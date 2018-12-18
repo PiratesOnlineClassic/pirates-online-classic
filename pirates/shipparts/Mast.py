@@ -2,7 +2,7 @@ import random
 from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
-from panda3d.core import *
+from pandac.PandaModules import *
 from direct.showbase import DirectObject
 from direct.actor import Actor
 from pirates.piratesbase import PiratesGlobals
@@ -24,7 +24,6 @@ from pirates.shipparts import MastDNA
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.shipparts import ShipPart
 import copy
-
 mastNetRiggingAnchor = {
     ShipGlobals.MAINMASTL1: 1,
     ShipGlobals.MAINMASTL2: 2,
@@ -69,13 +68,12 @@ maximumMastHeights = [
     1,
     1]
 
-
 class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
     notify = directNotify.newCategory('Mast')
     breakSfx1 = None
     breakSfx2 = None
     card = None
-
+    
     def __init__(self, ship, cr):
         self.cr = cr
         ShipPart.ShipPart.__init__(self)
@@ -95,17 +93,17 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
         if self.breakSfx1 is None:
             Mast.breakSfx1 = loader.loadSfx('audio/mastBreak1.mp3')
             Mast.breakSfx2 = loader.loadSfx('audio/mastBreak2.mp3')
-            Mast.card = loader.loadModel('models/textureCards/mastTextures')
+            Mast.card = loader.loadModelCopy('models/textureCards/mastTextures')
 
     def delete(self):
         if self.mastIval:
             self.mastIval.pause()
             self.mastIval = None
-
+        
         del self.prop
         for i in self.collMasts:
             del i
-
+        
         del self.collMasts
         del self.mastAnimDict
         self.breakSfx1 = None
@@ -117,10 +115,10 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
     def loadModel(self, dna):
         if config.GetBool('disable-ship-geom', 0):
             return
-
+        
         if self.prop:
             return
-
+        
         self.dna = dna
         id = ShipGlobals.getMastClassification(self.dna.mastType)[0]
         if id == ShipGlobals.MAINMAST:
@@ -133,7 +131,7 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
             mastCategory = 1
         mastHeight = len(ShipGlobals.getMastStats(self.dna.mastType)['maxArrayHp'])
         self.mastsState = [
-                              0] * mastHeight
+            0] * mastHeight
         filePrefix = self.getPrefix(self.dna.mastType)
         (self.prop, self.locators) = ShipGlobals.getMast('%s%s_%s' % (filePrefix, mastHeight, self.dna.posIndex))
         textureType = MastDNA.TextureDict.get(self.dna.textureIndex)
@@ -142,17 +140,17 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
         else:
             self.mastTexture = None
         self.propCollisions = NodePath(ModelNode('mast-%d' % self.dna.posIndex))
-
+        
         try:
             for i in xrange(mastHeight):
-                self.prop.play('Idle', partName='mast_%d_%d' % (i, self.dna.posIndex))
+                self.prop.play('Idle', partName = 'mast_%d_%d' % (i, self.dna.posIndex))
         except:
             self.notify.warning('failed call: self.prop.play("Idle")')
 
         if self.locators:
             self.locators.reparentTo(self.ship.root)
             self.locators.stash()
-
+        
         self.geom_Low = self.prop.getLOD('low')
         self.geom_Medium = self.prop.getLOD('medium')
         self.geom_High = self.prop.getLOD('high')
@@ -162,7 +160,7 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
             self.replaceMastTexture(self.mastTexture, self.geom_High)
             self.replaceMastTexture(self.mastTexture, self.geom_Medium)
             self.replaceMastTexture(self.mastTexture, self.geom_Low)
-
+        
         if self.dna.baseTeam not in [
             PiratesGlobals.UNDEAD_TEAM,
             PiratesGlobals.FRENCH_UNDEAD_TEAM,
@@ -177,38 +175,36 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
     def unloadModel(self):
         if not self.prop:
             return
-
+        
         if self.card:
             self.card.removeNode()
             self.card = None
-
+        
         filePrefix = MastDNA.MastDict.get(self.dna.mastType)
         for i in self.flashIvals:
             if self.flashIvals[i]:
                 self.flashIvals[i].pause()
                 self.flashIvals[i] = None
-
+        
         if self.prop:
             self.prop.cleanup()
             self.prop.removeNode()
             self.prop = None
-
+        
         for anim in self.mastAnimDict:
             loader.unloadModel(filePrefix + 'mast_' + str(i) + anim[1])
-
+        
         self.removeNode()
 
     def loadCollisions(self):
         if config.GetBool('disable-ship-geom', 0):
             return
-
         if self.collisions or self.isEmpty():
             return
-
         filePrefix = self.getPrefix(self.dna.mastType)
-        self.collisions = loader.loadModel(filePrefix + 'zero_collisions')
+        self.collisions = loader.loadModelCopy(filePrefix + 'zero_collisions')
         self.collisions.reparentTo(self.propCollisions)
-        coll = self.collisions.findAllMatches('**/collision_*')
+        coll = self.collisions.findAllMatches('**/collision_*').asList()
         for c in coll:
             c.setTag('objType', str(PiratesGlobals.COLL_SHIPPART))
             c.setTag('propId', str(self.doId))
@@ -230,10 +226,10 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
     def unloadCollisions(self):
         if not self.collisions:
             return
-
+        
         if self.collisions.isEmpty():
             return
-
+        
         if self.collisions:
             self.collisions.removeNode()
             self.collisions = None
@@ -247,7 +243,7 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
                 break
             elif state == 0:
                 self.restoreMast(i)
-
+    
     def getPrefix(self, mastType):
         filePrefix = MastDNA.MastDict.get(mastType)
         return filePrefix
@@ -255,7 +251,7 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
     def getFlatPrefix(self, mastType):
         filePrefix = MastDNA.MastFlatDict.get(mastType)
         return filePrefix
-
+    
     def radians2degrees(self, radians):
         return radians / 0.0174532925
 
@@ -270,15 +266,15 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         if localAvatar.ship == self.ship:
             sfx = random.choice(self.woodBreakSfx)
-            base.playSfx(sfx, node=self.ship, cutoff=2500)
+            base.playSfx(sfx, node = self.ship, cutoff = 2500)
         else:
             sfx = random.choice(self.distantBreakSfx)
-            base.playSfx(sfx, node=self.ship, cutoff=2500)
+            base.playSfx(sfx, node = self.ship, cutoff = 2500)
         (cannonCode, hullCode, sailCode) = codes
         if self.cr and self.cr.wantSpecialEffects:
             if hullCode >= 1:
                 index = hullCode - 1
-
+            
             if WeaponGlobals.getSkillEffectFlag(skillId) & WeaponGlobals.EFFECT_FLAME:
                 if hullCode >= 1:
                     index = hullCode - 1
@@ -286,7 +282,7 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
                 else:
                     fxParent = render
 
-    def death(self, index=None):
+    def death(self, index = None):
         if index != None:
             for i in range(random.randint(2, 4)):
                 spawnPoint = self.locators.find('**/break_' + str(index) + ';+s')
@@ -297,19 +293,19 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
                         shipDebrisEffect.setPosHpr(spawnPoint, 0, 0, 0, 0, 0, 0)
                         shipDebrisEffect.endPlaneZ = 0
                         shipDebrisEffect.play()
-
+    
     def hideMast(self, index):
         mastHeight = len(ShipGlobals.getMastStats(self.dna.mastType)['maxArrayHp'])
         for i in range(index, mastHeight):
-            self.prop.pose('Hidden', 1, partName='mast_%d_%d' % (i, self.dna.posIndex))
+            self.prop.pose('Hidden', 1, partName = 'mast_%d_%d' % (i, self.dna.posIndex))
             self.disableCollisions(i)
-
+        
         if index == 0:
             if self.rigging:
                 self.rigging.hide()
 
     def showMast(self, index):
-        self.prop.pose('Idle', 0, partName='mast_%d_%d' % (index, self.dna.posIndex))
+        self.prop.pose('Idle', 0, partName = 'mast_%d_%d' % (index, self.dna.posIndex))
         self.prop.update()
         if self.ship.sails.has_key(self.dna.posIndex):
             if self.ship.sails[self.dna.posIndex].has_key(index):
@@ -325,37 +321,38 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
         if self.mastIval:
             self.mastIval.finish()
             self.mastIval = None
-
+        
         self.restoreMast(index)
-
-    def setBreakAnim(self, index, animMultiplier=1.0):
+    
+    def setBreakAnim(self, index, animMultiplier = 1.0):
         for i in range(index, 5):
             anim = 'break' + str(index) + 'A'
             if len(self.mastsState) - 1 >= i:
                 if self.mastsState[i] == 0:
-                    projDummy = ProjectileArc(wantColl=1)
+                    projDummy = ProjectileArc(wantColl = 1)
                     projDummy.reparentTo(self.collMasts[i])
                     projDummy.bigSplash = 1
                     projDummy.startCollisions()
                     if self.mastIval:
                         self.mastIval.finish()
-
-                    ival = Parallel(Func(base.playSfx, self.breakSfx1, node=self.ship, cutoff=3000),
-                                    Sequence(Func(self.prop.play, anim, partName='mast_%d_%d' % (i, self.dna.posIndex)),
+                    
+                    ival = Parallel(Func(base.playSfx, self.breakSfx1, node = self.ship, cutoff = 3000),
+                                    Sequence(Func(self.prop.play, anim, partName = 'mast_%d_%d' % (i, self.dna.posIndex)),
                                              Wait(10.0),
                                              Func(self.hideMast, index),
                                              Func(projDummy.destroy)))
                     ival.start()
                     self.mastIval = ival
                     self.mastsState[i] = 1
-
+        
         if index == 0 or self.ship.modelClass < 4 and self.dna.posIndex == 0 and index < 2:
             self.breakRigging()
+        
 
     def restoreMast(self, index):
         self.mastsState[index] = 0
         self.showMast(index)
-
+    
     def disableCollisions(self, index):
         self.collMasts[index].setCollideMask(PiratesGlobals.TargetBitmask.allOff())
 
@@ -365,7 +362,7 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
     def breakRigging(self):
         if not self.rigging:
             return
-
+        
         fadeOut = self.rigging.colorScaleInterval(1.0, Vec4(1.0, 1.0, 1.0, 0.0))
         self.riggingIval = Sequence(fadeOut, Func(self.rigging.hide))
         self.riggingIval.start()
@@ -379,7 +376,7 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
             locator = self.ship.locators.find('**/location_mainmast_%s;+s' % self.dna.posIndex)
         elif id == ShipGlobals.AFTMAST:
             locator = self.ship.locators.find('**/location_aftmast;+s')
-
+        
         lpos = locator.getPos(self.ship.root)
         lhpr = locator.getHpr(self.ship.root)
         lscl = locator.getScale(self.ship.root)
@@ -399,6 +396,8 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
         self.propCollisions.flattenLight()
         if self.rigging:
             self.rigging.reparentTo(self.ship.modelGeom)
-
+        
         self.prop.setLODNode(self.ship.lodRoot)
         ShipPart.ShipPart.addToShip(self)
+
+

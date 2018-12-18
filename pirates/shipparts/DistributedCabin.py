@@ -5,7 +5,7 @@ from pirates.piratesbase import PiratesGlobals
 from direct.distributed import DistributedObject
 from pirates.piratesbase import PLocalizer
 from direct.gui.DirectGui import *
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.ship import ShipGlobals
 from pirates.battle import CannonGlobals
 from pirates.battle import WeaponGlobals
@@ -23,12 +23,10 @@ from pirates.shipparts import DistributedShippart
 from pirates.destructibles import DistributedDestructibleObject
 import random
 
-
-class DistributedCabin(DistributedShippart.DistributedShippart,
-                       DistributedDestructibleObject.DistributedDestructibleObject):
+class DistributedCabin(DistributedShippart.DistributedShippart, DistributedDestructibleObject.DistributedDestructibleObject):
     notify = directNotify.newCategory('DistributedCabin')
     woodBreakSfx = None
-
+    
     def __init__(self, cr):
         DistributedShippart.DistributedShippart.__init__(self, cr)
         DistributedDestructibleObject.DistributedDestructibleObject.__init__(self, cr)
@@ -44,7 +42,7 @@ class DistributedCabin(DistributedShippart.DistributedShippart,
         self.setDefaultDNA()
         DistributedShippart.DistributedShippart.generate(self)
         DistributedDestructibleObject.DistributedDestructibleObject.generate(self)
-
+    
     def announceGenerate(self):
         self.notify.debug('Announce Generate ' + str(self.doId))
         DistributedShippart.DistributedShippart.announceGenerate(self)
@@ -61,10 +59,8 @@ class DistributedCabin(DistributedShippart.DistributedShippart,
         self.prop = Cabin.Cabin(base.cr)
         self.prop.shipId = self.shipId
         self.prop.doId = self.doId
-        self.ship.cabin = [
-            self.prop,
-            self]
-
+        self.ship.cabin = [self.prop, self]
+    
     def propLoaded(self):
         pass
 
@@ -73,7 +69,7 @@ class DistributedCabin(DistributedShippart.DistributedShippart,
         if self.pendingSetupCollisions:
             base.cr.relatedObjectMgr.abortRequest(self.pendingSetupCollisions)
             self.pendingSetupCollisions = None
-
+        
         DistributedShippart.DistributedShippart.disable(self)
         DistributedDestructibleObject.DistributedDestructibleObject.disable(self)
 
@@ -81,11 +77,11 @@ class DistributedCabin(DistributedShippart.DistributedShippart,
         self.notify.debug('Delete ' + str(self.doId))
         if self.ship.cabin:
             self.ship.cabin[1] = None
-
+        
         del self.dna
         DistributedShippart.DistributedShippart.delete(self)
         DistributedDestructibleObject.DistributedDestructibleObject.delete(self)
-
+    
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker)
 
@@ -95,13 +91,11 @@ class DistributedCabin(DistributedShippart.DistributedShippart,
             messenger.send('setCabinHp-%s' % self.doId, self.getHp())
 
     def getHp(self):
-        return [
-            self.Hp,
-            self.maxHp]
+        return [self.Hp, self.maxHp]
 
     def playDeath(self):
         pass
-
+    
     def respawn(self):
         if self.prop:
             self.prop.respawn()
@@ -113,12 +107,12 @@ class DistributedCabin(DistributedShippart.DistributedShippart,
     def unstashFloorCollisions(self):
         if self.prop:
             self.prop.unstashFloorCollisions()
-
+    
     def attachCannon(self, cannon):
         self.prop.addCannon(cannon)
         myParent = base.cr.doId2do.get(self.shipId)
         myParent.cannons.append(cannon)
-
+    
     def setDefaultDNA(self):
         newDNA = CabinDNA.CabinDNA()
         self.setDNA(newDNA)
@@ -128,8 +122,8 @@ class DistributedCabin(DistributedShippart.DistributedShippart,
             self.updateDNA(dna)
         else:
             self.dna = dna
-
-    def updateDNA(self, newDNA, fForce=0):
+    
+    def updateDNA(self, newDNA, fForce = 0):
         oldDna = self.dna
         self.dna = newDNA
 
@@ -186,3 +180,4 @@ class DistributedCabin(DistributedShippart.DistributedShippart,
 
     def setMaxCargo(self, maxCargo):
         self.maxCargo = maxCargo
+

@@ -1,7 +1,7 @@
 import random
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
-from panda3d.core import *
+from pandac.PandaModules import *
 from direct.showbase.PythonUtil import report
 from pirates.piratesbase.PiratesGlobals import *
 from pirates.piratesbase import PiratesGlobals
@@ -16,8 +16,7 @@ from pirates.battle import WeaponGlobals
 from pirates.ship import ShipGlobals
 from pirates.shipparts import HullDNA
 
-
-def cutGeomTextureStates(geomNode, excludedStages=[]):
+def cutGeomTextureStates(geomNode, excludedStages = []):
     numGeoms = geomNode.getNumGeoms()
     finalPacket = []
     for i in xrange(numGeoms):
@@ -25,7 +24,7 @@ def cutGeomTextureStates(geomNode, excludedStages=[]):
         attrib = geomState.getAttrib(TextureAttrib.getClassType())
         finalPacket.append(attrib)
         geomNode.setGeomState(i, geomState.addAttrib(TextureAttrib.make()))
-
+    
     return finalPacket
 
 
@@ -33,7 +32,7 @@ def pasteGeomTextureStates(geomNode, attribList):
     for i in xrange(geomNode.getNumGeoms()):
         gs = geomNode.getGeomState(i).addAttrib(attribList[i])
         geomNode.setGeomState(i, gs)
-
+    
 
 class SplattableObject(NodePath):
     holeCard = None
@@ -41,7 +40,7 @@ class SplattableObject(NodePath):
     breakTex1 = None
     blankTex = None
     shipTextures = None
-
+    
     def __init__(self):
         self.card = None
         self.ship = None
@@ -59,7 +58,7 @@ class SplattableObject(NodePath):
         self.smokeEffects = {}
         self.holeLocations = {}
         if not self.holeCard:
-            SplattableObject.holeCard = loader.loadModel('models/effects/battleEffects')
+            SplattableObject.holeCard = loader.loadModelCopy('models/effects/battleEffects')
             SplattableObject.holeTexArray = [
                 [
                     self.holeCard.find('**/effectHoleC').findTexture('*'),
@@ -78,7 +77,7 @@ class SplattableObject(NodePath):
                 SplattableObject.blankTex = blankTex
             else:
                 SplattableObject.blankTex = self.holeCard.find('**/hullBlank').findTexture('*')
-            SplattableObject.shipTextures = loader.loadModel('models/textureCards/shipTextures')
+            SplattableObject.shipTextures = loader.loadModelCopy('models/textureCards/shipTextures')
             for texInfo in SplattableObject.holeTexArray:
                 tex = texInfo[0]
                 tex.setWrapU(Texture.WMBorderColor)
@@ -86,10 +85,10 @@ class SplattableObject(NodePath):
                 tex.setMinfilter(Texture.FTNearest)
                 tex.setMagfilter(Texture.FTNearest)
                 tex.setBorderColor(Vec4(1, 1, 1, 0))
-
+            
             self.blankTex.setMinfilter(Texture.FTLinearMipmapLinear)
             self.blankTex.setMagfilter(Texture.FTLinear)
-
+    
     def disable(self):
         self.cleanupEffects()
         self.panelsHigh = []
@@ -97,11 +96,11 @@ class SplattableObject(NodePath):
         self.panelsLow = []
         self.collPanels = []
         self.projScreens = {}
-
+    
     def delete(self):
         if self.cr:
             base.textureFlattenMgr.clearSplattables(self)
-
+        
         del self.fireEffects
         del self.smokeEffects
 
@@ -127,14 +126,14 @@ class SplattableObject(NodePath):
         t.setSort(250)
         if len(self.panelsHigh) - 1 >= index:
             self.panelsHigh[index].setTexture(self.holeLayer, self.blankTex)
-
+        
         if len(self.panelsMed) - 1 >= index:
             self.panelsMed[index].setTexture(self.holeLayer, self.blankTex)
-
+        
         if self.fireEffects.has_key(index):
             self.fireEffects[index].stopLoop()
             del self.fireEffects[index]
-
+        
         if self.smokeEffects.has_key(index):
             self.smokeEffects[index].stopLoop()
             del self.smokeEffects[index]
@@ -142,24 +141,24 @@ class SplattableObject(NodePath):
     def playHoleSplat(self, pos, normal, index):
         if base.options.getSpecialEffectsSetting() <= base.options.SpecialEffectsLow:
             return
-
+        
         panel = None
         if index > 0:
             index = (index - 1) % 2 + 1
-
+        
         if base.config.GetBool('force-highLOD-destruction', 0) is 1:
             if len(self.panelsHigh) - 1 >= index:
                 panel = self.panelsHigh[index]
-
+            
         elif len(self.panelsMed) - 1 >= index:
             panel = self.panelsMed[index]
-
+        
         if not panel:
             return
-
+        
         if not self.projScreens:
             return
-
+        
         if base.cr.wantSpecialEffects and panel:
             holeCount = base.textureFlattenMgr.addSplattable(self, index)
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
@@ -168,7 +167,7 @@ class SplattableObject(NodePath):
                 t.setSort(200)
                 t.setTexcoordName('uvHole-%s' % holeCount)
                 self.t = t
-
+            
             n = render.attachNewNode('dummy')
             n.lookAt(Point3(normal))
             hpr = n.getHpr()
@@ -199,24 +198,24 @@ class SplattableObject(NodePath):
                 del lens
                 holeLocation.removeNode()
                 del holeLocation
-
+            
             hole.removeNode()
             del hole
 
     def playBreak(self, index, collIndex):
         if not self.ship:
             return
-
+        
         panel = None
         if len(self.panelsMed) - 1 >= index:
             panel = self.panelsMed[index]
-
+        
         if not panel:
             return
-
+        
         if not self.projScreens:
             return
-
+        
         projNode = self.ship.locators.find('**/location_fire_' + str(collIndex) + ';+s')
         hole = render.attachNewNode('hole')
         hole.reparentTo(self.ship)
@@ -234,7 +233,7 @@ class SplattableObject(NodePath):
 
             pos = projNode.getPos()
             sfx = random.choice(self.woodBreakSfx)
-            base.playSfx(sfx, node=self, cutoff=2500)
+            base.playSfx(sfx, node = self, cutoff = 2500)
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 cameraShakerEffect = CameraShaker()
                 cameraShakerEffect.reparentTo(self.ship.root)
@@ -252,7 +251,7 @@ class SplattableObject(NodePath):
                     if self.smokeEffects.get(collIndex):
                         self.smokeEffects[collIndex].stopLoop()
                         del self.smokeEffects[collIndex]
-
+                    
                     self.smokeEffects[collIndex] = blackSmokeEffect
 
             fireEffect = Fire.getEffect()
@@ -265,14 +264,14 @@ class SplattableObject(NodePath):
                 if self.fireEffects.get(collIndex):
                     self.fireEffects[collIndex].stopLoop()
                     del self.fireEffects[collIndex]
-
+                
                 self.fireEffects[collIndex] = fireEffect
 
     def add2dHole(self, index, u, v):
         panel = None
         if len(self.panelsMed) - 1 >= index:
             panel = self.panelsMed[index]
-
+        
         if base.cr.wantSpecialEffects and panel:
             t = TextureStage('final')
             t.setMode(TextureStage.MModulate)
@@ -281,13 +280,12 @@ class SplattableObject(NodePath):
             panel.setTexture(t, self.holeTex)
             panel.setTexScale(t, 2, 2)
             panel.setTexOffset(t, u, v)
-            attribList = self.cutGeomTextureStates(panel.node(), [
-                'holeLayer'])
-            panel.flattenMultitex(useGeom=0, target=self.holeLayer)
+            attribList = self.cutGeomTextureStates(panel.node(), ['holeLayer'])
+            panel.flattenMultitex(useGeom = 0, target = self.holeLayer)
             self.copyMultitexLayer(panel, self.panelsHigh[index])
             self.pasteGeomTextureStates(panel.node(), attribList)
             del t
-
+    
     def changeColor(self, geom):
         suffix = [
             'A',
@@ -295,24 +293,22 @@ class SplattableObject(NodePath):
             'C',
             'D',
             'E']
+
         for i in xrange(len(self.dna.hullTextureIndex)):
-            self.configColor(geom, 'hull%s' % suffix[i], self.dna.hullTextureIndex[i], self.dna.hullColorIndex[i],
-                             self.dna.hullHilightColorIndex[i])
+            self.configColor(geom, 'hull%s' % suffix[i], self.dna.hullTextureIndex[i], self.dna.hullColorIndex[i], self.dna.hullHilightColorIndex[i])
 
         for i in xrange(len(self.dna.stripeTextureIndex)):
-            self.configColor(geom, 'stripe%s' % suffix[i], self.dna.stripeTextureIndex[i], self.dna.stripeColorIndex[i],
-                             self.dna.stripeHilightColorIndex[i])
+            self.configColor(geom, 'stripe%s' % suffix[i], self.dna.stripeTextureIndex[i], self.dna.stripeColorIndex[i], self.dna.stripeHilightColorIndex[i])
 
         for i in xrange(len(self.dna.patternTextureIndex)):
-            self.configColor(geom, 'pattern%s' % suffix[i], self.dna.patternTextureIndex[i],
-                             self.dna.patternColorIndex[i], self.dna.patternHilightColorIndex[i])
+            self.configColor(geom, 'pattern%s' % suffix[i], self.dna.patternTextureIndex[i], self.dna.patternColorIndex[i], self.dna.patternHilightColorIndex[i])
 
         self.configColor(geom, 'bottom_hull', 255)
         if self.dna.hullTextureIndex or self.dna.stripeTextureIndex or self.dna.patternTextureIndex:
-            panels = geom.findAllMatches('**/panel_*/*')
+            panels = geom.findAllMatches('**/panel_*/*').asList()
             self.reloadPanelTex(panels)
 
-    def configColor(self, geom, prefix, texIndex=0, color=0, hilightColor=0):
+    def configColor(self, geom, prefix, texIndex = 0, color = 0, hilightColor = 0):
         if texIndex:
             self.setMultitexColorFromRoot(geom, prefix, texIndex, color, hilightColor)
 
@@ -330,18 +326,16 @@ class SplattableObject(NodePath):
             filePrefix = HullDNA.StripeTexDict.get(texIndex)
         elif prefix[0:7] == 'pattern':
             filePrefix = HullDNA.PatternTexDict.get(texIndex)
-
+        
         if not filePrefix:
             return
-
+        
         colorTs = TextureStage(prefix + 'Color')
-        colorTs.setCombineRgb(TextureStage.CMModulate, TextureStage.CSConstant, TextureStage.COSrcColor,
-                              TextureStage.CSTexture, TextureStage.COSrcColor)
+        colorTs.setCombineRgb(TextureStage.CMModulate, TextureStage.CSConstant, TextureStage.COSrcColor, TextureStage.CSTexture, TextureStage.COSrcColor)
         colorTs.setColor(HullDNA.HullColors[color])
         colorTs.setSort(5)
         blendTs = TextureStage(prefix + 'blendTs')
-        blendTs.setCombineRgb(TextureStage.CMModulate, TextureStage.CSPrimaryColor, TextureStage.COSrcColor,
-                              TextureStage.CSPrevious, TextureStage.COSrcColor)
+        blendTs.setCombineRgb(TextureStage.CMModulate, TextureStage.CSPrimaryColor, TextureStage.COSrcColor, TextureStage.CSPrevious, TextureStage.COSrcColor)
         blendTs.setSort(30)
         colorTex = self.shipTextures.find('**/%s' % filePrefix[0]).findTexture('*')
         if filePrefix[1]:
@@ -360,14 +354,14 @@ class SplattableObject(NodePath):
                         hilightTs.setMode(TextureStage.MModulate)
                         hilightTs.setSort(12)
                         target.setTexture(hilightTs, hilightTex)
-
+                    
                 else:
                     hilightTs = TextureStage(prefix + 'Hilight')
                     hilightTs.setMode(TextureStage.MBlend)
                     hilightTs.setColor(HullDNA.HullColors[hilightColor])
                     hilightTs.setSort(12)
                     target.setTexture(hilightTs, hilightTex)
-
+            
             target.setTexture(blendTs, colorTex)
 
     def hideBaseTexture(self, panel):
@@ -379,14 +373,14 @@ class SplattableObject(NodePath):
     def copyMultitexLayer(self, sourcePanel, targetPanel):
         if not sourcePanel or not targetPanel:
             return 0
-
+        
         ts = sourcePanel.findTextureStage('holeLayer')
         if ts:
             tex = sourcePanel.findTexture(ts)
             if tex:
                 targetPanel.setTexture(self.holeLayer, tex)
                 return 1
-
+        
         return 0
 
     def cutState(self):
@@ -407,23 +401,23 @@ class SplattableObject(NodePath):
     def hideAllPanels(self):
         for panel in self.panelsHigh:
             panel.hide()
-
+        
         for panel in self.panelsMed:
             panel.hide()
-
+        
         for panel in self.panelsLow:
             panel.hide()
 
     def showAllPanels(self):
         for panel in self.panelsHigh:
             panel.show()
-
+        
         for panel in self.panelsMed:
             panel.show()
-
+        
         for panel in self.panelsLow:
             panel.show()
-
+    
     def cleanupEffects(self):
         for i in self.fireEffects:
             self.fireEffects[i].stopLoop()
@@ -434,7 +428,7 @@ class SplattableObject(NodePath):
 
         self.smokeEffects = {}
 
-    def cutGeomTextureStates(self, geomNode, excludedStages=[]):
+    def cutGeomTextureStates(self, geomNode, excludedStages = []):
         numGeoms = geomNode.getNumGeoms()
         finalPacket = []
         for i in xrange(numGeoms):
@@ -442,21 +436,21 @@ class SplattableObject(NodePath):
             attrib = geomState.getAttrib(TextureAttrib.getClassType())
             finalPacket.append(attrib)
             geomNode.setGeomState(i, geomState.setAttrib(TextureAttrib.make()))
-
+        
         return finalPacket
 
     def pasteGeomTextureStates(self, geomNode, attribList):
         for i in xrange(geomNode.getNumGeoms()):
             gs = geomNode.getGeomState(i).setAttrib(attribList[i])
             geomNode.setGeomState(i, gs)
-
+    
     def stopAllSmoke(self):
         for i in self.smokeEffects:
             if self.smokeEffects.get(i):
                 self.smokeEffects[i].stopLoop()
-
+        
         self.smokeEffects = {}
-
+    
     def hideSmoke(self):
         for effect in self.smokeEffects.values():
             effect.p0.renderer.getRenderNodePath().hide()
@@ -477,5 +471,6 @@ class SplattableObject(NodePath):
                 if self.smokeEffects.get(collIndex):
                     self.smokeEffects[collIndex].stopLoop()
                     del self.smokeEffects[collIndex]
-
+                
                 self.smokeEffects[collIndex] = blackSmokeEffect
+
