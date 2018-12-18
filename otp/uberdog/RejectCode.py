@@ -1,7 +1,4 @@
-
-
 class RejectCode:
-
     TIMEOUT = 65535
     NO_GUILD = 10000
     MAY_NOT_JOIN_GUILD = 10001
@@ -77,3 +74,4 @@ class RejectCode:
     NOT_YOUR_FRIENDS_LIST = 60009
     ALREADY_FRIENDS_WITH_SELF = 60010
     MAY_NOT_OPEN_INVITE = 60011
+

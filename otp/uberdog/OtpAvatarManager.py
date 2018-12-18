@@ -1,11 +1,12 @@
-from cPickle import dumps, loads
-from direct.directnotify import DirectNotifyGlobal
+from cPickle import loads, dumps
 from direct.distributed import DistributedObject
+from direct.directnotify import DirectNotifyGlobal
+notify = DirectNotifyGlobal.directNotify.newCategory('AvatarManager')
 
 class OtpAvatarManager(DistributedObject.DistributedObject):
-    notify = DirectNotifyGlobal.directNotify.newCategory('AvatarManager')
+    notify = notify
     OnlineEvent = 'GlobalAvatarManagerOnline'
-
+    
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
         self.avatars = {}
@@ -37,25 +38,25 @@ class OtpAvatarManager(DistributedObject.DistributedObject):
 
     def sendRequestRemoveAvatar(self, avatarId, subId, confirmPassword):
         self.sendUpdate('requestRemoveAvatar', [0, avatarId, subId, confirmPassword])
-
+    
     def rejectRemoveAvatar(self, reasonId):
         messenger.send('rejectRemoveAvatar', [reasonId])
 
     def removeAvatarResponse(self, avatarId, subId):
         messenger.send('removeAvatarResponse', [avatarId, subId])
-
+    
     def sendRequestShareAvatar(self, avatarId, subId, shared):
         self.sendUpdate('requestShareAvatar', [0, avatarId, subId, shared])
 
     def rejectShareAvatar(self, reasonId):
         messenger.send('rejectShareAvatar', [reasonId])
-
+    
     def shareAvatarResponse(self, avatarId, subId, shared):
         messenger.send('shareAvatarResponse', [avatarId, subId, shared])
-
+    
     def sendRequestAvatarSlot(self, subId, slot):
         self.sendUpdate('requestAvatarSlot', [0, subId, slot])
-
+    
     def rejectAvatarSlot(self, reasonId, subId, slot):
         messenger.send('rejectAvatarSlot', [reasonId, subId, slot])
 
@@ -64,9 +65,11 @@ class OtpAvatarManager(DistributedObject.DistributedObject):
 
     def sendRequestPlayAvatar(self, avatarId, subId):
         self.sendUpdate('requestPlayAvatar', [0, avatarId, subId])
-
+    
     def rejectPlayAvatar(self, reasonId, avatarId):
         messenger.send('rejectPlayAvatar', [reasonId, avatarId])
-
+    
     def playAvatarResponse(self, avatarId, subId, access, founder):
         messenger.send('playAvatarResponse', [avatarId, subId, access, founder])
+
+

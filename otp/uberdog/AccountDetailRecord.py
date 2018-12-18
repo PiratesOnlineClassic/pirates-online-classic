@@ -1,6 +1,7 @@
 from otp.otpbase import OTPGlobals
 
 class SubDetailRecord:
+    
     def __init__(self):
         self.subId = 0
         self.subOwnerId = 0
@@ -11,7 +12,7 @@ class SubDetailRecord:
         self.subNumAvatars = 0
         self.subNumConcur = 0
         self.subFounder = 0
-
+    
     def __str__(self):
         s = ''
         s += '========== Sub %d ==========\n' % self.subId
@@ -26,7 +27,9 @@ class SubDetailRecord:
         s += 'Sub Founder: %d\n' % self.subFounder
         return s
 
+
 class AccountDetailRecord:
+    
     def __init__(self):
         self.openChatEnabled = False
         self.createFriendsWithChat = False
@@ -48,11 +51,12 @@ class AccountDetailRecord:
         subDetails = self.subDetails.get(subId)
         if subDetails:
             return subDetails.subNumAvatars
-        return 0
-
+        else:
+            return 0
+    
     def canOpenChatAndNotGetBooted(self):
         return self.openChatEnabled or self.createFriendsWithChat
-
+    
     def __str__(self):
         s = '========== Account %s ==========\n' % self.playerAccountId
         s += 'OpenChatEnabled: %s\n' % self.openChatEnabled
@@ -71,6 +75,8 @@ class AccountDetailRecord:
         s += 'NumSubs: %s\n' % self.numSubs
         for subDetails in self.subDetails.values():
             s += str(subDetails)
-
+        
         s += '================================\n'
         return s
+
+
