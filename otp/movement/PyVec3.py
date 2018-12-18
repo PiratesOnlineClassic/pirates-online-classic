@@ -1,14 +1,11 @@
-import math
+from pandac.PandaModules import *
 import types
-
-from panda3d.core import *
-
+import math
 
 class PyVec3:
-
     Epsilon = 0.0001
     ScalarTypes = (types.FloatType, types.IntType, types.LongType)
-
+    
     def __init__(self, *args):
         self.assign(*args)
 
@@ -27,11 +24,10 @@ class PyVec3:
                 z = arg.getZ()
             else:
                 raise TypeError
-        else:
-            if len(args) == 3:
-                x = args[0]
-                y = args[1]
-                z = args[2]
+        elif len(args) == 3:
+            x = args[0]
+            y = args[1]
+            z = args[2]
         self.x = x
         self.y = y
         self.z = z
@@ -75,14 +71,14 @@ class PyVec3:
         return self.x * other.getX() + self.y * other.getY() + self.z * other.getZ()
 
     def _crossResults(self, other):
-        return (
-            self.y * other.getZ() - self.z * other.getY(), self.z * other.getX() - self.x * other.getZ(), self.x * other.getY() - self.y * other.getX())
+        return (self.y * other.getZ() - self.z * other.getY(), self.z * other.getX() - self.x * other.getZ(),
+                self.x * other.getY() - self.y * other.getX())
 
     def cross(self, other):
         return PyVec3(*self._crossResults(other))
 
     def crossInto(self, other):
-        self.x, self.y, self.z = self._crossResults(other)
+        (self.x, self.y, self.z) = self._crossResults(other)
 
     def __lt__(a, b):
         return a.length() < b.length()
@@ -94,7 +90,7 @@ class PyVec3:
         return abs(a.length() - b.length()) < PyVec3.Epsilon
 
     def __ne__(a, b):
-        return not a == b
+        return not (a == b)
 
     def __ge__(a, b):
         return a > b or a == b
@@ -103,12 +99,10 @@ class PyVec3:
         return a.length() > b.length()
 
     def __add__(a, b):
-        return PyVec3(a.getX() + b.getX(), a.getY() +
-                      b.getY(), a.getZ() + b.getZ())
+        return PyVec3(a.getX() + b.getX(), a.getY() + b.getY(), a.getZ() + b.getZ())
 
     def __sub__(a, b):
-        return PyVec3(a.getX() - b.getX(), a.getY() -
-                      b.getY(), a.getZ() - b.getZ())
+        return PyVec3(a.getX() - b.getX(), a.getY() - b.getY(), a.getZ() - b.getZ())
 
     def __mul__(a, s):
         return PyVec3(a.getX() * s, a.getY() * s, a.getZ() * s)
@@ -161,26 +155,22 @@ class PyVec3:
     def __getitem__(self, i):
         if i == 0:
             return self.x
+        elif i == 1:
+            return self.y
+        elif i == 2:
+            return self.z
         else:
-            if i == 1:
-                return self.y
-            else:
-                if i == 2:
-                    return self.z
-                else:
-                    raise IndexError
+            raise IndexError
 
     def __setitem__(self, i, s):
         if i == 0:
             self.x = s
+        elif i == 1:
+            self.y = s
+        elif i == 2:
+            self.z = s
         else:
-            if i == 1:
-                self.y = s
-            else:
-                if i == 2:
-                    self.z = s
-                else:
-                    raise IndexError
+            raise IndexError
 
     def __repr__(self):
         return 'PyVec3(%s,%s,%s)' % (self.x, self.y, self.z)

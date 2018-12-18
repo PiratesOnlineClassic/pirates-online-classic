@@ -1,13 +1,10 @@
+from pandac.PandaModules import *
+from direct.directnotify import DirectNotifyGlobal
+from otp.movement.PyVec3 import PyVec3
+from direct.showbase import PythonUtil
 import __builtin__
 
-from direct.directnotify import DirectNotifyGlobal
-from direct.showbase import PythonUtil
-from otp.movement.PyVec3 import PyVec3
-from panda3d.core import *
-
-
-class Mover:
-
+class Mover(CMover):
     notify = DirectNotifyGlobal.directNotify.newCategory('Mover')
     SerialNum = 0
     Profile = 0
@@ -15,8 +12,9 @@ class Mover:
     PSCCpp = 'App:Show code:moveObjects:MoverC++'
     PSCPy = 'App:Show code:moveObjects:MoverPy'
     PSCInt = 'App:Show code:moveObjects:MoverIntegrate'
-
-    def __init__(self, objNodePath, fwdSpeed=1, rotSpeed=1):
+    
+    def __init__(self, objNodePath, fwdSpeed = 1, rotSpeed = 1):
+        CMover.__init__(self, objNodePath, fwdSpeed, rotSpeed)
         self.serialNum = Mover.SerialNum
         Mover.SerialNum += 1
         self.VecType = Vec3
@@ -25,58 +23,62 @@ class Mover:
             self.pscCpp = PStatCollector(Mover.PSCCpp)
             self.pscPy = PStatCollector(Mover.PSCPy)
             self.pscInt = PStatCollector(Mover.PSCInt)
-
+    
     def destroy(self):
-        for name, impulse in self.impulses.items():
-            self.notify.debug('removing impulse: %s' % name)
+        for (name, impulse) in self.impulses.items():
+            Mover.notify.debug('removing impulse: %s' % name)
             self.removeImpulse(name)
-
+    
     def addImpulse(self, name, impulse):
-        self.impulses[name] = impulse
-        impulse._setMover(self)
-
+        if impulse.isCpp():
+            CMover.addCImpulse(self, name, impulse)
+        else:
+            self.impulses[name] = impulse
+            impulse._setMover(self)
+    
     def removeImpulse(self, name):
         if name not in self.impulses:
-            self.notify.warning(
-                "Mover.removeImpulse: unknown impulse '%s'" %
-                name)
+            if not CMover.removeCImpulse(self, name):
+                Mover.notify.warning("Mover.removeImpulse: unknown impulse '%s'" % name)
+            
             return
-
+        
         self.impulses[name]._clearMover(self)
         del self.impulses[name]
 
     def getCollisionEventName(self):
         return 'moverCollision-%s' % self.serialNum
-
-    def move(self, dt=-1, profile=0):
-        if self.Profile and not profile:
-
-            def func(doMove=self.move):
+    
+    def move(self, dt = -1, profile = 0):
+        if Mover.Profile and not profile:
+            
+            def func(doMove = self.move):
                 for i in xrange(10000):
-                    doMove(dt, profile=1)
+                    doMove(dt, profile = 1)
 
             __builtin__.func = func
-            PythonUtil.startProfile(
-                cmd='func()',
-                filename='profile',
-                sorts=['cumulative'],
-                callInfo=0)
+            PythonUtil.startProfile(cmd = 'func()', filename = 'profile', sorts = [
+                'cumulative'], callInfo = 0)
             del __builtin__.func
             return
-
-        if self.Pstats:
+        
+        if Mover.Pstats:
             self.pscCpp.start()
-
-        if self.Pstats:
+        
+        CMover.processCImpulses(self, dt)
+        if Mover.Pstats:
             self.pscCpp.stop()
             self.pscPy.start()
-
+        
         for impulse in self.impulses.values():
             impulse._process(self.getDt())
-
-        if self.Pstats:
+        
+        if Mover.Pstats:
             self.pscPy.stop()
             self.pscInt.start()
-
-        if self.Pstats:
+        
+        CMover.integrate(self)
+        if Mover.Pstats:
             self.pscInt.stop()
+
+
