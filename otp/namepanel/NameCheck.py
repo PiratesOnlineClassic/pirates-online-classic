@@ -1,18 +1,15 @@
 import string
-
-from direct.directnotify import DirectNotifyGlobal
 from otp.otpbase import OTPLocalizer
+from direct.directnotify import DirectNotifyGlobal
 from pandac.PandaModules import TextEncoder
-
 notify = DirectNotifyGlobal.directNotify.newCategory('NameCheck')
-
 
 def filterString(str, filter):
     result = ''
     for char in str:
         if char in filter:
             result = result + char
-
+    
     return result
 
 
@@ -28,7 +25,7 @@ def wordList(str):
     return result
 
 
-def checkName(name, otherCheckFuncs=[]):
+def checkName(name, otherCheckFuncs = []):
 
     def longEnough(name):
         if len(name) < 2:
@@ -59,6 +56,7 @@ def checkName(name, otherCheckFuncs=[]):
                     else:
                         char = char + name[i + 1]
                     return OTPLocalizer.NCBadCharacter % char
+
             elif char not in okChars:
                 if char in string.digits:
                     notify.info('name contains digits')
@@ -84,10 +82,11 @@ def checkName(name, otherCheckFuncs=[]):
 
         def perWord(word):
             if '.' in word:
-                return
+                return None
+
             for char in word:
                 if ord(char) >= 128:
-                    return
+                    return None
 
             letters = filterString(word, string.letters)
             if len(letters) > 2:
@@ -95,7 +94,6 @@ def checkName(name, otherCheckFuncs=[]):
                 if len(vowels) == 0:
                     notify.info('word "%s" has no vowels' % word)
                     return OTPLocalizer.NCNeedVowels
-            return
 
         for word in wordList(name):
             problem = perWord(word)
@@ -107,7 +105,7 @@ def checkName(name, otherCheckFuncs=[]):
         def perWord(word):
             for char in word:
                 if ord(char) >= 128:
-                    return
+                    return None
 
             letters = filterString(word, string.letters)
             letters = TextEncoder.lower(letters)
@@ -116,7 +114,6 @@ def checkName(name, otherCheckFuncs=[]):
                 if filtered == letters:
                     notify.info('word "%s" uses only one letter' % word)
                     return OTPLocalizer.NCGeneric
-            return
 
         for word in wordList(name):
             problem = perWord(word)
@@ -125,50 +122,55 @@ def checkName(name, otherCheckFuncs=[]):
 
     def checkDashes(name):
 
-        def validDash(index, name=name):
+        def validDash(index, name = name):
             if index == 0 or i == len(name) - 1:
                 return 0
+
             if name[i - 1] not in string.letters:
                 return 0
+
             if name[i + 1] not in string.letters:
                 return 0
+
             return 1
 
         i = 0
-        while True:
+        while 1:
             i = name.find('-', i, len(name))
             if i < 0:
-                return
+                return None
+
             if not validDash(i):
                 notify.info('name makes invalid use of dashes')
                 return OTPLocalizer.NCDashUsage
-            i += 1
 
-        return
+            i += 1
 
     def checkCommas(name):
 
-        def validComma(index, name=name):
+        def validComma(index, name = name):
             if index == 0 or i == len(name) - 1:
                 return OTPLocalizer.NCCommaEdge
+
             if name[i - 1] in string.whitespace:
                 return OTPLocalizer.NCCommaAfterWord
+
             if name[i + 1] not in string.whitespace:
                 return OTPLocalizer.NCCommaUsage
-            return
+            return None
 
         i = 0
-        while True:
+        while 1:
             i = name.find(',', i, len(name))
             if i < 0:
-                return
+                return None
+
             problem = validComma(i)
             if problem:
                 notify.info('name makes invalid use of commas')
                 return problem
-            i += 1
 
-        return
+            i += 1
 
     def checkPeriods(name):
         words = wordList(name)
@@ -188,12 +190,10 @@ def checkName(name, otherCheckFuncs=[]):
                 return OTPLocalizer.NCPeriodUsage
             if numPeriods == 2:
                 if not (word[1] == '.' and word[3] == '.'):
-                    notify.info(
-                        'word "%s" does not fit the J.T. pattern' %
-                        word)
+                    notify.info('word "%s" does not fit the J.T. pattern' % word)
                     return OTPLocalizer.NCPeriodUsage
 
-        return
+        return None
 
     def checkApostrophes(name):
         words = wordList(name)
@@ -242,6 +242,7 @@ def checkName(name, otherCheckFuncs=[]):
                 if ord(char[0]) >= 224:
                     char = char + name[i]
                     i += 1
+
             if char == lastChar:
                 count += 1
             else:
@@ -251,10 +252,22 @@ def checkName(name, otherCheckFuncs=[]):
                 notify.info('character %s is repeated too many times' % char)
                 return OTPLocalizer.NCRepeatedChar % char
 
-        return
-
     checks = [
-        longEnough, emptyName, printableChars, badCharacters, hasLetters, hasVowels, monoLetter, checkDashes, checkCommas, checkPeriods, checkApostrophes, tooManyWords, allCaps, mixedCase, repeatedChars] + otherCheckFuncs
+        longEnough,
+        emptyName,
+        printableChars,
+        badCharacters,
+        hasLetters,
+        hasVowels,
+        monoLetter,
+        checkDashes,
+        checkCommas,
+        checkPeriods,
+        checkApostrophes,
+        tooManyWords,
+        allCaps,
+        mixedCase,
+        repeatedChars] + otherCheckFuncs
     symmetricChecks = []
     notify.info('checking name "%s"...' % name)
     for check in checks:
@@ -264,11 +277,13 @@ def checkName(name, otherCheckFuncs=[]):
             bName = te.decodeText(name)
             bName = list(bName)
             bName.reverse()
-            bName = (u'').join(bName)
+            bName = u''.join(bName)
             bName = te.encodeWtext(bName)
             problem = check(bName)
             print 'problem = %s' % problem
         if problem:
             return problem
 
-    return
+    return None
+    
+
