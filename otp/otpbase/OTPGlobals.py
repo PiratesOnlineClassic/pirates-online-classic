@@ -1,5 +1,4 @@
-from panda3d.core import *
-
+from pandac.PandaModules import *
 QuietZone = 1
 UberZone = 2
 WallBitmask = BitMask32(1)
@@ -58,8 +57,7 @@ DisconnectReasons = {
     DisconnectGraphicsError: 'graphics error'}
 DatabaseDialogTimeout = 20.0
 DatabaseGiveupTimeout = 45.0
-PeriodTimerWarningTime = (
-    600, 300, 60)
+PeriodTimerWarningTime = (600, 300, 60)
 WalkCutOff = 0.5
 RunCutOff = 8.0
 FloorOffset = 0.025
@@ -76,12 +74,11 @@ DialogClass = None
 GlobalDialogClass = None
 ProductPrefix = None
 
-
 def getInterfaceFont():
-    global InterfaceFont
     global InterfaceFontPath
-    if InterfaceFont is None:
-        if InterfaceFontPath is None:
+    global InterfaceFont
+    if InterfaceFont == None:
+        if InterfaceFontPath == None:
             InterfaceFont = TextNode.getDefaultFont()
         else:
             InterfaceFont = loader.loadFont(InterfaceFontPath, lineHeight=1.0)
@@ -89,8 +86,8 @@ def getInterfaceFont():
 
 
 def setInterfaceFont(path):
-    global InterfaceFont
     global InterfaceFontPath
+    global InterfaceFont
     InterfaceFontPath = path
     InterfaceFont = None
     return
@@ -99,8 +96,8 @@ def setInterfaceFont(path):
 def getSignFont():
     global SignFont
     global SignFontPath
-    if SignFont is None:
-        if SignFontPath is None:
+    if SignFont == None:
+        if SignFontPath == None:
             InterfaceFont = TextNode.getDefaultFont()
             SignFont = TextNode.getDefaultFont()
         else:
@@ -114,10 +111,10 @@ def setSignFont(path):
 
 
 def getFancyFont():
-    global FancyFont
     global FancyFontPath
-    if FancyFont is None:
-        if FancyFontPath is None:
+    global FancyFont
+    if FancyFont == None:
+        if FancyFontPath == None:
             InterfaceFont = TextNode.getDefaultFont()
             FancyFont = TextNode.getDefaultFont()
         else:
@@ -133,13 +130,12 @@ def setFancyFont(path):
 def getNametagFont(index):
     global NametagFontPaths
     global NametagFonts
-    if index not in NametagFonts or NametagFonts[index] is None:
-        if index not in NametagFontPaths or NametagFontPaths[index] is None:
+    if not NametagFonts.has_key(index) or NametagFonts[index] == None:
+        if not NametagFontPaths.has_key(index) or NametagFontPaths[index] == None:
             InterfaceFont = TextNode.getDefaultFont()
             NametagFonts[index] = TextNode.getDefaultFont()
         else:
-            NametagFonts[index] = loader.loadFont(
-                NametagFontPaths[index], lineHeight=1.0)
+            NametagFonts[index] = loader.loadFont(NametagFontPaths[index], lineHeight=1.0)
     return NametagFonts[index]
 
 
@@ -149,7 +145,7 @@ def setNametagFont(index, path):
 
 def getDialogClass():
     global DialogClass
-    if DialogClass is None:
+    if DialogClass == None:
         from otp.otpgui.OTPDialog import OTPDialog
         DialogClass = OTPDialog
     return DialogClass
@@ -157,7 +153,7 @@ def getDialogClass():
 
 def getGlobalDialogClass():
     global GlobalDialogClass
-    if DialogClass is None:
+    if DialogClass == None:
         from otp.otpgui.OTPDialog import GlobalDialog
         GlobalDialogClass = GlobalDialog
     return GlobalDialogClass
@@ -215,19 +211,20 @@ InventoryHotkeyOn = 'home'
 InventoryHotkeyOff = 'home-up'
 PrintCamPosHotkey = 'f12'
 GlobalDialogColor = (
-    1, 1, 0.75, 1)
+ 1, 1, 0.75, 1)
 DefaultBackgroundColor = (
-    0.3, 0.3, 0.3, 1)
+ 0.3, 0.3, 0.3, 1)
 toonBodyScales = {
-    'mouse': 0.6,
-    'cat': 0.73,
-    'duck': 0.66,
-    'rabbit': 0.74,
-    'horse': 0.85,
-    'dog': 0.85,
-    'monkey': 0.68,
-    'bear': 0.85,
-    'pig': 0.77}
+  'mouse': 0.6,
+  'cat': 0.73,
+  'duck': 0.66,
+  'rabbit': 0.74,
+  'horse': 0.85,
+  'dog': 0.85,
+  'monkey': 0.68,
+  'bear': 0.85,
+  'pig': 0.77
+}
 toonHeadScales = {
     'mouse': Point3(1.0),
     'cat': Point3(1.0),
@@ -238,7 +235,10 @@ toonHeadScales = {
     'monkey': Point3(1.0),
     'bear': Point3(1.0),
     'pig': Point3(1.0)}
-legHeightDict = {'s': 1.5, 'm': 2.0, 'l': 2.75}
+legHeightDict = {
+    's': 1.5,
+    'm': 2.0,
+    'l': 2.75}
 torsoHeightDict = {
     's': 1.5,
     'm': 1.75,
@@ -296,8 +296,7 @@ NameShopPlay = 'Free Trial'
 NameShopOnlyPaid = 'Only paid users\nmay name their Toons.\nUntil you subscribe\nyour name will be\n'
 NameShopContinueSubmission = 'Continue Submission'
 NameShopChooseAnother = 'Choose Another Name'
-NameShopToonCouncil = 'The Toon Council\nwill review your\nname.  ' + \
-    'Review may\ntake a few days.\nWhile you wait\nyour name will be\n '
+NameShopToonCouncil = 'The Toon Council\nwill review your\nname.  ' + 'Review may\ntake a few days.\nWhile you wait\nyour name will be\n '
 PleaseTypeName = 'Please type your name:'
 AllNewNames = 'All new names\nmust be approved\nby the Toon Council.'
 NameShopNameRejected = 'The name you\nsubmitted has\nbeen rejected.'
@@ -307,18 +306,7 @@ PeriodOnlyAfterLetter = 'You can use a period in your name, but only after a let
 ApostropheOnlyAfterLetter = 'You can use an apostrophe in your name, but only after a letter.'
 NoNumbersInTheMiddle = 'Numeric digits may not appear in the middle of a word.'
 ThreeWordsOrLess = 'Your name must be three words or fewer.'
-CopyrightedNames = (
-    'mickey',
-    'mickey mouse',
-    'mickeymouse',
-    'minnie',
-    'minnie mouse',
-    'minniemouse',
-    'donald',
-    'donald duck',
-    'donaldduck',
-    'pluto',
-    'goofy')
+CopyrightedNames = ('mickey', 'mickey mouse', 'mickeymouse', 'minnie', 'minnie mouse', 'minniemouse', 'donald', 'donald duck', 'donaldduck', 'pluto', 'goofy')
 GuildUpdateMembersEvent = 'guildUpdateMembersEvent'
 GuildInvitationEvent = 'guildInvitationEvent'
 GuildAcceptInviteEvent = 'guildAcceptInviteEvent'

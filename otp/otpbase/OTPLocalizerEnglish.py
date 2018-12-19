@@ -1,7 +1,4 @@
 import string
-
-from pandac.PandaModules import TextProperties, TextPropertiesManager
-
 lTheBrrrgh = 'The Brrrgh'
 lDaisyGardens = 'Daisy Gardens'
 lDonaldsDock = "Donald's Dock"
@@ -82,6 +79,8 @@ ActivateChatTitle = 'True Friends Options'
 WhisperToFormat = 'To %s %s'
 WhisperToFormatName = 'To %s'
 WhisperFromFormatName = '%s whispers'
+from pandac.PandaModules import TextProperties
+from pandac.PandaModules import TextPropertiesManager
 shadow = TextProperties()
 shadow.setShadow(-0.025, -0.025)
 shadow.setShadowColor(0, 0, 0, 1)
@@ -175,17 +174,14 @@ CRBootedReasons = {
     151: 'You have been logged out by an administrator working on the servers.',
     152: "There has been a reported violation of our Terms of Use connected to '%(name)s'. For safety purposes, we have placed a temporary hold on the account. For more details, please review the message sent to the e-mail address associated with '%(name)s'.",
     153: 'The district you were playing on has been reset.  Everyone who was playing on that district has been disconnected.  However, you should be able to connect again and go right back into the game.',
-    154: 'The district you were playing on has been reset. However, you should be able to connect agan and go right back into the game',
     288: 'Sorry, you have used up all of your available minutes this month.',
-    349: 'Sorry, you have used up all of your available minutes this month.'}
+    349: 'Sorry, you have used up all of your available minutes this month.' }
 CRBootedReasonUnknownCode = 'An unexpected problem has occurred (error code %s).  Your connection has been lost, but you should be able to connect again and go right back into the game.'
 CRTryConnectAgain = '\n\nTry to connect again?'
 CRToontownUnavailable = 'The server appears to be temporarily unavailable, still trying...'
 CRToontownUnavailableCancel = lCancel
 CRNameCongratulations = 'CONGRATULATIONS!!'
 CRNameAccepted = 'Your name has been\napproved by the Toon Council.\n\nFrom this day forth\nyou will be named\n"%s"'
-CRMaintenanceCountdownMessage = 'Pirates Online Classic will be going down for maintenance in %d minutes.'
-CRMaintenanceMessage = 'Pirates Online Classic is now going down for maintenance.'
 CRServerConstantsProxyNoPort = 'Unable to contact %s.\n\nYou are communicating to the internet via a proxy, but your proxy does not permit connections on port %s.\n\nYou must open up this port, or disable your proxy, in order to play.  If your proxy has been provided by your ISP, you must contact your ISP to request them to open up this port.'
 CRServerConstantsProxyNoCONNECT = 'Unable to contact %s.\n\nYou are communicating to the internet via a proxy, but your proxy does not support the CONNECT method.\n\nYou must enable this capability, or disable your proxy, in order to play.  If your proxy has been provided by your ISP, you must contact your ISP to request them to enable this capability.'
 CRServerConstantsTryAgain = 'Unable to contact %s.\n\nThe account server might be temporarily down, or there might be some problem with your internet connection.\n\nTry again?'
@@ -374,9 +370,57 @@ IgnoreConfirmNewIgnore = 'You are ignoring %s.'
 IgnoreConfirmEndIgnore = 'You are no longer ignoring %s.'
 IgnoreConfirmRemoveIgnore = 'Stop ignoring %s?'
 EmoteList = [
-    'Wave', 'Happy', 'Sad', 'Angry', 'Sleepy', 'Shrug', 'Dance', 'Think', 'Bored', 'Applause', 'Cringe', 'Confused', 'Belly Flop', 'Bow', 'Banana Peel', 'Resistance Salute', 'Laugh', lYes, lNo, lOK, 'Surprise', 'Cry', 'Delighted', 'Furious', 'Laugh']
+    'Wave',
+    'Happy',
+    'Sad',
+    'Angry',
+    'Sleepy',
+    'Shrug',
+    'Dance',
+    'Think',
+    'Bored',
+    'Applause',
+    'Cringe',
+    'Confused',
+    'Belly Flop',
+    'Bow',
+    'Banana Peel',
+    'Resistance Salute',
+    'Laugh',
+    lYes,
+    lNo,
+    lOK,
+    'Surprise',
+    'Cry',
+    'Delighted',
+    'Furious',
+    'Laugh']
 EmoteWhispers = [
-    '%s waves.', '%s is happy.', '%s is sad.', '%s is angry.', '%s is sleepy.', '%s shrugs.', '%s dances.', '%s thinks.', '%s is bored.', '%s applauds.', '%s cringes.', '%s is confused.', '%s does a belly flop.', '%s bows to you.', '%s slips on a banana peel.', '%s gives the resistance salute.', '%s laughs.', "%s says '" + lYes + "'.", "%s says '" + lNo + "'.", "%s says '" + lOK + "'.", '%s is surprised.', '%s is crying.', '%s is delighted.', '%s is furious.', '%s is laughing.']
+    '%s waves.',
+    '%s is happy.',
+    '%s is sad.',
+    '%s is angry.',
+    '%s is sleepy.',
+    '%s shrugs.',
+    '%s dances.',
+    '%s thinks.',
+    '%s is bored.',
+    '%s applauds.',
+    '%s cringes.',
+    '%s is confused.',
+    '%s does a belly flop.',
+    '%s bows to you.',
+    '%s slips on a banana peel.',
+    '%s gives the resistance salute.',
+    '%s laughs.',
+    "%s says '" + lYes + "'.",
+    "%s says '" + lNo + "'.",
+    "%s says '" + lOK + "'.",
+    '%s is surprised.',
+    '%s is crying.',
+    '%s is delighted.',
+    '%s is furious.',
+    '%s is laughing.']
 EmoteFuncDict = {
     'Wave': 0,
     'Happy': 1,
@@ -404,9 +448,12 @@ EmoteFuncDict = {
     'Furious': 23,
     'Laugh': 24}
 SuitBrushOffs = {
-    'f': ["I'm late for a meeting."],
-    'p': ['Push off.'],
-    'ym': ['Yes Man says NO.'],
+    'f': [
+        "I'm late for a meeting."],
+    'p': [
+        'Push off.'],
+    'ym': [
+        'Yes Man says NO.'],
     None: [
         "It's my day off.",
         "I believe you're in the wrong office.",
@@ -880,8 +927,7 @@ SpeedChatStaticText = {
     807: "Sorry, I can't.",
     808: "I couldn't wait any longer.",
     809: "I can't understand you.",
-    810: 'Use the %s.' %
-    GlobalSpeedChatName,
+    810: 'Use the %s.' % GlobalSpeedChatName,
     811: "Sorry, I'm busy fishing!",
     812: "Sorry, I'm in a building!",
     813: "Sorry, I'm helping a friend!",
@@ -918,25 +964,16 @@ SpeedChatStaticText = {
     1017: "Let's catch the next one.",
     1100: "Let's go on the trolley!",
     1101: "Let's go back to the playground!",
-    1102: "Let's go fight the %s!" %
-    Cogs,
-    1103: "Let's go take over a %s building!" %
-    Cog,
+    1102: "Let's go fight the %s!" % Cogs,
+    1103: "Let's go take over a %s building!" % Cog,
     1104: "Let's go in the elevator!",
-    1105: "Let's go to %s!" %
-    lToontownCentral,
-    1106: "Let's go to %s!" %
-    lDonaldsDock,
-    1107: "Let's go to %s!" %
-    lMinniesMelodyland,
-    1108: "Let's go to %s!" %
-    lDaisyGardens,
-    1109: "Let's go to %s!" %
-    lTheBrrrgh,
-    1110: "Let's go to %s!" %
-    lDonaldsDreamland,
-    1111: "Let's go to %s!" %
-    lGoofySpeedway,
+    1105: "Let's go to %s!" % lToontownCentral,
+    1106: "Let's go to %s!" % lDonaldsDock,
+    1107: "Let's go to %s!" % lMinniesMelodyland,
+    1108: "Let's go to %s!" % lDaisyGardens,
+    1109: "Let's go to %s!" % lTheBrrrgh,
+    1110: "Let's go to %s!" % lDonaldsDreamland,
+    1111: "Let's go to %s!" % lGoofySpeedway,
     1112: "Let's go to my house!",
     1113: "Let's go to your house!",
     1114: "Let's go to Sellbot HQ!",
@@ -950,10 +987,8 @@ SpeedChatStaticText = {
     1122: "Let's go to Lawbot HQ!",
     1123: "Let's go fight the Chief Justice!",
     1124: "Let's go in the District Attorney's Office!",
-    1125: "Let's go to %s!" %
-    lOutdoorZone,
-    1126: "Let's go to %s!" %
-    lGolfZone,
+    1125: "Let's go to %s!" % lOutdoorZone,
+    1126: "Let's go to %s!" % lGolfZone,
     1127: "Let's go to Bossbot HQ!",
     1128: "Let's go fight the CEO!",
     1129: "Let's go in the Cog Golf Courses!",
@@ -1650,30 +1685,31 @@ SpeedChatStaticText = {
     50103: 'Walk the plank!',
     50104: 'Dead men tell no tales....',
     50105: 'Shiver me timbers!',
+    50106: "Salty as a Kraken's kiss.",
     50700: 'Ahoy!',
-    50701: 'Ahoy, matey!',
+    50701: 'Ahoy, mate!',
     50702: 'Yo-Ho-Ho',
     50703: 'Avast!',
     50704: 'Hey Bucko.',
     50800: 'Until next time.',
-    50801: 'May fair winds find you.',
+    50801: 'May fair winds find ye.',
     50802: 'Godspeed.',
-    50900: 'How are ya, matey?',
+    50900: 'How are ye, mate?',
     50901: '',
-    51000: "It's like the sky is raining gold doubloons!",
-    51001: '',
-    51100: "I've been sailing some rough waters this day.",
-    51200: 'My apologies, mate.',
+    51000: "It's like the sky be raining gold doubloons!",
+    51001: 'May a stiff wind be at our backs, the sun on our faces and our cannons fire true!',
+    51100: 'I be sailing some rough waters today.',
+    51200: 'Me apologies, mate.',
     51201: 'Sorry.',
     51202: 'Sorry, I was busy before.',
     51203: 'Sorry, I already have plans.',
     51204: "Sorry, I don't need to do that.",
     51300: 'Attack the weakest one!',
     51301: 'Attack the strongest one!',
-    51302: 'Attack my target!',
-    51303: 'I need help!',
+    51302: 'Attack me target!',
+    51303: 'I be needing help!',
     51304: "I can't do any damage!",
-    51305: "I think we're in trouble.",
+    51305: 'I think we be in trouble.',
     51306: 'Surround the most powerful one.',
     51307: 'We should retreat.',
     51308: 'Run for it!',
@@ -1685,20 +1721,20 @@ SpeedChatStaticText = {
     51405: 'Broadside! Take Cover!',
     51406: 'To the Cannons!',
     51407: 'Open fire!',
-    51408: 'Hold your fire!',
+    51408: 'Hold yer fire!',
     51409: 'Aim for the masts!',
     51410: 'Aim for the hull!',
     51411: 'Prepare to board!',
     51412: "She's coming about.",
     51413: 'Ramming speed!',
     51414: "We've got her on the run.",
-    51415: "We're taking on water.",
-    51416: "We can't take anymore.",
+    51415: 'We be taking on water!',
+    51416: "We can't take anymore!",
     51417: "I don't have a shot!",
     51418: "Let's find port for repair.",
     51419: 'Man overboard!',
     51420: 'Enemy spotted.',
-    51421: 'Handsomely now, men!',
+    51421: 'Handsomely now, mates!',
     50400: "Let's set sail.",
     50401: "Let's get out of here.",
     51500: "Let's sail to Port Royal.",
@@ -1716,25 +1752,28 @@ SpeedChatStaticText = {
     51512: "Let's sail to Isla Cangrejos.",
     51600: "Let's head into town.",
     51601: "Let's go to the docks.",
-    51602: "Let's go to the bar.",
+    51602: "Let's head to the tavern.",
     51800: "Let's go to Fort Charles.",
     51801: "Let's go to the Governor's Mansion.",
-    52500: 'Where am I?',
-    51700: "You're already there.",
+    52500: 'Where be I, mate?',
+    51700: 'Yer already there.',
     51701: "I don't know.",
-    51702: "You're on the wrong island.",
+    51702: 'Yer on the wrong island.',
     51703: "That's in town.",
     51704: 'Look just outside of town.',
-    51705: "You'll have to search through the jungle.",
+    51705: 'Ye will have to search through the jungle.',
     51706: 'Deeper inland.',
-    51707: "Oh, that's by the coast.",
+    51707: 'Oh, that be by the coast.',
     50200: 'Bilge rat!',
-    50201: 'Ye scurvy dog!',
-    50202: "See ye in Davy Jones's locker!",
+    50201: 'Scurvy dog!',
+    50202: 'See ye in Davy Jones locker!',
     50203: 'Scoundrel!',
-    50204: 'Land lover!',
+    50204: 'Landlubber!',
     50205: 'Addle-minded fool!',
-    50300: "Nice shootin' matey!",
+    50206: 'You need a sharp sword and sharper wits.',
+    50207: 'Ye be one doubloon short of a full hull mate!',
+    50208: "Watch yer tongue or I'll pickle it with sea salt!",
+    50300: 'Fine shooting mate!',
     50301: 'A well placed blow!',
     50302: 'Nice shot!',
     50303: 'Well met!',
@@ -1742,24 +1781,24 @@ SpeedChatStaticText = {
     50305: 'Yer not so bad yerself!',
     50306: 'A fine plunder haul!',
     52400: 'May luck be my lady.',
-    52401: 'I think these cards are marked!',
+    52401: 'I think these cards be marked!',
     52402: 'Blimey cheater!',
     51900: "That's a terrible flop!",
-    51901: 'Trying to buy the hand, are you?',
-    51902: "You're bluffing.",
-    51903: "I don't think you had it.",
+    51901: 'Trying to buy the hand, are ye?',
+    51902: 'Ye be bluffing.',
+    51903: "I don't think ye had it.",
     51904: 'Saved by the river.',
     52600: 'Hit me.',
     52601: 'Can I get another dealer?',
     52100: 'Want to group up?',
-    52101: 'Join my crew?',
+    52101: 'Join me crew?',
     52200: 'Fight some skeletons?',
     52201: 'Fight some crabs?',
-    52300: 'How about a game of Mayhem?',
-    52301: 'Join my Mayhem game.',
+    52300: "How 'bout a game of Mayhem?",
+    52301: 'Join me Mayhem game.',
     52302: 'Want to start a Mayhem game?',
     52303: 'Want to start a team battle game?',
-    52304: 'Join my team battle game.',
+    52304: 'Join me team battle game.',
     52000: '',
     52000: '',
     52700: '',
@@ -1859,53 +1898,8 @@ Emote_CombatDenied = 'Cannot emote while in combat.'
 Emote_CannonDenied = 'Cannot emote while using a cannon.'
 Emote_SwimDenied = 'Cannot emote while swimming.'
 Emote_ParlorGameDenied = 'Cannot emote while playing a parlor game.'
-Emotes = (
-    60505,
-    60506,
-    60509,
-    60510,
-    60511,
-    60516,
-    60519,
-    60520,
-    60521,
-    60522,
-    60523,
-    60524,
-    60525,
-    60526,
-    60527,
-    60528,
-    60529,
-    60530,
-    60602,
-    60668,
-    60614,
-    60622,
-    60640,
-    60644,
-    60652,
-    60657,
-    60664,
-    60665,
-    60666,
-    60669,
-    60612,
-    60661,
-    60645,
-    60629,
-    60641,
-    60654,
-    60630,
-    60670,
-    60633,
-    60676,
-    60677,
-    65000,
-    65001,
-    60517)
-SCFactoryMeetMenuIndexes = (
-    1903, 1904, 1906, 1907, 1908, 1910, 1913, 1915, 1916, 1917, 1919, 1922, 1923, 1924, 1932, 1940, 1941)
+Emotes = (60505, 60506, 60509, 60510, 60511, 60516, 60519, 60520, 60521, 60522, 60523, 60524, 60525, 60526, 60527, 60528, 60529, 60530, 60602, 60668, 60614, 60622, 60640, 60644, 60652, 60657, 60664, 60665, 60666, 60669, 60612, 60661, 60645, 60629, 60641, 60654, 60630, 60670, 60633, 60676, 60677, 65000, 65001, 60517)
+SCFactoryMeetMenuIndexes = (1903, 1904, 1906, 1907, 1908, 1910, 1913, 1915, 1916, 1917, 1919, 1922, 1923, 1924, 1932, 1940, 1941)
 CustomSCStrings = {
     10: 'Oh, well.',
     20: 'Why not?',
@@ -2324,42 +2318,40 @@ CustomSCStrings = {
     14009: 'Your Estate rocks!',
     14010: 'Your Garden is cool!',
     14011: 'Your Estate is cool!'}
-SCMenuCommonCogIndices = (
-    20000, 20004)
+SCMenuCommonCogIndices = (20000, 20004)
 SCMenuCustomCogIndices = {
-    'bf': (
-        20005, 20014), 'nc': (
-            20015, 20024), 'ym': (
-                20025, 20035), 'ms': (
-                    20036, 20046), 'bc': (
-                        20047, 20057), 'cc': (
-                            20058, 20070), 'nd': (
-                                20071, 20080), 'ac': (
-                                    20081, 20092), 'tf': (
-                                        20093, 20103), 'hh': (
-                                            20104, 20114), 'le': (
-                                                20115, 20124), 'bs': (
-                                                    20125, 20135), 'cr': (
-                                                        20136, 20145), 'tbc': (
-                                                            20146, 20156), 'ds': (
-                                                                20157, 20164), 'gh': (
-                                                                    20165, 20177), 'pp': (
-                                                                        20178, 20187), 'b': (
-                                                                            20188, 20199), 'f': (
-                                                                                20200, 20210), 'mm': (
-                                                                                    20211, 20224), 'tw': (
-                                                                                        20225, 20235), 'mb': (
-                                                                                            20236, 20245), 'm': (
-                                                                                                20246, 20254), 'mh': (
-                                                                                                    20255, 20266), 'dt': (
-                                                                                                        20267, 20276), 'p': (
-                                                                                                            20277, 20287), 'tm': (
-                                                                                                                20288, 20298), 'bw': (
-                                                                                                                    20299, 20308), 'ls': (
-                                                                                                                        20309, 20319), 'rb': (
-                                                                                                                            20320, 20329), 'sc': (
-                                                                                                                                20330, 20331), 'sd': (
-                                                                                                                                    20341, 20350)}
+    'bf': (20005, 20014),
+    'nc': (20015, 20024),
+    'ym': (20025, 20035),
+    'ms': (20036, 20046),
+    'bc': (20047, 20057),
+    'cc': (20058, 20070),
+    'nd': (20071, 20080),
+    'ac': (20081, 20092),
+    'tf': (20093, 20103),
+    'hh': (20104, 20114),
+    'le': (20115, 20124),
+    'bs': (20125, 20135),
+    'cr': (20136, 20145),
+    'tbc': (20146, 20156),
+    'ds': (20157, 20164),
+    'gh': (20165, 20177),
+    'pp': (20178, 20187),
+    'b': (20188, 20199),
+    'f': (20200, 20210),
+    'mm': (20211, 20224),
+    'tw': (20225, 20235),
+    'mb': (20236, 20245),
+    'm': (20246, 20254),
+    'mh': (20255, 20266),
+    'dt': (20267, 20276),
+    'p': (20277, 20287),
+    'tm': (20288, 20298),
+    'bw': (20299, 20308),
+    'ls': (20309, 20319),
+    'rb': (20320, 20329),
+    'sc': (20330, 20331),
+    'sd': (20341, 20350)}
 PSCMenuExpressions = 'EXPRESSIONS'
 PSCMenuGreetings = 'GREETINGS'
 PSCMenuGoodbyes = 'GOODBYES'
@@ -2389,6 +2381,7 @@ PSCMenuInvitations = 'INVITATIONS'
 PSCMenuVersusPlayer = 'VERSUS'
 PSCMenuHunting = 'HUNTING'
 PSCMenuQuests = 'QUESTS'
+PSCMenuGM = 'GM'
 PSCMenuShips = 'SHIPS'
 PSCMenuAdventures = 'ADVENTURE'
 GWSCMenuHello = 'GREETINGS'
@@ -2408,8 +2401,7 @@ NameShopPlay = 'Free Trial'
 NameShopOnlyPaid = 'Only paid users\nmay name their Toons.\nUntil you subscribe\nyour name will be\n'
 NameShopContinueSubmission = 'Continue Submission'
 NameShopChooseAnother = 'Choose Another Name'
-NameShopToonCouncil = 'The Toon Council\nwill review your\nname.  ' + \
-    'Review may\ntake a few days.\nWhile you wait\nyour name will be\n '
+NameShopToonCouncil = 'The Toon Council\nwill review your\nname.  ' + 'Review may\ntake a few days.\nWhile you wait\nyour name will be\n '
 PleaseTypeName = 'Please type your name:'
 AllNewNames = 'All new names\nmust be approved\nby the Name Council.'
 NameShopNameRejected = 'The name you\nsubmitted has\nbeen rejected.'
@@ -2419,18 +2411,7 @@ PeriodOnlyAfterLetter = 'You can use a period in your name, but only after a let
 ApostropheOnlyAfterLetter = 'You can use an apostrophe in your name, but only after a letter.'
 NoNumbersInTheMiddle = 'Numeric digits may not appear in the middle of a word.'
 ThreeWordsOrLess = 'Your name must be three words or fewer.'
-CopyrightedNames = (
-    'mickey',
-    'mickey mouse',
-    'mickeymouse',
-    'minnie',
-    'minnie mouse',
-    'minniemouse',
-    'donald',
-    'donald duck',
-    'donaldduck',
-    'pluto',
-    'goofy')
+CopyrightedNames = ('mickey', 'mickey mouse', 'mickeymouse', 'minnie', 'minnie mouse', 'minniemouse', 'donald', 'donald duck', 'donaldduck', 'pluto', 'goofy')
 NCTooShort = 'That name is too short.'
 NCNoDigits = 'Your name cannot contain numbers.'
 NCNeedLetters = 'Each word in your name must contain some letters.'
@@ -2479,11 +2460,20 @@ TeleportPanelUnavailableHood = '%s is not available right now; try again later.'
 TeleportPanelDenySelf = "You can't go to yourself!"
 TeleportPanelOtherShard = "%(avName)s is in district %(shardName)s, and you're in district %(myShardName)s.  Do you want to switch to %(shardName)s?"
 KartRacingMenuSections = [
-    -1, 'PLACES', 'RACES', 'TRACKS', 'COMPLIMENTS', 'TAUNTS']
+    -1,
+    'PLACES',
+    'RACES',
+    'TRACKS',
+    'COMPLIMENTS',
+    'TAUNTS']
 GolfMenuSections = [
-    -1, 'COURSES', 'TIPS', 'COMMENTS']
+    -1,
+    'COURSES',
+    'TIPS',
+    'COMMENTS']
 WhiteListMenu = [
-    -1, 'WHITELIST']
+    -1,
+    'WHITELIST']
 TTAccountCallCustomerService = 'Please call Customer Service at %s.'
 TTAccountCustomerServiceHelp = '\nIf you need help, please call Customer Service at %s.'
 TTAccountIntractibleError = 'An error occurred.'
