@@ -1,34 +1,43 @@
-import bz2
-import os
-import random
-import string
 import sys
+import os
 import time
-
-from direct.directnotify.DirectNotifyGlobal import *
+import string
+import bz2
+import random
+from direct.showbase.MessengerGlobal import *
 from direct.showbase.DirectObject import DirectObject
 from direct.showbase.EventManagerGlobal import *
-from direct.showbase.MessengerGlobal import *
-from direct.task.Task import Task
 from direct.task.TaskManagerGlobal import *
+from direct.task.Task import Task
+from direct.directnotify.DirectNotifyGlobal import *
+from pandac.PandaModules import *
 from otp.launcher.LauncherBase import LauncherBase
-from panda3d.core import *
 from pirates.piratesbase import PLocalizer
-
 
 class PiratesQuickLauncher(LauncherBase):
     GameName = 'Pirates'
     ArgCount = 3
     LauncherPhases = [
-     1, 2, 3, 4, 5, 6]
-    TmpOverallMap = [0.16, 0.16, 0.16, 0.16, 0.16, 0.2]
+        1,
+        2,
+        3,
+        4,
+        5,
+        6]
+    TmpOverallMap = [
+        0.16,
+        0.16,
+        0.16,
+        0.16,
+        0.16,
+        0.2]
     ForegroundSleepTime = 0.001
     Localizer = PLocalizer
     DecompressMultifiles = True
     launcherFileDbFilename = '%s?%s' % (os.environ.get('GAME_PATCHER_FILE_OPTIONS', 'patcher.ver'), random.randint(1, 1000000000))
     CompressionExt = 'bz2'
     PatchExt = 'pch'
-
+    
     def __init__(self):
         print 'Running: PiratesQuickLauncher'
         self.heavyDownloadServerList = []
@@ -42,8 +51,7 @@ class PiratesQuickLauncher(LauncherBase):
         self.showPhase = -1
         self.maybeStartGame()
         self.mainLoop()
-        return
-
+    
     def addDownloadVersion(self, serverFilePath):
         if self.heavyDownloadServer:
             url = URLSpec(self.heavyDownloadServer)
@@ -65,21 +73,19 @@ class PiratesQuickLauncher(LauncherBase):
                 key = line[:equalIndex]
                 value = line[equalIndex + 1:]
                 settings[key] = value
-
+        
         self.requiredInstallFiles = []
         if sys.platform == 'win32':
             fileList = settings['REQUIRED_INSTALL_FILES']
+        elif sys.platform == 'darwin':
+            fileList = settings['REQUIRED_INSTALL_FILES_OSX']
+        elif sys.platform == 'linux2':
+            fileList = settings['REQUIRED_INSTALL_FILES_LINUX']
         else:
-            if sys.platform == 'darwin':
-                fileList = settings['REQUIRED_INSTALL_FILES_OSX']
-            else:
-                if sys.platform == 'linux2':
-                    fileList = settings['REQUIRED_INSTALL_FILES_LINUX']
-                else:
-                    self.notify.warning('Unknown sys.platform: %s' % sys.platform)
-                    fileList = settings['REQUIRED_INSTALL_FILES']
+            self.notify.warning('Unknown sys.platform: %s' % sys.platform)
+            fileList = settings['REQUIRED_INSTALL_FILES']
         for fileDesc in fileList.split():
-            fileName, flag = fileDesc.split(':')
+            (fileName, flag) = fileDesc.split(':')
             directions = BitMask32(flag)
             extract = directions.getBit(0)
             requiredByLauncher = directions.getBit(1)
@@ -87,21 +93,21 @@ class PiratesQuickLauncher(LauncherBase):
             self.notify.info('fileName: %s, flag:=%s directions=%s, extract=%s required=%s optDownload=%s' % (fileName, flag, directions, extract, requiredByLauncher, optionalDownload))
             if not optionalDownload:
                 self.requiredInstallFiles.append(fileName)
-
+        
         self.notify.info('requiredInstallFiles: %s' % self.requiredInstallFiles)
         self.mfDetails = {}
         for mfName in self.requiredInstallFiles:
             currentVer = settings['FILE_%s.current' % mfName]
             details = settings['FILE_%s.%s' % (mfName, currentVer)]
-            size, hash = details.split()
+            (size, hash) = details.split()
             self.mfDetails[mfName] = (currentVer, int(size), hash)
             self.notify.info('mfDetails[%s] = %s' % (mfName, self.mfDetails[mfName]))
-
+        
         heavyDownloadServerString = settings['PATCHER_BASE_URL_HEAVY_LIFTING']
         for name in string.split(heavyDownloadServerString, ';'):
             url = URLSpec(name, 1)
             self.heavyDownloadServerList.append(url)
-
+        
         self.getNextHeavyDownloadServer()
         self.resumeInstall()
 
@@ -110,18 +116,19 @@ class PiratesQuickLauncher(LauncherBase):
             return self.getNextHeavyDownloadServer()
         else:
             return LauncherBase.getNextDownloadServer(self)
-
+    
     def getNextHeavyDownloadServer(self):
         if not self.heavyDownloadServerList:
             self.notify.warning('No more heavy download servers')
             self.heavyDownloadServer = None
             return 0
+        
         self.heavyDownloadServer = self.heavyDownloadServerList.pop(0)
         self.notify.info('Using heavy download server %s.' % self.heavyDownloadServer.cStr())
         return 1
-
+    
     def resumeMultifileDownload(self):
-        curVer, expectedSize, expectedMd5 = self.mfDetails[self.currentMfname]
+        (curVer, expectedSize, expectedMd5) = self.mfDetails[self.currentMfname]
         localFilename = Filename(self.topDir, Filename('_%s.%s.%s' % (self.currentMfname, curVer, self.CompressionExt)))
         serverFilename = '%s%s.%s.%s' % (self.contentDir, self.currentMfname, curVer, self.CompressionExt)
         if localFilename.exists():
@@ -130,13 +137,13 @@ class PiratesQuickLauncher(LauncherBase):
             self.downloadMultifile(serverFilename, localFilename, self.currentMfname, self.downloadMultifileDone, 0, fileSize, self.downloadMultifileWriteToDisk)
         else:
             self.downloadMultifile(serverFilename, localFilename, self.currentMfname, self.downloadMultifileDone, 0, 0, self.downloadMultifileWriteToDisk)
-
+    
     def resumeInstall(self):
         while self.requiredInstallFiles:
             self.currentMfname = self.requiredInstallFiles.pop(0)
             self.currentPhaseName = self.Localizer.LauncherPhaseNames[self.currentPhase]
             self.notify.info('currentMfname: %s currentPhase: %s currentPhaseIndex: %s' % (self.currentMfname, self.currentPhase, self.currentPhaseIndex))
-            curVer, expectedSize, expectedMd5 = self.mfDetails[self.currentMfname]
+            (curVer, expectedSize, expectedMd5) = self.mfDetails[self.currentMfname]
             self.curPhaseFile = Filename(self.topDir, Filename(self.currentMfname))
             self.notify.info('working on: %s' % self.curPhaseFile)
             if self.curPhaseFile.exists():
@@ -159,29 +166,32 @@ class PiratesQuickLauncher(LauncherBase):
                 return
             self.currentPhase += 1
             self.currentPhaseIndex += 1
-
         if not self.requiredInstallFiles:
             self.notify.info('ALL PHASES COMPLETE')
             messenger.send('launcherAllPhasesComplete')
             self.cleanup()
             return
+        
         raise StandardError, 'Some phases not listed in LauncherPhases: %s' % self.requiredInstallFiles
 
     def getDecompressMultifile(self, mfname):
         if not self.DecompressMultifiles:
             self.decompressMultifileDone()
-        else:
+        elif 1:
             self.notify.info('decompressMultifile: Decompressing multifile: ' + mfname)
-            (curVer, expectedSize,expectedMd5) = self.mfDetails[self.currentMfname]
+            (curVer, expectedSize, expectedMd5) = self.mfDetails[self.currentMfname]
             localFilename = Filename(self.topDir, Filename('_%s.%s.%s' % (mfname, curVer, self.CompressionExt)))
             self.decompressMultifile(mfname, localFilename, self.decompressMultifileDone)
-
-        self.notify.info('decompressMultifile: Multifile already decompressed: %s' % mfname)
-        self.decompressMultifileDone()
-
+        else:
+            self.notify.info('decompressMultifile: Multifile already decompressed: %s' % mfname)
+            self.decompressMultifileDone()
+    
     def decompressMultifile(self, mfname, localFilename, callback):
         self.notify.info('decompressMultifile: request: ' + localFilename.cStr())
-        self.launcherMessage(self.Localizer.LauncherDecompressingFile % {'name': self.currentPhaseName, 'current': self.currentPhaseIndex, 'total': self.numPhases})
+        self.launcherMessage(self.Localizer.LauncherDecompressingFile % {
+            'name': self.currentPhaseName,
+            'current': self.currentPhaseIndex,
+            'total': self.numPhases})
         task = Task(self.decompressMultifileTask)
         task.mfname = mfname
         task.mfFilename = Filename(self.topDir, Filename('_' + task.mfname))
@@ -201,12 +211,17 @@ class PiratesQuickLauncher(LauncherBase):
             if now - task.lastUpdate >= self.UserUpdateDelay:
                 task.lastUpdate = now
                 curSize = task.mfFilename.getFileSize()
-                curVer, expectedSize, expectedMd5 = self.mfDetails[self.currentMfname]
+                (curVer, expectedSize, expectedMd5) = self.mfDetails[self.currentMfname]
                 progress = curSize / float(expectedSize)
-                self.launcherMessage(self.Localizer.LauncherDecompressingPercent % {'name': self.currentPhaseName, 'current': self.currentPhaseIndex, 'total': self.numPhases, 'percent': int(round(progress * 100))})
+                self.launcherMessage(self.Localizer.LauncherDecompressingPercent % {
+                    'name': self.currentPhaseName,
+                    'current': self.currentPhaseIndex,
+                    'total': self.numPhases,
+                    'percent': int(round(progress * 100))})
                 percentProgress = int(round(progress * self.decompressPercentage))
                 totalPercent = self.downloadPercentage + percentProgress
                 self.setPercentPhaseComplete(self.currentPhase, totalPercent)
+            
             self.foregroundSleep()
             return Task.cont
         else:
@@ -215,21 +230,28 @@ class PiratesQuickLauncher(LauncherBase):
             unlinked = task.localFilename.unlink()
             if not unlinked:
                 self.notify.warning('unlink failed on file: %s' % task.localFilename.cStr())
+            
             realMf = Filename(self.topDir, Filename(self.currentMfname))
             renamed = task.mfFilename.renameTo(realMf)
             if not renamed:
                 self.notify.warning('rename failed on file: %s' % task.mfFilename.cStr())
-            self.launcherMessage(self.Localizer.LauncherDecompressingPercent % {'name': self.currentPhaseName, 'current': self.currentPhaseIndex, 'total': self.numPhases, 'percent': 100})
+            
+            self.launcherMessage(self.Localizer.LauncherDecompressingPercent % {
+                'name': self.currentPhaseName,
+                'current': self.currentPhaseIndex,
+                'total': self.numPhases,
+                'percent': 100})
             totalPercent = self.downloadPercentage + self.decompressPercentage
             self.setPercentPhaseComplete(self.currentPhase, totalPercent)
             self.notify.info('decompressMultifileTask: Decompress multifile done: ' + task.localFilename.cStr())
             if self.dldb:
                 self.dldb.setClientMultifileDecompressed(task.mfname)
+            
             del task.decompressor
             task.callback()
             del task.callback
             return Task.done
-
+    
     def decompressMultifileDone(self):
         self.finalizePhase()
         self.notify.info('Done updating multifiles in phase: %s' % self.currentPhase)
@@ -238,7 +260,7 @@ class PiratesQuickLauncher(LauncherBase):
         self.currentPhase += 1
         self.currentPhaseIndex += 1
         self.resumeInstall()
-
+    
     def finalizePhase(self):
         mfFilename = Filename(self.topDir, Filename(self.currentMfname))
         self.MakeNTFSFilesGlobalWriteable(mfFilename)
@@ -247,12 +269,12 @@ class PiratesQuickLauncher(LauncherBase):
         self.setPercentPhaseComplete(self.currentPhase, 100)
         messenger.send('phaseComplete-%s' % self.currentPhase)
 
-    def getValue(self, key, default=None):
+    def getValue(self, key, default = None):
         return os.environ.get(key, default)
 
     def setValue(self, key, value):
         os.environ[key] = str(value)
-
+    
     def getVerifyFiles(self):
         return config.GetInt('launcher-verify', 0)
 
@@ -261,10 +283,10 @@ class PiratesQuickLauncher(LauncherBase):
 
     def getGameServer(self):
         return self.getValue('GAME_SERVER', '')
-
+    
     def getLogFileName(self):
         return 'pirates'
-
+    
     def getCDDownloadPath(self, origPath, serverFilePath):
         return '%s/%s/CD_%d/%s' % (origPath, self.ServerVersion, self.fromCD, serverFilePath)
 
@@ -275,7 +297,7 @@ class PiratesQuickLauncher(LauncherBase):
         return serverHash.setFromDec(hashStr)
 
     def getAccountServer(self):
-        return
+        return None
 
     def getNeedPwForSecretKey(self):
         return 0
@@ -289,3 +311,5 @@ class PiratesQuickLauncher(LauncherBase):
     def startGame(self):
         eventMgr.restart()
         from pirates.piratesbase import PiratesStart
+
+

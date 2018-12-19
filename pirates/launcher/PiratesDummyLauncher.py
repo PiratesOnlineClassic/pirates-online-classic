@@ -1,14 +1,10 @@
-import os
-
 from otp.launcher.DummyLauncherBase import DummyLauncherBase
-from pandac.PandaModules import loadPrcFileData
 from pirates.launcher.PiratesQuickLauncher import PiratesQuickLauncher
-
+from pandac.PandaModules import loadPrcFileData
 loadPrcFileData('force-offscreen', 'window-type none')
 
-
 class PiratesDummyLauncher(DummyLauncherBase, PiratesQuickLauncher):
-
+    
     def __init__(self):
         DummyLauncherBase.__init__(self)
         self.setPhaseComplete(1, 100)
@@ -16,8 +12,4 @@ class PiratesDummyLauncher(DummyLauncherBase, PiratesQuickLauncher):
         self.firstPhase = 3
         self.startFakeDownload()
 
-    def getPlayToken(self):
-        return os.environ.get('POC_TOKEN', None)
 
-    def getGameServer(self):
-        return os.environ.get('POC_GAMESERVER', None)
