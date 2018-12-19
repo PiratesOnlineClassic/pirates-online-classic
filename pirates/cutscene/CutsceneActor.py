@@ -1,38 +1,42 @@
-import random
-
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
 from direct.actor.Actor import Actor
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import ScratchPad
 from direct.task import Task
-from panda3d.core import *
-from pirates.effects.Explosion import Explosion
-from pirates.effects.JollySoulDrain import JollySoulDrain
-from pirates.effects.JRSpawnEffect import JRSpawnEffect
-from pirates.effects.JRTeleportEffect import JRTeleportEffect
-from pirates.effects.ShipSinkSplashes import ShipSinkSplashes
-from pirates.effects.SpectralSmoke import SpectralSmoke
-from pirates.effects.VoodooAura import VoodooAura
-from pirates.effects.VoodooFire import VoodooFire
-from pirates.effects.WaterMist import WaterMist
-from pirates.effects.WaterSplashes import WaterSplashes
-from pirates.effects.WaterWakes import WaterWakes
 from pirates.leveleditor import NPCList
-from pirates.npc.Cast import (CaptBarbossa, ElizabethSwan, JackSparrow,
-                              JollyRoger, JoshGibbs, TiaDalma, WillTurner)
-from pirates.npc.Skeleton import Skeleton
 from pirates.pirate.Human import Human
-from pirates.pirate.HumanDNA import HumanDNA
 from pirates.pirate.Pirate import Pirate
-from pirates.piratesbase import PiratesGlobals
+from pirates.pirate.HumanDNA import HumanDNA
+from pirates.npc.Cast import JollyRoger
+from pirates.npc.Cast import JackSparrow
+from pirates.npc.Cast import WillTurner
+from pirates.npc.Cast import ElizabethSwan
+from pirates.npc.Cast import CaptBarbossa
+from pirates.npc.Cast import TiaDalma
+from pirates.npc.Cast import JoshGibbs
+from pirates.npc.Skeleton import Skeleton
+from pirates.shipparts import HullDNA
 from pirates.ship import ShipGlobals
 from pirates.ship.ShipModel import ShipModel
-from pirates.shipparts import HullDNA
+from pirates.piratesbase import PiratesGlobals
+from pirates.effects.SpectralSmoke import SpectralSmoke
+from pirates.effects.VoodooAura import VoodooAura
+from pirates.effects.JollySoulDrain import JollySoulDrain
+from pirates.effects.VoodooFire import VoodooFire
+from pirates.effects.JRTeleportEffect import JRTeleportEffect
+from pirates.effects.JRSpawnEffect import JRSpawnEffect
+from pirates.effects.ShipSinkSplashes import ShipSinkSplashes
+from pirates.effects.Explosion import Explosion
 from pirates.uberdog.UberDogGlobals import InventoryType
+from pirates.effects.WaterSplashes import WaterSplashes
+from pirates.effects.WaterWakes import WaterWakes
+from pirates.effects.WaterMist import WaterMist
+import random
 
 class CutsceneActor:
     notify = directNotify.newCategory('CutsceneActor')
-
+    
     def __init__(self, cutsceneDesc):
         self._cutsceneName = cutsceneDesc.filename
         self._csComponents = cutsceneDesc.components
@@ -46,7 +50,8 @@ class CutsceneActor:
     def handleModelHiding(self):
         self.modelLoaded = None
         if 'localAvatar' in __builtins__:
-            base.cr.uidMgr.addUidCallback(self.Uid, self.foundIt, timeout=0)
+            base.cr.uidMgr.addUidCallback(self.Uid, self.foundIt, timeout = 0)
+        
         if self.modelLoaded:
             self.modelLoaded.stash()
 
@@ -60,15 +65,16 @@ class CutsceneActor:
             if self.modelLoaded.isDeleted():
                 self.notify.debug('Warning:Cast Deleted Already')
                 self.modelLoaded = None
-
+    
     def destroy(self):
         if self.fader:
             self.fader.finish()
             self.fader = None
+        
         for animName in self.animFileNames:
             self.notify.debug('unloading cs anim file: %s' % animName)
             loader.unloadModel(animName)
-
+        
         del self._cutsceneName
         del self._csComponents
         if self.Uid and self.modelLoaded:
@@ -77,7 +83,7 @@ class CutsceneActor:
     @staticmethod
     def getActorKey(actorName):
         self.notify.error('derived must implement')
-
+    
     def getThisActorKey(self):
         return self.getActorKey()
 
@@ -85,15 +91,14 @@ class CutsceneActor:
         names = []
         for component in self._csComponents:
             names.append(self._cutsceneName + component)
-
+        
         return names
 
     def getInterval(self):
-        self.setBlend(frameBlend=True)
         ival = Sequence()
         for animName in self.getCSAnimNames():
             ival.append(self.actorInterval(animName))
-
+        
         return ival
 
     def startCutscene(self, locators):
@@ -105,6 +110,7 @@ class CutsceneActor:
             characterDetailLevel = 2
         if characterDetailLevel != 2:
             characterDetailLevel = 1
+        
         if self.node() != NotImplemented:
             self.node().setBounds(OmniBoundingVolume())
             self.node().setFinal(1)
@@ -119,47 +125,51 @@ class CutsceneActor:
             lodNode = self.find('**/+LODNode')
             if not lodNode.isEmpty():
                 lodNode.node().clearForceSwitch()
-        self.detachNode()
 
+        self.detachNode()
+    
     def fadeIn(self, time):
         if self.fader:
             self.fader.finish()
             self.fader = None
+        
         self.setTransparency(1, 1)
         self.setAlphaScale(0.0)
         self.show()
-        self.fader = Sequence(LerpFunctionInterval(self.setAlphaScale, time, fromData=0.0, toData=1.0), Func(self.clearTransparency))
+        self.fader = Sequence(LerpFunctionInterval(self.setAlphaScale, time, fromData = 0.0, toData = 1.0), Func(self.clearTransparency))
         self.fader.start()
 
     def fadeOut(self, time):
         if self.fader:
             self.fader.finish()
             self.fader = None
+        
         self.setTransparency(1, 1)
-        self.fader = Sequence(LerpFunctionInterval(self.setAlphaScale, time, fromData=1.0, toData=0.0), Func(self.hide), Func(self.clearTransparency))
+        self.fader = Sequence(LerpFunctionInterval(self.setAlphaScale, time, fromData = 1.0, toData = 0.0), Func(self.hide), Func(self.clearTransparency))
         self.fader.start()
 
     def fadeInBlack(self, time):
         if self.fader:
             self.fader.finish()
             self.fader = None
+        
         self.setTransparency(1)
         self.show()
-        self.fader = Sequence(self.colorScaleInterval(time / 2.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(0, 0, 0, 0)), self.colorScaleInterval(time / 2.0, Vec4(1, 1, 1, 1), startColorScale=Vec4(0, 0, 0, 1)), Func(self.clearTransparency))
+        self.fader = Sequence(self.colorScaleInterval(time / 2.0, Vec4(0, 0, 0, 1), startColorScale = Vec4(0, 0, 0, 0)), self.colorScaleInterval(time / 2.0, Vec4(1, 1, 1, 1), startColorScale = Vec4(0, 0, 0, 1)), Func(self.clearTransparency))
         self.fader.start()
-
+    
     def fadeOutBlack(self, time):
         if self.fader:
             self.fader.finish()
             self.fader = None
+        
         self.setTransparency(1)
-        self.fader = Sequence(self.colorScaleInterval(time / 2.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(1, 1, 1, 1)), self.colorScaleInterval(time / 2.0, Vec4(0, 0, 0, 0), startColorScale=Vec4(0, 0, 0, 1)), Func(self.clearTransparency), Func(self.hide))
+        self.fader = Sequence(self.colorScaleInterval(time / 2.0, Vec4(0, 0, 0, 1), startColorScale = Vec4(1, 1, 1, 1)), self.colorScaleInterval(time / 2.0, Vec4(0, 0, 0, 0), startColorScale = Vec4(0, 0, 0, 1)), Func(self.clearTransparency), Func(self.hide))
         self.fader.start()
 
 
 class CutsceneShadowCaster(CutsceneActor):
     
-
     def initShadow(self):
         self.initializeDropShadow()
         self.setActiveShadow(1)
@@ -169,7 +179,7 @@ class CutsceneShadowCaster(CutsceneActor):
 
 
 class CutCam(CutsceneActor, Actor):
-
+    
     def __init__(self, cutsceneDesc):
         self.Uid = None
         Actor.__init__(self)
@@ -180,14 +190,16 @@ class CutCam(CutsceneActor, Actor):
         for animName in self.getCSAnimNames():
             animFileName = 'models/char/cutcam_%s' % animName
             self.animFileNames.append(animFileName)
-            self.loadAnims({animName: animFileName})
+            self.loadAnims({
+                animName: animFileName })
             self.getAnimControls(animName)
-
+        
         geomNode = self.find('**/+GeomNode')
         if geomNode.isEmpty():
             self.notify.error('could not find cutcam geom node')
+        
         geomNode.stash()
-
+    
     def destroy(self):
         CutsceneActor.destroy(self)
         Actor.delete(self)
@@ -195,7 +207,7 @@ class CutCam(CutsceneActor, Actor):
     @staticmethod
     def getActorKey():
         return 'CutCam'
-
+    
     def _getCutCamTaskName(self):
         return '%s-cutCam-update' % self._cutsceneName
 
@@ -213,17 +225,19 @@ class CutCam(CutsceneActor, Actor):
         parentNode = self.find('**/cutcam')
         if parentNode.isEmpty():
             self.notify.error('could not find cutcam node')
+        
         self._parentNode = parentNode
         if 'localAvatar' in __builtins__:
             self.oldParams.state = base.localAvatar.cameraFSM.state
             base.localAvatar.cameraFSM.request('Control')
+        
         base.camLens.setNear(0.3)
         base.camLens.setFilmSize(self.filmSizeHorizontal)
         base.camLens.setFocalLength(self.focalLength)
         camera.reparentTo(self._parentNode)
         camera.setPosHprScale(0, 0, 0, 0, 0, 0, 1, 1, 1)
         taskMgr.add(self._updateCamTask, self._getCutCamTaskName())
-
+    
     def _updateCamTask(self, task):
         self.update()
         return Task.cont
@@ -248,12 +262,13 @@ class CutCam(CutsceneActor, Actor):
     def changeCameraParams(self, filmSize, focalLength):
         if filmSize:
             base.camLens.setFilmSize(filmSize)
+        
         if focalLength:
             base.camLens.setFocalLength(focalLength)
-
+        
 
 class CutGenericActor(CutsceneActor, Actor):
-
+    
     def __init__(self, actorName, modelName, path, cutsceneDesc):
         self.Uid = None
         CutsceneActor.__init__(self, cutsceneDesc)
@@ -263,9 +278,10 @@ class CutGenericActor(CutsceneActor, Actor):
         for animName in self.getCSAnimNames():
             animFileName = '%s%s_%s' % (path, actorName, animName)
             self.animFileNames.append(animFileName)
-            self.loadAnims({animName: animFileName})
+            self.loadAnims({
+                animName: animFileName})
             self.getAnimControls(animName)
-
+    
     def destroy(self):
         CutsceneActor.destroy(self)
         Actor.delete(self)
@@ -273,7 +289,7 @@ class CutGenericActor(CutsceneActor, Actor):
     @staticmethod
     def getActorKey(actorName):
         return 'GenericActor-%s' % actorName
-
+    
     def getThisActorKey(self):
         return CutGenericActor.getActorKey(self.actorName)
 
@@ -290,19 +306,24 @@ class CutGenericActor(CutsceneActor, Actor):
         if self.effect:
             self.effect.destroy()
             self.effect = None
-
+        
 
 class CutLocators(CutGenericActor):
-
+    
     def __init__(self, cutsceneDesc):
         CutGenericActor.__init__(self, 'cs', 'cs_dummy', 'models/char/', cutsceneDesc)
-        self._locators = {'ghostShip': self.find('**/locator_ship_ghostship'), 'interceptor': self.find('**/locator_ship_interceptor'), 'warship': self.find('**/locator_ship_interceptor'), 'blackpearl': self.find('**/locator_ship_ghostship')}
-        for name, node in self._locators.items():
+        self._locators = {
+            'ghostShip': self.find('**/locator_ship_ghostship'),
+            'interceptor': self.find('**/locator_ship_interceptor'),
+            'warship': self.find('**/locator_ship_interceptor'),
+            'blackpearl': self.find('**/locator_ship_ghostship')}
+        for (name, node) in self._locators.items():
             pass
-
+        
         geomNode = self.find('**/+GeomNode')
         if geomNode.isEmpty():
             self.notify.error('could not find cut locator geom node')
+        
         geomNode.stash()
 
     def setOrigin(self, origin):
@@ -310,11 +331,11 @@ class CutLocators(CutGenericActor):
 
     def __getitem__(self, name):
         return self._locators[name]
-
+    
     def destroy(self):
-        for name, node in self._locators.items():
+        for (name, node) in self._locators.items():
             node.removeNode()
-
+        
         del self._locators
         del self.origin
         CutGenericActor.destroy(self)
@@ -325,20 +346,26 @@ class CutLocators(CutGenericActor):
 
 
 class CutBoat(CutsceneActor, ShipModel):
-    Class2Locator = {ShipGlobals.STUMPY_SHIP: 'interceptor', ShipGlobals.SKEL_DEATH_OMEN: 'ghostShip', ShipGlobals.WARSHIPL3: 'warship', ShipGlobals.BLACK_PEARL: 'blackpearl'}
-
-    def __init__(self, shipClass, team, offset, wantCollisions, cutsceneDesc, rootScale=1.0):
+    Class2Locator = {
+        ShipGlobals.STUMPY_SHIP: 'interceptor',
+        ShipGlobals.SKEL_DEATH_OMEN: 'ghostShip',
+        ShipGlobals.WARSHIPL3: 'warship',
+        ShipGlobals.BLACK_PEARL: 'blackpearl'}
+    
+    def __init__(self, shipClass, team, offset, wantCollisions, cutsceneDesc, rootScale = 1.0):
         self.Uid = None
         CutsceneActor.__init__(self, cutsceneDesc)
         cr = None
         if 'localAvatar' in __builtins__:
             cr = base.cr
+        
         ShipModel.__init__(self, cr, shipClass, team, wantCollisions)
         self._shipClass = shipClass
         self._team = team
         self._offset = offset
         if rootScale != 1.0:
             self.root.setScale(rootScale)
+        
         self.cannonSfx = (loader.loadSfx('audio/cball_fire_1.mp3'), loader.loadSfx('audio/cball_fire_2.mp3'), loader.loadSfx('audio/cball_fire_3.mp3'), loader.loadSfx('audio/cball_fire_4.mp3'))
 
     def destroy(self):
@@ -359,7 +386,7 @@ class CutBoat(CutsceneActor, ShipModel):
     @classmethod
     def getActorKey(cls, shipClass):
         return 'CutBoat-%s' % cls.Class2Locator[shipClass]
-
+    
     def getThisActorKey(self):
         return CutBoat.getActorKey(self._shipClass)
 
@@ -368,7 +395,7 @@ class CutBoat(CutsceneActor, ShipModel):
 
     def fadeOut(self):
         ShipModel.fadeOut(self)
-
+    
     def hideRigging(self):
         for mast in self.masts.values():
             rigging = mast[0].rigging
@@ -393,6 +420,7 @@ class CutBoat(CutsceneActor, ShipModel):
                 ripples.setZ(2)
                 ripples.setP(2)
                 ripples.play()
+
         if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
             splashes = WaterSplashes.getEffect()
             if splashes:
@@ -402,6 +430,7 @@ class CutBoat(CutsceneActor, ShipModel):
                 splashes.setEffectScale(1.0)
                 splashes.setZ(-5.0)
                 splashes.play()
+
         if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
             mist = WaterMist.getEffect()
             if mist:
@@ -412,7 +441,7 @@ class CutBoat(CutsceneActor, ShipModel):
                 mist.setZ(-5.0)
                 mist.play()
 
-    def explosionVFX(self, node=None, offset=Vec3(0, 0, 0)):
+    def explosionVFX(self, node = None, offset = Vec3(0, 0, 0)):
         if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
             explosion = Explosion.getEffect()
             if explosion:
@@ -423,18 +452,20 @@ class CutBoat(CutsceneActor, ShipModel):
                 explosion.setPos(pos)
                 explosion.play()
 
-    def fireCannon(self, index, ammo=InventoryType.CannonRoundShot, targetPos=None, targetNode=None, wantCollisions=0, flightTime=None, preciseHit=False, offset=Vec3(0, 0, 0)):
+    def fireCannon(self, index, ammo = InventoryType.CannonRoundShot, targetPos = None, targetNode = None, wantCollisions = 0, flightTime = None, preciseHit = False, offset = Vec3(0, 0, 0)):
         if targetNode:
             targetPos = targetNode.getPos(render)
+        
         targetPos = targetPos + offset
         if len(self.cannons):
             self.cannons[index].playAttack(InventoryType.CannonShoot, ammo, 'localShipHit', targetPos, wantCollisions, flightTime, preciseHit)
+        
         sfx = random.choice(self.cannonSfx)
         base.playSfx(sfx)
 
 
 class CutJackSparrow(CutsceneActor, JackSparrow):
-
+    
     def __init__(self, cutsceneDesc):
         self.Uid = None
         JackSparrow.__init__(self)
@@ -442,16 +473,19 @@ class CutJackSparrow(CutsceneActor, JackSparrow):
         for animName in self.getCSAnimNames():
             animFileName = 'models/char/js_%s' % animName
             self.animFileNames.append(animFileName)
-            self.loadAnims({animName: animFileName})
+            self.loadAnims({
+                animName: animFileName})
             self.getAnimControls(animName)
 
     def destroy(self):
         if self.effect:
             self.effect.finish()
             self.effect = None
+        
         if self.fader:
             self.fader.finish()
             self.fader = None
+        
         CutsceneActor.destroy(self)
         JackSparrow.delete(self)
 
@@ -462,25 +496,27 @@ class CutJackSparrow(CutsceneActor, JackSparrow):
     def attachHandheld(self, handheld, bRightHand):
         if handheld.isEmpty():
             return
+        
         if bRightHand:
             handNode = self.find('**/*weapon_right')
         else:
             handNode = self.find('**/*weapon_left')
         handheld.reparentTo(handNode)
 
-    def detachHandheld(self, handheld, remove=False):
+    def detachHandheld(self, handheld, remove = False):
         if handheld.isEmpty():
             return
+        
         handheld.reparentTo(hidden)
         if remove:
             handheld.removeNode()
-
+    
     def keepDOHidden(self):
         self.Uid = None
 
 
 class CutJollyRoger(CutsceneActor, JollyRoger):
-
+    
     def __init__(self, cutsceneDesc):
         self.Uid = None
         JollyRoger.__init__(self)
@@ -488,9 +524,10 @@ class CutJollyRoger(CutsceneActor, JollyRoger):
         for animName in self.getCSAnimNames():
             animFileName = 'models/char/jr_%s' % animName
             self.animFileNames.append(animFileName)
-            self.loadAnims({animName: animFileName})
+            self.loadAnims({
+                animName: animFileName})
             self.getAnimControls(animName)
-
+        
         self.attuneEffect = None
         self.darkEffects = []
         self.setTransparency(1)
@@ -499,32 +536,36 @@ class CutJollyRoger(CutsceneActor, JollyRoger):
         if self.effect:
             self.effect.finish()
             self.effect = None
+        
         if self.attuneEffect:
             self.attuneEffect.finish()
             self.attuneEffect = None
+        
         for effect in self.darkEffects:
             if effect:
                 effect.finish()
-
+        
         self.darkEffects = []
         CutsceneActor.destroy(self)
         JollyRoger.delete(self)
-
-    def startTeleportEffect(self, offset=None):
+    
+    def startTeleportEffect(self, offset = None):
         joint = self.find('**/def_root')
         if not joint.isEmpty():
             self.effectDummy = joint.attachNewNode('effectDummy')
+        
         self.effect = JRTeleportEffect.getEffect()
         if self.effect and self.effectDummy:
             if not offset:
                 offset = 0.0
-            posIval = LerpPosInterval(self.effectDummy, 2.0, Vec3(self.effectDummy.getX(), self.effectDummy.getY() + offset / 3.0, self.effectDummy.getZ() + 5.5), startPos=Vec3(self.effectDummy.getX() + offset, self.effectDummy.getY() + offset, self.effectDummy.getZ() - 3.0))
+            
+            posIval = LerpPosInterval(self.effectDummy, 2.0, Vec3(self.effectDummy.getX(), self.effectDummy.getY() + offset / 3.0, self.effectDummy.getZ() + 5.5), startPos = Vec3(self.effectDummy.getX() + offset, self.effectDummy.getY() + offset, self.effectDummy.getZ() - 3.0))
             self.effect.reparentTo(self.effectDummy)
             self.effect.duration = 1.5
             self.effect.effectScale = 1.0
             self.effect.radius = 1.25
             Sequence(Func(self.effect.play), posIval).start()
-
+    
     def spawnSkeletons(self, cutscene):
         jr1 = cutscene.getActor('Skeleton-2')
         jr1.unstash()
@@ -540,6 +581,7 @@ class CutJollyRoger(CutsceneActor, JollyRoger):
             spawnEffect.effectScale = 0.9
             spawnEffect.duration = 0.25
             spawnEffect.play()
+        
         spawnEffect2 = JRSpawnEffect.getEffect()
         if spawnEffect2:
             spawnEffect2.reparentTo(render)
@@ -548,7 +590,7 @@ class CutJollyRoger(CutsceneActor, JollyRoger):
             spawnEffect2.effectScale = 0.9
             spawnEffect2.duration = 0.25
             spawnEffect2.play()
-
+    
     def startAttuneEffect(self):
         joint = self.find('**/weapon_left')
         self.leftHandNode = NodePath('leftHand')
@@ -560,7 +602,7 @@ class CutJollyRoger(CutsceneActor, JollyRoger):
             self.attuneEffect.setPos(0, 0, 0)
             self.attuneEffect.particleDummy.reparentTo(self.leftHandNode)
             self.attuneEffect.startLoop()
-
+    
     def startSoulSuckEffect(self):
         joint2 = self.find('**/p_1_2')
         joint3 = self.find('**/p_1_3')
@@ -578,6 +620,7 @@ class CutJollyRoger(CutsceneActor, JollyRoger):
             effect.particleDummy.reparentTo(render)
             effect.startLoop()
             self.darkEffects.append(effect)
+        
         effect = JollySoulDrain.getEffect()
         if effect:
             effect.reparentTo(joint5)
@@ -585,6 +628,7 @@ class CutJollyRoger(CutsceneActor, JollyRoger):
             effect.particleDummy.reparentTo(render)
             effect.startLoop()
             self.darkEffects.append(effect)
+        
         effect = JollySoulDrain.getEffect()
         if effect:
             effect.reparentTo(joint7)
@@ -592,6 +636,7 @@ class CutJollyRoger(CutsceneActor, JollyRoger):
             effect.particleDummy.reparentTo(render)
             effect.startLoop()
             self.darkEffects.append(effect)
+        
         effect = JollySoulDrain.getEffect()
         if effect:
             effect.reparentTo(joint9)
@@ -599,6 +644,7 @@ class CutJollyRoger(CutsceneActor, JollyRoger):
             effect.particleDummy.reparentTo(render)
             effect.startLoop()
             self.darkEffects.append(effect)
+        
         effect = JollySoulDrain.getEffect()
         if effect:
             effect.reparentTo(joint11)
@@ -611,10 +657,11 @@ class CutJollyRoger(CutsceneActor, JollyRoger):
         if self.attuneEffect:
             self.attuneEffect.stopLoop()
             self.attuneEffect = None
+        
         for effect in self.darkEffects:
             if effect:
                 effect.stopLoop()
-
+        
         self.darkEffects = []
         self.leftHandNode.removeNode()
 
@@ -622,9 +669,9 @@ class CutJollyRoger(CutsceneActor, JollyRoger):
     def getActorKey():
         return 'JollyRoger'
 
+
 class CutWillTurner(CutsceneActor, WillTurner):
     
-
     def __init__(self, Uid, cutsceneDesc):
         self.Uid = Uid
         WillTurner.__init__(self)
@@ -632,16 +679,19 @@ class CutWillTurner(CutsceneActor, WillTurner):
         for animName in self.getCSAnimNames():
             animFileName = 'models/char/wt_%s' % animName
             self.animFileNames.append(animFileName)
-            self.loadAnims({animName: animFileName})
+            self.loadAnims({
+                animName: animFileName})
             self.getAnimControls(animName)
 
     def destroy(self):
         if self.effect:
             self.effect.finish()
             self.effect = None
+        
         if self.fader:
             self.fader.finish()
             self.fader = None
+        
         CutsceneActor.destroy(self)
         WillTurner.delete(self)
         if self.modelLoaded:
@@ -654,15 +704,17 @@ class CutWillTurner(CutsceneActor, WillTurner):
     def attachHandheld(self, handheld, bRightHand):
         if handheld.isEmpty():
             return
+        
         if bRightHand:
             handNode = self.find('**/*weapon_right')
         else:
             handNode = self.find('**/*weapon_left')
         handheld.reparentTo(handNode)
 
-    def detachHandheld(self, handheld, remove=False):
+    def detachHandheld(self, handheld, remove = False):
         if handheld.isEmpty():
             return
+        
         handheld.reparentTo(hidden)
         if remove:
             handheld.removeNode()
@@ -676,10 +728,10 @@ class CutWillTurner(CutsceneActor, WillTurner):
         if self.modelLoaded:
             self.modelLoaded.setPos(render, self.posFromPose)
             self.modelLoaded.setH(render, self.hprFromPose[0] - 180)
+        
 
 class CutElizabethSwan(CutsceneActor, ElizabethSwan):
     
-
     def __init__(self, Uid, cutsceneDesc):
         self.Uid = Uid
         ElizabethSwan.__init__(self)
@@ -687,18 +739,22 @@ class CutElizabethSwan(CutsceneActor, ElizabethSwan):
         for animName in self.getCSAnimNames():
             animFileName = 'models/char/es_%s' % animName
             self.animFileNames.append(animFileName)
-            self.loadAnims({animName: animFileName})
+            self.loadAnims({
+                animName: animFileName})
             self.getAnimControls(animName)
 
     def destroy(self):
         if self.effect:
             self.effect.finish()
             self.effect = None
+        
         if self.fader:
             self.fader.finish()
             self.fader = None
+        
         if self.modelLoaded:
             self.modelLoaded.tutorialCharacter = 0
+        
         CutsceneActor.destroy(self)
         ElizabethSwan.delete(self)
 
@@ -706,9 +762,9 @@ class CutElizabethSwan(CutsceneActor, ElizabethSwan):
     def getActorKey():
         return 'ElizabethSwan'
 
+
 class CutCaptBarbossa(CutsceneActor, CaptBarbossa):
     
-
     def __init__(self, Uid, cutsceneDesc):
         self.Uid = Uid
         CaptBarbossa.__init__(self)
@@ -716,37 +772,43 @@ class CutCaptBarbossa(CutsceneActor, CaptBarbossa):
         for animName in self.getCSAnimNames():
             animFileName = 'models/char/cb_%s' % animName
             self.animFileNames.append(animFileName)
-            self.loadAnims({animName: animFileName})
+            self.loadAnims({
+                animName: animFileName})
             self.getAnimControls(animName)
 
     def destroy(self):
         if self.effect:
             self.effect.finish()
             self.effect = None
+        
         if self.fader:
             self.fader.finish()
             self.fader = None
+        
         if self.modelLoaded:
             self.modelLoaded.tutorialCharacter = 0
+        
         CutsceneActor.destroy(self)
         CaptBarbossa.delete(self)
 
     @staticmethod
     def getActorKey():
         return 'CaptBarbossa'
-
+    
     def attachHandheld(self, handheld, bRightHand):
         if handheld.isEmpty():
             return
+        
         if bRightHand:
             handNode = self.find('**/*weapon_right')
         else:
             handNode = self.find('**/*weapon_left')
         handheld.reparentTo(handNode)
-
-    def detachHandheld(self, handheld, remove=False):
+    
+    def detachHandheld(self, handheld, remove = False):
         if handheld.isEmpty():
             return
+        
         handheld.reparentTo(hidden)
         if remove:
             handheld.removeNode()
@@ -754,7 +816,6 @@ class CutCaptBarbossa(CutsceneActor, CaptBarbossa):
 
 class CutTiaDalma(CutsceneActor, TiaDalma):
     
-
     def __init__(self, Uid, cutsceneDesc):
         self.Uid = Uid
         TiaDalma.__init__(self)
@@ -762,10 +823,12 @@ class CutTiaDalma(CutsceneActor, TiaDalma):
         self.loadBG = False
         if '2.2' in cutsceneDesc.id:
             self.loadBG = True
+        
         for animName in self.getCSAnimNames():
             animFileName = 'models/char/td_%s' % animName
             self.animFileNames.append(animFileName)
-            self.loadAnims({animName: animFileName})
+            self.loadAnims({
+                animName: animFileName})
             self.getAnimControls(animName)
             if self.loadBG:
                 self.loadBGItems('models/jungles/jungle_set')
@@ -774,25 +837,30 @@ class CutTiaDalma(CutsceneActor, TiaDalma):
         if self.effect:
             self.effect.finish()
             self.effect = None
+        
         if self.fader:
             self.fader.finish()
             self.fader = None
+        
         CutsceneActor.destroy(self)
         TiaDalma.delete(self)
-
+    
     def loadBGItems(self, path):
         setName = path
         terrainModel = loader.loadModel(setName + '_terrain')
         if terrainModel:
             self.bg = terrainModel
+        
         vegeWallModel = loader.loadModel(setName + '_veg')
         if vegeWallModel:
             vegeWallModel.reparentTo(self.bg)
+        
         logsModel = loader.loadModel(setName + '_logs')
         if logsModel:
             logsModel.reparentTo(self.bg)
+        
         self.bg.reparentTo(self.getParent())
-
+    
     def unloadBGItems(self):
         self.bg.removeNode()
 
@@ -815,7 +883,7 @@ class CutTiaDalma(CutsceneActor, TiaDalma):
         bg3.unstash()
         handNode = bg3.find('**/*weapon_right')
         self.cutlassDict[2].reparentTo(handNode)
-        self.fader = Parallel(LerpFunctionInterval(bg1.setAlphaScale, 2.0, fromData=0.0, toData=0.6), LerpFunctionInterval(bg2.setAlphaScale, 2.5, fromData=0.0, toData=0.6), LerpFunctionInterval(bg3.setAlphaScale, 2.0, fromData=0.0, toData=0.6))
+        self.fader = Parallel(LerpFunctionInterval(bg1.setAlphaScale, 2.0, fromData = 0.0, toData = 0.6), LerpFunctionInterval(bg2.setAlphaScale, 2.5, fromData = 0.0, toData = 0.6), LerpFunctionInterval(bg3.setAlphaScale, 2.0, fromData = 0.0, toData = 0.6))
         self.fader.start()
 
     def hideVisionBG(self, cutscene, cleanup):
@@ -824,17 +892,19 @@ class CutTiaDalma(CutsceneActor, TiaDalma):
         self.cutlassDict[0].reparentTo(hidden)
         if cleanup:
             self.cutlassDict[0].removeNode()
+        
         bg2 = cutscene.getActor('Pirate-n-2')
         bg2.stash()
         self.cutlassDict[1].reparentTo(hidden)
         if cleanup:
             self.cutlassDict[1].removeNode()
+        
         bg3 = cutscene.getActor('Pirate-n-3')
         bg3.stash()
         self.cutlassDict[2].reparentTo(hidden)
         if cleanup:
             self.cutlassDict[2].removeNode()
-
+    
     def showVisionJR(self, cutscene):
         self.hideVisionBG(cutscene, False)
         jr1 = cutscene.getActor('JollyRoger')
@@ -860,7 +930,7 @@ class CutTiaDalma(CutsceneActor, TiaDalma):
             spawnEffect.effectScale = 1.0
             spawnEffect.duration = 2.0
             spawnEffect.play()
-
+    
     def spawnSkeleton2(self, cutscene):
         rootNode = cutscene.getActor('JollyRoger').find('**/def_root')
         effectPos = Vec3(rootNode.getX(self) - 4.0, rootNode.getY(self), rootNode.getZ(self) - 5.0)
@@ -871,22 +941,23 @@ class CutTiaDalma(CutsceneActor, TiaDalma):
             spawnEffect.effectScale = 1.0
             spawnEffect.duration = 0.5
             spawnEffect.play()
-
+    
     def hideVisionJR(self, cutscene, cleanup):
         cutscene.getActor('JollyRoger').stash()
         cutscene.getActor('Skeleton-4').stash()
         cutscene.getActor('Skeleton-5').stash()
-
+    
     def hideVision(self, cutscene, cutlassDict, cleanup):
         if cutlassDict:
             self.cutlassDict = cutlassDict
+        
         self.hideVisionBG(cutscene, cleanup)
         self.hideVisionJR(cutscene, cleanup)
 
     @staticmethod
     def getActorKey():
         return 'TiaDalma'
-
+    
     def startCutscene(self, locators):
         CutsceneActor.startCutscene(self, locators)
         if self.loadBG:
@@ -896,26 +967,28 @@ class CutTiaDalma(CutsceneActor, TiaDalma):
         CutsceneActor.finishCutscene(self)
         if self.loadBG:
             self.unloadBGItems()
-
+    
     def attachHandheld(self, handheld, bRightHand):
         if handheld.isEmpty():
             return
+        
         if bRightHand:
             handNode = self.find('**/*weapon_right')
         else:
             handNode = self.find('**/*weapon_left')
         handheld.reparentTo(handNode)
-
-    def detachHandheld(self, handheld, remove=False):
+    
+    def detachHandheld(self, handheld, remove = False):
         if handheld.isEmpty():
             return
+        
         handheld.reparentTo(hidden)
         if remove:
             handheld.removeNode()
+        
 
 class CutJoshGibbs(CutsceneActor, JoshGibbs):
     
-
     def __init__(self, Uid, cutsceneDesc):
         self.Uid = Uid
         JoshGibbs.__init__(self)
@@ -923,16 +996,19 @@ class CutJoshGibbs(CutsceneActor, JoshGibbs):
         for animName in self.getCSAnimNames():
             animFileName = 'models/char/jg_%s' % animName
             self.animFileNames.append(animFileName)
-            self.loadAnims({animName: animFileName})
+            self.loadAnims({
+                animName: animFileName})
             self.getAnimControls(animName)
-
+    
     def destroy(self):
         if self.effect:
             self.effect.finish()
             self.effect = None
+        
         if self.fader:
             self.fader.finish()
             self.fader = None
+        
         CutsceneActor.destroy(self)
         JoshGibbs.delete(self)
 
@@ -943,7 +1019,6 @@ class CutJoshGibbs(CutsceneActor, JoshGibbs):
 
 class CutPirate(CutsceneActor, Pirate):
     
-
     def __init__(self, Uid, npcIndex, cutsceneDesc):
         self.Uid = Uid
         Pirate.__init__(self)
@@ -958,21 +1033,22 @@ class CutPirate(CutsceneActor, Pirate):
             self.generateHuman(dna.gender, base.pe.human)
         if cutsceneDesc.id == '2.2: Tia Dalma Compass':
             self.useLOD(500)
+        
         self.setGlobalScale(1.0)
         self._npcIndex = npcIndex
         self.faceTowardsViewer()
         for animName in self.getCSAnimNames():
             self.getAnimControls(str(npcIndex) + '_' + animName)
-
+    
     def destroy(self):
         CutsceneActor.destroy(self)
         Pirate.delete(self)
-
+    
     def getInterval(self):
         ival = Sequence()
         for animName in self.getCSAnimNames():
             ival.append(self.actorInterval('%s_%s' % (self._npcIndex, animName)))
-
+        
         return ival
 
     def makeAnimDict(self, gender, npcIndex):
@@ -984,37 +1060,41 @@ class CutPirate(CutsceneActor, Pirate):
             else:
                 animFileName = 'models/char/mp_%s' % queryName
             self.animFileNames.append(animFileName)
-            entryDict = [queryName, queryName]
+            entryDict = [
+                queryName,
+                queryName]
             animDict.append(entryDict)
-
+        
         self.createAnimDict(animDict)
 
     @staticmethod
     def getActorKey(self, npcIndex):
         return 'Pirate-%s-%s' % (self.style.gender, npcIndex)
-
+    
     def getThisActorKey(self):
         return CutPirate.getActorKey(self, self._npcIndex)
-
+    
     def attachHandheld(self, handheld, bRightHand):
         if handheld == None or handheld.isEmpty():
             return
+        
         if bRightHand:
             handNode = self.find('**/*weapon_right')
         else:
             handNode = self.find('**/*weapon_left')
         handheld.reparentTo(handNode)
 
-    def detachHandheld(self, handheld, remove=False):
+    def detachHandheld(self, handheld, remove = False):
         if handheld == None or handheld.isEmpty():
             return
+
         handheld.reparentTo(hidden)
         if remove:
             handheld.removeNode()
+        
 
 class CutSkeleton(CutsceneActor, Skeleton):
     
-
     def __init__(self, skeletonType, npcIndex, cutsceneDesc):
         self.Uid = None
         Skeleton.__init__(self)
@@ -1024,32 +1104,33 @@ class CutSkeleton(CutsceneActor, Skeleton):
         self.faceTowardsViewer()
         if cutsceneDesc.id == '2.2: Tia Dalma Compass':
             self.useLOD(500)
+        
         for animName in self.getCSAnimNames():
             animFileName = 'models/char/mp_%s_%s' % (npcIndex, animName)
             self.animFileNames.append(animFileName)
             self.getAnimControls(str(npcIndex) + '_' + animName)
-
+    
     def destroy(self):
         CutsceneActor.destroy(self)
         Skeleton.delete(self)
-
+    
     def getInterval(self):
         ival = Sequence()
         for animName in self.getCSAnimNames():
             ival.append(self.actorInterval('%s_%s' % (self._npcIndex, animName)))
-
+        
         return ival
 
     @staticmethod
     def getActorKey(npcIndex):
         return 'Skeleton-%s' % npcIndex
-
+    
     def getThisActorKey(self):
         return CutSkeleton.getActorKey(self._npcIndex)
 
+
 class CutLocalPirate(CutsceneActor):
     
-
     def __init__(self, wantZombie, cutsceneDesc):
         self.Uid = None
         CutsceneActor.__init__(self, cutsceneDesc)
@@ -1078,6 +1159,7 @@ class CutLocalPirate(CutsceneActor):
                         dnaDict = currNpcList.NPC_LIST[base.pe.cutLocalPirateId]
                         dna = HumanDNA()
                         dna.loadFromNPCDict(dnaDict)
+                
             self.localAvatar.setDNA(dna)
             self.localAvatar.generateHuman(dna.gender, masterHuman)
         self.wantZombie = wantZombie
@@ -1088,6 +1170,7 @@ class CutLocalPirate(CutsceneActor):
             self.zombieAvatar.style.copy(self.localAvatar.style)
             self.zombieAvatar.generateHuman(self.zombieAvatar.style.gender, masterHuman)
             self.zombieAvatar.faceTowardsViewer()
+        
         for animName in self.getCSAnimNames():
             if dna.gender == 'f':
                 animFileName = 'models/char/fp_0_%s' % animName
@@ -1097,18 +1180,21 @@ class CutLocalPirate(CutsceneActor):
             self.localAvatar.getAnimControls('0_' + animName)
             if self.wantZombie:
                 self.zombieAvatar.getAnimControls('0_' + animName)
-
+        
         if 'localAvatar' in __builtins__:
             if self._cutsceneName == 'tut_act_1_1_2_jail':
                 self.preloadFemale()
+
         self.oldAvState = None
 
     def destroy(self):
         if 'localAvatar' not in __builtins__:
             self.localAvatar.delete()
+        
         del self.localAvatar
         if self.wantZombie:
             del self.zombieAvatar
+        
         CutsceneActor.destroy(self)
         if self.fader:
             self.fader.finish()
@@ -1118,29 +1204,33 @@ class CutLocalPirate(CutsceneActor):
         if self.fader:
             self.fader.finish()
             self.fader = None
+        
         self.localAvatar.setTransparency(1)
-        self.fader = Sequence(self.localAvatar.colorScaleInterval(1.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(0, 0, 0, 0)), self.localAvatar.colorScaleInterval(1.0, Vec4(1, 1, 1, 1), startColorScale=Vec4(0, 0, 0, 1)))
+        self.fader = Sequence(self.localAvatar.colorScaleInterval(1.0, Vec4(0, 0, 0, 1), startColorScale = Vec4(0, 0, 0, 0)), self.localAvatar.colorScaleInterval(1.0, Vec4(1, 1, 1, 1), startColorScale = Vec4(0, 0, 0, 1)))
         self.fader.start()
-
+    
     def fadeOut(self):
         if self.fader:
             self.fader.finish()
             self.fader = None
+        
         self.localAvatar.setTransparency(1)
-        self.fader = Sequence(self.localAvatar.colorScaleInterval(1.0, Vec4(0, 0, 0, 1), startColorScale=Vec4(1, 1, 1, 1)), self.localAvatar.colorScaleInterval(1.0, Vec4(0, 0, 0, 0), startColorScale=Vec4(0, 0, 0, 1)))
+        self.fader = Sequence(self.localAvatar.colorScaleInterval(1.0, Vec4(0, 0, 0, 1), startColorScale = Vec4(1, 1, 1, 1)), self.localAvatar.colorScaleInterval(1.0, Vec4(0, 0, 0, 0), startColorScale = Vec4(0, 0, 0, 1)))
         self.fader.start()
-
+    
     def openJailDoor(self):
         if 'localAvatar' in __builtins__:
             localAvatar.openJailDoor()
             return
+        
         self.jail = render.find('**/navy_jail_interior*')
         if self.jail.isEmpty():
             return
+        
         self.jail_door = self.jail.find('**/jail_door01')
         self.jail_lock = self.jail.find('**/lock01')
         self.jail_door_collision = self.jail.find('**/door_collision_01')
-        seq = Sequence(LerpHprInterval(self.jail_door, 1, VBase3(120, self.jail_door.getP(), self.jail_door.getR()), blendType='easeInOut'), duration=1.0)
+        seq = Sequence(LerpHprInterval(self.jail_door, 1, VBase3(120, self.jail_door.getP(), self.jail_door.getR()), blendType = 'easeInOut'), duration = 1.0)
         seq.start()
         self.jail_door_collision.setR(30)
         if not self.jail_lock.isEmpty():
@@ -1149,15 +1239,18 @@ class CutLocalPirate(CutsceneActor):
     def closeJailDoor(self):
         if 'localAvatar' in __builtins__:
             return
+        
         if self.jail.isEmpty():
             return
+        
         self.jail_door.setH(0)
         self.jail_door_collision.setR(0)
         self.jail_lock.unstash()
-
-    def attachHandheld(self, handheld, bRightHand, zombie=False):
+    
+    def attachHandheld(self, handheld, bRightHand, zombie = False):
         if handheld.isEmpty():
             return
+        
         if zombie:
             avatar = self.zombieAvatar
         else:
@@ -1166,10 +1259,11 @@ class CutLocalPirate(CutsceneActor):
             handheld.reparentTo(avatar.rightHandNode)
         else:
             handheld.reparentTo(avatar.leftHandNode)
-
-    def detachHandheld(self, handheld, remove=False, zombie=False):
+    
+    def detachHandheld(self, handheld, remove = False, zombie = False):
         if handheld.isEmpty():
             return
+        
         if zombie:
             avatar = self.zombieAvatar
         else:
@@ -1177,7 +1271,7 @@ class CutLocalPirate(CutsceneActor):
         handheld.reparentTo(hidden)
         if remove:
             handheld.removeNode()
-
+    
     def preloadFemale(self):
         for animName in self.getCSAnimNames():
             animFileName = 'models/char/fp_0_%s' % animName
@@ -1187,13 +1281,15 @@ class CutLocalPirate(CutsceneActor):
     def hideZombie(self):
         if self.wantZombie:
             self.zombieAvatar.hide()
+        
         self.localAvatar.show()
-
+    
     def showZombie(self):
         if self.wantZombie:
             self.zombieAvatar.show()
+        
         self.localAvatar.hide()
-
+    
     def syncZombieAnimation(self):
         if self.wantZombie:
             self.zombieAvatar.play('0_' + self.getCSAnimNames()[1])
@@ -1201,14 +1297,14 @@ class CutLocalPirate(CutsceneActor):
     @staticmethod
     def getActorKey():
         return 'LocalPirate'
-
+    
     def getInterval(self):
         ival = Sequence()
         for animName in self.getCSAnimNames():
             ival.append(self.localAvatar.actorInterval('0_%s' % animName))
-
+        
         return ival
-
+    
     def recordTransAtCutscene(self, frame):
         animName = '0_' + self.getCSAnimNames()[0]
         self.localAvatar.pose(animName, frame)
@@ -1216,16 +1312,16 @@ class CutLocalPirate(CutsceneActor):
         self.posFromPose = Vec3(rootNode.getX(render), rootNode.getY(render), 0)
         self.hprFromPose = rootNode.getHpr(render)
 
-    def adjustPos(self, x, y, z, h=-90):
+    def adjustPos(self, x, y, z, h = -90):
         self.posFromPose = Vec3(x, y, z)
         self.hprFromPose = Vec3(h, 0, 0)
 
     def recordEvent(self, eventName):
         self.eventName = eventName
-
+    
     def setOldAvState(self, avState):
         self.oldAvState = avState
-
+    
     def startCutscene(self, locators):
         self.oldParams = ScratchPad()
         self.oldParams.parent = self.localAvatar.getParent()
@@ -1239,6 +1335,7 @@ class CutLocalPirate(CutsceneActor):
             self.oldParams.gameStateLock = self.localAvatar.gameFSM.lockFSM
             self.localAvatar.gameFSM.lockFSM = True
             self.localAvatar.b_setGameState('Cutscene')
+        
         self.localAvatar.reparentTo(locators.origin)
         self.localAvatar.clearTransform()
         self.localAvatar.node().setBounds(OmniBoundingVolume())
@@ -1246,14 +1343,19 @@ class CutLocalPirate(CutsceneActor):
         self.localAvatar.stopBlink()
         if 'localAvatar' in __builtins__:
             self.localAvatar.stopLookAroundTask()
+        
         self.localAvatar.headNode.setHpr(0, 0, 0)
         self.localAvatar.nametag3d.hide()
         self.localAvatar.faceTowardsViewer()
-        LODLevels = {2: 2000, 1: 1000, 0: 500}
+        LODLevels = {
+            2: 2000,
+            1: 1000,
+            0: 500}
         if 'localAvatar' in __builtins__:
             characterDetailLevel = base.options.character_detail_level
             if characterDetailLevel != 2:
                 characterDetailLevel = 1
+            
             characterDetail = LODLevels[characterDetailLevel]
         else:
             characterDetail = 2000
@@ -1268,6 +1370,7 @@ class CutLocalPirate(CutsceneActor):
             self.zombieAvatar.stopBlink()
             if self.localAvatar and hasattr(self.zombieAvatar, 'lookAroundTaskName'):
                 self.zombieAvatar.stopLookAroundTask()
+            
             self.zombieAvatar.headNode.setHpr(0, 0, 0)
             self.zombieAvatar.nametag3d.hide()
             self.zombieAvatar.faceTowardsViewer()
@@ -1282,16 +1385,19 @@ class CutLocalPirate(CutsceneActor):
         if self.posFromPose:
             self.localAvatar.setPos(render, self.posFromPose)
             self.localAvatar.setH(render, self.hprFromPose[0])
+        
         self.localAvatar.node().clearBounds()
         self.localAvatar.node().setFinal(0)
         self.localAvatar.startBlink()
         if 'localAvatar' in __builtins__:
             self.localAvatar.startLookAroundTask()
+        
         self.localAvatar.nametag3d.show()
         self.localAvatar.resetLOD()
         if self.wantZombie:
             self.zombieAvatar.hide()
             self.localAvatar.show()
+        
         if hasattr(self.localAvatar, 'gameFSM'):
             self.localAvatar.enableMixing()
             self.localAvatar.gameFSM.lockFSM = False
@@ -1300,11 +1406,12 @@ class CutLocalPirate(CutsceneActor):
             else:
                 self.localAvatar.b_setGameState(self.oldParams.gameState)
             self.localAvatar.gameFSM.lockFSM = self.oldParams.gameStateLock
+        
         self.localAvatar.setGlobalScale(self.oldParams.bodyScale)
         del self.oldParams
         if self.eventName:
             messenger.send(self.eventName)
-
+        
 
 CutBartenderMmsDoggerel = Functor(CutPirate, '1154731709.64jubutler')
 CutBartenderFmiNell = Functor(CutPirate, '1171238953.92MAsaduzz')

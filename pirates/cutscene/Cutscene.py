@@ -1,19 +1,19 @@
-from direct.gui.DirectGui import *
+from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import DirectObject
 from direct.showbase.PythonUtil import DelayedCall, makeList
-from direct.task import Task
-from panda3d.core import *
-from pirates.cutscene import CutsceneActor, CutsceneData, CutsceneIvals
-from pirates.effects.CameraShaker import CameraShaker
+from direct.showbase.DirectObject import DirectObject
 from pirates.pirate import AvatarTypes
-from pirates.piratesbase import TimeOfDayManager, TODGlobals
+from pirates.cutscene import CutsceneData, CutsceneActor, CutsceneIvals
+from pirates.effects.CameraShaker import CameraShaker
+from direct.gui.DirectGui import *
 from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesbase import TimeOfDayManager, TODGlobals
+from direct.task import Task
 
-class Cutscene(NodePath, DirectObject):  
+class Cutscene(NodePath, DirectObject):
     notify = directNotify.newCategory('Cutscene')
-
-    def __init__(self, cr, cutsceneName, doneCallback=None, giverId=None):
+    
+    def __init__(self, cr, cutsceneName, doneCallback = None, giverId = None):
         self._destroyed = False
         self.cr = cr
         self._serial = serialNum()
@@ -30,13 +30,14 @@ class Cutscene(NodePath, DirectObject):
         self._loadActors()
         self._loadSound()
         self.startedCallback = None
-
-    def initialize(self, doneCallback=None, giverId=None, patch=False):
+    
+    def initialize(self, doneCallback = None, giverId = None, patch = False):
         self._callback = doneCallback
         originNode = None
         if self.cr is not None:
             self.cr.currentCutscene = self
             originNode = self.cr.activeWorld.getCutsceneOriginNode(self.cutsceneName)
+        
         if originNode is not None:
             if 'localAvatar' in __builtins__:
                 if localAvatar.ship:
@@ -45,10 +46,12 @@ class Cutscene(NodePath, DirectObject):
                 else:
                     self.reparentTo(originNode)
                     self.clearMat()
+            
         else:
             giverObject = None
             if giverId:
                 giverObject = self.cr.doId2do[giverId]
+            
             if giverObject and giverObject.getParent().getParent().getName() == 'GameArea':
                 self.reparentTo(giverObject.getParent().getParent())
             elif 'localAvatar' in __builtins__:
@@ -68,14 +71,18 @@ class Cutscene(NodePath, DirectObject):
                 self.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_OFF)
                 for currLight in self.gameArea.dynamicLights:
                     currLight.turnOn()
+                
             else:
                 self.oldTodState = base.pe.todManager.getTimeOfDayState()
                 base.pe.disableTOD()
+        
         if self.cr and localAvatar.ship:
             self.addFlatWell()
+        
         if base.config.GetBool('cutscene-axis'):
             self._axis = loader.loadModel('models/misc/xyzAxis')
             self._axis.reparentTo(self)
+        
         if patch:
             self.patch()
 
@@ -91,41 +98,48 @@ class Cutscene(NodePath, DirectObject):
             if ga and hasattr(ga, 'envEffects'):
                 self.envEffects = ga.envEffects
                 self.gameArea = ga
+            
         else:
             self.envEffects = base.pe.envEffects
 
     def setShowTimer(self, showTimer):
         if showTimer:
             if self.timer == None:
-                self.timer = DirectLabel(parent=render2d, pos=(0.0, 0, 0.9), frameSize=(0, 0.16, 0, 0.12), text='0.0', text_align=TextNode.ARight, text_scale=0.05, text_pos=(0.15, 0.05), text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1)
-        else:
-            if self.timer:
-                self.timer.removeNode()
-                self.timer = None
+                self.timer = DirectLabel(parent = render2d, pos = (0.0, 0, 0.9), frameSize = (0, 0.16, 0, 0.12), text = '0.0', text_align = TextNode.ARight, text_scale = 0.05, text_pos = (0.15, 0.05), text_shadow = PiratesGuiGlobals.TextShadow, textMayChange = 1)
+            
+        elif self.timer:
+            self.timer.removeNode()
+            self.timer = None
 
     def addFlatWell(self):
         water = None
         if self.cr is not None:
             water = self.cr.activeWorld.getWater()
+        
         if water:
             water.patch.addFlatWell(self.getName(), self, 0, 0, 400, 400 + 200)
-
+    
     def destroy(self):
         if self._destroyed:
             return
+        
         self._destroyed = True
         if hasattr(self, '_axis'):
             self._axis.removeNode()
             del self._axis
+        
         if self._ival:
             self._ival.finish()
             base.sfxManagerList[0].stopAllSounds()
+        
         self._ival = None
         water = None
         if self.cr is not None and self.cr.activeWorld is not None:
             water = self.cr.activeWorld.getWater()
+        
         if water:
             water.patch.removeFlatWell(self.getName())
+        
         self._unloadActors()
         self._unloadSound()
         del self._serial
@@ -133,20 +147,21 @@ class Cutscene(NodePath, DirectObject):
         if self.timer:
             self.timer.removeNode()
             self.timer = None
+        
         self.ignore('cutscene-finish')
-
+    
     def getName(self):
         return '%s-%s' % (self._data.id, self._serial)
 
     def getDoneEvent(self):
         return '%s-done' % self.getName()
-
+    
     def setCallback(self, callback):
         self._callback = callback
-
+    
     def getActor(self, actorKey):
         return self._actorKey2actor[actorKey]
-
+    
     def forceOriginNode(self):
         if self.cr is None:
             self.setPos(render, 0, 0, 0)
@@ -161,17 +176,19 @@ class Cutscene(NodePath, DirectObject):
         elif self._data.id == CutsceneData.Cutscene3_1:
             self.setPos(253.226, -430.155, 1.241)
             self.setH(120.39)
-
+    
     def _loadActors(self):
         cutCam = CutsceneActor.CutCam(self._data)
         locators = CutsceneActor.CutLocators(self._data)
         self._locators = locators
         self._locators.setOrigin(self)
         self.notify.debug('cutscene origin %s' % self.getPos())
-        self._actors = [cutCam, locators]
+        self._actors = [
+            cutCam,
+            locators]
         for ctor in self._data.actorFunctors:
             self._actors.append(ctor(self._data))
-
+        
         self._actorKey2actor = {}
         for actor in self._actors:
             self._actorKey2actor[actor.getThisActorKey()] = actor
@@ -180,7 +197,7 @@ class Cutscene(NodePath, DirectObject):
         del self._actorKey2actor
         for actor in self._actors:
             actor.destroy()
-
+        
         del self._locators
         del self._actors
 
@@ -191,44 +208,47 @@ class Cutscene(NodePath, DirectObject):
         self._sounds = []
         for soundFile in makeList(self._data.soundFile):
             self._sounds.append(loader.loadSfx(soundFile))
-
+    
     def _unloadSound(self):
         del self._sounds
 
     def _startCutscene(self):
         if self.cr:
             base.musicMgr.requestCurMusicFadeOut(1.0, 0.0)
+        
         aspect2d.hide()
         for actor in self._actors:
             actor.startCutscene(self._locators)
-
+        
         CameraShaker.setCutsceneScale(0.1)
         self.acceptOnce('escape', self._skip)
         if self.startedCallback:
             self.startedCallback()
+        
         render.prepareScene(base.win.getGsg())
-
+    
     def _skip(self):
         if self.allowSkip:
             self._ival.finish()
             base.sfxManagerList[0].stopAllSounds()
             messenger.send('cutscene-skipped')
-            return
-        messenger.send('cutscene-not-skipped')
-
+        else:
+            messenger.send('cutscene-not-skipped')
+    
     def skipNow(self):
         self._ival.finish()
         base.sfxManagerList[0].stopAllSounds()
         messenger.send('cutscene-skipped')
-
+    
     def _finishCutscene(self):
         if self.cr:
             base.musicMgr.requestCurMusicFadeIn(3.0, 1.0)
+        
         self.ignore('escape')
         CameraShaker.clearCutsceneScale()
         for actor in self._actors:
             actor.finishCutscene()
-
+        
         base.sfxManagerList[0].stopAllSounds()
         aspect2d.show()
         if self.oldTodState:
@@ -236,22 +256,24 @@ class Cutscene(NodePath, DirectObject):
                 self.cr.timeOfDayManager.setEnvironment(self.oldTodState)
             else:
                 base.pe.changeTimeOfDay()
+        
         messenger.send('cutscene-finish')
-
+    
     def startTimer(self):
         self._resetTimer()
         taskMgr.add(self.updateTimer, 'cutsceneTimerUpdate')
         self.acceptOnce('cutscene-finish', self.stopTimer)
-
+    
     def stopTimer(self):
         taskMgr.remove('cutsceneTimerUpdate')
 
-    def updateTimer(self, task=None):
+    def updateTimer(self, task = None):
         if self._ival.isPlaying():
             totalPlayTime = globalClock.getRealTime() - self.timerStartTime - self.timerTotalPauseTime
             self.timer['text'] = '%.2f' % totalPlayTime
+        
         return Task.cont
-
+    
     def play(self):
         self._ival = Sequence()
         self._ival.extend((Func(self._startCutscene),))
@@ -259,25 +281,29 @@ class Cutscene(NodePath, DirectObject):
         seqDuration = 0
         for actor in self._actors:
             scene.append(actor.getInterval())
-
+        
         if self.timer:
             scene.append(Func(self.startTimer))
+        
         ivalFunc = CutsceneIvals.CutsceneIvals.get(self._data.id)
         if ivalFunc is not None:
-            bodyIval, endIval = ivalFunc(self)
+            (bodyIval, endIval) = ivalFunc(self)
             scene.append(bodyIval)
+        
         self._ival.append(scene)
         if ivalFunc is not None:
             self._ival.append(endIval)
+        
         self._ival.append(Func(self._finishCutscene))
         if self._callback is not None:
             self._ival.append(Func(self._callback))
+        
         seqDuration = scene.getDuration()
         for sound in self._sounds:
-            scene.append(SoundInterval(sound, duration=seqDuration))
-
-        DelayedCall(self._ival.start, 'cutscene-start-sync', delay=0.001)
-
+            scene.append(SoundInterval(sound, duration = seqDuration))
+        
+        DelayedCall(self._ival.start, 'cutscene-start-sync', delay = 0.001)
+    
     def isPlaying(self):
         return self._ival and self._ival.isPlaying()
 
@@ -290,7 +316,7 @@ class Cutscene(NodePath, DirectObject):
         if self._ival:
             self._ival.pause()
             self.timerPauseTime = globalClock.getRealTime()
-
+    
     def resume(self):
         if self._ival:
             self.timerTotalPauseTime += globalClock.getRealTime() - self.timerPauseTime
@@ -307,3 +333,5 @@ class Cutscene(NodePath, DirectObject):
 
     def setStartCallback(self, callback):
         self.startedCallback = callback
+
+
