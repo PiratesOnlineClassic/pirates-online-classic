@@ -1,6 +1,8 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from pirates.battle.DistributedBattleNPC import DistributedBattleNPC
+from pirates.piratesbase import PLocalizer
+from pirates.pirate import AvatarTypes
 from pirates.creature.Alligator import Alligator
 from pirates.creature.Bat import Bat
 from pirates.creature.Chicken import Chicken
@@ -14,19 +16,34 @@ from pirates.creature.Scorpion import Scorpion
 from pirates.creature.Seagull import Seagull
 from pirates.creature.Stump import Stump
 from pirates.creature.Wasp import Wasp
-from pirates.pirate import AvatarTypes
-from pirates.piratesbase import PLocalizer
-
-CreatureTypes = {AvatarTypes.Crab: Crab, AvatarTypes.RockCrab: Crab, AvatarTypes.GiantCrab: Crab, AvatarTypes.Chicken: Chicken, AvatarTypes.Rooster: Rooster, AvatarTypes.Pig: Pig, AvatarTypes.Dog: Dog, AvatarTypes.Seagull: Seagull, AvatarTypes.Stump: Stump, AvatarTypes.FlyTrap: FlyTrap, AvatarTypes.Scorpion: Scorpion, AvatarTypes.DreadScorpion: Scorpion, AvatarTypes.Alligator: Alligator, AvatarTypes.BigGator: Alligator, AvatarTypes.HugeGator: Alligator, AvatarTypes.Bat: Bat, AvatarTypes.VampireBat: Bat, AvatarTypes.Wasp: Wasp, AvatarTypes.AngryWasp: Wasp, AvatarTypes.Monkey: Monkey}
+CreatureTypes = {
+    AvatarTypes.Crab: Crab,
+    AvatarTypes.RockCrab: Crab,
+    AvatarTypes.GiantCrab: Crab,
+    AvatarTypes.Chicken: Chicken,
+    AvatarTypes.Rooster: Rooster,
+    AvatarTypes.Pig: Pig,
+    AvatarTypes.Dog: Dog,
+    AvatarTypes.Seagull: Seagull,
+    AvatarTypes.Stump: Stump,
+    AvatarTypes.FlyTrap: FlyTrap,
+    AvatarTypes.Scorpion: Scorpion,
+    AvatarTypes.DreadScorpion: Scorpion,
+    AvatarTypes.Alligator: Alligator,
+    AvatarTypes.BigGator: Alligator,
+    AvatarTypes.HugeGator: Alligator,
+    AvatarTypes.Bat: Bat,
+    AvatarTypes.VampireBat: Bat,
+    AvatarTypes.Wasp: Wasp,
+    AvatarTypes.AngryWasp: Wasp,
+    AvatarTypes.Monkey: Monkey}
 
 class DistributedCreature(DistributedBattleNPC):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCreature')
-
+    
     def __init__(self, cr):
         DistributedBattleNPC.__init__(self, cr)
         self.creature = None
-        return
 
     def generate(self):
         DistributedBattleNPC.generate(self)
@@ -35,15 +52,15 @@ class DistributedCreature(DistributedBattleNPC):
     def announceGenerate(self):
         DistributedBattleNPC.announceGenerate(self)
         self.addActive()
-
+    
     def delete(self):
         if self.creature:
             self.creature.detachNode()
             self.creature.delete()
             self.creature = None
+        
         DistributedBattleNPC.delete(self)
-        return
-
+    
     def setupCreature(self, avatarType):
         if not self.creature:
             self.creature = CreatureTypes[avatarType.getNonBossType()]()
@@ -52,7 +69,7 @@ class DistributedCreature(DistributedBattleNPC):
             self.motionFSM.setAnimInfo(self.getAnimInfo('LandRoam'))
             self.nametag3d.setName('empty_use_self_dot_creature_dot_nametag3d_instead')
             self.creature.nametag3d.reparentTo(self.nametag3d)
-
+    
     def loop(self, *args, **kw):
         return self.creature and self.creature.loop(*args, **kw)
 
@@ -111,6 +128,7 @@ class DistributedCreature(DistributedBattleNPC):
                 color2 = EnemyGlobals.getNametagColor(self.avatarType)
                 if self.isBoss():
                     color2 = (0.95, 0.1, 0.1, 1)
+                
                 nameText['fg'] = color2
 
     @report(types=['module', 'args'], dConfigParam='want-nametag-report')
@@ -128,19 +146,19 @@ class DistributedCreature(DistributedBattleNPC):
         if self.creature:
             self.creature.addActive()
             self.creature.nametag.setName(' ')
-
+    
     def removeActive(self):
         if self.creature:
             self.creature.removeActive()
-
+    
     def customInteractOptions(self):
-        self.setInteractOptions(isTarget=False, allowInteract=False)
+        self.setInteractOptions(isTarget = False, allowInteract = False)
 
     @report(types=['module', 'args'], dConfigParam='want-nametag-report')
     def setAvatarType(self, avatarType):
         DistributedBattleNPC.setAvatarType(self, avatarType)
         self.setupCreature(avatarType)
-
+    
     def getEnterDeathTrack(self):
         return Sequence(Func(self.setAllowInteract, False), self.creature.getEnterDeathTrack())
 
@@ -150,15 +168,14 @@ class DistributedCreature(DistributedBattleNPC):
     def setLevel(self, level):
         DistributedBattleNPC.setLevel(self, level)
         self.creature.setLevel(level)
-
+    
     def getAnimInfo(self, *args, **kw):
         return self.creature and self.creature.getAnimInfo(*args, **kw)
 
     def freezeShadow(self, *args, **kw):
         self.creature.shadowPlacer.off()
         self.freezeTask = None
-        return
-
+    
     def setHeight(self, height):
         self.height = height
         self.creature.adjustNametag3d(self.scale)
@@ -166,5 +183,8 @@ class DistributedCreature(DistributedBattleNPC):
             self.collTube.setPointB(0, 0, height)
             if self.collNodePath:
                 self.collNodePath.forceRecomputeBounds()
+        
         if self.battleTube:
             self.battleTube.setPointB(0, 0, max(5.0, height))
+
+

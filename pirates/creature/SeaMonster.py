@@ -1,42 +1,40 @@
-import copy
-import random
-
-from direct.actor import Actor
-from direct.gui.OnscreenText import OnscreenText
 from direct.interval.IntervalGlobal import *
-from otp.avatar import Avatar
-from otp.otpbase import OTPGlobals, OTPRender
-from panda3d.core import *
-from pirates.battle import EnemyGlobals
-from pirates.effects.JRDeathEffect import JRDeathEffect
-from pirates.effects.JRSpiritEffect import JRSpiritEffect
-from pirates.effects.ShockwaveRing import ShockwaveRing
-from pirates.effects.UsesEffectNode import UsesEffectNode
+from direct.gui.OnscreenText import OnscreenText
+from direct.actor import Actor
+from pandac.PandaModules import *
+from otp.otpbase import OTPGlobals
+from pirates.piratesbase import PiratesGlobals
 from pirates.movement.AnimationMixer import AnimationMixer
 from pirates.movement.UsesAnimationMixer import UsesAnimationMixer
+from otp.avatar import Avatar
+from pirates.effects.UsesEffectNode import UsesEffectNode
 from pirates.pirate import AvatarTypes
 from pirates.pirate.AvatarType import AvatarType
-from pirates.piratesbase import PiratesGlobals
-
+from otp.otpbase import OTPRender
+from pirates.effects.JRDeathEffect import JRDeathEffect
+from pirates.effects.ShockwaveRing import ShockwaveRing
+from pirates.effects.JRSpiritEffect import JRSpiritEffect
+from pirates.battle import EnemyGlobals
+import random
+import copy
 WALK_CUTOFF = 0.5
 ADVANCE_CUTOFF = 0.5
 RUN_CUTOFF = PiratesGlobals.ToonForwardSpeed
 
 class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
-    
     FailsafeAnims = (('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0))
-    SfxNames = {'death': 'bodyFall-08.mp3'}
+    SfxNames = {
+        'death': 'bodyFall-08.mp3'}
     sfx = {}
     actor = None
     animInfo = {}
-
+    
     class AnimationMixer(AnimationMixer):
-        
         LOOP = AnimationMixer.LOOP
         ACTION = dict(AnimationMixer.ACTION)
         ACTION['MOVIE'] = AnimationMixer.ACTION_INDEX + 1
-
-    def __init__(self, animationMixer=None):
+    
+    def __init__(self, animationMixer = None):
         Avatar.Avatar.__init__(self)
         UsesEffectNode.__init__(self)
         self.setPickable(0)
@@ -50,7 +48,6 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
         OTPRender.renderReflection(False, self, 'p_creature', None)
         animationMixer = self.AnimationMixer
         UsesAnimationMixer.__init__(self, animationMixer)
-        return
 
     def delete(self):
         Avatar.Avatar.delete(self)
@@ -72,10 +69,11 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
             self.height = EnemyGlobals.getHeight(avatarType)
             self.initializeDropShadow()
             self.initializeNametag3d()
-
+    
     def initializeNametag3d(self):
-        if self.avatarType.isA(AvatarType(base=AvatarTypes.Animal)):
+        if self.avatarType.isA(AvatarType(base = AvatarTypes.Animal)):
             return
+        
         Avatar.Avatar.initializeNametag3d(self)
         self.nametag3d.setH(self.getGeomNode().getH())
         self.nametag3d.setFogOff()
@@ -86,8 +84,9 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
         if self.iconNodePath.isEmpty():
             self.notify.warning('empty iconNodePath in initializeNametag3d')
             return 0
+        
         if not self.nameText:
-            self.nameText = OnscreenText(fg=Vec4(1, 1, 1, 1), bg=Vec4(0, 0, 0, 0), scale=1.1, align=TextNode.ACenter, mayChange=1, font=PiratesGlobals.getPirateBoldOutlineFont())
+            self.nameText = OnscreenText(fg = Vec4(1, 1, 1, 1), bg = Vec4(0, 0, 0, 0), scale = 1.1, align = TextNode.ACenter, mayChange = 1, font = PiratesGlobals.getPirateBoldOutlineFont())
             self.nameText.reparentTo(self.iconNodePath)
             self.nameText.setTransparency(TransparencyAttrib.MDual, 2)
             self.nameText.setColorScaleOff(100)
@@ -95,7 +94,7 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
             self.nameText.setFogOff()
             scale = self.nametag3d.getScale(render)
             self.nameText.setScale(1.0 / scale[0])
-
+    
     def scaleAnimRate(self, forwardSpeed):
         rate = 1.0
         myMaxSpeed = self.getMaxSpeed()
@@ -105,6 +104,7 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
             prevTime = self.prevSpeedClock
             self.prevSpeedClock = currTime
             rate = min(1.25, forwardSpeed / maxSpeed)
+        
         return rate
 
     def getNametagJoints(self):
@@ -114,9 +114,9 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
             joint = bundle.findChild('name_tag')
             if joint:
                 joints.append(joint)
-
+        
         return joints
-
+    
     def getAirborneHeight(self):
         return 0.0
 
@@ -141,16 +141,18 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
     def stop(self, *args, **kwArgs):
         UsesAnimationMixer.stop(self, *args, **kwArgs)
 
-    def getDeathAnimName(self, animNum=None):
+    def getDeathAnimName(self, animNum = None):
         animStrings = ['death']
         if animNum not in range(len(animStrings)):
             animNum = random.choice([0])
+        
         return animStrings[animNum]
 
     def getEnterDeathTrack(self):
         animName = self.getDeathAnimName()
         if not animName:
             return Sequence()
+        
         frames = self.getNumFrames(animName)
         duration = self.getDuration(animName)
         if not frames:
@@ -171,12 +173,14 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
                     deathEffect.setScale(effectScale)
                     deathEffect.effectScale = effectScale
                     deathEffect.play()
+                
                 shockwaveRingEffect = ShockwaveRing.getEffect()
                 if shockwaveRingEffect:
                     shockwaveRingEffect.reparentTo(render)
                     shockwaveRingEffect.setPos(self.getPos(render))
                     shockwaveRingEffect.size = 24.0 + effectScale
                     Sequence(Wait(0.25), Func(shockwaveRingEffect.play)).start()
+                
                 spiritEffect = JRSpiritEffect.getEffect()
                 if spiritEffect:
                     spiritEffect.reparentTo(render)
@@ -184,7 +188,7 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
                     spiritEffect.setZ(self.getZ(render) + 6.0)
                     Sequence(Wait(0.25), Func(spiritEffect.play)).start()
 
-        return Sequence(Wait(0.5), Parallel(Func(playSfx), Sequence(self.actorInterval(animName, blendOutT=0.0), Func(self.disableMixing), Func(self.pose, animName, frames - 1, blendT=0.0)), Sequence(Wait(duration / 3.0), Func(self.setTransparency, 1), LerpColorScaleInterval(self, duration / 4.0, Vec4(0.55, 0.7, 0.2, 1.0), startColorScale=Vec4(1)), Wait(duration / 3.0), Func(startVFX), LerpColorScaleInterval(self, 0.5, Vec4(0.0, 0.0, 0.0, 0.0), startColorScale=Vec4(0.55, 0.7, 0.2, 1.0)), Func(self.hide), Func(self.clearTransparency), Func(self.clearColorScale)), Func(self.setAllowInteract, False)))
+        return Sequence(Wait(0.5), Parallel(Func(playSfx), Sequence(self.actorInterval(animName, blendOutT = 0.0), Func(self.disableMixing), Func(self.pose, animName, frames - 1, blendT = 0.0)), Sequence(Wait(duration / 3.0), Func(self.setTransparency, 1), LerpColorScaleInterval(self, duration / 4.0, Vec4(0.55000000000000004, 0.69999999999999996, 0.20000000000000001, 1.0), startColorScale = Vec4(1)), Wait(duration / 3.0), Func(startVFX), LerpColorScaleInterval(self, 0.5, Vec4(0.0, 0.0, 0.0, 0.0), startColorScale = Vec4(0.55000000000000004, 0.69999999999999996, 0.20000000000000001, 1.0)), Func(self.hide), Func(self.clearTransparency), Func(self.clearColorScale)), Func(self.setAllowInteract, False)))
 
     def getExitDeathTrack(self):
         return Sequence(Func(self.show))
@@ -196,6 +200,7 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
     def setupAnimInfoState(cls, state, info):
         if len(info) < len(cls.FailsafeAnims):
             info += cls.FailsafeAnims[len(info) - len(cls.FailsafeAnims):]
+        
         cls.animInfo[state] = info
 
     @classmethod
@@ -212,24 +217,31 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
         animDict = {}
         for anim in animList:
             animDict[anim[0]] = filePrefix + anim[1]
-
+        
         cls.animDict = animDict
-
+    
     def setLODs(self):
         avatarDetail = base.config.GetString('avatar-detail', 'high')
         if avatarDetail == 'high':
             dist = [
-             0, 20, 80, 280]
+                0,
+                20,
+                80,
+                280]
+        elif avatarDetail == 'med':
+            dist = [
+                0,
+                10,
+                40,
+                280]
+        elif avatarDetail == 'low':
+            dist = [
+                0,
+                6,
+                20,
+                280]
         else:
-            if avatarDetail == 'med':
-                dist = [
-                 0, 10, 40, 280]
-            else:
-                if avatarDetail == 'low':
-                    dist = [
-                     0, 6, 20, 280]
-                else:
-                    raise StandardError, 'Invalid avatar-detail: %s' % avatarDetail
+            raise StandardError, 'Invalid avatar-detail: %s' % avatarDetail
         self.addLOD('low', dist[3], dist[2])
         self.addLOD('med', dist[2], dist[1])
         self.addLOD('hi', dist[1], dist[0])
@@ -243,25 +255,35 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
         animDict = {}
         for anim in animList:
             animDict[anim[0]] = filePrefix + anim[1]
-
+        
         cls.animDict = animDict
         filePrefix = cls.ModelInfo[1]
         for name in cls.SfxNames:
             cls.sfx[name] = loader.loadSfx('audio/' + cls.SfxNames[name])
-
+        
         cls.actor = Actor.Actor()
         if loader.loadModel(filePrefix + 'med') != None:
             avatarDetail = base.config.GetString('avatar-detail', 'high')
             if avatarDetail == 'high':
-                dist = [0, 200, 800, 2800]
+                dist = [
+                    0,
+                    200,
+                    800,
+                    2800]
+            elif avatarDetail == 'med':
+                dist = [
+                    0,
+                    100,
+                    400,
+                    2800]
+            elif avatarDetail == 'low':
+                dist = [
+                    0,
+                    60,
+                    200,
+                    2800]
             else:
-                if avatarDetail == 'med':
-                    dist = [0, 100, 400, 2800]
-                else:
-                    if avatarDetail == 'low':
-                        dist = [0, 60, 200, 2800]
-                    else:
-                        raise StandardError, 'Invalid avatar-detail: %s' % avatarDetail
+                raise StandardError, 'Invalid avatar-detail: %s' % avatarDetail
             cls.actor.setLODNode()
             cls.actor.addLOD('low', dist[3], dist[2])
             cls.actor.addLOD('med', dist[2], dist[1])
@@ -274,7 +296,6 @@ class SeaMonster(UsesAnimationMixer, Avatar.Avatar, UsesEffectNode):
             cls.actor.loadModel(cls.ModelInfo[0])
             cls.actor.loadAnims(cls.animDict)
         cls.actor.getGeomNode().setH(180)
-        return
 
 
 SeaMonster.setupAnimInfo()
