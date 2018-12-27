@@ -30,32 +30,32 @@ class PiratesRPCServerUD(Thread):
         self.server.register_introspection_functions()
         self.registerCommands()
 
-    def register_function(self, function, name=None):
+    def registerFunction(self, function, name=None):
         self.server.register_function(function, name)
 
     def run(self):
         self.notify.info('Starting RPC server at %s:%d' % (self.hostname, self.port))
         self.server.serve_forever(poll_interval=0.001)
 
-    def stop_Server(self):
+    def shutdown(self):
         self.server.shutdown()
         self.server.server_close()
 
     def registerCommands(self):
-        self.register_function(self.ping)
-        self.register_function(self.systemMessage)
-        self.register_function(self.systemMessageChannel)
-        self.register_function(self.kickChannel)
-        self.register_function(self.getDistricts)
-        self.register_function(self.getHolidays)
-        self.register_function(self.startHoliday)
-        self.register_function(self.stopHoliday)
+        self.registerFunction(self.ping)
+        self.registerFunction(self.systemMessage)
+        self.registerFunction(self.systemMessageChannel)
+        self.registerFunction(self.kickChannel)
+        self.registerFunction(self.getDistricts)
+        self.registerFunction(self.getHolidays)
+        self.registerFunction(self.startHoliday)
+        self.registerFunction(self.stopHoliday)
 
     def formatCallback(self, code=200, message='Success', **kwargs):
         response = {'code': code, 'message': message}
         for keyword in kwargs:
             response[keyword] = kwargs[keyword]
-        
+
         return json.dumps(response)
 
     def ping(self, response):
@@ -69,7 +69,7 @@ class PiratesRPCServerUD(Thread):
 
         Example response: 'pong'
         """
-        
+
         return self.formatCallback(response=response)
 
     def systemMessage(self, message):
@@ -80,7 +80,7 @@ class PiratesRPCServerUD(Thread):
         Parameters:
             [str message] = The message to broadcast.
         """
-        
+
         self.air.systemMessage(message)
         return self.formatCallback()
 
@@ -94,7 +94,7 @@ class PiratesRPCServerUD(Thread):
             [int channel] = The channel to direct the message to.
             [str message] = The message to broadcast.
         """
-        
+
         self.air.systemMessage(message, channel)
         return self.formatCallback()
 
