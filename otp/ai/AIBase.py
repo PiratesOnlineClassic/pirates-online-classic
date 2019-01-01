@@ -13,6 +13,7 @@ from direct.showbase.JobManagerGlobal import *
 from direct.showbase.EventManagerGlobal import *
 from direct.showbase.PythonUtil import *
 from direct.showbase import PythonUtil
+from direct.showbase import DConfig
 from direct.interval.IntervalManager import ivalMgr
 from direct.task import Task
 from direct.showbase import EventManager
@@ -23,7 +24,7 @@ class AIBase():
     notify = directNotify.newCategory('AIBase')
 
     def __init__(self):
-        self.config = getConfigShowbase()
+        self.config = DConfig
         __builtins__['__dev__'] = self.config.GetBool('want-dev', False)
         logStackDump = self.config.GetBool('log-stack-dump', not __dev__) or self.config.GetBool(
             'ai-log-stack-dump', not __dev__)

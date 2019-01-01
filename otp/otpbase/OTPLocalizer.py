@@ -4,11 +4,11 @@ import types
 from panda3d.core import *
 
 try:
-    language = getConfigExpress().GetString('language', 'english')
-    checkLanguage = getConfigExpress().GetBool('check-language', 0)
+    language = ConfigVariableString('language', 'english').getValue()
+    checkLanguage = ConfigVariableBool('check-language', False).getValue()
 except BaseException:
     language = simbase.config.GetString('language', 'english')
-    checkLanguage = simbase.config.GetBool('check-language', 0)
+    checkLanguage = simbase.config.GetBool('check-language', False)
 else:
     print 'OTPLocalizer: Running in language: %s' % language
     if language != 'english':
