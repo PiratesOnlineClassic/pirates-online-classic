@@ -1,3 +1,6 @@
+# File: Q (Python 2.4)
+
+
 class QuestStatData:
     EnemyDefeatTime = 0.00833333
     ShipDefeatTime = 0.05
@@ -9,20 +12,20 @@ class QuestStatData:
     Tasks = {}
     Enemies = {}
     Misc = {}
-
-    def incrementTasks(self, name, count=1):
+    
+    def incrementTasks(self, name, count = 1):
         if not self.Tasks.has_key(name):
             self.Tasks[name] = count
         else:
             self.Tasks[name] = self.Tasks[name] + count
-
-    def incrementEnemies(self, name, count=1):
+    
+    def incrementEnemies(self, name, count = 1):
         if not self.Enemies.has_key(name):
             self.Enemies[name] = count
         else:
             self.Enemies[name] = self.Enemies[name] + count
-
-    def incrementMisc(self, name, count=1):
+    
+    def incrementMisc(self, name, count = 1):
         if not self.Misc.has_key(name):
             self.Misc[name] = count
         else:
@@ -38,19 +41,19 @@ class QuestStatData:
         self.treasureTime = self.Misc.get('treasures') * self.TreasureTime
         self.visitTime = self.Misc.get('visits') * self.VisitTime
         self.totalTime = self.totalQuestFightTime + self.totalVoyageTime + self.goldTime + self.TreasureTime + self.visitTime
-
+    
     def __repr__(self):
         self.computeTime()
         argStr = ''
-        for name, value in self.Tasks.items():
+        for (name, value) in self.Tasks.items():
             argStr += '%s=%s,' % (name, repr(self.Tasks[name]))
-
-        for name, value in self.Enemies.items():
+        
+        for (name, value) in self.Enemies.items():
             argStr += '%s=%s,' % (name, repr(self.Enemies[name]))
-
-        for name, value in self.Misc.items():
+        
+        for (name, value) in self.Misc.items():
             argStr += '%s=%s,' % (name, repr(self.Misc[name]))
-
+        
         argStr += 'totalEnemyFightTime=%s,' % self.totalEnemyTime
         argStr += 'totalShipFightTime=%s,' % self.totalShipTime
         argStr += 'totalQuestFightTime=%s,' % self.totalQuestFightTime
@@ -61,3 +64,5 @@ class QuestStatData:
         argStr += 'visitTime=%s,' % self.visitTime
         argStr += 'totalTime=%s,' % self.totalTime
         return '%s(%s)' % (self.__class__.__name__, argStr)
+
+

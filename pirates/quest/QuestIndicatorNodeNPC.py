@@ -1,35 +1,30 @@
-from direct.showbase.PythonUtil import report
 from pirates.effects.QuestIndicatorEffect import QuestIndicatorEffect
 from pirates.quest.QuestIndicatorGridNode import QuestIndicatorGridNode
-
+from direct.showbase.PythonUtil import report
 
 class QuestIndicatorNodeNPC(QuestIndicatorGridNode):
     
-
     def __init__(self, questStep):
         self.nearEffect = None
-        QuestIndicatorGridNode.__init__(self, 'NPCIndicator', [
-         30, 150], questStep)
-        return
+        QuestIndicatorGridNode.__init__(self, 'NPCIndicator', [30, 150], questStep)
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def delete(self):
         QuestIndicatorGridNode.delete(self)
         self.nearEffect = None
-        return
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def enterOff(self):
         if self.nearEffect and not self.nearEffect.isEmpty():
             self.nearEffect.reallyCleanUpEffect()
+        
         self.nearEffect = None
         QuestIndicatorGridNode.enterOff(self)
-        return
-
+    
     def enterFar(self):
         QuestIndicatorGridNode.enterFar(self)
         self.requestTargetRefresh()
-
+    
     def exitFar(self):
         QuestIndicatorGridNode.exitFar(self)
         self.stopTargetRefresh()
@@ -55,13 +50,13 @@ class QuestIndicatorNodeNPC(QuestIndicatorGridNode):
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def stepObjArrived(self, stepObj):
         QuestIndicatorGridNode.stepObjArrived(self, stepObj)
-        if self.getCurrentOrNextState() in ('Near', ):
+        if self.getCurrentOrNextState() in ('Near',):
             self.startNearEffect()
-
+    
     def stepObjLeft(self):
         self.stopNearEffect()
         QuestIndicatorGridNode.stepObjLeft(self)
-
+    
     def showEffect(self):
         QuestIndicatorGridNode.showEffect(self)
         if self.nearEffect and not self.nearEffect.isEmpty():
@@ -76,12 +71,14 @@ class QuestIndicatorNodeNPC(QuestIndicatorGridNode):
     def startNearEffect(self):
         if self.nearEffect and not self.nearEffect.isEmpty():
             self.nearEffect.reallyCleanUpEffect()
+        
         self.nearEffect = QuestIndicatorEffect.getEffect()
         self.nearEffect.setWantBottomEffect(self.wantBottomEffect)
         self.nearEffect.startLoop()
         if self.stepObj:
             self.nearEffect.particleDummy.reparentTo(self.stepObj)
             self.nearEffect.reparentTo(self.stepObj)
+        
         if self.muted:
             self.hideEffect()
 
@@ -89,3 +86,5 @@ class QuestIndicatorNodeNPC(QuestIndicatorGridNode):
     def stopNearEffect(self):
         if self.nearEffect and not self.nearEffect.isEmpty():
             self.nearEffect.stopLoop()
+
+

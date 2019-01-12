@@ -1,16 +1,13 @@
-from direct.showbase.PythonUtil import report
-from pirates.piratesgui.RadarGui import RADAR_OBJ_TYPE_QUEST
 from pirates.quest.QuestIndicatorNode import QuestIndicatorNode
-
+from pirates.piratesgui.RadarGui import RADAR_OBJ_TYPE_QUEST
+from direct.showbase.PythonUtil import report
 
 class QuestIndicatorGridNode(QuestIndicatorNode):
     
-
     def __init__(self, name, zoneRadii, questStep):
         self.pendingStepObj = None
         self.stepObj = None
         QuestIndicatorNode.__init__(self, name, zoneRadii, questStep)
-        return
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def delete(self):
@@ -18,8 +15,8 @@ class QuestIndicatorGridNode(QuestIndicatorNode):
         if self.pendingStepObj:
             base.cr.relatedObjectMgr.abortRequest(self.pendingStepObj)
             self.pendingStepObj = None
+        
         QuestIndicatorNode.delete(self)
-        return
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def placeInWorld(self):
@@ -44,15 +41,16 @@ class QuestIndicatorGridNode(QuestIndicatorNode):
                 self.setPos(*pos)
                 self.setHpr(h, 0, 0)
                 localAvatar.enableQuestArrow(self)
-        return
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def loadZoneLevel(self, level):
         QuestIndicatorNode.loadZoneLevel(self, level)
         if level == 0:
             self.request('At')
+        
         if level == 1:
             self.request('Near')
+        
         if level == 2:
             self.request('Far')
 
@@ -61,8 +59,10 @@ class QuestIndicatorGridNode(QuestIndicatorNode):
         QuestIndicatorNode.unloadZoneLevel(self, level)
         if level == 0:
             self.request('Near')
+        
         if level == 1:
             self.request('Far')
+        
         if level == 2:
             self.request('Off')
 
@@ -108,10 +108,10 @@ class QuestIndicatorGridNode(QuestIndicatorNode):
         self.stepObj = stepObj
         self.accept(stepObj.getDisableEvent(), self.stepObjLeft)
         self.placeInWorld()
-        return
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def stepObjLeft(self):
         self.stepObj = None
         self.placeInWorld()
-        return
+
+

@@ -17,6 +17,7 @@ class QuestStatus:
         self.initialized = False
 
     def delete(self):
+        
         try:
             self.QuestStatus_deleted
         except:
@@ -38,7 +39,7 @@ class QuestStatus:
                 self.initialized = True
             else:
                 self.notify.warning('inventory not available yet!')
-
+    
     def createLadders(self, inventory):
         if inventory:
             for quest in inventory.getQuestList():
@@ -68,7 +69,7 @@ class QuestStatus:
                         self.cacheHistoryMode = True
                         questStub.completePreviousContainers()
                         self.cacheHistoryMode = False
-        
+
         for (ladderId, ladderDNA) in QuestLadderDB.FortuneQuestLadderDict.items():
             if ladderDNA.hasQuest(questId):
                 if not self.ladders.has_key(ladderId):
@@ -94,7 +95,7 @@ class QuestStatus:
             if questId != droppedQuestId and ladder.hasQuest(questId):
                 ladderActive = True
                 break
-
+        
         if not ladderActive:
             ladderName = ladder.getName()
             if QuestLadderDB.FortuneQuestLadderDict.has_key(ladderName):
@@ -115,7 +116,7 @@ class QuestStatus:
             ladder.destroy()
         else:
             self.ladderDeleteList.append(ladderName)
-
+    
     def deleteLadder(self, ladderName):
         if self.ladders.has_key(ladderName):
             self.ladders[ladderName].destroy()
@@ -132,7 +133,7 @@ class QuestStatus:
         quests = inventory.getQuestList()
         if len(quests) == 0:
             self.notify.warning('av: %s has no active quests!' % self.av.getDoId())
-            return
+            return None
         
         return quests
 
@@ -156,7 +157,7 @@ class QuestStatus:
         else:
             self.av.setCurrentQuestChoiceContainers(containers)
         self.choiceContainers[container.getName()] = container
-
+    
     def removeCurrentQuestChoiceContainer(self, container):
         nameInt = container.getQuestInt()
         containers = self.av.getCurrentQuestChoiceContainers()
@@ -175,7 +176,7 @@ class QuestStatus:
         ladderHistory = self.av.getQuestLadderHistory()
         if len(ladderHistory):
             self.av.b_setQuestLadderHistory([])
-
+    
     def writeHistory(self):
         ladderHistory = self.av.getQuestLadderHistory()
         self.av.b_setQuestLadderHistory(ladderHistory)
@@ -213,7 +214,7 @@ class QuestStatus:
             self.av.b_setQuestLadderHistory(ladderHistory)
         else:
             self.av.setQuestLadderHistory(ladderHistory)
-
+    
     def __getDeepestChoiceContainerWithGiver(self, giverId):
         deepestContainer = None
         for container in self.choiceContainers.values():
@@ -221,7 +222,7 @@ class QuestStatus:
                 deepestContainer = container
         
         return deepestContainer
-
+    
     def getQuestOffersFromGiver(self, giverId):
         quests = self.getCurrentQuests()
         if not quests:
@@ -252,7 +253,7 @@ class QuestStatus:
 
     def hasLadderQuest(self, quest):
         return self.hasLadderQuestId(quest.getQuestId())
-
+    
     def hasLadderQuestId(self, questId):
         for currLadder in self.ladders.values():
             if currLadder.hasQuest(questId):
@@ -287,7 +288,7 @@ class QuestStatus:
             if stub:
                 return stub
         return None
-
+    
     def getNextQuestId(self, questId):
         for currLadder in self.ladders.values():
             if currLadder.hasQuest(questId):
@@ -313,7 +314,7 @@ class QuestStatus:
                             self.notify.debug('getCompletedContainer().questId Excluded: %s' % questId)
                             self.notify.debug('getCompletedContainer().completedStubCount: %s' % completedStubCount)
                             includeSelf = False
-                    
+
                     if container and container.hasQuest(questId) and includeSelf:
                         ladderName = ladder.getName()
                         if ladderName in self.ladderDeleteList:
@@ -346,7 +347,7 @@ class QuestStatus:
 
     def setNPCInteractMode(self, mode):
         self.NPCInteractMode = mode
-
+    
     def getNPCInteractMode(self):
         return self.NPCInteractMode
 
@@ -357,4 +358,5 @@ class QuestStatus:
                 offers.append(ladder)
         
         return offers
+
 

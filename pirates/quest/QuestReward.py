@@ -12,27 +12,25 @@ from pirates.minigame import PlayingCardDropper
 from pirates.makeapirate import JewelryGlobals, TattooGlobals, ClothingGlobals
 from pirates.economy.EconomyGlobals import ItemId
 from pirates.piratesbase import Freebooter
-
 REPFACTOR_HOLIDAY = 1
 GOLDFACTOR_HOLIDAY = 1
 REWARD_TO = 3
-
 
 class QuestReward(POD):
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestReward')
     DataSet = {
         'amount': 1,
         'questId': ''}
-
-    def __init__(self, amount=None, **kwArgs):
+    
+    def __init__(self, amount = None, **kwArgs):
         if amount is not None:
             kwArgs['amount'] = amount
-
+        
         POD.__init__(self, **kwArgs)
-
+    
     def applyTo(self, trade, av):
         raise 'derived must override'
-
+    
     def getQuestRewardStruct(self):
         rewardStruct = QuestRewardStruct.QuestRewardStruct().copyFrom(self)
         rewardStruct.setRewardType(Class2DBId[self.__class__])
@@ -41,25 +39,26 @@ class QuestReward(POD):
     @staticmethod
     @exceptionLogged()
     def makeFromStruct(rewardStruct):
-        return DBId2Class[rewardStruct.rewardType]().copyFrom(rewardStruct, strict=True)
+        return DBId2Class[rewardStruct.rewardType]().copyFrom(rewardStruct, strict = True)
 
     @staticmethod
     def getDescriptionText(rewards):
         if len(rewards) == 0:
             return ''
+        
         if len(rewards) == 1:
             str = PLocalizer.QuestRewardDescS % rewards[0].getDescriptionText()
         else:
             rewardsStr = ''
             for reward in rewards:
                 rewardsStr += PLocalizer.QuestRewardDescItem % reward.getDescriptionText()
-
+            
             str = PLocalizer.QuestRewardDescM % rewardsStr
         return str
 
 
 class GoldAmountReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         global GOLDFACTOR_HOLIDAY
         avId = av.getDoId()
@@ -75,6 +74,7 @@ class GoldAmountReward(QuestReward):
         text = PLocalizer.GoldRewardDesc % goldAmt
         if GOLDFACTOR_HOLIDAY == 2:
             text = +'\\ + ' + PLocalizer.LootGoldDouble % goldAmt
+        
         return text
 
     def setGoldFactor(self, multiplier):
@@ -83,7 +83,7 @@ class GoldAmountReward(QuestReward):
 
 
 class GoldReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         avId = av.getDoId()
         goldAmt = EnemyGlobals.getMaxGoldDrop(None, self.amount, 5)
@@ -92,27 +92,27 @@ class GoldReward(QuestReward):
         elif not Freebooter.getPaidStatusAI(avId) and (REWARD_TO == 1 or REWARD_TO == 3):
             goldAmt *= GOLDFACTOR_HOLIDAY
         trade.giveGoldInPocket(goldAmt)
-        return
 
     def getDescriptionText(self):
         goldAmt = EnemyGlobals.getMaxGoldDrop(None, self.amount, 5)
         text = PLocalizer.GoldRewardDesc % goldAmt
         if GOLDFACTOR_HOLIDAY == 2:
             text = +'\\ + ' + PLocalizer.LootGoldDouble % goldAmt
+        
         return text
-
+    
     def setGoldFactor(self, multiplier):
         global GOLDFACTOR_HOLIDAY
         GOLDFACTOR_HOLIDAY = multiplier
 
 
 class PlayingCardReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         for i in range(self.amount):
             cardId = random.randint(0, 51)
             trade.giveStack(InventoryType.begin_Cards + cardId, 1)
-
+        
         av.giveCardMessage(InventoryType.begin_Cards + cardId)
 
     def getDescriptionText(self):
@@ -123,7 +123,7 @@ class PlayingCardReward(QuestReward):
 
 
 class PlayingCardTier0Reward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         card = PlayingCardDropper.dropTier0()
         trade.givePlayingCard(card)
@@ -134,7 +134,7 @@ class PlayingCardTier0Reward(QuestReward):
 
 
 class PlayingCardTier1Reward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         card = PlayingCardDropper.dropTier1()
         trade.givePlayingCard(card)
@@ -145,7 +145,7 @@ class PlayingCardTier1Reward(QuestReward):
 
 
 class PlayingCardTier2Reward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         card = PlayingCardDropper.dropTier2()
         trade.givePlayingCard(card)
@@ -156,7 +156,7 @@ class PlayingCardTier2Reward(QuestReward):
 
 
 class PlayingCardTier3Reward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         card = PlayingCardDropper.dropTier3()
         trade.givePlayingCard(card)
@@ -167,25 +167,25 @@ class PlayingCardTier3Reward(QuestReward):
 
 
 class MaxHpReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         trade.giveStack(InventoryType.Hp, self.amount)
-
+    
     def getDescriptionText(self):
         return PLocalizer.MaxHpRewardDesc % self.amount
 
 
 class MaxMojoReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         trade.giveStack(InventoryType.Mojo, self.amount)
-
+    
     def getDescriptionText(self):
         return PLocalizer.MaxMojoRewardDesc % self.amount
 
 
 class LuckReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         raise 'TODO'
 
@@ -194,7 +194,7 @@ class LuckReward(QuestReward):
 
 
 class SwiftnessReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         raise 'TODO'
 
@@ -203,7 +203,7 @@ class SwiftnessReward(QuestReward):
 
 
 class CollectReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         if self.amount >= InventoryType.begin_Collections and self.amount < InventoryType.end_Collections:
             trade.giveStackableTypeLimit(self.amount, 2)
@@ -217,7 +217,7 @@ class CollectReward(QuestReward):
 
 
 class TreasureMapReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         trade.giveNewTreasureMap('DistributedTreasureMap')
 
@@ -226,20 +226,20 @@ class TreasureMapReward(QuestReward):
 
 
 class ShipReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         if av.constructedShipDoId:
             trade.giveShip(av.constructedShipDoId)
             trade.giveNewShipToken()
-
+        
         av.constructedShipDoId = None
-
+    
     def getDescriptionText(self):
         return PLocalizer.ShipRewardDesc
 
 
 class PistolUpgradeReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         if self.amount == ItemId.PISTOL_L1:
             trade.giveStack(InventoryType.PistolWeaponL1, 1)
@@ -265,27 +265,26 @@ class PistolUpgradeReward(QuestReward):
 
 
 class PistolReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         trade.givePistolTraining()
-        trade.giveStack(InventoryType.PistolWeaponL1, 1)
 
     def getDescriptionText(self):
         return PLocalizer.PistolRewardDesc
 
 
 class DollReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         trade.giveDollTraining()
         trade.giveStack(InventoryType.DollWeaponL1, 1)
-
+    
     def getDescriptionText(self):
         return PLocalizer.DollRewardDesc
 
 
 class DaggerUpgradeReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         if self.amount == ItemId.DAGGER_L1:
             trade.giveStack(InventoryType.DaggerWeaponL1, 1)
@@ -311,7 +310,7 @@ class DaggerUpgradeReward(QuestReward):
 
 
 class CutlassUpgradeReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         if self.amount == ItemId.CUTLASS_L1:
             trade.giveStack(InventoryType.CutlassWeaponL1, 1)
@@ -328,7 +327,7 @@ class CutlassUpgradeReward(QuestReward):
         else:
             return
         av.giveWeaponMessage(self.amount)
-
+    
     def getDescriptionText(self):
         if PLocalizer.InventoryTypeNames.has_key(self.amount):
             return PLocalizer.InventoryTypeNames.get(self.amount)
@@ -337,7 +336,7 @@ class CutlassUpgradeReward(QuestReward):
 
 
 class DollUpgradeReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         if self.amount == ItemId.DOLL_L1:
             trade.giveStack(InventoryType.DollWeaponL1, 1)
@@ -363,7 +362,7 @@ class DollUpgradeReward(QuestReward):
 
 
 class WandUpgradeReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         if self.amount == ItemId.WAND_L1:
             trade.giveStack(InventoryType.WandWeaponL1, 1)
@@ -380,7 +379,7 @@ class WandUpgradeReward(QuestReward):
         else:
             return
         av.giveWeaponMessage(self.amount)
-
+    
     def getDescriptionText(self):
         if PLocalizer.InventoryTypeNames.has_key(self.amount):
             return PLocalizer.InventoryTypeNames.get(self.amount)
@@ -388,85 +387,74 @@ class WandUpgradeReward(QuestReward):
             return PLocalizer.DollRewardDesc
 
 
-class CutlassReward(QuestReward):
-
-    def applyTo(self, trade, av):
-        trade.giveCutlassTraining()
-        trade.giveStack(InventoryType.CutlassWeaponL1, 1)
-
-    def getDescriptionText(self):
-        return PLocalizer.CutlassRewardDesc
-
-
 class DaggerReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         trade.giveDaggersTraining()
         trade.giveStack(InventoryType.DaggerWeaponL1, 1)
-
+    
     def getDescriptionText(self):
         return PLocalizer.DaggerRewardDesc
 
 
 class GrenadeReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         trade.giveGrenadeTraining()
         trade.giveStack(InventoryType.GrenadeWeaponL1, 1)
         trade.giveStack(InventoryType.GrenadeExplosion, 2)
-
+    
     def getDescriptionText(self):
         return PLocalizer.GrenadeRewardDesc
 
 
 class StaffReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         trade.giveWandTraining()
         trade.giveStack(InventoryType.WandWeaponL1, 1)
-
+    
     def getDescriptionText(self):
         return PLocalizer.StaffRewardDesc
 
 
 class TeleportTotemReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         trade.giveTortugaTeleportToken()
-
+    
     def getDescriptionText(self):
         return PLocalizer.TeleportTotemRewardDesc
 
 
 class CubaTeleportReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         trade.giveCubaTeleportToken()
 
     def getDescriptionText(self):
         return PLocalizer.CubaTeleportRewardDesc
 
-
 class PortRoyalTeleportReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         trade.givePortRoyalTeleportToken()
-
+    
     def getDescriptionText(self):
         return PLocalizer.PortRoyalTeleportRewardDesc
 
 
 class PadresDelFuegoTeleportReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         trade.givePadresDelFuegoTeleportToken()
-
+    
     def getDescriptionText(self):
         return PLocalizer.PadresDelFuegoTeleportRewardDesc
 
 
 class KingsHeadTeleportReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         trade.giveKingsheadTeleportToken()
 
@@ -475,7 +463,7 @@ class KingsHeadTeleportReward(QuestReward):
 
 
 class MainStoryReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         if not av.checkQuestRewardFlag(PiratesGlobals.QRFlagMainStory):
             av.assignQuestRewardFlag(PiratesGlobals.QRFlagMainStory)
@@ -487,7 +475,7 @@ class MainStoryReward(QuestReward):
 
 
 class ReputationReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         global REPFACTOR_HOLIDAY
         avId = av.getDoId()
@@ -499,18 +487,18 @@ class ReputationReward(QuestReward):
         if av.getTempDoubleXPReward():
             rewardAmount = rewardAmount * 2
         trade.giveReputation(InventoryType.GeneralRep, rewardAmount)
-
+    
     def getDescriptionText(self):
         rewardAmount = self.amount * REPFACTOR_HOLIDAY
         return PLocalizer.ReputationRewardDesc % rewardAmount
-
+    
     def setReputationFactor(self, multiplier):
         global REPFACTOR_HOLIDAY
         REPFACTOR_HOLIDAY = multiplier
 
 
 class SpecialQuestReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         av.acceptSpecialQuestReward(self.questId, trade)
 
@@ -519,24 +507,24 @@ class SpecialQuestReward(QuestReward):
 
 
 class JewelryQuestReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         gender = av.dna.getGender()
         questDrop = JewelryGlobals.questDrops.get(self.amount)
         if questDrop is None:
-            return
-
+            return None
+        
         if gender == 'm':
             uid = questDrop[0]
             if not (uid >= JewelryGlobals.MALE_RBROW) or not (uid <= JewelryGlobals.MALE_RHAND + 9999):
-                return
-
+                return None
+            
         else:
             uid = questDrop[1]
             if not (uid >= JewelryGlobals.FEMALE_RBROW) or not (uid <= JewelryGlobals.FEMALE_RHAND + 9999):
-                return
-
-        simbase.air.avatarAccessoriesManager.requestJewelryAdd(av.getDoId(), uid, forceAdd=True)
+                return None
+            
+        simbase.air.avatarAccessoriesManager.requestJewelryAdd(av.getDoId(), uid, forceAdd = True)
         av.giveJewelryMessage(uid)
         simbase.air.writeServerEvent('QUEST_JEWELRY_ADDED', av.getDoId(), 'UID=%s|' % uid)
 
@@ -545,14 +533,14 @@ class JewelryQuestReward(QuestReward):
 
 
 class TattooQuestReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         doId = av.getDoId()
         keys = TattooGlobals.tattoos.keys()
         questDrop = TattooGlobals.questDrops.get(self.amount)
         for drop in questDrop:
             if drop in keys:
-                simbase.air.avatarAccessoriesManager.requestTattooAdd(doId, drop, forceAdd=True)
+                simbase.air.avatarAccessoriesManager.requestTattooAdd(doId, drop, forceAdd = True)
                 av.giveTattooMessage(drop)
                 simbase.air.writeServerEvent('QUEST_TATTOO_ADDED', doId, 'UID=%s|' % drop)
 
@@ -561,23 +549,23 @@ class TattooQuestReward(QuestReward):
 
 
 class ClothingQuestReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         doId = av.getDoId()
         gender = av.dna.getGender()
         keys = ClothingGlobals.UNIQUE_ID.keys()
         questDrop = ClothingGlobals.questDrops.get(self.amount)
         if questDrop is None:
-            return
-
+            return None
+        
         dropForGender = questDrop.get(gender)
         if dropForGender is None:
-            return
-
+            return None
+        
         dropId = dropForGender[0]
         colorId = dropForGender[1]
         if dropId in keys:
-            simbase.air.avatarAccessoriesManager.requestClothingAdd(doId, dropId, colorId, forceAdd=True)
+            simbase.air.avatarAccessoriesManager.requestClothingAdd(doId, dropId, colorId, forceAdd = True)
             av.giveClothingMessage(dropId, colorId)
             simbase.air.writeServerEvent('QUEST_CLOTHING_ADDED', doId, 'UID=%s|' % dropId)
 
@@ -586,10 +574,10 @@ class ClothingQuestReward(QuestReward):
 
 
 class TempDoubleRepReward(QuestReward):
-
+    
     def applyTo(self, trade, av):
         av.updateTempDoubleXPReward(self.amount)
-
+    
     def getDescriptionText(self):
         return PLocalizer.Temp2xRepQuestRewardDesc
 
