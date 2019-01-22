@@ -1,20 +1,18 @@
 from pirates.creature.DistributedCreature import DistributedCreature
-from pirates.kraken.Body import Body
 from pirates.kraken.BodyGameFSM import BodyGameFSM
-
+from pirates.kraken.Body import Body
 
 class KrakenBody(Body, DistributedCreature):
     
-
     def __init__(self, cr):
         DistributedCreature.__init__(self, cr)
         Body.__init__(self)
         Body.generateCreature(self)
-
+    
     def delete(self):
         Body.delete(self)
         DistributedCreature.delete(self)
-
+    
     def setKrakenId(self, krackenId):
         self.krakenId = krackenId
 
@@ -23,7 +21,7 @@ class KrakenBody(Body, DistributedCreature):
 
     def getKraken(self):
         return self.cr.getDo(self.krakenId)
-
+    
     def createGameFSM(self):
         self.gameFSM = BodyGameFSM(self)
 
@@ -31,3 +29,5 @@ class KrakenBody(Body, DistributedCreature):
         Body.reparentTo(self, *args, **kw)
         import pdb
         pdb.set_trace()
+
+
