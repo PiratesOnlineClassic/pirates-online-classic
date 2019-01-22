@@ -1,24 +1,25 @@
-from direct.task import Task
 from pandac.PandaModules import Vec3
-from pirates.effects.TentacleFire import TentacleFire
-from pirates.effects.TentacleWaterDrips import TentacleWaterDrips
+from direct.task import Task
 from pirates.effects.WaterRipple2 import WaterRipple2
-
+from pirates.effects.TentacleWaterDrips import TentacleWaterDrips
+from pirates.effects.TentacleFire import TentacleFire
 
 class TentacleUtils:
     
-
     def __init__(self):
         self.statusTable = []
         self.effectsScale = 1.0
-
+    
     def initStatusTable(self):
         self.statusTable = []
-        joints = self.findAllMatches('**/def_ten*') 
+        joints = self.findAllMatches('**/def_ten*').asList()
         for i in range(len(joints) - 1):
-            self.statusTable.append([joints[i], joints[i + 1], 0, Vec3(0, 0, 0), [None, None, None]])
-
-        return
+            self.statusTable.append([
+                joints[i],
+                joints[i + 1],
+                0,
+                Vec3(0, 0, 0),
+                [None, None, None]])
 
     def setEffectsScale(self, scale):
         self.effectsScale = scale
@@ -33,11 +34,13 @@ class TentacleUtils:
                 if self.statusTable[i][2] != 2:
                     self.stopRippleEffect(i)
                     self.statusTable[i][2] = 2
+
             elif joint1Z > tempWaterPos[2] and joint2Z <= tempWaterPos[2] or joint1Z <= tempWaterPos[2] and joint2Z > tempWaterPos[2]:
                 if self.statusTable[i][2] != 1:
                     self.startRippleEffect(i)
                     self.startWaterDripEffect(i)
                     self.statusTable[i][2] = 1
+
             elif self.statusTable[i][2] != 0:
                 self.stopAllEffects(i)
                 self.statusTable[i][2] = 0
@@ -46,7 +49,7 @@ class TentacleUtils:
         avgPos = (aboveJoint.getPos(render) + belowJoint.getPos(render)) / 2.0
         waterHeight = base.cr.activeWorld.getWater().calcHeight(avgPos[0], avgPos[1], 0, render)
         return Vec3(avgPos[0], avgPos[1], waterHeight)
-
+    
     def startRippleEffect(self, section):
         if not self.statusTable[section][4][0]:
             self.statusTable[section][4][0] = WaterRipple2.getEffect()
@@ -59,8 +62,7 @@ class TentacleUtils:
         if self.statusTable[section][4][0]:
             self.statusTable[section][4][0].stopLoop()
             self.statusTable[section][4][0] = None
-        return
-
+    
     def startWaterDripEffect(self, section):
         if not self.statusTable[section][4][1]:
             self.statusTable[section][4][1] = TentacleWaterDrips.getEffect()
@@ -75,7 +77,6 @@ class TentacleUtils:
         if self.statusTable[section][4][1]:
             self.statusTable[section][4][1].stop()
             self.statusTable[section][4][1] = None
-        return
 
     def startFireEffect(self, section):
         if not self.statusTable[section][4][2]:
@@ -91,7 +92,6 @@ class TentacleUtils:
         if self.statusTable[section][4][2]:
             self.statusTable[section][4][2].stopLoop()
             self.statusTable[section][4][2] = None
-        return
 
     def stopAllEffects(self, section):
         self.stopRippleEffect(section)
@@ -101,19 +101,19 @@ class TentacleUtils:
     def removeEffects(self):
         for i in range(len(self.statusTable)):
             self.stopAllEffects(i)
-
+    
     def updateEffects(self):
         for i in range(len(self.statusTable)):
             if self.statusTable[i][4][0]:
                 self.statusTable[i][4][0].setPos(render, self.statusTable[i][3])
                 self.statusTable[i][4][0].particleDummy.setZ(render, self.statusTable[i][3][2] + 2.0)
-
+    
     def startUpdateTask(self):
         taskMgr.add(self.updateTask, self.uniqueName('updateTask'))
-
+    
     def stopUpdateTask(self):
         taskMgr.remove(self.uniqueName('updateTask'))
-
+    
     def updateTask(self, task):
         self.updateStatusTable()
         self.updateEffects()
@@ -121,3 +121,5 @@ class TentacleUtils:
 
     def uniqueName(self, str):
         pass
+
+
