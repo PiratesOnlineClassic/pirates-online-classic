@@ -67,6 +67,9 @@ audio-library-name p3fmod_audio
 audio-music-active #t
 low-memory-stream-audio #t
 
+# Quests:
+disable-blockers #t
+
 # Cache
 want-cache #t
 want-disk-cache #f
