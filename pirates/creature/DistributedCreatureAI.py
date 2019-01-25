@@ -10,6 +10,3 @@ class DistributedCreatureAI(DistributedBattleNPCAI):
 
     def handleClientAggro(self, avatar):
         pass
-
-    def getDamagable(self):
-        return False
