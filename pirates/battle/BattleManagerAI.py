@@ -10,6 +10,8 @@ from pirates.uberdog import UberDogGlobals
 from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
 from pirates.battle.ComboDiaryAI import ComboDiaryAI
 from pirates.piratesbase import Freebooter
+from pirates.pirate import AvatarTypes
+
 
 class BattleManagerAI(BattleManagerBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManagerAI')
@@ -310,6 +312,9 @@ class BattleManagerAI(BattleManagerBase):
 
     def __hurtTarget(self, target, targetEffects):
         if not target.getDamagable():
+            return
+
+        if target.getAvatarType() == AvatarTypes.Monkey:
             return
 
         target.b_setHp(max(0, min(target.getHp()[0] + targetEffects[0], target.getMaxHp())))
