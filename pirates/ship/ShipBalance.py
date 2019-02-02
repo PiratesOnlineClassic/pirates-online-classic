@@ -1,5 +1,4 @@
 from otp.web.Setting import StateVarSetting
-
 RepairRate = StateVarSetting('ship.repair.rate', 500)
 RepairPeriod = StateVarSetting('ship.repair.period', 2)
 FalloffShift = StateVarSetting('ship.falloff.shift', 500)
