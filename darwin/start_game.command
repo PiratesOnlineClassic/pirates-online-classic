@@ -21,4 +21,4 @@ echo "Username: $pocUsername"
 echo "Gameserver: $POC_GAMESERVER"
 echo "==============================="
 
-ppython -m pirates.piratesbase.PiratesStart
+python -m pirates.piratesbase.PiratesStart
