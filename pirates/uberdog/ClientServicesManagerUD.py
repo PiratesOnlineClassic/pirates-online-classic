@@ -1091,7 +1091,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
         sender = self.air.getMsgSender()
 
-        banned_addresses = ['']
+        banned_addresses = []
 
         # Time to check this login to see if its authentic
         digest_maker = hmac.new(self.key)
