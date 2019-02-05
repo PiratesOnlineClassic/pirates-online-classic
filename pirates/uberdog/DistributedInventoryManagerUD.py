@@ -40,10 +40,10 @@ class InventoryFSM(InventoryOperationFSM):
     def enterStart(self):
         self.air.dbInterface.queryObject(self.air.dbId,
             self.avatarId,
-            self.__avatarQueryCallback,
+            self.avatarQueryCallback,
             dclass=self.air.dclassesByName['DistributedPlayerPirateUD'])
 
-    def __avatarQueryCallback(self, dclass, fields):
+    def avatarQueryCallback(self, dclass, fields):
         if not dclass and not fields:
             self.notify.warning('Failed to query avatar %d for inventory!' % (
                 self.avatarId))
@@ -90,17 +90,16 @@ class InventoryFSM(InventoryOperationFSM):
         self.air.dbInterface.createObject(self.air.dbId,
             self.air.dclassesByName['PirateInventoryUD'],
             fields=fields,
-            callback=self.__inventoryCreatedCallback)
+            callback=self.inventoryCreatedCallback)
 
-    def __inventoryCreatedCallback(self, inventoryId):
+    def inventoryCreatedCallback(self, inventoryId):
+        self.inventoryId = inventoryId
         if not inventoryId:
             self.notify.warning('Failed to create inventory for avatar %d!' % (
                 self.avatarId))
 
             self.cleanup(0)
             return
-
-        self.inventoryId = inventoryId
 
         fields = {
             'setInventoryId': (inventoryId,),
@@ -110,9 +109,9 @@ class InventoryFSM(InventoryOperationFSM):
             self.avatarId,
             self.air.dclassesByName['DistributedPlayerPirateUD'],
             fields,
-            callback=self.__inventorySetCallback)
+            callback=self.inventorySetCallback)
 
-    def __inventorySetCallback(self, fields):
+    def inventorySetCallback(self, fields):
         if fields is not None:
             self.notify.warning('Failed to update inventory %d for avatar %d' % (
                 self.inventoryId, self.avatarId))
