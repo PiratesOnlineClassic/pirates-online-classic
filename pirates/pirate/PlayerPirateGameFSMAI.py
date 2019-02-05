@@ -36,8 +36,8 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
             return
         
         if not isinstance(area, DistributedIslandAI):
-            self.notify.warning('Cannot teleport avatar %d to jail, parent has invalid type: %r! % (
-                self.avatar.doId, area)
+            self.notify.warning('Cannot teleport avatar %d to jail, parent has invalid type: %r!' % (
+                self.avatar.doId, area))
             
             return
 
@@ -94,8 +94,8 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
             return
 
         if not isinstance(area, DistributedJailInteriorAI):
-            self.notify.warning('Cannot finish teleporting avatar %d to jail, parent has invalid type: %r! % (
-                self.avatar.doId, area)
+            self.notify.warning('Cannot finish teleporting avatar %d to jail, parent has invalid type: %r!' % (
+                self.avatar.doId, area))
 
             return
         
@@ -107,8 +107,8 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
             return
 
         if not isinstance(instance, DistributedInstanceBaseAI):
-            self.notify.warning('Cannot finish teleporting avatar %d to jail, parent instance has invalid type: %r! % (
-                self.avatar.doId, instance)
+            self.notify.warning('Cannot finish teleporting avatar %d to jail, parent instance has invalid type: %r!' % (
+                self.avatar.doId, instance))
 
             return
         
