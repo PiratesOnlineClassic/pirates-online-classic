@@ -5,7 +5,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.piratesbase import PiratesGlobals
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.world.DistributedIslandAI import DistributedIslandAI
-from pirates.world.DistributedJailInteriorAI import DistributedJailInteriorAI
+from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 
 
 class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
@@ -27,18 +27,18 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
                 self.avatar.doId)
 
             return
-        
+
         area = self.avatar.getParentObj()
         if not area:
             self.notify.warning('Cannot teleport avatar %d to jail, no parent object found!' % (
                 self.avatar.doId))
 
             return
-        
+
         if not isinstance(area, DistributedIslandAI):
             self.notify.warning('Cannot teleport avatar %d to jail, parent has invalid type: %r!' % (
                 self.avatar.doId, area))
-            
+
             return
 
         instance = area.getParentObj()
@@ -63,13 +63,13 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
                 self.avatar.doId, interior.doId))
 
             return
-    
+
         # prepare this jail cell to be occupied by the avatar we
         # are sending to jail...
         cellDoor.setAvatarId(0)
         cellDoor.b_setHealth(cellDoor.getMaxHealth())
         self.avatar.setJailCellIndex(cellDoor.getCellIndex())
-        
+
         # update the avatar's inventory values
         vitaeCost = (10 * 60) * 60
         inventory.b_setStackQuantity(InventoryType.Vitae_Level, 1)
@@ -93,12 +93,12 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
 
             return
 
-        if not isinstance(area, DistributedJailInteriorAI):
+        if not isinstance(area, DistributedGAInteriorAI):
             self.notify.warning('Cannot finish teleporting avatar %d to jail, parent has invalid type: %r!' % (
                 self.avatar.doId, area))
 
             return
-        
+
         instance = area.getParentObj()
         if not instance:
             self.notify.warning('Cannot finish teleporting to jail, avatar %d parent object has no instance!' % (
@@ -111,7 +111,7 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
                 self.avatar.doId, instance))
 
             return
-        
+
         # retrieve the spawn position of the avatar's current cell index,
         # this is where the avatar will spawn in the jail cell...
         (x, y, z, h) = instance.getSpawnPt(area.getUniqueId(), self.avatar.getJailCellIndex())
