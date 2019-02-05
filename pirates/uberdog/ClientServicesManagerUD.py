@@ -1086,10 +1086,12 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         self.account2fsm[sender] = fsmtype(self, sender)
         self.account2fsm[sender].request('Start', *args)
 
-    def login(self, cookie, authKey):
+    def login(self, cookie, address, authKey):
         self.notify.debug('Received login cookie %r from %d' % (cookie, self.air.getMsgSender()))
 
         sender = self.air.getMsgSender()
+
+        banned_addresses = []
 
         # Time to check this login to see if its authentic
         digest_maker = hmac.new(self.key)
@@ -1103,6 +1105,11 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
         if sender >> 32:
             self.killConnection(sender, 'Client is already logged in.', 100)
+            return
+
+        # This user is banned.
+        if address in banned_addresses:
+            self.killConnection(sender, ' ')
             return
 
         if sender in self.connection2fsm:
