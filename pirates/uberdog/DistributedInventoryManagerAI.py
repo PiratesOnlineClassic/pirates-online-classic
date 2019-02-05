@@ -68,38 +68,6 @@ class LoadInventoryFSM(InventoryOperationFSM):
             self.callback(None)
             return
 
-        self.air.dbInterface.queryObject(self.air.dbId,
-            inventory.doId,
-            callback=self.inventoryQueryCallback,
-            dclass=self.air.dclassesByName['DistributedInventoryAI'])
-
-    def inventoryQueryCallback(self, dclass, fields):
-        if not dclass or not fields:
-            self.notify.debug('Failed to query inventory %d for avatar %d!' % (
-                self.inventory.id, self.avatar.doId))
-
-            self.callback(None)
-            return
-
-        categoriesAndLimits, = fields.get('setCategoryLimits', [])
-        categoriesAndDoIds, = fields.get('setDoIds', [])
-        accumulatorTypesAndQuantities, = fields.get('setAccumulators', [])
-        stackTypesAndLimits, = fields.get('setStackLimits', [])
-        stackTypesAndQuantities, = fields.get('setStacks', [])
-
-        for categoryAndLimit in categoriesAndLimits:
-            self.inventory.b_setCategoryLimit(*categoryAndLimit)
-
-        self.inventory.b_setDoIds(categoriesAndDoIds)
-        for accumulatorTypeAndQuantity in accumulatorTypesAndQuantities:
-            self.inventory.b_setAccumulator(*accumulatorTypeAndQuantity)
-
-        for stackTypeAndLimit in stackTypesAndLimits:
-            self.inventory.b_setStackLimit(*stackTypeAndLimit)
-
-        for stackTypeAndQuantity in stackTypesAndQuantities:
-            self.inventory.b_setStackQuantity(*stackTypeAndQuantity)
-
         self.inventory.b_setStackLimit(InventoryType.Hp, self.avatar.getMaxHp())
         self.inventory.b_setStackLimit(InventoryType.Mojo, self.avatar.getMaxMojo())
 
