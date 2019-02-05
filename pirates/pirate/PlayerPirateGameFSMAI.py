@@ -3,7 +3,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from pirates.pirate.BattleAvatarGameFSMAI import BattleAvatarGameFSMAI
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.piratesbase import PiratesGlobals
-from pirates.world.DistributedInstanceBaseAI import DistributedInstanceBaseAI
+from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.world.DistributedIslandAI import DistributedIslandAI
 from pirates.world.DistributedJailInteriorAI import DistributedJailInteriorAI
 
