@@ -225,9 +225,11 @@ class QuestManagerAI(DirectObject):
                 # to activate on the dbss...
                 callback(None)
                 return
-
-            channel = avatar.getDISLid() << 32 | avatar.doId
-            self.air.setOwner(quest.doId, channel)
+            
+            # TODO: Seems as if Disney never generated the OwnerView object for quests,
+            # as doing so seems to cause irrational issues...
+            #channel = avatar.getDISLid() << 32 | avatar.doId
+            #self.air.setOwner(quest.doId, channel)
 
             # store the new quest object to the dictionary of quest objects
             # so we can keep track of it for later use...
