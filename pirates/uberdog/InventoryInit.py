@@ -129,6 +129,12 @@ StackLimits = {
     InventoryType.Vitae_Cost: 10000,
     InventoryType.Vitae_Left: 10000,
     InventoryType.Vitae_Update: 10000,
+    InventoryType.Potion1: 3,
+    InventoryType.Potion2: 3,
+    InventoryType.Potion3: 3,
+    InventoryType.Potion4: 3,
+    InventoryType.Potion5: 3,
+    InventoryType.PorkChunk: 10,
     InventoryType.UseItem: 6,
     InventoryType.CTFGame: 9999,
     InventoryType.CTLGame: 9999,
@@ -322,7 +328,7 @@ for i in range(InventoryType.begin_Songs, InventoryType.end_Songs):
 
 StartingStacks = {
     # Weapons
-    InventoryType.CutlassWeaponL1: 0,
+    InventoryType.CutlassWeaponL1: 1,
     InventoryType.PistolWeaponL1: 0,
     InventoryType.MusketWeaponL1: 0,
     InventoryType.BayonetWeaponL1: 0,
@@ -336,6 +342,8 @@ StartingStacks = {
     InventoryType.CannonRoundShot: 2,
     InventoryType.SailBroadsideLeft: 2,
     InventoryType.SailBroadsideRight: 2,
+    InventoryType.CutlassSlash: 2,
+    InventoryType.CutlassHack: 2,
     InventoryType.CutlassSweep: 1,
 
     # Skill Points
