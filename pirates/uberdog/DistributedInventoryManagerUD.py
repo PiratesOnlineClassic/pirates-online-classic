@@ -34,8 +34,8 @@ class InventoryOperationFSM(FSM):
             self.callback(*args, **kwargs)
 
 
-class InventoryFSM(InventoryOperationFSM):
-    notify = DirectNotifyGlobal.directNotify.newCategory('InventoryFSM')
+class QueryInventoryFSM(InventoryOperationFSM):
+    notify = DirectNotifyGlobal.directNotify.newCategory('QueryInventoryFSM')
 
     def enterStart(self):
         self.air.dbInterface.queryObject(self.air.dbId,
@@ -45,22 +45,21 @@ class InventoryFSM(InventoryOperationFSM):
 
     def avatarQueryCallback(self, dclass, fields):
         if not dclass and not fields:
-            self.notify.warning('Failed to query avatar %d for inventory!' % (
-                self.avatarId))
-
+            self.notify.warning('Failed to query avatar %d for inventory!' % self.avatarId)
             self.cleanup(0)
             return
 
         self.inventoryId, = fields.get('setInventoryId', (0,))
-        if not self.inventoryId:
-            self.request('Create')
-        else:
-            self.request('Load')
+        self.cleanup(self.inventoryId)
 
     def exitStart(self):
         pass
 
-    def enterCreate(self):
+
+class CreateInventoryFSM(InventoryOperationFSM):
+    notify = DirectNotifyGlobal.directNotify.newCategory('CreateInventoryFSM')
+
+    def enterStart(self):
         categoryLimits = []
         for key, limit in InventoryInit.CategoryLimits.iteritems():
             categoryLimits.append((key, limit))
@@ -119,20 +118,29 @@ class InventoryFSM(InventoryOperationFSM):
             self.cleanup(0)
             return
 
-        self.request('Load')
+        self.cleanup(self.inventoryId)
 
-    def exitCreate(self):
+    def exitStart(self):
         pass
 
-    def enterLoad(self):
-        self.air.sendActivate(self.inventoryId,
+
+class ActivateInventoryFSM(InventoryOperationFSM):
+    notify = DirectNotifyGlobal.directNotify.newCategory('ActivateInventoryFSM')
+
+    def enterStart(self, inventoryId):
+        if not inventoryId:
+            self.notify.warning('Cannot activate inventory for avatar %d!' % self.avatarId)
+            self.cleanup(0)
+            return
+
+        self.air.sendActivate(inventoryId,
             self.avatarId,
             OtpDoGlobals.OTP_ZONE_ID_MANAGEMENT,
             dclass=self.air.dclassesByName['PirateInventoryUD'])
 
-        self.cleanup(self.inventoryId)
+        self.cleanup(inventoryId)
 
-    def exitLoad(self):
+    def exitStart(self):
         pass
 
 
@@ -176,8 +184,20 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
         self.avatar2fsm[avatarId] = fsmtype(self.air, avatarId, callback)
         self.avatar2fsm[avatarId].request('Start', *args, **kwargs)
 
-    def initiateInventory(self, avatarId, callback=None):
-        self.runInventoryFSM(InventoryFSM, avatarId, callback=callback)
+    def queryInventory(self, avatarId, callback=None):
+
+        # query the database to see if the avatar has an inventory created,
+        # if not then create a new inventory and callback.
+        def inventoryQueryCallback(inventoryId):
+            if not inventoryId:
+                self.runInventoryFSM(CreateInventoryFSM, avatarId, callback=callback)
+            else:
+                callback(inventoryId)
+
+        self.runInventoryFSM(QueryInventoryFSM, avatarId, callback=inventoryQueryCallback)
+
+    def activateInventory(self, avatarId, inventoryId, callback=None):
+        self.runInventoryFSM(ActivateInventoryFSM, avatarId, inventoryId, callback=callback)
 
     def proccessCallbackResponse(self, callback, *args, **kwargs):
         if callback and callable(callback):

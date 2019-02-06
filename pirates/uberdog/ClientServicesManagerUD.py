@@ -904,8 +904,14 @@ class LoadAvatarFSM(AvatarOperationFSM):
         datagram.addChannel(self.target << 32 | self.avId)
         self.csm.air.send(datagram)
 
-        self.csm.air.writeServerEvent('avatarChosen', avId=self.avId, target=self.target)
-        self.demand('Off')
+        def inventoryActivatedCallback(inventoryId):
+            self.csm.air.writeServerEvent('avatarChosen', avId=self.avId, target=self.target)
+            self.demand('Off')
+
+        # activate the avatar's inventory on the DBSS
+        self.csm.air.inventoryManager.activateInventory(self.avId, inventoryId,
+            inventoryActivatedCallback)
+
         return task.done
 
     def enterSetAvatar(self):
@@ -928,11 +934,11 @@ class LoadAvatarFSM(AvatarOperationFSM):
         datagram.addString(datagramCleanup.getMessage())
         self.csm.air.send(datagram)
 
-        # setup the avatar's inventory.
-        self.csm.air.inventoryManager.initiateInventory(self.avId,
-            self.inventorySetup)
+        # get the doId of the avatar's inventory object that it will
+        # be activated on by the DBSS...
+        self.csm.air.inventoryManager.queryInventory(self.avId, self.inventoryQueryCallback)
 
-    def inventorySetup(self, inventoryId):
+    def inventoryQueryCallback(self, inventoryId):
         channel = self.csm.GetAccountConnectionChannel(self.target)
 
         # Activate the avatar on the DBSS:

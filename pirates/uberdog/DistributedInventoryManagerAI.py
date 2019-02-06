@@ -41,18 +41,18 @@ class LoadInventoryFSM(InventoryOperationFSM):
             callback=self.avatarQueryResponse,
             dclass=self.air.dclassesByName['DistributedPlayerPirateAI'])
 
-        self.acceptOnce(self.avatar.getDeleteEvent(), lambda: self.callback(None))
+        self.acceptOnce(self.avatar.getDeleteEvent(), lambda: self.cleanup(None))
 
     def avatarQueryResponse(self, dclass, fields):
         if not dclass or not fields:
             self.notify.debug('Failed to query avatar %d!' % self.avatar.doId)
-            self.callback(None)
+            self.cleanup(None)
             return
 
         inventoryId, = fields.get('setInventoryId', (0,))
         if not inventoryId:
             self.notify.warning('Avatar %d does not have an inventory!' % self.avatar.doId)
-            self.callback(None)
+            self.cleanup(None)
             return
 
         inventory = self.air.doId2do.get(inventoryId)
@@ -65,14 +65,15 @@ class LoadInventoryFSM(InventoryOperationFSM):
         self.inventory = inventory
         if not inventory:
             self.notify.warning('Failed to retrieve inventory for avatar %d!' % self.avatar.doId)
-            self.callback(None)
+            self.cleanup(None)
             return
 
         self.inventory.b_setStackLimit(InventoryType.Hp, self.avatar.getMaxHp())
         self.inventory.b_setStackLimit(InventoryType.Mojo, self.avatar.getMaxMojo())
+        self.inventory.d_requestInventoryComplete()
 
         # we're done.
-        self.callback(self.inventory)
+        self.cleanup(self.inventory)
 
     def exitStart(self):
         pass
@@ -155,16 +156,8 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         else:
             self.initiateInventory(avatar)
 
-    def initiateInventory(self, avatar):
-
-        def inventoryCallback(inventory):
-            if not inventory:
-                self.notify.warning('Failed to request inventory for avatar %d!' % avatar.doId)
-                return
-
-            inventory.d_requestInventoryComplete()
-
-        self.runInventoryFSM(LoadInventoryFSM, avatar, callback=inventoryCallback)
+    def initiateInventory(self, avatar, callback=None):
+        self.runInventoryFSM(LoadInventoryFSM, avatar, callback=callback)
 
     def proccessCallbackResponse(self, callback, *args, **kwargs):
         if callback and callable(callback):
