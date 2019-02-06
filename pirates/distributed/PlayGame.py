@@ -69,7 +69,7 @@ class PlayGame(StateData.StateData):
             base.localAvatar.sendUpdate('giveDefaultQuest')
             self.pendingInitQuest = None
 
-        if base.localAvatar.style.getTutorial() == 0 and base.cr.forceTutorial == 0 and base.cr.skipTutorial == 1:
+        if base.localAvatar.style.getTutorial() == 0 and base.cr.forceTutorial == 0 and base.cr.skipTutorial == 1 or base.config.GetBool('force-tutorial-complete', False):
             self.pendingInitQuest = base.cr.relatedObjectMgr.requestObjects([base.localAvatar.getInventoryId()],
                 eachCallback=initDefQuest)
 
