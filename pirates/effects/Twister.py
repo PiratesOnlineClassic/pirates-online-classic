@@ -22,6 +22,7 @@ class Twister(PooledEffect):
         if __debug__:
             particleSearchPath.appendDirectory(Filename('../resources/phase_2/etc'))
         else:
+            particleSearchPath.appendDirectory(Filename('phase_2/etc'))
             particleSearchPath.appendDirectory(Filename('.'))
             particleSearchPath.appendDirectory(Filename('etc'))
         pfile = Filename('dust.ptf')
