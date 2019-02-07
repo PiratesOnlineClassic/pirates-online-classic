@@ -13,13 +13,6 @@ class DistributedJailInteriorAI(DistributedGAInteriorAI):
 
         self.__cellDoors = {}
 
-    def handleChildArrive(self, childObj, zoneId):
-        if isinstance(childObj, DistributedPlayerPirateAI) and not childObj.isNpc:
-            if childObj.getJailCellIndex() < 100:
-                childObj.b_setGameState('ThrownInJail')
-
-        DistributedGAInteriorAI.handleChildArrive(self, childObj, zoneId)
-
     def handleChildLeave(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerPirateAI) and not childObj.isNpc:
             if childObj.getJailCellIndex() < 100:

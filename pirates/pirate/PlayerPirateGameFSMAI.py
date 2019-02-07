@@ -112,15 +112,15 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
 
             return
 
+        # broadcast the avatar's current cell index to enable interaction with
+        # the appropriate cell door...
+        self.avatar.d_setJailCellIndex(self.avatar.getJailCellIndex())
+
         # retrieve the spawn position of the avatar's current cell index,
         # this is where the avatar will spawn in the jail cell...
         (x, y, z, h) = instance.getSpawnPt(area.getUniqueId(), self.avatar.getJailCellIndex())
         instance.d_setSpawnInfo(self.avatar.doId, x, y, z, h, 0, [area.doId,
             area.parentId, area.zoneId])
-
-        # broadcast the avatar's current cell index to enable interaction with
-        # the appropriate cell door...
-        self.avatar.d_setJailCellIndex(self.avatar.getJailCellIndex())
 
     def exitThrownInJail(self):
         pass
