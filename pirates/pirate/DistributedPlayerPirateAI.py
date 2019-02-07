@@ -1,5 +1,10 @@
+from panda3d.core import *
+
 from direct.directnotify import DirectNotifyGlobal
+
+from otp.ai.MagicWordGlobal import *
 from otp.avatar.DistributedPlayerAI import DistributedPlayerAI
+
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.pirate.HumanDNAAI import HumanDNAAI
 from pirates.quest.DistributedQuestAvatarAI import DistributedQuestAvatarAI
@@ -17,7 +22,6 @@ from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
-from otp.ai.MagicWordGlobal import *
 from pirates.battle import WeaponGlobals
 from pirates.reputation import ReputationGlobals
 from pirates.battle.BattleSkillDiaryAI import BattleSkillDiaryAI
@@ -41,7 +45,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.inventoryId = 0
         self.guildId = 0
         self.guildName = 'Null'
-        self.teleportFlags = None
+        self.teleportFlags = PiratesGlobals.TFInInitTeleport
         self.jailCellIndex = 0
         self.returnLocation = ''
         self.currentIsland = ''
@@ -196,11 +200,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return self.guildName
 
     def setTeleportFlags(self, teleportFlags):
-        self.teleportFlags = teleportFlags
+        self.teleportFlags = BitMask32(teleportFlags)
 
     def d_setTeleportFlags(self, teleportFlags):
-        self.sendUpdate('setTeleportFlags', [PiratesGlobals.encodeTeleportFlag(
-            teleportFlags)])
+        self.sendUpdate('setTeleportFlags', [PiratesGlobals.encodeTeleportFlag(teleportFlags)])
 
     def b_setTeleportFlag(self, teleportFlags):
         self.setTeleportFlags(teleportFlags)
@@ -208,6 +211,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def getTeleportFlags(self):
         return self.teleportFlags
+
+    def testTeleportFlag(self, flag):
+        return not (self.teleportFlags & flag).isZero()
 
     def d_relayTeleportLoc(self, shardId, zoneId, teleportMgrDoId):
         self.sendUpdateToAvatarId(self.doId, 'relayTeleportLoc', [shardId, zoneId,
