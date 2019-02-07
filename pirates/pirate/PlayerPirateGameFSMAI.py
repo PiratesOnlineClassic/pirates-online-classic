@@ -76,7 +76,7 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
 
         # tell the instance to send the avatar to the jail, and set it's interest
         # properly before we update their game state...
-        parentWorld = interior.getParentObj()
+        parentWorld = parentObj.getParentObj()
         parentWorld.d_sendLocalAvatarToJail(self.avatar.doId, interior.doId,
             interior.parentId, interior.zoneId)
 
