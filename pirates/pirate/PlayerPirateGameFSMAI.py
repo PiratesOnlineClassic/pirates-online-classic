@@ -61,8 +61,8 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
 
             return
 
-        # prepare this jail cell to be occupied by the avatar we
-        # that has just died and ar enow sending to the jail...
+        # prepare this jail cell to be occupied by the avatar
+        # that has just died and we are now sending to the jail...
         cellDoor.setAvatarId(0)
         cellDoor.b_setHealth(cellDoor.getMaxHealth())
         self.avatar.b_setJailCellIndex(cellDoor.getCellIndex())
