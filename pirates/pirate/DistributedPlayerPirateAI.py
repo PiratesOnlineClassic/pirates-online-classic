@@ -95,7 +95,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         if not self.hasTempDoubleXPReward():
             return task.again
 
-        self.tempDoubleXPReward -= 15
+        self.tempDoubleXPReward -= 10
         if self.tempDoubleXPReward < 0:
             self.b_setTempDoubleXPReward(0)
 
