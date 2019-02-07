@@ -52,7 +52,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.stickyTargets = []
         self.defaultShard = 0
         self.defaultZone = 0
-        self.tempDoubleXPReward = False
+        self.tempDoubleXPReward = 0
         self.toonUpTask = None
         self.constructedShipDoId = 0
 
@@ -72,6 +72,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.accept('todHalloweenStateChange', self.attemptToSetCursedZombie)
 
         taskMgr.doMethodLater(0.05, self.__processGroggy, self.uniqueName('process-groggy'))
+        taskMgr.doMethodLater(10, self.__processDoubleXP, self.uniqueName('process-double-xp'))
 
     def __processGroggy(self, task):
         inventory = self.getInventory()
@@ -87,6 +88,18 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             # check if the groggy state has expired
             if amount <= 0:
                 inventory.setVitaeLevel(0)
+
+        return task.again
+
+    def __processDoubleXP(self, task):
+        if not self.hasTempDoubleXPReward():
+            return task.again
+
+        self.tempDoubleXPReward -= 15
+        if self.tempDoubleXPReward < 0:
+            self.b_setTempDoubleXPReward(0)
+
+        self.b_setTempDoubleXPReward(self.tempDoubleXPReward)
 
         return task.again
 
@@ -647,6 +660,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getTempDoubleXPReward(self):
         return self.tempDoubleXPReward
 
+    def hasTempDoubleXPReward(self):
+        return self.tempDoubleXPReward > 0
+
     def updateTempDoubleXPReward(self, tempDoubleXPReward):
         self.b_setTempDoubleXPReward(tempDoubleXPReward)
 
@@ -697,6 +713,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.ignore('timeOfDayChange')
 
         taskMgr.remove(self.uniqueName('process-groggy'))
+        taskMgr.remove(self.uniqueName('process-double-xp'))
 
         DistributedPlayerAI.delete(self)
         DistributedBattleAvatarAI.delete(self)
@@ -722,6 +739,12 @@ def setGMTag(gmNameTagState, gmNameTagColor, gmNameTagString):
     invoker.b_updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
 
     return 'Nametag set.'
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def setDoubleXP(val):
+    target = spellbook.getTarget()
+    target.b_setTempDoubleXPReward(val * 60)
+    return "Set %s's Double XP Reward to %s minutes" % (target.getName(), val)
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def setFounder(state):
