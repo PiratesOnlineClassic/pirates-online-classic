@@ -1,9 +1,7 @@
 from otp.friends.FriendInfo import FriendInfo
 from pirates.pirate.PAvatarHandle import PAvatarHandle
 
-
 class PCFriendInfo(FriendInfo, PAvatarHandle):
-    
 
     @classmethod
     def makeFromFriendInfo(cls, info):
@@ -21,22 +19,25 @@ class PCFriendInfo(FriendInfo, PAvatarHandle):
         out.friendPrivs = info.friendPrivs
         out.tokenPrivs = info.tokenPrivs
         return out
-
+    
     def __init__(self, *args, **kw):
         FriendInfo.__init__(self, *args, **kw)
-        self.bandId = (0, 0)
-
+        self.bandId = None
+    
     def setBandId(self, bandMgrId, bandId):
-        self.bandId = (
-         bandMgrId, bandId)
+        if (bandMgrId, bandId) != (0, 0):
+            self.bandId = (bandMgrId, bandId)
+        else:
+            self.bandId = None
 
     def getBandId(self):
         return self.bandId
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
-    def sendTeleportQuery(self, sendToId, localShardId):
-        localAvatar.sendTeleportQuery(sendToId, localShardId)
+    def sendTeleportQuery(self, sendToId, localBandMgrId, localBandId, localGuildId, localShardId):
+        localAvatar.sendTeleportQuery(sendToId, localBandMgrId, localBandId, localGuildId, localShardId)
 
     @report(types=['deltaStamp', 'args'], dConfigParam='want-teleport-report')
-    def sendTeleportResponse(self, available, shardId, instanceDoId, areaDoId, sendToId=None):
+    def sendTeleportResponse(self, available, shardId, instanceDoId, areaDoId, sendToId = None):
         localAvatar.sendTeleportResponse(available, shardId, instanceDoId, areaDoId, sendToId)
+

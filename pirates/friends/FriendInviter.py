@@ -1,25 +1,32 @@
-from direct.directnotify import DirectNotifyGlobal
-from direct.fsm import ClassicFSM, State
 from direct.gui.DirectGui import *
+from pandac.PandaModules import *
 from direct.task.Task import Task
-from otp.otpbase import OTPGlobals, OTPLocalizer
+from direct.fsm import ClassicFSM
+from direct.fsm import State
+from direct.directnotify import DirectNotifyGlobal
+from otp.otpbase import OTPLocalizer
+from otp.otpbase import OTPGlobals
 from otp.uberdog.RejectCode import RejectCode
-from panda3d.core import *
-from pirates.battle.DistributedBattleNPC import DistributedBattleNPC
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
-from pirates.piratesgui.CheckBox import CheckBox
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.piratesgui import GuiPanel
 from pirates.piratesgui.RequestButton import RequestButton
+from pirates.piratesgui.CheckBox import CheckBox
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.battle.DistributedBattleNPC import DistributedBattleNPC
 
 class FriendInviterButton(RequestButton):
+    
     def __init__(self, text, command):
         RequestButton.__init__(self, text, command)
         self.initialiseoptions(FriendInviterButton)
 
+
+
 class FriendInviter(GuiPanel.GuiPanel):
     notify = DirectNotifyGlobal.directNotify.newCategory('FriendInviter')
-
-    def __init__(self, avId, avName, isPlayerInvite, quickYesNo=True):
+    
+    def __init__(self, avId, avName, isPlayerInvite, quickYesNo = True):
         GuiPanel.GuiPanel.__init__(self, 'Invite Friend', 0.5, 0.5)
         self.initialiseoptions(FriendInviter)
         self.setPos(0.15, 0, 0.25)
@@ -30,51 +37,110 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.skipYesNo = quickYesNo
         self.skipCongrats = False
         self.fsm = ClassicFSM.ClassicFSM('FriendInviter', [
-         State.State('off', self.enterOff, self.exitOff),
-         State.State('getNewFriend', self.enterGetNewFriend, self.exitGetNewFriend),
-         State.State('begin', self.enterBegin, self.exitBegin),
-         State.State('tooMany', self.enterTooMany, self.exitTooMany),
-         State.State('notYet', self.enterNotYet, self.exitNotYet),
-         State.State('checkAvailability', self.enterCheckAvailability, self.exitCheckAvailability),
-         State.State('notAvailable', self.enterNotAvailable, self.exitNotAvailable),
-         State.State('notOpen', self.enterNotOpen, self.exitNotOpen),
-         State.State('notAcceptingFriends', self.enterNotAcceptingFriends, self.exitNotAcceptingFriends),
-         State.State('wentAway', self.enterWentAway, self.exitWentAway),
-         State.State('alreadyFriends', self.enterAlreadyFriends, self.exitAlreadyFriends),
-         State.State('alreadyInvited', self.enterAlreadyInvited, self.exitAlreadyInvited),
-         State.State('askingNPC', self.enterAskingNPC, self.exitAskingNPC),
-         State.State('endFriendship', self.enterEndFriendship, self.exitEndFriendship),
-         State.State('friendsNoMore', self.enterFriendsNoMore, self.exitFriendsNoMore),
-         State.State('self', self.enterSelf, self.exitSelf),
-         State.State('ignored', self.enterIgnored, self.exitIgnored),
-         State.State('asking', self.enterAsking, self.exitAsking),
-         State.State('yes', self.enterYes, self.exitYes),
-         State.State('no', self.enterNo, self.exitNo),
-         State.State('otherTooMany', self.enterOtherTooMany, self.exitOtherTooMany),
-         State.State('maybe', self.enterMaybe, self.exitMaybe),
-         State.State('down', self.enterDown, self.exitDown),
-         State.State('cancel', self.enterCancel, self.exitCancel)], 'off', 'off')
-        self.message = DirectLabel(parent=self, relief=None, text='', text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, 
-                                   text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=11, 
-                                   pos=(0.25, 0, 0.35), textMayChange=1)
+            State.State('off',
+                        self.enterOff,
+                        self.exitOff),
+            State.State('getNewFriend',
+                        self.enterGetNewFriend,
+                        self.exitGetNewFriend),
+            State.State('begin',
+                        self.enterBegin,
+                        self.exitBegin),
+            State.State('tooMany',
+                        self.enterTooMany,
+                        self.exitTooMany),
+            State.State('notYet',
+                        self.enterNotYet,
+                        self.exitNotYet),
+            State.State('checkAvailability',
+                        self.enterCheckAvailability,
+                        self.exitCheckAvailability),
+            State.State('notAvailable',
+                        self.enterNotAvailable,
+                        self.exitNotAvailable),
+            State.State('notOpen',
+                        self.enterNotOpen,
+                        self.exitNotOpen),
+            State.State('notAcceptingFriends',
+                        self.enterNotAcceptingFriends,
+                        self.exitNotAcceptingFriends),
+            State.State('wentAway',
+                        self.enterWentAway,
+                        self.exitWentAway),
+            State.State('alreadyFriends',
+                        self.enterAlreadyFriends,
+                        self.exitAlreadyFriends),
+            State.State('alreadyInvited',
+                        self.enterAlreadyInvited,
+                        self.exitAlreadyInvited),
+            State.State('askingNPC',
+                        self.enterAskingNPC,
+                        self.exitAskingNPC),
+            State.State('endFriendship',
+                        self.enterEndFriendship,
+                        self.exitEndFriendship),
+            State.State('friendsNoMore',
+                        self.enterFriendsNoMore,
+                        self.exitFriendsNoMore),
+            State.State('self',
+                        self.enterSelf,
+                        self.exitSelf),
+            State.State('ignored',
+                        self.enterIgnored,
+                        self.exitIgnored),
+            State.State('asking',
+                        self.enterAsking,
+                        self.exitAsking),
+            State.State('yes',
+                        self.enterYes,
+                        self.exitYes),
+            State.State('no',
+                        self.enterNo,
+                        self.exitNo),
+            State.State('otherTooMany',
+                        self.enterOtherTooMany,
+                        self.exitOtherTooMany),
+            State.State('maybe',
+                        self.enterMaybe,
+                        self.exitMaybe),
+            State.State('down',
+                        self.enterDown,
+                        self.exitDown),
+            State.State('cancel',
+                        self.enterCancel,
+                        self.exitCancel)], 'off', 'off')
+        self.message = DirectLabel(parent = self,
+                                   relief = None,
+                                   text = '',
+                                   text_scale = PiratesGuiGlobals.TextScaleLarge,
+                                   text_align = TextNode.ACenter,
+                                   text_fg = PiratesGuiGlobals.TextFG2,
+                                   text_shadow = PiratesGuiGlobals.TextShadow,
+                                   text_wordwrap = 11,
+                                   pos = (0.25, 0, 0.35),
+                                   textMayChange = 1)
         self.context = None
-        self.bOk = FriendInviterButton(text=OTPLocalizer.FriendInviterOK, command=self.__handleOk)
+        self.bOk = FriendInviterButton(text = OTPLocalizer.FriendInviterOK, command = self.__handleOk)
         self.bOk.reparentTo(self)
         self.bOk.setPos(0.2, 0, 0.05)
         self.bOk.hide()
-        self.bCancel = FriendInviterButton(text=OTPLocalizer.FriendInviterCancel, command=self.__handleCancel)
+        self.bCancel = FriendInviterButton(text = OTPLocalizer.FriendInviterCancel,
+                                           command = self.__handleCancel)
         self.bCancel.reparentTo(self)
         self.bCancel.setPos(0.2, 0, 0.05)
         self.bCancel.hide()
-        self.bStop = FriendInviterButton(text='Stop', command=self.__handleStop)
+        self.bStop = FriendInviterButton(text = 'Stop',
+                                         command = self.__handleStop)
         self.bStop.reparentTo(self)
         self.bStop.setPos(0.2, 0, 0.15)
         self.bStop.hide()
-        self.bYes = FriendInviterButton(text=OTPLocalizer.FriendInviterYes, command=self.__handleYes)
+        self.bYes = FriendInviterButton(text = OTPLocalizer.FriendInviterYes,
+                                        command = self.__handleYes)
         self.bYes.reparentTo(self)
         self.bYes.setPos(0.1, 0, 0.05)
         self.bYes.hide()
-        self.bNo = FriendInviterButton(text=OTPLocalizer.FriendInviterNo, command=self.__handleNo)
+        self.bNo = FriendInviterButton(text = OTPLocalizer.FriendInviterNo,
+                                       command = self.__handleNo)
         self.bNo.reparentTo(self)
         self.bNo.setPos(0.3, 0, 0.05)
         self.bNo.hide()
@@ -87,6 +153,7 @@ class FriendInviter(GuiPanel.GuiPanel):
     def destroy(self):
         if hasattr(self, 'destroyed'):
             return
+        
         self.destroyed = 1
         self.fsm.request('cancel')
         del self.fsm
@@ -97,7 +164,7 @@ class FriendInviter(GuiPanel.GuiPanel):
 
     def exitOff(self):
         pass
-
+    
     def enterGetNewFriend(self):
         self.message['text'] = OTPLocalizer.FriendInviterClickToon
         self.bCancel.show()
@@ -106,7 +173,7 @@ class FriendInviter(GuiPanel.GuiPanel):
     def exitGetNewFriend(self):
         self.bCancel.hide()
         self.ignore('clickedNametag')
-
+    
     def __handleClickedNametag(self, avatar):
         self.avId = avatar.doId
         self.avName = avatar.getName()
@@ -119,8 +186,8 @@ class FriendInviter(GuiPanel.GuiPanel):
         if self.avId == myId:
             self.fsm.request('self')
         elif self.isPlayerInvite:
-            #print 'isPlayerFriend: %s' % base.cr.playerFriendsManager.isPlayerFriend(self.avId)
-            #print 'isavatarofplayerfriend: %s' % base.cr.playerFriendsManager.findPlayerIdFromAvId(self.avId)
+            print 'isPlayerFriend: %s' % base.cr.playerFriendsManager.isPlayerFriend(self.avId)
+            print 'isavatarofplayerfriend: %s' % base.cr.playerFriendsManager.findPlayerIdFromAvId(self.avId)
             if base.cr.playerFriendsManager.isAvatarOwnerPlayerFriend(self.avId):
                 self.fsm.request('alreadyFriends')
             elif len(base.cr.playerFriendsManager.playerFriendsList) >= OTPGlobals.MaxFriends:
@@ -139,10 +206,10 @@ class FriendInviter(GuiPanel.GuiPanel):
                 self.fsm.request('checkAvailability')
             else:
                 self.fsm.request('notYet')
-
+    
     def exitBegin(self):
         self.ignore(self.avDisableName)
-
+    
     def enterTooMany(self):
         self.message['text'] = PLocalizer.FriendInviterTooMany % (self.avName,)
         self['text_pos'] = (0.0, 0.2)
@@ -150,13 +217,13 @@ class FriendInviter(GuiPanel.GuiPanel):
 
     def exitTooMany(self):
         self.bCancel.hide()
-
+    
     def enterNotYet(self):
         self.accept(self.avDisableName, self.__handleDisableAvatar)
         self.message['text'] = OTPLocalizer.FriendInviterNotYet % self.avName
         self.bYes.show()
         self.bNo.show()
-
+    
     def exitNotYet(self):
         self.ignore(self.avDisableName)
         self.bYes.hide()
@@ -168,9 +235,11 @@ class FriendInviter(GuiPanel.GuiPanel):
         if not handle:
             self.fsm.request('wentAway')
             return
+        
         if isinstance(handle, DistributedBattleNPC):
             self.fsm.request('askingNPC')
             return
+        
         if self.isPlayerInvite:
             base.cr.playerFriendsManager.sendRequestInvite(self.avId)
         else:
@@ -182,12 +251,13 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.accept(OTPGlobals.PlayerFriendUpdateEvent, self.__friendAdded)
         self.accept(OTPGlobals.PlayerFriendRejectInviteEvent, self.__friendRejectInvite)
         self.bCancel.show()
-
+    
     def __friendAdded(self, avId, info):
         if self.isPlayerInvite:
             if self.avId == info.avatarId:
                 self.info = info
                 self.fsm.request('yes')
+            
         elif self.avId == avId:
             self.fsm.request('yes')
 
@@ -205,7 +275,7 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.FriendInviterNotAvailable % self.avName
         self.context = None
         self.bOk.show()
-
+    
     def exitNotAvailable(self):
         self.bOk.hide()
 
@@ -213,7 +283,7 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.FriendInviterNotOpen % self.avName
         self.context = None
         self.bOk.show()
-
+    
     def exitNotOpen(self):
         self.bOk.hide()
 
@@ -229,18 +299,19 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.message['text'] = OTPLocalizer.FriendInviterWentAway % self.avName
         if self.context != None:
             self.context = None
+        
         self.bOk.show()
-
+    
     def exitWentAway(self):
         self.bOk.hide()
-
+    
     def enterAlreadyFriends(self):
         self.message['text'] = OTPLocalizer.FriendInviterAlready % self.avName
         self['text_pos'] = (0.0, 0.2)
         self.context = None
         self.bStop.show()
         self.bCancel.show()
-
+    
     def exitAlreadyFriends(self):
         self.message['text'] = ''
         self['text_pos'] = (0.0, 0.13)
@@ -264,11 +335,11 @@ class FriendInviter(GuiPanel.GuiPanel):
         self.message['text'] = PLocalizer.FriendInviterAskingNPC % self.avName
         taskMgr.doMethodLater(2.0, self.npcReplies, 'npcFriendship')
         self.bCancel.show()
-
+    
     def exitAskingNPC(self):
         taskMgr.remove('npcFriendship')
         self.bCancel.hide()
-
+    
     def npcReplies(self, task):
         self.fsm.request('no')
         return Task.done
@@ -282,13 +353,14 @@ class FriendInviter(GuiPanel.GuiPanel):
     def exitEndFriendship(self):
         self.bYes.hide()
         self.bNo.hide()
-
+    
     def enterFriendsNoMore(self):
-        #print 'enterFriendsNoMore %s %s' % (self.isPlayerInvite, self.avId)
+        print 'enterFriendsNoMore %s %s' % (self.isPlayerInvite, self.avId)
         if self.isPlayerInvite:
             pId = base.cr.playerFriendsManager.findPlayerIdFromAvId(self.avId)
             if pId:
                 base.cr.playerFriendsManager.sendRequestRemove(pId)
+            
         else:
             base.cr.avatarFriendsManager.sendRequestRemove(self.avId)
         self.message['text'] = OTPLocalizer.FriendInviterFriendsNoMore % self.avName
@@ -298,12 +370,12 @@ class FriendInviter(GuiPanel.GuiPanel):
 
     def exitFriendsNoMore(self):
         self.bOk.hide()
-
+    
     def enterSelf(self):
         self.message['text'] = OTPLocalizer.FriendInviterSelf
         self.context = None
         self.bOk.show()
-
+    
     def exitSelf(self):
         self.bOk.hide()
 
@@ -337,16 +409,17 @@ class FriendInviter(GuiPanel.GuiPanel):
     def enterYes(self):
         if self.skipCongrats:
             self.destroy()
-        elif self.isPlayerInvite:
-            self.message['text'] = OTPLocalizer.FriendInviterPlayerFriendSaidYes % (self.avName, self.info.playerName)
         else:
-            self.message['text'] = OTPLocalizer.FriendInviterFriendSaidYes % self.avName
-        self.context = None
-        self.bOk.show()
+            if self.isPlayerInvite:
+                self.message['text'] = OTPLocalizer.FriendInviterPlayerFriendSaidYes % (self.avName, self.info.playerName)
+            else:
+                self.message['text'] = OTPLocalizer.FriendInviterFriendSaidYes % self.avName
+            self.context = None
+            self.bOk.show()
 
     def exitYes(self):
         self.bOk.hide()
-
+    
     def enterNo(self):
         self.message['text'] = OTPLocalizer.FriendInviterFriendSaidNo % self.avName
         self.context = None
@@ -378,12 +451,13 @@ class FriendInviter(GuiPanel.GuiPanel):
 
     def exitDown(self):
         self.bOk.hide()
-
+    
     def enterCancel(self):
         if self.context != None:
             self.context = None
+        
         self.fsm.request('off')
-
+    
     def exitCancel(self):
         pass
 
@@ -392,7 +466,7 @@ class FriendInviter(GuiPanel.GuiPanel):
 
     def __handleCancel(self):
         self.destroy()
-
+    
     def __handleStop(self):
         self.fsm.request('endFriendship')
 
@@ -406,10 +480,10 @@ class FriendInviter(GuiPanel.GuiPanel):
 
     def __handleNo(self):
         self.destroy()
-
+    
     def __handleList(self):
         messenger.send('openFriendsList')
-
+    
     def __friendConsidering(self, yesNoAlready, context):
         if yesNoAlready == 1:
             self.context = context
@@ -431,7 +505,7 @@ class FriendInviter(GuiPanel.GuiPanel):
         else:
             self.notify.warning('Got unexpected response to friendConsidering: %s' % yesNoAlready)
             self.fsm.request('maybe')
-
+    
     def __friendRejectInvite(self, avId, reason):
         if reason == RejectCode.NO_FRIENDS_LIST:
             pass
@@ -459,6 +533,7 @@ class FriendInviter(GuiPanel.GuiPanel):
         if self.context != context:
             self.notify.warning('Unexpected change of context from %s to %s.' % (self.context, context))
             self.context = context
+        
         if yesNoMaybe == 1:
             self.fsm.request('yes')
         elif yesNoMaybe == 0:
@@ -471,3 +546,5 @@ class FriendInviter(GuiPanel.GuiPanel):
 
     def __handleDisableAvatar(self):
         self.fsm.request('wentAway')
+
+

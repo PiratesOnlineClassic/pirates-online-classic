@@ -1,12 +1,12 @@
-from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
-from otp.friends.PlayerFriendsManager import PlayerFriendsManager
+from direct.directnotify.DirectNotifyGlobal import directNotify
 from otp.otpbase import OTPGlobals
+from otp.friends.PlayerFriendsManager import PlayerFriendsManager
 from pirates.friends.PCFriendInfo import PCFriendInfo
 
 class PCPlayerFriendsManager(PlayerFriendsManager):
     notify = directNotify.newCategory('PCPlayerFriendsManager')
-
+    
     def __init__(self, cr):
         PlayerFriendsManager.__init__(self, cr)
         self.playerId2ShipState = {}
@@ -23,8 +23,9 @@ class PCPlayerFriendsManager(PlayerFriendsManager):
         shipId = self.playerId2ShipId.get(id, 0)
         if shipId:
             self.shipId2ShipState.pop(id, None)
+        
         self.playerId2ShipId.pop(id, None)
-
+    
     def setShipState(self, playerId, onShip, shipId):
         self.playerId2ShipState[playerId] = onShip
         self.playerId2ShipId[playerId] = shipId
@@ -36,7 +37,7 @@ class PCPlayerFriendsManager(PlayerFriendsManager):
 
     def getShipId2State(self, shipId):
         return self.shipId2ShipState.get(shipId, 0)
-
+    
     def getShipId(self, playerId):
         return self.playerId2ShipId.get(playerId, 0)
 
@@ -44,8 +45,10 @@ class PCPlayerFriendsManager(PlayerFriendsManager):
         info = self.playerId2Info.get(playerId)
         if info:
             info.setBandId(bandMgrId, bandId)
-
+    
     def getBandId(self, playerId):
         info = self.playerId2Info.get(playerId)
         if info:
             return info.getBandId()
+
+
