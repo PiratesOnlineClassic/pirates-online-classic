@@ -30,6 +30,18 @@ class PirateInventoryAI(DistributedInventoryAI):
             if newLevel > oldLevel:
                 avatar.d_levelUpMsg(repType, newLevel, 0)
 
+                # Give level up skills
+                earnedUnspent, earnedSkill = RepChart.getLevelUpSkills(repType, newLevel)
+                for unspent in earnedUnspent:
+                    self.b_setStackQuantity(unspent, 1)
+
+                for earnedSkill in earnedSkill:
+                    self.b_setStackQuantity(earnedSkill, 1)
+
+                for unspent in RepChart.getLevelUpSkills(repType, 0)[1] + RepChart.getLevelUpSkills(repType, 1)[1]:
+                    if not self.getStackQuantity(unspent):
+                        self.b_setStackQuantity(unspent, 1)
+
                 maxMojo = avatar.getMaxMojo()
                 maxMojo += RepChart.getManaGain(repType)
 
@@ -38,6 +50,10 @@ class PirateInventoryAI(DistributedInventoryAI):
 
                 avatar.b_setMaxHp(maxHp)
                 avatar.b_setMaxMojo(maxMojo)
+
+        if repType == InventoryType.OverallRep and newLevel > avatar.getLevel() or newLevel > oldLevel:
+            avatar.b_setHp(avatar.getMaxHp())
+            avatar.b_setMojo(avatar.getMaxMojo())
 
         self.b_setAccumulator(repType, quantity)
 

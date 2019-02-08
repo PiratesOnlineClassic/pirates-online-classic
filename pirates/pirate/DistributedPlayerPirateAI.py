@@ -367,7 +367,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         def updateStack(stackType):
             unspentStackQuantity = inventory.getStackQuantity(stackType)
             skillQuantity = inventory.getStackQuantity(skillId)
-            skillLimit = inventory.getStackLimit(skillId)
 
             # check to see if the player has any skill points...
             if not unspentStackQuantity:
@@ -378,9 +377,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
             # check to see if the player can purchase anymore stacks
             # for this type...
-            if skillQuantity >= skillLimit:
-                self.notify.debug('Cannot update stack %d, stack limit reached; skillQuantity=%d skillLimit=%d!' % (
-                    stackType, skillQuantity, skillLimit))
+            if skillQuantity >= 5:
+                self.notify.debug('Cannot update stack %d, stack limit reached; skillQuantity=%d, skillLimit=5' % (
+                    stackType, skillQuantity))
 
                 return
 
