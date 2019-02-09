@@ -54,7 +54,7 @@ class DistributedJailInteriorAI(DistributedGAInteriorAI):
         if len(self.__cellDoors) == 0:
             return None
 
-        return random.choice(self.__cellDoors.items())
+        return random.choice(self.__cellDoors.values())
 
     def avatarAlreadyInJail(self):
         pass
