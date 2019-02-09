@@ -3,7 +3,7 @@ from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
 from direct.distributed import DistributedObject
 from direct.gui.DirectGui import *
-from panda3d.core import *
+from pandac.PandaModules import *
 from direct.showbase import DirectObject
 from direct.actor import Actor
 from direct.showbase.PythonUtil import quickProfile
@@ -18,11 +18,9 @@ from pirates.shipparts import Mast
 from pirates.shipparts import DistributedShippart
 from pirates.destructibles import DistributedDestructibleArray
 
-
-class DistributedMast(DistributedShippart.DistributedShippart,
-                      DistributedDestructibleArray.DistributedDestructibleArray, DirectObject.DirectObject):
+class DistributedMast(DistributedShippart.DistributedShippart, DistributedDestructibleArray.DistributedDestructibleArray, DirectObject.DirectObject):
     notify = directNotify.newCategory('DistributedMast')
-
+    
     def __init__(self, cr):
         self.cr = cr
         DistributedShippart.DistributedShippart.__init__(self, cr)
@@ -59,7 +57,7 @@ class DistributedMast(DistributedShippart.DistributedShippart,
                 self.prop = mast[0]
                 self.ship.masts[self.dna.posIndex][1] = self
                 return
-
+        
         self.prop = Mast.Mast(self.ship, self.cr)
         self.prop.shipId = self.shipId
         self.prop.doId = self.doId
@@ -76,11 +74,11 @@ class DistributedMast(DistributedShippart.DistributedShippart,
         self.notify.debug('Delete ' + str(self.doId))
         if self.ship.masts.get(self.dna.posIndex, 0):
             self.ship.masts[self.dna.posIndex][1] = None
-
+        
         del self.dna
         if base.cr.config.GetBool('want-ship-hpdisplay', 0) is 1:
             self.destroyHpDisplay()
-
+        
         DistributedShippart.DistributedShippart.delete(self)
         DistributedDestructibleArray.DistributedDestructibleArray.delete(self)
 
@@ -95,7 +93,7 @@ class DistributedMast(DistributedShippart.DistributedShippart,
         self.prop.loadHigh()
         self.prop.loadMedium()
         self.prop.loadLow()
-
+    
     def setArrayHp(self, hpArray):
         DistributedDestructibleArray.DistributedDestructibleArray.setArrayHp(self, hpArray)
         messenger.send('setMastHp-%s' % self.shipId, self.getArrayHp())
@@ -108,8 +106,8 @@ class DistributedMast(DistributedShippart.DistributedShippart,
 
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker)
-
-    def playDeath(self, index=None):
+    
+    def playDeath(self, index = None):
         if self.prop.mastsState[index] == 0 and self.isGenerated():
             if index != None and self.prop:
                 self.prop.death(index)
@@ -119,18 +117,18 @@ class DistributedMast(DistributedShippart.DistributedShippart,
             for i in range(index, len(self.arrayHp)):
                 if self.arrayHp[i] > 0:
                     self.prop.respawn(i)
-
-    def setBreakAnim(self, index, animMultiplier=1.0):
+    
+    def setBreakAnim(self, index, animMultiplier = 1.0):
         if self.prop.mastsState[index] == 0:
             self.prop.setBreakAnim(index, animMultiplier)
-
+    
     def loadStats(self):
         if self.stats:
             return
-
+        
         if not self.dna.mastType:
             return
-
+        
         self.stats = ShipGlobals.getMastStats(self.dna.mastType)
         self.maxArrayHp = copy.copy(self.stats['maxArrayHp'])
         self.arrayHp = copy.copy(self.maxArrayHp)
@@ -138,7 +136,7 @@ class DistributedMast(DistributedShippart.DistributedShippart,
         self.hullDrag = self.stats['hullDrag']
         self.mass = self.stats['mass']
         self.addStats()
-
+    
     def addStats(self):
         ship = base.cr.doId2do.get(self.shipId)
         ship.anchorDrag += self.anchorDrag
@@ -150,7 +148,7 @@ class DistributedMast(DistributedShippart.DistributedShippart,
         ship.anchorDrag -= self.anchorDrag
         ship.hullDrag -= self.hullDrag
         self.mass -= self.mass
-
+    
     def setDefaultDNA(self):
         newDNA = MastDNA.MastDNA()
         self.setDNA(newDNA)
@@ -160,8 +158,8 @@ class DistributedMast(DistributedShippart.DistributedShippart,
             self.updateDNA(dna)
         else:
             self.dna = dna
-
-    def updateDNA(self, newDNA, fForce=0):
+    
+    def updateDNA(self, newDNA, fForce = 0):
         oldDna = self.dna
         self.dna = newDNA
 
@@ -178,22 +176,22 @@ class DistributedMast(DistributedShippart.DistributedShippart,
             self.level = stats[2]
         else:
             self.level = 0
-
+    
     def getMastType(self):
         return self.dna.getMastType()
-
+    
     def setPosIndex(self, val):
         self.dna.setPosIndex(val)
-
+    
     def getPosIndex(self):
         return self.dna.getPosIndex()
-
+    
     def setTextureIndex(self, val):
         self.dna.setTextureIndex(val)
-
+    
     def setColorIndex(self, val):
         self.dna.setColorIndex(val)
-
+    
     def setSailConfig(self, val):
         self.dna.setSailConfig(val)
         messenger.send('setMastType-%s' % self.shipId, [
@@ -211,3 +209,4 @@ class DistributedMast(DistributedShippart.DistributedShippart,
     def addPropToShip(self):
         self.prop.loadCollisions()
         self.prop.addToShip()
+

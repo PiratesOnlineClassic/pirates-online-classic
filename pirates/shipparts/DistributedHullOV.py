@@ -4,7 +4,7 @@ from pirates.ship import ShipGlobals
 
 class DistributedHullOV(DistributedObjectOV.DistributedObjectOV):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedHullOV')
-
+    
     def __init__(self, cr):
         DistributedObjectOV.DistributedObjectOV.__init__(self, cr)
         self.shipId = 0
@@ -36,7 +36,7 @@ class DistributedHullOV(DistributedObjectOV.DistributedObjectOV):
         self.rBroadsideConfig = []
         self.lBroadsideConfig = []
         self.pendingLinkToShip = None
-
+    
     def announceGenerate(self):
         DistributedObjectOV.DistributedObjectOV.announceGenerate(self)
 
@@ -44,15 +44,14 @@ class DistributedHullOV(DistributedObjectOV.DistributedObjectOV):
         DistributedObjectOV.DistributedObjectOV.disable(self)
 
     def __repr__(self):
-        return repr(self.doId)
+        return `self.doId`
 
     def setShipId(self, val):
         self.shipId = val
 
     def setShipClass(self, val):
         self.shipClass = val
-        messenger.send('setShipClass-%s' % self.shipId, [
-            self.shipClass])
+        messenger.send('setShipClass-%s' % self.shipId, [self.shipClass])
 
     def setBaseTeam(self, val):
         pass
@@ -107,3 +106,4 @@ class DistributedHullOV(DistributedObjectOV.DistributedObjectOV):
     def setRightBroadsideConfig(self, val):
         self.rBroadsideConfig = val
         messenger.send('setHullRightBroadsideConfig-%s' % self.shipId, [val])
+

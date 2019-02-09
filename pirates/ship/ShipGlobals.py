@@ -1,14 +1,12 @@
-import copy
-import math
-import random
-
-from direct.actor import Actor
-from direct.showbase.PythonUtil import Enum
-from direct.task import Task
 from pandac.PandaModules import *
+from direct.showbase.PythonUtil import Enum
 from pirates.uberdog.UberDogGlobals import *
 from pirates.uberdog.UberDogGlobals import InventoryType
-
+from direct.actor import Actor
+from direct.task import Task
+import random
+import copy
+import math
 AI_RAM_LATENCY_BUFFER = 500
 BROADSIDE_MAX_AUTOAIM_DIST = 2000
 BROADSIDE_LEFT = 0
@@ -56,8 +54,7 @@ WARSHIPL1 = 21
 WARSHIPL2 = 22
 WARSHIPL3 = 23
 WARSHIPL4 = 24
-PLAYER_SHIPS = (
- INTERCEPTORL1, INTERCEPTORL2, INTERCEPTORL3, INTERCEPTORL4, MERCHANTL1, MERCHANTL2, MERCHANTL3, MERCHANTL4, WARSHIPL1, WARSHIPL2, WARSHIPL3, WARSHIPL4)
+PLAYER_SHIPS = (INTERCEPTORL1, INTERCEPTORL2, INTERCEPTORL3, INTERCEPTORL4, MERCHANTL1, MERCHANTL2, MERCHANTL3, MERCHANTL4, WARSHIPL1, WARSHIPL2, WARSHIPL3, WARSHIPL4)
 BLACK_PEARL = 50
 DAUNTLESS = 51
 FLYING_DUTCHMAN = 52
@@ -286,7 +283,6 @@ ShipInfoDefs = {
     'accelMod': 0.7
   }
 }
-
 SHIP_CLASS_LIST = [
     'DINGHY',
     'INTERCEPTORL1',
@@ -343,7 +339,6 @@ SHIP_CLASS_LIST = [
     'SKEL_HELLHOUND_SP',
     'SKEL_BLOOD_SCOURGE_SP']
 
-
 def getShipSizeIndex(shipClass):
     return shipClass % 10 - 1
 
@@ -362,35 +357,45 @@ SKEL_WAR_CABINL3A = 52
 BLACK_PEARL_CABIN = 200
 GOLIATH_CABIN = 212
 _cabinToType = {
-  WAR_CABINL1A: 0,
-  WAR_CABINL2A: 0,
-  WAR_CABINL2B: 1,
-  WAR_CABINL3A: 0,
-  MERCH_CABINL1A: 0,
-  MERCH_CABINL2A: 0,
-  MERCH_CABINL3A: 0,
-  INT_CABINL1A: -1,
-  INT_CABINL2A: -1,
-  INT_CABINL3A: -1,
-  SKEL_WAR_CABINL3A: 0,
-  BLACK_PEARL_CABIN: 0,
-  GOLIATH_CABIN: 0
-}
+    WAR_CABINL1A: 0,
+    WAR_CABINL2A: 0,
+    WAR_CABINL2B: 1,
+    WAR_CABINL3A: 0,
+    MERCH_CABINL1A: 0,
+    MERCH_CABINL2A: 0,
+    MERCH_CABINL3A: 0,
+    INT_CABINL1A: -1,
+    INT_CABINL2A: -1,
+    INT_CABINL3A: -1,
+    SKEL_WAR_CABINL3A: 0,
+    BLACK_PEARL_CABIN: 0,
+    GOLIATH_CABIN: 0}
 
 
 def getCabinType(shipClass):
     cabinId = __baseShipConfigs[shipClass]['setCabinType']
     if cabinId:
         return _cabinToType[cabinId]
+    
     return -1
 
 
 def getHullInfo(shipClass):
     shipInfo = __baseShipConfigs[shipClass]
-    hullInfo = [[shipInfo['setHullTextureIndex'], shipInfo['setHullColorIndex']], [shipInfo['setStripeTextureIndex'], shipInfo['setStripeColorIndex']], [shipInfo['setPatternTextureIndex'], shipInfo['setPatternColorIndex']]]
+    hullInfo = [
+        [
+            shipInfo['setHullTextureIndex'],
+            shipInfo['setHullColorIndex']],
+        [
+            shipInfo['setStripeTextureIndex'],
+            shipInfo['setStripeColorIndex']],
+        [
+            shipInfo['setPatternTextureIndex'],
+            shipInfo['setPatternColorIndex']]]
     for s in hullInfo:
         for p in s:
-            p += [0] * (3 - len(p))
+            p += [
+                0] * (3 - len(p))
 
     return hullInfo
 
@@ -405,14 +410,19 @@ def getMastInfo(shipClass):
     mastA = shipInfo['setAftmastConfig']
     if mast1 > 0:
         mastInfo[0] = __mastClassification[mast1][2]
+    
     if mast2 > 0:
         mastInfo[1] = __mastClassification[mast2][2]
+    
     if mast3 > 0:
         mastInfo[2] = __mastClassification[mast3][2]
+    
     if mastF > 0:
         mastInfo[3] = 1
+    
     if mastA > 0:
         mastInfo[4] = 1
+    
     return mastInfo
 
 
@@ -482,45 +492,43 @@ MAINMAST = 1
 FOREMAST = 2
 AFTMAST = 3
 __mastClassification = {
-  MAINMASTL1: (MAINMAST, 1, 1),
-  MAINMASTL2: (MAINMAST, 2, 2),
-  MAINMASTL3: (MAINMAST, 3, 3),
-  MAINMASTL4: (MAINMAST, 4, 4),
-  MAINMASTL5: (MAINMAST, 5, 5),
-  TRIMASTL1: (MAINMAST, 2, 1),
-  TRIMASTL2: (MAINMAST, 2, 2),
-  TRIMASTL3: (MAINMAST, 2, 3),
-  TRIMASTL4: (MAINMAST, 2, 4),
-  TRIMASTL5: (MAINMAST, 2, 5),
-  FOREMASTL1: (FOREMAST, 1, 1),
-  FOREMASTL2: (FOREMAST, 1, 2),
-  FOREMASTL3: (FOREMAST, 1, 3),
-  AFTMASTL1: (AFTMAST, 1, 1),
-  AFTMASTL2: (AFTMAST, 1, 2),
-  AFTMASTL3: (AFTMAST, 1, 3),
-  SKEL_MAINMASTL1_A: (MAINMAST, 1, 1),
-  SKEL_MAINMASTL2_A: (MAINMAST, 2, 2),
-  SKEL_MAINMASTL3_A: (MAINMAST, 3, 3),
-  SKEL_MAINMASTL4_A: (MAINMAST, 4, 4),
-  SKEL_MAINMASTL5_A: (MAINMAST, 5, 5),
-  SKEL_MAINMASTL1_B: (MAINMAST, 1, 1),
-  SKEL_MAINMASTL2_B: (MAINMAST, 2, 2),
-  SKEL_MAINMASTL3_B: (MAINMAST, 3, 3),
-  SKEL_MAINMASTL4_B: (MAINMAST, 4, 4),
-  SKEL_MAINMASTL5_B: (MAINMAST, 5, 5),
-  SKEL_TRIMASTL1: (MAINMAST, 2, 1),
-  SKEL_TRIMASTL2: (MAINMAST, 2, 2),
-  SKEL_TRIMASTL3: (MAINMAST, 2, 3),
-  SKEL_TRIMASTL4: (MAINMAST, 2, 4),
-  SKEL_TRIMASTL5: (MAINMAST, 2, 5),
-  SKEL_FOREMASTL1: (FOREMAST, 2, 1),
-  SKEL_FOREMASTL2: (FOREMAST, 2, 2),
-  SKEL_FOREMASTL3: (FOREMAST, 2, 3),
-  SKEL_AFTMASTL1: (AFTMAST, 1, 1),
-  SKEL_AFTMASTL2: (AFTMAST, 1, 2),
-  SKEL_AFTMASTL3: (AFTMAST, 1, 3)
-}
-
+    MAINMASTL1: (MAINMAST, 1, 1),
+    MAINMASTL2: (MAINMAST, 2, 2),
+    MAINMASTL3: (MAINMAST, 3, 3),
+    MAINMASTL4: (MAINMAST, 4, 4),
+    MAINMASTL5: (MAINMAST, 5, 5),
+    TRIMASTL1: (MAINMAST, 2, 1),
+    TRIMASTL2: (MAINMAST, 2, 2),
+    TRIMASTL3: (MAINMAST, 2, 3),
+    TRIMASTL4: (MAINMAST, 2, 4),
+    TRIMASTL5: (MAINMAST, 2, 5),
+    FOREMASTL1: (FOREMAST, 1, 1),
+    FOREMASTL2: (FOREMAST, 1, 2),
+    FOREMASTL3: (FOREMAST, 1, 3),
+    AFTMASTL1: (AFTMAST, 1, 1),
+    AFTMASTL2: (AFTMAST, 1, 2),
+    AFTMASTL3: (AFTMAST, 1, 3),
+    SKEL_MAINMASTL1_A: (MAINMAST, 1, 1),
+    SKEL_MAINMASTL2_A: (MAINMAST, 2, 2),
+    SKEL_MAINMASTL3_A: (MAINMAST, 3, 3),
+    SKEL_MAINMASTL4_A: (MAINMAST, 4, 4),
+    SKEL_MAINMASTL5_A: (MAINMAST, 5, 5),
+    SKEL_MAINMASTL1_B: (MAINMAST, 1, 1),
+    SKEL_MAINMASTL2_B: (MAINMAST, 2, 2),
+    SKEL_MAINMASTL3_B: (MAINMAST, 3, 3),
+    SKEL_MAINMASTL4_B: (MAINMAST, 4, 4),
+    SKEL_MAINMASTL5_B: (MAINMAST, 5, 5),
+    SKEL_TRIMASTL1: (MAINMAST, 2, 1),
+    SKEL_TRIMASTL2: (MAINMAST, 2, 2),
+    SKEL_TRIMASTL3: (MAINMAST, 2, 3),
+    SKEL_TRIMASTL4: (MAINMAST, 2, 4),
+    SKEL_TRIMASTL5: (MAINMAST, 2, 5),
+    SKEL_FOREMASTL1: (FOREMAST, 2, 1),
+    SKEL_FOREMASTL2: (FOREMAST, 2, 2),
+    SKEL_FOREMASTL3: (FOREMAST, 2, 3),
+    SKEL_AFTMASTL1: (AFTMAST, 1, 1),
+    SKEL_AFTMASTL2: (AFTMAST, 1, 2),
+    SKEL_AFTMASTL3: (AFTMAST, 1, 3)}
 
 def getMastClassification(mastType):
     return __mastClassification.get(mastType)
@@ -1469,196 +1477,204 @@ def getMaxHullStats():
 
 
 BaseLevel = {
-  INTERCEPTORL1: 2,
-  MERCHANTL1: 4,
-  WARSHIPL1: 8,
-  INTERCEPTORL2: 12,
-  MERCHANTL2: 16,
-  WARSHIPL2: 20,
-  INTERCEPTORL3: 26,
-  MERCHANTL3: 30,
-  WARSHIPL3: 34,
-  BLACK_PEARL: 40,
-  SKEL_WARSHIPL3: 32,
-  SKEL_INTERCEPTORL3: 26
-}
+    INTERCEPTORL1: 2,
+    MERCHANTL1: 4,
+    WARSHIPL1: 8,
+    INTERCEPTORL2: 12,
+    MERCHANTL2: 16,
+    WARSHIPL2: 20,
+    INTERCEPTORL3: 26,
+    MERCHANTL3: 30,
+    WARSHIPL3: 34,
+    BLACK_PEARL: 40,
+    SKEL_WARSHIPL3: 32,
+    SKEL_INTERCEPTORL3: 26}
 WaterlineOffsets = {
-  INTERCEPTORL1: -4,
-  INTERCEPTORL2: -4,
-  INTERCEPTORL3: -4,
-  MERCHANTL1: -4,
-  MERCHANTL2: -4,
-  MERCHANTL3: -4,
-  WARSHIPL1: -4,
-  WARSHIPL2: -4,
-  WARSHIPL3: -4,
-  BLACK_PEARL: -10,
-  GOLIATH: -10,
-  SKEL_WARSHIPL3: -4,
-  SKEL_INTERCEPTORL3: -4
-}
+    INTERCEPTORL1: -4,
+    INTERCEPTORL2: -4,
+    INTERCEPTORL3: -4,
+    MERCHANTL1: -4,
+    MERCHANTL2: -4,
+    MERCHANTL3: -4,
+    WARSHIPL1: -4,
+    WARSHIPL2: -4,
+    WARSHIPL3: -4,
+    BLACK_PEARL: -10,
+    GOLIATH: -10,
+    SKEL_WARSHIPL3: -4,
+    SKEL_INTERCEPTORL3: -4}
 TiltFakeMass = {
-  INTERCEPTORL1: 1.0,
-  INTERCEPTORL2: 1.4,
-  INTERCEPTORL3: 1.7,
-  MERCHANTL1: 2.5,
-  MERCHANTL2: 3.0,
-  MERCHANTL3: 3.5,
-  WARSHIPL1: 2.5,
-  WARSHIPL2: 3.0,
-  WARSHIPL3: 4.0,
-  BLACK_PEARL: 4.5,
-  GOLIATH: 4.5,
-  SKEL_INTERCEPTORL3: 1.7,
-  SKEL_WARSHIPL3: 4.0
-}
-
+    INTERCEPTORL1: 1.0,
+    INTERCEPTORL2: 1.4,
+    INTERCEPTORL3: 1.7,
+    MERCHANTL1: 2.5,
+    MERCHANTL2: 3.0,
+    MERCHANTL3: 3.5,
+    WARSHIPL1: 2.5,
+    WARSHIPL2: 3.0,
+    WARSHIPL3: 4.0,
+    BLACK_PEARL: 4.5,
+    GOLIATH: 4.5,
+    SKEL_INTERCEPTORL3: 1.7,
+    SKEL_WARSHIPL3: 4.0}
 SamplePoints = Enum('\n    FL, F, FR,\n     L, C,  R,\n    BL, B, BR,\n    ')
 SamplePointOffsets = {
-  INTERCEPTORL1: [(0, -11), {
-    SamplePoints.FL: (-13, 29),
-    SamplePoints.F: (0, 29),
-    SamplePoints.FR: (13, 29),
-    SamplePoints.L: (-13, 0),
-    SamplePoints.C: (0, 0),
-    SamplePoints.R: (13, 0),
-    SamplePoints.BL: (-13, -29),
-    SamplePoints.B: (0, -29),
-    SamplePoints.BR: (13, -29)
-  }],
-  INTERCEPTORL2: [(0, -8), {
-    SamplePoints.FL: (-20, 50),
-    SamplePoints.F: (0, 50),
-    SamplePoints.FR: (20, 50),
-    SamplePoints.L: (-20, 0),
-    SamplePoints.C: (0, 0),
-    SamplePoints.R: (20, 0),
-    SamplePoints.BL: (-20, -50),
-    SamplePoints.B: (0, -50),
-    SamplePoints.BR: (20, -50)
-  }],
-  INTERCEPTORL3: [(0, 0), {
-    SamplePoints.FL: (-26, 50),
-    SamplePoints.F: (0, 50),
-    SamplePoints.FR: (26, 50),
-    SamplePoints.L: (-26, 0),
-    SamplePoints.C: (0, 0),
-    SamplePoints.R: (26, 0),
-    SamplePoints.BL: (-26, -50),
-    SamplePoints.B: (0, -50),
-    SamplePoints.BR: (26, -50)
-  }],
-  MERCHANTL1: [(0, 0), {
-    SamplePoints.FL: (-23, 33),
-    SamplePoints.F: (0, 33),
-    SamplePoints.FR: (23, 33),
-    SamplePoints.L: (-23, 0),
-    SamplePoints.C: (0, 0),
-    SamplePoints.R: (23, 0),
-    SamplePoints.BL: (-23, -33),
-    SamplePoints.B: (0, -33),
-    SamplePoints.BR: (23, -33)
-  }],
-  MERCHANTL2: [(0, 0), {
-    SamplePoints.FL: (-35, 60),
-    SamplePoints.F: (0, 60),
-    SamplePoints.FR: (35, 60),
-    SamplePoints.L: (-35, 0),
-    SamplePoints.C: (0, 0),
-    SamplePoints.R: (35, 0),
-    SamplePoints.BL: (-35, -60),
-    SamplePoints.B: (0, -60),
-    SamplePoints.BR: (35, -60)
-  }],
-  MERCHANTL3: [(0, 0), {
-    SamplePoints.FL: (-38, 68),
-    SamplePoints.F: (0, 68),
-    SamplePoints.FR: (38, 68),
-    SamplePoints.L: (-38, 0),
-    SamplePoints.C: (0, 0),
-    SamplePoints.R: (38, 0),
-    SamplePoints.BL: (-38, -68),
-    SamplePoints.B: (0, -68),
-    SamplePoints.BR: (38, -68)
-  }],
-  WARSHIPL1: [(0, -5), {
-    SamplePoints.FL: (-22, 45),
-    SamplePoints.F: (0, 45),
-    SamplePoints.FR: (22, 45),
-    SamplePoints.L: (-22, 0),
-    SamplePoints.C: (0, 0),
-    SamplePoints.R: (22, 0),
-    SamplePoints.BL: (-22, -45),
-    SamplePoints.B: (0, -45),
-    SamplePoints.BR: (22, -45)
-  }],
-  WARSHIPL2: [(0, 0), {
-    SamplePoints.FL: (-28, 64),
-    SamplePoints.F: (0, 64),
-    SamplePoints.FR: (28, 64),
-    SamplePoints.L: (-28, 0),
-    SamplePoints.C: (0, 0),
-    SamplePoints.R: (28, 0),
-    SamplePoints.BL: (-28, -64),
-    SamplePoints.B: (0, -64),
-    SamplePoints.BR: (28, -64)
-  }],
-  WARSHIPL3: [(0, -5), {
-    SamplePoints.FL: (-42, 84),
-    SamplePoints.F: (0, 84),
-    SamplePoints.FR: (42, 84),
-    SamplePoints.L: (-42, 0),
-    SamplePoints.C: (0, 0),
-    SamplePoints.R: (42, 0),
-    SamplePoints.BL: (-42, -84),
-    SamplePoints.B: (0, -84),
-    SamplePoints.BR: (42, -84)
-  }],
-  BLACK_PEARL: [(0, -5), {
-    SamplePoints.FL: (-32, 94),
-    SamplePoints.F: (0, 94),
-    SamplePoints.FR: (32, 94),
-    SamplePoints.L: (-32, 0),
-    SamplePoints.C: (0, 0),
-    SamplePoints.R: (32, 0),
-    SamplePoints.BL: (-32, -94),
-    SamplePoints.B: (0, -94),
-    SamplePoints.BR: (32, -94)
-  }],
-  GOLIATH: [(0, -5), {
-    SamplePoints.FL: (-32, 94),
-    SamplePoints.F: (0, 94),
-    SamplePoints.FR: (32, 94),
-    SamplePoints.L: (-32, 0),
-    SamplePoints.C: (0, 0),
-    SamplePoints.R: (32, 0),
-    SamplePoints.BL: (-32, -94),
-    SamplePoints.B: (0, -94),
-    SamplePoints.BR: (32, -94)
-  }],
-  SKEL_INTERCEPTORL3: [(0, 0), {
-    SamplePoints.FL: (-26, 50),
-    SamplePoints.F: (0, 50),
-    SamplePoints.FR: (26, 50),
-    SamplePoints.L: (-26, 0),
-    SamplePoints.C: (0, 0),
-    SamplePoints.R: (26, 0),
-    SamplePoints.BL: (-26, -50),
-    SamplePoints.B: (0, -50),
-    SamplePoints.BR: (26, -50)
-  }],
-  SKEL_WARSHIPL3: [(0, -5), {
-    SamplePoints.FL: (-42, 84),
-    SamplePoints.F: (0, 84),
-    SamplePoints.FR: (42, 84),
-    SamplePoints.L: (-42, 0),
-    SamplePoints.C: (0, 0),
-    SamplePoints.R: (42, 0),
-    SamplePoints.BL: (-42, -84),
-    SamplePoints.B: (0, -84),
-    SamplePoints.BR: (42, -84)
-  }]
-}
+    INTERCEPTORL1: [
+        (0, -11),
+        {
+            SamplePoints.FL: (-13, 29),
+            SamplePoints.F: (0, 29),
+            SamplePoints.FR: (13, 29),
+            SamplePoints.L: (-13, 0),
+            SamplePoints.C: (0, 0),
+            SamplePoints.R: (13, 0),
+            SamplePoints.BL: (-13, -29),
+            SamplePoints.B: (0, -29),
+            SamplePoints.BR: (13, -29)}],
+    INTERCEPTORL2: [
+        (0, -8),
+        {
+            SamplePoints.FL: (-20, 50),
+            SamplePoints.F: (0, 50),
+            SamplePoints.FR: (20, 50),
+            SamplePoints.L: (-20, 0),
+            SamplePoints.C: (0, 0),
+            SamplePoints.R: (20, 0),
+            SamplePoints.BL: (-20, -50),
+            SamplePoints.B: (0, -50),
+            SamplePoints.BR: (20, -50)}],
+    INTERCEPTORL3: [
+        (0, 0),
+        {
+            SamplePoints.FL: (-26, 50),
+            SamplePoints.F: (0, 50),
+            SamplePoints.FR: (26, 50),
+            SamplePoints.L: (-26, 0),
+            SamplePoints.C: (0, 0),
+            SamplePoints.R: (26, 0),
+            SamplePoints.BL: (-26, -50),
+            SamplePoints.B: (0, -50),
+            SamplePoints.BR: (26, -50)}],
+    MERCHANTL1: [
+        (0, 0),
+        {
+            SamplePoints.FL: (-23, 33),
+            SamplePoints.F: (0, 33),
+            SamplePoints.FR: (23, 33),
+            SamplePoints.L: (-23, 0),
+            SamplePoints.C: (0, 0),
+            SamplePoints.R: (23, 0),
+            SamplePoints.BL: (-23, -33),
+            SamplePoints.B: (0, -33),
+            SamplePoints.BR: (23, -33)}],
+    MERCHANTL2: [
+        (0, 0),
+        {
+            SamplePoints.FL: (-35, 60),
+            SamplePoints.F: (0, 60),
+            SamplePoints.FR: (35, 60),
+            SamplePoints.L: (-35, 0),
+            SamplePoints.C: (0, 0),
+            SamplePoints.R: (35, 0),
+            SamplePoints.BL: (-35, -60),
+            SamplePoints.B: (0, -60),
+            SamplePoints.BR: (35, -60)}],
+    MERCHANTL3: [
+        (0, 0),
+        {
+            SamplePoints.FL: (-38, 68),
+            SamplePoints.F: (0, 68),
+            SamplePoints.FR: (38, 68),
+            SamplePoints.L: (-38, 0),
+            SamplePoints.C: (0, 0),
+            SamplePoints.R: (38, 0),
+            SamplePoints.BL: (-38, -68),
+            SamplePoints.B: (0, -68),
+            SamplePoints.BR: (38, -68)}],
+    WARSHIPL1: [
+        (0, -5),
+        {
+            SamplePoints.FL: (-22, 45),
+            SamplePoints.F: (0, 45),
+            SamplePoints.FR: (22, 45),
+            SamplePoints.L: (-22, 0),
+            SamplePoints.C: (0, 0),
+            SamplePoints.R: (22, 0),
+            SamplePoints.BL: (-22, -45),
+            SamplePoints.B: (0, -45),
+            SamplePoints.BR: (22, -45)}],
+    WARSHIPL2: [
+        (0, 0),
+        {
+            SamplePoints.FL: (-28, 64),
+            SamplePoints.F: (0, 64),
+            SamplePoints.FR: (28, 64),
+            SamplePoints.L: (-28, 0),
+            SamplePoints.C: (0, 0),
+            SamplePoints.R: (28, 0),
+            SamplePoints.BL: (-28, -64),
+            SamplePoints.B: (0, -64),
+            SamplePoints.BR: (28, -64)}],
+    WARSHIPL3: [
+        (0, -5),
+        {
+            SamplePoints.FL: (-42, 84),
+            SamplePoints.F: (0, 84),
+            SamplePoints.FR: (42, 84),
+            SamplePoints.L: (-42, 0),
+            SamplePoints.C: (0, 0),
+            SamplePoints.R: (42, 0),
+            SamplePoints.BL: (-42, -84),
+            SamplePoints.B: (0, -84),
+            SamplePoints.BR: (42, -84)}],
+    BLACK_PEARL: [
+        (0, -5),
+        {
+            SamplePoints.FL: (-32, 94),
+            SamplePoints.F: (0, 94),
+            SamplePoints.FR: (32, 94),
+            SamplePoints.L: (-32, 0),
+            SamplePoints.C: (0, 0),
+            SamplePoints.R: (32, 0),
+            SamplePoints.BL: (-32, -94),
+            SamplePoints.B: (0, -94),
+            SamplePoints.BR: (32, -94)}],
+    GOLIATH: [
+        (0, -5),
+        {
+            SamplePoints.FL: (-32, 94),
+            SamplePoints.F: (0, 94),
+            SamplePoints.FR: (32, 94),
+            SamplePoints.L: (-32, 0),
+            SamplePoints.C: (0, 0),
+            SamplePoints.R: (32, 0),
+            SamplePoints.BL: (-32, -94),
+            SamplePoints.B: (0, -94),
+            SamplePoints.BR: (32, -94)}],
+    SKEL_INTERCEPTORL3: [
+        (0, 0),
+        {
+            SamplePoints.FL: (-26, 50),
+            SamplePoints.F: (0, 50),
+            SamplePoints.FR: (26, 50),
+            SamplePoints.L: (-26, 0),
+            SamplePoints.C: (0, 0),
+            SamplePoints.R: (26, 0),
+            SamplePoints.BL: (-26, -50),
+            SamplePoints.B: (0, -50),
+            SamplePoints.BR: (26, -50)}],
+    SKEL_WARSHIPL3: [
+        (0, -5),
+        {
+            SamplePoints.FL: (-42, 84),
+            SamplePoints.F: (0, 84),
+            SamplePoints.FR: (42, 84),
+            SamplePoints.L: (-42, 0),
+            SamplePoints.C: (0, 0),
+            SamplePoints.R: (42, 0),
+            SamplePoints.BL: (-42, -84),
+            SamplePoints.B: (0, -84),
+            SamplePoints.BR: (42, -84)}]}
 __shipLevelStatMultiplier = {
   0: (0.5, 0, 10),
   1: (0.7, 0, 15),
@@ -1718,6 +1734,7 @@ def getShipExp(level):
     modifiers = __shipLevelStatMultiplier.get(level)
     if modifiers:
         return modifiers[2]
+    
     return modifiers
 
 
@@ -1870,60 +1887,185 @@ def getLowLODPosOffset(shipClass):
 
 
 __holeSizes = {
-  MAINMASTL1: (14, 4, 5),
-  MAINMASTL2: (24, 3, 5),
-  MAINMASTL3: (30, 3, 5),
-  MAINMASTL4: (36, 2, 5),
-  MAINMASTL5: (42, 2, 5),
-  TRIMASTL1: (6, 6, 5),
-  TRIMASTL2: (8, 5, 5),
-  TRIMASTL3: (12, 4, 5),
-  TRIMASTL4: (16, 3, 5),
-  TRIMASTL5: (20, 2, 5),
-  FOREMASTL1: (8, 4, 5),
-  FOREMASTL2: (12, 3, 5),
-  FOREMASTL3: (16, 2, 5),
-  AFTMASTL1: (14, 4, 5),
-  AFTMASTL2: (24, 3, 5),
-  AFTMASTL3: (30, 2, 5),
-  SKEL_MAINMASTL1_A: (14, 4, 5),
-  SKEL_MAINMASTL2_A: (24, 3, 5),
-  SKEL_MAINMASTL3_A: (30, 3, 5),
-  SKEL_MAINMASTL4_A: (36, 2, 5),
-  SKEL_MAINMASTL5_A: (42, 2, 5),
-  SKEL_MAINMASTL1_B: (14, 4, 5),
-  SKEL_MAINMASTL2_B: (24, 3, 5),
-  SKEL_MAINMASTL3_B: (30, 3, 5),
-  SKEL_MAINMASTL4_B: (36, 2, 5),
-  SKEL_MAINMASTL5_B: (42, 2, 5),
-  SKEL_TRIMASTL1: (6, 6, 5),
-  SKEL_TRIMASTL2: (8, 5, 5),
-  SKEL_TRIMASTL3: (12, 4, 5),
-  SKEL_TRIMASTL4: (16, 3, 5),
-  SKEL_TRIMASTL5: (20, 2, 5),
-  SKEL_FOREMASTL1: (8, 4, 5),
-  SKEL_FOREMASTL2: (12, 3, 5),
-  SKEL_FOREMASTL3: (16, 2, 5),
-  SKEL_AFTMASTL1: (14, 4, 5),
-  SKEL_AFTMASTL2: (24, 3, 5),
-  SKEL_AFTMASTL3: (30, 2, 5),
-  INTERCEPTORL1: (5, 4, [4, 4, 4, 4, 4, 4, 4]),
-  INTERCEPTORL2: (8, 3, [8, 8, 8, 8, 8, 8, 8]),
-  INTERCEPTORL3: (11, 3, [25, 25, 25, 25, 25, 25, 25]),
-  INTERCEPTORL4: (14, 2, [35, 35, 35, 35, 35, 35, 35]),
-  MERCHANTL1: (9, 4, [20, 20, 20, 10, 10, 15, 15]),
-  MERCHANTL2: (12, 3, [30, 30, 30, 20, 20, 25, 25]),
-  MERCHANTL3: (15, 3, [35, 35, 35, 25, 25, 30, 30]),
-  MERCHANTL4: (18, 2, [40, 40, 40, 30, 30, 35, 35]),
-  WARSHIPL1: (7, 3, [15, 15, 15, 15, 15, 25, 25, 20, 20]),
-  WARSHIPL2: (10, 3, [15, 25, 25, 25, 25, 35, 35, 30, 30]),
-  WARSHIPL3: (14, 3, [30, 30, 30, 30, 30, 40, 40, 35, 35]),
-  WARSHIPL4: (18, 2, [40, 40, 40, 40, 40, 50, 50, 45, 45]),
-  BLACK_PEARL: (14, 3, [30, 30, 30, 30, 30, 40, 40, 35, 35]),
-  GOLIATH: (14, 3, [30, 30, 30, 30, 30, 40, 40, 35, 35]),
-  SKEL_INTERCEPTORL3: (11, 3, [25, 25, 25, 25, 25, 25, 25]),
-  SKEL_WARSHIPL3: (14, 3, [30, 30, 30, 30, 30, 40, 40, 35, 35])
-}
+    MAINMASTL1: (14, 4, 5),
+    MAINMASTL2: (24, 3, 5),
+    MAINMASTL3: (30, 3, 5),
+    MAINMASTL4: (36, 2, 5),
+    MAINMASTL5: (42, 2, 5),
+    TRIMASTL1: (6, 6, 5),
+    TRIMASTL2: (8, 5, 5),
+    TRIMASTL3: (12, 4, 5),
+    TRIMASTL4: (16, 3, 5),
+    TRIMASTL5: (20, 2, 5),
+    FOREMASTL1: (8, 4, 5),
+    FOREMASTL2: (12, 3, 5),
+    FOREMASTL3: (16, 2, 5),
+    AFTMASTL1: (14, 4, 5),
+    AFTMASTL2: (24, 3, 5),
+    AFTMASTL3: (30, 2, 5),
+    SKEL_MAINMASTL1_A: (14, 4, 5),
+    SKEL_MAINMASTL2_A: (24, 3, 5),
+    SKEL_MAINMASTL3_A: (30, 3, 5),
+    SKEL_MAINMASTL4_A: (36, 2, 5),
+    SKEL_MAINMASTL5_A: (42, 2, 5),
+    SKEL_MAINMASTL1_B: (14, 4, 5),
+    SKEL_MAINMASTL2_B: (24, 3, 5),
+    SKEL_MAINMASTL3_B: (30, 3, 5),
+    SKEL_MAINMASTL4_B: (36, 2, 5),
+    SKEL_MAINMASTL5_B: (42, 2, 5),
+    SKEL_TRIMASTL1: (6, 6, 5),
+    SKEL_TRIMASTL2: (8, 5, 5),
+    SKEL_TRIMASTL3: (12, 4, 5),
+    SKEL_TRIMASTL4: (16, 3, 5),
+    SKEL_TRIMASTL5: (20, 2, 5),
+    SKEL_FOREMASTL1: (8, 4, 5),
+    SKEL_FOREMASTL2: (12, 3, 5),
+    SKEL_FOREMASTL3: (16, 2, 5),
+    SKEL_AFTMASTL1: (14, 4, 5),
+    SKEL_AFTMASTL2: (24, 3, 5),
+    SKEL_AFTMASTL3: (30, 2, 5),
+    INTERCEPTORL1: (5, 4, [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4]),
+    INTERCEPTORL2: (8, 3, [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8]),
+    INTERCEPTORL3: (11, 3, [
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25]),
+    INTERCEPTORL4: (14, 2, [
+        35,
+        35,
+        35,
+        35,
+        35,
+        35,
+        35]),
+    MERCHANTL1: (9, 4, [
+        20,
+        20,
+        20,
+        10,
+        10,
+        15,
+        15]),
+    MERCHANTL2: (12, 3, [
+        30,
+        30,
+        30,
+        20,
+        20,
+        25,
+        25]),
+    MERCHANTL3: (15, 3, [
+        35,
+        35,
+        35,
+        25,
+        25,
+        30,
+        30]),
+    MERCHANTL4: (18, 2, [
+        40,
+        40,
+        40,
+        30,
+        30,
+        35,
+        35]),
+    WARSHIPL1: (7, 3, [
+        15,
+        15,
+        15,
+        15,
+        15,
+        25,
+        25,
+        20,
+        20]),
+    WARSHIPL2: (10, 3, [
+        15,
+        25,
+        25,
+        25,
+        25,
+        35,
+        35,
+        30,
+        30]),
+    WARSHIPL3: (14, 3, [
+        30,
+        30,
+        30,
+        30,
+        30,
+        40,
+        40,
+        35,
+        35]),
+    WARSHIPL4: (18, 2, [
+        40,
+        40,
+        40,
+        40,
+        40,
+        50,
+        50,
+        45,
+        45]),
+    BLACK_PEARL: (14, 3, [
+        30,
+        30,
+        30,
+        30,
+        30,
+        40,
+        40,
+        35,
+        35]),
+    GOLIATH: (14, 3, [
+        30,
+        30,
+        30,
+        30,
+        30,
+        40,
+        40,
+        35,
+        35]),
+    SKEL_INTERCEPTORL3: (11, 3, [
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25]),
+    SKEL_WARSHIPL3: (14, 3, [
+        30,
+        30,
+        30,
+        30,
+        30,
+        40,
+        40,
+        35,
+        35])}
 
 
 def getHoleSizes(itemClass):
@@ -1950,165 +2092,196 @@ __boardingRopeHeight = {
   SKEL_INTERCEPTORL3: 0.8
 }
 
+
 def getBoardingRopeH(shipClass):
     return __boardingRopeHeight.get(shipClass)
 
 
 __mastStats = {
-  MAINMASTL1: {
-    'maxHp': 400,
-    'maxArrayHp': [600],
-    'mass': 0
-  },
-  MAINMASTL2: {
-    'maxHp': 600,
-    'maxArrayHp': [800, 400],
-    'mass': 0
-  },
-  MAINMASTL3: {
-    'maxHp': 1000,
-    'maxArrayHp': [1200, 800, 400],
-    'mass': 0
-  },
-  MAINMASTL4: {
-    'maxHp': 1000,
-    'maxArrayHp': [1800, 1200, 600],
-    'mass': 0
-  },
-  MAINMASTL5: {
-    'maxHp': 1000,
-    'maxArrayHp': [2400, 1600, 800],
-    'mass': 0
-  },
-  TRIMASTL1: {
-    'maxHp': 600,
-    'maxArrayHp': [600, 200, 50],
-    'mass': 0
-  },
-  TRIMASTL2: {
-    'maxHp': 600,
-    'maxArrayHp': [900, 500, 50],
-    'mass': 0
-  },
-  TRIMASTL3: {
-    'maxHp': 600,
-    'maxArrayHp': [1200, 800, 50],
-    'mass': 0
-  },
-  TRIMASTL4: {
-    'maxHp': 600,
-    'maxArrayHp': [1800, 1200, 50],
-    'mass': 0
-  },
-  TRIMASTL5: {
-    'maxHp': 600,
-    'maxArrayHp': [2400, 1600, 50],
-    'mass': 0
-  },
-  FOREMASTL1: {
-    'maxHp': 200,
-    'maxArrayHp': [500],
-    'mass': 0
-  },
-  FOREMASTL2: {
-    'maxHp': 400,
-    'maxArrayHp': [1000],
-    'mass': 0
-  },
-  FOREMASTL3: {
-    'maxHp': 600,
-    'maxArrayHp': [2000],
-    'mass': 0
-  },
-  AFTMASTL1: {
-    'maxHp': 200,
-    'maxArrayHp': [500],
-    'mass': 0
-  },
-  AFTMASTL2: {
-    'maxHp': 400,
-    'maxArrayHp': [1000],
-    'mass': 0
-  },
-  AFTMASTL3: {
-    'maxHp': 600,
-    'maxArrayHp': [2000],
-    'mass': 0
-  },
-  SKEL_MAINMASTL1_A: {
-    'maxHp': 600,
-    'maxArrayHp': [800, 400],
-    'mass': 0
-  },
-  SKEL_MAINMASTL2_A: {
-    'maxHp': 800,
-    'maxArrayHp': [1200, 800, 400],
-    'mass': 0
-  },
-  SKEL_MAINMASTL3_A: {
-    'maxHp': 1200,
-    'maxArrayHp': [1600, 1200, 600, 200],
-    'mass': 0
-  },
-  SKEL_MAINMASTL4_A: {},
-  SKEL_MAINMASTL5_A: {},
-  SKEL_MAINMASTL1_B: {
-    'maxHp': 600,
-    'maxArrayHp': [800, 400],
-    'mass': 0
-  },
-  SKEL_MAINMASTL2_B: {
-    'maxHp': 800,
-    'maxArrayHp': [1200, 800, 400],
-    'mass': 0
-  },
-  SKEL_MAINMASTL3_B: {
-    'maxHp': 1200,
-    'maxArrayHp': [1600, 1200, 600, 200],
-    'mass': 0
-  },
-  SKEL_MAINMASTL4_B: {},
-  SKEL_MAINMASTL5_B: {},
-  SKEL_TRIMASTL1: {},
-  SKEL_TRIMASTL2: {
-    'maxHp': 600,
-    'maxArrayHp': [800, 400],
-    'mass': 0
-  },
-  SKEL_TRIMASTL3: {},
-  SKEL_TRIMASTL4: {},
-  SKEL_TRIMASTL5: {},
-  SKEL_FOREMASTL1: {
-    'maxHp': 200,
-    'maxArrayHp': [500],
-    'mass': 0
-  },
-  SKEL_FOREMASTL2: {
-    'maxHp': 400,
-    'maxArrayHp': [1000],
-    'mass': 0
-  },
-  SKEL_FOREMASTL3: {
-    'maxHp': 600,
-    'maxArrayHp': [2000],
-    'mass': 0
-  },
-  SKEL_AFTMASTL1: {
-    'maxHp': 200,
-    'maxArrayHp': [500],
-    'mass': 0
-  },
-  SKEL_AFTMASTL2: {
-    'maxHp': 400,
-    'maxArrayHp': [1000],
-    'mass': 0
-  },
-  SKEL_AFTMASTL3: {
-    'maxHp': 600,
-    'maxArrayHp': [2000],
-    'mass': 0
-  }
-}
+    MAINMASTL1: {
+        'maxHp': 400,
+        'maxArrayHp': [
+            600],
+        'mass': 0},
+    MAINMASTL2: {
+        'maxHp': 600,
+        'maxArrayHp': [
+            800,
+            400],
+        'mass': 0},
+    MAINMASTL3: {
+        'maxHp': 1000,
+        'maxArrayHp': [
+            1200,
+            800,
+            400],
+        'mass': 0},
+    MAINMASTL4: {
+        'maxHp': 1000,
+        'maxArrayHp': [
+            1800,
+            1200,
+            600],
+        'mass': 0},
+    MAINMASTL5: {
+        'maxHp': 1000,
+        'maxArrayHp': [
+            2400,
+            1600,
+            800],
+        'mass': 0},
+    TRIMASTL1: {
+        'maxHp': 600,
+        'maxArrayHp': [
+            600,
+            200,
+            50],
+        'mass': 0},
+    TRIMASTL2: {
+        'maxHp': 600,
+        'maxArrayHp': [
+            900,
+            500,
+            50],
+        'mass': 0},
+    TRIMASTL3: {
+        'maxHp': 600,
+        'maxArrayHp': [
+            1200,
+            800,
+            50],
+        'mass': 0},
+    TRIMASTL4: {
+        'maxHp': 600,
+        'maxArrayHp': [
+            1800,
+            1200,
+            50],
+        'mass': 0},
+    TRIMASTL5: {
+        'maxHp': 600,
+        'maxArrayHp': [
+            2400,
+            1600,
+            50],
+        'mass': 0},
+    FOREMASTL1: {
+        'maxHp': 200,
+        'maxArrayHp': [
+            500],
+        'mass': 0},
+    FOREMASTL2: {
+        'maxHp': 400,
+        'maxArrayHp': [
+            1000],
+        'mass': 0},
+    FOREMASTL3: {
+        'maxHp': 600,
+        'maxArrayHp': [
+            2000],
+        'mass': 0},
+    AFTMASTL1: {
+        'maxHp': 200,
+        'maxArrayHp': [
+            500],
+        'mass': 0},
+    AFTMASTL2: {
+        'maxHp': 400,
+        'maxArrayHp': [
+            1000],
+        'mass': 0},
+    AFTMASTL3: {
+        'maxHp': 600,
+        'maxArrayHp': [
+            2000],
+        'mass': 0},
+    SKEL_MAINMASTL1_A: {
+        'maxHp': 600,
+        'maxArrayHp': [
+            800,
+            400],
+        'mass': 0},
+    SKEL_MAINMASTL2_A: {
+        'maxHp': 800,
+        'maxArrayHp': [
+            1200,
+            800,
+            400],
+        'mass': 0},
+    SKEL_MAINMASTL3_A: {
+        'maxHp': 1200,
+        'maxArrayHp': [
+            1600,
+            1200,
+            600,
+            200],
+        'mass': 0},
+    SKEL_MAINMASTL4_A: {},
+    SKEL_MAINMASTL5_A: {},
+    SKEL_MAINMASTL1_B: {
+        'maxHp': 600,
+        'maxArrayHp': [
+            800,
+            400],
+        'mass': 0},
+    SKEL_MAINMASTL2_B: {
+        'maxHp': 800,
+        'maxArrayHp': [
+            1200,
+            800,
+            400],
+        'mass': 0},
+    SKEL_MAINMASTL3_B: {
+        'maxHp': 1200,
+        'maxArrayHp': [
+            1600,
+            1200,
+            600,
+            200],
+        'mass': 0},
+    SKEL_MAINMASTL4_B: {},
+    SKEL_MAINMASTL5_B: {},
+    SKEL_TRIMASTL1: {},
+    SKEL_TRIMASTL2: {
+        'maxHp': 600,
+        'maxArrayHp': [
+            800,
+            400],
+        'mass': 0},
+    SKEL_TRIMASTL3: {},
+    SKEL_TRIMASTL4: {},
+    SKEL_TRIMASTL5: {},
+    SKEL_FOREMASTL1: {
+        'maxHp': 200,
+        'maxArrayHp': [
+            500],
+        'mass': 0},
+    SKEL_FOREMASTL2: {
+        'maxHp': 400,
+        'maxArrayHp': [
+            1000],
+        'mass': 0},
+    SKEL_FOREMASTL3: {
+        'maxHp': 600,
+        'maxArrayHp': [
+            2000],
+        'mass': 0},
+    SKEL_AFTMASTL1: {
+        'maxHp': 200,
+        'maxArrayHp': [
+            500],
+        'mass': 0},
+    SKEL_AFTMASTL2: {
+        'maxHp': 400,
+        'maxArrayHp': [
+            1000],
+        'mass': 0},
+    SKEL_AFTMASTL3: {
+        'maxHp': 600,
+        'maxArrayHp': [
+            2000],
+        'mass': 0}}
+
 
 def getMastStats(mastId):
     mastInfo = __mastStats.get(mastId)
@@ -2169,67 +2342,54 @@ def getSailStats(sailId):
 
 
 __cabinStats = {
-  WAR_CABINL1A: {
-    'maxHp': 1600,
-    'mass': 0,
-    'maxCargo': 0
-  },
-  WAR_CABINL2A: {
-    'maxHp': 2400,
-    'mass': 0,
-    'maxCargo': 0
-  },
-  WAR_CABINL3A: {
-    'maxHp': 3200,
-    'mass': 0,
-    'maxCargo': 0
-  },
-  MERCH_CABINL1A: {
-    'maxHp': 3200,
-    'mass': 0,
-    'maxCargo': 0
-  },
-  MERCH_CABINL2A: {
-    'maxHp': 4000,
-    'mass': 0,
-    'maxCargo': 0
-  },
-  MERCH_CABINL3A: {
-    'maxHp': 4800,
-    'mass': 0,
-    'maxCargo': 0
-  },
-  INT_CABINL1A: {
-    'maxHp': 800,
-    'mass': 0,
-    'maxCargo': 0
-  },
-  INT_CABINL2A: {
-    'maxHp': 1600,
-    'mass': 0,
-    'maxCargo': 0
-  },
-  INT_CABINL3A: {
-    'maxHp': 2400,
-    'mass': 0,
-    'maxCargo': 0
-  },
-  BLACK_PEARL_CABIN: {
-    'maxHp': 4000,
-    'mass': 0,
-    'maxCargo': 0
-  },
-  GOLIATH_CABIN: {
-    'maxHp': 6000,
-    'mass': 0,
-    'maxCargo': 0
-  },
-  SKEL_WAR_CABINL3A: {
-    'maxHp': 3200,
-    'mass': 0,
-    'maxCargo': 0
-  }
-}
+    WAR_CABINL1A: {
+        'maxHp': 1600,
+        'mass': 0,
+        'maxCargo': 0},
+    WAR_CABINL2A: {
+        'maxHp': 2400,
+        'mass': 0,
+        'maxCargo': 0},
+    WAR_CABINL3A: {
+        'maxHp': 3200,
+        'mass': 0,
+        'maxCargo': 0},
+    MERCH_CABINL1A: {
+        'maxHp': 3200,
+        'mass': 0,
+        'maxCargo': 0},
+    MERCH_CABINL2A: {
+        'maxHp': 4000,
+        'mass': 0,
+        'maxCargo': 0},
+    MERCH_CABINL3A: {
+        'maxHp': 4800,
+        'mass': 0,
+        'maxCargo': 0},
+    INT_CABINL1A: {
+        'maxHp': 800,
+        'mass': 0,
+        'maxCargo': 0},
+    INT_CABINL2A: {
+        'maxHp': 1600,
+        'mass': 0,
+        'maxCargo': 0},
+    INT_CABINL3A: {
+        'maxHp': 2400,
+        'mass': 0,
+        'maxCargo': 0},
+    BLACK_PEARL_CABIN: {
+        'maxHp': 4000,
+        'mass': 0,
+        'maxCargo': 0},
+    GOLIATH_CABIN: {
+        'maxHp': 6000,
+        'mass': 0,
+        'maxCargo': 0},
+    SKEL_WAR_CABINL3A: {
+        'maxHp': 3200,
+        'mass': 0,
+        'maxCargo': 0}}
 
 
 def getCabinStats(cabinId):
@@ -2238,31 +2398,26 @@ def getCabinStats(cabinId):
 
 
 __prowStats = {
-  SKELETON: {
-    'maxHp': 500,
-    'mass': 0,
-    'rammingPower': 50,
-    'buff': 1
-  },
-  LADY: {
-    'maxHp': 500,
-    'mass': 0,
-    'rammingPower': 0,
-    'buff': 1
-  },
-  RAML3: {
-    'maxHp': 500,
-    'mass': 0,
-    'rammingPower': 500,
-    'buff': 0
-  },
-  SKEL_RAML3: {
-    'maxHp': 500,
-    'mass': 0,
-    'rammingPower': 500,
-    'buff': 0
-  }
-}
+    SKELETON: {
+        'maxHp': 500,
+        'mass': 0,
+        'rammingPower': 50,
+        'buff': 1},
+    LADY: {
+        'maxHp': 500,
+        'mass': 0,
+        'rammingPower': 0,
+        'buff': 1},
+    RAML3: {
+        'maxHp': 500,
+        'mass': 0,
+        'rammingPower': 500,
+        'buff': 0},
+    SKEL_RAML3: {
+        'maxHp': 500,
+        'mass': 0,
+        'rammingPower': 500,
+        'buff': 0}}
 
 
 def getProwStats(prowId):
@@ -2271,31 +2426,22 @@ def getProwStats(prowId):
 
 
 __decorStats = {
-  1: {
-    'maxHp': 50
-  },
-  2: {
-    'maxHp': 50
-  },
-  3: {
-    'maxHp': 50
-  },
-  50: {
-    'maxHp': 50
-  },
-  51: {
-    'maxHp': 50
-  },
-  200: {
-    'maxHp': 50
-  },
-  201: {
-    'maxHp': 50
-  },
-  202: {
-    'maxHp': 50
-  }
-}
+    1: {
+        'maxHp': 50},
+    2: {
+        'maxHp': 50},
+    3: {
+        'maxHp': 50},
+    50: {
+        'maxHp': 50},
+    51: {
+        'maxHp': 50},
+    200: {
+        'maxHp': 50},
+    201: {
+        'maxHp': 50},
+    202: {
+        'maxHp': 50}}
 
 
 def getDecorStats(decorId):
@@ -2304,2071 +2450,3948 @@ def getDecorStats(decorId):
 
 
 __baseShipConfigs = {
-  DINGHY: {
-    'setShipClass': DINGHY,
-    'setModelClass': DINGHY,
-    'setMastConfig1': 0,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': 0,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 0,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [],
-    'setLeftBroadsideConfig': [],
-    'setRightBroadsideConfig': [],
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [],
-    'setProwType': 0,
-    'setRamType': 0,
-    'setHullTextureIndex': [0],
-    'setHullColorIndex': [0],
-    'setHullHilightColorIndex': [0],
-    'setStripeTextureIndex': [0],
-    'setStripeColorIndex': [0],
-    'setStripeHilightColorIndex': [0],
-    'setPatternTextureIndex': [0],
-    'setPatternColorIndex': [0],
-    'setPatternHilightColorIndex': [0],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  WARSHIPL1: {
-    'setShipClass': WARSHIPL1,
-    'setModelClass': WARSHIPL1,
-    'setMastConfig1': MAINMASTL1,
-    'setMastConfig2': MAINMASTL2,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL3] * 8,
-    'setLeftBroadsideConfig': [CANNONL2] * 5,
-    'setRightBroadsideConfig': [CANNONL2] * 5,
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [2, 2, 2, 2],
-    'setFloorDecorConfig': [3] * 20,
-    'setProwType': 0,
-    'setRamType': RAML3,
-    'setHullTextureIndex': [2, 101, 2],
-    'setHullColorIndex': [0, 0, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [1, 1, 1],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [1, 1],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': WAR_CABINL1A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  WARSHIPL2: {
-    'setShipClass': WARSHIPL2,
-    'setModelClass': WARSHIPL2,
-    'setMastConfig1': MAINMASTL2,
-    'setMastConfig2': MAINMASTL2,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL3] * 10,
-    'setLeftBroadsideConfig': [CANNONL2] * 7,
-    'setRightBroadsideConfig': [CANNONL2] * 7,
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [3] * 26,
-    'setProwType': 0,
-    'setRamType': RAML3,
-    'setHullTextureIndex': [2, 101, 2],
-    'setHullColorIndex': [0, 19, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [1, 1, 1],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [1, 1],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': WAR_CABINL2A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  WARSHIPL3: {
-    'setShipClass': WARSHIPL3,
-    'setModelClass': WARSHIPL3,
-    'setMastConfig1': MAINMASTL3,
-    'setMastConfig2': MAINMASTL3,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [0, FORESAILL1, FORESAILL1],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL3] * 14,
-    'setLeftBroadsideConfig': [CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2, 0, CANNONL2, CANNONL2, CANNONL2, 0],
-    'setRightBroadsideConfig': [CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2, 0, CANNONL2, CANNONL2, CANNONL2, 0],
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [200, 200, 200, 200, 200, 202, 200, 200, 200, 200, 200, 202, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 202, 202, 202, 201, 201, 201, 201, 201, 201, 201, 201],
-    'setFloorDecorConfig': [3] * 26,
-    'setProwType': 0,
-    'setRamType': RAML3,
-    'setHullTextureIndex': [2, 101, 2],
-    'setHullColorIndex': [0, 19, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [1, 1, 1],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [1, 1],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': WAR_CABINL3A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  MERCHANTL1: {
-    'setShipClass': MERCHANTL1,
-    'setModelClass': MERCHANTL1,
-    'setMastConfig1': MAINMASTL2,
-    'setMastConfig2': MAINMASTL1,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [0, 0, FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 4,
-    'setLeftBroadsideConfig': [CANNONL2] * 5,
-    'setRightBroadsideConfig': [CANNONL2] * 5,
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [2, 2, 2],
-    'setFloorDecorConfig': [3] * 14,
-    'setProwType': SKELETON,
-    'setRamType': 0,
-    'setHullTextureIndex': [2, 101, 2],
-    'setHullColorIndex': [0, 0, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [1, 1, 1],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [1],
-    'setPatternColorIndex': [0],
-    'setPatternHilightColorIndex': [0],
-    'setCabinType': MERCH_CABINL1A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  MERCHANTL2: {
-    'setShipClass': MERCHANTL2,
-    'setModelClass': MERCHANTL2,
-    'setMastConfig1': MAINMASTL1,
-    'setMastConfig2': MAINMASTL2,
-    'setMastConfig3': MAINMASTL1,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [MAINSAILL1],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [0, 0, FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 8,
-    'setLeftBroadsideConfig': [CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2, 0, 0, CANNONL2, CANNONL2, CANNONL2, CANNONL2, 0],
-    'setRightBroadsideConfig': [CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2, 0, 0, CANNONL2, CANNONL2, CANNONL2, CANNONL2, 0],
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [2] * 5,
-    'setFloorDecorConfig': [3] * 14,
-    'setProwType': SKELETON,
-    'setRamType': 0,
-    'setHullTextureIndex': [2, 101, 2],
-    'setHullColorIndex': [0, 0, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [1, 1, 1],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [1],
-    'setPatternColorIndex': [0],
-    'setPatternHilightColorIndex': [0],
-    'setCabinType': MERCH_CABINL2A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  MERCHANTL3: {
-    'setShipClass': MERCHANTL3,
-    'setModelClass': MERCHANTL3,
-    'setMastConfig1': MAINMASTL3,
-    'setMastConfig2': MAINMASTL3,
-    'setMastConfig3': MAINMASTL3,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [0, FORESAILL1, FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 10,
-    'setLeftBroadsideConfig': [CANNONL2] * 12,
-    'setRightBroadsideConfig': [CANNONL2] * 12,
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [2] * 5,
-    'setFloorDecorConfig': [3] * 14,
-    'setProwType': SKELETON,
-    'setRamType': 0,
-    'setHullTextureIndex': [2, 101, 2],
-    'setHullColorIndex': [0, 0, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [1, 1, 1],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [1],
-    'setPatternColorIndex': [0],
-    'setPatternHilightColorIndex': [0],
-    'setCabinType': MERCH_CABINL3A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  INTERCEPTORL1: {
-    'setShipClass': INTERCEPTORL1,
-    'setModelClass': INTERCEPTORL1,
-    'setMastConfig1': TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL1,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 2,
-    'setLeftBroadsideConfig': [CANNONL2] * 3,
-    'setRightBroadsideConfig': [CANNONL2] * 3,
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [2, 2],
-    'setFloorDecorConfig': [3, 3, 3],
-    'setProwType': SKELETON,
-    'setRamType': 0,
-    'setHullTextureIndex': [255, 255],
-    'setHullColorIndex': [0, 0],
-    'setHullHilightColorIndex': [0, 0],
-    'setStripeTextureIndex': [1, 2, 1],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [1, 1],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  INTERCEPTORL2: {
-    'setShipClass': INTERCEPTORL2,
-    'setModelClass': INTERCEPTORL2,
-    'setMastConfig1': TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL1,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 6,
-    'setLeftBroadsideConfig': [CANNONL1] * 5,
-    'setRightBroadsideConfig': [CANNONL1] * 5,
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [2, 2, 2, 2],
-    'setFloorDecorConfig': [3, 3, 3],
-    'setProwType': SKELETON,
-    'setRamType': 0,
-    'setHullTextureIndex': [255, 255],
-    'setHullColorIndex': [0, 0],
-    'setHullHilightColorIndex': [0, 0],
-    'setStripeTextureIndex': [1, 2, 1],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [1, 1],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  INTERCEPTORL3: {
-    'setShipClass': INTERCEPTORL3,
-    'setModelClass': INTERCEPTORL3,
-    'setMastConfig1': TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL1,
-    'setAftmastConfig': AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [FORESAILL1],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 8,
-    'setLeftBroadsideConfig': [CANNONL1] * 7,
-    'setRightBroadsideConfig': [CANNONL1] * 7,
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [2, 2, 2, 2],
-    'setFloorDecorConfig': [3, 3, 3],
-    'setProwType': SKELETON,
-    'setRamType': 0,
-    'setHullTextureIndex': [255, 255],
-    'setHullColorIndex': [0, 0],
-    'setHullHilightColorIndex': [0, 0],
-    'setStripeTextureIndex': [1, 2, 1],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [1, 1],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  BLACK_PEARL: {
-    'setShipClass': BLACK_PEARL,
-    'setModelClass': BLACK_PEARL,
-    'setMastConfig1': MAINMASTL3,
-    'setMastConfig2': MAINMASTL3,
-    'setMastConfig3': MAINMASTL3,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 200,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailTextureIndex': 202,
-    'setSailLogoIndex': 201,
-    'setForesailConfig': [FORESAILL1, 0, 0],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [BPCANNON] * 14,
-    'setLeftBroadsideConfig': [BPCANNON] * 9,
-    'setRightBroadsideConfig': [BPCANNON] * 9,
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [],
-    'setProwType': 0,
-    'setRamType': 0,
-    'setHullTextureIndex': [],
-    'setHullColorIndex': [],
-    'setHullHilightColorIndex': [],
-    'setStripeTextureIndex': [],
-    'setStripeColorIndex': [],
-    'setStripeHilightColorIndex': [],
-    'setPatternTextureIndex': [],
-    'setPatternColorIndex': [],
-    'setPatternHilightColorIndex': [],
-    'setCabinType': BLACK_PEARL_CABIN,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  STUMPY_SHIP: {
-    'setShipClass': INTERCEPTORL1,
-    'setModelClass': INTERCEPTORL1,
-    'setMastConfig1': TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL1,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [TUTORIAL_CANNON, 0],
-    'setLeftBroadsideConfig': [],
-    'setRightBroadsideConfig': [],
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [2, 2],
-    'setFloorDecorConfig': [3, 3, 3],
-    'setProwType': SKELETON,
-    'setRamType': 0,
-    'setHullTextureIndex': [2, 101],
-    'setHullColorIndex': [0, 0],
-    'setHullHilightColorIndex': [0, 0],
-    'setStripeTextureIndex': [1, 2, 1],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [1, 1],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  GOLIATH: {
-    'setShipClass': GOLIATH,
-    'setModelClass': GOLIATH,
-    'setMastConfig1': MAINMASTL3,
-    'setMastConfig2': MAINMASTL3,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [0, FORESAILL1, FORESAILL1],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL3] * 14,
-    'setLeftBroadsideConfig': [CANNONL4] * 9,
-    'setRightBroadsideConfig': [CANNONL4] * 9,
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonFirebrand,
-    'setWallDecorConfig': [200, 200, 200, 200, 200, 202, 200, 200, 200, 200, 200, 202, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 202, 202, 202, 201, 201, 201, 201, 201, 201, 201, 201],
-    'setFloorDecorConfig': [0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3],
-    'setProwType': 0,
-    'setRamType': RAML3,
-    'setHullTextureIndex': [255, 253, 254],
-    'setHullColorIndex': [15, 15, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [200, 200, 200],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [200, 200],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': GOLIATH_CABIN,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  NAVY_PANTHER: {
-    'setShipClass': NAVY_PANTHER,
-    'setModelClass': WARSHIPL1,
-    'setMastConfig1': MAINMASTL1,
-    'setMastConfig2': MAINMASTL2,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL3] * 6,
-    'setLeftBroadsideConfig': [CANNONL2] * 4,
-    'setRightBroadsideConfig': [CANNONL2] * 4,
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [2, 2, 2, 2],
-    'setFloorDecorConfig': [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-    'setProwType': 0,
-    'setRamType': RAML3,
-    'setHullTextureIndex': [253, 253, 255],
-    'setHullColorIndex': [15, 15, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [200, 200, 200],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [200, 200],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': WAR_CABINL1A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  NAVY_CENTURION: {
-    'setShipClass': NAVY_CENTURION,
-    'setModelClass': WARSHIPL2,
-    'setMastConfig1': MAINMASTL2,
-    'setMastConfig2': MAINMASTL2,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL3] * 8,
-    'setLeftBroadsideConfig': [CANNONL2] * 6,
-    'setRightBroadsideConfig': [CANNONL2] * 6,
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 3, 3, 0, 0, 3, 3],
-    'setProwType': 0,
-    'setRamType': RAML3,
-    'setHullTextureIndex': [253, 253, 254],
-    'setHullColorIndex': [15, 15, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [200, 200, 200],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [200, 200],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': WAR_CABINL2A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  NAVY_MAN_O_WAR: {
-    'setShipClass': NAVY_MAN_O_WAR,
-    'setModelClass': WARSHIPL3,
-    'setMastConfig1': MAINMASTL2,
-    'setMastConfig2': MAINMASTL3,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [0, FORESAILL1, 0],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL3] * 10,
-    'setLeftBroadsideConfig': [CANNONL2] * 8,
-    'setRightBroadsideConfig': [CANNONL2] * 8,
-    'setBroadsideAmmo': InventoryType.CannonFirebrand,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [200, 200, 200, 200, 200, 202, 200, 200, 200, 200, 200, 202, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 202, 202, 202, 201, 201, 201, 201, 201, 201, 201, 201],
-    'setFloorDecorConfig': [0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3],
-    'setProwType': 0,
-    'setRamType': RAML3,
-    'setHullTextureIndex': [253, 253, 254],
-    'setHullColorIndex': [15, 15, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [200, 200, 200],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [200, 200],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': WAR_CABINL3A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  NAVY_DREADNOUGHT: {
-    'setShipClass': NAVY_DREADNOUGHT,
-    'setModelClass': WARSHIPL3,
-    'setMastConfig1': MAINMASTL3,
-    'setMastConfig2': MAINMASTL3,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [0, FORESAILL1, FORESAILL1],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL3] * 14,
-    'setLeftBroadsideConfig': [CANNONL4] * 9,
-    'setRightBroadsideConfig': [CANNONL4] * 9,
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonFirebrand,
-    'setWallDecorConfig': [200, 200, 200, 200, 200, 202, 200, 200, 200, 200, 200, 202, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 202, 202, 202, 201, 201, 201, 201, 201, 201, 201, 201],
-    'setFloorDecorConfig': [0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3],
-    'setProwType': 0,
-    'setRamType': RAML3,
-    'setHullTextureIndex': [255, 253, 254],
-    'setHullColorIndex': [15, 15, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [200, 200, 200],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [200, 200],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': WAR_CABINL3A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  NAVY_BULWARK: {
-    'setShipClass': NAVY_BULWARK,
-    'setModelClass': MERCHANTL1,
-    'setMastConfig1': MAINMASTL2,
-    'setMastConfig2': MAINMASTL1,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [0, 0, FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 4,
-    'setLeftBroadsideConfig': [0, CANNONL2, CANNONL2, CANNONL2, 0],
-    'setRightBroadsideConfig': [0, CANNONL2, CANNONL2, CANNONL2, 0],
-    'setBroadsideAmmo': InventoryType.CannonChainShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [2, 2, 2],
-    'setFloorDecorConfig': [3, 3, 3, 3, 3, 3],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [253, 254, 253],
-    'setHullColorIndex': [15, 0, 15],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [200, 201, 202],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [200],
-    'setPatternColorIndex': [0],
-    'setPatternHilightColorIndex': [0],
-    'setCabinType': MERCH_CABINL1A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  NAVY_VANGUARD: {
-    'setShipClass': NAVY_VANGUARD,
-    'setModelClass': MERCHANTL2,
-    'setMastConfig1': MAINMASTL1,
-    'setMastConfig2': MAINMASTL2,
-    'setMastConfig3': MAINMASTL1,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [MAINSAILL1],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [0, 0, FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 6,
-    'setLeftBroadsideConfig': [CANNONL3] * 5,
-    'setRightBroadsideConfig': [CANNONL3] * 5,
-    'setBroadsideAmmo': InventoryType.CannonChainShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [253, 254, 253],
-    'setHullColorIndex': [15, 0, 15],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [200, 201, 202],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [200],
-    'setPatternColorIndex': [0],
-    'setPatternHilightColorIndex': [0],
-    'setCabinType': MERCH_CABINL2A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  NAVY_MONARCH: {
-    'setShipClass': NAVY_MONARCH,
-    'setModelClass': MERCHANTL3,
-    'setMastConfig1': MAINMASTL2,
-    'setMastConfig2': MAINMASTL2,
-    'setMastConfig3': MAINMASTL2,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [MAINSAILL1, MAINSAILL1],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [0, 0, FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 8,
-    'setLeftBroadsideConfig': [0, CANNONL2, CANNONL2, CANNONL2, CANNONL2, 0, 0, 0, CANNONL2, CANNONL2, CANNONL2, 0],
-    'setRightBroadsideConfig': [0, CANNONL2, CANNONL2, CANNONL2, CANNONL2, 0, 0, 0, CANNONL2, CANNONL2, CANNONL2, 0],
-    'setBroadsideAmmo': InventoryType.CannonChainShot,
-    'setCannonAmmo': InventoryType.CannonFirebrand,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [253, 254, 254],
-    'setHullColorIndex': [15, 0, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [200, 201, 202],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [200],
-    'setPatternColorIndex': [0],
-    'setPatternHilightColorIndex': [0],
-    'setCabinType': MERCH_CABINL3A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  NAVY_COLOSSUS: {
-    'setShipClass': NAVY_COLOSSUS,
-    'setModelClass': MERCHANTL3,
-    'setMastConfig1': MAINMASTL3,
-    'setMastConfig2': MAINMASTL3,
-    'setMastConfig3': MAINMASTL3,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [0, FORESAILL1, FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 10,
-    'setLeftBroadsideConfig': [CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2, 0, CANNONL2, CANNONL2, CANNONL2, CANNONL2, 0],
-    'setRightBroadsideConfig': [CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2, 0, CANNONL2, CANNONL2, CANNONL2, CANNONL2, 0],
-    'setBroadsideAmmo': InventoryType.CannonChainShot,
-    'setCannonAmmo': InventoryType.CannonFirebrand,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [255, 254, 254],
-    'setHullColorIndex': [15, 0, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [200, 201, 202],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [200],
-    'setPatternColorIndex': [0],
-    'setPatternHilightColorIndex': [0],
-    'setCabinType': MERCH_CABINL3A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  NAVY_FERRET: {
-    'setShipClass': NAVY_FERRET,
-    'setModelClass': INTERCEPTORL1,
-    'setMastConfig1': TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL1,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 2,
-    'setLeftBroadsideConfig': [],
-    'setRightBroadsideConfig': [],
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [2, 2],
-    'setFloorDecorConfig': [3, 3, 3],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [253, 254],
-    'setHullColorIndex': [15, 0],
-    'setHullHilightColorIndex': [0, 0],
-    'setStripeTextureIndex': [200, 201, 202],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [200, 200],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  NAVY_GREYHOUND: {
-    'setShipClass': NAVY_GREYHOUND,
-    'setModelClass': INTERCEPTORL2,
-    'setMastConfig1': TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL1,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 4,
-    'setLeftBroadsideConfig': [CANNONL1] * 3,
-    'setRightBroadsideConfig': [CANNONL1] * 3,
-    'setBroadsideAmmo': InventoryType.CannonChainShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [2, 2, 2, 2],
-    'setFloorDecorConfig': [3, 3, 3],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [253, 254],
-    'setHullColorIndex': [15, 0],
-    'setHullHilightColorIndex': [0, 0],
-    'setStripeTextureIndex': [200, 201, 202],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [200, 200],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  NAVY_KINGFISHER: {
-    'setShipClass': NAVY_KINGFISHER,
-    'setModelClass': INTERCEPTORL3,
-    'setMastConfig1': TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL1,
-    'setAftmastConfig': AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [FORESAILL1],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 6,
-    'setLeftBroadsideConfig': [CANNONL1] * 5,
-    'setRightBroadsideConfig': [CANNONL1] * 5,
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonFirebrand,
-    'setWallDecorConfig': [2, 2, 2, 2],
-    'setFloorDecorConfig': [3, 3, 3],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [253, 254],
-    'setHullColorIndex': [15, 0],
-    'setHullHilightColorIndex': [0, 0],
-    'setStripeTextureIndex': [200, 201, 202],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [200, 200],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  NAVY_PREDATOR: {
-    'setShipClass': NAVY_PREDATOR,
-    'setModelClass': INTERCEPTORL3,
-    'setMastConfig1': TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL1,
-    'setAftmastConfig': AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [FORESAILL1],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 8,
-    'setLeftBroadsideConfig': [CANNONL1] * 7,
-    'setRightBroadsideConfig': [CANNONL1] * 7,
-    'setBroadsideAmmo': InventoryType.CannonFirebrand,
-    'setCannonAmmo': InventoryType.CannonFirebrand,
-    'setWallDecorConfig': [2, 2, 2, 2],
-    'setFloorDecorConfig': [3, 3, 3],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [255, 255],
-    'setHullColorIndex': [15, 0],
-    'setHullHilightColorIndex': [0, 0],
-    'setStripeTextureIndex': [200, 201, 202],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [200, 200],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  EITC_CORVETTE: {
-    'setShipClass': EITC_CORVETTE,
-    'setModelClass': WARSHIPL1,
-    'setMastConfig1': MAINMASTL1,
-    'setMastConfig2': MAINMASTL2,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 202,
-    'setForesailConfig': [],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL3] * 6,
-    'setLeftBroadsideConfig': [CANNONL2] * 5,
-    'setRightBroadsideConfig': [CANNONL2] * 5,
-    'setBroadsideAmmo': InventoryType.CannonChainShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [2, 2, 2, 2],
-    'setFloorDecorConfig': [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-    'setProwType': 0,
-    'setRamType': RAML3,
-    'setHullTextureIndex': [253, 253, 250],
-    'setHullColorIndex': [17, 18, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [204, 204, 205],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [208, 208],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': WAR_CABINL1A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  EITC_MARAUDER: {
-    'setShipClass': EITC_MARAUDER,
-    'setModelClass': WARSHIPL2,
-    'setMastConfig1': MAINMASTL2,
-    'setMastConfig2': MAINMASTL2,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 202,
-    'setForesailConfig': [],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL3] * 8,
-    'setLeftBroadsideConfig': [CANNONL2] * 7,
-    'setRightBroadsideConfig': [CANNONL2] * 7,
-    'setBroadsideAmmo': InventoryType.CannonFirebrand,
-    'setCannonAmmo': InventoryType.CannonChainShot,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 3, 3, 0, 0, 3, 3],
-    'setProwType': 0,
-    'setRamType': RAML3,
-    'setHullTextureIndex': [253, 253, 250],
-    'setHullColorIndex': [17, 18, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [204, 204, 205],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [208, 208],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': WAR_CABINL2A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  EITC_WARLORD: {
-    'setShipClass': EITC_WARLORD,
-    'setModelClass': WARSHIPL3,
-    'setMastConfig1': MAINMASTL2,
-    'setMastConfig2': MAINMASTL3,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 202,
-    'setForesailConfig': [0, FORESAILL1, 0],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL3] * 12,
-    'setLeftBroadsideConfig': [CANNONL2] * 9,
-    'setRightBroadsideConfig': [CANNONL2] * 9,
-    'setBroadsideAmmo': InventoryType.CannonFirebrand,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [200, 200, 200, 200, 200, 202, 200, 200, 200, 200, 200, 202, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 202, 202, 202, 201, 201, 201, 201, 201, 201, 201, 201],
-    'setFloorDecorConfig': [0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3],
-    'setProwType': 0,
-    'setRamType': RAML3,
-    'setHullTextureIndex': [253, 253, 250],
-    'setHullColorIndex': [17, 18, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [204, 204, 205],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [208, 208],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': WAR_CABINL3A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  EITC_JUGGERNAUT: {
-    'setShipClass': EITC_JUGGERNAUT,
-    'setModelClass': WARSHIPL3,
-    'setMastConfig1': MAINMASTL3,
-    'setMastConfig2': MAINMASTL3,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 202,
-    'setForesailConfig': [0, FORESAILL1, FORESAILL1],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL3] * 14,
-    'setLeftBroadsideConfig': [CANNONL2] * 10,
-    'setRightBroadsideConfig': [CANNONL2] * 10,
-    'setBroadsideAmmo': InventoryType.CannonExplosive,
-    'setCannonAmmo': InventoryType.CannonFirebrand,
-    'setWallDecorConfig': [200, 200, 200, 200, 200, 202, 200, 200, 200, 200, 200, 202, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 202, 202, 202, 201, 201, 201, 201, 201, 201, 201, 201],
-    'setFloorDecorConfig': [0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3],
-    'setProwType': 0,
-    'setRamType': RAML3,
-    'setHullTextureIndex': [253, 253, 250],
-    'setHullColorIndex': [17, 18, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [204, 204, 205],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [208, 208],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': WAR_CABINL3A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  EITC_SENTINEL: {
-    'setShipClass': EITC_SENTINEL,
-    'setModelClass': MERCHANTL1,
-    'setMastConfig1': MAINMASTL2,
-    'setMastConfig2': MAINMASTL1,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 202,
-    'setForesailConfig': [0, 0, FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 4,
-    'setLeftBroadsideConfig': [CANNONL2] * 5,
-    'setRightBroadsideConfig': [CANNONL2] * 5,
-    'setBroadsideAmmo': InventoryType.CannonFirebrand,
-    'setCannonAmmo': InventoryType.CannonChainShot,
-    'setWallDecorConfig': [2, 2, 2],
-    'setFloorDecorConfig': [3, 3, 3, 3, 3, 3],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [253, 250, 253],
-    'setHullColorIndex': [17, 0, 17],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [204, 204, 205],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [208],
-    'setPatternColorIndex': [0],
-    'setPatternHilightColorIndex': [0],
-    'setCabinType': MERCH_CABINL1A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  EITC_IRONWALL: {
-    'setShipClass': EITC_IRONWALL,
-    'setModelClass': MERCHANTL2,
-    'setMastConfig1': MAINMASTL1,
-    'setMastConfig2': MAINMASTL2,
-    'setMastConfig3': MAINMASTL1,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [MAINSAILL1],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 202,
-    'setForesailConfig': [0, 0, FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 6,
-    'setLeftBroadsideConfig': [CANNONL3] * 7,
-    'setRightBroadsideConfig': [CANNONL3] * 7,
-    'setBroadsideAmmo': InventoryType.CannonRoundShot,
-    'setCannonAmmo': InventoryType.CannonFirebrand,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [253, 250, 253],
-    'setHullColorIndex': [17, 0, 17],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [204, 204, 205],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [208],
-    'setPatternColorIndex': [0],
-    'setPatternHilightColorIndex': [0],
-    'setCabinType': MERCH_CABINL2A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  EITC_OGRE: {
-    'setShipClass': EITC_OGRE,
-    'setModelClass': MERCHANTL3,
-    'setMastConfig1': MAINMASTL2,
-    'setMastConfig2': MAINMASTL2,
-    'setMastConfig3': MAINMASTL2,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [MAINSAILL1, MAINSAILL1],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 202,
-    'setForesailConfig': [0, 0, FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 8,
-    'setLeftBroadsideConfig': [CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2, 0, 0, CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2],
-    'setRightBroadsideConfig': [CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2, 0, 0, CANNONL2, CANNONL2, CANNONL2, CANNONL2, CANNONL2],
-    'setBroadsideAmmo': InventoryType.CannonFirebrand,
-    'setCannonAmmo': InventoryType.CannonFirebrand,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [253, 250, 250],
-    'setHullColorIndex': [17, 0, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [204, 204, 205],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [208],
-    'setPatternColorIndex': [0],
-    'setPatternHilightColorIndex': [0],
-    'setCabinType': MERCH_CABINL3A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  EITC_BEHEMOTH: {
-    'setShipClass': EITC_BEHEMOTH,
-    'setModelClass': MERCHANTL3,
-    'setMastConfig1': MAINMASTL3,
-    'setMastConfig2': MAINMASTL3,
-    'setMastConfig3': MAINMASTL3,
-    'setForemastConfig': FOREMASTL2,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 202,
-    'setForesailConfig': [0, FORESAILL1, FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 10,
-    'setLeftBroadsideConfig': [CANNONL2] * 12,
-    'setRightBroadsideConfig': [CANNONL2] * 12,
-    'setBroadsideAmmo': InventoryType.CannonFirebrand,
-    'setCannonAmmo': InventoryType.CannonExplosive,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [253, 250, 250],
-    'setHullColorIndex': [17, 0, 0],
-    'setHullHilightColorIndex': [0, 0, 0],
-    'setStripeTextureIndex': [204, 204, 205],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [208],
-    'setPatternColorIndex': [0],
-    'setPatternHilightColorIndex': [0],
-    'setCabinType': MERCH_CABINL3A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  EITC_SEA_VIPER: {
-    'setShipClass': EITC_SEA_VIPER,
-    'setModelClass': INTERCEPTORL1,
-    'setMastConfig1': TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL1,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 202,
-    'setForesailConfig': [FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 2,
-    'setLeftBroadsideConfig': [CANNONL1] * 3,
-    'setRightBroadsideConfig': [CANNONL1] * 3,
-    'setBroadsideAmmo': InventoryType.CannonChainShot,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [2, 2],
-    'setFloorDecorConfig': [3, 3, 3],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [253, 255],
-    'setHullColorIndex': [17, 0],
-    'setHullHilightColorIndex': [0, 0],
-    'setStripeTextureIndex': [204, 204, 205],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [208, 208],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  EITC_BLOODHOUND: {
-    'setShipClass': EITC_BLOODHOUND,
-    'setModelClass': INTERCEPTORL2,
-    'setMastConfig1': TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL1,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 202,
-    'setForesailConfig': [FORESAILL1],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 6,
-    'setLeftBroadsideConfig': [CANNONL1] * 5,
-    'setRightBroadsideConfig': [CANNONL1] * 5,
-    'setBroadsideAmmo': InventoryType.CannonFirebrand,
-    'setCannonAmmo': InventoryType.CannonChainShot,
-    'setWallDecorConfig': [2, 2, 2, 2],
-    'setFloorDecorConfig': [3, 3, 3],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [255, 255],
-    'setHullColorIndex': [17, 0],
-    'setHullHilightColorIndex': [0, 0],
-    'setStripeTextureIndex': [204, 204, 205],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [208, 208],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  EITC_BARRACUDA: {
-    'setShipClass': EITC_BARRACUDA,
-    'setModelClass': INTERCEPTORL3,
-    'setMastConfig1': TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL1,
-    'setAftmastConfig': AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 202,
-    'setForesailConfig': [FORESAILL1],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 6,
-    'setLeftBroadsideConfig': [CANNONL1] * 7,
-    'setRightBroadsideConfig': [CANNONL1] * 7,
-    'setBroadsideAmmo': InventoryType.CannonFirebrand,
-    'setCannonAmmo': InventoryType.CannonChainShot,
-    'setWallDecorConfig': [2, 2, 2, 2],
-    'setFloorDecorConfig': [3, 3, 3],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [253, 255],
-    'setHullColorIndex': [17, 0],
-    'setHullHilightColorIndex': [0, 0],
-    'setStripeTextureIndex': [204, 204, 205],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [208, 208],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  EITC_CORSAIR: {
-    'setShipClass': EITC_CORSAIR,
-    'setModelClass': INTERCEPTORL3,
-    'setMastConfig1': TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': FOREMASTL1,
-    'setAftmastConfig': AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 1,
-    'setSailLogoIndex': 202,
-    'setForesailConfig': [FORESAILL1],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [CANNONL1] * 8,
-    'setLeftBroadsideConfig': [CANNONL1] * 7,
-    'setRightBroadsideConfig': [CANNONL1] * 7,
-    'setBroadsideAmmo': InventoryType.CannonExplosive,
-    'setCannonAmmo': InventoryType.CannonFirebrand,
-    'setWallDecorConfig': [2, 2, 2, 2],
-    'setFloorDecorConfig': [3, 3, 3],
-    'setProwType': LADY,
-    'setRamType': 0,
-    'setHullTextureIndex': [255, 255],
-    'setHullColorIndex': [17, 0],
-    'setHullHilightColorIndex': [0, 0],
-    'setStripeTextureIndex': [204, 204, 205],
-    'setStripeColorIndex': [0, 0, 0],
-    'setStripeHilightColorIndex': [0, 0, 0],
-    'setPatternTextureIndex': [208, 208],
-    'setPatternColorIndex': [0, 0],
-    'setPatternHilightColorIndex': [0, 0],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  SKEL_PHANTOM: {
-    'setShipClass': SKEL_PHANTOM,
-    'setModelClass': SKEL_WARSHIPL3,
-    'setMastConfig1': SKEL_MAINMASTL3_A,
-    'setMastConfig2': SKEL_MAINMASTL3_B,
-    'setMastConfig3': 0,
-    'setForemastConfig': SKEL_FOREMASTL2,
-    'setAftmastConfig': SKEL_AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 0,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [FORESAILL1, FORESAILL1],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [SKEL_CANNON_L3] * 6,
-    'setLeftBroadsideConfig': [0, SKEL_CANNON_L2, SKEL_CANNON_L2, SKEL_CANNON_L2, SKEL_CANNON_L2, SKEL_CANNON_L2, 0],
-    'setRightBroadsideConfig': [0, SKEL_CANNON_L2, SKEL_CANNON_L2, SKEL_CANNON_L2, SKEL_CANNON_L2, SKEL_CANNON_L2, 0],
-    'setBroadsideAmmo': InventoryType.CannonThunderbolt,
-    'setCannonAmmo': InventoryType.CannonChainShot,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [],
-    'setProwType': 0,
-    'setRamType': SKEL_RAML3,
-    'setHullTextureIndex': [],
-    'setHullColorIndex': [],
-    'setHullHilightColorIndex': [],
-    'setStripeTextureIndex': [],
-    'setStripeColorIndex': [],
-    'setStripeHilightColorIndex': [],
-    'setPatternTextureIndex': [],
-    'setPatternColorIndex': [],
-    'setPatternHilightColorIndex': [],
-    'setCabinType': SKEL_WAR_CABINL3A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  SKEL_REVENANT: {
-    'setShipClass': SKEL_REVENANT,
-    'setModelClass': SKEL_WARSHIPL3,
-    'setMastConfig1': SKEL_MAINMASTL3_A,
-    'setMastConfig2': SKEL_MAINMASTL3_B,
-    'setMastConfig3': 0,
-    'setForemastConfig': SKEL_FOREMASTL2,
-    'setAftmastConfig': SKEL_AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 0,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [FORESAILL1, FORESAILL1],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [SKEL_CANNON_L3] * 6,
-    'setLeftBroadsideConfig': [SKEL_CANNON_L2] * 6,
-    'setRightBroadsideConfig': [SKEL_CANNON_L2] * 6,
-    'setBroadsideAmmo': InventoryType.CannonFury,
-    'setCannonAmmo': InventoryType.CannonRoundShot,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [],
-    'setProwType': 0,
-    'setRamType': SKEL_RAML3,
-    'setHullTextureIndex': [],
-    'setHullColorIndex': [],
-    'setHullHilightColorIndex': [],
-    'setStripeTextureIndex': [],
-    'setStripeColorIndex': [],
-    'setStripeHilightColorIndex': [],
-    'setPatternTextureIndex': [],
-    'setPatternColorIndex': [],
-    'setPatternHilightColorIndex': [],
-    'setCabinType': SKEL_WAR_CABINL3A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  SKEL_STORM_REAPER: {
-    'setShipClass': SKEL_STORM_REAPER,
-    'setModelClass': SKEL_WARSHIPL3,
-    'setMastConfig1': SKEL_MAINMASTL3_A,
-    'setMastConfig2': SKEL_MAINMASTL3_B,
-    'setMastConfig3': 0,
-    'setForemastConfig': SKEL_FOREMASTL2,
-    'setAftmastConfig': SKEL_AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 0,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [FORESAILL1, FORESAILL1],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [SKEL_CANNON_L3] * 6,
-    'setLeftBroadsideConfig': [SKEL_CANNON_L2] * 7,
-    'setRightBroadsideConfig': [SKEL_CANNON_L2] * 7,
-    'setBroadsideAmmo': InventoryType.CannonThunderbolt,
-    'setCannonAmmo': InventoryType.CannonThunderbolt,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [],
-    'setProwType': 0,
-    'setRamType': SKEL_RAML3,
-    'setHullTextureIndex': [],
-    'setHullColorIndex': [],
-    'setHullHilightColorIndex': [],
-    'setStripeTextureIndex': [],
-    'setStripeColorIndex': [],
-    'setStripeHilightColorIndex': [],
-    'setPatternTextureIndex': [],
-    'setPatternColorIndex': [],
-    'setPatternHilightColorIndex': [],
-    'setCabinType': SKEL_WAR_CABINL3A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  SKEL_BLACK_HARBINGER: {
-    'setShipClass': SKEL_BLACK_HARBINGER,
-    'setModelClass': SKEL_WARSHIPL3,
-    'setMastConfig1': SKEL_MAINMASTL3_A,
-    'setMastConfig2': SKEL_MAINMASTL3_B,
-    'setMastConfig3': 0,
-    'setForemastConfig': SKEL_FOREMASTL2,
-    'setAftmastConfig': SKEL_AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 0,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [FORESAILL1, FORESAILL1],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [SKEL_CANNON_L3] * 6,
-    'setLeftBroadsideConfig': [SKEL_CANNON_L2] * 7,
-    'setRightBroadsideConfig': [SKEL_CANNON_L2] * 7,
-    'setBroadsideAmmo': InventoryType.CannonFury,
-    'setCannonAmmo': InventoryType.CannonFury,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [],
-    'setProwType': 0,
-    'setRamType': SKEL_RAML3,
-    'setHullTextureIndex': [],
-    'setHullColorIndex': [],
-    'setHullHilightColorIndex': [],
-    'setStripeTextureIndex': [],
-    'setStripeColorIndex': [],
-    'setStripeHilightColorIndex': [],
-    'setPatternTextureIndex': [],
-    'setPatternColorIndex': [],
-    'setPatternHilightColorIndex': [],
-    'setCabinType': SKEL_WAR_CABINL3A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  SKEL_DEATH_OMEN: {
-    'setShipClass': SKEL_DEATH_OMEN,
-    'setModelClass': SKEL_WARSHIPL3,
-    'setMastConfig1': SKEL_MAINMASTL3_A,
-    'setMastConfig2': SKEL_MAINMASTL3_B,
-    'setMastConfig3': 0,
-    'setForemastConfig': SKEL_FOREMASTL2,
-    'setAftmastConfig': SKEL_AFTMASTL2,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [MAINSAILL1, MAINSAILL1, MAINSAILL1],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 0,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [FORESAILL1, FORESAILL1],
-    'setAftsailConfig': [AFTSAILL1],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [SKEL_CANNON_L3] * 6,
-    'setLeftBroadsideConfig': [SKEL_CANNON_L2] * 7,
-    'setRightBroadsideConfig': [SKEL_CANNON_L2] * 7,
-    'setBroadsideAmmo': InventoryType.CannonFury,
-    'setCannonAmmo': InventoryType.CannonThunderbolt,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [],
-    'setProwType': 0,
-    'setRamType': SKEL_RAML3,
-    'setHullTextureIndex': [],
-    'setHullColorIndex': [],
-    'setHullHilightColorIndex': [],
-    'setStripeTextureIndex': [],
-    'setStripeColorIndex': [],
-    'setStripeHilightColorIndex': [],
-    'setPatternTextureIndex': [],
-    'setPatternColorIndex': [],
-    'setPatternHilightColorIndex': [],
-    'setCabinType': SKEL_WAR_CABINL3A,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  SKEL_SHADOW_CROW_FR: {
-    'setShipClass': SKEL_SHADOW_CROW_FR,
-    'setModelClass': SKEL_INTERCEPTORL3,
-    'setMastConfig1': SKEL_TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': 0,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 0,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [SKEL_CANNON_L3] * 5,
-    'setLeftBroadsideConfig': [SKEL_CANNON_L2] * 5,
-    'setRightBroadsideConfig': [SKEL_CANNON_L2] * 5,
-    'setBroadsideAmmo': InventoryType.CannonChainShot,
-    'setCannonAmmo': InventoryType.CannonFury,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [],
-    'setProwType': 0,
-    'setRamType': 0,
-    'setHullTextureIndex': [],
-    'setHullColorIndex': [],
-    'setHullHilightColorIndex': [],
-    'setStripeTextureIndex': [],
-    'setStripeColorIndex': [],
-    'setStripeHilightColorIndex': [],
-    'setPatternTextureIndex': [],
-    'setPatternColorIndex': [],
-    'setPatternHilightColorIndex': [],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  SKEL_HELLHOUND_FR: {
-    'setShipClass': SKEL_HELLHOUND_FR,
-    'setModelClass': SKEL_INTERCEPTORL3,
-    'setMastConfig1': SKEL_TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': 0,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 0,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [SKEL_CANNON_L3] * 5,
-    'setLeftBroadsideConfig': [SKEL_CANNON_L2] * 5,
-    'setRightBroadsideConfig': [SKEL_CANNON_L2] * 5,
-    'setBroadsideAmmo': InventoryType.CannonExplosive,
-    'setCannonAmmo': InventoryType.CannonFirebrand,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [],
-    'setProwType': 0,
-    'setRamType': 0,
-    'setHullTextureIndex': [],
-    'setHullColorIndex': [],
-    'setHullHilightColorIndex': [],
-    'setStripeTextureIndex': [],
-    'setStripeColorIndex': [],
-    'setStripeHilightColorIndex': [],
-    'setPatternTextureIndex': [],
-    'setPatternColorIndex': [],
-    'setPatternHilightColorIndex': [],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  SKEL_BLOOD_SCOURGE_FR: {
-    'setShipClass': SKEL_BLOOD_SCOURGE_FR,
-    'setModelClass': SKEL_INTERCEPTORL3,
-    'setMastConfig1': SKEL_TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': 0,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 0,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [SKEL_CANNON_L3] * 5,
-    'setLeftBroadsideConfig': [SKEL_CANNON_L2] * 5,
-    'setRightBroadsideConfig': [SKEL_CANNON_L2] * 5,
-    'setBroadsideAmmo': InventoryType.CannonFirebrand,
-    'setCannonAmmo': InventoryType.CannonThunderbolt,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [],
-    'setProwType': 0,
-    'setRamType': 0,
-    'setHullTextureIndex': [],
-    'setHullColorIndex': [],
-    'setHullHilightColorIndex': [],
-    'setStripeTextureIndex': [],
-    'setStripeColorIndex': [],
-    'setStripeHilightColorIndex': [],
-    'setPatternTextureIndex': [],
-    'setPatternColorIndex': [],
-    'setPatternHilightColorIndex': [],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  SKEL_SHADOW_CROW_SP: {
-    'setShipClass': SKEL_SHADOW_CROW_SP,
-    'setModelClass': SKEL_INTERCEPTORL3,
-    'setMastConfig1': SKEL_TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': 0,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 0,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [SKEL_CANNON_L3] * 5,
-    'setLeftBroadsideConfig': [SKEL_CANNON_L2] * 5,
-    'setRightBroadsideConfig': [SKEL_CANNON_L2] * 5,
-    'setBroadsideAmmo': InventoryType.CannonChainShot,
-    'setCannonAmmo': InventoryType.CannonFury,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [],
-    'setProwType': 0,
-    'setRamType': 0,
-    'setHullTextureIndex': [],
-    'setHullColorIndex': [],
-    'setHullHilightColorIndex': [],
-    'setStripeTextureIndex': [],
-    'setStripeColorIndex': [],
-    'setStripeHilightColorIndex': [],
-    'setPatternTextureIndex': [],
-    'setPatternColorIndex': [],
-    'setPatternHilightColorIndex': [],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  SKEL_HELLHOUND_SP: {
-    'setShipClass': SKEL_HELLHOUND_SP,
-    'setModelClass': SKEL_INTERCEPTORL3,
-    'setMastConfig1': SKEL_TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': 0,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 0,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [SKEL_CANNON_L3] * 5,
-    'setLeftBroadsideConfig': [SKEL_CANNON_L2] * 5,
-    'setRightBroadsideConfig': [SKEL_CANNON_L2] * 5,
-    'setBroadsideAmmo': InventoryType.CannonExplosive,
-    'setCannonAmmo': InventoryType.CannonFirebrand,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [],
-    'setProwType': 0,
-    'setRamType': 0,
-    'setHullTextureIndex': [],
-    'setHullColorIndex': [],
-    'setHullHilightColorIndex': [],
-    'setStripeTextureIndex': [],
-    'setStripeColorIndex': [],
-    'setStripeHilightColorIndex': [],
-    'setPatternTextureIndex': [],
-    'setPatternColorIndex': [],
-    'setPatternHilightColorIndex': [],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  },
-  SKEL_BLOOD_SCOURGE_SP: {
-    'setShipClass': SKEL_BLOOD_SCOURGE_SP,
-    'setModelClass': SKEL_INTERCEPTORL3,
-    'setMastConfig1': SKEL_TRIMASTL2,
-    'setMastConfig2': 0,
-    'setMastConfig3': 0,
-    'setForemastConfig': 0,
-    'setAftmastConfig': 0,
-    'setMastTextureIndex': 0,
-    'setSailConfig1': [MAINSAILL1, MAINSAILL1],
-    'setSailConfig2': [],
-    'setSailConfig3': [],
-    'setSailTextureIndex': 0,
-    'setSailLogoIndex': 0,
-    'setForesailConfig': [],
-    'setAftsailConfig': [],
-    'setPanelArmorConfig': [],
-    'setCannonConfig': [SKEL_CANNON_L3] * 5,
-    'setLeftBroadsideConfig': [SKEL_CANNON_L2] * 5,
-    'setRightBroadsideConfig': [SKEL_CANNON_L2] * 5,
-    'setBroadsideAmmo': InventoryType.CannonFirebrand,
-    'setCannonAmmo': InventoryType.CannonThunderbolt,
-    'setWallDecorConfig': [],
-    'setFloorDecorConfig': [],
-    'setProwType': 0,
-    'setRamType': 0,
-    'setHullTextureIndex': [],
-    'setHullColorIndex': [],
-    'setHullHilightColorIndex': [],
-    'setStripeTextureIndex': [],
-    'setStripeColorIndex': [],
-    'setStripeHilightColorIndex': [],
-    'setPatternTextureIndex': [],
-    'setPatternColorIndex': [],
-    'setPatternHilightColorIndex': [],
-    'setCabinType': 0,
-    'setCabinMastConfig': [],
-    'setCabinSailConfig': [],
-    'setCabinCannonConfig': [],
-    'setCabinWallDecorConfig': [],
-    'setCabinFloorDecorConfig': [],
-    'setCabinWindowConfig': []
-  }
-}
+    DINGHY: {
+        'setShipClass': DINGHY,
+        'setModelClass': DINGHY,
+        'setMastConfig1': 0,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': 0,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 0,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [],
+        'setLeftBroadsideConfig': [],
+        'setRightBroadsideConfig': [],
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [],
+        'setProwType': 0,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            0],
+        'setHullColorIndex': [
+            0],
+        'setHullHilightColorIndex': [
+            0],
+        'setStripeTextureIndex': [
+            0],
+        'setStripeColorIndex': [
+            0],
+        'setStripeHilightColorIndex': [
+            0],
+        'setPatternTextureIndex': [
+            0],
+        'setPatternColorIndex': [
+            0],
+        'setPatternHilightColorIndex': [
+            0],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    WARSHIPL1: {
+        'setShipClass': WARSHIPL1,
+        'setModelClass': WARSHIPL1,
+        'setMastConfig1': MAINMASTL1,
+        'setMastConfig2': MAINMASTL2,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL3] * 8,
+        'setLeftBroadsideConfig': [
+                                      CANNONL2] * 5,
+        'setRightBroadsideConfig': [
+                                       CANNONL2] * 5,
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+            2,
+            2,
+            2,
+            2],
+        'setFloorDecorConfig': [
+                                   3] * 20,
+        'setProwType': 0,
+        'setRamType': RAML3,
+        'setHullTextureIndex': [
+            2,
+            101,
+            2],
+        'setHullColorIndex': [
+            0,
+            0,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            1,
+            1,
+            1],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            1,
+            1],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': WAR_CABINL1A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    WARSHIPL2: {
+        'setShipClass': WARSHIPL2,
+        'setModelClass': WARSHIPL2,
+        'setMastConfig1': MAINMASTL2,
+        'setMastConfig2': MAINMASTL2,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL3] * 10,
+        'setLeftBroadsideConfig': [
+                                      CANNONL2] * 7,
+        'setRightBroadsideConfig': [
+                                       CANNONL2] * 7,
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [
+                                   3] * 26,
+        'setProwType': 0,
+        'setRamType': RAML3,
+        'setHullTextureIndex': [
+            2,
+            101,
+            2],
+        'setHullColorIndex': [
+            0,
+            19,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            1,
+            1,
+            1],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            1,
+            1],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': WAR_CABINL2A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    WARSHIPL3: {
+        'setShipClass': WARSHIPL3,
+        'setModelClass': WARSHIPL3,
+        'setMastConfig1': MAINMASTL3,
+        'setMastConfig2': MAINMASTL3,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            0,
+            FORESAILL1,
+            FORESAILL1],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL3] * 14,
+        'setLeftBroadsideConfig': [
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0],
+        'setRightBroadsideConfig': [
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0],
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            202,
+            202,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201],
+        'setFloorDecorConfig': [
+                                   3] * 26,
+        'setProwType': 0,
+        'setRamType': RAML3,
+        'setHullTextureIndex': [
+            2,
+            101,
+            2],
+        'setHullColorIndex': [
+            0,
+            19,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            1,
+            1,
+            1],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            1,
+            1],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': WAR_CABINL3A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    MERCHANTL1: {
+        'setShipClass': MERCHANTL1,
+        'setModelClass': MERCHANTL1,
+        'setMastConfig1': MAINMASTL2,
+        'setMastConfig2': MAINMASTL1,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            0,
+            0,
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 4,
+        'setLeftBroadsideConfig': [
+                                      CANNONL2] * 5,
+        'setRightBroadsideConfig': [
+                                       CANNONL2] * 5,
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+            2,
+            2,
+            2],
+        'setFloorDecorConfig': [
+                                   3] * 14,
+        'setProwType': SKELETON,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            2,
+            101,
+            2],
+        'setHullColorIndex': [
+            0,
+            0,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            1,
+            1,
+            1],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            1],
+        'setPatternColorIndex': [
+            0],
+        'setPatternHilightColorIndex': [
+            0],
+        'setCabinType': MERCH_CABINL1A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    MERCHANTL2: {
+        'setShipClass': MERCHANTL2,
+        'setModelClass': MERCHANTL2,
+        'setMastConfig1': MAINMASTL1,
+        'setMastConfig2': MAINMASTL2,
+        'setMastConfig3': MAINMASTL1,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [
+            MAINSAILL1],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            0,
+            0,
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 8,
+        'setLeftBroadsideConfig': [
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0,
+            0,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0],
+        'setRightBroadsideConfig': [
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0,
+            0,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0],
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+                                  2] * 5,
+        'setFloorDecorConfig': [
+                                   3] * 14,
+        'setProwType': SKELETON,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            2,
+            101,
+            2],
+        'setHullColorIndex': [
+            0,
+            0,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            1,
+            1,
+            1],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            1],
+        'setPatternColorIndex': [
+            0],
+        'setPatternHilightColorIndex': [
+            0],
+        'setCabinType': MERCH_CABINL2A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    MERCHANTL3: {
+        'setShipClass': MERCHANTL3,
+        'setModelClass': MERCHANTL3,
+        'setMastConfig1': MAINMASTL3,
+        'setMastConfig2': MAINMASTL3,
+        'setMastConfig3': MAINMASTL3,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            0,
+            FORESAILL1,
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 10,
+        'setLeftBroadsideConfig': [
+                                      CANNONL2] * 12,
+        'setRightBroadsideConfig': [
+                                       CANNONL2] * 12,
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+                                  2] * 5,
+        'setFloorDecorConfig': [
+                                   3] * 14,
+        'setProwType': SKELETON,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            2,
+            101,
+            2],
+        'setHullColorIndex': [
+            0,
+            0,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            1,
+            1,
+            1],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            1],
+        'setPatternColorIndex': [
+            0],
+        'setPatternHilightColorIndex': [
+            0],
+        'setCabinType': MERCH_CABINL3A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    INTERCEPTORL1: {
+        'setShipClass': INTERCEPTORL1,
+        'setModelClass': INTERCEPTORL1,
+        'setMastConfig1': TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL1,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 2,
+        'setLeftBroadsideConfig': [
+                                      CANNONL2] * 3,
+        'setRightBroadsideConfig': [
+                                       CANNONL2] * 3,
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3],
+        'setProwType': SKELETON,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            255,
+            255],
+        'setHullColorIndex': [
+            0,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0],
+        'setStripeTextureIndex': [
+            1,
+            2,
+            1],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            1,
+            1],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    INTERCEPTORL2: {
+        'setShipClass': INTERCEPTORL2,
+        'setModelClass': INTERCEPTORL2,
+        'setMastConfig1': TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL1,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 6,
+        'setLeftBroadsideConfig': [
+                                      CANNONL1] * 5,
+        'setRightBroadsideConfig': [
+                                       CANNONL1] * 5,
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+            2,
+            2,
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3],
+        'setProwType': SKELETON,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            255,
+            255],
+        'setHullColorIndex': [
+            0,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0],
+        'setStripeTextureIndex': [
+            1,
+            2,
+            1],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            1,
+            1],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    INTERCEPTORL3: {
+        'setShipClass': INTERCEPTORL3,
+        'setModelClass': INTERCEPTORL3,
+        'setMastConfig1': TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL1,
+        'setAftmastConfig': AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            FORESAILL1],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 8,
+        'setLeftBroadsideConfig': [
+                                      CANNONL1] * 7,
+        'setRightBroadsideConfig': [
+                                       CANNONL1] * 7,
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+            2,
+            2,
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3],
+        'setProwType': SKELETON,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            255,
+            255],
+        'setHullColorIndex': [
+            0,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0],
+        'setStripeTextureIndex': [
+            1,
+            2,
+            1],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            1,
+            1],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    BLACK_PEARL: {
+        'setShipClass': BLACK_PEARL,
+        'setModelClass': BLACK_PEARL,
+        'setMastConfig1': MAINMASTL3,
+        'setMastConfig2': MAINMASTL3,
+        'setMastConfig3': MAINMASTL3,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 200,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailTextureIndex': 202,
+        'setSailLogoIndex': 201,
+        'setForesailConfig': [
+            FORESAILL1,
+            0,
+            0],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               BPCANNON] * 14,
+        'setLeftBroadsideConfig': [
+                                      BPCANNON] * 9,
+        'setRightBroadsideConfig': [
+                                       BPCANNON] * 9,
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [],
+        'setProwType': 0,
+        'setRamType': 0,
+        'setHullTextureIndex': [],
+        'setHullColorIndex': [],
+        'setHullHilightColorIndex': [],
+        'setStripeTextureIndex': [],
+        'setStripeColorIndex': [],
+        'setStripeHilightColorIndex': [],
+        'setPatternTextureIndex': [],
+        'setPatternColorIndex': [],
+        'setPatternHilightColorIndex': [],
+        'setCabinType': BLACK_PEARL_CABIN,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    STUMPY_SHIP: {
+        'setShipClass': INTERCEPTORL1,
+        'setModelClass': INTERCEPTORL1,
+        'setMastConfig1': TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL1,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+            TUTORIAL_CANNON,
+            0],
+        'setLeftBroadsideConfig': [],
+        'setRightBroadsideConfig': [],
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3],
+        'setProwType': SKELETON,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            2,
+            101],
+        'setHullColorIndex': [
+            0,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0],
+        'setStripeTextureIndex': [
+            1,
+            2,
+            1],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            1,
+            1],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    GOLIATH: {
+        'setShipClass': GOLIATH,
+        'setModelClass': GOLIATH,
+        'setMastConfig1': MAINMASTL3,
+        'setMastConfig2': MAINMASTL3,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            0,
+            FORESAILL1,
+            FORESAILL1],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL3] * 14,
+        'setLeftBroadsideConfig': [
+                                      CANNONL4] * 9,
+        'setRightBroadsideConfig': [
+                                       CANNONL4] * 9,
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonFirebrand,
+        'setWallDecorConfig': [
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            202,
+            202,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201],
+        'setFloorDecorConfig': [
+            0,
+            0,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            0,
+            0,
+            3,
+            3,
+            3,
+            3],
+        'setProwType': 0,
+        'setRamType': RAML3,
+        'setHullTextureIndex': [
+            255,
+            253,
+            254],
+        'setHullColorIndex': [
+            15,
+            15,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            200,
+            200,
+            200],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            200,
+            200],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': GOLIATH_CABIN,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    NAVY_PANTHER: {
+        'setShipClass': NAVY_PANTHER,
+        'setModelClass': WARSHIPL1,
+        'setMastConfig1': MAINMASTL1,
+        'setMastConfig2': MAINMASTL2,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL3] * 6,
+        'setLeftBroadsideConfig': [
+                                      CANNONL2] * 4,
+        'setRightBroadsideConfig': [
+                                       CANNONL2] * 4,
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+            2,
+            2,
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3],
+        'setProwType': 0,
+        'setRamType': RAML3,
+        'setHullTextureIndex': [
+            253,
+            253,
+            255],
+        'setHullColorIndex': [
+            15,
+            15,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            200,
+            200,
+            200],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            200,
+            200],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': WAR_CABINL1A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    NAVY_CENTURION: {
+        'setShipClass': NAVY_CENTURION,
+        'setModelClass': WARSHIPL2,
+        'setMastConfig1': MAINMASTL2,
+        'setMastConfig2': MAINMASTL2,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL3] * 8,
+        'setLeftBroadsideConfig': [
+                                      CANNONL2] * 6,
+        'setRightBroadsideConfig': [
+                                       CANNONL2] * 6,
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            3,
+            3,
+            0,
+            0,
+            3,
+            3],
+        'setProwType': 0,
+        'setRamType': RAML3,
+        'setHullTextureIndex': [
+            253,
+            253,
+            254],
+        'setHullColorIndex': [
+            15,
+            15,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            200,
+            200,
+            200],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            200,
+            200],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': WAR_CABINL2A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    NAVY_MAN_O_WAR: {
+        'setShipClass': NAVY_MAN_O_WAR,
+        'setModelClass': WARSHIPL3,
+        'setMastConfig1': MAINMASTL2,
+        'setMastConfig2': MAINMASTL3,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            0,
+            FORESAILL1,
+            0],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL3] * 10,
+        'setLeftBroadsideConfig': [
+                                      CANNONL2] * 8,
+        'setRightBroadsideConfig': [
+                                       CANNONL2] * 8,
+        'setBroadsideAmmo': InventoryType.CannonFirebrand,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            202,
+            202,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201],
+        'setFloorDecorConfig': [
+            0,
+            0,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            0,
+            0,
+            3,
+            3,
+            3,
+            3],
+        'setProwType': 0,
+        'setRamType': RAML3,
+        'setHullTextureIndex': [
+            253,
+            253,
+            254],
+        'setHullColorIndex': [
+            15,
+            15,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            200,
+            200,
+            200],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            200,
+            200],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': WAR_CABINL3A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    NAVY_DREADNOUGHT: {
+        'setShipClass': NAVY_DREADNOUGHT,
+        'setModelClass': WARSHIPL3,
+        'setMastConfig1': MAINMASTL3,
+        'setMastConfig2': MAINMASTL3,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            0,
+            FORESAILL1,
+            FORESAILL1],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL3] * 14,
+        'setLeftBroadsideConfig': [
+                                      CANNONL4] * 9,
+        'setRightBroadsideConfig': [
+                                       CANNONL4] * 9,
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonFirebrand,
+        'setWallDecorConfig': [
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            202,
+            202,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201],
+        'setFloorDecorConfig': [
+            0,
+            0,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            0,
+            0,
+            3,
+            3,
+            3,
+            3],
+        'setProwType': 0,
+        'setRamType': RAML3,
+        'setHullTextureIndex': [
+            255,
+            253,
+            254],
+        'setHullColorIndex': [
+            15,
+            15,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            200,
+            200,
+            200],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            200,
+            200],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': WAR_CABINL3A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    NAVY_BULWARK: {
+        'setShipClass': NAVY_BULWARK,
+        'setModelClass': MERCHANTL1,
+        'setMastConfig1': MAINMASTL2,
+        'setMastConfig2': MAINMASTL1,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            0,
+            0,
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 4,
+        'setLeftBroadsideConfig': [
+            0,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0],
+        'setRightBroadsideConfig': [
+            0,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0],
+        'setBroadsideAmmo': InventoryType.CannonChainShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+            2,
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            253,
+            254,
+            253],
+        'setHullColorIndex': [
+            15,
+            0,
+            15],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            200,
+            201,
+            202],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            200],
+        'setPatternColorIndex': [
+            0],
+        'setPatternHilightColorIndex': [
+            0],
+        'setCabinType': MERCH_CABINL1A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    NAVY_VANGUARD: {
+        'setShipClass': NAVY_VANGUARD,
+        'setModelClass': MERCHANTL2,
+        'setMastConfig1': MAINMASTL1,
+        'setMastConfig2': MAINMASTL2,
+        'setMastConfig3': MAINMASTL1,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [
+            MAINSAILL1],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            0,
+            0,
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 6,
+        'setLeftBroadsideConfig': [
+                                      CANNONL3] * 5,
+        'setRightBroadsideConfig': [
+                                       CANNONL3] * 5,
+        'setBroadsideAmmo': InventoryType.CannonChainShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            253,
+            254,
+            253],
+        'setHullColorIndex': [
+            15,
+            0,
+            15],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            200,
+            201,
+            202],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            200],
+        'setPatternColorIndex': [
+            0],
+        'setPatternHilightColorIndex': [
+            0],
+        'setCabinType': MERCH_CABINL2A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    NAVY_MONARCH: {
+        'setShipClass': NAVY_MONARCH,
+        'setModelClass': MERCHANTL3,
+        'setMastConfig1': MAINMASTL2,
+        'setMastConfig2': MAINMASTL2,
+        'setMastConfig3': MAINMASTL2,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            0,
+            0,
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 8,
+        'setLeftBroadsideConfig': [
+            0,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0,
+            0,
+            0,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0],
+        'setRightBroadsideConfig': [
+            0,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0,
+            0,
+            0,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0],
+        'setBroadsideAmmo': InventoryType.CannonChainShot,
+        'setCannonAmmo': InventoryType.CannonFirebrand,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            253,
+            254,
+            254],
+        'setHullColorIndex': [
+            15,
+            0,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            200,
+            201,
+            202],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            200],
+        'setPatternColorIndex': [
+            0],
+        'setPatternHilightColorIndex': [
+            0],
+        'setCabinType': MERCH_CABINL3A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    NAVY_COLOSSUS: {
+        'setShipClass': NAVY_COLOSSUS,
+        'setModelClass': MERCHANTL3,
+        'setMastConfig1': MAINMASTL3,
+        'setMastConfig2': MAINMASTL3,
+        'setMastConfig3': MAINMASTL3,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            0,
+            FORESAILL1,
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 10,
+        'setLeftBroadsideConfig': [
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0],
+        'setRightBroadsideConfig': [
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0],
+        'setBroadsideAmmo': InventoryType.CannonChainShot,
+        'setCannonAmmo': InventoryType.CannonFirebrand,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            255,
+            254,
+            254],
+        'setHullColorIndex': [
+            15,
+            0,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            200,
+            201,
+            202],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            200],
+        'setPatternColorIndex': [
+            0],
+        'setPatternHilightColorIndex': [
+            0],
+        'setCabinType': MERCH_CABINL3A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    NAVY_FERRET: {
+        'setShipClass': NAVY_FERRET,
+        'setModelClass': INTERCEPTORL1,
+        'setMastConfig1': TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL1,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 2,
+        'setLeftBroadsideConfig': [],
+        'setRightBroadsideConfig': [],
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            253,
+            254],
+        'setHullColorIndex': [
+            15,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0],
+        'setStripeTextureIndex': [
+            200,
+            201,
+            202],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            200,
+            200],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    NAVY_GREYHOUND: {
+        'setShipClass': NAVY_GREYHOUND,
+        'setModelClass': INTERCEPTORL2,
+        'setMastConfig1': TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL1,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 4,
+        'setLeftBroadsideConfig': [
+                                      CANNONL1] * 3,
+        'setRightBroadsideConfig': [
+                                       CANNONL1] * 3,
+        'setBroadsideAmmo': InventoryType.CannonChainShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+            2,
+            2,
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            253,
+            254],
+        'setHullColorIndex': [
+            15,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0],
+        'setStripeTextureIndex': [
+            200,
+            201,
+            202],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            200,
+            200],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    NAVY_KINGFISHER: {
+        'setShipClass': NAVY_KINGFISHER,
+        'setModelClass': INTERCEPTORL3,
+        'setMastConfig1': TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL1,
+        'setAftmastConfig': AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            FORESAILL1],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 6,
+        'setLeftBroadsideConfig': [
+                                      CANNONL1] * 5,
+        'setRightBroadsideConfig': [
+                                       CANNONL1] * 5,
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonFirebrand,
+        'setWallDecorConfig': [
+            2,
+            2,
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            253,
+            254],
+        'setHullColorIndex': [
+            15,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0],
+        'setStripeTextureIndex': [
+            200,
+            201,
+            202],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            200,
+            200],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    NAVY_PREDATOR: {
+        'setShipClass': NAVY_PREDATOR,
+        'setModelClass': INTERCEPTORL3,
+        'setMastConfig1': TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL1,
+        'setAftmastConfig': AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            FORESAILL1],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 8,
+        'setLeftBroadsideConfig': [
+                                      CANNONL1] * 7,
+        'setRightBroadsideConfig': [
+                                       CANNONL1] * 7,
+        'setBroadsideAmmo': InventoryType.CannonFirebrand,
+        'setCannonAmmo': InventoryType.CannonFirebrand,
+        'setWallDecorConfig': [
+            2,
+            2,
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            255,
+            255],
+        'setHullColorIndex': [
+            15,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0],
+        'setStripeTextureIndex': [
+            200,
+            201,
+            202],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            200,
+            200],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    EITC_CORVETTE: {
+        'setShipClass': EITC_CORVETTE,
+        'setModelClass': WARSHIPL1,
+        'setMastConfig1': MAINMASTL1,
+        'setMastConfig2': MAINMASTL2,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 202,
+        'setForesailConfig': [],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL3] * 6,
+        'setLeftBroadsideConfig': [
+                                      CANNONL2] * 5,
+        'setRightBroadsideConfig': [
+                                       CANNONL2] * 5,
+        'setBroadsideAmmo': InventoryType.CannonChainShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+            2,
+            2,
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3],
+        'setProwType': 0,
+        'setRamType': RAML3,
+        'setHullTextureIndex': [
+            253,
+            253,
+            250],
+        'setHullColorIndex': [
+            17,
+            18,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            204,
+            204,
+            205],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            208,
+            208],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': WAR_CABINL1A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    EITC_MARAUDER: {
+        'setShipClass': EITC_MARAUDER,
+        'setModelClass': WARSHIPL2,
+        'setMastConfig1': MAINMASTL2,
+        'setMastConfig2': MAINMASTL2,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 202,
+        'setForesailConfig': [],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL3] * 8,
+        'setLeftBroadsideConfig': [
+                                      CANNONL2] * 7,
+        'setRightBroadsideConfig': [
+                                       CANNONL2] * 7,
+        'setBroadsideAmmo': InventoryType.CannonFirebrand,
+        'setCannonAmmo': InventoryType.CannonChainShot,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            3,
+            3,
+            0,
+            0,
+            3,
+            3],
+        'setProwType': 0,
+        'setRamType': RAML3,
+        'setHullTextureIndex': [
+            253,
+            253,
+            250],
+        'setHullColorIndex': [
+            17,
+            18,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            204,
+            204,
+            205],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            208,
+            208],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': WAR_CABINL2A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    EITC_WARLORD: {
+        'setShipClass': EITC_WARLORD,
+        'setModelClass': WARSHIPL3,
+        'setMastConfig1': MAINMASTL2,
+        'setMastConfig2': MAINMASTL3,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 202,
+        'setForesailConfig': [
+            0,
+            FORESAILL1,
+            0],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL3] * 12,
+        'setLeftBroadsideConfig': [
+                                      CANNONL2] * 9,
+        'setRightBroadsideConfig': [
+                                       CANNONL2] * 9,
+        'setBroadsideAmmo': InventoryType.CannonFirebrand,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            202,
+            202,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201],
+        'setFloorDecorConfig': [
+            0,
+            0,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            0,
+            0,
+            3,
+            3,
+            3,
+            3],
+        'setProwType': 0,
+        'setRamType': RAML3,
+        'setHullTextureIndex': [
+            253,
+            253,
+            250],
+        'setHullColorIndex': [
+            17,
+            18,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            204,
+            204,
+            205],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            208,
+            208],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': WAR_CABINL3A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    EITC_JUGGERNAUT: {
+        'setShipClass': EITC_JUGGERNAUT,
+        'setModelClass': WARSHIPL3,
+        'setMastConfig1': MAINMASTL3,
+        'setMastConfig2': MAINMASTL3,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 202,
+        'setForesailConfig': [
+            0,
+            FORESAILL1,
+            FORESAILL1],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL3] * 14,
+        'setLeftBroadsideConfig': [
+                                      CANNONL2] * 10,
+        'setRightBroadsideConfig': [
+                                       CANNONL2] * 10,
+        'setBroadsideAmmo': InventoryType.CannonExplosive,
+        'setCannonAmmo': InventoryType.CannonFirebrand,
+        'setWallDecorConfig': [
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            202,
+            202,
+            202,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201,
+            201],
+        'setFloorDecorConfig': [
+            0,
+            0,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            0,
+            0,
+            3,
+            3,
+            3,
+            3],
+        'setProwType': 0,
+        'setRamType': RAML3,
+        'setHullTextureIndex': [
+            253,
+            253,
+            250],
+        'setHullColorIndex': [
+            17,
+            18,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            204,
+            204,
+            205],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            208,
+            208],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': WAR_CABINL3A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    EITC_SENTINEL: {
+        'setShipClass': EITC_SENTINEL,
+        'setModelClass': MERCHANTL1,
+        'setMastConfig1': MAINMASTL2,
+        'setMastConfig2': MAINMASTL1,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 202,
+        'setForesailConfig': [
+            0,
+            0,
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 4,
+        'setLeftBroadsideConfig': [
+                                      CANNONL2] * 5,
+        'setRightBroadsideConfig': [
+                                       CANNONL2] * 5,
+        'setBroadsideAmmo': InventoryType.CannonFirebrand,
+        'setCannonAmmo': InventoryType.CannonChainShot,
+        'setWallDecorConfig': [
+            2,
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            253,
+            250,
+            253],
+        'setHullColorIndex': [
+            17,
+            0,
+            17],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            204,
+            204,
+            205],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            208],
+        'setPatternColorIndex': [
+            0],
+        'setPatternHilightColorIndex': [
+            0],
+        'setCabinType': MERCH_CABINL1A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    EITC_IRONWALL: {
+        'setShipClass': EITC_IRONWALL,
+        'setModelClass': MERCHANTL2,
+        'setMastConfig1': MAINMASTL1,
+        'setMastConfig2': MAINMASTL2,
+        'setMastConfig3': MAINMASTL1,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [
+            MAINSAILL1],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 202,
+        'setForesailConfig': [
+            0,
+            0,
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 6,
+        'setLeftBroadsideConfig': [
+                                      CANNONL3] * 7,
+        'setRightBroadsideConfig': [
+                                       CANNONL3] * 7,
+        'setBroadsideAmmo': InventoryType.CannonRoundShot,
+        'setCannonAmmo': InventoryType.CannonFirebrand,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            253,
+            250,
+            253],
+        'setHullColorIndex': [
+            17,
+            0,
+            17],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            204,
+            204,
+            205],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            208],
+        'setPatternColorIndex': [
+            0],
+        'setPatternHilightColorIndex': [
+            0],
+        'setCabinType': MERCH_CABINL2A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    EITC_OGRE: {
+        'setShipClass': EITC_OGRE,
+        'setModelClass': MERCHANTL3,
+        'setMastConfig1': MAINMASTL2,
+        'setMastConfig2': MAINMASTL2,
+        'setMastConfig3': MAINMASTL2,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 202,
+        'setForesailConfig': [
+            0,
+            0,
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 8,
+        'setLeftBroadsideConfig': [
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0,
+            0,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2],
+        'setRightBroadsideConfig': [
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            0,
+            0,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2,
+            CANNONL2],
+        'setBroadsideAmmo': InventoryType.CannonFirebrand,
+        'setCannonAmmo': InventoryType.CannonFirebrand,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            253,
+            250,
+            250],
+        'setHullColorIndex': [
+            17,
+            0,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            204,
+            204,
+            205],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            208],
+        'setPatternColorIndex': [
+            0],
+        'setPatternHilightColorIndex': [
+            0],
+        'setCabinType': MERCH_CABINL3A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    EITC_BEHEMOTH: {
+        'setShipClass': EITC_BEHEMOTH,
+        'setModelClass': MERCHANTL3,
+        'setMastConfig1': MAINMASTL3,
+        'setMastConfig2': MAINMASTL3,
+        'setMastConfig3': MAINMASTL3,
+        'setForemastConfig': FOREMASTL2,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 202,
+        'setForesailConfig': [
+            0,
+            FORESAILL1,
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 10,
+        'setLeftBroadsideConfig': [
+                                      CANNONL2] * 12,
+        'setRightBroadsideConfig': [
+                                       CANNONL2] * 12,
+        'setBroadsideAmmo': InventoryType.CannonFirebrand,
+        'setCannonAmmo': InventoryType.CannonExplosive,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            253,
+            250,
+            250],
+        'setHullColorIndex': [
+            17,
+            0,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeTextureIndex': [
+            204,
+            204,
+            205],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            208],
+        'setPatternColorIndex': [
+            0],
+        'setPatternHilightColorIndex': [
+            0],
+        'setCabinType': MERCH_CABINL3A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    EITC_SEA_VIPER: {
+        'setShipClass': EITC_SEA_VIPER,
+        'setModelClass': INTERCEPTORL1,
+        'setMastConfig1': TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL1,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 202,
+        'setForesailConfig': [
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 2,
+        'setLeftBroadsideConfig': [
+                                      CANNONL1] * 3,
+        'setRightBroadsideConfig': [
+                                       CANNONL1] * 3,
+        'setBroadsideAmmo': InventoryType.CannonChainShot,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            253,
+            255],
+        'setHullColorIndex': [
+            17,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0],
+        'setStripeTextureIndex': [
+            204,
+            204,
+            205],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            208,
+            208],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    EITC_BLOODHOUND: {
+        'setShipClass': EITC_BLOODHOUND,
+        'setModelClass': INTERCEPTORL2,
+        'setMastConfig1': TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL1,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 202,
+        'setForesailConfig': [
+            FORESAILL1],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 6,
+        'setLeftBroadsideConfig': [
+                                      CANNONL1] * 5,
+        'setRightBroadsideConfig': [
+                                       CANNONL1] * 5,
+        'setBroadsideAmmo': InventoryType.CannonFirebrand,
+        'setCannonAmmo': InventoryType.CannonChainShot,
+        'setWallDecorConfig': [
+            2,
+            2,
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            255,
+            255],
+        'setHullColorIndex': [
+            17,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0],
+        'setStripeTextureIndex': [
+            204,
+            204,
+            205],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            208,
+            208],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    EITC_BARRACUDA: {
+        'setShipClass': EITC_BARRACUDA,
+        'setModelClass': INTERCEPTORL3,
+        'setMastConfig1': TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL1,
+        'setAftmastConfig': AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 202,
+        'setForesailConfig': [
+            FORESAILL1],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 6,
+        'setLeftBroadsideConfig': [
+                                      CANNONL1] * 7,
+        'setRightBroadsideConfig': [
+                                       CANNONL1] * 7,
+        'setBroadsideAmmo': InventoryType.CannonFirebrand,
+        'setCannonAmmo': InventoryType.CannonChainShot,
+        'setWallDecorConfig': [
+            2,
+            2,
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            253,
+            255],
+        'setHullColorIndex': [
+            17,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0],
+        'setStripeTextureIndex': [
+            204,
+            204,
+            205],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            208,
+            208],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    EITC_CORSAIR: {
+        'setShipClass': EITC_CORSAIR,
+        'setModelClass': INTERCEPTORL3,
+        'setMastConfig1': TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': FOREMASTL1,
+        'setAftmastConfig': AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 1,
+        'setSailLogoIndex': 202,
+        'setForesailConfig': [
+            FORESAILL1],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               CANNONL1] * 8,
+        'setLeftBroadsideConfig': [
+                                      CANNONL1] * 7,
+        'setRightBroadsideConfig': [
+                                       CANNONL1] * 7,
+        'setBroadsideAmmo': InventoryType.CannonExplosive,
+        'setCannonAmmo': InventoryType.CannonFirebrand,
+        'setWallDecorConfig': [
+            2,
+            2,
+            2,
+            2],
+        'setFloorDecorConfig': [
+            3,
+            3,
+            3],
+        'setProwType': LADY,
+        'setRamType': 0,
+        'setHullTextureIndex': [
+            255,
+            255],
+        'setHullColorIndex': [
+            17,
+            0],
+        'setHullHilightColorIndex': [
+            0,
+            0],
+        'setStripeTextureIndex': [
+            204,
+            204,
+            205],
+        'setStripeColorIndex': [
+            0,
+            0,
+            0],
+        'setStripeHilightColorIndex': [
+            0,
+            0,
+            0],
+        'setPatternTextureIndex': [
+            208,
+            208],
+        'setPatternColorIndex': [
+            0,
+            0],
+        'setPatternHilightColorIndex': [
+            0,
+            0],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    SKEL_PHANTOM: {
+        'setShipClass': SKEL_PHANTOM,
+        'setModelClass': SKEL_WARSHIPL3,
+        'setMastConfig1': SKEL_MAINMASTL3_A,
+        'setMastConfig2': SKEL_MAINMASTL3_B,
+        'setMastConfig3': 0,
+        'setForemastConfig': SKEL_FOREMASTL2,
+        'setAftmastConfig': SKEL_AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 0,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            FORESAILL1,
+            FORESAILL1],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               SKEL_CANNON_L3] * 6,
+        'setLeftBroadsideConfig': [
+            0,
+            SKEL_CANNON_L2,
+            SKEL_CANNON_L2,
+            SKEL_CANNON_L2,
+            SKEL_CANNON_L2,
+            SKEL_CANNON_L2,
+            0],
+        'setRightBroadsideConfig': [
+            0,
+            SKEL_CANNON_L2,
+            SKEL_CANNON_L2,
+            SKEL_CANNON_L2,
+            SKEL_CANNON_L2,
+            SKEL_CANNON_L2,
+            0],
+        'setBroadsideAmmo': InventoryType.CannonThunderbolt,
+        'setCannonAmmo': InventoryType.CannonChainShot,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [],
+        'setProwType': 0,
+        'setRamType': SKEL_RAML3,
+        'setHullTextureIndex': [],
+        'setHullColorIndex': [],
+        'setHullHilightColorIndex': [],
+        'setStripeTextureIndex': [],
+        'setStripeColorIndex': [],
+        'setStripeHilightColorIndex': [],
+        'setPatternTextureIndex': [],
+        'setPatternColorIndex': [],
+        'setPatternHilightColorIndex': [],
+        'setCabinType': SKEL_WAR_CABINL3A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    SKEL_REVENANT: {
+        'setShipClass': SKEL_REVENANT,
+        'setModelClass': SKEL_WARSHIPL3,
+        'setMastConfig1': SKEL_MAINMASTL3_A,
+        'setMastConfig2': SKEL_MAINMASTL3_B,
+        'setMastConfig3': 0,
+        'setForemastConfig': SKEL_FOREMASTL2,
+        'setAftmastConfig': SKEL_AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 0,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            FORESAILL1,
+            FORESAILL1],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               SKEL_CANNON_L3] * 6,
+        'setLeftBroadsideConfig': [
+                                      SKEL_CANNON_L2] * 6,
+        'setRightBroadsideConfig': [
+                                       SKEL_CANNON_L2] * 6,
+        'setBroadsideAmmo': InventoryType.CannonFury,
+        'setCannonAmmo': InventoryType.CannonRoundShot,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [],
+        'setProwType': 0,
+        'setRamType': SKEL_RAML3,
+        'setHullTextureIndex': [],
+        'setHullColorIndex': [],
+        'setHullHilightColorIndex': [],
+        'setStripeTextureIndex': [],
+        'setStripeColorIndex': [],
+        'setStripeHilightColorIndex': [],
+        'setPatternTextureIndex': [],
+        'setPatternColorIndex': [],
+        'setPatternHilightColorIndex': [],
+        'setCabinType': SKEL_WAR_CABINL3A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    SKEL_STORM_REAPER: {
+        'setShipClass': SKEL_STORM_REAPER,
+        'setModelClass': SKEL_WARSHIPL3,
+        'setMastConfig1': SKEL_MAINMASTL3_A,
+        'setMastConfig2': SKEL_MAINMASTL3_B,
+        'setMastConfig3': 0,
+        'setForemastConfig': SKEL_FOREMASTL2,
+        'setAftmastConfig': SKEL_AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 0,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            FORESAILL1,
+            FORESAILL1],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               SKEL_CANNON_L3] * 6,
+        'setLeftBroadsideConfig': [
+                                      SKEL_CANNON_L2] * 7,
+        'setRightBroadsideConfig': [
+                                       SKEL_CANNON_L2] * 7,
+        'setBroadsideAmmo': InventoryType.CannonThunderbolt,
+        'setCannonAmmo': InventoryType.CannonThunderbolt,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [],
+        'setProwType': 0,
+        'setRamType': SKEL_RAML3,
+        'setHullTextureIndex': [],
+        'setHullColorIndex': [],
+        'setHullHilightColorIndex': [],
+        'setStripeTextureIndex': [],
+        'setStripeColorIndex': [],
+        'setStripeHilightColorIndex': [],
+        'setPatternTextureIndex': [],
+        'setPatternColorIndex': [],
+        'setPatternHilightColorIndex': [],
+        'setCabinType': SKEL_WAR_CABINL3A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    SKEL_BLACK_HARBINGER: {
+        'setShipClass': SKEL_BLACK_HARBINGER,
+        'setModelClass': SKEL_WARSHIPL3,
+        'setMastConfig1': SKEL_MAINMASTL3_A,
+        'setMastConfig2': SKEL_MAINMASTL3_B,
+        'setMastConfig3': 0,
+        'setForemastConfig': SKEL_FOREMASTL2,
+        'setAftmastConfig': SKEL_AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 0,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            FORESAILL1,
+            FORESAILL1],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               SKEL_CANNON_L3] * 6,
+        'setLeftBroadsideConfig': [
+                                      SKEL_CANNON_L2] * 7,
+        'setRightBroadsideConfig': [
+                                       SKEL_CANNON_L2] * 7,
+        'setBroadsideAmmo': InventoryType.CannonFury,
+        'setCannonAmmo': InventoryType.CannonFury,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [],
+        'setProwType': 0,
+        'setRamType': SKEL_RAML3,
+        'setHullTextureIndex': [],
+        'setHullColorIndex': [],
+        'setHullHilightColorIndex': [],
+        'setStripeTextureIndex': [],
+        'setStripeColorIndex': [],
+        'setStripeHilightColorIndex': [],
+        'setPatternTextureIndex': [],
+        'setPatternColorIndex': [],
+        'setPatternHilightColorIndex': [],
+        'setCabinType': SKEL_WAR_CABINL3A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    SKEL_DEATH_OMEN: {
+        'setShipClass': SKEL_DEATH_OMEN,
+        'setModelClass': SKEL_WARSHIPL3,
+        'setMastConfig1': SKEL_MAINMASTL3_A,
+        'setMastConfig2': SKEL_MAINMASTL3_B,
+        'setMastConfig3': 0,
+        'setForemastConfig': SKEL_FOREMASTL2,
+        'setAftmastConfig': SKEL_AFTMASTL2,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [
+            MAINSAILL1,
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 0,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [
+            FORESAILL1,
+            FORESAILL1],
+        'setAftsailConfig': [
+            AFTSAILL1],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               SKEL_CANNON_L3] * 6,
+        'setLeftBroadsideConfig': [
+                                      SKEL_CANNON_L2] * 7,
+        'setRightBroadsideConfig': [
+                                       SKEL_CANNON_L2] * 7,
+        'setBroadsideAmmo': InventoryType.CannonFury,
+        'setCannonAmmo': InventoryType.CannonThunderbolt,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [],
+        'setProwType': 0,
+        'setRamType': SKEL_RAML3,
+        'setHullTextureIndex': [],
+        'setHullColorIndex': [],
+        'setHullHilightColorIndex': [],
+        'setStripeTextureIndex': [],
+        'setStripeColorIndex': [],
+        'setStripeHilightColorIndex': [],
+        'setPatternTextureIndex': [],
+        'setPatternColorIndex': [],
+        'setPatternHilightColorIndex': [],
+        'setCabinType': SKEL_WAR_CABINL3A,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    SKEL_SHADOW_CROW_FR: {
+        'setShipClass': SKEL_SHADOW_CROW_FR,
+        'setModelClass': SKEL_INTERCEPTORL3,
+        'setMastConfig1': SKEL_TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': 0,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 0,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               SKEL_CANNON_L3] * 5,
+        'setLeftBroadsideConfig': [
+                                      SKEL_CANNON_L2] * 5,
+        'setRightBroadsideConfig': [
+                                       SKEL_CANNON_L2] * 5,
+        'setBroadsideAmmo': InventoryType.CannonChainShot,
+        'setCannonAmmo': InventoryType.CannonFury,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [],
+        'setProwType': 0,
+        'setRamType': 0,
+        'setHullTextureIndex': [],
+        'setHullColorIndex': [],
+        'setHullHilightColorIndex': [],
+        'setStripeTextureIndex': [],
+        'setStripeColorIndex': [],
+        'setStripeHilightColorIndex': [],
+        'setPatternTextureIndex': [],
+        'setPatternColorIndex': [],
+        'setPatternHilightColorIndex': [],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    SKEL_HELLHOUND_FR: {
+        'setShipClass': SKEL_HELLHOUND_FR,
+        'setModelClass': SKEL_INTERCEPTORL3,
+        'setMastConfig1': SKEL_TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': 0,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 0,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               SKEL_CANNON_L3] * 5,
+        'setLeftBroadsideConfig': [
+                                      SKEL_CANNON_L2] * 5,
+        'setRightBroadsideConfig': [
+                                       SKEL_CANNON_L2] * 5,
+        'setBroadsideAmmo': InventoryType.CannonExplosive,
+        'setCannonAmmo': InventoryType.CannonFirebrand,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [],
+        'setProwType': 0,
+        'setRamType': 0,
+        'setHullTextureIndex': [],
+        'setHullColorIndex': [],
+        'setHullHilightColorIndex': [],
+        'setStripeTextureIndex': [],
+        'setStripeColorIndex': [],
+        'setStripeHilightColorIndex': [],
+        'setPatternTextureIndex': [],
+        'setPatternColorIndex': [],
+        'setPatternHilightColorIndex': [],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    SKEL_BLOOD_SCOURGE_FR: {
+        'setShipClass': SKEL_BLOOD_SCOURGE_FR,
+        'setModelClass': SKEL_INTERCEPTORL3,
+        'setMastConfig1': SKEL_TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': 0,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 0,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               SKEL_CANNON_L3] * 5,
+        'setLeftBroadsideConfig': [
+                                      SKEL_CANNON_L2] * 5,
+        'setRightBroadsideConfig': [
+                                       SKEL_CANNON_L2] * 5,
+        'setBroadsideAmmo': InventoryType.CannonFirebrand,
+        'setCannonAmmo': InventoryType.CannonThunderbolt,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [],
+        'setProwType': 0,
+        'setRamType': 0,
+        'setHullTextureIndex': [],
+        'setHullColorIndex': [],
+        'setHullHilightColorIndex': [],
+        'setStripeTextureIndex': [],
+        'setStripeColorIndex': [],
+        'setStripeHilightColorIndex': [],
+        'setPatternTextureIndex': [],
+        'setPatternColorIndex': [],
+        'setPatternHilightColorIndex': [],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    SKEL_SHADOW_CROW_SP: {
+        'setShipClass': SKEL_SHADOW_CROW_SP,
+        'setModelClass': SKEL_INTERCEPTORL3,
+        'setMastConfig1': SKEL_TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': 0,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 0,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               SKEL_CANNON_L3] * 5,
+        'setLeftBroadsideConfig': [
+                                      SKEL_CANNON_L2] * 5,
+        'setRightBroadsideConfig': [
+                                       SKEL_CANNON_L2] * 5,
+        'setBroadsideAmmo': InventoryType.CannonChainShot,
+        'setCannonAmmo': InventoryType.CannonFury,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [],
+        'setProwType': 0,
+        'setRamType': 0,
+        'setHullTextureIndex': [],
+        'setHullColorIndex': [],
+        'setHullHilightColorIndex': [],
+        'setStripeTextureIndex': [],
+        'setStripeColorIndex': [],
+        'setStripeHilightColorIndex': [],
+        'setPatternTextureIndex': [],
+        'setPatternColorIndex': [],
+        'setPatternHilightColorIndex': [],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    SKEL_HELLHOUND_SP: {
+        'setShipClass': SKEL_HELLHOUND_SP,
+        'setModelClass': SKEL_INTERCEPTORL3,
+        'setMastConfig1': SKEL_TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': 0,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 0,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               SKEL_CANNON_L3] * 5,
+        'setLeftBroadsideConfig': [
+                                      SKEL_CANNON_L2] * 5,
+        'setRightBroadsideConfig': [
+                                       SKEL_CANNON_L2] * 5,
+        'setBroadsideAmmo': InventoryType.CannonExplosive,
+        'setCannonAmmo': InventoryType.CannonFirebrand,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [],
+        'setProwType': 0,
+        'setRamType': 0,
+        'setHullTextureIndex': [],
+        'setHullColorIndex': [],
+        'setHullHilightColorIndex': [],
+        'setStripeTextureIndex': [],
+        'setStripeColorIndex': [],
+        'setStripeHilightColorIndex': [],
+        'setPatternTextureIndex': [],
+        'setPatternColorIndex': [],
+        'setPatternHilightColorIndex': [],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []},
+    SKEL_BLOOD_SCOURGE_SP: {
+        'setShipClass': SKEL_BLOOD_SCOURGE_SP,
+        'setModelClass': SKEL_INTERCEPTORL3,
+        'setMastConfig1': SKEL_TRIMASTL2,
+        'setMastConfig2': 0,
+        'setMastConfig3': 0,
+        'setForemastConfig': 0,
+        'setAftmastConfig': 0,
+        'setMastTextureIndex': 0,
+        'setSailConfig1': [
+            MAINSAILL1,
+            MAINSAILL1],
+        'setSailConfig2': [],
+        'setSailConfig3': [],
+        'setSailTextureIndex': 0,
+        'setSailLogoIndex': 0,
+        'setForesailConfig': [],
+        'setAftsailConfig': [],
+        'setPanelArmorConfig': [],
+        'setCannonConfig': [
+                               SKEL_CANNON_L3] * 5,
+        'setLeftBroadsideConfig': [
+                                      SKEL_CANNON_L2] * 5,
+        'setRightBroadsideConfig': [
+                                       SKEL_CANNON_L2] * 5,
+        'setBroadsideAmmo': InventoryType.CannonFirebrand,
+        'setCannonAmmo': InventoryType.CannonThunderbolt,
+        'setWallDecorConfig': [],
+        'setFloorDecorConfig': [],
+        'setProwType': 0,
+        'setRamType': 0,
+        'setHullTextureIndex': [],
+        'setHullColorIndex': [],
+        'setHullHilightColorIndex': [],
+        'setStripeTextureIndex': [],
+        'setStripeColorIndex': [],
+        'setStripeHilightColorIndex': [],
+        'setPatternTextureIndex': [],
+        'setPatternColorIndex': [],
+        'setPatternHilightColorIndex': [],
+        'setCabinType': 0,
+        'setCabinMastConfig': [],
+        'setCabinSailConfig': [],
+        'setCabinCannonConfig': [],
+        'setCabinWallDecorConfig': [],
+        'setCabinFloorDecorConfig': [],
+        'setCabinWindowConfig': []}}
 
 def getBaseShipConfig(hullId):
     hullInfo = __baseShipConfigs.get(hullId)
@@ -4377,8 +6400,18 @@ def getBaseShipConfig(hullId):
 
 def getMastInfo(hullId):
     hullInfo = getBaseShipConfig(hullId)
-    mastNames = ['setMastConfig1', 'setMastConfig2', 'setMastConfig3', 'setForemastConfig', 'setAftmastConfig']
-    sailNames = ['setSailConfig1', 'setSailConfig2', 'setSailConfig3', 'setForesailConfig', 'setAftsailConfig']
+    mastNames = [
+        'setMastConfig1',
+        'setMastConfig2',
+        'setMastConfig3',
+        'setForemastConfig',
+        'setAftmastConfig']
+    sailNames = [
+        'setSailConfig1',
+        'setSailConfig2',
+        'setSailConfig3',
+        'setForesailConfig',
+        'setAftsailConfig']
     mastInfo = []
     for x, (mastName, sailName) in enumerate(zip(mastNames, sailNames)):
         mastType = hullInfo[mastName]
@@ -4427,19 +6460,57 @@ __cabinAttributes = [
     'setPatternColorIndex',
     'setPatternHilightColorIndex']
 __mastAttributes = {
-  0: ['setShipClass', 'setMastConfig1', 'setSailConfig1', 'setMastTextureIndex'],
-  1: ['setShipClass', 'setMastConfig2', 'setSailConfig2', 'setMastTextureIndex'],
-  2: ['setShipClass', 'setMastConfig3', 'setSailConfig3', 'setMastTextureIndex'],
-  3: ['setShipClass', 'setForemastConfig', 'setForesailConfig', 'setMastTextureIndex'],
-  4: ['setShipClass', 'setAftmastConfig', 'setAftsailConfig', 'setMastTextureIndex']
-}
+    0: [
+        'setShipClass',
+        'setMastConfig1',
+        'setSailConfig1',
+        'setMastTextureIndex'],
+    1: [
+        'setShipClass',
+        'setMastConfig2',
+        'setSailConfig2',
+        'setMastTextureIndex'],
+    2: [
+        'setShipClass',
+        'setMastConfig3',
+        'setSailConfig3',
+        'setMastTextureIndex'],
+    3: [
+        'setShipClass',
+        'setForemastConfig',
+        'setForesailConfig',
+        'setMastTextureIndex'],
+    4: [
+        'setShipClass',
+        'setAftmastConfig',
+        'setAftsailConfig',
+        'setMastTextureIndex'] }
 __sailAttributes = {
-  0: ['setMastConfig1', 'setSailConfig1', 'setSailTextureIndex', 'setSailLogoIndex'],
-  1: ['setMastConfig2', 'setSailConfig2', 'setSailTextureIndex', 'setSailLogoIndex'],
-  2: ['setMastConfig3', 'setSailConfig3', 'setSailTextureIndex', 'setSailLogoIndex'],
-  3: ['setForemastConfig', 'setForesailConfig', 'setSailTextureIndex', 'setSailLogoIndex'],
-  4: ['setAftmastConfig', 'setAftsailConfig', 'setSailTextureIndex', 'setSailLogoIndex']
-}
+    0: [
+        'setMastConfig1',
+        'setSailConfig1',
+        'setSailTextureIndex',
+        'setSailLogoIndex'],
+    1: [
+        'setMastConfig2',
+        'setSailConfig2',
+        'setSailTextureIndex',
+        'setSailLogoIndex'],
+    2: [
+        'setMastConfig3',
+        'setSailConfig3',
+        'setSailTextureIndex',
+        'setSailLogoIndex'],
+    3: [
+        'setForemastConfig',
+        'setForesailConfig',
+        'setSailTextureIndex',
+        'setSailLogoIndex'],
+    4: [
+        'setAftmastConfig',
+        'setAftsailConfig',
+        'setSailTextureIndex',
+        'setSailLogoIndex'] }
 __prowAttributes = [
     'setProwType']
 __ramAttributes = [
@@ -4510,6 +6581,7 @@ def getModelClass(shipClass):
     shipData = getBaseShipConfig(shipClass)
     if shipData:
         return shipData['setModelClass']
+    
     return 0
 
 
@@ -4521,20 +6593,20 @@ def getShipConfigAll(shipClass):
 def getShipConfig(shipClass):
     shipData = getBaseShipConfig(shipClass)
     if shipData is None:
-        return
+        return None
+    
     newData = {}
     for i in range(len(__shipAttributes)):
         if shipData.has_key(__shipAttributes[i]):
             newData[__shipDNAdata[i]] = shipData[__shipAttributes[i]]
-
+    
     partStats = getHullStats(shipClass)
     newData['setMaxHp'] = partStats['maxHp']
     newData['setHp'] = partStats['maxHp']
     newData['setMaxCrew'] = partStats['maxCrew']
     for i in newData:
-        newData[i] = [
-         newData[i]]
-
+        newData[i] = [newData[i]]
+    
     return newData
 
 
@@ -4544,7 +6616,7 @@ def getHullConfig(shipClass):
     for i in range(len(__hullAttributes)):
         if shipData.has_key(__hullAttributes[i]):
             newData[__hullDNAdata[i]] = shipData[__hullAttributes[i]]
-
+    
     partStats = getHullStats(shipClass)
     newData['setMaxArrayHp'] = partStats['maxArrayHp']
     newData['setArrayHp'] = partStats['maxArrayHp']
@@ -4553,8 +6625,8 @@ def getHullConfig(shipClass):
     newData['setSp'] = partStats['maxSp']
     for i in newData:
         newData[i] = [
-         newData[i]]
-
+            newData[i]]
+    
     return newData
 
 
@@ -4564,15 +6636,15 @@ def getCabinConfig(shipClass):
     for i in range(len(__cabinAttributes)):
         if shipData.has_key(__cabinAttributes[i]):
             newData[__cabinDNAdata[i]] = shipData[__cabinAttributes[i]]
-
+    
     partStats = getCabinStats(newData['setCabinType'])
     newData['setMaxHp'] = partStats['maxHp']
     newData['setHp'] = partStats['maxHp']
     newData['setMaxCargo'] = partStats['maxCargo']
     for i in newData:
         newData[i] = [
-         newData[i]]
-
+            newData[i]]
+    
     return newData
 
 
@@ -4583,15 +6655,15 @@ def getMastConfig(shipClass, index):
     for i in range(len(mastAttrib)):
         if shipData.has_key(mastAttrib[i]):
             newData[__mastDNAdata[i]] = shipData[mastAttrib[i]]
-
+    
     newData['setPosIndex'] = index
     partStats = getMastStats(newData['setMastType'])
     newData['setMaxArrayHp'] = partStats['maxArrayHp']
     newData['setArrayHp'] = partStats['maxArrayHp']
     for i in newData:
         newData[i] = [
-         newData[i]]
-
+            newData[i]]
+    
     return newData
 
 
@@ -4605,7 +6677,7 @@ def getSailConfig(shipClass, mastIndex, sailIndex):
                 newData[__sailDNAdata[i]] = shipData[sailAttrib[i]][sailIndex]
             else:
                 newData[__sailDNAdata[i]] = shipData[sailAttrib[i]]
-
+    
     newData['setMastPosIndex'] = mastIndex
     newData['setPosIndex'] = sailIndex
     partStats = getSailStats(newData['setSailType'])
@@ -4615,8 +6687,8 @@ def getSailConfig(shipClass, mastIndex, sailIndex):
     newData['setSp'] = partStats['maxSp']
     for i in newData:
         newData[i] = [
-         newData[i]]
-
+            newData[i]]
+    
     return newData
 
 
@@ -4626,14 +6698,14 @@ def getProwConfig(shipClass):
     for i in range(len(__prowAttributes)):
         if shipData.has_key(__prowAttributes[i]):
             newData[__prowDNAdata[i]] = shipData[__prowAttributes[i]]
-
+    
     partStats = getProwStats(newData['setProwType'])
     newData['setMaxHp'] = partStats['maxHp']
     newData['setHp'] = partStats['maxHp']
     for i in newData:
         newData[i] = [
-         newData[i]]
-
+            newData[i]]
+    
     return newData
 
 
@@ -4643,14 +6715,14 @@ def getRamConfig(shipClass):
     for i in range(len(__ramAttributes)):
         if shipData.has_key(__ramAttributes[i]):
             newData[__prowDNAdata[i]] = shipData[__ramAttributes[i]]
-
+    
     partStats = getProwStats(newData['setProwType'])
     newData['setMaxHp'] = partStats['maxHp']
     newData['setHp'] = partStats['maxHp']
     for i in newData:
         newData[i] = [
-         newData[i]]
-
+            newData[i]]
+    
     return newData
 
 
@@ -4667,55 +6739,55 @@ def getDecorConfig(shipClass, placement, decorIndex):
                 newData[__decorDNAdata[i]] = shipData[decorAttrib[i]][decorIndex]
             else:
                 newData[__decorDNAdata[i]] = shipData[decorAttrib[i]]
-
+    
     newData['setPosIndex'] = decorIndex
     partStats = getDecorStats(newData['setDecorType'])
     newData['setMaxHp'] = partStats['maxHp']
     newData['setHp'] = partStats['maxHp']
     for i in newData:
         newData[i] = [
-         newData[i]]
-
+            newData[i]]
+    
     return newData
 
 
 __shipRepairCostMultiplier = {
-  DINGHY: 1.0,
-  INTERCEPTORL1: 0.15,
-  MERCHANTL1: 0.2,
-  WARSHIPL1: 0.25,
-  INTERCEPTORL2: 0.15,
-  MERCHANTL2: 0.2,
-  WARSHIPL2: 0.25,
-  INTERCEPTORL3: 0.15,
-  MERCHANTL3: 0.2,
-  WARSHIPL3: 0.25,
-  INTERCEPTORL4: 0.15,
-  MERCHANTL4: 0.2,
-  WARSHIPL4: 0.25,
-  GOLIATH: 0.25,
-  BLACK_PEARL: 0.25,
-  SKEL_WARSHIPL3: 0.25,
-  SKEL_INTERCEPTORL3: 0.25
-}
-
+    DINGHY: 1.0,
+    INTERCEPTORL1: 0.15,
+    MERCHANTL1: 0.2,
+    WARSHIPL1: 0.25,
+    INTERCEPTORL2: 0.15,
+    MERCHANTL2: 0.2,
+    WARSHIPL2: 0.25,
+    INTERCEPTORL3: 0.15,
+    MERCHANTL3: 0.2,
+    WARSHIPL3: 0.25,
+    INTERCEPTORL4: 0.15,
+    MERCHANTL4: 0.2,
+    WARSHIPL4: 0.25,
+    GOLIATH: 0.25,
+    BLACK_PEARL: 0.25,
+    SKEL_WARSHIPL3: 0.25,
+    SKEL_INTERCEPTORL3: 0.25}
 
 def getRepairCostMult(modelClass):
     return __shipRepairCostMultiplier.get(modelClass)
 
 
-def getRepairCost(ship, hull=None, cabin=None, masts=[], sails=[], prow=None, ram=None):
+def getRepairCost(ship, hull = None, cabin = None, masts = [], sails = [], prow = None, ram = None):
     return calcRepairCost(ship.maxHp, ship.Hp, ship.maxSp, ship.Sp, ship.modelClass)
 
 
 def calcRepairCost(maxHp, Hp, maxSp, Sp, modelClass):
     totalCost = 0
-    totalCost += maxHp - Hp + (maxSp - Sp) / 2
+    totalCost += (maxHp - Hp) + (maxSp - Sp) / 2
     if Hp <= 0:
         totalCost = totalCost * SUNK_REPAIR_COST_MULTIPLIER
+    
     mult = getRepairCostMult(modelClass)
     if mult:
         totalCost *= mult
+    
     totalCost = totalCost / 100.0
     return int(math.ceil(totalCost))
 
@@ -4731,45 +6803,154 @@ LEVEL_INDEX = 0
 TEAM_INDEX = 1
 ENABLED_INDEX = 2
 shipData = {
-  NAVY_FERRET: [2, NAVY_TEAM, 1],
-  NAVY_BULWARK: [6, NAVY_TEAM, 1],
-  NAVY_PANTHER: [9, NAVY_TEAM, 1],
-  NAVY_GREYHOUND: [12, NAVY_TEAM, 1],
-  NAVY_VANGUARD: [16, NAVY_TEAM, 1],
-  NAVY_CENTURION: [19, NAVY_TEAM, 1],
-  NAVY_KINGFISHER: [22, NAVY_TEAM, 1],
-  NAVY_MONARCH: [26, NAVY_TEAM, 1],
-  NAVY_MAN_O_WAR: [29, NAVY_TEAM, 1],
-  NAVY_PREDATOR: [32, NAVY_TEAM, 1],
-  NAVY_COLOSSUS: [36, NAVY_TEAM, 1],
-  NAVY_DREADNOUGHT: [39, NAVY_TEAM, 1],
-  GOLIATH: [40, NAVY_TEAM, 1],
-  BLACK_PEARL: [30, PLAYER_TEAM, 1],
-  EITC_SEA_VIPER: [7, TRADING_CO_TEAM, 1],
-  EITC_SENTINEL: [11, TRADING_CO_TEAM, 1],
-  EITC_CORVETTE: [14, TRADING_CO_TEAM, 1],
-  EITC_BLOODHOUND: [17, TRADING_CO_TEAM, 1],
-  EITC_IRONWALL: [21, TRADING_CO_TEAM, 1],
-  EITC_MARAUDER: [24, TRADING_CO_TEAM, 1],
-  EITC_BARRACUDA: [27, TRADING_CO_TEAM, 1],
-  EITC_OGRE: [31, TRADING_CO_TEAM, 1],
-  EITC_WARLORD: [34, TRADING_CO_TEAM, 1],
-  EITC_CORSAIR: [37, TRADING_CO_TEAM, 1],
-  EITC_BEHEMOTH: [41, TRADING_CO_TEAM, 1],
-  EITC_JUGGERNAUT: [44, TRADING_CO_TEAM, 1],
-  SKEL_PHANTOM: [18, UNDEAD_TEAM, 1],
-  SKEL_REVENANT: [26, UNDEAD_TEAM, 1],
-  SKEL_STORM_REAPER: [31, UNDEAD_TEAM, 1],
-  SKEL_BLACK_HARBINGER: [36, UNDEAD_TEAM, 1],
-  SKEL_DEATH_OMEN: [42, UNDEAD_TEAM, 1],
-  SKEL_SHADOW_CROW_FR: [18, FRENCH_UNDEAD_TEAM, 1],
-  SKEL_HELLHOUND_FR: [21, FRENCH_UNDEAD_TEAM, 1],
-  SKEL_BLOOD_SCOURGE_FR: [28, FRENCH_UNDEAD_TEAM, 1],
-  SKEL_SHADOW_CROW_SP: [18, SPANISH_UNDEAD_TEAM, 1],
-  SKEL_HELLHOUND_SP: [21, SPANISH_UNDEAD_TEAM, 1],
-  SKEL_BLOOD_SCOURGE_SP: [28, SPANISH_UNDEAD_TEAM, 1]
-}
-
+    NAVY_FERRET: [
+        2,
+        NAVY_TEAM,
+        1],
+    NAVY_BULWARK: [
+        6,
+        NAVY_TEAM,
+        1],
+    NAVY_PANTHER: [
+        9,
+        NAVY_TEAM,
+        1],
+    NAVY_GREYHOUND: [
+        12,
+        NAVY_TEAM,
+        1],
+    NAVY_VANGUARD: [
+        16,
+        NAVY_TEAM,
+        1],
+    NAVY_CENTURION: [
+        19,
+        NAVY_TEAM,
+        1],
+    NAVY_KINGFISHER: [
+        22,
+        NAVY_TEAM,
+        1],
+    NAVY_MONARCH: [
+        26,
+        NAVY_TEAM,
+        1],
+    NAVY_MAN_O_WAR: [
+        29,
+        NAVY_TEAM,
+        1],
+    NAVY_PREDATOR: [
+        32,
+        NAVY_TEAM,
+        1],
+    NAVY_COLOSSUS: [
+        36,
+        NAVY_TEAM,
+        1],
+    NAVY_DREADNOUGHT: [
+        39,
+        NAVY_TEAM,
+        1],
+    GOLIATH: [
+        40,
+        NAVY_TEAM,
+        1],
+    BLACK_PEARL: [
+        30,
+        PLAYER_TEAM,
+        1],
+    EITC_SEA_VIPER: [
+        7,
+        TRADING_CO_TEAM,
+        1],
+    EITC_SENTINEL: [
+        11,
+        TRADING_CO_TEAM,
+        1],
+    EITC_CORVETTE: [
+        14,
+        TRADING_CO_TEAM,
+        1],
+    EITC_BLOODHOUND: [
+        17,
+        TRADING_CO_TEAM,
+        1],
+    EITC_IRONWALL: [
+        21,
+        TRADING_CO_TEAM,
+        1],
+    EITC_MARAUDER: [
+        24,
+        TRADING_CO_TEAM,
+        1],
+    EITC_BARRACUDA: [
+        27,
+        TRADING_CO_TEAM,
+        1],
+    EITC_OGRE: [
+        31,
+        TRADING_CO_TEAM,
+        1],
+    EITC_WARLORD: [
+        34,
+        TRADING_CO_TEAM,
+        1],
+    EITC_CORSAIR: [
+        37,
+        TRADING_CO_TEAM,
+        1],
+    EITC_BEHEMOTH: [
+        41,
+        TRADING_CO_TEAM,
+        1],
+    EITC_JUGGERNAUT: [
+        44,
+        TRADING_CO_TEAM,
+        1],
+    SKEL_PHANTOM: [
+        18,
+        UNDEAD_TEAM,
+        1],
+    SKEL_REVENANT: [
+        26,
+        UNDEAD_TEAM,
+        1],
+    SKEL_STORM_REAPER: [
+        31,
+        UNDEAD_TEAM,
+        1],
+    SKEL_BLACK_HARBINGER: [
+        36,
+        UNDEAD_TEAM,
+        1],
+    SKEL_DEATH_OMEN: [
+        42,
+        UNDEAD_TEAM,
+        1],
+    SKEL_SHADOW_CROW_FR: [
+        18,
+        FRENCH_UNDEAD_TEAM,
+        1],
+    SKEL_HELLHOUND_FR: [
+        21,
+        FRENCH_UNDEAD_TEAM,
+        1],
+    SKEL_BLOOD_SCOURGE_FR: [
+        28,
+        FRENCH_UNDEAD_TEAM,
+        1],
+    SKEL_SHADOW_CROW_SP: [
+        18,
+        SPANISH_UNDEAD_TEAM,
+        1],
+    SKEL_HELLHOUND_SP: [
+        21,
+        SPANISH_UNDEAD_TEAM,
+        1],
+    SKEL_BLOOD_SCOURGE_SP: [
+        28,
+        SPANISH_UNDEAD_TEAM,
+        1]}
 
 def getRandomShipLevel(shipClass):
     baselevel = getShipLevel(shipClass) - 1
@@ -4791,9 +6972,7 @@ def getShipTeam(shipClass):
     else:
         return PLAYER_TEAM
 
-
 shipGeoms = {}
-
 
 def preprocessHull(name):
     geom = loader.loadModel('models/shipparts/%s-geometry_High' % name)
@@ -4801,26 +6980,20 @@ def preprocessHull(name):
     allPanels = geom.findAllMatches('**/panel_High_*')
     for panel in allPanels:
         for mn in panel.findAllMatches('**/+ModelNode'):
-            if mn.getNumChildren() < 2:
-                if mn.getNumChildren() > 0:
-                    gn = mn.find('+GeomNode')
-                    if gn.isEmpty():
-                        gn = mn.getChild(0)
-
+            if mn.getNumChildren() < 2 and mn.getNumChildren() > 0:
+                if not mn.find('+GeomNode').isEmpty():
+                    gn = mn.getChild(0)
                     gn.setName(mn.getName())
                     gn.reparentTo(mn.getParent())
                     mn.detachNode()
 
         panel.reparentTo(geom)
         panel.stash()
-
+    
     for mn in geom.findAllMatches('**/+ModelNode'):
-        if mn.getNumChildren() < 2:
-            if mn.getNumChildren() > 0:
-                gn = mn.find('+GeomNode')
-                if gn.isEmpty():
-                    gn = mn.getChild(0)
-
+        if mn.getNumChildren() < 2 and mn.getNumChildren() > 0:
+            if not mn.find('+GeomNode').isEmpty():
+                gn = mn.getChild(0)
                 gn.setName(mn.getName())
                 gn.reparentTo(mn.getParent())
                 mn.detachNode()
@@ -4829,14 +7002,14 @@ def preprocessHull(name):
     geom.getChild(0).reparentTo(geomStatic)
     for panel in allPanels:
         panel.unstash()
-
+    
     highGeom = geom.copyTo(hidden)
     highGeom.detachNode()
     highPanels = highGeom.findAllMatches('**/panel_High_*')
     flashPanelsHigh = []
     for panel in highPanels:
         panel.reparentTo(highGeom)
-
+    
     medGeom = geom.copyTo(hidden)
     medGeom.detachNode()
     medPanels = medGeom.findAllMatches('**/panel_High_*')
@@ -4847,14 +7020,18 @@ def preprocessHull(name):
         ps.setTexcoordName('uvHole')
         psnp = medGeom.attachNewNode(ps)
         panel.reparentTo(psnp)
-
+    
     lowGeom = geom.copyTo(hidden)
     lowGeom.detachNode()
     geomStatic.copyTo(lowGeom)
     shipGeoms['models/shipparts/%s-geometry_High' % name] = [
-     highGeom, geomStatic]
-    shipGeoms['models/shipparts/%s-geometry_Medium' % name] = [medGeom, geomStatic]
-    shipGeoms['models/shipparts/%s-geometry_Low' % name] = [lowGeom]
+        highGeom,
+        geomStatic]
+    shipGeoms['models/shipparts/%s-geometry_Medium' % name] = [
+        medGeom,
+        geomStatic]
+    shipGeoms['models/shipparts/%s-geometry_Low' % name] = [
+        lowGeom]
 
 
 def preprocessHullMed(name):
@@ -4863,26 +7040,20 @@ def preprocessHullMed(name):
     allPanels = geom.findAllMatches('**/panel_High_*')
     for panel in allPanels:
         for mn in panel.findAllMatches('**/+ModelNode'):
-            if mn.getNumChildren() < 2:
-                if mn.getNumChildren() > 0:
-                    gn = mn.find('+GeomNode')
-                    if gn.isEmpty():
-                        gn = mn.getChild(0)
-
+            if mn.getNumChildren() < 2 and mn.getNumChildren() > 0:
+                if not mn.find('+GeomNode').isEmpty():
+                    gn = mn.getChild(0)
                     gn.setName(mn.getName())
                     gn.reparentTo(mn.getParent())
                     mn.detachNode()
 
         panel.reparentTo(geom)
         panel.stash()
-
+    
     for mn in geom.findAllMatches('**/+ModelNode'):
-        if mn.getNumChildren() < 2:
-            if mn.getNumChildren() > 0:
-                gn = mn.find('+GeomNode')
-                if gn.isEmpty():
-                    gn = mn.getChild(0)
-
+        if mn.getNumChildren() < 2 and mn.getNumChildren() > 0:
+            if not mn.find('+GeomNode').isEmpty():
+                gn = mn.getChild(0)
                 gn.setName(mn.getName())
                 gn.reparentTo(mn.getParent())
                 mn.detachNode()
@@ -4891,7 +7062,7 @@ def preprocessHullMed(name):
     geom.getChild(0).reparentTo(geomStatic)
     for panel in allPanels:
         panel.unstash()
-
+    
     mediumGeom = geom.copyTo(hidden)
     mediumGeom.detachNode()
     medPanels = mediumGeom.findAllMatches('**/panel_High_*')
@@ -4902,20 +7073,19 @@ def preprocessHullMed(name):
         ps.setTexcoordName('uvHole')
         psnp = mediumGeom.attachNewNode(ps)
         panel.reparentTo(psnp)
+    
+    shipGeoms['models/shipparts/%s-geometry_Medium' % name] = [
+        mediumGeom,
+        geomStatic]
 
-    shipGeoms['models/shipparts/%s-geometry_Medium' % name] = [mediumGeom, geomStatic]
 
-
-def preprocessHullLow(name, inFix='', isSkelShip=False):
+def preprocessHullLow(name, inFix = '', isSkelShip = False):
     geom = loader.loadModel('models/shipparts/%s-geometry_Low' % name)
     geom.flattenStrong()
     for mn in geom.findAllMatches('**/+ModelNode'):
-        if mn.getNumChildren() < 2:
-            if mn.getNumChildren() > 0:
-                gn = mn.find('+GeomNode')
-                if gn.isEmpty():
-                    gn = mn.getChild(0)
-
+        if mn.getNumChildren() < 2 and mn.getNumChildren() > 0:
+            if not mn.find('+GeomNode').isEmpty():
+                gn = mn.getChild(0)
                 gn.setName(mn.getName())
                 gn.reparentTo(mn.getParent())
                 mn.detachNode()
@@ -4925,12 +7095,14 @@ def preprocessHullLow(name, inFix='', isSkelShip=False):
     lowGeom.detachNode()
     if isSkelShip:
         shipGeoms['models/shipparts/%s%s-geometry_Low' % (name, inFix)] = [
-         lowGeom]
+            lowGeom]
     else:
         shipGeoms['models/shipparts/%s%sL1-geometry_Low' % (name, inFix)] = [
-         lowGeom]
-        shipGeoms['models/shipparts/%s%sL2-geometry_Low' % (name, inFix)] = [lowGeom]
-        shipGeoms['models/shipparts/%s%sL3-geometry_Low' % (name, inFix)] = [lowGeom]
+            lowGeom]
+        shipGeoms['models/shipparts/%s%sL2-geometry_Low' % (name, inFix)] = [
+            lowGeom]
+        shipGeoms['models/shipparts/%s%sL3-geometry_Low' % (name, inFix)] = [
+            lowGeom]
 
 
 def preprocessHulls():
@@ -4947,13 +7119,13 @@ def preprocessHulls():
     preprocessHullMed('warCabinAL2')
     preprocessHull('warCabinAL3')
     preprocessHullMed('warCabinAL3')
-    preprocessHullLow('warCabin', inFix='A')
+    preprocessHullLow('warCabin', inFix = 'A')
     preprocessHull('skeletonWarshipL3')
     preprocessHullMed('skeletonWarshipL3')
-    preprocessHullLow('skeletonWarshipL3', isSkelShip=True)
+    preprocessHullLow('skeletonWarshipL3', isSkelShip = True)
     preprocessHull('skeletonWarCabinAL3')
     preprocessHullMed('skeletonWarCabinAL3')
-    preprocessHullLow('skeletonWarCabinAL3', inFix='', isSkelShip=True)
+    preprocessHullLow('skeletonWarCabinAL3', inFix = '', isSkelShip = True)
     preprocessHull('merchantL1')
     preprocessHullMed('merchantL1')
     preprocessHull('merchantL2')
@@ -4967,7 +7139,7 @@ def preprocessHulls():
     preprocessHullMed('merchantCabinAL2')
     preprocessHull('merchantCabinAL3')
     preprocessHullMed('merchantCabinAL3')
-    preprocessHullLow('merchantCabin', inFix='A')
+    preprocessHullLow('merchantCabin', inFix = 'A')
     preprocessHull('interceptorL1')
     preprocessHullMed('interceptorL1')
     preprocessHull('interceptorL2')
@@ -4977,23 +7149,23 @@ def preprocessHulls():
     preprocessHullLow('interceptor')
 
 
-def preprocessPhase5Ships(task=0):
+def preprocessPhase5Ships(task = 0):
     preprocessHull('skeletonInterceptorL3')
     preprocessHullMed('skeletonInterceptorL3')
-    preprocessHullLow('skeletonInterceptorL3', isSkelShip=True)
+    preprocessHullLow('skeletonInterceptorL3', isSkelShip = True)
     for i in xrange(5):
         preprocessMast('models/char/mainmastA_tri_ghost', 2, i)
-
+    
     return Task.done
 
 
-def preprocessBlackPearl(task=0):
+def preprocessBlackPearl(task = 0):
     preprocessHull('blackpearl')
     preprocessHull('blackpearlCabin')
     return Task.done
 
 
-def preprocessGoliath(task=0):
+def preprocessGoliath(task = 0):
     preprocessHull('goliath')
     preprocessHull('goliathCabinA')
     return Task.done
@@ -5005,32 +7177,31 @@ def preprocessCannon(name):
     cannon.addLOD('hi', 100, 0)
     cannon.addLOD('med', 200, 100)
     cannon.addLOD('low', 400, 200)
-    cannon.loadModel('%s%s' % (name, '_hi'), lodName='hi')
-    cannon.loadModel('%s%s' % (name, '_med'), lodName='med')
-    cannon.loadModel('%s%s' % (name, '_low'), lodName='low')
-    cannon.loadAnims({'zero': '%s%s' % (name, '_zero')}, lodName='all')
+    cannon.loadModel('%s%s' % (name, '_hi'), lodName = 'hi')
+    cannon.loadModel('%s%s' % (name, '_med'), lodName = 'med')
+    cannon.loadModel('%s%s' % (name, '_low'), lodName = 'low')
+    cannon.loadAnims({
+        'zero': '%s%s' % (name, '_zero') }, lodName = 'all')
     cannon.findAllMatches('**/+ModelNode').detach()
     shipGeoms[name] = cannon
 
+BroadsideAnimDict = (('zero', '_zero'), ('Fire', '_fire'), ('Open', '_open'), ('Close', '_close'))
 
-BroadsideAnimDict = (
- (
-  'zero', '_zero'), ('Fire', '_fire'), ('Open', '_open'), ('Close', '_close'))
 
 def preprocessBroadside(name):
     anims = {}
     for anim in BroadsideAnimDict:
         anims[anim[0]] = name + anim[1]
-
+    
     cannon = Actor.Actor()
     cannon.setLODNode()
     cannon.addLOD('hi', 100, 0)
     cannon.addLOD('med', 200, 100)
     cannon.addLOD('low', 400, 200)
-    cannon.loadModel('%s%s' % (name, '_hi'), lodName='hi')
-    cannon.loadModel('%s%s' % (name, '_med'), lodName='med')
-    cannon.loadModel('%s%s' % (name, '_low'), lodName='low')
-    cannon.loadAnims(anims, lodName='all')
+    cannon.loadModel('%s%s' % (name, '_hi'), lodName = 'hi')
+    cannon.loadModel('%s%s' % (name, '_med'), lodName = 'med')
+    cannon.loadModel('%s%s' % (name, '_low'), lodName = 'low')
+    cannon.loadAnims(anims, lodName = 'all')
     cannon.findAllMatches('**/+ModelNode').detach()
     shipGeoms[name] = cannon
 
@@ -5072,11 +7243,15 @@ def preprocessMast(name, maxHeight, index):
     mast.addLOD('high', 100, 0)
     mast.addLOD('medium', 200, 100)
     mast.addLOD('low', 1000, 200)
-    animNames = ['break0A', 'break1A', 'break2A', 'break3A'][:maxHeight]
+    animNames = [
+        'break0A',
+        'break1A',
+        'break2A',
+        'break3A'][:maxHeight]
     anims = {}
     for animName in animNames:
         anims[animName] = '%s_%s_new' % (name, animName)
-
+    
     anims['Idle'] = '%s_idle_new' % name
     anims['Hidden'] = '%s_hidden_new' % name
     mast.loadModel('%s_h' % name, 'modelRoot', 'high')
@@ -5099,27 +7274,34 @@ def preprocessMast(name, maxHeight, index):
 
     for j in xrange(maxHeight):
         excludedJoint = [
-         'def_sail_%d_a_1' % j, 'def_sail_%d_b_1' % j, 'def_sail_%d_c_1' % j]
+            'def_sail_%d_a_1' % j,
+            'def_sail_%d_b_1' % j,
+            'def_sail_%d_c_1' % j]
         if j < maxHeight - 1:
             excludedJoint.append('def_mast_%d' % (j + 1))
         else:
             excludedJoint = []
-        mast.makeSubpart('mast_%d_%d' % (j, index), ['def_mast_' + str(j)], excludedJoint)
-
+        mast.makeSubpart('mast_%d_%d' % (j, index), [
+            'def_mast_' + str(j)], excludedJoint)
+    
     mast.setSubpartsComplete(True)
     mast.findAllMatches('**/+ModelNode').detach()
     locators = loader.loadModel('%s_zero_locators' % name)
     tallestMast = Actor.Actor()
     tallestMast.copyActor(mast, 1)
-    shipGeoms['%s_%s_%s' % (name, maxHeight, index)] = [tallestMast, locators]
+    shipGeoms['%s_%s_%s' % (name, maxHeight, index)] = [
+        tallestMast,
+        locators]
     for i in xrange(1, maxHeight):
         height = maxHeight - i
         if height < 3:
-            mast.freezeJoint('mast_%d_%d' % (height, index), 'def_mast_%s' % height, scale=Vec3(0.001, 0.001, 0.001))
+            mast.freezeJoint('mast_%d_%d' % (height, index), 'def_mast_%s' % height, scale = Vec3(0.001, 0.001, 0.001))
+        
         newMast = Actor.Actor()
         newMast.copyActor(mast, 1)
-        shipGeoms['%s_%s_%s' % (name, height, index)] = [newMast, locators]
-
+        shipGeoms['%s_%s_%s' % (name, height, index)] = [
+            newMast,
+            locators]
 
 def preprocessRigging(name, indices):
     for i in indices:
@@ -5129,7 +7311,6 @@ def preprocessRigging(name, indices):
         rigNodePath.setBin('ShipRigging', 0)
         rig.findAllMatches('**/+GeomNode').reparentTo(rigNodePath)
         shipGeoms['%s_%s' % (name, i)] = rigNodePath
-
 
 def preprocessMasts():
     for i in range(5):
@@ -5142,16 +7323,33 @@ def preprocessMasts():
         preprocessMast('models/char/mainmastB_ghost', 4, i)
         preprocessMast('models/char/aftmastA_ghost', 2, i)
         preprocessMast('models/char/foremastA_ghost', 1, i)
-
-    preprocessRigging('models/char/interceptorL1-rigging', [0])
-    preprocessRigging('models/char/interceptorL2-rigging', [0])
-    preprocessRigging('models/char/interceptorL3-rigging', [0])
-    preprocessRigging('models/char/merchantL1-rigging', [0, 1])
-    preprocessRigging('models/char/merchantL2-rigging', [0, 1, 2])
-    preprocessRigging('models/char/merchantL3-rigging', [0, 1, 2])
-    preprocessRigging('models/char/warshipL1-rigging', [0, 1])
-    preprocessRigging('models/char/warshipL2-rigging', [0, 1])
-    preprocessRigging('models/char/warshipL3-rigging', [0, 1])
+    
+    preprocessRigging('models/char/interceptorL1-rigging', [
+        0])
+    preprocessRigging('models/char/interceptorL2-rigging', [
+        0])
+    preprocessRigging('models/char/interceptorL3-rigging', [
+        0])
+    preprocessRigging('models/char/merchantL1-rigging', [
+        0,
+        1])
+    preprocessRigging('models/char/merchantL2-rigging', [
+        0,
+        1,
+        2])
+    preprocessRigging('models/char/merchantL3-rigging', [
+        0,
+        1,
+        2])
+    preprocessRigging('models/char/warshipL1-rigging', [
+        0,
+        1])
+    preprocessRigging('models/char/warshipL2-rigging', [
+        0,
+        1])
+    preprocessRigging('models/char/warshipL3-rigging', [
+        0,
+        1])
 
 
 def preprocessPhase3ShipParts():
@@ -5165,8 +7363,7 @@ def getShipGeom(filename):
     if data:
         return (1, data)
     else:
-        return (
-         0, loader.loadModel(filename))
+        return (0, loader.loadModel(filename))
 
 
 def getActor(filename):
@@ -5174,16 +7371,15 @@ def getActor(filename):
     if cannon:
         newCannon = Actor.Actor()
         newCannon.copyActor(cannon)
-        return (
-         1, newCannon)
+        return (1, newCannon)
     else:
         return (0, None)
-    return
 
 
 def getMast(filename):
+    
     try:
-        mast, locators = shipGeoms.get(filename)
+        (mast, locators) = shipGeoms.get(filename)
     except:
         base.notify.error('Mast helper function from ShipGlobals encountered an error trying to load %s' % filename)
 
@@ -5191,8 +7387,7 @@ def getMast(filename):
     newMast.copyActor(mast, 1)
     newLocators = locators.copyTo(hidden)
     newLocators.detachNode()
-    return (
-     newMast, newLocators)
+    return (newMast, newLocators)
 
 
 def getRigging(filename):
@@ -5202,62 +7397,360 @@ def getRigging(filename):
         rig.detachNode()
         return rig
     else:
-        return
-    return
+        return None
 
 
 __enemyAIShipSpeed = {
-  WARSHIPL1: ([50, 100, 115, 135], [10, 10]),
-  WARSHIPL2: ([50, 100, 115, 135], [10, 10]),
-  WARSHIPL3: ([50, 100, 115, 135], [10, 10]),
-  WARSHIPL4: ([50, 100, 115, 135], [10, 10]),
-  MERCHANTL1: ([45, 90, 105, 125], [6, 6]),
-  MERCHANTL2: ([45, 90, 105, 125], [6, 6]),
-  MERCHANTL3: ([45, 90, 105, 125], [6, 6]),
-  MERCHANTL4: ([45, 90, 105, 125], [6, 6]),
-  INTERCEPTORL1: ([55, 110, 125, 145], [16, 16]),
-  INTERCEPTORL2: ([55, 110, 125, 145], [16, 16]),
-  INTERCEPTORL3: ([55, 110, 125, 145], [16, 16]),
-  INTERCEPTORL4: ([55, 110, 125, 145], [16, 16]),
-  STUMPY_SHIP: ([8, 8, 8, 8], [6, 6]),
-  BLACK_PEARL: ([50, 100, 150, 200], [14, 14]),
-  GOLIATH: ([50, 100, 150, 200], [14, 14]),
-  NAVY_PANTHER: ([25, 60, 105, 125], [7, 7]),
-  NAVY_CENTURION: ([30, 65, 110, 130], [8, 8]),
-  NAVY_MAN_O_WAR: ([35, 70, 115, 135], [9, 9]),
-  NAVY_DREADNOUGHT: ([35, 70, 115, 135], [9, 9]),
-  NAVY_BULWARK: ([20, 50, 95, 115], [5, 5]),
-  NAVY_VANGUARD: ([25, 55, 100, 120], [6, 6]),
-  NAVY_MONARCH: ([30, 60, 105, 125], [7, 7]),
-  NAVY_COLOSSUS: ([30, 60, 105, 125], [7, 7]),
-  NAVY_FERRET: ([30, 70, 115, 135], [10, 10]),
-  NAVY_GREYHOUND: ([35, 75, 120, 140], [11, 11]),
-  NAVY_KINGFISHER: ([40, 80, 125, 145], [12, 12]),
-  NAVY_PREDATOR: ([40, 80, 125, 145], [12, 12]),
-  EITC_CORVETTE: ([25, 60, 105, 125], [7, 7]),
-  EITC_MARAUDER: ([30, 65, 110, 130], [8, 8]),
-  EITC_WARLORD: ([35, 70, 115, 135], [9, 9]),
-  EITC_JUGGERNAUT: ([35, 70, 115, 135], [9, 9]),
-  EITC_SENTINEL: ([20, 50, 95, 115], [5, 5]),
-  EITC_IRONWALL: ([25, 55, 100, 120], [6, 6]),
-  EITC_OGRE: ([30, 60, 105, 125], [7, 7]),
-  EITC_BEHEMOTH: ([30, 60, 105, 125], [7, 7]),
-  EITC_SEA_VIPER: ([30, 70, 115, 135], [10, 10]),
-  EITC_BLOODHOUND: ([35, 75, 120, 140], [11, 11]),
-  EITC_BARRACUDA: ([40, 80, 125, 145], [12, 12]),
-  EITC_CORSAIR: ([40, 80, 125, 145], [12, 12]),
-  SKEL_PHANTOM: ([35, 70, 115, 135], [10, 10]),
-  SKEL_REVENANT: ([35, 70, 115, 135], [11, 11]),
-  SKEL_STORM_REAPER: ([40, 75, 120, 140], [11, 11]),
-  SKEL_BLACK_HARBINGER: ([40, 75, 120, 140], [12, 12]),
-  SKEL_DEATH_OMEN: ([45, 80, 125, 145], [12, 12]),
-  SKEL_SHADOW_CROW_FR: ([40, 80, 125, 145], [12, 12]),
-  SKEL_HELLHOUND_FR: ([40, 80, 125, 145], [13, 13]),
-  SKEL_BLOOD_SCOURGE_FR: ([45, 85, 130, 150], [14, 14]),
-  SKEL_SHADOW_CROW_SP: ([40, 80, 125, 145], [12, 12]),
-  SKEL_HELLHOUND_SP: ([40, 80, 125, 145], [13, 13]),
-  SKEL_BLOOD_SCOURGE_SP: ([45, 85, 130, 150], [14, 14])
-}
+    WARSHIPL1: ([
+        50,
+        100,
+        115,
+        135], [
+        10,
+        10]),
+    WARSHIPL2: ([
+        50,
+        100,
+        115,
+        135], [
+        10,
+        10]),
+    WARSHIPL3: ([
+        50,
+        100,
+        115,
+        135], [
+        10,
+        10]),
+    WARSHIPL4: ([
+        50,
+        100,
+        115,
+        135], [
+        10,
+        10]),
+    MERCHANTL1: ([
+        45,
+        90,
+        105,
+        125], [
+        6,
+        6]),
+    MERCHANTL2: ([
+        45,
+        90,
+        105,
+        125], [
+        6,
+        6]),
+    MERCHANTL3: ([
+        45,
+        90,
+        105,
+        125], [
+        6,
+        6]),
+    MERCHANTL4: ([
+        45,
+        90,
+        105,
+        125], [
+        6,
+        6]),
+    INTERCEPTORL1: ([
+        55,
+        110,
+        125,
+        145], [
+        16,
+        16]),
+    INTERCEPTORL2: ([
+        55,
+        110,
+        125,
+        145], [
+        16,
+        16]),
+    INTERCEPTORL3: ([
+        55,
+        110,
+        125,
+        145], [
+        16,
+        16]),
+    INTERCEPTORL4: ([
+        55,
+        110,
+        125,
+        145], [
+        16,
+        16]),
+    STUMPY_SHIP: ([
+        8,
+        8,
+        8,
+        8], [
+        6,
+        6]),
+    BLACK_PEARL: ([
+        50,
+        100,
+        150,
+        200], [
+        14,
+        14]),
+    GOLIATH: ([
+        50,
+        100,
+        150,
+        200], [
+        14,
+        14]),
+    NAVY_PANTHER: ([
+        25,
+        60,
+        105,
+        125], [
+        7,
+        7]),
+    NAVY_CENTURION: ([
+        30,
+        65,
+        110,
+        130], [
+        8,
+        8]),
+    NAVY_MAN_O_WAR: ([
+        35,
+        70,
+        115,
+        135], [
+        9,
+        9]),
+    NAVY_DREADNOUGHT: ([
+        35,
+        70,
+        115,
+        135], [
+        9,
+        9]),
+    NAVY_BULWARK: ([
+        20,
+        50,
+        95,
+        115], [
+        5,
+        5]),
+    NAVY_VANGUARD: ([
+        25,
+        55,
+        100,
+        120], [
+        6,
+        6]),
+    NAVY_MONARCH: ([
+        30,
+        60,
+        105,
+        125], [
+        7,
+        7]),
+    NAVY_COLOSSUS: ([
+        30,
+        60,
+        105,
+        125], [
+        7,
+        7]),
+    NAVY_FERRET: ([
+        30,
+        70,
+        115,
+        135], [
+        10,
+        10]),
+    NAVY_GREYHOUND: ([
+        35,
+        75,
+        120,
+        140], [
+        11,
+        11]),
+    NAVY_KINGFISHER: ([
+        40,
+        80,
+        125,
+        145], [
+        12,
+        12]),
+    NAVY_PREDATOR: ([
+        40,
+        80,
+        125,
+        145], [
+        12,
+        12]),
+    EITC_CORVETTE: ([
+        25,
+        60,
+        105,
+        125], [
+        7,
+        7]),
+    EITC_MARAUDER: ([
+        30,
+        65,
+        110,
+        130], [
+        8,
+        8]),
+    EITC_WARLORD: ([
+        35,
+        70,
+        115,
+        135], [
+        9,
+        9]),
+    EITC_JUGGERNAUT: ([
+        35,
+        70,
+        115,
+        135], [
+        9,
+        9]),
+    EITC_SENTINEL: ([
+        20,
+        50,
+        95,
+        115], [
+        5,
+        5]),
+    EITC_IRONWALL: ([
+        25,
+        55,
+        100,
+        120], [
+        6,
+        6]),
+    EITC_OGRE: ([
+        30,
+        60,
+        105,
+        125], [
+        7,
+        7]),
+    EITC_BEHEMOTH: ([
+        30,
+        60,
+        105,
+        125], [
+        7,
+        7]),
+    EITC_SEA_VIPER: ([
+        30,
+        70,
+        115,
+        135], [
+        10,
+        10]),
+    EITC_BLOODHOUND: ([
+        35,
+        75,
+        120,
+        140], [
+        11,
+        11]),
+    EITC_BARRACUDA: ([
+        40,
+        80,
+        125,
+        145], [
+        12,
+        12]),
+    EITC_CORSAIR: ([
+        40,
+        80,
+        125,
+        145], [
+        12,
+        12]),
+    SKEL_PHANTOM: ([
+        35,
+        70,
+        115,
+        135], [
+        10,
+        10]),
+    SKEL_REVENANT: ([
+        35,
+        70,
+        115,
+        135], [
+        11,
+        11]),
+    SKEL_STORM_REAPER: ([
+        40,
+        75,
+        120,
+        140], [
+        11,
+        11]),
+    SKEL_BLACK_HARBINGER: ([
+        40,
+        75,
+        120,
+        140], [
+        12,
+        12]),
+    SKEL_DEATH_OMEN: ([
+        45,
+        80,
+        125,
+        145], [
+        12,
+        12]),
+    SKEL_SHADOW_CROW_FR: ([
+        40,
+        80,
+        125,
+        145], [
+        12,
+        12]),
+    SKEL_HELLHOUND_FR: ([
+        40,
+        80,
+        125,
+        145], [
+        13,
+        13]),
+    SKEL_BLOOD_SCOURGE_FR: ([
+        45,
+        85,
+        130,
+        150], [
+        14,
+        14]),
+    SKEL_SHADOW_CROW_SP: ([
+        40,
+        80,
+        125,
+        145], [
+        12,
+        12]),
+    SKEL_HELLHOUND_SP: ([
+        40,
+        80,
+        125,
+        145], [
+        13,
+        13]),
+    SKEL_BLOOD_SCOURGE_SP: ([
+        45,
+        85,
+        130,
+        150], [
+        14,
+        14])}
 
 
 def getAIShipSpeed(shipClass):
@@ -5336,3 +7829,4 @@ def getShipBreakMast(shipClass):
         return hasMast[1]
     else:
         return -1
+

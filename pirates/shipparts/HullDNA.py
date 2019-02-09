@@ -1,4 +1,4 @@
-from panda3d.core import *
+from pandac.PandaModules import *
 from direct.directnotify.DirectNotifyGlobal import *
 import random
 from direct.distributed.PyDatagram import PyDatagram
@@ -7,7 +7,6 @@ from otp.avatar import AvatarDNA
 from otp.speedchat import ColorSpace
 from pirates.ship import ShipGlobals
 from pirates.piratesbase import PiratesGlobals
-
 notify = directNotify.newCategory('HullDNA')
 HullDict = {
     ShipGlobals.DINGHY: 'models/shipparts/dingy',
@@ -74,10 +73,31 @@ PatternTexDict = {
     200: ('ship_pattern_navy', None),
     208: ('ship_et_pattern_A', None)}
 HullColors = [
- VBase4(1.0, 1.0, 1.0, 1.0), VBase4(0.0, 0.0, 0.0, 1.0), VBase4(0.933594, 0.265625, 0.28125, 1.0), VBase4(0.863281, 0.40625, 0.417969, 1.0), VBase4(1.0, 0.0, 0.0, 1.0), VBase4(0.7, 0.5, 0.3, 1.0), VBase4(0.6, 0.0, 0.0, 1.0), VBase4(0.710938, 0.234375, 0.4375, 1.0), VBase4(0.992188, 0.480469, 0.167969, 1.0), VBase4(0.996094, 0.898438, 0.320312, 1.0), VBase4(0.550781, 0.824219, 0.324219, 1.0), VBase4(0.242188, 0.742188, 0.515625, 1.0), VBase4(0.433594, 0.90625, 0.835938, 1.0), VBase4(0.347656, 0.820312, 0.953125, 1.0), VBase4(0.191406, 0.5625, 0.773438, 1.0), VBase4(0.63, 0.172, 0.088, 1.0), VBase4(1.0, 0.272, 0.139, 1.0), VBase4(0.4, 0.4, 0.4, 1.0), VBase4(0.2, 0.2, 0.2, 1.0), VBase4(0.4, 0.5, 0.8, 1.0)]
+    VBase4(1.0, 1.0, 1.0, 1.0),
+    VBase4(0.0, 0.0, 0.0, 1.0),
+    VBase4(0.933594, 0.265625, 0.28125, 1.0),
+    VBase4(0.863281, 0.40625, 0.417969, 1.0),
+    VBase4(1.0, 0.0, 0.0, 1.0),
+    VBase4(0.7, 0.5, 0.3, 1.0),
+    VBase4(0.6, 0.0, 0.0, 1.0),
+    VBase4(0.710938, 0.234375, 0.4375, 1.0),
+    VBase4(0.992188, 0.480469, 0.167969, 1.0),
+    VBase4(0.996094, 0.898438, 0.320312, 1.0),
+    VBase4(0.550781, 0.824219, 0.324219, 1.0),
+    VBase4(0.242188, 0.742188, 0.515625, 1.0),
+    VBase4(0.433594, 0.90625, 0.835938, 1.0),
+    VBase4(0.347656, 0.820312, 0.953125, 1.0),
+    VBase4(0.191406, 0.5625, 0.773438, 1.0),
+    VBase4(0.63, 0.172, 0.088, 1.0),
+    VBase4(1.0, 0.272, 0.139, 1.0),
+    VBase4(0.4, 0.4, 0.4, 1.0),
+    VBase4(0.2, 0.2, 0.2, 1.0),
+    VBase4(0.4, 0.5, 0.8, 1.0)
+]
 
 
 class HullDNA(AvatarDNA.AvatarDNA):
+    
     def __init__(self):
         self.shipClass = 0
         self.modelClass = 0
@@ -119,15 +139,9 @@ class HullDNA(AvatarDNA.AvatarDNA):
         self.cabinCannonConfig = []
         self.cabinWallDecorConfig = []
         self.cabinWindowConfig = []
-
+    
     def __str__(self):
-        string = 'shipClass %s, hullTextureColor %s:%s:%s, stripeTextureColor %s:%s:%s, patternTextureColor %s:%s:%s, mastConfig1 %s:%s, mastConfig2 %s:%s, mastConfig3 %s:%s, foremastConfig %s:%s, aftmastConfig %s:%s, cannonConfig %s, leftBroadsideConfig %s, rightBroadsideConfig %s, wallDecorConfig %s, floorDecorConfig %s, prowType %s, ramType %s, cabinType %s' % (
-        self.shipClass, self.hullTextureIndex, self.hullColorIndex, self.hullHilightColorIndex, self.stripeTextureIndex,
-        self.stripeColorIndex, self.stripeHilightColorIndex, self.patternTextureIndex, self.patternColorIndex,
-        self.patternHilightColorIndex, self.mastConfig1, self.sailConfig1, self.mastConfig2, self.sailConfig2,
-        self.mastConfig3, self.sailConfig3, self.foremastConfig, self.foresailConfig, self.aftmastConfig,
-        self.aftsailConfig, self.cannonConfig, self.leftBroadsideConfig, self.rightBroadsideConfig,
-        self.wallDecorConfig, self.floorDecorConfig, self.prowType, self.ramType, self.cabinType)
+        string = 'shipClass %s, hullTextureColor %s:%s:%s, stripeTextureColor %s:%s:%s, patternTextureColor %s:%s:%s, mastConfig1 %s:%s, mastConfig2 %s:%s, mastConfig3 %s:%s, foremastConfig %s:%s, aftmastConfig %s:%s, cannonConfig %s, leftBroadsideConfig %s, rightBroadsideConfig %s, wallDecorConfig %s, floorDecorConfig %s, prowType %s, ramType %s, cabinType %s' % (self.shipClass, self.hullTextureIndex, self.hullColorIndex, self.hullHilightColorIndex, self.stripeTextureIndex, self.stripeColorIndex, self.stripeHilightColorIndex, self.patternTextureIndex, self.patternColorIndex, self.patternHilightColorIndex, self.mastConfig1, self.sailConfig1, self.mastConfig2, self.sailConfig2, self.mastConfig3, self.sailConfig3, self.foremastConfig, self.foresailConfig, self.aftmastConfig, self.aftsailConfig, self.cannonConfig, self.leftBroadsideConfig, self.rightBroadsideConfig, self.wallDecorConfig, self.floorDecorConfig, self.prowType, self.ramType, self.cabinType)
         return string
 
     def setShipClass(self, val):
@@ -313,3 +327,4 @@ class HullDNA(AvatarDNA.AvatarDNA):
 
     def getCabinType(self):
         return self.cabinType
+

@@ -6,7 +6,7 @@ from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
 from direct.distributed import DistributedObject
 from direct.gui.DirectGui import *
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.piratesbase.PiratesGlobals import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
@@ -19,11 +19,9 @@ from pirates.shipparts import Hull
 from pirates.shipparts import DistributedShippart
 from pirates.destructibles import DistributedDestructibleArray
 
-
-class DistributedHull(DistributedShippart.DistributedShippart,
-                      DistributedDestructibleArray.DistributedDestructibleArray):
+class DistributedHull(DistributedShippart.DistributedShippart, DistributedDestructibleArray.DistributedDestructibleArray):
     notify = directNotify.newCategory('DistributedHull')
-
+    
     def __init__(self, cr):
         DistributedShippart.DistributedShippart.__init__(self, cr)
         DistributedDestructibleArray.DistributedDestructibleArray.__init__(self, cr)
@@ -48,7 +46,7 @@ class DistributedHull(DistributedShippart.DistributedShippart,
         self.rightDamageLvl = 0
         self.pendingLoadStats = None
         self.pendingStateTest = None
-
+    
     def generate(self):
         self.notify.debug('Generate ' + str(self.doId))
         if not self.prop:
@@ -71,40 +69,38 @@ class DistributedHull(DistributedShippart.DistributedShippart,
                 self.ship.hull[1] = self
                 self.stashFloorCollisions()
                 return
-
+        
         self.prop = Hull.Hull(self.ship, base.cr)
         self.prop.shipId = self.shipId
         self.prop.doId = self.doId
-        self.ship.hull = [
-            self.prop,
-            self]
+        self.ship.hull = [self.prop, self]
         self.stashFloorCollisions()
-
+    
     def propLoaded(self):
         if self.ship.getHp() <= 0:
             return
-
+        
         for i in range(len(self.arrayHp)):
             if self.arrayHp[i] <= 0:
                 panelIndex = self.prop.getPanelIndex(i)
                 self.prop.playBreak(panelIndex, i)
-
+    
     def disable(self):
         self.notify.debug('Disable ' + str(self.doId))
         DistributedShippart.DistributedShippart.disable(self)
         DistributedDestructibleArray.DistributedDestructibleArray.disable(self)
-
+    
     def delete(self):
         self.notify.debug('Delete ' + str(self.doId))
         del self.dna
         if self.ship.hull:
             self.ship.hull[1] = None
-
+        
         del self.leftDamageLvl
         del self.rightDamageLvl
         DistributedShippart.DistributedShippart.delete(self)
         DistributedDestructibleArray.DistributedDestructibleArray.delete(self)
-
+    
     def getFlagDNAString(self):
         return self.ship.getFlagDNAString()
 
@@ -113,14 +109,11 @@ class DistributedHull(DistributedShippart.DistributedShippart,
 
     def getArmorStatus(self):
         if len(self.arrayHp) % 2 == 1:
-            left = 1.0 - (self.arrayHp[1] + self.arrayHp[3] + self.arrayHp[5]) / float(
-                self.maxArrayHp[1] + self.maxArrayHp[3] + self.maxArrayHp[5])
+            left = 1.0 - (self.arrayHp[1] + self.arrayHp[3] + self.arrayHp[5]) / float(self.maxArrayHp[1] + self.maxArrayHp[3] + self.maxArrayHp[5])
             rear = 1.0 - self.arrayHp[0] / float(self.maxArrayHp[0])
-            right = 1.0 - (self.arrayHp[2] + self.arrayHp[4] + self.arrayHp[6]) / float(
-                self.maxArrayHp[2] + self.maxArrayHp[4] + self.maxArrayHp[6])
+            right = 1.0 - (self.arrayHp[2] + self.arrayHp[4] + self.arrayHp[6]) / float(self.maxArrayHp[2] + self.maxArrayHp[4] + self.maxArrayHp[6])
         else:
-            left = 1.0 - (self.arrayHp[1] + self.arrayHp[3] + self.arrayHp[5]) / float(
-                self.maxArrayHp[1] + self.maxArrayHp[3] + self.maxArrayHp[5])
+            left = 1.0 - (self.arrayHp[1] + self.arrayHp[3] + self.arrayHp[5]) / float(self.maxArrayHp[1] + self.maxArrayHp[3] + self.maxArrayHp[5])
             rear = 1.0 - self.arrayHp[0] / float(self.maxArrayHp[0])
             right = 1.0 - (self.arrayHp[2] + self.arrayHp[4]) / float(self.maxArrayHp[2] + self.maxArrayHp[4])
         return (left, rear, right)
@@ -132,11 +125,11 @@ class DistributedHull(DistributedShippart.DistributedShippart,
             deltaHp = int(hpArray[index] - self.arrayHp[index])
             if deltaHp > 0 and self.arrayHp[index] == 0:
                 self.respawn(index)
-
+            
             self.arrayHp[index] = int(hpArray[index])
             if base.cr.config.GetBool('want-ship-hpdisplay', 0) is 1:
                 self.updateHpDisplay(index)
-
+            
             if deltaHp < 0:
                 if self.prop:
                     if self.arrayHp[index] <= 0 and self.arrayHp[index] - deltaHp > 0:
@@ -145,10 +138,10 @@ class DistributedHull(DistributedShippart.DistributedShippart,
         self.arrayHp = copy.copy(hpArray)
         for index in range(len(self.arrayHp)):
             self.arrayHp[index] = int(self.arrayHp[index])
-
+        
         if self.ship:
             self.ship.adjustArmorDisplay()
-
+        
         for index in range(len(self.arrayHp)):
             if index % 2 == 1:
                 if self.arrayHp[index] <= 0:
@@ -160,7 +153,7 @@ class DistributedHull(DistributedShippart.DistributedShippart,
         messenger.send('setHullHp-%s' % self.shipId, self.getArrayHp())
         if self.arrayHp == self.maxArrayHp:
             self.respawnAll()
-
+    
     def getArrayHp(self):
         return [
             self.arrayHp,
@@ -169,10 +162,10 @@ class DistributedHull(DistributedShippart.DistributedShippart,
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         if self.ship.invulnerable():
             return
-
+        
         self.prop.projectileWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker)
 
-    def playDeath(self, index=None):
+    def playDeath(self, index = None):
         if self.prop:
             self.prop.death(index)
 
@@ -202,39 +195,39 @@ class DistributedHull(DistributedShippart.DistributedShippart,
     def loadStats(self, ship):
         if self.stats:
             return
-
+        
         if not self.dna.shipClass:
             return
-
+        
         if self.dna.baseTeam == PiratesGlobals.INVALID_TEAM:
             return
-
+        
         self.stats = ShipGlobals.getHullStats(self.dna.shipClass)
         if self.stats:
             self.maxArrayHp = copy.copy(self.stats['maxArrayHp'])
             self.arrayHp = copy.copy(self.maxArrayHp)
-
+    
     def setDefaultDNA(self):
         newDNA = HullDNA.HullDNA()
         self.setDNA(newDNA)
-
+    
     def setDNA(self, dna):
         if self.dna:
             self.updateDNA(dna)
         else:
             self.dna = dna
-
-    def updateDNA(self, newDNA, fForce=0):
+    
+    def updateDNA(self, newDNA, fForce = 0):
         oldDna = self.dna
         self.dna = newDNA
-
+    
     def setShipId(self, shipId):
         DistributedShippart.DistributedShippart.setShipId(self, shipId)
         if self.pendingLoadStats:
             base.cr.relatedObjectMgr.abortRequest(self.pendingLoadStats)
-
+        
         self.pendingLoadStats = base.cr.relatedObjectMgr.requestObjects([
-            self.shipId], eachCallback=self.loadStats)
+            self.shipId], eachCallback = self.loadStats)
 
     def setShipClass(self, val):
         self.dna.setShipClass(val)
@@ -328,3 +321,4 @@ class DistributedHull(DistributedShippart.DistributedShippart,
 
     def addPropToShip(self):
         self.prop.addToShip()
+

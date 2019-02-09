@@ -1,7 +1,7 @@
 from pirates.ship.DistributedShip import DistributedShip
 
 class BlackPearlShip(DistributedShip):
-
+    
     def __init__(self, cr):
         DistributedShip.__init__(self, cr)
 
@@ -21,8 +21,9 @@ class BlackPearlShip(DistributedShip):
         DistributedShip.handleChildLeave(self, child, zoneId)
         if child.isLocal():
             localAvatar.ship = None
-        return
 
     def loadShipStatusDisplay(self):
         DistributedShip.loadShipStatusDisplay(self)
         self.shipStatusDisplay.hidePermissionButton()
+
+

@@ -1,7 +1,7 @@
 import random
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
-from panda3d.core import *
+from pandac.PandaModules import *
 from direct.showbase.PythonUtil import report
 from pirates.piratesbase.PiratesGlobals import *
 from pirates.piratesbase import PiratesGlobals
@@ -16,8 +16,7 @@ from pirates.battle import WeaponGlobals
 from pirates.ship import ShipGlobals
 from pirates.shipparts import HullDNA
 
-
-def cutGeomTextureStates(geomNode, excludedStages=[]):
+def cutGeomTextureStates(geomNode, excludedStages = []):
     numGeoms = geomNode.getNumGeoms()
     finalPacket = []
     for i in xrange(numGeoms):
@@ -59,7 +58,7 @@ class SplattableObject(NodePath):
         self.smokeEffects = {}
         self.holeLocations = {}
         if not self.holeCard:
-            SplattableObject.holeCard = loader.loadModel('models/effects/battleEffects')
+            SplattableObject.holeCard = loader.loadModelCopy('models/effects/battleEffects')
             SplattableObject.holeTexArray = [
                 [
                     self.holeCard.find('**/effectHoleC').findTexture('*'),
@@ -78,7 +77,7 @@ class SplattableObject(NodePath):
                 SplattableObject.blankTex = blankTex
             else:
                 SplattableObject.blankTex = self.holeCard.find('**/hullBlank').findTexture('*')
-            SplattableObject.shipTextures = loader.loadModel('models/textureCards/shipTextures')
+            SplattableObject.shipTextures = loader.loadModelCopy('models/textureCards/shipTextures')
             for texInfo in SplattableObject.holeTexArray:
                 tex = texInfo[0]
                 tex.setWrapU(Texture.WMBorderColor)
@@ -234,7 +233,7 @@ class SplattableObject(NodePath):
 
             pos = projNode.getPos()
             sfx = random.choice(self.woodBreakSfx)
-            base.playSfx(sfx, node=self, cutoff=2500)
+            base.playSfx(sfx, node = self, cutoff = 2500)
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 cameraShakerEffect = CameraShaker()
                 cameraShakerEffect.reparentTo(self.ship.root)
@@ -281,9 +280,8 @@ class SplattableObject(NodePath):
             panel.setTexture(t, self.holeTex)
             panel.setTexScale(t, 2, 2)
             panel.setTexOffset(t, u, v)
-            attribList = self.cutGeomTextureStates(panel.node(), [
-                'holeLayer'])
-            panel.flattenMultitex(useGeom=0, target=self.holeLayer)
+            attribList = self.cutGeomTextureStates(panel.node(), ['holeLayer'])
+            panel.flattenMultitex(useGeom = 0, target = self.holeLayer)
             self.copyMultitexLayer(panel, self.panelsHigh[index])
             self.pasteGeomTextureStates(panel.node(), attribList)
             del t
@@ -295,24 +293,22 @@ class SplattableObject(NodePath):
             'C',
             'D',
             'E']
+
         for i in xrange(len(self.dna.hullTextureIndex)):
-            self.configColor(geom, 'hull%s' % suffix[i], self.dna.hullTextureIndex[i], self.dna.hullColorIndex[i],
-                             self.dna.hullHilightColorIndex[i])
+            self.configColor(geom, 'hull%s' % suffix[i], self.dna.hullTextureIndex[i], self.dna.hullColorIndex[i], self.dna.hullHilightColorIndex[i])
 
         for i in xrange(len(self.dna.stripeTextureIndex)):
-            self.configColor(geom, 'stripe%s' % suffix[i], self.dna.stripeTextureIndex[i], self.dna.stripeColorIndex[i],
-                             self.dna.stripeHilightColorIndex[i])
+            self.configColor(geom, 'stripe%s' % suffix[i], self.dna.stripeTextureIndex[i], self.dna.stripeColorIndex[i], self.dna.stripeHilightColorIndex[i])
 
         for i in xrange(len(self.dna.patternTextureIndex)):
-            self.configColor(geom, 'pattern%s' % suffix[i], self.dna.patternTextureIndex[i],
-                             self.dna.patternColorIndex[i], self.dna.patternHilightColorIndex[i])
+            self.configColor(geom, 'pattern%s' % suffix[i], self.dna.patternTextureIndex[i], self.dna.patternColorIndex[i], self.dna.patternHilightColorIndex[i])
 
         self.configColor(geom, 'bottom_hull', 255)
         if self.dna.hullTextureIndex or self.dna.stripeTextureIndex or self.dna.patternTextureIndex:
             panels = geom.findAllMatches('**/panel_*/*')
             self.reloadPanelTex(panels)
 
-    def configColor(self, geom, prefix, texIndex=0, color=0, hilightColor=0):
+    def configColor(self, geom, prefix, texIndex = 0, color = 0, hilightColor = 0):
         if texIndex:
             self.setMultitexColorFromRoot(geom, prefix, texIndex, color, hilightColor)
 
@@ -335,13 +331,11 @@ class SplattableObject(NodePath):
             return
 
         colorTs = TextureStage(prefix + 'Color')
-        colorTs.setCombineRgb(TextureStage.CMModulate, TextureStage.CSConstant, TextureStage.COSrcColor,
-                              TextureStage.CSTexture, TextureStage.COSrcColor)
+        colorTs.setCombineRgb(TextureStage.CMModulate, TextureStage.CSConstant, TextureStage.COSrcColor, TextureStage.CSTexture, TextureStage.COSrcColor)
         colorTs.setColor(HullDNA.HullColors[color])
         colorTs.setSort(5)
         blendTs = TextureStage(prefix + 'blendTs')
-        blendTs.setCombineRgb(TextureStage.CMModulate, TextureStage.CSPrimaryColor, TextureStage.COSrcColor,
-                              TextureStage.CSPrevious, TextureStage.COSrcColor)
+        blendTs.setCombineRgb(TextureStage.CMModulate, TextureStage.CSPrimaryColor, TextureStage.COSrcColor, TextureStage.CSPrevious, TextureStage.COSrcColor)
         blendTs.setSort(30)
         colorTex = self.shipTextures.find('**/%s' % filePrefix[0]).findTexture('*')
         if filePrefix[1]:
@@ -434,7 +428,7 @@ class SplattableObject(NodePath):
 
         self.smokeEffects = {}
 
-    def cutGeomTextureStates(self, geomNode, excludedStages=[]):
+    def cutGeomTextureStates(self, geomNode, excludedStages = []):
         numGeoms = geomNode.getNumGeoms()
         finalPacket = []
         for i in xrange(numGeoms):
