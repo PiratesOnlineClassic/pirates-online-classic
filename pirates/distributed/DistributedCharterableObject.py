@@ -1,12 +1,11 @@
 from direct.distributed import DistributedNode
-from direct.distributed.ClockDelta import *
 from direct.task import Task
+from direct.distributed.ClockDelta import *
 from pirates.ship import ShipGlobals
-
 
 class DistributedCharterableObject(DistributedNode.DistributedNode):
     notify = directNotify.newCategory('DistributedCharterableObject')
-
+    
     def __init__(self, cr):
         DistributedNode.DistributedNode.__init__(self, cr)
         self.isInPort = ''
@@ -31,23 +30,23 @@ class DistributedCharterableObject(DistributedNode.DistributedNode):
 
     def stopCharterTask(self):
         taskMgr.remove(self.uniqueName('shipCharterTask'))
-
+    
     def charterTask(self, task):
         ts = globalClockDelta.localElapsedTime(self.charterTimestamp)
         if ts >= ShipGlobals.CHARTER_DURATION:
             return Task.done
         else:
             return Task.cont
-
+    
     def setOwnerId(self, doId):
         self.ownerId = doId
 
     def getOwnerId(self):
         return self.ownerId
-
+    
     def setCharter(self, val):
         self.charter = val
-
+    
     def getCharter(self):
         return self.charter
 
@@ -56,10 +55,12 @@ class DistributedCharterableObject(DistributedNode.DistributedNode):
         localTime = globalClock.getFrameTime()
         self.timerTimestamp = localTime - elapsedTime
         self.timerTime = time
-
+    
     def getTimer(self):
         return self.timerTimestamp
 
     def getTimeLeft(self):
         timePassed = globalClock.getFrameTime() - self.timerTimestamp
         return max(0, self.timerTime - timePassed)
+
+

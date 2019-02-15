@@ -1,6 +1,5 @@
-
 class TargetManagerBase:
-
+    
     def __init__(self):
         self.objectDict = {}
 
@@ -8,7 +7,7 @@ class TargetManagerBase:
         del self.objectDict
 
     def getUniqueId(self, obj):
-        return obj.get_key()
+        return obj.id()
 
     def addTarget(self, nodePathId, obj):
         self.objectDict[nodePathId] = obj
@@ -18,4 +17,6 @@ class TargetManagerBase:
             del self.objectDict[nodePathId]
 
     def getObjectFromNodepath(self, nodePath):
-        return self.objectDict.get(nodePath.get_key(), None)
+        return self.objectDict.get(nodePath.id(), None)
+
+
