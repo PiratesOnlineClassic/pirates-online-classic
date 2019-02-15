@@ -60,7 +60,7 @@ class DistributedInteractive(DistributedNode.DistributedNode, InteractiveBase.In
         self.refreshState()
     
     def refreshState(self):
-        if self.hasProximityCollision and self.allowInteract and not (self.ignoreProximity) and not self.proximityCollisionNodePath.isEmpty():
+        if self.hasProximityCollision and self.allowInteract and not self.ignoreProximity and not self.proximityCollisionNodePath.isEmpty():
             distance = self.proximityCollisionNodePath.getDistance(localAvatar)
             proxSphereRadius = self.proximityCollisionNodePath.getScale()[0]
             avRadius = 1.4
