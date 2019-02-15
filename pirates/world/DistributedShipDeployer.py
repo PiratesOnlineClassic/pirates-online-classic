@@ -1,13 +1,13 @@
 import math
-
+from pandac.PandaModules import *
 from direct.distributed.DistributedNode import DistributedNode
 from direct.showbase.PythonUtil import report
-from panda3d.core import *
-from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 
 class DistributedShipDeployer(DistributedNode):
-
+    
     def __init__(self, cr):
         DistributedNode.__init__(self, cr)
         NodePath.__init__(self, 'ShipDeployer')
@@ -20,7 +20,6 @@ class DistributedShipDeployer(DistributedNode):
         self.maxSphereHard = None
         self.deploySpheres = []
         self.outerBarrierState = True
-        return
 
     @report(types=['frameCount', 'args'], dConfigParam='want-shipboard-report')
     def announceGenerate(self):
@@ -45,7 +44,7 @@ class DistributedShipDeployer(DistributedNode):
         self.ignore(self.uniqueName('enterShipDeploy-MaxSphereHard'))
         self.ignore(self.uniqueName('exitShipDeploy-MaxSphereHard'))
         self.ignore(self.uniqueName('enterShipDeploy-MinSphere'))
-        self.get_children().detach()
+        self.removeChildren()
         self.minSphere = None
         self.maxSphereSoft = None
         self.maxSphereHard = None
@@ -66,22 +65,27 @@ class DistributedShipDeployer(DistributedNode):
 
     def setHeading(self, heading):
         self.heading = heading
-
+    
     def d_shipEnteredSphere(self, shipId, sphereId):
-        self.sendUpdate('shipEnteredSphere', [shipId, sphereId])
+        self.sendUpdate('shipEnteredSphere', [
+            shipId,
+            sphereId])
 
     def d_shipExitedSphere(self, shipId, sphereId):
-        self.sendUpdate('shipExitedSphere', [shipId, sphereId])
-
+        self.sendUpdate('shipExitedSphere', [
+            shipId,
+            sphereId])
+    
     def d_shipExitedBarrier(self, shipId):
-        self.sendUpdate('shipExitedBarrier', [shipId])
+        self.sendUpdate('shipExitedBarrier', [
+            shipId])
 
     @report(types=['frameCount', 'args'], dConfigParam='want-shipboard-report')
     def createSpheres(self):
         self.createMinSphere()
         self.createMaxSpheres()
         self.createDeploySpheres()
-
+    
     def createMinSphere(self):
         cSphere = CollisionSphere(0, 0, 0, self.minRadius)
         cSphere.setTangible(1)
@@ -90,7 +94,7 @@ class DistributedShipDeployer(DistributedNode):
         cSphereNode.setIntoCollideMask(PiratesGlobals.ShipCollideBitmask)
         cSphereNode.addSolid(cSphere)
         self.minSphere = self.attachNewNode(cSphereNode)
-
+    
     def createMaxSpheres(self):
         cSphere = CollisionSphere(0, 0, 0, self.maxRadius)
         cSphere.setTangible(0)
@@ -112,7 +116,7 @@ class DistributedShipDeployer(DistributedNode):
         C = 2 * math.pi * deployRingRadius
         numSpheres = int(C / self.spacing)
         stepAngle = 360.0 / numSpheres
-
+        
         def getSpherePos(sphereId):
             h = sphereId * stepAngle + 90.0 + self.heading
             angle = h * math.pi / 180.0
@@ -153,7 +157,7 @@ class DistributedShipDeployer(DistributedNode):
         self.d_shipEnteredSphere(shipId, sphereId)
         for sphere in self.deploySpheres:
             sphere.stash()
-
+        
         padding = 3
         numSpheres = len(self.deploySpheres)
         for sphere in (s % numSpheres for s in xrange(sphereId - padding, sphereId + padding + 1)):
@@ -175,7 +179,7 @@ class DistributedShipDeployer(DistributedNode):
     def handleShipEnterSoftBarrier(self, colEntry):
         shipId = colEntry.getFromNodePath().getNetTag('shipId')
         shipId = int(shipId)
-        ship = self.cr.doId2do.get(shipId)
+        ship = base.cr.doId2do.get(shipId)
         if ship and not ship.getRespectDeployBarriers():
             self.enableDeploySpheres(True)
 
@@ -183,7 +187,7 @@ class DistributedShipDeployer(DistributedNode):
     def handleShipExitSoftBarrier(self, colEntry):
         shipId = colEntry.getFromNodePath().getNetTag('shipId')
         shipId = int(shipId)
-        ship = self.cr.doId2do.get(shipId)
+        ship = base.cr.doId2do.get(shipId)
         if ship and not ship.getRespectDeployBarriers():
             self.enableDeploySpheres(False)
             self.d_shipExitedBarrier(shipId)
@@ -201,9 +205,13 @@ class DistributedShipDeployer(DistributedNode):
     def enableDeploySpheres(self, enable):
         if base.config.GetBool('want-shipboard-report', 0):
             self.showSpheres()
+        
         if enable:
             for sphere in self.deploySpheres:
                 sphere.unstash()
+            
+        else:
+            for sphere in self.deploySpheres:
+                sphere.stash()
 
-        for sphere in self.deploySpheres:
-            sphere.stash()
+

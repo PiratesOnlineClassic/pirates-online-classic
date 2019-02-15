@@ -1,12 +1,11 @@
-from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObject import DistributedObject
 from pirates.piratesbase import PiratesGlobals
 from pirates.world import WorldGlobals
-
+from direct.directnotify.DirectNotifyGlobal import directNotify
 
 class DistributedLocationManager(DistributedObject):
     notify = directNotify.newCategory('LocationManager')
-
+    
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)
 
@@ -15,11 +14,10 @@ class DistributedLocationManager(DistributedObject):
         self.notify.warning('LocationManager is going offline')
         self.cr.locationMgr = None
         DistributedObject.delete(self)
-        return
 
     def online(self):
         pass
-
+    
     def queryOcean(self):
         self.requestQueryLocation(WorldGlobals.OCEAN)
 
@@ -40,6 +38,8 @@ class DistributedLocationManager(DistributedObject):
 
     def queryShip(self):
         self.requestQueryLocation(WorldGlobals.SHIP)
-
+    
     def queryLocation(self, category):
         self.sendUpdate('requestLocation', [category])
+
+

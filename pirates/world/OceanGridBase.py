@@ -1,7 +1,7 @@
-from panda3d.core import *
+from pandac.PandaModules import *
 
 class OceanGridBase:
-
+    
     def __init__(self):
         NodePath.__init__(self, 'OceanGrid')
 
@@ -12,6 +12,8 @@ class OceanGridBase:
 
     def addObjectToOceanGrid(self, av):
         pass
-
+    
     def removeObjectFromOceanGrid(self, av):
         pass
+
+
