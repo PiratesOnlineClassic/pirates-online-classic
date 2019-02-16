@@ -1,5 +1,3 @@
-# File: G (Python 2.4)
-
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.showbase import DirectObject, TaskThreaded
 
