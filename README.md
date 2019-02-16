@@ -23,7 +23,7 @@ Master is a branch that's stable, you're not to commit directly to master.
 
 ### Develop
 
-Develop is a branch that is used for development purposes, namely it's purpose is for experimental changes and new features, which then get branched off to the QA branch for internal testing. Most temporary develompental branches should be based off this branch.
+Develop is a branch that is used for development purposes, namely it's purpose is for experimental changes and new features, which then get branched off to the QA branch for internal testing. Most temporary developmental branches should be based off this branch.
 
 ### QA
 
