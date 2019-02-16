@@ -1,6 +1,5 @@
-
 class PotentialShard:
-
+    
     def __init__(self, id):
         self.id = id
         self.name = None
@@ -8,3 +7,5 @@ class PotentialShard:
         self.welcomeValleyPopulation = 0
         self.active = 1
         self.available = 1
+
+
