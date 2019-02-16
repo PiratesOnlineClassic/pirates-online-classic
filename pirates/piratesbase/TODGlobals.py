@@ -1,6 +1,5 @@
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
-
 StateDict = {
     PiratesGlobals.TOD_DAWN: 'Dawn',
     PiratesGlobals.TOD_DAWN2DAY: 'Dawn2Day',
@@ -16,16 +15,14 @@ StateDict = {
     PiratesGlobals.TOD_HALLOWEEN: 'HalloweenNight',
     PiratesGlobals.TOD_FULLMOON: 'FullMoon',
     PiratesGlobals.TOD_HALF2FULLMOON: 'Half2FullMoon',
-    PiratesGlobals.TOD_FULL2HALFMOON: 'Full2HalfMoon',
-}
+    PiratesGlobals.TOD_FULL2HALFMOON: 'Full2HalfMoon'}
 TOD_REGULAR_CYCLE = 0
 TOD_HALLOWEEN_CYCLE = 1
 TOD_JOLLYCURSE_CYCLE = 2
 StartingStates = {
     TOD_REGULAR_CYCLE: PiratesGlobals.TOD_DAY,
     TOD_HALLOWEEN_CYCLE: PiratesGlobals.TOD_HALLOWEEN,
-    TOD_JOLLYCURSE_CYCLE: PiratesGlobals.TOD_HALF2FULLMOON
-}
+    TOD_JOLLYCURSE_CYCLE: PiratesGlobals.TOD_HALF2FULLMOON}
 CycleStateTimeList = {
     TOD_REGULAR_CYCLE: [
         (PiratesGlobals.TOD_DAWN, 1),
@@ -37,18 +34,14 @@ CycleStateTimeList = {
         (PiratesGlobals.TOD_NIGHT, 4),
         (PiratesGlobals.TOD_NIGHT2STARS, 2),
         (PiratesGlobals.TOD_STARS, 4),
-        (PiratesGlobals.TOD_STARS2DAWN, 1),
-    ], 
+        (PiratesGlobals.TOD_STARS2DAWN, 1)],
     TOD_HALLOWEEN_CYCLE: [
-        (PiratesGlobals.TOD_HALLOWEEN, 24)
-    ],
+        (PiratesGlobals.TOD_HALLOWEEN, 24)],
     TOD_JOLLYCURSE_CYCLE: [
         (PiratesGlobals.TOD_HALF2FULLMOON, 2),
         (PiratesGlobals.TOD_FULLMOON, 4),
         (PiratesGlobals.TOD_FULL2HALFMOON, 2),
-        (PiratesGlobals.TOD_HALLOWEEN, 16)
-    ]
-}
+        (PiratesGlobals.TOD_HALLOWEEN, 16)]}
 StateBreakdownList = {}
 StateBeginTimeList = {}
 NumStates = {}
@@ -63,7 +56,7 @@ for cycleKey in cycles:
         StateBeginTimeList[cycleKey][state[0]] = totalHours / 24.0
         StateBreakdownList[cycleKey][state[0]] = state[1] / 24.0
         totalHours += state[1]
-
+    
 
 def getStartingState(cycleId):
     return StartingStates.get(cycleId)
@@ -90,9 +83,7 @@ def getStateId(stateName):
     for stateId in stateKeys:
         if StateDict.get(stateId) == stateName:
             return stateId
-
-    return
-
+    return None
 
 def getNextStateId(cycleId, stateId):
     cycle = CycleStateTimeList.get(cycleId)
@@ -100,7 +91,7 @@ def getNextStateId(cycleId, stateId):
     for i in range(numStates - 1):
         if cycle[i][0] == stateId and i + 1 < numStates:
             return cycle[i + 1][0]
-
+    
     return cycle[0][0]
 
 
@@ -109,9 +100,8 @@ def isStateIdValid(cycleId, stateId):
     for state in cycle:
         if state[0] == stateId:
             return True
-
+    
     return False
-
 
 ENV_DEFAULT = 0
 ENV_FOREST = 1
@@ -192,8 +182,7 @@ ShadowColorTable = [
     (240, 0.8),
     (330, 0.8),
     (345, 1.0),
-    (360, 1.0),
-]
+    (360, 1.0)]
 AmbientLightColors = {
     ENV_DEFAULT: {
         PiratesGlobals.TOD_DAWN: DAWN_AMBIENT_COLOR,
@@ -202,8 +191,7 @@ AmbientLightColors = {
         PiratesGlobals.TOD_NIGHT: NIGHT_AMBIENT_COLOR,
         PiratesGlobals.TOD_STARS: STARS_AMBIENT_COLOR,
         PiratesGlobals.TOD_HALLOWEEN: HALLOWEEN_AMBIENT_COLOR,
-        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_AMBIENT_COLOR,
-    },
+        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_AMBIENT_COLOR},
     ENV_FOREST: {
         PiratesGlobals.TOD_DAWN: FOREST_AMBIENT_COLOR,
         PiratesGlobals.TOD_DAY: FOREST_AMBIENT_COLOR,
@@ -211,8 +199,7 @@ AmbientLightColors = {
         PiratesGlobals.TOD_NIGHT: FOREST_AMBIENT_COLOR,
         PiratesGlobals.TOD_STARS: FOREST_AMBIENT_COLOR,
         PiratesGlobals.TOD_HALLOWEEN: HALLOWEEN_AMBIENT_COLOR,
-        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_AMBIENT_COLOR,
-    },
+        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_AMBIENT_COLOR},
     ENV_SWAMP: {
         PiratesGlobals.TOD_DAWN: SWAMP_AMBIENT_COLOR,
         PiratesGlobals.TOD_DAY: SWAMP_AMBIENT_COLOR,
@@ -220,8 +207,7 @@ AmbientLightColors = {
         PiratesGlobals.TOD_NIGHT: SWAMP_AMBIENT_COLOR,
         PiratesGlobals.TOD_STARS: SWAMP_AMBIENT_COLOR,
         PiratesGlobals.TOD_HALLOWEEN: HALLOWEEN_AMBIENT_COLOR,
-        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_AMBIENT_COLOR,
-    },
+        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_AMBIENT_COLOR},
     ENV_CAVE: {
         PiratesGlobals.TOD_DAWN: CAVE_AMBIENT_COLOR,
         PiratesGlobals.TOD_DAY: CAVE_AMBIENT_COLOR,
@@ -229,8 +215,7 @@ AmbientLightColors = {
         PiratesGlobals.TOD_NIGHT: CAVE_AMBIENT_COLOR,
         PiratesGlobals.TOD_STARS: CAVE_AMBIENT_COLOR,
         PiratesGlobals.TOD_HALLOWEEN: CAVE_HALLOWEEN_AMBIENT_COLOR,
-        PiratesGlobals.TOD_FULLMOON: CAVE_HALLOWEEN_AMBIENT_COLOR,
-    },
+        PiratesGlobals.TOD_FULLMOON: CAVE_HALLOWEEN_AMBIENT_COLOR},
     ENV_LAVACAVE: {
         PiratesGlobals.TOD_DAWN: LAVACAVE_AMBIENT_COLOR,
         PiratesGlobals.TOD_DAY: LAVACAVE_AMBIENT_COLOR,
@@ -238,9 +223,7 @@ AmbientLightColors = {
         PiratesGlobals.TOD_NIGHT: LAVACAVE_AMBIENT_COLOR,
         PiratesGlobals.TOD_STARS: LAVACAVE_AMBIENT_COLOR,
         PiratesGlobals.TOD_HALLOWEEN: CAVE_HALLOWEEN_AMBIENT_COLOR,
-        PiratesGlobals.TOD_FULLMOON: CAVE_HALLOWEEN_AMBIENT_COLOR,
-    },
-}
+        PiratesGlobals.TOD_FULLMOON: CAVE_HALLOWEEN_AMBIENT_COLOR}}
 DirectionalLightColors = {
     ENV_DEFAULT: {
         PiratesGlobals.TOD_DAWN: DAWN_DIRECTIONAL_COLOR,
@@ -249,8 +232,7 @@ DirectionalLightColors = {
         PiratesGlobals.TOD_NIGHT: NIGHT_DIRECTIONAL_COLOR,
         PiratesGlobals.TOD_STARS: STARS_DIRECTIONAL_COLOR,
         PiratesGlobals.TOD_HALLOWEEN: HALLOWEEN_DIRECTIONAL_COLOR,
-        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_DIRECTIONAL_COLOR,
-    },
+        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_DIRECTIONAL_COLOR},
     ENV_FOREST: {
         PiratesGlobals.TOD_DAWN: FOREST_DIRECTIONAL_COLOR,
         PiratesGlobals.TOD_DAY: FOREST_DIRECTIONAL_COLOR,
@@ -258,8 +240,7 @@ DirectionalLightColors = {
         PiratesGlobals.TOD_NIGHT: FOREST_DIRECTIONAL_COLOR,
         PiratesGlobals.TOD_STARS: FOREST_DIRECTIONAL_COLOR,
         PiratesGlobals.TOD_HALLOWEEN: HALLOWEEN_DIRECTIONAL_COLOR,
-        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_DIRECTIONAL_COLOR,
-    },
+        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_DIRECTIONAL_COLOR},
     ENV_SWAMP: {
         PiratesGlobals.TOD_DAWN: SWAMP_DIRECTIONAL_COLOR,
         PiratesGlobals.TOD_DAY: SWAMP_DIRECTIONAL_COLOR,
@@ -267,8 +248,7 @@ DirectionalLightColors = {
         PiratesGlobals.TOD_NIGHT: SWAMP_DIRECTIONAL_COLOR,
         PiratesGlobals.TOD_STARS: SWAMP_DIRECTIONAL_COLOR,
         PiratesGlobals.TOD_HALLOWEEN: HALLOWEEN_DIRECTIONAL_COLOR,
-        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_DIRECTIONAL_COLOR,
-    },
+        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_DIRECTIONAL_COLOR},
     ENV_CAVE: {
         PiratesGlobals.TOD_DAWN: CAVE_DIRECTIONAL_COLOR,
         PiratesGlobals.TOD_DAY: CAVE_DIRECTIONAL_COLOR,
@@ -276,8 +256,7 @@ DirectionalLightColors = {
         PiratesGlobals.TOD_NIGHT: CAVE_DIRECTIONAL_COLOR,
         PiratesGlobals.TOD_STARS: CAVE_DIRECTIONAL_COLOR,
         PiratesGlobals.TOD_HALLOWEEN: CAVE_HALLOWEEN_DIRECTIONAL_COLOR,
-        PiratesGlobals.TOD_FULLMOON: CAVE_HALLOWEEN_DIRECTIONAL_COLOR,
-    },
+        PiratesGlobals.TOD_FULLMOON: CAVE_HALLOWEEN_DIRECTIONAL_COLOR},
     ENV_LAVACAVE: {
         PiratesGlobals.TOD_DAWN: LAVACAVE_DIRECTIONAL_COLOR,
         PiratesGlobals.TOD_DAY: LAVACAVE_DIRECTIONAL_COLOR,
@@ -285,17 +264,14 @@ DirectionalLightColors = {
         PiratesGlobals.TOD_NIGHT: LAVACAVE_DIRECTIONAL_COLOR,
         PiratesGlobals.TOD_STARS: LAVACAVE_DIRECTIONAL_COLOR,
         PiratesGlobals.TOD_HALLOWEEN: CAVE_HALLOWEEN_DIRECTIONAL_COLOR,
-        PiratesGlobals.TOD_FULLMOON: CAVE_HALLOWEEN_DIRECTIONAL_COLOR,
-    },
-}
+        PiratesGlobals.TOD_FULLMOON: CAVE_HALLOWEEN_DIRECTIONAL_COLOR}}
 GrassLightColors = {
     PiratesGlobals.TOD_DAWN: DAWN_DIRECTIONAL_COLOR,
     PiratesGlobals.TOD_DAY: DAY_DIRECTIONAL_COLOR,
     PiratesGlobals.TOD_DUSK: DUSK_DIRECTIONAL_COLOR,
     PiratesGlobals.TOD_NIGHT: NIGHT_DIRECTIONAL_COLOR,
     PiratesGlobals.TOD_STARS: STARS_DIRECTIONAL_COLOR,
-    PiratesGlobals.TOD_HALLOWEEN: HALLOWEEN_DIRECTIONAL_COLOR,
-}
+    PiratesGlobals.TOD_HALLOWEEN: HALLOWEEN_DIRECTIONAL_COLOR}
 FogColors = {
     ENV_DEFAULT: {
         PiratesGlobals.TOD_DAWN: DAWN_FOG_COLOR,
@@ -304,8 +280,7 @@ FogColors = {
         PiratesGlobals.TOD_NIGHT: NIGHT_FOG_COLOR,
         PiratesGlobals.TOD_STARS: STARS_FOG_COLOR,
         PiratesGlobals.TOD_HALLOWEEN: HALLOWEEN_FOG_COLOR,
-        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_FOG_COLOR,
-    },
+        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_FOG_COLOR},
     ENV_FOREST: {
         PiratesGlobals.TOD_DAWN: FOREST_DAWN_FOG_COLOR,
         PiratesGlobals.TOD_DAY: FOREST_DAY_FOG_COLOR,
@@ -313,8 +288,7 @@ FogColors = {
         PiratesGlobals.TOD_NIGHT: FOREST_NIGHT_FOG_COLOR,
         PiratesGlobals.TOD_STARS: FOREST_STARS_FOG_COLOR,
         PiratesGlobals.TOD_HALLOWEEN: HALLOWEEN_FOG_COLOR,
-        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_FOG_COLOR,
-    },
+        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_FOG_COLOR},
     ENV_SWAMP: {
         PiratesGlobals.TOD_DAWN: SWAMP_FOG_COLOR,
         PiratesGlobals.TOD_DAY: SWAMP_FOG_COLOR,
@@ -322,8 +296,7 @@ FogColors = {
         PiratesGlobals.TOD_NIGHT: SWAMP_FOG_COLOR,
         PiratesGlobals.TOD_STARS: SWAMP_FOG_COLOR,
         PiratesGlobals.TOD_HALLOWEEN: HALLOWEEN_FOG_COLOR,
-        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_FOG_COLOR,
-    },
+        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_FOG_COLOR},
     ENV_CAVE: {
         PiratesGlobals.TOD_DAWN: CAVE_FOG_COLOR,
         PiratesGlobals.TOD_DAY: CAVE_FOG_COLOR,
@@ -331,8 +304,7 @@ FogColors = {
         PiratesGlobals.TOD_NIGHT: CAVE_FOG_COLOR,
         PiratesGlobals.TOD_STARS: CAVE_FOG_COLOR,
         PiratesGlobals.TOD_HALLOWEEN: HALLOWEEN_FOG_COLOR,
-        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_FOG_COLOR,
-    },
+        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_FOG_COLOR},
     ENV_LAVACAVE: {
         PiratesGlobals.TOD_DAWN: LAVACAVE_FOG_COLOR,
         PiratesGlobals.TOD_DAY: LAVACAVE_FOG_COLOR,
@@ -340,9 +312,7 @@ FogColors = {
         PiratesGlobals.TOD_NIGHT: LAVACAVE_FOG_COLOR,
         PiratesGlobals.TOD_STARS: LAVACAVE_FOG_COLOR,
         PiratesGlobals.TOD_HALLOWEEN: HALLOWEEN_FOG_COLOR,
-        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_FOG_COLOR,
-    },
-}
+        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_FOG_COLOR}}
 FogExps = {
     ENV_DEFAULT: {
         PiratesGlobals.TOD_DAWN: DAWN_FOG_EXP,
@@ -351,8 +321,7 @@ FogExps = {
         PiratesGlobals.TOD_NIGHT: NIGHT_FOG_EXP,
         PiratesGlobals.TOD_STARS: STARS_FOG_EXP,
         PiratesGlobals.TOD_HALLOWEEN: HALLOWEEN_FOG_EXP,
-        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_FOG_EXP,
-    },
+        PiratesGlobals.TOD_FULLMOON: HALLOWEEN_FOG_EXP},
     ENV_FOREST: {
         PiratesGlobals.TOD_DAWN: FOREST_FOG_EXP,
         PiratesGlobals.TOD_DAY: FOREST_FOG_EXP,
@@ -360,8 +329,7 @@ FogExps = {
         PiratesGlobals.TOD_NIGHT: FOREST_FOG_EXP,
         PiratesGlobals.TOD_STARS: FOREST_NIGHT_FOG_EXP,
         PiratesGlobals.TOD_HALLOWEEN: FOREST_NIGHT_FOG_EXP,
-        PiratesGlobals.TOD_FULLMOON: FOREST_NIGHT_FOG_EXP,
-    },
+        PiratesGlobals.TOD_FULLMOON: FOREST_NIGHT_FOG_EXP},
     ENV_SWAMP: {
         PiratesGlobals.TOD_DAWN: SWAMP_FOG_EXP,
         PiratesGlobals.TOD_DAY: SWAMP_FOG_EXP,
@@ -369,8 +337,7 @@ FogExps = {
         PiratesGlobals.TOD_NIGHT: SWAMP_FOG_EXP,
         PiratesGlobals.TOD_STARS: SWAMP_FOG_EXP,
         PiratesGlobals.TOD_HALLOWEEN: SWAMP_FOG_EXP,
-        PiratesGlobals.TOD_FULLMOON: SWAMP_FOG_EXP,
-    },
+        PiratesGlobals.TOD_FULLMOON: SWAMP_FOG_EXP},
     ENV_CAVE: {
         PiratesGlobals.TOD_DAWN: CAVE_FOG_EXP,
         PiratesGlobals.TOD_DAY: CAVE_FOG_EXP,
@@ -378,8 +345,7 @@ FogExps = {
         PiratesGlobals.TOD_NIGHT: CAVE_FOG_EXP,
         PiratesGlobals.TOD_STARS: CAVE_FOG_EXP,
         PiratesGlobals.TOD_HALLOWEEN: CAVE_FOG_EXP,
-        PiratesGlobals.TOD_FULLMOON: CAVE_FOG_EXP,
-    },
+        PiratesGlobals.TOD_FULLMOON: CAVE_FOG_EXP},
     ENV_LAVACAVE: {
         PiratesGlobals.TOD_DAWN: LAVACAVE_FOG_EXP,
         PiratesGlobals.TOD_DAY: LAVACAVE_FOG_EXP,
@@ -387,15 +353,13 @@ FogExps = {
         PiratesGlobals.TOD_NIGHT: LAVACAVE_FOG_EXP,
         PiratesGlobals.TOD_STARS: LAVACAVE_FOG_EXP,
         PiratesGlobals.TOD_HALLOWEEN: LAVACAVE_FOG_EXP,
-        PiratesGlobals.TOD_FULLMOON: LAVACAVE_FOG_EXP,
-    },
-}
+        PiratesGlobals.TOD_FULLMOON: LAVACAVE_FOG_EXP}}
 SkyColors = {
-    PiratesGlobals.TOD_DAWN: Vec4(0.72, 0.72, 0.52, 1),
-    PiratesGlobals.TOD_DAY: Vec4(0.4, 0.6, 0.85, 1),
-    PiratesGlobals.TOD_DUSK: Vec4(0.65, 0.55, 0.5, 1),
-    PiratesGlobals.TOD_NIGHT: Vec4(0.075, 0.13, 0.26, 1),
-    PiratesGlobals.TOD_STARS: Vec4(0.075, 0.13, 0.26, 1) * 0.3,
-    PiratesGlobals.TOD_HALLOWEEN: Vec4(0.075, 0.05, 0.12, 1),
-    PiratesGlobals.TOD_SWAMP: Vec4(0.2, 0.25, 0.3, 1),
+  PiratesGlobals.TOD_DAWN: Vec4(0.72, 0.72, 0.52, 1),
+  PiratesGlobals.TOD_DAY: Vec4(0.4, 0.6, 0.85, 1),
+  PiratesGlobals.TOD_DUSK: Vec4(0.65, 0.55, 0.5, 1),
+  PiratesGlobals.TOD_NIGHT: Vec4(0.075, 0.13, 0.26, 1),
+  PiratesGlobals.TOD_STARS: Vec4(0.075, 0.13, 0.26, 1) * 0.3,
+  PiratesGlobals.TOD_HALLOWEEN: Vec4(0.075, 0.05, 0.12, 1),
+  PiratesGlobals.TOD_SWAMP: Vec4(0.2, 0.25, 0.3, 1)
 }

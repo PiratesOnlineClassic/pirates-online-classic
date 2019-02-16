@@ -1,12 +1,11 @@
-from pirates.piratesbase import PLocalizer
-from direct.gui import DirectButton, DirectFrame
-from otp.otpbase import OTPLocalizer as OL
+from pandac.PandaModules import *
+import PLocalizer
 from otp.otpbase.OTPGlobals import *
-from panda3d.core import *
-from pirates.piratesbase import PLocalizer as PL
-from pirates.piratesgui import PDialog
+from direct.gui import DirectFrame
+from direct.gui import DirectButton
 from pirates.uberdog.UberDogGlobals import *
-
+from pirates.piratesbase import PLocalizer as PL
+from otp.otpbase import OTPLocalizer as OL
 searchPath = DSearchPath()
 for i in range(getModelPath().getNumDirectories()):
     searchPath.appendDirectory(getModelPath().getDirectory(i))
@@ -87,7 +86,8 @@ TUTORIAL_ENEMY_TEAM = 6
 FRENCH_UNDEAD_TEAM = 7
 SPANISH_UNDEAD_TEAM = 8
 NeutralTeams = [
- PLAYER_TEAM, VILLAGER_TEAM]
+    PLAYER_TEAM,
+    VILLAGER_TEAM]
 FriendlyTeams = []
 NEUTRAL = 0
 PVP_ENEMY = 1
@@ -104,19 +104,19 @@ ISLAND_TEAM_STR = 'Island'
 TUTORIAL_ENEMY_TEAM_STR = 'TutorialEnemy'
 FRENCH_UNDEAD_TEAM_STR = 'French Undead'
 SPANISH_UNDEAD_TEAM_STR = 'Spanish Undead'
-PLAYER_NAMETAG = (
- 1, 0.8, 0.5, 1)
+PLAYER_NAMETAG = (1, 0.8, 0.5, 1)
 UNDEAD_NAMETAG = (0.6, 0.6, 0.6, 1)
 NAVY_NAMETAG = (1, 0.2, 0.2, 1)
 FRENCH_NAMETAG = (0.1, 0.1, 0.44, 1.0)
 SPANISH_NAMETAG = (0.85, 0.65, 0.13, 1.0)
 NAMETAG_WORDWRAP = 100
 MAX_COMBAT_DAMAGE = 999
-AI_BROADCAST_PERIOD = ConfigVariableDouble('smooth-lag', 0.2).getValue() * 0.9
+AI_BROADCAST_PERIOD = config.GetDouble('smooth-lag', 0.2) * 0.9
 AI_MOVEMENT_PERIOD = AI_BROADCAST_PERIOD * 0.9
-AI_EXAMINE_EVERY = ConfigVariableInt('ai-examine-every', 2).getValue()
+AI_EXAMINE_EVERY = config.GetInt('ai-examine-every', 2)
 IDLES_DONT_EXAMINE = [
- VILLAGER_TEAM, PLAYER_TEAM]
+    VILLAGER_TEAM,
+    PLAYER_TEAM]
 COLL_MODE_NONE = 0
 COLL_MODE_FLOORS_CL = 1
 COLL_MODE_INTERACT = 2
@@ -155,7 +155,11 @@ ShipZoneSilhouette = InventoryCategory.SHIP_MAINPARTS
 ShipZoneDistance = InventoryCategory.SHIP_ACCESSORIES
 ShipZoneDetails = 1000
 ShipZoneOnDeck = 500
-ShipZones = [OnDeckZoneDist, DetailsZoneDist, DistanceZoneDist, SilhouetteZoneDist]
+ShipZones = [
+    OnDeckZoneDist,
+    DetailsZoneDist,
+    DistanceZoneDist,
+    SilhouetteZoneDist]
 COLL_AV = 1
 COLL_SEA = 2
 COLL_LAND = 3
@@ -208,18 +212,17 @@ def getInterfaceOutlineFont():
         if InterfaceOutlineFontPath == None:
             InterfaceOutlineFont = TextNode.getDefaultFont()
         else:
-            InterfaceOutlineFont = loader.loadFont(InterfaceOutlineFontPath, lineHeight=1.0)
+            InterfaceOutlineFont = loader.loadFont(InterfaceOutlineFontPath, lineHeight = 1.0)
             if not InterfaceOutlineFont.isValid():
                 InterfaceOutlineFont = TextNode.getDefaultFont()
+
     return InterfaceOutlineFont
 
 
 def setInterfaceOutlineFont(path):
-    global InterfaceOutlineFont
-    global InterfaceOutlineFontPath
+    global InterfaceOutlineFontPath, InterfaceOutlineFont
     InterfaceOutlineFontPath = path
     InterfaceOutlineFont = None
-    return
 
 
 def getPirateFont():
@@ -228,18 +231,17 @@ def getPirateFont():
         if PirateFontPath == None:
             PirateFont = TextNode.getDefaultFont()
         else:
-            PirateFont = loader.loadFont(PirateFontPath, lineHeight=1.0)
+            PirateFont = loader.loadFont(PirateFontPath, lineHeight = 1.0)
             if not PirateFont.isValid():
                 PirateFont = TextNode.getDefaultFont()
+    
     return PirateFont
 
 
 def setPirateFont(path):
-    global PirateFont
-    global PirateFontPath
+    global PirateFontPath, PirateFont
     PirateFontPath = path
     PirateFont = None
-    return
 
 
 def getPirateOutlineFont():
@@ -248,18 +250,17 @@ def getPirateOutlineFont():
         if PirateOutlineFontPath == None:
             PirateOutlineFont = TextNode.getDefaultFont()
         else:
-            PirateOutlineFont = loader.loadFont(PirateOutlineFontPath, lineHeight=1.0)
+            PirateOutlineFont = loader.loadFont(PirateOutlineFontPath, lineHeight = 1.0)
             if not PirateOutlineFont.isValid():
                 PirateOutlineFont = TextNode.getDefaultFont()
+
     return PirateOutlineFont
 
 
 def setPirateOutlineFont(path):
-    global PirateOutlineFont
-    global PirateOutlineFontPath
+    global PirateOutlineFontPath, PirateOutlineFont
     PirateOutlineFontPath = path
     PirateOutlineFont = None
-    return
 
 
 def getPirateBoldOutlineFont():
@@ -268,15 +269,15 @@ def getPirateBoldOutlineFont():
         if PirateBoldOutlineFontPath == None:
             PirateBoldOutlineFont = TextNode.getDefaultFont()
         else:
-            PirateBoldOutlineFont = loader.loadFont(PirateBoldOutlineFontPath, lineHeight=1.0)
+            PirateBoldOutlineFont = loader.loadFont(PirateBoldOutlineFontPath, lineHeight = 1.0)
             if not PirateBoldOutlineFont.isValid():
                 PirateBoldOutlineFont = TextNode.getDefaultFont()
+
     return PirateBoldOutlineFont
 
 
 def setPirateBoldOutlineFont(path):
-    global PirateBoldOutlineFont
-    global PirateBoldOutlineFontPath
+    global PirateBoldOutlineFontPath, PirateBoldOutlineFont
     PirateBoldOutlineFontPath = path
     PirateBoldOutlineFont = None
 
@@ -287,23 +288,26 @@ setSignFont(PLocalizer.SignFont)
 setPirateFont(PLocalizer.PirateChippedFont)
 setPirateOutlineFont(PLocalizer.PirateChippedOutlineFont)
 setPirateBoldOutlineFont(PLocalizer.PirateBoldOutlineFont)
+from pirates.piratesgui import PDialog
 setDialogClasses(PDialog.PDialog, PDialog.PGlobalDialog)
 PirateDialog = None
 LogoutHotkey = 'shift-f2'
-ScreenshotHotkeyList = ['f9', 'control-f9']
+ScreenshotHotkeyList = [
+    'f9',
+    'control-f9']
 ScreenshotViewerHotkey = 'shift-f9'
-MarketingHotkeyList = ['.']
+MarketingHotkeyList = [
+    '.']
 SpeedChatHotkey = '`'
 SeaChestHotkey = 'uber-tab'
 EscapeHotkey = 'uber-escape'
-if ConfigVariableBool('want-dev-hotkeys', False).getValue():
+if config.GetBool('want-dev-hotkeys', 0):
     ShipHotkey = 'f11'
     KrakenHotkey = 'f10'
     SynchronizeHotkey = 'f6'
-GlobalDialogColor = (
- 1, 1, 0.75, 1)
-DefaultBackgroundColor = (
- 0.3, 0.3, 0.3, 1)
+
+GlobalDialogColor = (1, 1, 0.75, 1)
+DefaultBackgroundColor = (0.3, 0.3, 0.3, 1)
 DynamicZonesBegin = 61000
 DynamicZonesEnd = 1 << 20
 ToonStandableGround = 0.707
@@ -314,8 +318,12 @@ SPEED_SLOW_INDEX = 3
 SPEED_CARRY_INDEX = 4
 SPEED_HEAVY_INDEX = 5
 PirateSpeeds = [
- (
-  24.0, 24.0, 8.0, 120.0), (24.0, 24.0, 8.0, 120.0), (24.0, 24.0, 8.0, 120.0), (6.0, 4.0, 2.5, 33.0), (16.0, 8.0, 8.0, 80.0), (12.0, 8.0, 4.0, 80.0)]
+    (24.0, 24.0, 8.0, 120.0),
+    (24.0, 24.0, 8.0, 120.0),
+    (24.0, 24.0, 8.0, 120.0),
+    (6.0, 4.0, 2.5, 33.0),
+    (16.0, 8.0, 8.0, 80.0),
+    (12.0, 8.0, 4.0, 80.0)]
 ToonForwardFastSpeed = 24.0
 ToonJumpFastForce = 24.0
 ToonReverseFastSpeed = 8.0
@@ -352,23 +360,20 @@ SPIN_LEFT_INDEX = 12
 SPIN_RIGHT_INDEX = 13
 SWIM_WALK_TRANSITION_TIME = 0.5
 AnimScaleTable = {
-  'models/char/mp_walk_gp8': 0.35,
-  'models/char/mp_walk_gp4': 0.35,
-  'models/char/mp_walk': 0.1,
-  'models/char/mp_bayonet_walk': 0.2,
-  'models/char/mp_run_gp8': 0.0971,
-  'models/char/mp_run': 0.03,
-  'models/char/mp_bayonet_run_mtm': 0.03,
-  'models/char/mp_bayonet_run': 0.03,
-  'models/char/mp_run_mtm': 0.03,
-  'models/char/mp_run_mtp': 0.03,
-  'models/char/mp_run_mmi': 0.03
-}
-
+    'models/char/mp_walk_gp8': 0.35,
+    'models/char/mp_walk_gp4': 0.35,
+    'models/char/mp_walk': 0.1,
+    'models/char/mp_bayonet_walk': 0.2,
+    'models/char/mp_run_gp8': 0.0971,
+    'models/char/mp_run': 0.03,
+    'models/char/mp_bayonet_run_mtm': 0.03,
+    'models/char/mp_bayonet_run': 0.03,
+    'models/char/mp_run_mtm': 0.03,
+    'models/char/mp_run_mtp': 0.03,
+    'models/char/mp_run_mmi': 0.03}
 
 def GetAnimScale(animName):
     return AnimScaleTable.get(animName)
-
 
 SPHidden = 0
 SPRender = 1
@@ -390,8 +395,7 @@ TOD_HALLOWEEN = 12
 TOD_FULLMOON = 13
 TOD_FULL2HALFMOON = 14
 TOD_HALF2FULLMOON = 15
-TOD_ALL = (
- TOD_DAWN, TOD_DAWN2DAY, TOD_DAY, TOD_DAY2DUSK, TOD_DUSK, TOD_DUSK2NIGHT, TOD_NIGHT, TOD_NIGHT2STARS, TOD_STARS, TOD_STARS2DAWN)
+TOD_ALL = (TOD_DAWN, TOD_DAWN2DAY, TOD_DAY, TOD_DAY2DUSK, TOD_DUSK, TOD_DUSK2NIGHT, TOD_NIGHT, TOD_NIGHT2STARS, TOD_STARS, TOD_STARS2DAWN)
 TOD_CYCLE_DURATION = 3600.0
 TUT_STARTED = 0
 TUT_MADE_PIRATE = 1
@@ -430,11 +434,26 @@ LOCATION_SPHERE = 'LOC_SPHERE'
 SPHERE_ENTER_SUFFIX = '_ENTER'
 SPHERE_EXIT_SUFFIX = '_EXIT'
 IslandPos = [
- (
-  -750, 0, 0, 90, 0, 0), (750, 0, 0, -90, 0, 0), (0, 750, 0, 0, 0, 0), (0, -750, 0, 180, 0, 0)]
+    (-750, 0, 0, 90, 0, 0),
+    (750, 0, 0, -90, 0, 0),
+    (0, 750, 0, 0, 0, 0),
+    (0, -750, 0, 180, 0, 0)]
 NumIslands = [
- 2, 2, 4]
-IslandTeams = [[0, -1], [0, 1], [0, 1, 2, 3]]
+    2,
+    2,
+    4]
+IslandTeams = [
+    [
+        0,
+        -1],
+    [
+        0,
+        1],
+    [
+        0,
+        1,
+        2,
+        3]]
 LOC_PIRATES = '12345'
 INSTANCE_NONE = 0
 INSTANCE_GENERIC = 1
@@ -450,9 +469,11 @@ SHARD_MAIN = 1
 SHARD_LOW_LATENCY = 2
 SHARD_WELCOME = 3
 INSTANCE_NO_NEWS_MESSAGES = [
- INSTANCE_TM, INSTANCE_PG, INSTANCE_TUTORIAL, INSTANCE_PVP]
-LowLatencyInstanceTypes = (
- INSTANCE_PVP,)
+    INSTANCE_TM,
+    INSTANCE_PG,
+    INSTANCE_TUTORIAL,
+    INSTANCE_PVP]
+LowLatencyInstanceTypes = (INSTANCE_PVP,)
 GAME_TYPE_PG = 0
 GAME_TYPE_PVP = 1
 GAME_TYPE_HSA = 2
@@ -478,20 +499,18 @@ CREW_STYLE_FIND_A_PVP_CREW = 14
 GAME_STYLE_TM_ANY = GAME_STYLE_ANY
 GAME_STYLE_TM_BLACK_PEARL = 0
 DYNAMIC_GAME_STYLE_PROPS = {
-  GAME_TYPE_TM: {
-    GAME_STYLE_TM_BLACK_PEARL: {
-      'Name': PLocalizer.BlackPearlTMName,
-      'Desc': PLocalizer.BlackPearlTMDesc,
-      'MapName': 'BlackpearlWorld',
-      'NumPlayers': [2, 12]
-    },
-    GAME_STYLE_ANY: {
-      'Name': PLocalizer.AnyTMName,
-      'Desc': '',
-      'MapName': ''
-    }
-  }
-}
+    GAME_TYPE_TM: {
+        GAME_STYLE_TM_BLACK_PEARL: {
+            'Name': PLocalizer.BlackPearlTMName,
+            'Desc': PLocalizer.BlackPearlTMDesc,
+            'MapName': 'BlackpearlWorld',
+            'NumPlayers': [
+                2,
+                12]},
+        GAME_STYLE_ANY: {
+            'Name': PLocalizer.AnyTMName,
+            'Desc': '',
+            'MapName': ''}}}
 LOOKOUT_INVITE_NONE = 0
 LOOKOUT_INVITE_CREW = 1
 LOOKOUT_INVITE_GUILD = 2
@@ -548,8 +567,7 @@ INTERACT_TYPE_HOSTILE = 1
 INTERACT_TYPE_S2SBOARD = 2
 S2SBOARD_SUCCESS_MSG = 'S2SBoarding complete-'
 
-
-def teamStr2TeamId(typeStr, defaultTeam=PLAYER_TEAM):
+def teamStr2TeamId(typeStr, defaultTeam = PLAYER_TEAM):
     team = defaultTeam
     if typeStr == NAVY_TEAM_STR:
         team = NAVY_TEAM
@@ -565,8 +583,8 @@ def teamStr2TeamId(typeStr, defaultTeam=PLAYER_TEAM):
         team = SPANISH_UNDEAD_TEAM_STR
     elif typeStr == FRENCH_UNDEAD_TEAM_STR:
         team = FRENCH_UNDEAD_TEAM_STR
+    
     return team
-
 
 SearchableCrate = 'Crate'
 SearchableBarrel = 'Barrel'
@@ -578,17 +596,16 @@ SearchableHaystack = 'Haystack'
 SearchableWellA = 'WellA'
 SearchableStove = 'Stove'
 SearchableModels = {
-  SearchableCrate: 'models/props/crate_04',
-  SearchableBarrel: 'models/props/barrel',
-  SearchableCabinet: 'models/props/cabinet_fancy_low',
-  SearchableBookshelf: 'models/props/bookshelf_fancy',
-  SearchableClock: 'models/props/clock_fancy_tall',
-  SearchableDesk: 'models/props/desk_gov',
-  SearchableHaystack: 'models/props/haystack',
-  SearchableHaystack: 'models/props/haystack',
-  SearchableWellA: 'models/props/wellA',
-  SearchableStove: 'models/props/stove_potbelly'
-}
+    SearchableCrate: 'models/props/crate_04',
+    SearchableBarrel: 'models/props/barrel',
+    SearchableCabinet: 'models/props/cabinet_fancy_low',
+    SearchableBookshelf: 'models/props/bookshelf_fancy',
+    SearchableClock: 'models/props/clock_fancy_tall',
+    SearchableDesk: 'models/props/desk_gov',
+    SearchableHaystack: 'models/props/haystack',
+    SearchableHaystack: 'models/props/haystack',
+    SearchableWellA: 'models/props/wellA',
+    SearchableStove: 'models/props/stove_potbelly'}
 TFFlag = 0
 TFPlayerConfirm = BitMask32.bit(TFFlag)
 TFFlag += 1
@@ -643,41 +660,39 @@ TFNoTeleport = TFInPVP | TFInTeleport | TFInTunnel | TFInTutorial | TFInJail | T
 TFNoTeleportTo = TFNoTeleport | TFIgnore | TFOnShip | TFNotSameCrew | TFInWelcomeWorld
 TFNoTeleportOut = TFNoTeleport | TFNoIslandToken | TFInBattle | TFInWater | TFParlorGame | TFNoCompass | TFPhaseIncomplete | TFLookoutJoined | TFVelvetRope | TFSiegeCaptain
 TFNoTeleportReasons = {
-  TFOnShip: PLocalizer.NoTeleportOnShip,
-  TFNoIslandToken: PLocalizer.NoTeleportIslandToken,
-  TFInBattle: PLocalizer.NoTeleportInBattle,
-  TFInPVP: PLocalizer.NoTeleportInPVP,
-  TFInTutorial: PLocalizer.NoTeleportInTutorial,
-  TFNoCompass: PLocalizer.NoTeleportCompass,
-  TFInTunnel: PLocalizer.NoTeleportInTunnel,
-  TFInTeleport: PLocalizer.NoTeleportInTeleport,
-  TFInInitTeleport: PLocalizer.NoTeleportInTeleport,
-  TFInJail: PLocalizer.NoTeleportInJail,
-  TFInWater: PLocalizer.NoTeleportInWater,
-  TFParlorGame: PLocalizer.NoTeleportParlorGame,
-  TFFlagshipBattle: PLocalizer.NoTeleportFlagshipBattle,
-  TFPhaseIncomplete: PLocalizer.NoTeleportPhaseIncomplete,
-  TFLookoutJoined: PLocalizer.NoTeleportLookoutJoined,
-  TFTreasureMap: PLocalizer.NoTeleportTreasureMap,
-  TFSiegeCaptain: PLocalizer.NoTeleportSiegeCaptain,
-  TFZombie: PLocalizer.NoTeleportZombie
-}
+    TFOnShip: PLocalizer.NoTeleportOnShip,
+    TFNoIslandToken: PLocalizer.NoTeleportIslandToken,
+    TFInBattle: PLocalizer.NoTeleportInBattle,
+    TFInPVP: PLocalizer.NoTeleportInPVP,
+    TFInTutorial: PLocalizer.NoTeleportInTutorial,
+    TFNoCompass: PLocalizer.NoTeleportCompass,
+    TFInTunnel: PLocalizer.NoTeleportInTunnel,
+    TFInTeleport: PLocalizer.NoTeleportInTeleport,
+    TFInInitTeleport: PLocalizer.NoTeleportInTeleport,
+    TFInJail: PLocalizer.NoTeleportInJail,
+    TFInWater: PLocalizer.NoTeleportInWater,
+    TFParlorGame: PLocalizer.NoTeleportParlorGame,
+    TFFlagshipBattle: PLocalizer.NoTeleportFlagshipBattle,
+    TFPhaseIncomplete: PLocalizer.NoTeleportPhaseIncomplete,
+    TFLookoutJoined: PLocalizer.NoTeleportLookoutJoined,
+    TFTreasureMap: PLocalizer.NoTeleportTreasureMap,
+    TFSiegeCaptain: PLocalizer.NoTeleportSiegeCaptain,
+    TFZombie: PLocalizer.NoTeleportZombie}
 TFNoTeleportToReasons = {
-  TFUnavailable: PLocalizer.NoTeleportToUnavailable,
-  TFInPVP: PLocalizer.NoTeleportToInPVP,
-  TFInTutorial: PLocalizer.NoTeleportToInTutorial,
-  TFInTunnel: PLocalizer.NoTeleportToInTunnel,
-  TFInTeleport: PLocalizer.NoTeleportToInTeleport,
-  TFInInitTeleport: PLocalizer.NoTeleportToInTeleport,
-  TFInJail: PLocalizer.NoTeleportToInJail,
-  TFFlagshipBattle: PLocalizer.NoTeleportToFlagshipBattle,
-  TFIgnore: PLocalizer.NoTeleportToIgnore,
-  TFNotSameCrew: PLocalizer.NoTeleportToNotSameCrew,
-  TFOnShip: PLocalizer.NoTeleportToNoSpaceOnShip,
-  TFTreasureMap: PLocalizer.NoTeleportToTreasureMap,
-  TFInWelcomeWorld: PLocalizer.NoTeleportToWelcomeWorld
-}
-
+    TFUnavailable: PLocalizer.NoTeleportToUnavailable,
+    TFInPVP: PLocalizer.NoTeleportToInPVP,
+    TFInTutorial: PLocalizer.NoTeleportToInTutorial,
+    TFInTunnel: PLocalizer.NoTeleportToInTunnel,
+    TFInTeleport: PLocalizer.NoTeleportToInTeleport,
+    TFInInitTeleport: PLocalizer.NoTeleportToInTeleport,
+    TFInJail: PLocalizer.NoTeleportToInJail,
+    TFFlagshipBattle: PLocalizer.NoTeleportToFlagshipBattle,
+    TFIgnore: PLocalizer.NoTeleportToIgnore,
+    TFNotSameCrew: PLocalizer.NoTeleportToNoPermission,
+    TFOnShip: PLocalizer.NoTeleportToNoSpaceOnShip,
+    TFTreasureMap: PLocalizer.NoTeleportToTreasureMap,
+    TFInWelcomeWorld: PLocalizer.NoTeleportToWelcomeWorld,
+    TFZombie: PLocalizer.NoTeleportToZombie}
 
 def encodeTeleportFlag(flag):
     return flag.getHighestOnBit() + 1
@@ -686,12 +701,12 @@ def encodeTeleportFlag(flag):
 def decodeTeleportFlag(available):
     return BitMask32.bit(available - 1)
 
-
 TAAvailable = 0
 TALater = 1
 TAIgnore = 2
 buf = [
- '        ', '        ']
+    '        ',
+    '        ']
 nicknamesMale = PL.PirateNames_NickNamesGeneric + PL.PirateNames_NickNamesMale
 nicknamesFemale = PL.PirateNames_NickNamesGeneric + PL.PirateNames_NickNamesFemale
 firstNamesMale = PL.PirateNames_FirstNamesGeneric + PL.PirateNames_FirstNamesMale
@@ -717,8 +732,16 @@ lastPrefixesFemale = buf + lastPrefixesFemale + buf
 lastSuffixesMale = buf + lastSuffixesMale + buf
 lastSuffixesFemale = buf + lastSuffixesFemale + buf
 del buf
-maleNames = [[], firstNamesMale[:], lastPrefixesMale[:], lastSuffixesMale[:]]
-femaleNames = [[], firstNamesFemale[:], lastPrefixesFemale[:], lastSuffixesFemale[:]]
+maleNames = [
+    [],
+    firstNamesMale[:],
+    lastPrefixesMale[:],
+    lastSuffixesMale[:]]
+femaleNames = [
+    [],
+    firstNamesFemale[:],
+    lastPrefixesFemale[:],
+    lastSuffixesFemale[:]]
 lastNamePrefixesCapped = PL.PirateNames_LastNamePrefixesCapped[:]
 TreasureMapReadyTimeout = 45
 DEFAULT_AMBIENT_VOLUME = 1.0
@@ -726,9 +749,18 @@ DEFAULT_AMBIENT_VOLUME_FAINT = DEFAULT_AMBIENT_VOLUME * 0.25
 DEFAULT_AMBIENT_VOLUME_MIDDLE = DEFAULT_AMBIENT_VOLUME * 0.5
 DEFAULT_AMBIENT_VOLUME_NEAR = DEFAULT_AMBIENT_VOLUME * 0.75
 treasureCarryTransforms = {
-  'm': [TransformState.makePosHprScale(Vec3(0.05, 0, -1.1), Vec3(0, 0, -90), Vec3(0.5, 0.5, 0.5)), TransformState.makePosHprScale(Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)), TransformState.makePosHprScale(Vec3(0.05, 0, -1.12), Vec3(0, 0, -90), Vec3(0.53, 0.53, 0.53)), TransformState.makePosHprScale(Vec3(0.05, 0, -1.03), Vec3(0, 0, -90), Vec3(0.48, 0.48, 0.48)), TransformState.makePosHprScale(Vec3(0.05, 0, -1.3), Vec3(0, 0, -90), Vec3(0.63, 0.63, 0.63))],
-  'f': [TransformState.makePosHprScale(Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)), TransformState.makePosHprScale(Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)), TransformState.makePosHprScale(Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)), TransformState.makePosHprScale(Vec3(-0.1, 0, -0.97), Vec3(0, 0, -90), Vec3(0.42, 0.42, 0.42)), TransformState.makePosHprScale(Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47))]
-}
+    'm': [
+        TransformState.makePosHprScale(Vec3(0.05, 0, -1.1), Vec3(0, 0, -90), Vec3(0.5, 0.5, 0.5)),
+        TransformState.makePosHprScale(Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)),
+        TransformState.makePosHprScale(Vec3(0.05, 0, -1.12), Vec3(0, 0, -90), Vec3(0.53, 0.53, 0.53)),
+        TransformState.makePosHprScale(Vec3(0.05, 0, -1.03), Vec3(0, 0, -90), Vec3(0.48, 0.48, 0.48)),
+        TransformState.makePosHprScale(Vec3(0.05, 0, -1.3), Vec3(0, 0, -90), Vec3(0.63, 0.63, 0.63))],
+    'f': [
+        TransformState.makePosHprScale(Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)),
+        TransformState.makePosHprScale(Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)),
+        TransformState.makePosHprScale(Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47)),
+        TransformState.makePosHprScale(Vec3(-.1, 0, -0.97), Vec3(0, 0, -90), Vec3(0.42, 0.42, 0.42)),
+        TransformState.makePosHprScale(Vec3(0.05, 0, -0.97), Vec3(0, 0, -90), Vec3(0.47, 0.47, 0.47))]}
 treasureSwimTransform = TransformState.makePosHprScale(Vec3(0, 0, 5), Vec3(0, 0, 0), Vec3(0.5, 0.5, 0.5))
 PORT_ROYAL_DEFAULTS = 100
 PORT_ROYAL_ALL = 101
@@ -762,7 +794,6 @@ FOUNDERSFEAST = 17
 FREEITEMTHANKSGIVING = 18
 CURSEDNIGHT = 19
 JOLLYCURSEAUTO = 20
-WINTERFESTIVAL = 21
 XP_HOLIDAY_START = 1
 XP_HOLIDAY_END = 2
 BLACKJACK_FRIDAY_START = 1
@@ -770,23 +801,21 @@ BLACKJACK_FRIDAY_END = 2
 QRFlag = 0
 QRFlagMainStory = BitMask32.bit(QRFlag)
 del QRFlag
-SkillToQRFlagMapping = {12661: QRFlagMainStory}
+SkillToQRFlagMapping = {
+    12661: QRFlagMainStory}
 WARDROBE_LIMIT_JEWELER = 4
 WARDROBE_LIMIT_TAILOR = 4
 WARDROBE_LIMIT_TATTOO = 4
 STATUS_AFK = 1
 STATUS_LFG = 2
 
-
 def getShardFromInstance(instanceType):
     if instanceType in LowLatencyInstanceTypes:
         return SHARD_LOW_LATENCY
+    elif instanceType == INSTANCE_TUTORIAL or instanceType == INSTANCE_WELCOME:
+        return SHARD_WELCOME
     else:
-        if instanceType == INSTANCE_TUTORIAL or instanceType == INSTANCE_WELCOME:
-            return SHARD_WELCOME
-        else:
-            return SHARD_MAIN
-
+        return SHARD_MAIN
 
 RewardBlackPearl = 1
 RewardVoodooDoll = PLocalizer.EMOTE_RECEIVE_DOLL
