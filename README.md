@@ -2,7 +2,7 @@
 
 
 # Pirates Online Classic
-Pirates Online Classic is a fan-made recreation of Disney's now-defunct MMORPG; Pirates of the Caribbean Online. Our project is founded on a promise to our community that we will never charge for full access to anything Pirates Online Classic provides.
+This is the game development repository for Pirates Online Classic, a fan-made recreation of Disney's now-defunct MMORPG; Pirates of the Caribbean Online.
 
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/uses-git.svg)](https://git-scm.com/) [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 
@@ -49,6 +49,9 @@ The verify branch houses the W.I.P client verification, which to put it in layma
 * [Python](https://www.python.org)
 * [Panda3D](https://github.com/panda3d/panda3d)
 * [Resources](https://gitlab.com/pirates-online-classic/resources)
+
+## Other
+* [Bytecode](https://anythingtechpro.github.io/github-pages/classic/dev/2008bytecode.zip)
 
 ## License
 
