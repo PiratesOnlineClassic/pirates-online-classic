@@ -2,7 +2,7 @@ import random
 from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
-from panda3d.core import *
+from pandac.PandaModules import *
 from direct.actor import Actor
 from direct.fsm import FSM
 from direct.fsm import State
@@ -19,7 +19,6 @@ from pirates.shipparts import SailDNA
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.shipparts import ShipPart
 from pirates.shipparts import SplattableObject
-
 NavySailDict = {
     0: [
         2,
@@ -35,7 +34,6 @@ teamToLetter = [
     '_a_',
     '_b_',
     '_c_']
-
 
 class Sail(NodePath, ShipPart.ShipPart):
     notify = directNotify.newCategory('Sail')
@@ -77,7 +75,7 @@ class Sail(NodePath, ShipPart.ShipPart):
 
     @classmethod
     def setupTextures(cls):
-        if not (cls.logoCard) and launcher.getPhaseComplete(3):
+        if not cls.logoCard and launcher.getPhaseComplete(3):
             cls.card = loader.loadModel('models/textureCards/sailTextures')
             cls.holeCard = loader.loadModel('models/effects/battleEffects')
             cls.logoCard = loader.loadModel('models/textureCards/sailLogo')
@@ -123,8 +121,7 @@ class Sail(NodePath, ShipPart.ShipPart):
             fileSuffix = 'sail_' + str(self.dna.posIndex)
         self.currPrefix = filePrefix
         self.prop = self.attachNewNode('prop')
-        self.propCollisions = self.ship.modelCollisions.attachNewNode(
-            ModelNode('sail-%d-%d' % (self.dna.mastPosIndex, self.dna.posIndex)))
+        self.propCollisions = self.ship.modelCollisions.attachNewNode(ModelNode('sail-%d-%d' % (self.dna.mastPosIndex, self.dna.posIndex)))
         textureType = SailDNA.SailTextureDict.get(self.dna.textureIndex)
         if textureType and self.card:
             self.sailTexture = self.card.find('**/%s' % textureType).findTexture('*')
@@ -140,22 +137,17 @@ class Sail(NodePath, ShipPart.ShipPart):
 
         self.baseLayer = TextureStage('baseLayer')
         self.baseLayer.setSort(5)
-        self.baseLayer.setCombineRgb(TextureStage.CMModulate, TextureStage.CSConstant, TextureStage.COSrcColor,
-                                     TextureStage.CSTexture, TextureStage.COSrcColor)
-        self.baseLayer.setCombineAlpha(TextureStage.CMModulate, TextureStage.CSConstant, TextureStage.COSrcAlpha,
-                                       TextureStage.CSTexture, TextureStage.COSrcAlpha)
+        self.baseLayer.setCombineRgb(TextureStage.CMModulate, TextureStage.CSConstant, TextureStage.COSrcColor, TextureStage.CSTexture, TextureStage.COSrcColor)
+        self.baseLayer.setCombineAlpha(TextureStage.CMModulate, TextureStage.CSConstant, TextureStage.COSrcAlpha, TextureStage.CSTexture, TextureStage.COSrcAlpha)
         self.baseLayer.setColor(VBase4(1.0, 1.0, 1.0, 1.0))
         self.logoLayer = TextureStage('logoLayer')
-        self.logoLayer.setCombineRgb(TextureStage.CMModulate, TextureStage.CSPrevious, TextureStage.COSrcColor,
-                                     TextureStage.CSTexture, TextureStage.COSrcColor)
+        self.logoLayer.setCombineRgb(TextureStage.CMModulate, TextureStage.CSPrevious, TextureStage.COSrcColor, TextureStage.CSTexture, TextureStage.COSrcColor)
         self.logoLayer.setCombineAlpha(TextureStage.CMReplace, TextureStage.CSPrevious, TextureStage.COSrcAlpha)
         self.logoLayer.setSort(12)
         self.logoLayer.setTexcoordName('uvLogo')
         self.blendTs = TextureStage('blendTs')
-        self.blendTs.setCombineRgb(TextureStage.CMModulate, TextureStage.CSPrimaryColor, TextureStage.COSrcColor,
-                                   TextureStage.CSPrevious, TextureStage.COSrcColor)
-        self.blendTs.setCombineAlpha(TextureStage.CMModulate, TextureStage.CSPrimaryColor, TextureStage.COSrcAlpha,
-                                     TextureStage.CSPrevious, TextureStage.COSrcAlpha)
+        self.blendTs.setCombineRgb(TextureStage.CMModulate, TextureStage.CSPrimaryColor, TextureStage.COSrcColor, TextureStage.CSPrevious, TextureStage.COSrcColor)
+        self.blendTs.setCombineAlpha(TextureStage.CMModulate, TextureStage.CSPrimaryColor, TextureStage.COSrcAlpha, TextureStage.CSPrevious, TextureStage.COSrcAlpha)
         self.blendTs.setSort(30)
         self.holeLayer = TextureStage('holeLayer')
         self.holeLayer.setMode(TextureStage.MModulate)
@@ -235,9 +227,7 @@ class Sail(NodePath, ShipPart.ShipPart):
                 fileName = SailDNA.LogoDict.get(logoIndex)
             if fileName:
                 self.logoTexture = self.logoCard.find('**/%s' % fileName).findTexture('*')
-                if logoIndex not in [
-                    210,
-                    211]:
+                if logoIndex not in [210, 211]:
                     self.logoTexture.setMinfilter(Texture.FTLinearMipmapLinear)
                     self.logoTexture.setMagfilter(Texture.FTLinear)
                 else:
@@ -297,13 +287,10 @@ class Sail(NodePath, ShipPart.ShipPart):
     def loadCollisions(self):
         if config.GetBool('disable-ship-geom', 0):
             return
-
         if self.collisions:
             return
-
-        if self.isEmpty() or not (self.prop):
+        if self.isEmpty() or not self.prop:
             return
-
         if self.dna.sailType == ShipGlobals.FLAG:
             fileSuffix = 'flag'
         else:
@@ -335,7 +322,7 @@ class Sail(NodePath, ShipPart.ShipPart):
         filePrefix = MastDNA.MastDict.get(mastType)
         return filePrefix
 
-    def cutGeomTextureStates(self, geomNode, excludedStages=[]):
+    def cutGeomTextureStates(self, geomNode, excludedStages = []):
         numGeoms = geomNode.getNumGeoms()
         finalPacket = []
         for i in xrange(numGeoms):
@@ -371,13 +358,7 @@ class Sail(NodePath, ShipPart.ShipPart):
             self.flash.finish()
 
         self.resetFlashing()
-        self.flash = Sequence(Func(self.hideBaseTexture), Func(self.sailActor.setColor, Vec4(1, 1, 0, 1)),
-                              Wait(0.029999999999999999), Func(self.sailActor.setColor, Vec4(1, 0, 0, 1)),
-                              Wait(0.029999999999999999), Func(self.sailActor.setColorOff), Func(self.showBaseTexture),
-                              Wait(0.10000000000000001), Func(self.hideBaseTexture),
-                              Func(self.sailActor.setColor, Vec4(1, 1, 0, 1)), Wait(0.029999999999999999),
-                              Func(self.sailActor.setColor, Vec4(1, 0, 0, 1)), Wait(0.029999999999999999),
-                              Func(self.sailActor.setColorOff), Func(self.showBaseTexture))
+        self.flash = Sequence(Func(self.hideBaseTexture), Func(self.sailActor.setColor, Vec4(1, 1, 0, 1)), Wait(0.03), Func(self.sailActor.setColor, Vec4(1, 0, 0, 1)), Wait(0.03), Func(self.sailActor.setColorOff), Func(self.showBaseTexture), Wait(0.1), Func(self.hideBaseTexture), Func(self.sailActor.setColor, Vec4(1, 1, 0, 1)), Wait(0.03), Func(self.sailActor.setColor, Vec4(1, 0, 0, 1)), Wait(0.03), Func(self.sailActor.setColorOff), Func(self.showBaseTexture))
         self.flash.start()
 
     def setProjScreen(self, projScreen):
@@ -469,7 +450,7 @@ class Sail(NodePath, ShipPart.ShipPart):
                 self.projNode.setTexcoordName('sailHole-%s-%s' % (self.dna.posIndex, holeCount))
                 self.projNode.recompute()
                 sfx = random.choice(self.sailTearSfx)
-                base.playSfx(sfx, node=self.sailGeom, cutoff=2000)
+                base.playSfx(sfx, node = self.sailGeom, cutoff = 2000)
                 del t
                 hole.removeNode()
                 del hole
@@ -486,13 +467,12 @@ class Sail(NodePath, ShipPart.ShipPart):
             t.setMode(TextureStage.MModulate)
             t.setSort(200)
             self.sailActor.setTexture(t, self.breakTex)
-            self.sailActor.setTexScale(t, 0.80000000000000004, 0.80000000000000004)
+            self.sailActor.setTexScale(t, 0.8, 0.8)
             if self.flash:
                 self.flash.pause()
 
-            cutStates = SplattableObject.cutGeomTextureStates(self.sailGeom.node(), [
-                'holeLayer'])
-            self.sailGeom.flattenMultitex(useGeom=0, target=self.holeLayer)
+            cutStates = SplattableObject.cutGeomTextureStates(self.sailGeom.node(), ['holeLayer'])
+            self.sailGeom.flattenMultitex(useGeom = 0, target = self.holeLayer)
             holeTex = self.sailGeom.findTexture(self.holeLayer)
             SplattableObject.pasteGeomTextureStates(self.sailGeom.node(), cutStates)
             self.sailGeom.setTexture(self.holeLayer, holeTex)
@@ -535,7 +515,7 @@ class Sail(NodePath, ShipPart.ShipPart):
     def showBaseTexture(self):
         self.notify.debug('SHOW TEX STAGE')
         if self.cr and self.cr.config.GetBool('want-hires-destruction', 1) is 0:
-            self.sailActor.flattenMultitex(useGeom=0, target=self.holeLayer)
+            self.sailActor.flattenMultitex(useGeom = 0, target = self.holeLayer)
 
     def copyMultitexLayer(self, sourcePanel, targetPanel):
         if not sourcePanel or not targetPanel:
@@ -654,7 +634,7 @@ class SailFSM(FSM.FSM):
             self.ival.pause()
             self.ival = None
 
-    def filterOff(self, request, args=[]):
+    def filterOff(self, request, args = []):
         if request == 'Rollup':
             return 'TiedUp'
         elif request == 'Rolldown':
@@ -662,7 +642,7 @@ class SailFSM(FSM.FSM):
 
         return self.defaultFilter(request, args)
 
-    def enterIdle(self, args=[]):
+    def enterIdle(self, args = []):
         self.notify.debug('enterIdle %s' % self.parentDoId)
         self.sail.sailActor.loop('Idle')
         self.sail.sailActor.update()
@@ -673,7 +653,7 @@ class SailFSM(FSM.FSM):
         if self.sail and not self.sail.isEmpty():
             self.sail.sailActor.stop()
 
-    def enterBillow(self, args=[]):
+    def enterBillow(self, args = []):
         self.notify.debug('enterIdle %s' % self.parentDoId)
         self.ival = ActorInterval(self.sail.sailActor, 'Idle')
         self.ival.loop()
@@ -684,7 +664,7 @@ class SailFSM(FSM.FSM):
         if self.ival:
             self.ival.finish()
 
-    def enterTiedUp(self, args=[]):
+    def enterTiedUp(self, args = []):
         self.notify.debug('enterTiedUp %s' % self.parentDoId)
         self.sail.sailActor.pose('Rolldown', 1)
         self.sail.sailActor.update()
@@ -696,7 +676,7 @@ class SailFSM(FSM.FSM):
         if not config.GetBool('enable-sail-colls-in-port', 0):
             self.sail.enableCollisions()
 
-    def enterRollup(self, args=[]):
+    def enterRollup(self, args = []):
         self.notify.debug('enterRollup %s' % self.parentDoId)
         if self.ival:
             self.ival.pause()
@@ -705,15 +685,14 @@ class SailFSM(FSM.FSM):
             self.sailIval.pause()
             self.sailIval = None
 
-        self.sailIval = ActorInterval(self.sail.sailActor, 'Rolldown', playRate=2.0, startFrame=80, endFrame=0)
-        self.ival = Sequence(Func(base.playSfx, self.sailFoldSfx, node=self.sail.sailGeom, cutoff=1000), self.sailIval,
-                             Func(self.demand, 'TiedUp'))
+        self.sailIval = ActorInterval(self.sail.sailActor, 'Rolldown', playRate = 2.0, startFrame = 80, endFrame = 0)
+        self.ival = Sequence(Func(base.playSfx, self.sailFoldSfx, node = self.sail.sailGeom, cutoff = 1000), self.sailIval, Func(self.demand, 'TiedUp'))
         self.ival.start()
         self.sail.sailActor.update()
         if not config.GetBool('enable-sail-colls-in-port', 0):
             self.sail.disableCollisions()
 
-    def filterRollup(self, request, args=[]):
+    def filterRollup(self, request, args = []):
         if request == 'advance':
             return 'TiedUp'
 
@@ -730,7 +709,7 @@ class SailFSM(FSM.FSM):
         if not config.GetBool('enable-sail-colls-in-port', 0):
             self.sail.enableCollisions()
 
-    def enterRolldown(self, args=[]):
+    def enterRolldown(self, args = []):
         self.notify.debug('enterRolldown %s' % self.parentDoId)
         if self.ival:
             self.ival.pause()
@@ -739,13 +718,12 @@ class SailFSM(FSM.FSM):
             self.sailIval.pause()
             self.sailIval = None
 
-        self.sailIval = ActorInterval(self.sail.sailActor, 'Rolldown', playRate=1.5, startFrame=0, endFrame=80)
-        self.ival = Sequence(Func(base.playSfx, self.sailUnfoldSfx, node=self.sail.sailGeom, cutoff=1000),
-                             self.sailIval, Func(self.demand, 'Idle'))
+        self.sailIval = ActorInterval(self.sail.sailActor, 'Rolldown', playRate = 1.5, startFrame = 0, endFrame = 80)
+        self.ival = Sequence(Func(base.playSfx, self.sailUnfoldSfx, node = self.sail.sailGeom, cutoff = 1000), self.sailIval, Func(self.demand, 'Idle'))
         self.ival.start()
         self.sail.sailActor.update()
 
-    def filterRolldown(self, request, args=[]):
+    def filterRolldown(self, request, args = []):
         if request == 'advance':
             return 'Idle'
 
@@ -759,7 +737,7 @@ class SailFSM(FSM.FSM):
         if self.ival:
             self.ival.pause()
 
-    def enterHit(self, args=[]):
+    def enterHit(self, args = []):
         self.notify.debug('enterHit %s' % self.parentDoId)
         if self.ival:
             self.ival.pause()
@@ -774,7 +752,7 @@ class SailFSM(FSM.FSM):
             self.ival.pause()
             self.ival = None
 
-    def enterFalling(self, args=[]):
+    def enterFalling(self, args = []):
         self.notify.debug('enterFalling %s' % self.parentDoId)
         if not args:
             return
@@ -786,12 +764,11 @@ class SailFSM(FSM.FSM):
         if self.ival:
             self.ival.pause()
 
-        self.ival = Sequence(Func(self.sail.sailActor.play, args, partName='mast'), Wait(10.0),
-                             Func(self.demand, 'Dead'))
+        self.ival = Sequence(Func(self.sail.sailActor.play, args, partName = 'mast'), Wait(10.0), Func(self.demand, 'Dead'))
         self.ival.start()
         self.sail.disableCollisions()
 
-    def filterFalling(self, request, args=[]):
+    def filterFalling(self, request, args = []):
         if request == 'advance':
             return 'Dead'
 
@@ -810,11 +787,11 @@ class SailFSM(FSM.FSM):
             self.sail.sailActor.node().setBounds(self.oldBound)
             self.sail.sailActor.node().setFinal(0)
 
-    def enterDead(self, args=[]):
+    def enterDead(self, args = []):
         self.notify.debug('enterDead %s' % self.parentDoId)
         self.sail.death()
 
-    def filterDead(self, request, args=[]):
+    def filterDead(self, request, args = []):
         if request == 'advance':
             return 'Idle'
 

@@ -1,4 +1,4 @@
-from panda3d.core import *
+from pandac.PandaModules import *
 from direct.directnotify.DirectNotifyGlobal import *
 import random
 from direct.distributed.PyDatagram import PyDatagram
@@ -7,7 +7,6 @@ from otp.avatar import AvatarDNA
 from otp.speedchat import ColorSpace
 from pirates.ship import ShipGlobals
 from pirates.piratesbase import PiratesGlobals
-
 notify = directNotify.newCategory('SailDNA')
 SailTextureDict = {
     1: 'ship_sail',
@@ -21,11 +20,23 @@ LogoDict = {
     211: 'logo_spanish_flag'}
 DefaultAnimDict = (('Idle', 'idle'), ('Hit', 'hit'), ('Billow', 'billow'), ('Rolldown', 'rolldown'), ('Hidden', 'hidden'))
 SailColors = [
- VBase4(1.0, 1.0, 1.0, 1.0), VBase4(0.0, 0.0, 0.0, 1.0), VBase4(0.933594, 0.265625, 0.28125, 1.0), VBase4(0.863281, 0.40625, 0.417969, 1.0), VBase4(0.710938, 0.234375, 0.4375, 1.0), VBase4(0.992188, 0.480469, 0.167969, 1.0), VBase4(0.996094, 0.898438, 0.320312, 1.0), VBase4(0.550781, 0.824219, 0.324219, 1.0), VBase4(0.242188, 0.742188, 0.515625, 1.0), VBase4(0.433594, 0.90625, 0.835938, 1.0), VBase4(0.347656, 0.820312, 0.953125, 1.0), VBase4(0.191406, 0.5625, 0.773438, 1.0)]
+    VBase4(1.0, 1.0, 1.0, 1.0),
+    VBase4(0.0, 0.0, 0.0, 1.0),
+    VBase4(0.933594, 0.265625, 0.28125, 1.0),
+    VBase4(0.863281, 0.40625, 0.417969, 1.0),
+    VBase4(0.710938, 0.234375, 0.4375, 1.0),
+    VBase4(0.992188, 0.480469, 0.167969, 1.0),
+    VBase4(0.996094, 0.898438, 0.320312, 1.0),
+    VBase4(0.550781, 0.824219, 0.324219, 1.0),
+    VBase4(0.242188, 0.742188, 0.515625, 1.0),
+    VBase4(0.433594, 0.90625, 0.835938, 1.0),
+    VBase4(0.347656, 0.820312, 0.953125, 1.0),
+    VBase4(0.191406, 0.5625, 0.773438, 1.0)
+]
 
 
 class SailDNA(AvatarDNA.AvatarDNA):
-
+    
     def __init__(self):
         self.baseTeam = PiratesGlobals.INVALID_TEAM
         self.mastType = 0
@@ -39,7 +50,7 @@ class SailDNA(AvatarDNA.AvatarDNA):
     def __str__(self):
         string = 'mastType %s, sailType %s, posIndex %s, textureIndex %s, colorIndex %s, logoIndex %s' % (self.mastType, self.sailType, self.posIndex, self.textureIndex, self.colorIndex, self.logoIndex)
         return string
-
+    
     def getMastClass(self):
         if self.mastType >= ShipGlobals.MAINMASTL1 and self.mastType <= ShipGlobals.MAINMASTL5:
             return 'mainmast'
@@ -75,7 +86,7 @@ class SailDNA(AvatarDNA.AvatarDNA):
 
     def setLogoIndex(self, val):
         self.logoIndex = val
-
+    
     def getBaseTeam(self):
         return self.baseTeam
 
@@ -99,3 +110,4 @@ class SailDNA(AvatarDNA.AvatarDNA):
 
     def getLogoIndex(self):
         return self.logoIndex
+

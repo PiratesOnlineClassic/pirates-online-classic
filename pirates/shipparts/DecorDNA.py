@@ -1,4 +1,4 @@
-from panda3d.core import *
+from pandac.PandaModules import *
 from direct.directnotify.DirectNotifyGlobal import *
 import random
 from direct.distributed.PyDatagram import PyDatagram
@@ -7,7 +7,6 @@ from otp.avatar import AvatarDNA
 from otp.speedchat import ColorSpace
 from pirates.piratesbase import PiratesGlobals
 from pirates.ship import ShipGlobals
-
 notify = directNotify.newCategory('DecorDNA')
 WALL = 1
 FLOOR = 2
@@ -38,19 +37,32 @@ def getDecorType(index):
         return 'decoration'
     elif index >= 200:
         return 'window'
-
+    
 
 DecorColors = [
- VBase4(1.0, 1.0, 1.0, 1.0), VBase4(0.0, 0.0, 0.0, 1.0), VBase4(0.933594, 0.265625, 0.28125, 1.0), VBase4(0.863281, 0.40625, 0.417969, 1.0), VBase4(0.710938, 0.234375, 0.4375, 1.0), VBase4(0.992188, 0.480469, 0.167969, 1.0), VBase4(0.996094, 0.898438, 0.320312, 1.0), VBase4(0.550781, 0.824219, 0.324219, 1.0), VBase4(0.242188, 0.742188, 0.515625, 1.0), VBase4(0.433594, 0.90625, 0.835938, 1.0), VBase4(0.347656, 0.820312, 0.953125, 1.0), VBase4(0.191406, 0.5625, 0.773438, 1.0)]
+    VBase4(1.0, 1.0, 1.0, 1.0),
+    VBase4(0.0, 0.0, 0.0, 1.0),
+    VBase4(0.933594, 0.265625, 0.28125, 1.0),
+    VBase4(0.863281, 0.40625, 0.417969, 1.0),
+    VBase4(0.710938, 0.234375, 0.4375, 1.0),
+    VBase4(0.992188, 0.480469, 0.167969, 1.0),
+    VBase4(0.996094, 0.898438, 0.320312, 1.0),
+    VBase4(0.550781, 0.824219, 0.324219, 1.0),
+    VBase4(0.242188, 0.742188, 0.515625, 1.0),
+    VBase4(0.433594, 0.90625, 0.835938, 1.0),
+    VBase4(0.347656, 0.820312, 0.953125, 1.0),
+    VBase4(0.191406, 0.5625, 0.773438, 1.0)
+]
 
 
 class DecorDNA(AvatarDNA.AvatarDNA):
+    
     def __init__(self):
         self.baseTeam = PiratesGlobals.INVALID_TEAM
         self.decorType = 0
         self.posIndex = 0
         self.colorIndex = 0
-
+    
     def __str__(self):
         string = 'decorType %s, posIndex %s, colorIndex %s' % (self.decorType, self.posIndex, self.colorIndex)
         return string
@@ -78,5 +90,3 @@ class DecorDNA(AvatarDNA.AvatarDNA):
 
     def getColorIndex(self):
         return self.colorIndex
-
-

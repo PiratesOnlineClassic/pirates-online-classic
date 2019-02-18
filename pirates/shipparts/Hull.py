@@ -48,11 +48,11 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         self.leftDamageLvl = 0
         self.rightDamageLvl = 0
         self.propCollisions = NodePath('Collisions-Hull')
-
+    
     def disable(self):
         SplattableObject.SplattableObject.disable(self)
         ShipPart.ShipPart.disable(self)
-
+    
     def delete(self):
         SplattableObject.SplattableObject.delete(self)
         ShipPart.ShipPart.destroy(self)
@@ -62,21 +62,21 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         
         del self.leftDamageLvl
         del self.rightDamageLvl
-    
+
     def loadModel(self, dna):
         self.dna = dna
         SplattableObject.SplattableObject.load(self)
         self.loadCollisions()
         self.loaded = True
-    
+
     def unloadModel(self):
         SplattableObject.SplattableObject.disable(self)
         if self.propCollisions:
             self.propCollisions.removeNode()
             self.propCollisions = None
-        
+
         self.removeNode()
-    
+
     def loadHigh(self):
         filePrefix = self.getPrefix(self.dna.modelClass)
         (result, data) = ShipGlobals.getShipGeom('%s-geometry_High' % filePrefix)
@@ -167,7 +167,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
             
         else:
             self.geom_Medium = NodePath('hull-geom')
-
+    
     def unloadMedium(self):
         if not self.geom_Medium:
             return
@@ -181,10 +181,10 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         self.geom_Medium.removeNode()
         self.geom_Medium = None
         self.panelsMed = []
-
+    
     def requestLow(self):
         return self.geom_Low
-    
+
     def loadLow(self):
         filePrefix = self.getPrefix(self.dna.modelClass)
         (result, data) = ShipGlobals.getShipGeom('%s-geometry_Low' % filePrefix)
@@ -207,7 +207,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
             s.setColorScale(0, 0, 1, 1)
             s.setScale(30)
             s.setZ(250)
-
+    
     def unloadLow(self):
         if not self.geom_Low:
             return
@@ -225,39 +225,34 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
     def loadCollisions(self):
         if config.GetBool('disable-ship-geom', 0):
             return
-        
         filePrefix = self.getPrefix(self.dna.modelClass)
         self.collisions = loader.loadModelCopy(filePrefix + '-collisions')
         if not self.collisions:
             return
-        
         self.collisions.reparentTo(self.propCollisions)
         numPanels = self.collisions.findAllMatches('**/collision_panel_*').getNumPaths()
         for i in range(numPanels):
             self.collPanels.append(self.collisions.find('**/collision_panel_' + str(i)))
-        
+
         if self.ship:
             self.setupCollisions(self.ship)
-        
         colls = []
         edgeRoot = self.collisions.find('**/collision_inside_edge')
         if edgeRoot != edgeRoot.notFound():
             colls += edgeRoot.getChildrenAsList()
-        
         deckRoot = self.collisions.find('**/collision_deck')
         if deckRoot != deckRoot.notFound():
             colls += deckRoot.getChildrenAsList()
-        
         for coll in colls:
             coll.stash()
-        
+
         bound = self.collisions.getBounds()
         for coll in colls:
             coll.unstash()
-        
+
         for coll in colls:
             coll.node().setBounds(bound)
-    
+
     def unloadCollisions(self):
         if not self.collisions:
             return
@@ -269,7 +264,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         self.collisions = None
         self.collPanels = []
         self.clearTargetableCollisions()
-    
+
     def getPrefix(self, shipClass):
         filePrefix = HullDNA.HullDict.get(shipClass)
         return filePrefix
@@ -277,8 +272,8 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
     def getFlatPrefix(self, shipClass):
         filePrefix = HullDNA.HullFlatDict.get(shipClass)
         return filePrefix
-    
-    def setupCollisions(self, ship = None):
+
+    def setupCollisions(self, ship=None):
         if config.GetBool('disable-ship-geom', 0):
             return
 
@@ -360,7 +355,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
                 self.shipInsideWall.unstash()
             else:
                 self.shipInsideWall.stash()
-
+    
     def getInsideWallName(self):
         if self.shipInsideWall:
             return self.shipInsideWall.getName()
@@ -373,7 +368,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         
         if not self.shipInsideWall.isEmpty():
             self.shipInsideWall.stash()
-    
+
     def unstashPlaneCollisions(self):
         if not self.deck.isEmpty():
             self.deck.unstash()
@@ -386,7 +381,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         if self.railing:
             if not self.railing.isEmpty():
                 self.railing.stash()
-        
+
         if self.floors:
             if not self.floors.isEmpty():
                 self.floors.stash()
@@ -400,7 +395,7 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         if self.floors:
             if not self.floors.isEmpty():
                 self.floors.unstash()
-
+    
     def stashDetailCollisions(self):
         if self.details:
             if not self.details.isEmpty():
@@ -453,10 +448,10 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
                 index = 2
         
         return index
-    
+
     def getClosestBoardingPos(self):
         return self.ship.getClosestBoardingPos()
-    
+
     def startDarkFog(self, offset = None):
         self.fogEffect = DarkShipFog.getEffect()
         if self.fogEffect:
@@ -475,4 +470,5 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
     def addToShip(self):
         self.propCollisions.reparentTo(self.ship.modelCollisions)
         ShipPart.ShipPart.addToShip(self)
+
 

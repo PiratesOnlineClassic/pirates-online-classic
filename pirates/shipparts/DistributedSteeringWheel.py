@@ -1,37 +1,39 @@
-from direct.showbase.PythonUtil import quickProfile, report
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.distributed import DistributedInteractive
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.shipparts import DistributedShippart
+from pirates.shipparts import Wheel
 from pirates.ship import ShipGlobals
-from pirates.shipparts import DistributedShippart, Wheel
-
+from pirates.piratesgui import PiratesGuiGlobals
+from direct.showbase.PythonUtil import report, quickProfile
 
 class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, DistributedShippart.DistributedShippart):
     notify = directNotify.newCategory('DistributedSteeringWheel')
-
+    
     def __init__(self, cr):
         NodePath.__init__(self, 'steeringWheel')
         DistributedInteractive.DistributedInteractive.__init__(self, cr)
         DistributedShippart.DistributedShippart.__init__(self, cr)
         self.ship = None
-        return
 
     def generate(self):
         DistributedInteractive.DistributedInteractive.generate(self)
         DistributedShippart.DistributedShippart.generate(self)
         if not self.cr.tutorial:
-            self.setInteractOptions(proximityText=PLocalizer.InteractWheel, sphereScale=6)
+            self.setInteractOptions(proximityText = PLocalizer.InteractWheel, sphereScale = 6)
 
     def announceGenerate(self):
         DistributedInteractive.DistributedInteractive.announceGenerate(self)
         DistributedShippart.DistributedShippart.announceGenerate(self)
         if self.proximityCollisionNodePath:
             self.proximityCollisionNodePath.reparentTo(self.prop.propCollisions)
+        
         locator = self.ship.locators.find('**/location_wheel;+s')
         if not locator.isEmpty():
             if self.ship.shipClass == ShipGlobals.DINGHY:
                 self.prop.hide()
+
         self.setAllowInteract(1)
         self.checkInUse()
 
@@ -41,8 +43,11 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
                 self.prop = self.ship.wheel[0]
                 self.ship.wheel[1] = self
                 return
+
         self.prop = Wheel.Wheel()
-        self.ship.wheel = [self.prop, self]
+        self.ship.wheel = [
+            self.prop,
+            self]
 
     def loadModel(self):
         self.prop.shipId = self.shipId
@@ -53,26 +58,28 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
         self.notify.debug('Disable ' + str(self.doId))
         DistributedInteractive.DistributedInteractive.disable(self)
         DistributedShippart.DistributedShippart.disable(self)
-
+    
     def delete(self):
         self.notify.debug('Delete ' + str(self.doId))
         if self.ship.wheel[1]:
             if self.ship.steeringAvId == base.localAvatar.doId:
                 self.ship.clientSteeringEnd()
+            
             self.ship.wheel[1] = None
+        
         del self.ship
         del self.dna
         DistributedInteractive.DistributedInteractive.delete(self)
         DistributedShippart.DistributedShippart.delete(self)
-        return
 
     def setupParent(self, parent):
         if not self.prop:
             return
+        
         if not self.prop.propCollisions:
             return
-
-    def requestInteraction(self, avId, interactType=0):
+    
+    def requestInteraction(self, avId, interactType = 0):
         av = base.cr.doId2do.get(avId)
         if self.isInteractionAllowed(av):
             base.localAvatar.motionFSM.off()
@@ -87,7 +94,7 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
     def rejectInteraction(self):
         base.localAvatar.motionFSM.on()
         DistributedInteractive.DistributedInteractive.rejectInteraction(self)
-
+    
     def requestExit(self):
         DistributedInteractive.DistributedInteractive.requestExit(self)
         if base.localAvatar:
@@ -117,20 +124,20 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
         self.requestExit()
 
     def loadTargetIndicator(self):
-        if self.isGenerated():
-            if self.ship.shipClass != ShipGlobals.DINGHY:
-                self.disk = loader.loadModel('models/effects/selectionCursor')
-                self.disk.setScale(self.diskRadius)
-                self.disk.setColorScale(0, 1, 0, 1)
-                self.disk.setP(-90)
-                self.disk.setZ(0.025)
-                self.disk.setBillboardAxis(6)
-                self.disk.reparentTo(self.ship.highDetail)
-                self.disk.setBin('shadow', 0)
-                self.disk.setTransparency(TransparencyAttrib.MAlpha)
-                self.disk.setDepthWrite(0)
-                locator = self.ship.locators.find('**/location_wheel;+s')
-                locator.isEmpty() or self.disk.setPos(locator.getPos(self.ship.root))
+        if self.isGenerated() and self.ship.shipClass != ShipGlobals.DINGHY:
+            self.disk = loader.loadModel('models/effects/selectionCursor')
+            self.disk.setScale(self.diskRadius)
+            self.disk.setColorScale(0, 1, 0, 1)
+            self.disk.setP(-90)
+            self.disk.setZ(0.025)
+            self.disk.setBillboardAxis(6)
+            self.disk.reparentTo(self.ship.highDetail)
+            self.disk.setBin('shadow', 0)
+            self.disk.setTransparency(TransparencyAttrib.MAlpha)
+            self.disk.setDepthWrite(0)
+            locator = self.ship.locators.find('**/location_wheel;+s')
+            if not locator.isEmpty():
+                self.disk.setPos(locator.getPos(self.ship.root))
 
     def addPropToShip(self):
         self.locator = self.ship.locators.find('**/location_wheel;+s')
@@ -148,7 +155,7 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
         self.prop.propCollisions.setPos(self.locator.getPos(self.ship.root))
         self.prop.propCollisions.setHpr(self.locator.getHpr(self.ship.root))
         self.prop.propCollisions.setScale(self.locator.getScale(self.ship.root))
-
+    
     def setUserId(self, avId):
         DistributedInteractive.DistributedInteractive.setUserId(self, avId)
         self.ship.setWheelInUse(self.userId != 0)
@@ -157,16 +164,16 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
     def checkInUse(self):
         if self.userId and base.localAvatar.getDoId() != self.ship.ownerId and localAvatar.getDoId() != self.userId:
             self.setAllowInteract(0)
+        elif self.userId and base.localAvatar.getDoId() == self.ship.ownerId:
+            self.proximityText = PLocalizer.InteractWheelCaptain
+            self.setAllowInteract(1)
         else:
-            if self.userId and base.localAvatar.getDoId() == self.ship.ownerId:
-                self.proximityText = PLocalizer.InteractWheelCaptain
-                self.setAllowInteract(1)
-            else:
-                self.proximityText = PLocalizer.InteractWheel
-                self.setAllowInteract(1)
+            self.proximityText = PLocalizer.InteractWheel
+            self.setAllowInteract(1)
 
-    def setAllowInteract(self, allow, forceOff=False):
+    def setAllowInteract(self, allow, forceOff = False):
         DistributedInteractive.DistributedInteractive.setAllowInteract(self, allow)
         if not allow and forceOff:
             if self.ship.steeringAvId == base.localAvatar.doId:
                 self.requestExit()
+

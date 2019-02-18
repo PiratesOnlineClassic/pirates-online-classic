@@ -3,15 +3,14 @@ from direct.interval.IntervalGlobal import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
 from direct.gui.DirectGui import *
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.effects.ShipSplintersA import ShipSplintersA
 from pirates.shipparts import DecorDNA
 from pirates.shipparts import ShipPart
 
-
 class ShipDecor(NodePath, ShipPart.ShipPart):
     notify = directNotify.newCategory('ShipDecor')
-
+    
     def __init__(self):
         ShipPart.ShipPart.__init__(self)
         NodePath.__init__(self, 'shipDecor')
@@ -21,19 +20,17 @@ class ShipDecor(NodePath, ShipPart.ShipPart):
     def delete(self):
         del self.dna
         self.clearTargetableCollisions()
-
+    
     def loadModel(self, dna):
         if config.GetBool('disable-ship-geom', 0):
             return
-
         if self.prop:
             return
-
         self.dna = dna
         filePrefix = self.getPrefix(self.dna.decorType, self.dna.baseTeam)
-        self.prop = loader.loadModel(filePrefix[0])
+        self.prop = loader.loadModelCopy(filePrefix[0])
         self.prop.flattenMedium()
-        self.coll = self.prop.findAllMatches('**/collision*')
+        self.coll = self.prop.findAllMatches('**/collision*').asList()
         for c in self.coll:
             c.setTag('objType', str(PiratesGlobals.COLL_SHIPPART))
             c.setTag('propId', str(self.doId))
@@ -51,32 +48,30 @@ class ShipDecor(NodePath, ShipPart.ShipPart):
         if not geomHigh.isEmpty():
             geomHigh.reparentTo(self.geom_High)
             geomHigh.flattenStrong()
-
         geomMed = self.prop.find('**/geometry_Medium')
         if not geomMed.isEmpty():
             geomMed.reparentTo(self.geom_Medium)
             geomMed.flattenStrong()
-
         self.propCollisions = self.prop.find('**/collisions')
         self.propCollisions.flattenStrong()
         self.loaded = True
-
+    
     def unloadModel(self):
         if not self.prop:
             return
-
+        
         if self.flash:
             self.flash.pause()
             self.flash = None
-
+        
         if self.propCollisions:
             self.propCollisions.removeNode()
             self.propCollisions = None
-
+        
         if self.prop:
             self.prop.removeNode()
             self.prop = None
-
+        
         self.removeNode()
 
     def getPrefix(self, shipClass, team):
@@ -98,7 +93,7 @@ class ShipDecor(NodePath, ShipPart.ShipPart):
                 shipSplintersAEffect.play()
 
         self.playFlash()
-
+    
     def death(self):
         if self.prop != None:
             self.prop.hide()
@@ -106,7 +101,7 @@ class ShipDecor(NodePath, ShipPart.ShipPart):
 
     def showBrokenState(self):
         pass
-
+    
     def respawn(self):
         if self.prop != None:
             self.prop.show()
@@ -117,18 +112,33 @@ class ShipDecor(NodePath, ShipPart.ShipPart):
         if self.flash:
             self.flash.finish()
             self.flash = None
-
-        self.flash = Sequence(Func(self.hideBaseTexture), Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03), Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03), Func(self.prop.setColorOff), Func(self.showBaseTexture), Wait(0.1), Func(self.hideBaseTexture), Func(self.prop.setColor, Vec4(1, 1, 0, 1)), Wait(0.03), Func(self.prop.setColor, Vec4(1, 0, 0, 1)), Wait(0.03), Func(self.prop.setColorOff), Func(self.showBaseTexture))
+        
+        self.flash = Sequence(Func(self.hideBaseTexture),
+                              Func(self.prop.setColor, Vec4(1, 1, 0, 1)),
+                              Wait(0.03),
+                              Func(self.prop.setColor, Vec4(1, 0, 0, 1)),
+                              Wait(0.03),
+                              Func(self.prop.setColorOff),
+                              Func(self.showBaseTexture),
+                              Wait(0.1),
+                              Func(self.hideBaseTexture),
+                              Func(self.prop.setColor, Vec4(1, 1, 0, 1)),
+                              Wait(0.03),
+                              Func(self.prop.setColor, Vec4(1, 0, 0, 1)),
+                              Wait(0.03),
+                              Func(self.prop.setColorOff),
+                              Func(self.showBaseTexture))
         self.flash.start()
-
+    
     def hideBaseTexture(self):
         if not self.textures:
             self.textures = self.prop.findTexture('*')
-
+        
         ts = self.prop.findAllTextureStages()
         if ts.getNumTextureStages():
             self.prop.setTextureOff(ts[0])
-
+    
     def showBaseTexture(self):
         if self.textures:
             self.prop.setTexture(self.textures, 1)
+

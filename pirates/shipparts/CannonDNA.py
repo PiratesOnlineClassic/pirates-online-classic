@@ -1,4 +1,4 @@
-from panda3d.core import *
+from pandac.PandaModules import *
 from direct.directnotify.DirectNotifyGlobal import *
 import random
 from direct.distributed.PyDatagram import PyDatagram
@@ -7,7 +7,6 @@ from otp.avatar import AvatarDNA
 from otp.speedchat import ColorSpace
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.ship import ShipGlobals
-
 notify = directNotify.newCategory('CannonDNA')
 CannonDict = {
     InventoryType.CannonL1: 'models/shipparts/cannon',
@@ -19,8 +18,8 @@ CannonDict = {
     ShipGlobals.SKEL_CANNON_L3: 'models/shipparts/GP_cannon',
     ShipGlobals.BPCANNON: 'models/shipparts/cannon_bp'}
 
-
 class CannonDNA(AvatarDNA.AvatarDNA):
+    
     def __init__(self):
         self.baseTeam = 0
         self.cannonType = 0
@@ -29,7 +28,7 @@ class CannonDNA(AvatarDNA.AvatarDNA):
     def __str__(self):
         string = 'decorType %s, posIndex %s, colorIndex %s' % (self.decorType, self.posIndex, self.colorIndex)
         return string
-
+    
     def setBaseTeam(self, val):
         self.baseTeam = val
 
@@ -41,3 +40,4 @@ class CannonDNA(AvatarDNA.AvatarDNA):
 
     def getCannonType(self):
         return self.cannonType
+

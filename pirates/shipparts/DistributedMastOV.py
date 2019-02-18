@@ -2,10 +2,9 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObjectOV
 from pirates.ship import ShipGlobals
 
-
 class DistributedMastOV(DistributedObjectOV.DistributedObjectOV):
     notify = directNotify.newCategory('DistributedMastOV')
-
+    
     def __init__(self, cr):
         DistributedObjectOV.DistributedObjectOV.__init__(self, cr)
         self.stopSend = 8 | 4 | 2 | 1
@@ -16,12 +15,12 @@ class DistributedMastOV(DistributedObjectOV.DistributedObjectOV):
 
     def announceGenerate(self):
         DistributedObjectOV.DistributedObjectOV.announceGenerate(self)
-
+    
     def disable(self):
         DistributedObjectOV.DistributedObjectOV.disable(self)
 
     def __repr__(self):
-        return repr(self.doId)
+        return `self.doId`
 
     def setShipId(self, val):
         self.shipId = val
@@ -49,3 +48,4 @@ class DistributedMastOV(DistributedObjectOV.DistributedObjectOV):
                 self.mastType,
                 self.posIndex,
                 self.sailConfig])
+

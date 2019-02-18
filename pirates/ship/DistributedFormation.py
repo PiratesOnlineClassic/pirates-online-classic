@@ -1,8 +1,7 @@
 from direct.distributed import DistributedSmoothNode
 from direct.fsm import FSM
-from direct.showbase.ShowBaseGlobal import *
 from pandac.PandaModules import NodePath
-
+from direct.showbase.ShowBaseGlobal import *
 
 class DistributedFormation(DistributedSmoothNode.DistributedSmoothNode, FSM.FSM):
     
@@ -13,8 +12,7 @@ class DistributedFormation(DistributedSmoothNode.DistributedSmoothNode, FSM.FSM)
         NodePath.__init__(self, node)
         self.cSphere = None
         self.cSphereNode = None
-        return
-
+    
     def generate(self):
         DistributedSmoothNode.DistributedSmoothNode.generate(self)
         self.setupCollisions()
@@ -23,20 +21,20 @@ class DistributedFormation(DistributedSmoothNode.DistributedSmoothNode, FSM.FSM)
         DistributedSmoothNode.DistributedSmoothNode.disable(self)
         self.cleanupCollisions()
         self.stopSmooth()
-
+    
     def setState(self, stateName, timeStamp):
         print 'DistributedFormation.setState %s' % stateName
         self.request(stateName)
-
+    
     def enterAIPatrol(self):
         self.startSmooth()
-
+    
     def exitAIPatrol(self):
         self.stopSmooth()
-
+    
     def enterAIPathFollow(self):
         self.startSmooth()
-
+    
     def exitAIPathFollow(self):
         self.stopSmooth()
 
@@ -44,25 +42,30 @@ class DistributedFormation(DistributedSmoothNode.DistributedSmoothNode, FSM.FSM)
         if base.config.GetBool('process-movingObj-collisions', 1) is 0:
             self.notify.debug('skipping setting up collision sphere for formation')
             return
+        
         self.notify.debug('setting up collision sphere for formation')
         self.cSphere = CollisionSphere(0.0, 0.0, 0.0, ShipGlobals.FORMATION_AVOID_SPHERE_RADIUS)
         self.cSphere.setTangible(0)
         cSphereNode = CollisionNode(self.uniqueName('FormationSphere'))
         cSphereNode.addSolid(self.cSphere)
         self.cSphereNodePath = self.attachNewNode(cSphereNode)
-
+    
     def cleanupCollisions(self):
         self.notify.debug('cleaning up collisions')
         if self.cSphereNodePath:
             self.cSphereNodePath.removeNode()
             del self.cSphereNodePath
             self.cSphereNodePath = None
+        
         if self.cSphere:
             del self.cSphere
             self.cSphere = None
+        
         taskMgr.remove('formationMove-%s' % self.doId)
-        return
 
     def setRadius(self, radius):
         if self.cSphere:
             self.cSphere.setRadius(radius)
+        
+
+

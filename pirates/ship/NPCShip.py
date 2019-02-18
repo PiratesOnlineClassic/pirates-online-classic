@@ -1,15 +1,14 @@
-from pirates.ship import ShipBalance
-from otp.otpbase import OTPGlobals
-from pirates.piratesbase import PiratesGlobals
 from pirates.ship.DistributedShip import DistributedShip
-
+from pirates.piratesbase import PiratesGlobals
+from otp.otpbase import OTPGlobals
+import ShipBalance
 
 class NPCShip(DistributedShip):
-
+    
     def __init__(self, cr):
         DistributedShip.__init__(self, cr)
         self.isNpc = 1
-
+    
     def announceGenerate(self):
         self.setupAggroCollisions()
         DistributedShip.announceGenerate(self)
@@ -23,13 +22,13 @@ class NPCShip(DistributedShip):
 
     def updatePickable(self):
         self.setPickable(0)
-
+    
     def canBoard(self, avId):
         return True
 
     def getDamageInputModifier(self):
         return ShipBalance.NPCDamageIn.getValue()
-
+    
     def getDamageOutputModifier(self):
         return ShipBalance.NPCDamageOut.getValue()
 
@@ -42,3 +41,5 @@ class NPCShip(DistributedShip):
         self.smoother.setDefaultToStandingStill(False)
         self.setSmoothWrtReparents(True)
         self.startSmooth()
+
+
