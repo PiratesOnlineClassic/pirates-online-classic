@@ -311,12 +311,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
     def createSearchableContainer(self, parent, parentUid, objKey, objectData):
         container = DistributedSearchableContainerAI(self.air)
         container.setUniqueId(objKey)
-        pos = objectData.get('Pos', (0, 0, 0))
-        gridPos = objectData.get('GridPos')
-        if gridPos:
-            pos = gridPos
-
-        container.setPos(pos)
+        container.setPos(objectData.get('GridPos'), objectData.get('Pos', (0, 0, 0)))
         container.setHpr(objectData.get('Hpr', (0, 0, 0)))
         container.setScale(objectData.get('Scale', (1, 1, 1)))
         container.setType(objectData.get('type', 'Crate'))
@@ -335,16 +330,12 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         return container
 
     def createObjectSpawnNode(self, parent, parentUid, objKey, objectData):
-        spawnClass = DistributedSurfaceTreasureAI if objectData['Spawnables'] == 'Surface Treasure' \
-            else DistributedBuriedTreasureAI
+        if objectData['Spawnables'] == 'Surface Treasure':
+            spawnNode = DistributedSurfaceTreasureAI(self.air)
+        else:
+            spawnNode = DistributedBuriedTreasureAI(self.air)
 
-        spawnNode = spawnClass(self.air)
-        pos = objectData.get('Pos', (0, 0, 0))
-        gridPos = objectData.get('GridPos')
-        if gridPos:
-            pos = gridPos
-
-        spawnNode.setPos(pos)
+        spawnNode.setPos(objectData.get('GridPos', objectData.get('Pos', (0, 0, 0))))
         spawnNode.setHpr(objectData.get('Hpr', (0, 0, 0)))
         spawnNode.setScale(objectData.get('Scale', (1, 1, 1)))
         spawnNode.setStartingDepth(int(objectData.get('startingDepth', 10)))

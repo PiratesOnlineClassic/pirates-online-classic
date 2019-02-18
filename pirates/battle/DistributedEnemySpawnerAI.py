@@ -166,12 +166,7 @@ class SpawnNodeBase:
         # Set NPC Node data
         npc.setScale(self.objectData.get('Scale'))
         npc.setUniqueId('' if avatarType.getBoss() else self.objKey)
-        pos = self.objectData.get('Pos', (0, 0, 0))
-        gridPos = self.objectData.get('GridPos')
-        if gridPos:
-            pos = gridPos
-
-        npc.setPos(pos)
+        npc.setPos(self.objectData.get('GridPos', self.objectData.get('Pos', (0, 0, 0))))
         npc.setHpr(self.objectData.get('Hpr', (0, 0, 0)))
         npc.setSpawnPosHpr(npc.getPos(), npc.getHpr())
         npc.setInitZ(npc.getZ())
