@@ -311,7 +311,12 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
     def createSearchableContainer(self, parent, parentUid, objKey, objectData):
         container = DistributedSearchableContainerAI(self.air)
         container.setUniqueId(objKey)
-        container.setPos(objectData.get('Pos', (0, 0, 0)))
+        pos = objectData.get('Pos', (0, 0, 0))
+        gridPos = objectData.get('GridPos')
+        if gridPos:
+            pos = gridPos
+
+        container.setPos(pos)
         container.setHpr(objectData.get('Hpr', (0, 0, 0)))
         container.setScale(objectData.get('Scale', (1, 1, 1)))
         container.setType(objectData.get('type', 'Crate'))
@@ -334,8 +339,12 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             else DistributedBuriedTreasureAI
 
         spawnNode = spawnClass(self.air)
+        pos = objectData.get('Pos', (0, 0, 0))
+        gridPos = objectData.get('GridPos')
+        if gridPos:
+            pos = gridPos
 
-        spawnNode.setPos(objectData.get('Pos', (0, 0, 0)))
+        spawnNode.setPos(pos)
         spawnNode.setHpr(objectData.get('Hpr', (0, 0, 0)))
         spawnNode.setScale(objectData.get('Scale', (1, 1, 1)))
         spawnNode.setStartingDepth(int(objectData.get('startingDepth', 10)))
