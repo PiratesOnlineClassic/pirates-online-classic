@@ -311,7 +311,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
     def createSearchableContainer(self, parent, parentUid, objKey, objectData):
         container = DistributedSearchableContainerAI(self.air)
         container.setUniqueId(objKey)
-        container.setPos(objectData.get('GridPos'), objectData.get('Pos', (0, 0, 0)))
+        container.setPos(objectData.get('GridPos', objectData.get('Pos', (0, 0, 0))))
         container.setHpr(objectData.get('Hpr', (0, 0, 0)))
         container.setScale(objectData.get('Scale', (1, 1, 1)))
         container.setType(objectData.get('type', 'Crate'))
