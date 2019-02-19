@@ -32,22 +32,24 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         # TODO FIXME: properly check to see what inventory type this
         # item they are trying to buy fits under...
         currentStack = inventory.getStackQuantity(itemId)
+        stackLimit = inventory.getStackLimit(itemId)
         if not currentStack:
-            if itemId in EconomyGlobals.SHIP_SHELF:
-                self.air.shipLoader.createShip(avatar, itemId)
-        else:
-            if not inventory.hasStackSpace(itemId, amount=itemQuantity):
-                return RejectCode.OVERFLOW
+            currentStack = 0
 
-            currentStack = currentStack[1]
-            inventory.b_setStackQuantity(itemId, currentStack + itemQuantity)
+        if itemId in EconomyGlobals.SHIP_SHELF:
+            self.air.shipLoader.createShip(avatar, itemId)
 
+        if currentStack >= stackLimit:
+            return RejectCode.OVERFLOW
+
+        inventory.b_setStackQuantity(itemId, currentStack + itemQuantity)
         inventory.setGoldInPocket(currentGold - itemPrice)
 
         # Process stack limit changes
         stackBonus = EconomyGlobals.getInventoryBonus(itemId)
         if stackBonus:
-            pass #TODO: write me!
+            # TODO: I will write this (internet pirate)
+            pass
 
         return 2
 
@@ -56,15 +58,13 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         currentStack = inventory.getStackQuantity(itemId)
         if not currentStack:
             currentStack = 0
-        else:
-            currentStack = currentStack[1]
 
         if currentStack < itemQuantity:
             self.air.logPotentialHacker(
                 message='Received makeSale sell for an item the avatar does not have!',
                 itemId=itemId,
                 itemQuantity=itemQuantity,
-                 currentStack=currentStack
+                currentStack=currentStack
             )
 
             return RejectCode.TIMEOUT
