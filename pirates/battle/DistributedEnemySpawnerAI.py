@@ -105,6 +105,9 @@ class SpawnNodeBase:
         if not self.canRespawn():
             self.__died(self._npc)
 
+    def __died(self, npc):
+        npc.requestDelete()
+
     def __respawn(self, task):
         if not self._npc:
             self.notify.warning('Attempted to perform respawn on a %s without a npc!' % \
