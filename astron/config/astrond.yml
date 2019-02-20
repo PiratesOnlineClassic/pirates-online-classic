@@ -50,6 +50,7 @@ roles:
       client:
        relocate: true
        add_interest: enabled
+       send_hash: false
       channels:
         min: 1000000000
         max: 1009999999
