@@ -136,37 +136,37 @@ class OceanZone:
 def getOceanZone(xc, yc):
     xcoord = xc / 2000
     ycoord = yc / 2000
-    if xcoord >= -15 and xcoord < -7 and ycoord >= 4 and ycoord < 11:
+    if (xcoord >= -15 and xcoord < -7) and ycoord >= 4 and ycoord < 11:
         return OceanZone.BRIGAND_BAY
-    elif xcoord >= -15 and xcoord < -7 and ycoord >= 0 and ycoord < 4:
+    elif (xcoord >= -15 and xcoord < -7) and ycoord >= 0 and ycoord < 4:
         return OceanZone.BLOODY_BAYOU
-    elif xcoord >= -7 and xcoord < -2 and ycoord >= 0 and ycoord < 11:
+    elif (xcoord >= -7 and xcoord < -2) and ycoord >= 0 and ycoord < 11:
         return OceanZone.SCURVY_SHALLOWS
-    elif xcoord >= 6 and xcoord < 13 and ycoord >= 8 and ycoord < 14:
+    elif (xcoord >= 6 and xcoord < 13) and ycoord >= 8 and ycoord < 14:
         return OceanZone.SALTY_FLATS
-    elif xcoord >= -2 and xcoord < 6 and ycoord >= 10 and ycoord < 14:
+    elif (xcoord >= -2 and xcoord < 6) and ycoord >= 10 and ycoord < 14:
         return OceanZone.BLACKHEART_STRAIGHT
-    elif xcoord >= -2 and xcoord < 2 and ycoord >= 8 and ycoord < 10:
+    elif (xcoord >= -2 and xcoord < 2) and ycoord >= 8 and ycoord < 10:
         return OceanZone.BLACKHEART_STRAIGHT
-    elif xcoord >= -2 and xcoord < 6 and ycoord >= -1 and ycoord < 10:
+    elif (xcoord >= -2 and xcoord < 6) and ycoord >= -1 and ycoord < 10:
         return OceanZone.WINDWARD_PASSAGE
-    elif xcoord >= 6 and xcoord < 13 and ycoord >= -1 and ycoord < 8:
+    elif (xcoord >= 6 and xcoord < 13) and ycoord >= -1 and ycoord < 8:
         return OceanZone.MAR_DE_PLATA
-    elif xcoord >= 9 and xcoord < 13 and ycoord >= -4 and ycoord < -1:
+    elif (xcoord >= 9 and xcoord < 13) and ycoord >= -4 and ycoord < -1:
         return OceanZone.MAR_DE_PLATA
-    elif xcoord >= 11 and xcoord < 13 and ycoord >= -6 and ycoord < -4:
+    elif (xcoord >= 11 and xcoord < 13) and ycoord >= -6 and ycoord < -4:
         return OceanZone.MAR_DE_PLATA
-    elif xcoord >= 1 and xcoord < 11 and ycoord >= -8 and ycoord < -1:
+    elif (xcoord >= 1 and xcoord < 11) and ycoord >= -8 and ycoord < -1:
         return OceanZone.SMUGGLERS_RUN
-    elif xcoord >= 7 and xcoord < 13 and ycoord >= -15 and ycoord < -6:
+    elif (xcoord >= 7 and xcoord < 13) and ycoord >= -15 and ycoord < -6:
         return OceanZone.THE_HINTER_SEAS
-    elif xcoord >= -8 and xcoord < 7 and ycoord >= -15 and ycoord < -12:
+    elif (xcoord >= -8 and xcoord < 7) and ycoord >= -15 and ycoord < -12:
         return OceanZone.MARINERS_REEF
-    elif xcoord >= 1 and xcoord < 7 and ycoord >= -12 and ycoord < -8:
+    elif (xcoord >= 1 and xcoord < 7) and ycoord >= -12 and ycoord < -8:
         return OceanZone.BOILING_BAY
-    elif xcoord >= -15 and xcoord < -6 and ycoord >= -8 and ycoord < 0:
+    elif (xcoord >= -15 and xcoord < -6) and ycoord >= -8 and ycoord < 0:
         return OceanZone.DEAD_MANS_TROUGH
-    elif xcoord >= -8 and xcoord < 1 and ycoord >= -12 and ycoord < 0:
+    elif (xcoord >= -8 and xcoord < 1) and ycoord >= -12 and ycoord < 0:
         return OceanZone.LEEWARD_PASSAGE
     else:
         return OceanZone.UNCHARTED_WATERS
