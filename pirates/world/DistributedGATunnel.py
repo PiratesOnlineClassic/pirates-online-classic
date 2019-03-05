@@ -7,14 +7,20 @@ import DistributedGAConnector
 
 class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientArea.ClientArea):
     notify = directNotify.newCategory('DistributedGATunnel')
-
+    
     def __init__(self, cr):
         DistributedGAConnector.DistributedGAConnector.__init__(self, cr, 'DistributedGATunnel')
         ClientArea.ClientArea.__init__(self)
-        self.loadSphere = [None, None]
+        self.loadSphere = [
+            None,
+            None]
         self.unloadSphere = None
-        self.connectorNodes = ['portal_connector_1', 'portal_connector_2']
-        self.ambientNames = [None, None]
+        self.connectorNodes = [
+            'portal_connector_1',
+            'portal_connector_2']
+        self.ambientNames = [
+            None,
+            None]
         self.avatarZoneContext = None
         self.ownContext = None
         self.floorIndex = -1
@@ -43,11 +49,11 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
         if self.ownContext:
             self.cr.removeInterest(self.ownContext)
             self.ownContext = None
-
+        
         for sphere in self.loadSphere:
             if sphere:
                 sphere.removeNode()
-
+        
         del self.loadSphere
         self.fadeoutAllAmbient()
         DistributedGAConnector.DistributedGAConnector.delete(self)
@@ -55,7 +61,7 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
 
     def loadModel(self):
         DistributedGAConnector.DistributedGAConnector.loadModel(self)
-
+    
     def __startProcessVisibility(self):
         if not self.avatarZoneContext and self.isGenerated():
             self.avatarZoneContext = self.cr.addInterest(self.getDoId(), 500, self.uniqueName('visibility'))
@@ -71,7 +77,7 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
                 'collision_floor_1',
                 'collision_floor_2',
                 'collision_floor_middle']
-
+        
         floors = []
         for i in range(len(self.floorNames)):
             floorName = self.floorNames[i]
@@ -79,17 +85,17 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
             uniqueFloorName = self.uniqueName(floorName)
             floor.setName(uniqueFloorName)
             self.floorNames[i] = uniqueFloorName
-            self.accept('enterFloor' + uniqueFloorName, self.__handleOnFloor, extraArgs=[i])
+            self.accept('enterFloor' + uniqueFloorName, self.__handleOnFloor, extraArgs = [i])
 
     @report(types=['frameCount', 'printInterests'], dConfigParam='want-connector-report')
     def unloadWorldFinished(self, areaDoId):
         DistributedGAConnector.DistributedGAConnector.unloadWorldFinished(self, areaDoId)
         self.loadArea(self.floorIndex, False)
-
+    
     def fadeOutAmbient(self, index):
         if self.ambientNames[index]:
             base.ambientMgr.requestFadeOut(self.ambientNames[index], duration = 0.01)
-
+        
         if self.ambientNames[1 - index]:
             base.ambientMgr.requestChangeVolume(self.ambientNames[1 - index], duration = 0, finalVolume = 0)
 
@@ -119,8 +125,8 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
                     self.notify.warning('***JCW*** No loaded area in GATunnel: %s' % self.getUniqueId())
                     self.notify.warning('***JCW*** Areas: %s, %s' % (self.areaUid[0], self.areaUid[1]))
                     self.notify.warning('***JCW*** Ignoring __handleOnFloor(%s) event' % areaIndex)
-                    return
-
+                    return None
+                
                 entranceNode = self.areaNode[areaIndex]
                 entryLocator = area.find('**/' + entranceNode + '*')
                 camera.wrtReparentTo(render)
@@ -145,12 +151,12 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
                 if localAvatar.style.tutorial == PiratesGlobals.TUT_KILLED_1_SKELETON:
                     localAvatar.setX(30)
                     localAvatar.setH(90)
-
+                
             else:
                 localAvatar.setH(-90)
             localAvatar.wrtReparentTo(area)
             if autoFadeIn:
-
+                
                 def leaveTunnelFinished():
                     localAvatar.b_clearTeleportFlag(PiratesGlobals.TFInTunnel)
                     localAvatar.b_setGameState('LandRoam')
@@ -184,7 +190,7 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
             if self.ownContext:
                 self.cr.removeInterest(self.ownContext)
                 self.ownContext = None
-
+    
     def fadeoutAllAmbient(self):
         if self.lastFloor >= 0:
             for ambientName in self.ambientNames:
@@ -194,21 +200,21 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
     def setLinks(self, isExterior, exteriorUid, links):
         DistributedGAConnector.DistributedGAConnector.setLinks(self, isExterior, exteriorUid, links)
         self.calcAmbientNames()
-
+    
     def calcOneAmbientName(self, area):
         retval = None
         if area:
             parts = area.split('_')
             retval = base.ambientMgr.calcAmbientNameFromStr(parts[-1])
-
+        
         return retval
-
+    
     def calcAmbientNames(self):
         for i in xrange(2):
             area = self.areaNode[i]
             ambientName = self.calcOneAmbientName(area)
             self.ambientNames[i] = ambientName
-
+        
         if not self.ambientNames[0] and not self.ambientNames[1]:
             self.ambientNames[1] = base.ambientMgr.calcAmbientNameFromStr(self.modelPath)
             self.notify.debug('Assuming self.ambientNames[1] = %s' % self.ambientNames[1])
@@ -227,3 +233,4 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
     def turnOff(self):
         self.__stopProcessVisibility()
         DistributedGAConnector.DistributedGAConnector.turnOff(self)
+

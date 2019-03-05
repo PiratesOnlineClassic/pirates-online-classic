@@ -12,3 +12,5 @@ class DistributedLocatableObject(DistributedObject):
         if displayName:
             self.guiMgr.createTitle(displayName, PiratesGuiGlobals.TextFG2)
             localAvatar.guiMgr.radarGui.showLocation(locationName)
+
+

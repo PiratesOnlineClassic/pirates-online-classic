@@ -90,7 +90,6 @@ __islandNametagHeight = {
     'Isla Tormenta': 200,
     'Cutthroat Isle': 500}
 
-
 def getNametagHeight(name):
     return __islandNametagHeight.get(name, 200)
 
@@ -112,7 +111,6 @@ ObjectAnimRates_new = {
     'tree_b': [
         0.4,
         0.7]}
-
 
 def getLocationValue(name):
     return __locationNames.get(name)
@@ -172,3 +170,4 @@ def getOceanZone(xc, yc):
         return OceanZone.LEEWARD_PASSAGE
     else:
         return OceanZone.UNCHARTED_WATERS
+

@@ -1,5 +1,4 @@
 import random
-
 UNCHARTED_WATERS = 0
 BRIGAND_BAY = 1
 BLOODY_BAYOU = 2
@@ -53,6 +52,7 @@ def getOceanZone(xc, yc):
         return LEEWARD_PASSAGE
     else:
         return UNCHARTED_WATERS
+
 
 def randomZoneCoord(ozone):
     if ozone == BRIGAND_BAY:
@@ -148,3 +148,4 @@ def randomZoneCoord(ozone):
         return (xc, yc)
     else:
         return (0, 0)
+

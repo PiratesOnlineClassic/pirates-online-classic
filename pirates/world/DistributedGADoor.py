@@ -1,22 +1,24 @@
-from pirates.world import DistributedGAConnector
+import DistributedGAConnector
 
 class DistributedGADoor(DistributedGAConnector.DistributedGAConnector):
     notify = directNotify.newCategory('DistributedGADoor')
-
+    
     def __init__(self, cr):
         DistributedGAConnector.DistributedGAConnector.__init__(self, cr)
-        self.connectorNodes = ['portal_A', 'portal_B']
+        self.connectorNodes = [
+            'portal_A',
+            'portal_B']
 
     def generate(self):
         DistributedGAConnector.DistributedGAConnector.generate(self)
         self.loadArea(0)
         self.loadArea(1)
         self.setupPortal()
-
-    def loadArea(self, areaIndex, entry=None):
-        parentId, zoneId = self.areaParentZone[areaIndex]
+    
+    def loadArea(self, areaIndex, entry = None):
+        (parentId, zoneId) = self.areaParentZone[areaIndex]
         visContext = self.cr.addInterest(parentId, zoneId, 'gaConnector', areaEvent)
-
+    
     def setupConnectorNodes(self):
         pass
 
@@ -33,3 +35,5 @@ class DistributedGADoor(DistributedGAConnector.DistributedGAConnector):
         portalNode1.setCellOut(area0)
         base.cam.node().setCullCenter(base.camera)
         base.graphicsEngine.setPortalCull(1)
+
+

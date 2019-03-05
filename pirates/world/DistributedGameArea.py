@@ -1,11 +1,8 @@
-import time
-
-from panda3d.core import *
+from pandac.PandaModules import *
 from direct.distributed import DistributedNode
 from direct.distributed import DistributedObject
 from direct.showbase.PythonUtil import Functor, report
 from direct.actor import Actor
-from otp.ai.MagicWordGlobal import *
 from pirates.world import WorldGlobals
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.effects import EnvironmentEffects
@@ -28,11 +25,11 @@ from pirates.seapatch.SeaPatch import SeaPatch
 from pirates.seapatch.Reflection import Reflection
 from pirates.seapatch.Water import IslandWaterParameters
 from pirates.swamp.Swamp import Swamp
-
+import time
 
 class DistributedGameArea(DistributedNode.DistributedNode):
     notify = directNotify.newCategory('DistributedGameArea')
-
+    
     def __init__(self, cr):
         DistributedNode.DistributedNode.__init__(self, cr)
         NodePath.__init__(self, 'GameArea')
@@ -399,7 +396,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         return (pt[0], pt[1], pt[2], 0)
 
     def _getTunnelSpawnPos(self, index = 0):
-        connectorNodes = self.findAllMatches('**/portal_exterior*') + self.findAllMatches('**/portal_interior*')
+        connectorNodes = self.findAllMatches('**/portal_exterior*').asList() + self.findAllMatches('**/portal_interior*').asList()
         return self.getRelativePoint(connectorNodes[index % len(connectorNodes)], Point3(40, 0, 0))
 
     def initializeIslandWaterParameters(self):
@@ -607,16 +604,5 @@ class DistributedGameArea(DistributedNode.DistributedNode):
     def getLevel(self):
         return 1
 
-@magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def visualizeGrid():
-    """
-    Enables visualize grid zones within a cartesian grid
-    """
 
-    parent = spellbook.getTarget().getParentObj()
 
-    if not parent or not isinstance(parent, DistributedGameArea):
-        return "You are not located under an cartesian grid object!"
-
-    parent.visualizeGrid()
-    return "Toggled visualize grid zones."
