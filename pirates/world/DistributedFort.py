@@ -93,7 +93,7 @@ class DistributedFort(DistributedBattleAvatar.DistributedBattleAvatar):
     def __setupIslandDependentObjects(self):
         self.notify.debug('setupIslandDependentObjects')
         if not self.areDrawbridgesLoaded():
-            self.cr.distributedDistrict.worldCreator.registerPostLoadCall(self._DistributedFort__setupIslandDependentObjects)
+            self.cr.distributedDistrict.worldCreator.registerPostLoadCall(self.__setupIslandDependentObjects)
             self.notify.debug('no drawbridges yet, registering another post load call')
             return
         
