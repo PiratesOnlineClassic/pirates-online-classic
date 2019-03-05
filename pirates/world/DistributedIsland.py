@@ -32,12 +32,7 @@ from pirates.pvp import PVPGlobals
 from direct.gui import DirectGuiGlobals
 from pirates.battle.Teamable import Teamable
 
-class DistributedIsland(
-    DistributedGameArea.DistributedGameArea,
-    DistributedCartesianGrid.DistributedCartesianGrid,
-    ZoneLOD.ZoneLOD,
-    ClientArea.ClientArea,
-    Teamable):
+class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCartesianGrid.DistributedCartesianGrid, ZoneLOD.ZoneLOD, ClientArea.ClientArea, Teamable):
 
     MusicNames = {
         'Port Royal': 'island-port-royal',
@@ -55,7 +50,7 @@ class DistributedIsland(
         'Cutthroat Isle': 'island-cutthroat'}
 
     MusicDefault = 'island-general'
-    SiegeIcon=None
+    SiegeIcon = None
     notify = directNotify.newCategory('DistributedIsland')
 
     def __init__(self, cr):
@@ -181,8 +176,7 @@ class DistributedIsland(
         ZoneLOD.ZoneLOD.turnOff(self)
 
     @report(types=['frameCount', 'args'], dConfigParam=['want-connector-report', 'want-death-debug'])
-    def turnOn(self,
-               av = None):
+    def turnOn(self, av = None):
 
         self.startCustomEffects()
         if self.lastZoneLevel == 0:
@@ -354,16 +348,14 @@ class DistributedIsland(
         
         DistributedGameArea.DistributedGameArea.handleChildLeave(self, child, zoneId)
 
-    def handleEnterGameArea(self,
-            collEntry = None):
+    def handleEnterGameArea(self, collEntry = None):
 
         if self.uniqueId == LocationIds.KINGSHEAD_ISLAND:
             self.accept(PiratesGlobals.EVENT_SPHERE_SNEAK + PiratesGlobals.SPHERE_ENTER_SUFFIX, self._handleSneakIntoKingshead)
         
         DistributedGameArea.DistributedGameArea.handleEnterGameArea(self, collEntry)
     
-    def handleExitGameArea(self,
-            collEntry = None):
+    def handleExitGameArea(self, collEntry = None):
         if self.uniqueId == LocationIds.KINGSHEAD_ISLAND:
             self.ignore(PiratesGlobals.EVENT_SPHERE_SNEAK + PiratesGlobals.SPHERE_ENTER_SUFFIX)
         
@@ -493,7 +485,7 @@ class DistributedIsland(
     def loadIslandShoreWave(self, parent):
         if hasattr(self, 'islandShoreWave'):
             self.islandShoreWave.reparentTo(parent)
-            return None
+            return
         
         lowend = ''
         if base.options.terrain_detail_level == 0:
@@ -508,7 +500,7 @@ class DistributedIsland(
         if waveModel:
             self.islandShoreWave = Actor.Actor(waveModel)
             self.islandShoreWave.loadAnims({
-                'idle': islandBaseName + lowend + '_wave_idle' })
+                'idle': islandBaseName + lowend + '_wave_idle'})
             self.islandShoreWave.reparentTo(parent)
             self.islandShoreWave.loop('idle')
             meshes = self.islandShoreWave.findAllMatches('**/mesh_tide1')
@@ -554,7 +546,7 @@ class DistributedIsland(
             self.geom = terrainModel
         else:
             self.geom = loader.loadModelCopy(islandBaseName)
-            return None
+            return
         collNode = self.geom.find('**/cannoncol*')
         if collNode != collNode.notFound():
             collNode.node().setIntoCollideMask(collNode.node().getIntoCollideMask() | PiratesGlobals.TargetBitmask)
@@ -881,12 +873,8 @@ class DistributedIsland(
     def listenForLocationSphere(self):
         self.locationSphereName = self.cr.activeWorld.uniqueName('locSphere')
         msgName = PiratesGlobals.LOCATION_SPHERE
-        self.accept('enter' + self.locationSphereName, self.cr.getActiveWorld().enteredSphere, extraArgs = [
-            [
-                msgName]])
-        self.accept('exit' + self.locationSphereName, self.cr.getActiveWorld().exitedSphere, extraArgs = [
-            [
-                msgName]])
+        self.accept('enter' + self.locationSphereName, self.cr.getActiveWorld().enteredSphere, extraArgs = [[msgName]])
+        self.accept('exit' + self.locationSphereName, self.cr.getActiveWorld().exitedSphere, extraArgs = [[msgName]])
 
     def stopListenForLocationSphere(self):
         if self.locationSphereName:
@@ -1149,7 +1137,6 @@ class DistributedIsland(
         
         DistributedCartesianGrid.DistributedCartesianGrid.handleAvatarZoneChange(self, av, zoneId)
 
-    
     def startCustomEffects(self, interior = False):
         DistributedGameArea.DistributedGameArea.startCustomEffects(self, interior = False)
         if self.grass:
@@ -1280,7 +1267,7 @@ class DistributedIsland(
             tsSet = [tsSet[x] for x in range(tsSet.getNumTextureStages())]
             tsSet.sort(key = lambda x: x.getSort())
             if not tsSet:
-                return None
+                return
             
             TS = TextureStage
             tsSet[0].setCombineRgb(TS.CMReplace, TS.CSTexture, TS.COSrcColor)
@@ -1319,7 +1306,7 @@ class DistributedIsland(
 
     def setFeastFireEnabled(self, value):
         if self.feastFireEnabled == value:
-            return None
+            return
         
         self.feastFireEnabled = value
         if self.feastFireEnabled:
