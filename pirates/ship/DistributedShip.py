@@ -676,7 +676,11 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def startDeployEffect(self, startT = 0):
         if not self.fog:
-            self.fog = ShipFog(parent = self.root, psbskp = (self.port.getX(), self.starboard.getX(), self.bow.getY(), self.stern.getY(), self.keel.getZ(), self.peak.getZ()), bin = self.ShipBin, binPriority = self.ShipBinPriority, camera = base.cam)
+            self.fog = ShipFog(parent = self.root,
+                               psbskp = (self.port.getX(), self.starboard.getX(), self.bow.getY(), self.stern.getY(), self.keel.getZ(), self.peak.getZ()),
+                               bin = self.ShipBin,
+                               binPriority = self.ShipBinPriority,
+                               camera = base.cam)
 
         if not self.fogIval:
             duration = 8
@@ -892,7 +896,28 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         if self.bowsprit:
             self.bowsprit[0].cache()
 
-        self.setCachedData('DistributedShip', CachedShipData(self.optimized, self.broadside, self.hull, self.cabin, self.masts, self.sails, self.cannons, self.wheel, self.bowsprit, self.fullsailSfx, self.rammingSfx, self.sinkingSfx, self.lodRoot, self.highDetail, self.mediumDetail, self.lowDetail, self.highStatic, self.mediumStatic, self.lowStatic, self.modelCollisions, self.sailProjectors, self.locators))
+        self.setCachedData('DistributedShip', CachedShipData(self.optimized,
+                                                             self.broadside,
+                                                             self.hull,
+                                                             self.cabin,
+                                                             self.masts,
+                                                             self.sails,
+                                                             self.cannons,
+                                                             self.wheel,
+                                                             self.bowsprit,
+                                                             self.fullsailSfx,
+                                                             self.rammingSfx,
+                                                             self.sinkingSfx,
+                                                             self.lodRoot,
+                                                             self.highDetail,
+                                                             self.mediumDetail,
+                                                             self.lowDetail,
+                                                             self.highStatic,
+                                                             self.mediumStatic,
+                                                             self.lowStatic,
+                                                             self.modelCollisions,
+                                                             self.sailProjectors,
+                                                             self.locators))
         self.lodRoot.detachNode()
         self.lodRoot = None
         self.modelCollisions.detachNode()
@@ -980,7 +1005,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def performBuildCompleteFunctions(self):
         for (func, args, kwargs) in self.buildCompleteFunctions:
-            func(*args, **args)
+            func(*args, **kwargs)
 
         self.buildCompleteFunctions = []
 
@@ -1002,7 +1027,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def performMainBuiltFunctions(self):
         for (func, args, kwargs) in self.mainBuiltFunctions:
-            func(*args, **args)
+            func(*args, **kwargs)
 
         self.mainBuiltFunctions = []
 
@@ -1576,7 +1601,15 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.renownDisplay = PVPRankGui.PVPRankGui(parent = base.a2dBottomRight, displayType = PVPRankGui.SHIP_RENOWN_DISPLAY)
             self.renownDisplay.reparentTo(base.a2dBottomRight, sort = -1)
 
-        self.shipStatusDisplay = ShipStatusDisplay(parent = base.a2dTopLeft, shipId = self.getDoId(), shipName = (self.name, self.getBaseTeam()), shipClass = self.shipClass, shipHp = (self.Hp, self.maxHp), shipSp = (self.Sp, self.maxSp), shipCargo = (self.cargo, self.maxCargo), shipCrew = (self.crew, self.maxCrew), ownShip = base.cr.hasOwnerViewDoId(self.getDoId()))
+        self.shipStatusDisplay = ShipStatusDisplay(parent = base.a2dTopLeft,
+                                                   shipId = self.getDoId(),
+                                                   shipName = (self.name, self.getBaseTeam()),
+                                                   shipClass = self.shipClass,
+                                                   shipHp = (self.Hp, self.maxHp),
+                                                   shipSp = (self.Sp, self.maxSp),
+                                                   shipCargo = (self.cargo, self.maxCargo),
+                                                   shipCrew = (self.crew, self.maxCrew),
+                                                   ownShip = base.cr.hasOwnerViewDoId(self.getDoId()))
         self.adjustArmorDisplay()
         self.shipStatusDisplay.hide()
         if self.renownDisplay:
@@ -1761,7 +1794,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                 self.wheel[1].refreshState()
 
     def stashFloorCollisions(self):
-        return None
+        return
         if self.hull:
             self.hull[0].stashFloorCollisions()
 
@@ -1769,7 +1802,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.cabin[0].stashFloorCollisions()
 
     def unstashFloorCollisions(self):
-        return None
+        return
         if self.hull:
             self.hull[0].unstashFloorCollisions()
 
@@ -2019,7 +2052,8 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.removeWake()
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 if not hasattr(base.cr.activeWorld.getWater(), 'patch'):
-                    self.notify.error("Ship %s is in location %s,%s (%s[%s]).\nThis causes Attribute Error: 'NoneType' object has no attribute 'patch'\n" % (self.doId, self.getLocation()[0], self.getLocation()[1], type(self.getParentObj()), safeRepr(self.getParentObj())))
+                    self.notify.error("Ship %s is in location %s,%s (%s[%s]).\nThis causes Attribute Error: 'NoneType' object has no attribute 'patch'\n" % (
+                        self.doId, self.getLocation()[0], self.getLocation()[1], type(self.getParentObj()), safeRepr(self.getParentObj())))
 
                 self.wake = Wake.getEffect()
                 if self.wake:
@@ -2240,9 +2274,9 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         leftRightPeriod = 10.13
         upDownPeriod = 15.43
         elapsed = task.time
-        fbTheta = (elapsed / frontBackPeriod) * 2.0 * math.pi
-        lrTheta = (elapsed / leftRightPeriod) * 2.0 * math.pi
-        udTheta = (elapsed / upDownPeriod) * 2.0 * math.pi
+        fbTheta = elapsed / frontBackPeriod * 2.0 * math.pi
+        lrTheta = elapsed / leftRightPeriod * 2.0 * math.pi
+        udTheta = elapsed / upDownPeriod * 2.0 * math.pi
         avgWaveHeight = 0.0
         avgLRheight = [
             0.0,
@@ -2289,7 +2323,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         rightVec = rotMat.xform(Vec3.right())
         leanValue = -40.0 * clampScalar(velVec.dot(rightVec) * 2.0, -1.0, 1.0) * normSpeed
         tiltMult = lerp(0.9, 0.4, normSpeed)
-        if (not hasattr(base, 'localAvatar') or base.localAvatar.ship == self) and self.steeringAvId != localAvatar.doId:
+        if not hasattr(base, 'localAvatar') or base.localAvatar.ship == self and self.steeringAvId != localAvatar.doId:
             tiltMult *= 0.1
 
         if self.kraken:
@@ -2905,7 +2939,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                 2.0]
 
     def setupDebugCollisions(self):
-        return None
+        return
         if base.config.GetBool('process-movingObj-collisions', 1) is 0:
             return None
 
@@ -2916,7 +2950,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         self.debugCSphereNodePath = self.attachNewNode(cSphereNode)
 
     def cleanupDebugcollisions(self):
-        return None
+        return
         if base.config.GetBool('process-movingObj-collisions', 1) is 0:
             return None
 
@@ -3340,13 +3374,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def addPassiveSkill(self, skillId, inventory):
         skillLvl = max(0, inventory.getStackQuantity(skillId) - 1)
         effects = WeaponGlobals.getShipEffects(skillId)
-        if effects != [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0]:
+        if effects != [0, 0, 0, 0, 0, 0]:
             self.acceleration += self.baseAcceleration * effects[0] * skillLvl
             self.maxSpeed += self.baseMaxSpeed * effects[1] * skillLvl
             self.reverseAcceleration += self.baseReverseAcceleration * effects[2] * skillLvl
@@ -3613,26 +3641,26 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.lookAtDummy.lookAt(target.bow)
             targetHeading = self.lookAtDummy.getH(self.transNode)
             if distToTgt < ShipGlobals.BROADSIDE_MAX_AUTOAIM_DIST:
-                if (targetHeading > 65 or targetHeading < 115) and side == 1:
+                if (targetHeading > 65 and targetHeading < 115) and side == 1:
                     return distToTgt
-                elif (targetHeading < -65 or targetHeading > -115) and side == 0:
+                elif (targetHeading < -65 and targetHeading > -115) and side == 0:
                     return distToTgt
 
             self.lookAtDummy.lookAt(target.stern)
             targetHeading = self.lookAtDummy.getH(self.transNode)
             if distToTgt < ShipGlobals.BROADSIDE_MAX_AUTOAIM_DIST:
-                if (targetHeading > 65 or targetHeading < 115) and side == 1:
+                if (targetHeading > 65 and targetHeading < 115) and side == 1:
                     return distToTgt
-                elif (targetHeading < -65 or targetHeading > -115) and side == 0:
+                elif (targetHeading < -65 and targetHeading > -115) and side == 0:
                     return distToTgt
 
         else:
             self.lookAtDummy.lookAt(target)
             targetHeading = self.lookAtDummy.getH(self.transNode)
             if distToTgt < ShipGlobals.BROADSIDE_MAX_AUTOAIM_DIST:
-                if (targetHeading > 65 or targetHeading < 115) and side == 1:
+                if (targetHeading > 65 and targetHeading < 115) and side == 1:
                     return distToTgt
-                elif (targetHeading < -65 or targetHeading > -115) and side == 0:
+                elif (targetHeading < -65 and targetHeading > -115) and side == 0:
                     return distToTgt
 
         return 0
@@ -3761,7 +3789,13 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             shipInfo = shipToBoard.getShipInfo()
             dt = globalClockDelta.localElapsedTime(shipToBoard.sinkTimestamp)
             time = shipToBoard.sinkTime - dt
-            self.boardingPanel = ShipFrameBoard.ShipFrameBoard(shipName = shipInfo[1], shipClass = shipInfo[2], mastInfo = shipInfo[3], parent = base.a2dTopCenter, pos = (-0.45, 0, -0.5), time = time, command = self.__handleBoardingChoice)
+            self.boardingPanel = ShipFrameBoard.ShipFrameBoard(shipName = shipInfo[1],
+                                                               shipClass = shipInfo[2],
+                                                               mastInfo = shipInfo[3],
+                                                               parent = base.a2dTopCenter,
+                                                               pos = (-0.45, 0, -0.5),
+                                                               time = time,
+                                                               command = self.__handleBoardingChoice)
             self._boardingTimer = taskMgr.doMethodLater(time, self._boardingChoiceTimeout, 'boardingTimer')
 
         self.boardingPanel.show()
@@ -3930,7 +3964,6 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def resetMiniLog(self, name=None):
         self.miniLog = name and MiniLog(name)
 
-
     def requestShipSkill(self, skillId, ammoSkillId):
         self.sendUpdate('requestSkillEvent', [
             skillId,
@@ -3946,7 +3979,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.findAllMatches('**/kraken-*').detach()
             self.krakenLocators = []
             locatorInfo = ShipGlobals.KrakenLocators.get(self.shipClass)
-            for (pos, scale, rPos, rScale) in enumerate(locatorInfo):
+            for x, (pos, scale, rPos, rScale) in enumerate(locatorInfo):
                 pos.setX(pos[0] + 30)
                 locator = self.attachNewNode('kraken-%s' % (x,))
                 locator.setPosHprScale(pos, VBase3(-90, 0, 0), VBase3(scale))
