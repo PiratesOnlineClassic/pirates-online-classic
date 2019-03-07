@@ -613,7 +613,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         debug = 0
         reset = __dev__ and debug
         if self.dimensionsComputed and not reset:
-            return None
+            return
 
         if reset:
             self.bow.removeNode()
@@ -659,6 +659,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def getFlagDNAString(self):
         if hasattr(self, 'flagDNAString'):
             return self.flagDNAString
+        return None
 
     def setFlagDNAString(self, dnaStr):
         if dnaStr:
@@ -1034,7 +1035,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def optimizeShip(self):
         if not self.hull or self.optimized:
             self.notify.warning('ship not in a state for optimizing (may allready be optimized)')
-            return None
+            return
 
         self.hull[0].cutState()
         sailStates = {}
@@ -1120,11 +1121,11 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             av = None
             if type(args) == list:
                 if args[0] == None or args[1] == None:
-                    return None
+                    return
 
                 (av, fromShip) = args
             elif args == None:
-                return None
+                return
 
             av = args
             if timestamp is None:
@@ -1188,7 +1189,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def setTargetBitmask(self, bool):
         if not self.hull:
-            return None
+            return
 
         self.hull[0].setTargetBitmask(bool)
         for entry in self.masts.values():
@@ -1453,7 +1454,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
             self.pendingClientSteer = self.cr.relatedObjectMgr.requestObjects([
                 avId], eachCallback = reClientSteer)
-            return None
+            return
 
         if av.isLocal() and self.wheel:
             s = MiniLogSentry(self.miniLog, 'clientSteeringBegin', avId)
@@ -1498,12 +1499,12 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     @report(types=['frameCount', 'deltaStamp'], dConfigParam=['want-shipboard-report', 'want-shiksink-report'])
     def clientSteeringEnd(self):
         if not self.steeringAvId:
-            return None
+            return
 
         av = base.cr.doId2do.get(self.steeringAvId)
         if not av:
             self.notify.warning('avId: %s not found' % self.steeringAvId)
-            return None
+            return
 
         if av.isLocal():
             self.stopAutoSailing()
@@ -1595,7 +1596,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def loadShipStatusDisplay(self):
         if self.shipStatusDisplay or base.cr.tutorial:
-            return None
+            return
 
         if base.config.GetBool('want-infamy', 0) and not self.renownDisplay:
             self.renownDisplay = PVPRankGui.PVPRankGui(parent = base.a2dBottomRight, displayType = PVPRankGui.SHIP_RENOWN_DISPLAY)
@@ -1619,7 +1620,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def loadShipTargetPanel(self):
         if self.shipTargetPanel or base.cr.tutorial:
-            return None
+            return
 
         self.loadShipStatusDisplay()
         self.shipTargetPanel = ShipTargetPanel.ShipTargetPanel(self)
@@ -1716,7 +1717,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         eventObject = entry.getIntoNodePath()
         objType = eventObject.getNetTag('objType')
         if not objType:
-            return None
+            return
 
         objType = int(objType)
         if entry.getIntoNode().getName() == self.deckName:
@@ -1729,7 +1730,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         eventObject = entry.getIntoNodePath()
         objType = eventObject.getNetTag('objType')
         if not objType:
-            return None
+            return
 
         objType = int(objType)
         if entry.getIntoNode().getName() == self.deckName:
@@ -1978,7 +1979,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         eventObject = entry.getIntoNodePath()
         objType = eventObject.getNetTag('objType')
         if not objType:
-            return None
+            return
 
         objType = int(objType)
         if objType == PiratesGlobals.COLL_SHIP and self.isRamming():
@@ -1990,7 +1991,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         eventObject = entry.getIntoNodePath()
         objType = eventObject.getNetTag('objType')
         if not objType:
-            return None
+            return
 
         objType = int(objType)
         if objType == PiratesGlobals.COLL_SHIP:
@@ -2024,7 +2025,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def _handleEnterAggroSphere(self, collEntry):
         if localAvatar.getSiegeTeam():
-            return None
+            return
 
         otherCollNode = collEntry.getFromNodePath()
         myCollNode = collEntry.getIntoNodePath()
@@ -2046,7 +2047,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def createWake(self):
         if not base.cr.activeWorld and base.cr.activeWorld.getWater():
             self.notify.warning('Ship %s is trying to create a wake without an ocean. (world: %s)' % (self.doId, base.cr.activeWorld))
-            return None
+            return
 
         if self.WantWake and base.cr.wantSpecialEffects:
             self.removeWake()
@@ -2082,13 +2083,13 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def loadStats(self):
         if self.stats:
-            return None
+            return
 
         if not self.shipClass:
-            return None
+            return
 
         if self.getBaseTeam() == PiratesGlobals.INVALID_TEAM:
-            return None
+            return
 
         self.stats = ShipGlobals.getHullStats(self.shipClass)
         self.acceleration = self.stats['acceleration']
@@ -2153,13 +2154,13 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def unloadZoneLevel(self, level):
         if level == 0:
             if not self.zoneOnDeck:
-                return None
+                return
 
             self.cr.removeInterest(self.zoneOnDeck)
             self.zoneOnDeck = None
         elif level == 1:
             if not self.zoneDetails:
-                return None
+                return
 
             self.cr.removeInterest(self.zoneDetails)
             self.zoneDetails = None
@@ -2167,7 +2168,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         elif level == 2:
             self.removeWake()
             if not self.zoneDistance:
-                return None
+                return
 
             self.cr.removeInterest(self.zoneDistance)
             self.zoneDistance = None
@@ -2215,7 +2216,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             elif attacker.getShip():
                 attackShip = attacker.getShip()
             else:
-                return None
+                return
             if self.isInCrew(localAvatar.doId):
                 localAvatar.addShipTarget(attackShip, 1)
                 localAvatar.guiMgr.radarGui.flashRadarObjectTimed(attackShip.doId)
@@ -2405,12 +2406,13 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         if self.boardableShipId:
             boardableShip = self.cr.doId2do.get(self.boardableShipId)
             return boardableShip
+        return None
 
     def setBoardingSuccess(self, attackShipId, timestamp):
         self.notify.debug('%s setBoardingSuccess %s' % (self.doId, attackShipId))
         if attackShipId != self.boardableShipId:
             self.notify.warning('boardingSuccess: attackShipId != boardableShipId')
-            return None
+            return
 
         if timestamp is None:
             ts = 0.0
@@ -2514,14 +2516,14 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def checkMakeNametag(self):
         if not self.shipClass:
-            return None
+            return
 
         if not self.name:
-            return None
+            return
 
         if not self.nametag:
             self.createNametag(self.name)
-            return None
+            return
 
     def setDisplayName(self, str):
         self.nametag.setDisplayName(str)
@@ -2542,27 +2544,27 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def hideName(self):
         if not self.nametag:
-            return None
+            return
 
         self.nametag.getNametag3d().setContents(Nametag.CSpeech | Nametag.CThought)
 
     def showName(self):
         if not self.nametag:
-            return None
+            return
 
         if self.__nameVisible:
             self.nametag.getNametag3d().setContents(Nametag.CName | Nametag.CSpeech | Nametag.CThought)
 
     def hideNametag2d(self):
         if not self.nametag:
-            return None
+            return
 
         self.nametag2dContents = 0
         self.nametag.getNametag2d().setContents(self.nametag2dContents & self.nametag2dDist)
 
     def showNametag2d(self):
         if not self.nametag:
-            return None
+            return
 
         self.nametag2dContents = self.nametag2dNormalContents
         self.nametag2dContents = Nametag.CSpeech
@@ -2574,7 +2576,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def showNametag3d(self):
         if not self.nametag:
-            return None
+            return
 
         if self.__nameVisible:
             self.nametag.getNametag3d().setContents(Nametag.CName | Nametag.CSpeech | Nametag.CThought)
@@ -2642,7 +2644,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def createNametag(self, name):
         if self.shipClass == ShipGlobals.STUMPY_SHIP:
-            return None
+            return
 
         self.__nameVisible = 1
         self.nametag = NametagGroup()
@@ -2691,7 +2693,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def setGUIBounty(self, bounty):
         if not base.config.GetBool('want-bountyicons', 0):
-            return None
+            return
 
         bountyRank = 0
         for rank in PVPGlobals.BountyRanks:
@@ -2889,7 +2891,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             print '---------------setLocation %s %s-----------' % (parentId, zoneId)
 
         if self.parentId == parentId and self.zoneId == zoneId:
-            return None
+            return
 
         if hasattr(base, 'localAvatar'):
             if localAvatar.getDoId() == self.steeringAvId:
@@ -2899,7 +2901,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                     zone = gridObj.getZoneFromXYZ(pos)
                     (currParentId, currZoneId) = self.getLocation()
                     if parentId == currParentId and currZoneId == zoneId:
-                        return None
+                        return
 
             DistributedMovingObject.setLocation(self, parentId, zoneId)
 
@@ -2941,7 +2943,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def setupDebugCollisions(self):
         return
         if base.config.GetBool('process-movingObj-collisions', 1) is 0:
-            return None
+            return
 
         self.debugCSphere = CollisionSphere(0.0, 0.0, 0.0, ShipGlobals.AVOID_SPHERE_RADIUS)
         self.debugCSphere.setTangible(0)
@@ -2952,7 +2954,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def cleanupDebugcollisions(self):
         return
         if base.config.GetBool('process-movingObj-collisions', 1) is 0:
-            return None
+            return
 
         if self.debugCSphereNodePath:
             self.debugCSphereNodePath.removeNode()
@@ -2982,12 +2984,12 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                 priority = WeaponGlobals.getBuffPriority(buffId)
                 category = WeaponGlobals.getBuffCategory(buffId)
                 if newPriority < priority and category == newCategory:
-                    return None
+                    return
 
         helmsman = self.cr.doId2do.get(self.steeringAvId)
         if helmsman:
             if helmsman.isNpc:
-                return None
+                return
 
             if not helmsman.isLocal() or localSignal:
                 self.playSkillMovie(skillId, ammoSkillId)
@@ -3005,7 +3007,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         helmsman = self.cr.doId2do.get(self.steeringAvId)
         if helmsman:
             if helmsman.isNpc:
-                return None
+                return
 
         self.curAttackAnim = getattr(self.cr.combatAnims, anim)(helmsman, skillId, ammoSkillId)
         self.curAttackAnim.start()
@@ -3055,7 +3057,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.registerMainBuiltFunction(self.addStatusEffect, extraArgs = [
                 effectId,
                 attackerId])
-            return None
+            return
 
         if effectId == WeaponGlobals.C_FULLSAIL:
             if self.isLocalCaptain():
@@ -3219,7 +3221,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def removeStatusEffect(self, effectId, attackerId):
         if self.findAllBuffCopyKeys(effectId):
-            return None
+            return
 
         if effectId == WeaponGlobals.C_RAM:
             if self.windConeEffect:
@@ -3270,10 +3272,10 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def startAutoSailing(self):
         if self.enableAutoSail:
-            return None
+            return
 
         if not self.sailsReady:
-            return None
+            return
 
         self.enableAutoSail = 1
         self.setIsAutoSailing(1)
@@ -3285,14 +3287,14 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def stopAutoSailing(self):
         if not self.enableAutoSail:
-            return None
+            return
 
         if not self.sailsReady:
-            return None
+            return
 
         for buffId in self.getSkillEffects():
             if WeaponGlobals.C_RAM == buffId:
-                return None
+                return
 
         self.enableAutoSail = 0
         self.setIsAutoSailing(0)
@@ -3310,7 +3312,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def setIsAutoSailing(self, value):
         if self.lockedSails:
-            return None
+            return
 
         self.autoSailing = value
         if value:
@@ -3406,11 +3408,11 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def composeRequestShipRam(self, targetId, pos):
         target = self.cr.doId2do.get(targetId)
         if not target:
-            return None
+            return
 
         if not TeamUtils.damageAllowed(target, self):
             localAvatar.guiMgr.createWarning(PLocalizer.FriendlyFireWarning, PiratesGuiGlobals.TextFG6)
-            return None
+            return
 
         for buffKeyId in self.skillEffects.keys():
             buffId = self.skillEffects[buffKeyId][0]
@@ -3514,7 +3516,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def showHpText(self, number, bonus = 0, duration = 2.0, scale = 1.0, pos = None, basicPenalty = 0, crewBonus = 0, doubleXPBonus = 0, holidayBonus = 0):
         if self.isEmpty():
-            return None
+            return
 
         distance = camera.getDistance(self)
         scale *= max(1.0, distance / 25.0)
@@ -3580,18 +3582,18 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def rollupSails(self):
         if not self.sailsDown:
-            return None
+            return
 
         currentState = self.gameFSM.getCurrentOrNextState()
         if currentState == 'Sunk' or currentState == 'Sinking':
-            return None
+            return
 
         self.sailsDown = 0
         self.b_animateSails('Rollup')
 
     def rolldownSails(self):
         if self.sailsDown:
-            return None
+            return
 
         self.sailsDown = 1
         self.b_animateSails('Rolldown')
@@ -3725,7 +3727,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def setRespectDeployBarriers(self, respect, barrierId):
         self.respectDeployBarriers = respect
         if not self.controlManager:
-            return None
+            return
 
         controls = self.controlManager.get('ship')
         if controls:
@@ -3746,7 +3748,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def setClientController(self, avId):
         if not self.mainPartsBuilt:
             self.registerMainBuiltFunction(self.setClientController, extraArgs = [avId])
-            return None
+            return
 
         self.clientController = avId
         if avId != 0 and avId == localAvatar.doId:
@@ -3828,7 +3830,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def loadFlat(self):
         if self.flat:
-            return None
+            return
 
         self.flat = self.root.attachNewNode('Flat')
         hullPrefix = self.hull[0].getFlatPrefix(self.modelClass)
