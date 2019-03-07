@@ -85,7 +85,7 @@ class DistributedAvatar(DistributedActor, Avatar):
                 self.nametag2dDist |= Nametag.CName
             self.nametag.getNametag2d().setContents(self.nametag2dContents & self.nametag2dDist)
             DistributedActor.do_setParent(self, parentToken)
-            self._DistributedAvatar__setTags()
+            self.__setTags()
 
     def toonUp(self, hpGained):
         if self.hp == None or hpGained < 0:
