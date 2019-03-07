@@ -1,15 +1,15 @@
+from pandac.PandaModules import *
 from direct.showbase.DirectObject import DirectObject
 from otp.otpbase import OTPGlobals
-from panda3d.core import *
-
 
 class PositionExaminer(DirectObject, NodePath):
-
+    
     def __init__(self):
+        
         try:
             self.__initialized
             return
-        except BaseException:
+        except:
             self.__initialized = 1
 
         NodePath.__init__(self, hidden.attachNewNode('PositionExaminer'))
@@ -77,8 +77,7 @@ class PositionExaminer(DirectObject, NodePath):
         self.cRayTrav.traverse(render)
         if self.cRayQueue.getNumEntries() != 0:
             self.cRayQueue.sortEntries()
-            floorPoint = self.cRayQueue.getEntry(
-                0).getSurfacePoint(self.cRayNodePath)
+            floorPoint = self.cRayQueue.getEntry(0).getSurfacePoint(self.cRayNodePath)
             if abs(floorPoint[2]) <= 4.0:
                 pos += floorPoint
                 self.setPos(pos)
@@ -89,8 +88,11 @@ class PositionExaminer(DirectObject, NodePath):
                     self.ccLineTrav.traverse(render)
                     if self.ccLineQueue.getNumEntries() == 0:
                         result = pos
+
         self.reparentTo(hidden)
         self.cRayQueue.clearEntries()
         self.cSphereQueue.clearEntries()
         self.ccLineQueue.clearEntries()
         return result
+
+
