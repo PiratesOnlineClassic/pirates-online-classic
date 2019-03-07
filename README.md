@@ -15,6 +15,22 @@ All merges should go through a three-step process:
 
 For emergency/security merges, only steps 1/2 are required if time is an issue.
 
+## Verification Guidelines
+
+Eventually we'll begin working on the verification codebase; when this happens we need to follow a set of regulations:
+
+- Don't update deprecations, the goal(currently) is to make it as close to the original as possible.
+
+- If you find code on the client you deem "Unnecessary" don't remove it, don't touch it; If it isn't broken, don't fix it.
+
+- Custom client features that poc previously had(e.g Rich Presence, Various discord integrations, Userfunnel modifications, etc, etc) should not be added back until the codebase is nearing beta release ready.
+
+- Retain originality. In the process of developing on this branch, we may need to alter things to support astron and the csm, we should try to retain as much originality as possible and not modify it out of the scope it needs to make certain things function.
+
+- Do not run autopep formatters or any kind of formatters on the codebase, it's been manually formatted.
+
+If you have anymore questions, ask me.
+
 ## Branches
 
 ### Master
