@@ -939,7 +939,6 @@ class LocalAvatar(DistributedAvatar.DistributedAvatar, DistributedSmoothNode.Dis
     def stopSleepWatch(self):
         taskMgr.remove(self.uniqueName('sleepwatch'))
         self.sleepCallback = None
-        return
 
     def startSleepSwimTest(self):
         taskName = self.taskName('sleepSwimTest')
