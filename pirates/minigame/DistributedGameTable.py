@@ -1,21 +1,20 @@
 import random
-
-from direct.directnotify import DirectNotifyGlobal
-from direct.interval.IntervalGlobal import *
+from pandac.PandaModules import *
 from direct.showbase import DirectObject
-from otp.otpgui import OTPDialog
-from panda3d.core import *
-from pirates.distributed import DistributedInteractive
+from direct.interval.IntervalGlobal import *
+from pirates.piratesbase import PiratesGlobals
 from pirates.npc import Townfolk
+from pirates.distributed import DistributedInteractive
+from pirates.piratesbase import PLocalizer
+from direct.directnotify import DirectNotifyGlobal
 from pirates.pirate import HumanDNA
-from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PDialog
-
+from otp.otpgui import OTPDialog
 
 class DistributedGameTable(DistributedInteractive.DistributedInteractive):
-
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGameTable')
-
+    
     def __init__(self, cr):
         NodePath.__init__(self, 'DistributedGameTable')
         DistributedInteractive.DistributedInteractive.__init__(self, cr)
@@ -38,6 +37,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
             disableEvent = av.uniqueName('disable')
             self.accept(disableEvent, Functor(self.finishAvIvals, av))
             self.avId2ivals[doId] = []
+        
         self.avId2ivals[doId].append(sequence)
 
     def finishAvIvals(self, av):
@@ -57,7 +57,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
     def showUseInfo(self):
         if self.disk:
             self.disk.hide()
-
+    
     def setTableType(self, type):
         self.tableType = type
         self.setTableInfo(self.tableType)
@@ -67,14 +67,14 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
     def setDealerType(self, type):
         self.dealerType = type
         self.createDealer(self.dealerType)
-
+    
     def setDealerName(self, name):
         self.dealerName = name
-
+    
     def setAIList(self, list):
         self.AIList = list
         self.createAIPlayers(self.AIList)
-
+    
     def announceGenerate(self):
         DistributedInteractive.DistributedInteractive.announceGenerate(self)
 
@@ -106,7 +106,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
             self.seatLocatorArray.append(self.tableModel.find('**/pot'))
             length = len(self.seatLocatorArray)
             for i in range(length):
-                stacks = loader.loadModelCopy('models/props/coinstacks')
+                stacks = loader.loadModel('models/props/coinstacks')
                 stacks.setLightOff()
                 self.stacksArray.append(stacks)
                 seat = self.seatLocatorArray[i]
@@ -118,27 +118,30 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
                         self.stackArray.append(stack)
                         if stack:
                             stack.hide()
+                        
                         stack = stacks.find('**/stack_2')
                         self.stackArray.append(stack)
                         if stack:
                             stack.hide()
+                        
                         stack = stacks.find('**/stack_3')
                         self.stackArray.append(stack)
                         if stack:
                             stack.hide()
+                        
                         stack = stacks.find('**/stack_4')
                         self.stackArray.append(stack)
                         if stack:
                             stack.hide()
+                        
                         stack = stacks.find('**/stack_5')
                         self.stackArray.append(stack)
                         if stack:
                             stack.hide()
 
             text = self.getInteractText()
-            self.setInteractOptions(proximityText=text, sphereScale=9, diskRadius=12)
-            self.DealerPos = (
-             Vec3(0, 6.5, 0), Vec3(180, 0, 0))
+            self.setInteractOptions(proximityText = text, sphereScale = 9, diskRadius = 12)
+            self.DealerPos = (Vec3(0, 6.5, 0), Vec3(180, 0, 0))
             self.HandPos = (Vec3(0, 1, 0), Vec3(0, -1, 0))
             self.NumSeats = 7
             self.SeatInfo = []
@@ -153,12 +156,13 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
                 if i != self.NumSeats:
                     self.actors.append(0)
                     self.SeatAnim.append(0)
+                
                 seat = NodePath('seat-%s' % i)
                 seat.reparentTo(self)
                 seat.setH(-(i * degreeIncrement + 180) % 360)
                 seatNode = NodePath('seatNode-%s' % i)
                 seatNode.reparentTo(seat)
-                seatNode.setY(-self.seatRadius)
+                seatNode.setY(-(self.seatRadius))
                 self.SeatInfo.append(seatNode)
                 stool = loader.loadModel('models/props/stool_bar')
                 lod = stool.find('**/+LODNode')
@@ -166,6 +170,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
                     node = lod.node()
                     if node:
                         self.seatLodNodeArray.append(node)
+
                 stool.reparentTo(seatNode)
                 stool.setY(-0.9)
                 stool.setZ(0.05)
@@ -182,17 +187,17 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
                     c.reparentTo(self)
                     c.hide()
                     self.PocketCards.append(c)
-
+                
                 self.displayStacks(i, 0)
-
+            
             self.displayStacks(self.getPotSeat(), 0)
 
     def randomInteger(self, length):
         return int(random.random() * length)
-
+    
     def randomArraySelection(self, array):
         return array[self.randomInteger(len(array))]
-
+    
     def createAiPlayerName(self, female, seed):
         state = random.getstate()
         random.seed(seed)
@@ -215,13 +220,13 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
         if avatar:
             avatar.setName(name)
             avatar.name = name
-
+    
     def createDealer(self, type):
         self.dealer = Townfolk.Townfolk()
         if type == 1:
             dna = HumanDNA.HumanDNA()
-            dna.makeNPCTownfolk(seed=self.doId)
-            name = self.dealerName
+            dna.makeNPCTownfolk(seed = self.doId)
+            name = 'Dealer'
             dna.setName(name)
             dna.clothes.coat = 0
             dna.clothes.vest = 2
@@ -235,6 +240,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
             self.setAiPlayerName(self.dealerName, name)
         self.dealer.reparentTo(self.SeatInfo[-1])
         self.dealer.setX(self.sittingOffset)
+        self.dealer.hideShadow()
         self.dealer.disableMixing()
         self.dealer.loop('deal_idle')
         deck = loader.loadModel('models/handheld/cards_deck_high')
@@ -254,7 +260,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
                 self.AIPlayers[i] = aiplayer
                 self.actors[i] = aiplayer
                 dna = HumanDNA.HumanDNA()
-                dna.makeNPCPirate(seed=self.doId + i)
+                dna.makeNPCPirate(seed = self.doId + i)
                 aiplayer.setDNAString(dna)
                 aiplayer.generateHuman(dna.gender, self.cr.human)
                 aiplayer.reparentTo(self.SeatInfo[i])
@@ -262,13 +268,15 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
                 female = False
                 if dna.gender == 'f':
                     female = True
+
                 seed = self.doId + i
                 name = self.createAiPlayerName(female, seed)
                 self.setAiPlayerName(aiplayer, name)
+                aiplayer.hideShadow()
                 aiplayer.disableMixing()
                 aiplayer.loop('sit_idle')
-
-    def requestInteraction(self, avId, interactType=0):
+    
+    def requestInteraction(self, avId, interactType = 0):
         base.localAvatar.motionFSM.off()
         DistributedInteractive.DistributedInteractive.requestInteraction(self, avId, interactType)
 
@@ -281,7 +289,6 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
             self.requestDialog.destroy()
             del self.requestDialog
             self.requestDialog = None
-        return
 
     def requestCommand(self, value):
         self.deleteRequestDialogs()
@@ -294,18 +301,18 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
             self.localAvatarGotUp(seatIndex)
         elif answer == 3:
             self.deleteRequestDialogs()
-            self.requestDialog = PDialog.PDialog(text=PLocalizer.TableIsFullMessage, style=OTPDialog.Acknowledge, command=self.requestCommand)
+            self.requestDialog = PDialog.PDialog(text = PLocalizer.TableIsFullMessage, style = OTPDialog.Acknowledge, command = self.requestCommand)
             self.setDialogBin(self.requestDialog)
             localAvatar.motionFSM.on()
             self.cr.interactionMgr.start()
         elif answer == 5:
-            localAvatar.guiMgr.showNonPayer(quest='Game_Table', focus=6)
+            localAvatar.guiMgr.showNonPayer(quest = 'Game_Table', focus = 6)
             localAvatar.motionFSM.on()
             self.cr.interactionMgr.start()
         else:
             localAvatar.motionFSM.on()
             self.cr.interactionMgr.start()
-
+    
     def localAvatarSatDown(self, seatIndex):
         self.actors[seatIndex] = localAvatar
         self.localAvatarSeat = seatIndex
@@ -316,24 +323,24 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
         localAvatar.setHpr(0, 0, 0)
         satDown = Func(self.satDown, seatIndex)
         disableMixing = Func(localAvatar.disableMixing)
-        sit = localAvatar.actorInterval('sit', mixingWanted=False)
+        sit = localAvatar.actorInterval('sit', mixingWanted = False)
         sit_idle = Func(localAvatar.loop, 'sit_idle')
         acceptInt = Func(self.acceptInteraction)
         sittingSeq = Sequence(satDown, disableMixing, sit, sit_idle, acceptInt)
         self.saveSequence(sittingSeq, localAvatar)
         sittingSeq.start()
         self.setSeatsLOD(True)
-
+    
     def satDown(self, seatIndex):
         pass
 
     def createGui(self):
         pass
-
+    
     def localAvatarGotUp(self, seatIndex):
         self.actors[seatIndex] = 0
         self.localAvatarSeat = -1
-
+        
         def restore():
             localAvatar.setControlEffect('sit', 0)
             localAvatar.enableMixing()
@@ -341,7 +348,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
             localAvatar.b_setGameState(localAvatar.gameFSM.defaultState)
             self.reparentAndMoveInRelationTo(localAvatar, self.getParent(), self.SeatInfo[seatIndex].getPos(self.getParent()))
 
-        sittingSeq = Sequence(Func(self.gotUp, seatIndex), Func(localAvatar.disableMixing), localAvatar.actorInterval('sit', playRate=-1, mixingWanted=False), Func(restore), Func(self.setSeatsLOD, False))
+        sittingSeq = Sequence(Func(self.gotUp, seatIndex), Func(localAvatar.disableMixing), localAvatar.actorInterval('sit', playRate = -1, mixingWanted = False), Func(restore), Func(self.setSeatsLOD, False))
         self.saveSequence(sittingSeq, localAvatar)
         sittingSeq.start()
 
@@ -362,6 +369,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
                     avatar.disableMixing()
                     if self.SeatAnim[seatIndex] == 0:
                         avatar.loop('sit_idle')
+                
             elif avId == 0 and self.AIPlayers[seatIndex] == 0:
                 self.actors[seatIndex] = 0
 
@@ -375,7 +383,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
                 avatar.setHpr(0, 0, 0)
                 self.SeatAnim[seatIndex] = 1
                 avatar.disableMixing()
-                sit = avatar.actorInterval('sit', mixingWanted=False)
+                sit = avatar.actorInterval('sit', mixingWanted = False)
                 sit_idle = Func(avatar.loop, 'sit_idle')
                 setAnim = Func(self.setSeatAnim, seatIndex, 0)
                 sittingSeq = Sequence(sit, sit_idle, setAnim)
@@ -388,7 +396,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
             if avatar:
                 self.SeatAnim[seatIndex] = 1
                 avatar.disableMixing()
-                stand = avatar.actorInterval('sit', playRate=-1, mixingWanted=False)
+                stand = avatar.actorInterval('sit', playRate = -1, mixingWanted = False)
                 enableMixing = Func(avatar.enableMixing)
                 idle = Func(avatar.loop, 'idle')
                 setAnim = Func(self.setSeatAnim, seatIndex, 0)
@@ -420,16 +428,17 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
             self.dealer.removeActive()
             self.dealer.delete()
             del self.dealer
+        
         for townfolk in self.AIPlayers:
             if townfolk:
                 townfolk.removeActive()
                 townfolk.delete()
-
+        
         del self.AIPlayers
         del self.actors
         for n in self.PocketCards:
             n.removeNode()
-
+        
         del self.PocketCards
         del self.SeatInfo
         del self.SeatAnim
@@ -444,7 +453,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
 
     def isLocalAvatarSeated(self):
         return self.localAvatarSeat != -1
-
+    
     def receiveAISpeech(self, seat, message):
         if self.AIList[seat] == 0:
             return
@@ -453,29 +462,230 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
 
     def receiveAIThoughts(self, seat, message):
         pass
-
+    
     def setDialogBin(self, dialog):
         dialog.setBin('gui-fixed', 10, 10)
 
     display_1 = [
-     [
-      0, 0, 0, 0, 0], [0, 1, 0, 0, 0], [1, 0, 0, 0, 0], [1, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 1, 0, 0], [0, 1, 1, 0, 0], [1, 0, 1, 0, 0], [0, 1, 1, 0, 0], [1, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 1, 0, 1, 0], [1, 0, 0, 1, 0], [0, 0, 1, 1, 0], [0, 1, 1, 1, 0], [1, 0, 1, 1, 0]]
+        [
+            0,
+            0,
+            0,
+            0,
+            0],
+        [
+            0,
+            1,
+            0,
+            0,
+            0],
+        [
+            1,
+            0,
+            0,
+            0,
+            0],
+        [
+            1,
+            1,
+            0,
+            0,
+            0],
+        [
+            0,
+            0,
+            1,
+            0,
+            0],
+        [
+            0,
+            0,
+            1,
+            0,
+            0],
+        [
+            0,
+            1,
+            1,
+            0,
+            0],
+        [
+            1,
+            0,
+            1,
+            0,
+            0],
+        [
+            0,
+            1,
+            1,
+            0,
+            0],
+        [
+            1,
+            0,
+            1,
+            0,
+            0],
+        [
+            0,
+            0,
+            0,
+            1,
+            0],
+        [
+            0,
+            1,
+            0,
+            1,
+            0],
+        [
+            1,
+            0,
+            0,
+            1,
+            0],
+        [
+            0,
+            0,
+            1,
+            1,
+            0],
+        [
+            0,
+            1,
+            1,
+            1,
+            0],
+        [
+            1,
+            0,
+            1,
+            1,
+            0]]
     display_2 = [
-     [
-      1, 1, 1, 1, 0], [0, 0, 0, 0, 1], [0, 1, 0, 0, 1], [1, 0, 0, 0, 1], [1, 1, 0, 0, 1], [0, 0, 1, 0, 1], [0, 0, 1, 0, 1], [0, 1, 1, 0, 1], [1, 0, 1, 0, 1], [0, 1, 1, 0, 1], [1, 0, 1, 0, 1], [0, 0, 0, 1, 1], [0, 1, 0, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 1, 1, 1]]
+        [
+            1,
+            1,
+            1,
+            1,
+            0],
+        [
+            0,
+            0,
+            0,
+            0,
+            1],
+        [
+            0,
+            1,
+            0,
+            0,
+            1],
+        [
+            1,
+            0,
+            0,
+            0,
+            1],
+        [
+            1,
+            1,
+            0,
+            0,
+            1],
+        [
+            0,
+            0,
+            1,
+            0,
+            1],
+        [
+            0,
+            0,
+            1,
+            0,
+            1],
+        [
+            0,
+            1,
+            1,
+            0,
+            1],
+        [
+            1,
+            0,
+            1,
+            0,
+            1],
+        [
+            0,
+            1,
+            1,
+            0,
+            1],
+        [
+            1,
+            0,
+            1,
+            0,
+            1],
+        [
+            0,
+            0,
+            0,
+            1,
+            1],
+        [
+            0,
+            1,
+            0,
+            1,
+            1],
+        [
+            1,
+            0,
+            0,
+            1,
+            1],
+        [
+            0,
+            0,
+            1,
+            1,
+            1],
+        [
+            0,
+            1,
+            1,
+            1,
+            1],
+        [
+            1,
+            0,
+            1,
+            1,
+            1]]
     display_3 = [
-     1, 1, 1, 1, 1]
-
+        1,
+        1,
+        1,
+        1,
+        1]
+    
     def numberToStackDisplay(self, number):
         stack_display = self.display_1[0]
         if number >= 0 and number <= 15:
             stack_display = self.display_1[number]
+        
         if number >= 16 and number <= 32:
             stack_display = self.display_2[number - 16]
+        
         if number >= 33:
             stack_display = self.display_3
+        
         return stack_display
-
+    
     def displayStacks(self, seat, number):
         offset = seat * self.maximum_stacks
         stack_display = self.numberToStackDisplay(number)
@@ -490,7 +700,10 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
 
     def getPotSeat(self):
         return self.NumSeats + 1
-
+    
     def updateStacks(self, chipsArray):
         for seat in range(self.NumSeats):
             self.displayStacks(seat, chipsArray[seat])
+        
+
+

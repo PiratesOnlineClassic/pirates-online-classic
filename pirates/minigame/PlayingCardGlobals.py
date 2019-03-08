@@ -1,8 +1,7 @@
+from pandac.PandaModules import *
 from direct.showbase.ShowBase import *
-from panda3d.core import *
-from pirates.piratesbase import PLocalizer
 from pirates.uberdog.UberDogGlobals import InventoryType
-
+from pirates.piratesbase import PLocalizer
 SecondsPerHand = 30.0
 MaximumTimeouts = 2
 MinimumChips = 0
@@ -79,13 +78,11 @@ DealDelay = 1.0
 DealCompleteDelay = 1.0
 PayOutDelay = 1.0
 
-
 def getBlackjackActionText(action):
     if action[0] == Bid:
         return PLocalizer.BlackjackActionNames[action[0]] % action[1]
     else:
         return PLocalizer.BlackjackActionNames[action[0]]
-
 
 DefaultBetAmount = 2
 BlackjackBidAmount = 2
@@ -94,22 +91,23 @@ Diamonds = 1
 Clubs = 2
 Spades = 3
 Suits = [
- Hearts, Diamonds, Clubs, Spades]
+    Hearts,
+    Diamonds,
+    Clubs,
+    Spades]
 AceOfSpades = 51
 Unknown = 255
 UpColor = Vec4(1, 1, 1, 1)
 RolloverColor = Vec4(1, 1, 0.5, 1)
 DownColor = Vec4(1, 0.9, 0.9, 1)
 DisabledColor = Vec4(1, 1, 1, 0.5)
-CardColors = (
- UpColor, DownColor, RolloverColor, DisabledColor)
+CardColors = (UpColor, DownColor, RolloverColor, DisabledColor)
 Styles = [
- 'standard']
+    'standard']
 _modelPathBase = 'models/handheld/playing_cards_'
 _prefix = 'PC_'
 CardImages = {}
 _cardImagesInitialized = 0
-
 
 def getCardName(value):
     if value == Unknown:
@@ -124,43 +122,44 @@ def getCardEncoding(suit, rank):
     encoding = InventoryType.begin_Cards
     if suit == 's':
         encoding = encoding + 39
-    else:
-        if suit == 'c':
-            encoding = encoding + 26
-        elif suit == 'd':
-            encoding = encoding + 13
-        if rank == '01':
-            encoding = encoding + 12
-        elif rank == '13':
-            encoding = encoding + 11
-        elif rank == '12':
-            encoding = encoding + 10
-        elif rank == '11':
-            encoding = encoding + 9
-        elif rank == '10':
-            encoding = encoding + 8
-        elif rank == '09':
-            encoding = encoding + 7
-        elif rank == '08':
-            encoding = encoding + 6
-        elif rank == '07':
-            encoding = encoding + 5
-        elif rank == '06':
-            encoding = encoding + 4
-        elif rank == '05':
-            encoding = encoding + 3
-        elif rank == '04':
-            encoding = encoding + 2
-        elif rank == '03':
-            encoding = encoding + 1
+    elif suit == 'c':
+        encoding = encoding + 26
+    elif suit == 'd':
+        encoding = encoding + 13
+    
+    if rank == '01':
+        encoding = encoding + 12
+    elif rank == '13':
+        encoding = encoding + 11
+    elif rank == '12':
+        encoding = encoding + 10
+    elif rank == '11':
+        encoding = encoding + 9
+    elif rank == '10':
+        encoding = encoding + 8
+    elif rank == '09':
+        encoding = encoding + 7
+    elif rank == '08':
+        encoding = encoding + 6
+    elif rank == '07':
+        encoding = encoding + 5
+    elif rank == '06':
+        encoding = encoding + 4
+    elif rank == '05':
+        encoding = encoding + 3
+    elif rank == '04':
+        encoding = encoding + 2
+    elif rank == '03':
+        encoding = encoding + 1
+    
     return encoding
 
 
 def getSuit(value):
-    global _cardImagesInitialized
     newValue = value - InventoryType.begin_Cards
     if _cardImagesInitialized == 0:
         initCardImages()
+    
     if newValue < 13:
         return 0
     else:
@@ -171,14 +170,14 @@ def getRank(value):
     newValue = value - InventoryType.begin_Cards
     if _cardImagesInitialized == 0:
         initCardImages()
+    
     return newValue % 13
 
 
 def initCardImages():
     global _cardImagesInitialized
     suitCodes = ('h', 'd', 'c', 's')
-    rankCodes = ('02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12',
-                 '13', '01')
+    rankCodes = ('02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '01')
     for style in Styles:
         modelPath = _modelPathBase + style
         cardModel = loader.loadModel(modelPath)
@@ -191,21 +190,23 @@ def initCardImages():
                 nodeName = _prefix + rankCode + suitCode
                 cardNode = cardModel.find('**/' + nodeName)
                 CardImages[style][suitIndex][rankIndex] = cardNode
-
+        
         CardImages[style]['back'] = cardModel.find('**/' + _prefix + 'back')
-
+    
     _cardImagesInitialized = 1
 
 
 def getImage(style, suit, rank):
     if _cardImagesInitialized == 0:
         initCardImages()
+    
     return CardImages[style][suit][rank]
 
 
 def getBack(style):
     if _cardImagesInitialized == 0:
         initCardImages()
+    
     return CardImages[style]['back']
 
 
@@ -216,14 +217,15 @@ def getBlackjackHandValue(hand):
         val = int(card % 13) + 2
         if val >= 11 and val <= 13:
             val = 10
-        else:
-            if val == 14:
-                aceCount += 1
-                val = 11
+        elif val == 14:
+            aceCount += 1
+            val = 11
+        
         handValue += val
-
+    
     for i in xrange(0, aceCount):
         if handValue > 21:
             handValue -= 10
-
+    
     return handValue
+

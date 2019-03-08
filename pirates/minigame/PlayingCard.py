@@ -1,12 +1,11 @@
-from pirates.minigame import PlayingCardGlobals
 from direct.gui.DirectGui import *
+from pandac.PandaModules import *
 from direct.task import Task
-from panda3d.core import *
 from pirates.piratesbase import PLocalizer
-
+import PlayingCardGlobals
 
 class PlayingCardBase:
-
+    
     def __init__(self, value):
         self.faceUp = 1
         self.setValue(value)
@@ -36,7 +35,6 @@ class PlayingCardBase:
             self.suit = value / 13
             self.rank = value % 13
         self.setImage()
-        return
 
     def isFaceUp(self):
         return self.faceUp
@@ -44,20 +42,20 @@ class PlayingCardBase:
     def turnUp(self):
         self.faceUp = 1
         self.setImage()
-
+    
     def turnDown(self):
         self.faceUp = 0
         self.setImage()
 
 
-class PlayingCardNodePath(NodePath, PlayingCardBase):
 
+class PlayingCardNodePath(NodePath, PlayingCardBase):
+    
     def __init__(self, style, value):
         self.image = None
         self.style = style
         NodePath.__init__(self, 'PlayingCard')
         PlayingCardBase.__init__(self, value)
-        return
 
     def setImage(self):
         if self.faceUp:
@@ -66,19 +64,20 @@ class PlayingCardNodePath(NodePath, PlayingCardBase):
             image = PlayingCardGlobals.getBack(self.style)
         if self.image:
             self.image.removeNode()
+        
         self.image = image.copyTo(self)
 
 
-class PlayingCardButton(PlayingCardBase, DirectButton):
 
+class PlayingCardButton(PlayingCardBase, DirectButton):
+    
     def __init__(self, style, value):
         PlayingCardBase.__init__(self, value)
         self.style = style
-        DirectButton.__init__(self, relief=None)
+        DirectButton.__init__(self, relief = None)
         self.initialiseoptions(PlayingCardButton)
         self.bind(DGG.B1PRESS, self.dragStart)
         self.bind(DGG.B1RELEASE, self.dragStop)
-        return
 
     def setImage(self):
         if self.faceUp:
@@ -86,7 +85,7 @@ class PlayingCardButton(PlayingCardBase, DirectButton):
         else:
             image = PlayingCardGlobals.getBack(self.style)
         self['image'] = image
-
+    
     def dragStart(self, event):
         taskMgr.remove(self.taskName('dragTask'))
         vWidget2render2d = self.getPos(render2d)
@@ -101,12 +100,16 @@ class PlayingCardButton(PlayingCardBase, DirectButton):
             vMouse2render2d = Point3(mwn.getMouse()[0], 0, mwn.getMouse()[1])
             newPos = vMouse2render2d + task.editVec
             self.setPos(render2d, newPos)
+        
         return Task.cont
 
     def dragStop(self, event):
         taskMgr.remove(self.taskName('dragTask'))
-        messenger.send('PlayingCardDrop', sentArgs=[self])
-
+        messenger.send('PlayingCardDrop', sentArgs = [
+            self])
+    
     def destroy(self):
         taskMgr.remove(self.taskName('dragTask'))
         DirectButton.destroy(self)
+
+

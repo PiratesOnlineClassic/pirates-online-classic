@@ -1,24 +1,23 @@
-import math
-import random
-
-from pirates.minigame import BlackjackTableGUI
-from pirates.minigame import DistributedGameTable
-from pirates.minigame import PlayingCard
-from pirates.minigame import PlayingCardGlobals
 from direct.directnotify import DirectNotifyGlobal
-from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
+from direct.gui.DirectGui import *
+from pandac.PandaModules import *
 from direct.task import Task
-from otp.otpgui import OTPDialog
-from panda3d.core import *
-from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import PDialog, PiratesGuiGlobals
+import random
+import math
+import DistributedGameTable
+import PlayingCardGlobals
+import PlayingCard
+import BlackjackTableGUI
 from pirates.uberdog.UberDogGlobals import InventoryType
-
+from pirates.piratesbase import PLocalizer
+from otp.otpgui import OTPDialog
+from pirates.piratesgui import PDialog
+from pirates.piratesgui import PiratesGuiGlobals
 
 class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBlackjackTable')
-
+    
     def __init__(self, cr):
         DistributedGameTable.DistributedGameTable.__init__(self, cr)
         self.hasGui = 0
@@ -37,16 +36,16 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
     def generate(self):
         DistributedGameTable.DistributedGameTable.generate(self)
         self.setName(self.uniqueName('DistributedBlackjackTable'))
-
+    
     def getInteractText(self):
         return PLocalizer.InteractTableBlackjack
-
+    
     def getSitDownText(self):
         return PLocalizer.BlackjackSitDownBlackjack
-
+    
     def disable(self):
         DistributedGameTable.DistributedGameTable.disable(self)
-
+    
     def delete(self):
         self.deleteSwapResultDialog()
         DistributedGameTable.DistributedGameTable.delete(self)
@@ -54,7 +53,7 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
             self.gui.destroy()
             del self.gui
             self.hasGui = 0
-
+    
     def allHandsToCurrentHands(self, allHandsArray):
         hands = []
         length = len(allHandsArray)
@@ -69,7 +68,7 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
                     if k == 0 or len(handArray[k]) >= 2:
                         hands = hands + [handArray[k]]
                         break
-
+        
         return hands
 
     def setTableState(self, hands, chipsCount):
@@ -83,7 +82,7 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
 
     def setBetMultiplier(self, betMultiplier):
         self.betMultiplier = betMultiplier
-
+    
     def setEvent(self, seatIndex, action):
         if self.isLocalAvatarSeated():
             self.gui.setEvent(seatIndex, action)
@@ -91,6 +90,7 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
                 pass
             else:
                 self.gui.showArrow(seatIndex)
+        
         if seatIndex >= 0 and seatIndex < len(self.actors):
             actor = self.actors[seatIndex]
         else:
@@ -98,6 +98,7 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
         if actor:
             if action[0] == PlayingCardGlobals.Stay:
                 actor.play('cards_blackjack_stay')
+            
             if action[0] == PlayingCardGlobals.Hit:
                 actor.play('cards_blackjack_hit')
                 if self.isLocalAvatarSeated():
@@ -105,8 +106,8 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
                     audio = self.getAudio()
                     if audio:
                         sfx = audio.sfxArray[audio.hitIdentifier]
+                    
                     self.playSoundEffect(sfx)
-        return
 
     def createGui(self):
         if not self.hasGui:
@@ -123,7 +124,7 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
         camera.reparentTo(self.cameraNode)
         self.cameraNode.setPosHpr(0, 0.75, 22, 0, -45, 0)
         camera.setHpr(0, 0, 0)
-        camera.setPos(-self.sittingOffset, 4.9, -11)
+        camera.setPos(-(self.sittingOffset), 4.9, -11)
         base.camLens.setMinFov(60)
         self.cameraNode.reparentTo(localAvatar)
         self.chips = 0
@@ -139,57 +140,74 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
         self.hasGui = 0
         if self.radarState:
             localAvatar.guiMgr.radarGui.request(self.radarState)
+        
         localAvatar.guiMgr.gameGui.show()
 
     def requestClientAction(self, action):
         if action == PlayingCardGlobals.Bid:
             if self.isLocalAvatarSeated():
                 self.initialPlayerBid = 0
-                self.gui.setEvent(self.localAvatarSeat, [PlayingCardGlobals.AskForBid])
+                self.gui.setEvent(self.localAvatarSeat, [
+                    PlayingCardGlobals.AskForBid])
                 self.gui.showArrow(self.localAvatarSeat)
 
     def d_clientAction(self, action):
-        self.sendUpdate('clientAction', [action])
+        self.sendUpdate('clientAction', [
+            action])
 
     def getPlayerBidAmount(self):
         amount = 0
         if self.getPlayerChips() >= self.getTableBidAmount():
             amount = self.getTableBidAmount()
+        
         if self.gui:
             if self.getPlayerChips() >= self.gui.bidAmount:
                 amount = self.gui.bidAmount
             else:
                 amount = self.getPlayerChips()
+        
         return amount
-
+    
     def guiCallback(self, guiAction):
         if guiAction == PlayingCardGlobals.Bid:
             amount = self.getPlayerBidAmount()
-            self.d_clientAction([guiAction, amount])
+            self.d_clientAction([
+                guiAction,
+                amount])
             self.initialPlayerBid = amount
             self.cheat = False
         elif guiAction == PlayingCardGlobals.Stay:
-            self.d_clientAction([guiAction, 0])
+            self.d_clientAction([
+                guiAction,
+                0])
         elif guiAction == PlayingCardGlobals.Hit:
-            self.d_clientAction([guiAction, 0])
+            self.d_clientAction([
+                guiAction,
+                0])
         elif guiAction == PlayingCardGlobals.Split:
             if self.initialPlayerBid > 0:
                 amount = self.getPlayerBidAmount()
             else:
                 amount = 0
-            self.d_clientAction([guiAction, amount])
+            self.d_clientAction([
+                guiAction,
+                amount])
         elif guiAction == PlayingCardGlobals.DoubleDown:
             if self.initialPlayerBid > 0:
                 amount = self.getPlayerBidAmount()
             else:
                 amount = 0
-            self.d_clientAction([guiAction, amount])
+            self.d_clientAction([
+                guiAction,
+                amount])
         elif guiAction == PlayingCardGlobals.Cheat1:
             self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardOneCheat, self.card_id)
         elif guiAction == PlayingCardGlobals.Cheat2:
             self.requestingCheat(PlayingCardGlobals.ReplaceHoleCardTwoCheat, self.card_id)
         elif guiAction == PlayingCardGlobals.AutoStay:
-            self.d_clientAction([guiAction, 0])
+            self.d_clientAction([
+                guiAction,
+                0])
         elif guiAction == PlayingCardGlobals.Leave:
             self.requestExit()
         else:
@@ -199,12 +217,13 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
         audio = None
         if self.hasGui:
             audio = self.gui
+        
         return audio
-
+    
     def playSoundEffect(self, sfx):
         if sfx:
             base.playSfx(sfx)
-
+    
     def getTableBidAmount(self):
         return PlayingCardGlobals.BlackjackBidAmount * self.betMultiplier
 
@@ -212,6 +231,7 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
         inventory = localAvatar.getInventory()
         if inventory:
             self.chips = inventory.getGoldInPocket()
+        
         return self.chips
 
     def getPlayerInventoryCardCount(self, card_id):
@@ -221,16 +241,18 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
         else:
             amount = 0
         return amount
-
+    
     def getLocalAvatarHand(self):
         return self.hands[self.localAvatarSeat]
 
     def requestingCheat(self, cheatType, cheatTarget):
         self.currentCheatType = cheatType
         self.currentCheatTarget = cheatTarget
-        self.sendUpdate('requestCheat', [cheatType, cheatTarget])
+        self.sendUpdate('requestCheat', [
+            cheatType,
+            cheatTarget])
         self.cheat = True
-
+    
     def setLocalAvatarHand(self, hand):
         self.hands[self.localAvatarSeat] = hand
         current_hand_index = self.getCurrentHandIndex(self.localAvatarSeat, self.allHands)
@@ -241,46 +263,43 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
             self.swapResultDialog.destroy()
             del self.swapResultDialog
             self.swapResultDialog = None
-        return
 
     def swapResultCallback(self, value):
         self.deleteSwapResultDialog()
-
+    
     def deleteDialogs(self):
         if self.dialog:
             self.dialog.destroy()
             del self.dialog
             self.dialog = None
-        return
-
+    
     def dialogCallback(self, value):
         self.deleteDialogs()
 
-    def delayedPlayerLeave(self, task=None):
+    def delayedPlayerLeave(self, task = None):
         self.deleteDialogs()
-
+    
     def cheatResponse(self, cheatType, cheatTarget, success, hand):
         swap = False
         if cheatType == PlayingCardGlobals.ReplaceHoleCardOneCheat:
             self.setLocalAvatarHand(hand)
             swap = True
-        else:
-            if cheatType == PlayingCardGlobals.ReplaceHoleCardTwoCheat:
-                self.setLocalAvatarHand(hand)
-                swap = True
-            else:
-                if cheatType == PlayingCardGlobals.CaughtCheating:
-                    self.guiCallback(PlayingCardGlobals.Leave)
-                    self.deleteDialogs()
-                    string = PLocalizer.PokerCaughtCheatingMessage % PlayingCardGlobals.CheatingFine
-                    self.dialog = PDialog.PDialog(text=string, style=OTPDialog.Acknowledge, command=self.dialogCallback)
-                    self.setDialogBin(self.dialog)
+        elif cheatType == PlayingCardGlobals.ReplaceHoleCardTwoCheat:
+            self.setLocalAvatarHand(hand)
+            swap = True
+        elif cheatType == PlayingCardGlobals.CaughtCheating:
+            self.guiCallback(PlayingCardGlobals.Leave)
+            self.deleteDialogs()
+            string = PLocalizer.PokerCaughtCheatingMessage % PlayingCardGlobals.CheatingFine
+            self.dialog = PDialog.PDialog(text = string, style = OTPDialog.Acknowledge, command = self.dialogCallback)
+            self.setDialogBin(self.dialog)
+        
         if self.gui and swap:
             if success:
                 string = PLocalizer.PokerSwapSuccessMessage
             else:
                 string = PLocalizer.PokerSwapFailureMessage
-            self.swapResultDialog = PDialog.PDialog(text=string, style=OTPDialog.Acknowledge, giveMouse=False, command=self.swapResultCallback)
+            self.swapResultDialog = PDialog.PDialog(text = string, style = OTPDialog.Acknowledge, giveMouse = False, command = self.swapResultCallback)
             self.setDialogBin(self.swapResultDialog)
             position = self.swapResultDialog.getPos()
             position.setZ(position[2] + 0.35)
@@ -293,6 +312,7 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
                 self.gui.disableAllPlayButtons()
                 self.gui.endTimer()
                 self.guiCallback(PlayingCardGlobals.AutoStay)
+            
             if self.isLocalAvatarSeated() and self.isLocalAvatarPlaying():
                 actor = self.actors[self.localAvatarSeat]
                 if actor:
@@ -303,8 +323,9 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
         inventory = localAvatar.getInventory()
         if inventory:
             reputation = inventory.getStackQuantity(InventoryType.BlackjackGame)
+        
         return reputation
-
+    
     def getCurrentHandIndex(self, seat, allHands):
         current_hand_index = 0
         handArray = allHands[seat]
@@ -316,7 +337,7 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
                 if k == 0 or len(handArray[k]) >= 2:
                     current_hand_index = k
                     break
-
+        
         return current_hand_index
 
     def setHandResults(self, results):
@@ -333,6 +354,7 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
                             color = Vec4(1.0, 1.0, 1.0, 1.0)
                             color = Vec4(0.2, 0.8, 0.2, 1.0)
                             self.gui.showWinText(text, color)
+
                 else:
                     actor = self.actors[i]
                     if actor:
@@ -342,9 +364,15 @@ class DistributedBlackjackTable(DistributedGameTable.DistributedGameTable):
                                 color = Vec4(0.7, 0.7, 0.7, 1.0)
                                 color = Vec4(0.2, 0.2, 0.8, 1.0)
                                 self.gui.showWinText(text, color)
+
                 if results[i] == PlayingCardGlobals.PlayerCaughtCheating:
                     actor = self.actors[i]
                     if actor:
                         name = actor.getName()
                         message = PLocalizer.PokerChatCaughtCheatingMessage % name
                         base.chatAssistant.receiveGameMessage(message)
+                    
+            
+        
+
+
