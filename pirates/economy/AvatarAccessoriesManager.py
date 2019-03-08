@@ -1,2 +1,3 @@
-class AvatarAccessoriesManager:
+class AvatarAccessories:
     pass
+
