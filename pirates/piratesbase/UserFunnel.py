@@ -95,7 +95,7 @@ class UserFunnel:
         if firstRun() == True:
             pass
 
-        if os.path.isfile(self.cfCookieFile) == False:
+        elif os.path.isfile(self.cfCookieFile) == False:
             firstRun('write', True)
     
     def whatOSver(self):
@@ -249,7 +249,6 @@ class UserFunnel:
                         variable,
                         value]
                     self.setTheHTTPCookie(self.pandaHTTPClientVarWSS)
-                    continue
         except IndexError:
             print 'UserFunnel(Warning): Cookie Data file bad'
 
@@ -487,7 +486,7 @@ class HitBoxCookie:
             filestreamListElement.split('\t')[6]]
     
     def writeIEHitBoxCookies(self):
-        if self.ctg == None and self.wss_gw == None or self.dm560804E8WD == None:
+        if self.ctg == None or self.wss_gw == None or self.dm560804E8WD == None:
             return None
         
         if sys.platform != 'win32':
@@ -534,7 +533,7 @@ class HitBoxCookie:
         iecWrite.close()
     
     def OLDwritePythonHitBoxCookies(self, filename = 'cf.txt'):
-        if self.ctg == None and self.wss_gw == None or self.dm560804E8WD == None:
+        if self.ctg == None or self.wss_gw == None or self.dm560804E8WD == None:
             return None
         
         outputfile = open(filename, 'w')
@@ -545,7 +544,7 @@ class HitBoxCookie:
         outputfile.close()
 
     def writePythonHitBoxCookies(self, filename = 'cf.txt'):
-        if self.ctg == None and self.wss_gw == None or self.dm560804E8WD == None:
+        if self.ctg == None or self.wss_gw == None or self.dm560804E8WD == None:
             return None
         
         outputfile = open(filename, 'w')

@@ -37,17 +37,9 @@ from pirates.piratesbase import UserFunnel
 
 class PiratesBase(OTPBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesBase')
-    lowMemoryStreamAudio = ConfigVariableBool(
-        'low-memory-stream-audio', 1)
-    resolution_table = [(800, 600),
-                        (1024, 768),
-                        (1280, 1024),
-                        (1600, 1200)]
-    widescreen_resolution_table = [
-        (1280,
-         720),
-        (1920,
-         1080)]
+    lowMemoryStreamAudio = ConfigVariableBool('low-memory-stream-audio', 1)
+    resolution_table = [(800, 600), (1024, 768), (1280, 1024), (1600, 1200)]
+    widescreen_resolution_table = [(1280, 720), (1920, 1080)]
     MinimumHorizontalResolution = 800
     MinimumVerticalResolution = 600
     
@@ -660,7 +652,7 @@ class PiratesBase(OTPBase):
     
     def userExit(self):
         if self.__alreadyExiting:
-            return None
+            return
         
         self.__alreadyExiting = True
         if self.cr.timeManager:
