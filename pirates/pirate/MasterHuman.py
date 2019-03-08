@@ -1,21 +1,21 @@
-import random
-
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
 from direct.actor import Actor
-from direct.directnotify import DirectNotifyGlobal
-from direct.fsm import FSM
+from direct.task import Task
+from direct.showbase import ShadowPlacer
 from direct.fsm.ClassicFSM import ClassicFSM
 from direct.fsm.State import State
-from direct.interval.IntervalGlobal import *
-from direct.showbase import ShadowPlacer
+from direct.fsm import FSM
+from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.PythonUtil import quickProfile
-from direct.task import Task
-from panda3d.core import *
-from pirates.battle import WeaponGlobals
-from pirates.makeapirate import PirateFemale, PirateMale
-from pirates.pirate import Biped, HumanBase, HumanDNA
-from pirates.pirate.HumanAnimationMixer import HumanAnimationMixer
 from pirates.piratesbase import PiratesGlobals
-
+from pirates.battle import WeaponGlobals
+from pirates.pirate import Biped, HumanBase
+from pirates.pirate import HumanDNA
+from pirates.makeapirate import PirateMale
+from pirates.makeapirate import PirateFemale
+from pirates.pirate.HumanAnimationMixer import HumanAnimationMixer
+import random
 TX = 0
 TY = 1
 TZ = 2
@@ -26,188 +26,334 @@ SX = 6
 SY = 7
 SZ = 8
 AnimDict = {}
-AnimListDict = {'sf': Biped.DefaultAnimList, 'ms': Biped.DefaultAnimList, 'mi': Biped.DefaultAnimList, 
-                'tp': Biped.DefaultAnimList, 'tm': Biped.DefaultAnimList}
-CustomAnimDict = {'msf': Biped.msfCustomAnimList, 'mms': Biped.mmsCustomAnimList, 'mmi': Biped.mmiCustomAnimList, 'mtp': Biped.mtpCustomAnimList, 
-                  'mtm': Biped.mtmCustomAnimList, 'fsf': Biped.fsfCustomAnimList, 'fms': Biped.fmsCustomAnimList, 'fmi': Biped.fmiCustomAnimList, 
-                  'ftp': Biped.ftpCustomAnimList, 'ftm': Biped.ftmCustomAnimList}
-NewModelDict = {'sf': 'sf', 'ms': 'ms', 'mi': 'mi', 'tp': 'tp', 'tm': 'tm'}
-TempDict = ['sf', 'ms', 'mi', 'tp', 'tm']
+AnimListDict = {
+    'sf': Biped.DefaultAnimList,
+    'ms': Biped.DefaultAnimList,
+    'mi': Biped.DefaultAnimList,
+    'tp': Biped.DefaultAnimList,
+    'tm': Biped.DefaultAnimList}
+CustomAnimDict = {
+    'msf': Biped.msfCustomAnimList,
+    'mms': Biped.mmsCustomAnimList,
+    'mmi': Biped.mmiCustomAnimList,
+    'mtp': Biped.mtpCustomAnimList,
+    'mtm': Biped.mtmCustomAnimList,
+    'fsf': Biped.fsfCustomAnimList,
+    'fms': Biped.fmsCustomAnimList,
+    'fmi': Biped.fmiCustomAnimList,
+    'ftp': Biped.ftpCustomAnimList,
+    'ftm': Biped.ftmCustomAnimList}
+NewModelDict = {
+    'sf': 'sf',
+    'ms': 'ms',
+    'mi': 'mi',
+    'tp': 'tp',
+    'tm': 'tm'}
+TempDict = [
+    'sf',
+    'ms',
+    'mi',
+    'tp',
+    'tm']
 PrebuiltAnimDict = {}
-HeadPositions = [[VBase3(0.0, 0.0, 0.0), VBase3(0.0, 0.0, -0.08), VBase3(0.0, 0.0, 0.0), VBase3(0.0, 0.0, -0.08), VBase3(0.0, 0.0, 0.0)], 
-                 [VBase3(0, 0, 0.0), VBase3(0, 0, 0.0), VBase3(0, 0, 0.0), VBase3(0, 0, 0.0), VBase3(0, 0, 0.0)]]
-HeadScales = [[1.05, 0.8, 0.85, 0.82, 0.88], [1.1, 0.9, 0.95, 0.97, 0.95]]
-BodyScales = [[0.87, 0.98, 1.0, 0.98, 1.05], [0.88, 0.9, 1.02, 1.07, 0.98]]
-PlayerHeight = [5, 6, 6, 6, 7]
-MaleBodyShapeControlJoints = ('def_spine02', 'def_spine03', 'def_spine04', 'def_shoulders', 'def_neck', 'def_left_clav', 'def_left_shoulder', 'def_left_elbow', 
-                              'def_left_wrist', 'def_left_thumb01', 'def_left_thumb02', 'def_left_thumb03', 'def_left_finger01', 'def_left_finger02', 
-                              'def_left_index01', 'def_left_index02', 'def_right_clav', 'def_right_shoulder', 'def_right_elbow', 'def_right_wrist', 
-                              'def_right_thumb01', 'def_right_thumb02', 'def_right_thumb03', 'def_right_finger01', 'def_right_finger02', 'def_right_index01', 
-                              'def_right_index02', 'tr_left_clav', 'tr_left_thumb01', 'tr_right_clav', 'tr_right_thumb01', 'def_hips', 'def_left_thigh', 
-                              'def_left_knee', 'def_left_ankle', 'def_left_ball', 'def_right_thigh', 'def_right_knee', 'def_right_ankle', 'def_right_ball', 
-                              'tr_sash01', 'tr_left_thigh', 'tr_right_thigh')
+HeadPositions = [
+    [
+        VBase3(0.0, 0.0, 0.0),
+        VBase3(0.0, 0.0, -0.08),
+        VBase3(0.0, 0.0, 0.0),
+        VBase3(0.0, 0.0, -0.08),
+        VBase3(0.0, 0.0, 0.0)],
+    [
+        VBase3(0, 0, 0.0),
+        VBase3(0, 0, 0.0),
+        VBase3(0, 0, 0.0),
+        VBase3(0, 0, 0.0),
+        VBase3(0, 0, 0.0)]]
+HeadScales = [
+    [
+        1.05,
+        0.8,
+        0.85,
+        0.82,
+        0.88],
+    [
+        1.1,
+        0.9,
+        0.95,
+        0.97,
+        0.95]]
+BodyScales = [
+    [
+        0.87,
+        0.98,
+        1.0,
+        0.98,
+        1.05],
+    [
+        0.88,
+        0.9,
+        1.02,
+        1.07,
+        0.98]]
+PlayerHeight = [
+    5,
+    6,
+    6,
+    6,
+    7]
+MaleBodyShapeControlJoints = ('def_spine02', 'def_spine03', 'def_spine04', 'def_shoulders', 'def_neck', 'def_left_clav', 'def_left_shoulder', 'def_left_elbow', 'def_left_wrist', 'def_left_thumb01', 'def_left_thumb02', 'def_left_thumb03', 'def_left_finger01', 'def_left_finger02', 'def_left_index01', 'def_left_index02', 'def_right_clav', 'def_right_shoulder', 'def_right_elbow', 'def_right_wrist', 'def_right_thumb01', 'def_right_thumb02', 'def_right_thumb03', 'def_right_finger01', 'def_right_finger02', 'def_right_index01', 'def_right_index02', 'tr_left_clav', 'tr_left_thumb01', 'tr_right_clav', 'tr_right_thumb01', 'def_hips', 'def_left_thigh', 'def_left_knee', 'def_left_ankle', 'def_left_ball', 'def_right_thigh', 'def_right_knee', 'def_right_ankle', 'def_right_ball', 'tr_sash01', 'tr_left_thigh', 'tr_right_thigh')
 MaleBodyShapeTranslateJoints = ('tr_left_clav', 'tr_left_thumb01', 'tr_right_clav', 'tr_right_thumb01', 'tr_sash01', 'tr_left_thigh', 'tr_right_thigh')
-MaleBodyShapeScaleJoints = ('def_spine02', 'def_spine03', 'def_spine04', 'def_shoulders', 'def_neck', 'def_left_clav', 'def_left_shoulder', 'def_left_elbow', 
-                            'def_left_wrist', 'def_left_thumb01', 'def_left_thumb02', 'def_left_thumb03', 'def_left_finger01', 'def_left_finger02', 
-                            'def_left_index01', 'def_left_index02', 'def_right_clav', 'def_right_shoulder', 'def_right_elbow', 'def_right_wrist', 
-                            'def_right_thumb01', 'def_right_thumb02', 'def_right_thumb03', 'def_right_finger01', 'def_right_finger02', 'def_right_index01', 
-                            'def_right_index02', 'def_hips', 'def_left_thigh', 'def_left_knee', 'def_left_ankle', 'def_left_ball', 'def_right_thigh', 
-                            'def_right_knee', 'def_right_ankle', 'def_right_ball')
-MaleBodyShapeControlJointMatrix = {'def_spine02': [VBase3(1, 1.9, 1.9), VBase3(1, 1, 1), VBase3(1, 1.3, 1), VBase3(1, 1.52, 1.4), VBase3(1, 1.5, 1.17)], 
-                                   'def_spine03': [VBase3(1, 1.7, 1.6), VBase3(1, 1, 1), VBase3(1, 1.4, 1.16), VBase3(1, 1.33, 1.2), VBase3(1, 1.7, 1.25)], 
-                                   'def_spine04': [VBase3(1, 1.5, 1.3), VBase3(1, 1, 1), VBase3(1, 1.4, 1.2), VBase3(1, 1.1, 1.0), VBase3(1, 1.7, 1.4)], 
-                                   'def_shoulders': [VBase3(1, 1.5, 1.5), VBase3(1, 1, 1), VBase3(1, 1.5, 1.1), VBase3(1, 1, 1), VBase3(1.3, 1.5, 1.45)], 
-                                   'def_neck': [VBase3(1, 2, 1.1), VBase3(1, 1, 1), VBase3(1, 1.5, 1), VBase3(1, 1, 1), VBase3(1, 1.5, 1)], 
-                                   'def_left_clav': [VBase3(1, 1.4, 1.4), VBase3(1, 1, 1), VBase3(1, 1.3, 1.3), VBase3(1, 1, 1), VBase3(1, 1.6, 1.5)], 
-                                   'def_left_shoulder': [VBase3(1, 1.9, 1.9), VBase3(1, 1, 1), VBase3(1, 1.68, 1.68), VBase3(1, 1.3, 1.3), VBase3(1, 2.0, 2.0)], 
-                                   'def_left_elbow': [VBase3(1, 2, 1.62), VBase3(1, 1, 1), VBase3(1, 1.74, 1.46), VBase3(1, 1.3, 1.3), VBase3(1, 1.7, 1.7)], 
-                                   'def_left_wrist': [VBase3(1, 1.3, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.15, 1.15)], 
-                                   'def_left_thumb01': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                   'def_left_thumb02': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                   'def_left_thumb03': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                   'def_left_finger01': [VBase3(1, 1.2, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.25, 1.25)], 
-                                   'def_left_finger02': [VBase3(1, 1.15, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.15, 1.15)], 
-                                   'def_left_index01': [VBase3(1, 1.75, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.2, 1.2)], 
-                                   'def_left_index02': [VBase3(1, 1.6, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.2, 1.2)], 
-                                   'def_right_clav': [VBase3(1, 1.4, 1.4), VBase3(1, 1, 1), VBase3(1, 1.3, 1.3), VBase3(1, 1, 1), VBase3(1, 1.6, 1.5)], 
-                                   'def_right_shoulder': [VBase3(1, 1.9, 1.9), VBase3(1, 1, 1), VBase3(1, 1.68, 1.68), VBase3(1, 1.3, 1.3), VBase3(1, 2.0, 2.0)], 
-                                   'def_right_elbow': [VBase3(1, 2, 1.62), VBase3(1, 1, 1), VBase3(1, 1.74, 1.46), VBase3(1, 1.3, 1.3), VBase3(1, 1.7, 1.7)], 
-                                   'def_right_wrist': [VBase3(1, 1.3, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.15, 1.15)], 
-                                   'def_right_thumb01': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                   'def_right_thumb02': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                   'def_right_thumb03': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                   'def_right_finger01': [VBase3(1, 1.2, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.25, 1.25)], 
-                                   'def_right_finger02': [VBase3(1, 1.15, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.15, 1.15)], 
-                                   'def_right_index01': [VBase3(1, 1.75, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.2, 1.2)], 
-                                   'def_right_index02': [VBase3(1, 1.6, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.2, 1.2)], 
-                                   'tr_left_clav': [VBase3(0.12, 0, 0), VBase3(0, 0, 0), VBase3(0.147, 0, 0), VBase3(0.0, 0.0, 0.0), VBase3(0.32, 0, 0)], 
-                                   'tr_left_thumb01': [VBase3(0, -0.07, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, -0.075, 0)], 
-                                   'tr_right_clav': [VBase3(0.12, 0, 0), VBase3(0, 0, 0), VBase3(0.147, 0, 0), VBase3(0.0, 0.0, 0.0), VBase3(0.32, 0, 0)], 
-                                   'tr_right_thumb01': [VBase3(0, 0.07, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0.075, 0)], 
-                                   'def_hips': [VBase3(1.9, 1.9, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1.6, 1.4, 1), VBase3(1.15, 1.15, 1)], 
-                                   'def_left_thigh': [VBase3(1, 1.9, 1.5), VBase3(1, 1, 1), VBase3(1, 1.2, 1.1), VBase3(1, 1.4, 1.4), VBase3(1, 1.4, 1.4)], 
-                                   'def_left_knee': [VBase3(1, 1.6, 1.5), VBase3(1, 1, 1), VBase3(1, 1.2, 1.1), VBase3(1, 1.2, 1.1), VBase3(1, 1.4, 1.2)], 
-                                   'def_left_ankle': [VBase3(1, 1, 1.38), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                   'def_left_ball': [VBase3(1, 1.4, 1.44), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.1, 1)], 
-                                   'def_right_thigh': [VBase3(1, 1.9, 1.5), VBase3(1, 1, 1), VBase3(1, 1.2, 1.1), VBase3(1, 1.4, 1.4), VBase3(1, 1.4, 1.4)], 
-                                   'def_right_knee': [VBase3(1, 1.6, 1.5), VBase3(1, 1, 1), VBase3(1, 1.2, 1.1), VBase3(1, 1.2, 1.1), VBase3(1, 1.4, 1.2)], 
-                                   'def_right_ankle': [VBase3(1, 1, 1.38), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                   'def_right_ball': [VBase3(1, 1.4, 1.44), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.1, 1)], 
-                                   'tr_sash01': [VBase3(0.1, -0.08, 0.33), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0.1, 0.085, 0.263), VBase3(0.049, 0.037, 0.128)], 
-                                   'tr_left_thigh': [VBase3(0, 0.2, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0.1, 0), VBase3(0, 0.08, 0)], 
-                                   'tr_right_thigh': [VBase3(0, -0.2, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, -0.1, 0), VBase3(0, -0.08, 0)]}
-FemaleBodyShapeControlJoints = ('def_spine02', 'def_spine03', 'def_spine04', 'def_shoulders', 'def_neck', 'def_left_clav', 'def_left_chest', 'def_left_shoulder', 
-                                'def_left_elbow', 'def_left_wrist', 'def_left_thumb01', 'def_left_thumb02', 'def_left_thumb03', 'def_left_finger01', 
-                                'def_left_finger02', 'def_left_index01', 'def_left_index02', 'def_right_clav', 'def_right_chest', 'def_right_shoulder', 
-                                'def_right_elbow', 'def_right_wrist', 'def_right_thumb01', 'def_right_thumb02', 'def_right_thumb03', 'def_right_finger01', 
-                                'def_right_finger02', 'def_right_index01', 'def_right_index02', 'tr_left_clav', 'tr_left_chest', 'tr_right_clav', 
-                                'tr_right_chest', 'def_hips', 'def_hips_waistline', 'def_hips_waistline_back', 'tr_sash01', 'def_left_thigh', 'def_left_knee', 
-                                'def_left_ankle', 'def_left_ball', 'def_right_thigh', 'def_right_knee', 'def_right_ankle', 'def_right_ball', 'tr_left_thigh', 
-                                'tr_right_thigh')
+MaleBodyShapeScaleJoints = ('def_spine02', 'def_spine03', 'def_spine04', 'def_shoulders', 'def_neck', 'def_left_clav', 'def_left_shoulder', 'def_left_elbow', 'def_left_wrist', 'def_left_thumb01', 'def_left_thumb02', 'def_left_thumb03', 'def_left_finger01', 'def_left_finger02', 'def_left_index01', 'def_left_index02', 'def_right_clav', 'def_right_shoulder', 'def_right_elbow', 'def_right_wrist', 'def_right_thumb01', 'def_right_thumb02', 'def_right_thumb03', 'def_right_finger01', 'def_right_finger02', 'def_right_index01', 'def_right_index02', 'def_hips', 'def_left_thigh', 'def_left_knee', 'def_left_ankle', 'def_left_ball', 'def_right_thigh', 'def_right_knee', 'def_right_ankle', 'def_right_ball')
+MaleBodyShapeControlJointMatrix = {
+  'def_spine02': [VBase3(1, 1.9, 1.9), VBase3(1, 1, 1), VBase3(1, 1.3, 1), VBase3(1, 1.52, 1.4), VBase3(1, 1.5, 1.17)],
+  'def_spine03': [VBase3(1, 1.7, 1.6), VBase3(1, 1, 1), VBase3(1, 1.4, 1.16), VBase3(1, 1.33, 1.2), VBase3(1, 1.7, 1.25)],
+  'def_spine04': [VBase3(1, 1.5, 1.3), VBase3(1, 1, 1), VBase3(1, 1.4, 1.2), VBase3(1, 1.1, 1.0), VBase3(1, 1.7, 1.4)],
+  'def_shoulders': [VBase3(1, 1.5, 1.5), VBase3(1, 1, 1), VBase3(1, 1.5, 1.1), VBase3(1, 1, 1), VBase3(1.3, 1.5, 1.45)],
+  'def_neck': [VBase3(1, 2, 1.1), VBase3(1, 1, 1), VBase3(1, 1.5, 1), VBase3(1, 1, 1), VBase3(1, 1.5, 1)],
+  'def_left_clav': [VBase3(1, 1.4, 1.4), VBase3(1, 1, 1), VBase3(1, 1.3, 1.3), VBase3(1, 1, 1), VBase3(1, 1.6, 1.5)],
+  'def_left_shoulder': [VBase3(1, 1.9, 1.9), VBase3(1, 1, 1), VBase3(1, 1.68, 1.68), VBase3(1, 1.3, 1.3), VBase3(1, 2.0, 2.0)],
+  'def_left_elbow': [VBase3(1, 2, 1.62), VBase3(1, 1, 1), VBase3(1, 1.74, 1.46), VBase3(1, 1.3, 1.3), VBase3(1, 1.7, 1.7)],
+  'def_left_wrist': [VBase3(1, 1.3, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.15, 1.15)],
+  'def_left_thumb01': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_left_thumb02': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_left_thumb03': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_left_finger01': [VBase3(1, 1.2, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.25, 1.25)],
+  'def_left_finger02': [VBase3(1, 1.15, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.15, 1.15)],
+  'def_left_index01': [VBase3(1, 1.75, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.2, 1.2)],
+  'def_left_index02': [VBase3(1, 1.6, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.2, 1.2)],
+  'def_right_clav': [VBase3(1, 1.4, 1.4), VBase3(1, 1, 1), VBase3(1, 1.3, 1.3), VBase3(1, 1, 1), VBase3(1, 1.6, 1.5)],
+  'def_right_shoulder': [VBase3(1, 1.9, 1.9), VBase3(1, 1, 1), VBase3(1, 1.68, 1.68), VBase3(1, 1.3, 1.3), VBase3(1, 2.0, 2.0)],
+  'def_right_elbow': [VBase3(1, 2, 1.62), VBase3(1, 1, 1), VBase3(1, 1.74, 1.46), VBase3(1, 1.3, 1.3), VBase3(1, 1.7, 1.7)],
+  'def_right_wrist': [VBase3(1, 1.3, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.15, 1.15)],
+  'def_right_thumb01': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_right_thumb02': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_right_thumb03': [VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_right_finger01': [VBase3(1, 1.2, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.25, 1.25)],
+  'def_right_finger02': [VBase3(1, 1.15, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.15, 1.15)],
+  'def_right_index01': [VBase3(1, 1.75, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.2, 1.2)],
+  'def_right_index02': [VBase3(1, 1.6, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.2, 1.2)],
+  'tr_left_clav': [VBase3(0.12, 0, 0), VBase3(0, 0, 0), VBase3(0.147, 0, 0), VBase3(0.0, 0.0, 0.0), VBase3(0.32, 0, 0)],
+  'tr_left_thumb01': [VBase3(0, -0.07, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, -0.075, 0)],
+  'tr_right_clav': [VBase3(0.12, 0, 0), VBase3(0, 0, 0), VBase3(0.147, 0, 0), VBase3(0.0, 0.0, 0.0), VBase3(0.32, 0, 0)],
+  'tr_right_thumb01': [VBase3(0, 0.07, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0.075, 0)],
+  'def_hips': [VBase3(1.9, 1.9, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1.6, 1.4, 1), VBase3(1.15, 1.15, 1)],
+  'def_left_thigh': [VBase3(1, 1.9, 1.5), VBase3(1, 1, 1), VBase3(1, 1.2, 1.1), VBase3(1, 1.4, 1.4), VBase3(1, 1.4, 1.4)],
+  'def_left_knee': [VBase3(1, 1.6, 1.5), VBase3(1, 1, 1), VBase3(1, 1.2, 1.1), VBase3(1, 1.2, 1.1), VBase3(1, 1.4, 1.2)],
+  'def_left_ankle': [VBase3(1, 1, 1.38), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_left_ball': [VBase3(1, 1.4, 1.44), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.1, 1)],
+  'def_right_thigh': [VBase3(1, 1.9, 1.5), VBase3(1, 1, 1), VBase3(1, 1.2, 1.1), VBase3(1, 1.4, 1.4), VBase3(1, 1.4, 1.4)],
+  'def_right_knee': [VBase3(1, 1.6, 1.5), VBase3(1, 1, 1), VBase3(1, 1.2, 1.1), VBase3(1, 1.2, 1.1), VBase3(1, 1.4, 1.2)],
+  'def_right_ankle': [VBase3(1, 1, 1.38), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_right_ball': [VBase3(1, 1.4, 1.44), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1.1, 1)],
+  'tr_sash01': [VBase3(0.1, -0.08, 0.33), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0.1, 0.085, 0.263), VBase3(0.049, 0.037, 0.128)],
+  'tr_left_thigh': [VBase3(0, 0.2, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0.1, 0), VBase3(0, 0.08, 0)],
+  'tr_right_thigh': [VBase3(0, -0.2, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, -0.1, 0), VBase3(0, -0.08, 0)]
+}
+FemaleBodyShapeControlJoints = ('def_spine02', 'def_spine03', 'def_spine04', 'def_shoulders', 'def_neck', 'def_left_clav', 'def_left_chest', 'def_left_shoulder', 'def_left_elbow', 'def_left_wrist', 'def_left_thumb01', 'def_left_thumb02', 'def_left_thumb03', 'def_left_finger01', 'def_left_finger02', 'def_left_index01', 'def_left_index02', 'def_right_clav', 'def_right_chest', 'def_right_shoulder', 'def_right_elbow', 'def_right_wrist', 'def_right_thumb01', 'def_right_thumb02', 'def_right_thumb03', 'def_right_finger01', 'def_right_finger02', 'def_right_index01', 'def_right_index02', 'tr_left_clav', 'tr_left_chest', 'tr_right_clav', 'tr_right_chest', 'def_hips', 'def_hips_waistline', 'def_hips_waistline_back', 'tr_sash01', 'def_left_thigh', 'def_left_knee', 'def_left_ankle', 'def_left_ball', 'def_right_thigh', 'def_right_knee', 'def_right_ankle', 'def_right_ball', 'tr_left_thigh', 'tr_right_thigh')
 FemaleBodyShapeTranslateJoints = ('tr_left_clav', 'tr_left_chest', 'tr_right_clav', 'tr_right_chest', 'tr_sash01', 'tr_left_thigh', 'tr_right_thigh')
-FemaleBodyShapeScaleJoints = ('def_spine02', 'def_spine03', 'def_spine04', 'def_shoulders', 'def_neck', 'def_left_clav', 'def_left_chest', 'def_left_shoulder', 
-                              'def_left_elbow', 'def_left_wrist', 'def_left_thumb01', 'def_left_thumb02', 'def_left_thumb03', 'def_left_finger01', 
-                              'def_left_finger02', 'def_left_index01', 'def_left_index02', 'def_right_clav', 'def_right_chest', 'def_right_shoulder', 
-                              'def_right_elbow', 'def_right_wrist', 'def_right_thumb01', 'def_right_thumb02', 'def_right_thumb03', 'def_right_finger01', 
-                              'def_right_finger02', 'def_right_index01', 'def_right_index02', 'def_hips', 'def_hips_waistline', 'def_hips_waistline_back', 
-                              'def_left_thigh', 'def_left_knee', 'def_left_ankle', 'def_left_ball', 'def_right_thigh', 'def_right_knee', 'def_right_ankle', 
-                              'def_right_ball')
-FemaleBodyShapeControlJointMatrix = {'def_spine02': [VBase3(1, 2.05, 1.8), VBase3(1, 0.85, 0.87), VBase3(1, 1, 1), VBase3(1, 1.1, 1.1), VBase3(1, 1, 1)], 
-                                     'def_spine03': [VBase3(1, 1.5, 1.4), VBase3(1, 0.94, 0.85), VBase3(1, 1, 1), VBase3(1, 1.2, 1.2), VBase3(1, 1, 1)], 
-                                     'def_spine04': [VBase3(1, 1.2, 1.2), VBase3(1, 0.87, 0.94), VBase3(1, 1, 1), VBase3(1, 1.14, 1.31), VBase3(1, 1, 1)], 
-                                     'def_shoulders': [VBase3(1.2, 1.0, 1.0), VBase3(1, 0.87, 0.87), VBase3(1, 1, 1), VBase3(1.15, 1.06, 1.15), VBase3(1, 1, 1)], 
-                                     'def_neck': [VBase3(1, 1.3, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_left_clav': [VBase3(1, 1.2, 1.2), VBase3(1, 0.87, 0.87), VBase3(1, 1, 1), VBase3(1, 1.25, 1.25), VBase3(1, 1, 1)], 
-                                     'def_left_shoulder': [VBase3(1, 1.6, 1.6), VBase3(1, 0.8, 0.8), VBase3(1, 1, 1), VBase3(1, 1.3, 1.3), VBase3(1, 1, 1)], 
-                                     'def_left_elbow': [VBase3(1, 1.4, 1.4), VBase3(1, 0.75, 0.75), VBase3(1, 1, 1), VBase3(1, 1.22, 1.22), VBase3(1, 1, 1)], 
-                                     'def_left_wrist': [VBase3(1, 1.2, 1.1), VBase3(1, 1.1, 1.1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_left_chest': [VBase3(1.7, 1.9, 1.4), VBase3(0.81, 0.4, 0.74), VBase3(1.65, 1, 1.2), VBase3(1.59, 1.53, 1.59), VBase3(1, 1, 1)], 
-                                     'def_left_thumb01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_left_thumb02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_left_thumb03': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_left_finger01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_left_finger02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_left_index01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_left_index02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_right_clav': [VBase3(1, 1.2, 1.2), VBase3(1, 0.87, 0.87), VBase3(1, 1, 1), VBase3(1, 1.25, 1.25), VBase3(1, 1, 1)], 
-                                     'def_right_shoulder': [VBase3(1, 1.6, 1.6), VBase3(1, 0.8, 0.8), VBase3(1, 1, 1), VBase3(1, 1.3, 1.3), VBase3(1, 1, 1)], 
-                                     'def_right_elbow': [VBase3(1, 1.4, 1.4), VBase3(1, 0.75, 0.75), VBase3(1, 1, 1), VBase3(1, 1.22, 1.22), VBase3(1, 1, 1)], 
-                                     'def_right_wrist': [VBase3(1, 1.2, 1.1), VBase3(1, 1.1, 1.1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_right_chest': [VBase3(1.7, 1.9, 1.4), VBase3(0.81, 0.4, 0.74), VBase3(1.65, 1, 1.2), VBase3(1.59, 1.53, 1.59), VBase3(1, 1, 1)], 
-                                     'def_right_thumb01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_right_thumb02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_right_thumb03': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_right_finger01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_right_finger02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_right_index01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_right_index02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'tr_left_clav': [VBase3(0.075, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0)], 
-                                     'tr_left_chest': [VBase3(0, -0.05, 0.02), VBase3(-0.04, -0.045, 0), VBase3(0.005, -0.066, 0.053), VBase3(0.056, -0.078, -0.016), VBase3(0, 0, 0)], 
-                                     'tr_right_clav': [VBase3(0.075, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0)], 
-                                     'tr_right_chest': [VBase3(0, -0.05, 0.02), VBase3(0.04, -0.045, 0), VBase3(0.005, -0.066, 0.053), VBase3(-0.056, -0.078, -0.016), VBase3(0, 0, 0)], 
-                                     'def_hips': [VBase3(1.55, 1.5, 1), VBase3(0.84, 0.79, 1), VBase3(0.85, 1, 1), VBase3(1.15, 1.13, 1), VBase3(1, 1, 1)], 
-                                     'def_hips_waistline': [VBase3(2.0, 1.7, 1), VBase3(0.997, 0.868, 1), VBase3(1, 1, 1), VBase3(1.3, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_hips_waistline_back': [VBase3(2.5, 2.5, 1), VBase3(1, 0.87, 1), VBase3(1, 1, 1), VBase3(1.6, 1.3, 1), VBase3(1, 1, 1)], 
-                                     'tr_sash01': [VBase3(0.088, 0.195, 0.113), VBase3(-0.013, -0.053, -0.07), VBase3(0, -0.03, 0), VBase3(0.007, 0.031, 0.038), VBase3(0, 0, 0)], 
-                                     'def_left_thigh': [VBase3(1, 1.5, 1.5), VBase3(1, 0.75, 0.75), VBase3(1, 0.85, 0.95), VBase3(1, 1.16, 1.15), VBase3(1, 1, 1)], 
-                                     'def_left_knee': [VBase3(1, 1.4, 1.4), VBase3(1, 0.87, 0.87), VBase3(1, 1, 1), VBase3(1, 1.1, 1.1), VBase3(1, 1, 1)], 
-                                     'def_left_ankle': [VBase3(1, 1.38, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_left_ball': [VBase3(1, 1.4, 1.44), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_right_thigh': [VBase3(1, 1.5, 1.5), VBase3(1, 0.75, 0.75), VBase3(1, 0.85, 0.95), VBase3(1, 1.16, 1.15), VBase3(1, 1, 1)], 
-                                     'def_right_knee': [VBase3(1, 1.4, 1.4), VBase3(1, 0.87, 0.87), VBase3(1, 1, 1), VBase3(1, 1.1, 1.1), VBase3(1, 1, 1)], 
-                                     'def_right_ankle': [VBase3(1, 1.38, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'def_right_ball': [VBase3(1, 1.4, 1.44), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)], 
-                                     'tr_left_thigh': [VBase3(0, -0.05, 0), VBase3(0, 0.035, 0), VBase3(0, 0, 0), VBase3(0, -0.04, 0), VBase3(0, 0, 0)], 
-                                     'tr_right_thigh': [VBase3(0, 0.05, 0), VBase3(0, -0.035, 0), VBase3(0, 0, 0), VBase3(0, 0.04, 0), VBase3(0, 0, 0)]}
-MaleHeadShapeControlJoints = ('def_trs_forehead', 'def_trs_left_forehead', 'def_trs_right_forehead', 'def_trs_left_cheek', 'def_trs_right_cheek', 
-                              'trs_face_bottom', 'def_trs_mid_jaw', 'def_trs_left_jaw1', 'def_trs_left_jaw2', 'def_trs_right_jaw1', 'def_trs_right_jaw2', 
-                              'def_trs_mid_nose_top', 'def_trs_mid_nose_bot', 'def_trs_left_ear', 'def_trs_right_ear', 'trs_left_eyebrow', 'trs_left_eyeball', 
-                              'trs_left_eyelid', 'trs_left_eyesocket', 'trs_right_eyebrow', 'trs_right_eyeball', 'trs_right_eyelid', 'trs_right_eyesocket', 
-                              'trs_lips_top', 'trs_lips_bot', 'trs_lip_top', 'trs_lip_bot', 'trs_lip_left1', 'trs_lip_left2', 'trs_lip_left3', 'trs_lip_right1', 
-                              'trs_lip_right2', 'trs_lip_right3')
-MaleHeadShapeControlJointMatrix = {'def_trs_forehead': [], 'def_trs_left_forehead': [], 'def_trs_right_forehead': [], 'def_trs_left_cheek': [], 
-                                   'def_trs_right_cheek': [], 'def_trs_mid_jaw': [], 'def_trs_left_jaw1': [], 'def_trs_left_jaw2': [], 'def_trs_right_jaw1': [], 
-                                   'def_trs_right_jaw2': [], 'def_trs_mid_nose_top': [], 'def_trs_mid_nose_bot': [], 'def_trs_left_ear': [], 
-                                   'def_trs_right_ear': [], 'trs_face_bottom': [], 'trs_left_eyebrow': [], 'trs_left_eyeball': [], 'trs_left_eyelid': [], 
-                                   'trs_left_eyesocket': [], 'trs_right_eyebrow': [], 'trs_right_eyeball': [], 'trs_right_eyelid': [], 'trs_right_eyesocket': [], 
-                                   'trs_lips_top': [], 'trs_lips_bot': [], 'trs_lip_top': [], 'trs_lip_bot': [], 'trs_lip_left1': [], 'trs_lip_left2': [], 
-                                   'trs_lip_left3': [], 'trs_lip_right1': [], 'trs_lip_right2': [], 'trs_lip_right3': [], 'initialized': []}
-MaleHeadShapeInitialControlJointMatrix = {'def_trs_forehead': [], 'def_trs_left_forehead': [], 'def_trs_right_forehead': [], 'def_trs_left_cheek': [], 
-                                          'def_trs_right_cheek': [], 'def_trs_mid_jaw': [], 'def_trs_left_jaw1': [], 'def_trs_left_jaw2': [], 
-                                          'def_trs_right_jaw1': [], 'def_trs_right_jaw2': [], 'def_trs_mid_nose_top': [], 'def_trs_mid_nose_bot': [], 
-                                          'def_trs_left_ear': [], 'def_trs_right_ear': [], 'trs_face_bottom': [], 'trs_left_eyebrow': [], 'trs_left_eyeball': [], 
-                                          'trs_left_eyelid': [], 'trs_left_eyesocket': [], 'trs_right_eyebrow': [], 'trs_right_eyeball': [], 
-                                          'trs_right_eyelid': [], 'trs_right_eyesocket': [], 'trs_lips_top': [], 'trs_lips_bot': [], 'trs_lip_top': [],
-                                          'trs_lip_bot': [], 'trs_lip_left1': [], 'trs_lip_left2': [], 'trs_lip_left3': [], 'trs_lip_right1': [],
-                                          'trs_lip_right2': [], 'trs_lip_right3': [], 'initialized': []}
-FemaleHeadShapeControlJoints = ('def_trs_forehead', 'def_trs_left_forehead', 'def_trs_right_forehead', 'def_trs_left_cheek', 'def_trs_right_cheek', 
-                                'trs_face_bottom', 'def_trs_mid_jaw', 'def_trs_left_jaw1', 'def_trs_left_jaw2', 'def_trs_right_jaw1', 'def_trs_right_jaw2', 
-                                'def_trs_mid_nose_top', 'def_trs_mid_nose_bot', 'def_trs_left_ear', 'def_trs_right_ear', 'trs_left_eyebrow', 'trs_left_eyeball', 
-                                'trs_left_eyelid', 'trs_left_eyesocket', 'trs_right_eyebrow', 'trs_right_eyeball', 'trs_right_eyelid', 'trs_right_eyesocket', 
-                                'trs_lips_top', 'trs_lips_bot', 'trs_lip_top', 'trs_lip_bot', 'trs_lip_left1', 'trs_lip_left2', 'trs_lip_left3', 'trs_lip_right1', 
-                                'trs_lip_right2', 'trs_lip_right3')
-FemaleHeadShapeControlJointMatrix = {'def_trs_forehead': [], 'def_trs_left_forehead': [], 'def_trs_right_forehead': [], 'def_trs_left_cheek': [], 
-                                     'def_trs_right_cheek': [], 'def_trs_mid_jaw': [], 'def_trs_left_jaw1': [], 'def_trs_left_jaw2': [], 'def_trs_right_jaw1': [], 
-                                     'def_trs_right_jaw2': [], 'def_trs_mid_nose_top': [], 'def_trs_mid_nose_bot': [], 'def_trs_left_ear': [], 
-                                     'def_trs_right_ear': [], 'trs_face_bottom': [], 'trs_left_eyebrow': [], 'trs_left_eyeball': [], 'trs_left_eyelid': [], 
-                                     'trs_left_eyesocket': [], 'trs_right_eyebrow': [], 'trs_right_eyeball': [], 'trs_right_eyelid': [], 'trs_right_eyesocket': [], 
-                                     'trs_lips_top': [], 'trs_lips_bot': [], 'trs_lip_top': [], 'trs_lip_bot': [], 'trs_lip_left1': [], 'trs_lip_left2': [], 
-                                     'trs_lip_left3': [], 'trs_lip_right1': [], 'trs_lip_right2': [], 'trs_lip_right3': [], 'initialized': []}
-FemaleHeadShapeInitialControlJointMatrix = {'def_trs_forehead': [], 'def_trs_left_forehead': [], 'def_trs_right_forehead': [], 'def_trs_left_cheek': [], 
-                                            'def_trs_right_cheek': [], 'def_trs_mid_jaw': [], 'def_trs_left_jaw1': [], 'def_trs_left_jaw2': [], 
-                                            'def_trs_right_jaw1': [], 'def_trs_right_jaw2': [], 'def_trs_mid_nose_top': [], 'def_trs_mid_nose_bot': [], 
-                                            'def_trs_left_ear': [], 'def_trs_right_ear': [], 'trs_face_bottom': [], 'trs_left_eyebrow': [], 'trs_left_eyeball': [], 
-                                            'trs_left_eyelid': [], 'trs_left_eyesocket': [], 'trs_right_eyebrow': [], 'trs_right_eyeball': [], 
-                                            'trs_right_eyelid': [], 'trs_right_eyesocket': [], 'trs_lips_top': [], 'trs_lips_bot': [], 'trs_lip_top': [], 
-                                            'trs_lip_bot': [], 'trs_lip_left1': [], 'trs_lip_left2': [], 'trs_lip_left3': [], 'trs_lip_right1': [], 
-                                            'trs_lip_right2': [], 'trs_lip_right3': [], 'initialized': []}
-PlayerNames = ["Cap'n Bruno Cannonballs", 'Bad-run Thomas', 'Carlos Saggingsails', 'Smugglin Willy Hawkins']
+FemaleBodyShapeScaleJoints = ('def_spine02', 'def_spine03', 'def_spine04', 'def_shoulders', 'def_neck', 'def_left_clav', 'def_left_chest', 'def_left_shoulder', 'def_left_elbow', 'def_left_wrist', 'def_left_thumb01', 'def_left_thumb02', 'def_left_thumb03', 'def_left_finger01', 'def_left_finger02', 'def_left_index01', 'def_left_index02', 'def_right_clav', 'def_right_chest', 'def_right_shoulder', 'def_right_elbow', 'def_right_wrist', 'def_right_thumb01', 'def_right_thumb02', 'def_right_thumb03', 'def_right_finger01', 'def_right_finger02', 'def_right_index01', 'def_right_index02', 'def_hips', 'def_hips_waistline', 'def_hips_waistline_back', 'def_left_thigh', 'def_left_knee', 'def_left_ankle', 'def_left_ball', 'def_right_thigh', 'def_right_knee', 'def_right_ankle', 'def_right_ball')
+FemaleBodyShapeControlJointMatrix = {
+  'def_spine02': [VBase3(1, 2.05, 1.8), VBase3(1, 0.85, 0.87), VBase3(1, 1, 1), VBase3(1, 1.1, 1.1), VBase3(1, 1, 1)],
+  'def_spine03': [VBase3(1, 1.5, 1.4), VBase3(1, 0.94, 0.85), VBase3(1, 1, 1), VBase3(1, 1.2, 1.2), VBase3(1, 1, 1)],
+  'def_spine04': [VBase3(1, 1.2, 1.2), VBase3(1, 0.87, 0.94), VBase3(1, 1, 1), VBase3(1, 1.14, 1.31), VBase3(1, 1, 1)],
+  'def_shoulders': [VBase3(1.2, 1.0, 1.0), VBase3(1, 0.87, 0.87), VBase3(1, 1, 1), VBase3(1.15, 1.06, 1.15), VBase3(1, 1, 1)],
+  'def_neck': [VBase3(1, 1.3, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_left_clav': [VBase3(1, 1.2, 1.2), VBase3(1, 0.87, 0.87), VBase3(1, 1, 1), VBase3(1, 1.25, 1.25), VBase3(1, 1, 1)],
+  'def_left_shoulder': [VBase3(1, 1.6, 1.6), VBase3(1, 0.8, 0.8), VBase3(1, 1, 1), VBase3(1, 1.3, 1.3), VBase3(1, 1, 1)],
+  'def_left_elbow': [VBase3(1, 1.4, 1.4), VBase3(1, 0.75, 0.75), VBase3(1, 1, 1), VBase3(1, 1.22, 1.22), VBase3(1, 1, 1)],
+  'def_left_wrist': [VBase3(1, 1.2, 1.1), VBase3(1, 1.1, 1.1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_left_chest': [VBase3(1.7, 1.9, 1.4), VBase3(0.81, 0.4, 0.74), VBase3(1.65, 1, 1.2), VBase3(1.59, 1.53, 1.59), VBase3(1, 1, 1)],
+  'def_left_thumb01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_left_thumb02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_left_thumb03': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_left_finger01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_left_finger02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_left_index01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_left_index02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_right_clav': [VBase3(1, 1.2, 1.2), VBase3(1, 0.87, 0.87), VBase3(1, 1, 1), VBase3(1, 1.25, 1.25), VBase3(1, 1, 1)],
+  'def_right_shoulder': [VBase3(1, 1.6, 1.6), VBase3(1, 0.8, 0.8), VBase3(1, 1, 1), VBase3(1, 1.3, 1.3), VBase3(1, 1, 1)],
+  'def_right_elbow': [VBase3(1, 1.4, 1.4), VBase3(1, 0.75, 0.75), VBase3(1, 1, 1), VBase3(1, 1.22, 1.22), VBase3(1, 1, 1)],
+  'def_right_wrist': [VBase3(1, 1.2, 1.1), VBase3(1, 1.1, 1.1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_right_chest': [VBase3(1.7, 1.9, 1.4), VBase3(0.81, 0.4, 0.74), VBase3(1.65, 1, 1.2), VBase3(1.59, 1.53, 1.59), VBase3(1, 1, 1)],
+  'def_right_thumb01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_right_thumb02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_right_thumb03': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_right_finger01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_right_finger02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_right_index01': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_right_index02': [VBase3(1, 1.2, 1.2), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'tr_left_clav': [VBase3(0.075, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0)],
+  'tr_left_chest': [VBase3(0, -0.05, 0.02), VBase3(-0.04, -0.045, 0), VBase3(0.005, -0.066, 0.053), VBase3(0.056, -0.078, -0.016), VBase3(0, 0, 0)],
+  'tr_right_clav': [VBase3(0.075, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0), VBase3(0, 0, 0)],
+  'tr_right_chest': [VBase3(0, -0.05, 0.02), VBase3(0.04, -0.045, 0), VBase3(0.005, -0.066, 0.053), VBase3(-0.056, -0.078, -0.016), VBase3(0, 0, 0)],
+  'def_hips': [VBase3(1.55, 1.5, 1), VBase3(0.84, 0.79, 1), VBase3(0.85, 1, 1), VBase3(1.15, 1.13, 1), VBase3(1, 1, 1)],
+  'def_hips_waistline': [VBase3(2.0, 1.7, 1), VBase3(0.997, 0.868, 1), VBase3(1, 1, 1), VBase3(1.3, 1, 1), VBase3(1, 1, 1)],
+  'def_hips_waistline_back': [VBase3(2.5, 2.5, 1), VBase3(1, 0.87, 1), VBase3(1, 1, 1), VBase3(1.6, 1.3, 1), VBase3(1, 1, 1)],
+  'tr_sash01': [VBase3(0.088, 0.195, 0.113), VBase3(-0.013, -0.053, -0.07), VBase3(0, -0.03, 0), VBase3(0.007, 0.031, 0.038), VBase3(0, 0, 0)],
+  'def_left_thigh': [VBase3(1, 1.5, 1.5), VBase3(1, 0.75, 0.75), VBase3(1, 0.85, 0.95), VBase3(1, 1.16, 1.15), VBase3(1, 1, 1)],
+  'def_left_knee': [VBase3(1, 1.4, 1.4), VBase3(1, 0.87, 0.87), VBase3(1, 1, 1), VBase3(1, 1.1, 1.1), VBase3(1, 1, 1)],
+  'def_left_ankle': [VBase3(1, 1.38, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_left_ball': [VBase3(1, 1.4, 1.44), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_right_thigh': [VBase3(1, 1.5, 1.5), VBase3(1, 0.75, 0.75), VBase3(1, 0.85, 0.95), VBase3(1, 1.16, 1.15), VBase3(1, 1, 1)],
+  'def_right_knee': [VBase3(1, 1.4, 1.4), VBase3(1, 0.87, 0.87), VBase3(1, 1, 1), VBase3(1, 1.1, 1.1), VBase3(1, 1, 1)],
+  'def_right_ankle': [VBase3(1, 1.38, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'def_right_ball': [VBase3(1, 1.4, 1.44), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1), VBase3(1, 1, 1)],
+  'tr_left_thigh': [VBase3(0, -0.05, 0), VBase3(0, 0.035, 0), VBase3(0, 0, 0), VBase3(0, -0.04, 0), VBase3(0, 0, 0)],
+  'tr_right_thigh': [VBase3(0, 0.05, 0), VBase3(0, -0.035, 0), VBase3(0, 0, 0), VBase3(0, 0.04, 0), VBase3(0, 0, 0)]
+}
+MaleHeadShapeControlJoints = ('def_trs_forehead', 'def_trs_left_forehead', 'def_trs_right_forehead', 'def_trs_left_cheek', 'def_trs_right_cheek', 'trs_face_bottom', 'def_trs_mid_jaw', 'def_trs_left_jaw1', 'def_trs_left_jaw2', 'def_trs_right_jaw1', 'def_trs_right_jaw2', 'def_trs_mid_nose_top', 'def_trs_mid_nose_bot', 'def_trs_left_ear', 'def_trs_right_ear', 'trs_left_eyebrow', 'trs_left_eyeball', 'trs_left_eyelid', 'trs_left_eyesocket', 'trs_right_eyebrow', 'trs_right_eyeball', 'trs_right_eyelid', 'trs_right_eyesocket', 'trs_lips_top', 'trs_lips_bot', 'trs_lip_top', 'trs_lip_bot', 'trs_lip_left1', 'trs_lip_left2', 'trs_lip_left3', 'trs_lip_right1', 'trs_lip_right2', 'trs_lip_right3')
+MaleHeadShapeControlJointMatrix = {
+    'def_trs_forehead': [],
+    'def_trs_left_forehead': [],
+    'def_trs_right_forehead': [],
+    'def_trs_left_cheek': [],
+    'def_trs_right_cheek': [],
+    'def_trs_mid_jaw': [],
+    'def_trs_left_jaw1': [],
+    'def_trs_left_jaw2': [],
+    'def_trs_right_jaw1': [],
+    'def_trs_right_jaw2': [],
+    'def_trs_mid_nose_top': [],
+    'def_trs_mid_nose_bot': [],
+    'def_trs_left_ear': [],
+    'def_trs_right_ear': [],
+    'trs_face_bottom': [],
+    'trs_left_eyebrow': [],
+    'trs_left_eyeball': [],
+    'trs_left_eyelid': [],
+    'trs_left_eyesocket': [],
+    'trs_right_eyebrow': [],
+    'trs_right_eyeball': [],
+    'trs_right_eyelid': [],
+    'trs_right_eyesocket': [],
+    'trs_lips_top': [],
+    'trs_lips_bot': [],
+    'trs_lip_top': [],
+    'trs_lip_bot': [],
+    'trs_lip_left1': [],
+    'trs_lip_left2': [],
+    'trs_lip_left3': [],
+    'trs_lip_right1': [],
+    'trs_lip_right2': [],
+    'trs_lip_right3': [],
+    'initialized': [] }
+MaleHeadShapeInitialControlJointMatrix = {
+    'def_trs_forehead': [],
+    'def_trs_left_forehead': [],
+    'def_trs_right_forehead': [],
+    'def_trs_left_cheek': [],
+    'def_trs_right_cheek': [],
+    'def_trs_mid_jaw': [],
+    'def_trs_left_jaw1': [],
+    'def_trs_left_jaw2': [],
+    'def_trs_right_jaw1': [],
+    'def_trs_right_jaw2': [],
+    'def_trs_mid_nose_top': [],
+    'def_trs_mid_nose_bot': [],
+    'def_trs_left_ear': [],
+    'def_trs_right_ear': [],
+    'trs_face_bottom': [],
+    'trs_left_eyebrow': [],
+    'trs_left_eyeball': [],
+    'trs_left_eyelid': [],
+    'trs_left_eyesocket': [],
+    'trs_right_eyebrow': [],
+    'trs_right_eyeball': [],
+    'trs_right_eyelid': [],
+    'trs_right_eyesocket': [],
+    'trs_lips_top': [],
+    'trs_lips_bot': [],
+    'trs_lip_top': [],
+    'trs_lip_bot': [],
+    'trs_lip_left1': [],
+    'trs_lip_left2': [],
+    'trs_lip_left3': [],
+    'trs_lip_right1': [],
+    'trs_lip_right2': [],
+    'trs_lip_right3': [],
+    'initialized': []}
+FemaleHeadShapeControlJoints = ('def_trs_forehead', 'def_trs_left_forehead', 'def_trs_right_forehead', 'def_trs_left_cheek', 'def_trs_right_cheek', 'trs_face_bottom', 'def_trs_mid_jaw', 'def_trs_left_jaw1', 'def_trs_left_jaw2', 'def_trs_right_jaw1', 'def_trs_right_jaw2', 'def_trs_mid_nose_top', 'def_trs_mid_nose_bot', 'def_trs_left_ear', 'def_trs_right_ear', 'trs_left_eyebrow', 'trs_left_eyeball', 'trs_left_eyelid', 'trs_left_eyesocket', 'trs_right_eyebrow', 'trs_right_eyeball', 'trs_right_eyelid', 'trs_right_eyesocket', 'trs_lips_top', 'trs_lips_bot', 'trs_lip_top', 'trs_lip_bot', 'trs_lip_left1', 'trs_lip_left2', 'trs_lip_left3', 'trs_lip_right1', 'trs_lip_right2', 'trs_lip_right3')
+FemaleHeadShapeControlJointMatrix = {
+    'def_trs_forehead': [],
+    'def_trs_left_forehead': [],
+    'def_trs_right_forehead': [],
+    'def_trs_left_cheek': [],
+    'def_trs_right_cheek': [],
+    'def_trs_mid_jaw': [],
+    'def_trs_left_jaw1': [],
+    'def_trs_left_jaw2': [],
+    'def_trs_right_jaw1': [],
+    'def_trs_right_jaw2': [],
+    'def_trs_mid_nose_top': [],
+    'def_trs_mid_nose_bot': [],
+    'def_trs_left_ear': [],
+    'def_trs_right_ear': [],
+    'trs_face_bottom': [],
+    'trs_left_eyebrow': [],
+    'trs_left_eyeball': [],
+    'trs_left_eyelid': [],
+    'trs_left_eyesocket': [],
+    'trs_right_eyebrow': [],
+    'trs_right_eyeball': [],
+    'trs_right_eyelid': [],
+    'trs_right_eyesocket': [],
+    'trs_lips_top': [],
+    'trs_lips_bot': [],
+    'trs_lip_top': [],
+    'trs_lip_bot': [],
+    'trs_lip_left1': [],
+    'trs_lip_left2': [],
+    'trs_lip_left3': [],
+    'trs_lip_right1': [],
+    'trs_lip_right2': [],
+    'trs_lip_right3': [],
+    'initialized': [] }
+FemaleHeadShapeInitialControlJointMatrix = {
+    'def_trs_forehead': [],
+    'def_trs_left_forehead': [],
+    'def_trs_right_forehead': [],
+    'def_trs_left_cheek': [],
+    'def_trs_right_cheek': [],
+    'def_trs_mid_jaw': [],
+    'def_trs_left_jaw1': [],
+    'def_trs_left_jaw2': [],
+    'def_trs_right_jaw1': [],
+    'def_trs_right_jaw2': [],
+    'def_trs_mid_nose_top': [],
+    'def_trs_mid_nose_bot': [],
+    'def_trs_left_ear': [],
+    'def_trs_right_ear': [],
+    'trs_face_bottom': [],
+    'trs_left_eyebrow': [],
+    'trs_left_eyeball': [],
+    'trs_left_eyelid': [],
+    'trs_left_eyesocket': [],
+    'trs_right_eyebrow': [],
+    'trs_right_eyeball': [],
+    'trs_right_eyelid': [],
+    'trs_right_eyesocket': [],
+    'trs_lips_top': [],
+    'trs_lips_bot': [],
+    'trs_lip_top': [],
+    'trs_lip_bot': [],
+    'trs_lip_left1': [],
+    'trs_lip_left2': [],
+    'trs_lip_left3': [],
+    'trs_lip_right1': [],
+    'trs_lip_right2': [],
+    'trs_lip_right3': [],
+    'initialized': []}
+PlayerNames = [
+    "Cap'n Bruno Cannonballs",
+    'Bad-run Thomas',
+    'Carlos Saggingsails',
+    'Smugglin Willy Hawkins']
 
 class MasterHuman(HumanBase.HumanBase, Biped.Biped):
-    notify = DirectNotifyGlobal.directNotify.newCategory('MasterHuman')
+    notify = DirectNotifyGlobal.directNotify.newCategory('Human')
     prebuiltAnimData = {}
-
-    def __init__(self, other=None):
+    
+    def __init__(self, other = None):
         Biped.Biped.__init__(self, other, HumanAnimationMixer)
         self.model = None
         self.joints = {}
@@ -234,24 +380,31 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         self.frozeSomething = True
         self.randGen = random.Random()
         self.randGen.seed(random.random())
-        self.eyeFSM = ClassicFSM('eyeFSM', [State('off', self.enterEyeFSMOff, self.exitEyeFSMOff, ['open', 'closed']),
-         State('open', self.enterEyeFSMOpen, self.exitEyeFSMOpen, ['closed', 'off']),
-         State('closed', self.enterEyeFSMClosed, self.exitEyeFSMClosed, ['open', 'off'])], 
-         'off', 'off')
+        self.eyeFSM = ClassicFSM('eyeFSM', [
+            State('off', self.enterEyeFSMOff, self.exitEyeFSMOff, [
+                'open',
+                'closed']),
+            State('open', self.enterEyeFSMOpen, self.exitEyeFSMOpen, [
+                'closed',
+                'off']),
+            State('closed', self.enterEyeFSMClosed, self.exitEyeFSMClosed, [
+                'open',
+                'off'])], 'off', 'off')
         self.eyeFSM.enterInitialState()
         if other != None:
             self.copyHuman(other)
+        
         self.isPaid = False
 
     def removeCopiedNodes(self):
         self.dropShadow = self.find('**/drop_shadow*')
         if not self.dropShadow.isEmpty():
             self.deleteDropShadow()
-
+    
     def flattenHuman(self):
         self.deleteNametag3d()
         self.getWeaponJoints()
-
+    
     def __doneFlattenHuman(self, models):
         self.flattenPending = None
         self.getWeaponJoints()
@@ -264,34 +417,38 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         self.model = None
 
     def delete(self):
+        
         try:
             self.Human_deleted
         except:
             self.Human_deleted = 1
-        
-        taskMgr.remove(self.__blinkName)
-        if self.dropShadow and not self.dropShadow.isEmpty():
-            self.deleteDropShadow()
-        del self.eyeFSM
-        self.controlShapes = None
-        self.sliderNames = None
-        if self.model:
-            self.model.delete()
-            del self.model
-        Biped.Biped.delete(self)
-
+            taskMgr.remove(self._MasterHuman__blinkName)
+            if self.dropShadow and not self.dropShadow.isEmpty():
+                self.deleteDropShadow()
+            
+            del self.eyeFSM
+            self.controlShapes = None
+            self.sliderNames = None
+            if self.model:
+                self.model.delete()
+                del self.model
+            
+            Biped.Biped.delete(self)
+    
     def isDeleted(self):
+        
         try:
             self.Human_deleted
-            return True
+            if self.Human_deleted == 1:
+                return True
         except:
             return False
-
+    
     def setupExtraNodes(self):
         idx = 0
         if self.gender == 'f':
             idx = 1
-
+        
         jointName = 'def_head01'
         jointNameExtra = 'def_extra_jt'
         jointNameScale = 'def_scale_jt'
@@ -308,10 +465,10 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             exposedHeadJoint = self.getLOD(lod).find('**/def_head01')
             if not exposedHeadJoint.isEmpty():
                 exposedHeadJoint.removeNode()
-
+        
         self.headNode.setScale(HeadScales[idx][self.style.getBodyShape])
         self.setGlobalScale(self.calcBodyScale())
-
+    
     def undoExtraNodes(self):
         jointNameExtra = 'def_extra_jt'
         jointNameScale = 'def_scale_jt'
@@ -319,15 +476,18 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         if not joints.isEmpty():
             joints.detach()
             joints.clear()
+        
         if self.headNode:
             self.headNode.removeNode()
             self.headNode = None
             self.extraNode.removeNode()
             self.extraNode = None
+        
         joints = self.findAllMatches('**/*' + jointNameScale)
         if not joints.isEmpty():
             joints.detach()
             joints.clear()
+        
         if self.scaleNode:
             self.scaleNode.removeNode()
             self.scaleNode = None
@@ -356,26 +516,28 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             if self.optimizeLOD:
                 self.model.currentBody[2].setColorScale(color)
                 self.model.faces[0][2].setColorScale(color)
-            return
-        numPaths = self.model.body.getNumPaths()
-        medIdx = numPaths / 3
-        lowIdx = numPaths / 3 * 2
-        if self.zombie:
-            self.model.body.setColorScale(Vec4(1, 1, 1, 1))
-            if self.optimizeLOD:
-                color = VBase4(121 / 255.0, 124 / 255.0, 103 / 255.0, 1.0)
-                for i in xrange(lowIdx, numPaths):
-                    self.model.body[i].setColorScale(color)
-
-                self.model.faceZomb[2].setColorScale(color)
-            return
-        self.model.body.setColorScale(skinColor)
-        lowColor = self.model.lowLODSkinColor
-        if self.optimizeLOD:
-            color = VBase4(lowColor[0] * skinColor[0], lowColor[1] * skinColor[1], lowColor[2] * skinColor[2], 1.0)
-            for i in xrange(lowIdx, numPaths):
-                self.model.body[i].setColorScale(color)
-
+            
+        else:
+            numPaths = self.model.body.getNumPaths()
+            medIdx = numPaths / 3
+            lowIdx = (numPaths / 3) * 2
+            if self.zombie:
+                self.model.body.setColorScale(Vec4(1, 1, 1, 1))
+                if self.optimizeLOD:
+                    color = VBase4(121 / 255.0, 124 / 255.0, 103 / 255.0, 1.0)
+                    for i in xrange(lowIdx, numPaths):
+                        self.model.body[i].setColorScale(color)
+                    
+                    self.model.faceZomb[2].setColorScale(color)
+                
+            else:
+                self.model.body.setColorScale(skinColor)
+                lowColor = self.model.lowLODSkinColor
+                if self.optimizeLOD:
+                    color = VBase4(lowColor[0] * skinColor[0], lowColor[1] * skinColor[1], lowColor[2] * skinColor[2], 1.0)
+                    for i in xrange(lowIdx, numPaths):
+                        self.model.body[i].setColorScale(color)
+    
     def generateSkinTexture(self):
         bodyTextureIdx = self.style.body.skin
         if self.zombie:
@@ -383,6 +545,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
                 bodyTextureIdx = PirateFemale.ZOMB_BODY_TEXTURE
             else:
                 bodyTextureIdx = PirateMale.ZOMB_BODY_TEXTURE
+        
         if self.gender == 'f':
             body_textures = PirateFemale.body_textures[self.style.body.shape]
         else:
@@ -390,11 +553,13 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         tex_name = self.getTrySafe(body_textures, bodyTextureIdx)
         if tex_name != None:
             tex = self.model.bodyTextures.findTexture(tex_name)
-            if tex:
-                for parts in self.model.bodys:
-                    numPaths = parts.getNumPaths()
-                    for i in xrange(numPaths):
-                        parts[i].setTexture(tex, 1)
+        else:
+            return None
+        if tex:
+            for parts in self.model.bodys:
+                numPaths = parts.getNumPaths()
+                for i in xrange(numPaths):
+                    parts[i].setTexture(tex, 1)
 
     def generateFaceTexture(self):
         faceTextureIdx = self.style.head.texture
@@ -406,8 +571,10 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         if tex_name != None:
             tex = self.model.faceTextures.findTexture(tex_name)
             if tex == None:
-                return
-            return
+                return None
+            
+        else:
+            return None
         for lodName in self.getLODNames():
             parts = self.findAllMatches('**/body_master_face')
             eyeball_parts = self.eyeBalls[lodName]
@@ -418,10 +585,11 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
                     for i in range(0, eyeball_parts.getNumPaths()):
                         eyeball_parts[i].setTexture(tex, 1)
 
-    def generateHairColor(self, colorName=None, colorModel=None):
+    def generateHairColor(self, colorName = None, colorModel = None):
         self.model.setHairBaseColor()
 
     def getTrySafe(self, list, idx):
+        
         try:
             if type(idx) == str:
                 lookup = idx.split('_cut')[0]
@@ -440,13 +608,16 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         tex_name = self.getTrySafe(eye_iris_textures, eyesTextureIdx)
         if tex_name != None:
             tex = self.eyeIrisTextures.findTexture(tex_name)
-            if tex:
-                self.model.irises.setTexture(tex, 1)
-
+        else:
+            return None
+        if tex:
+            self.model.irises.setTexture(tex, 1)
+    
     def generateHatColor(self):
         style = self.model.dna
         if self.zombie:
             style = self.model.dnaZomb
+        
         hatColor = style.lookupHatColor()
         geom = self.getGeomNode()
         parts = geom.findAllMatches('**/hat_band*')
@@ -456,16 +627,18 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         style = self.model.dna
         if self.zombie:
             style = self.model.dnaZomb
+        
         clothesTopColor = style.lookupClothesTopColor()
         clothesBotColor = style.lookupClothesBotColor()
         geom = self.getGeomNode()
         if self.optimizeLOD:
+            
             def tempColorParts(parts, ct):
                 numPaths = parts.getNumPaths()
-                lowIdx = numPaths / 3 * 2
+                lowIdx = (numPaths / 3) * 2
                 for j in xrange(lowIdx):
                     parts[j].setColorScale(ct)
-
+                
                 for j in xrange(lowIdx, numPaths):
                     cl = parts[j].getColorScale()
                     compoundColor = VBase4(cl[0] * ct[0], cl[1] * ct[1], cl[2] * ct[2], 1.0)
@@ -484,10 +657,10 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         parts = geom.findAllMatches('**/clothing_layer1_pant*')
         colorParts(parts, clothesBotColor[0])
         del colorParts
-
+    
     def generateTexture(self):
         self.generateEyesTexture()
-
+    
     def generateColor(self):
         self.generateSkinColor()
         self.generateHairColor()
@@ -498,18 +671,21 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         for currAnim in animNames:
             anim = animNames.get(currAnim)
             for currAnimName in anim:
-                self.animTable.append([currAnimName, currAnimName])
+                self.animTable.append([
+                    currAnimName,
+                    currAnimName])
 
         self.reducedAnimList = self.animTable
 
     def forceLoadAnimDict(self):
         for anim in self.animTable:
             self.getAnimControls(anim[0])
-
-    def createAnimDict(self, customList=None):
+    
+    def createAnimDict(self, customList = None):
         if self.reducedAnimList is None:
             self.animDict = self.prebuiltAnimData[self.gender + self.type]
-            return
+            return None
+        
         if self.gender == 'f':
             filePrefix = 'models/char/f'
             genderPrefix = 'f'
@@ -520,6 +696,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         animList = self.reducedAnimList
         if animList is None:
             animList = AnimListDict[self.type]
+        
         self.animDict = {}
         for anim in animList:
             animSuffix = ''
@@ -527,32 +704,40 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
                 if anim[0] == CustomAnimDict[genderPrefix + self.type][i]:
                     animSuffix = '_' + genderPrefix + NewModelDict.get(self.type)
                     break
-
+            
             self.animDict[anim[0]] = filePrefix + '_' + anim[1] + animSuffix
-
+        
         if self.reducedAnimList is None:
             self.animDict.pop('intro')
+        
         return filePrefix
 
-    def generateBody(self, copy=1):
+
+    def generateBody(self, copy = 1):
         if self.gender == 'm':
             filePrefix = 'models/char/mp'
         else:
             filePrefix = 'models/char/fp'
-
         lodString = '2000'
         self.loadModel(filePrefix + '_' + lodString, 'modelRoot', '2000', copy)
-        if loader.loadModel(filePrefix + '_' + '1000', allowInstance=True) != None:
+        if loader.loadModel(filePrefix + '_' + '1000', allowInstance = True) != None:
             lodString = '1000'
-
+        
         self.loadModel(filePrefix + '_' + lodString, 'modelRoot', '1000', copy)
-        if loader.loadModel(filePrefix + '_' + '500', allowInstance=True) != None:
+        if loader.loadModel(filePrefix + '_' + '500', allowInstance = True) != None:
             lodString = '500'
-
+        
         self.loadModel(filePrefix + '_' + lodString, 'modelRoot', '500', copy)
-        self.makeSubpart('head', ['zz_head01'], [])
-        self.makeSubpart('torso', ['zz_spine01'], ['zz_head01'])
-        self.makeSubpart('legs', ['dx_root'], ['zz_spine01'])
+        self.makeSubpart('head', [
+            'def_head_base',
+            'zz_head01'], [])
+        self.makeSubpart('torso', [
+            'zz_spine01',
+            'def_head01'], [
+            'zz_head01'])
+        self.makeSubpart('legs', [
+            'dx_root'], [
+            'zz_spine01'])
         self.setSubpartsComplete(True)
         self.eyeIrisTextures = loader.loadModel('models/misc/eye_iris.bam')
 
@@ -560,24 +745,35 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         self.setLODNode()
         avatarDetail = base.config.GetString('avatar-detail', 'high')
         if avatarDetail == 'high':
-            dist = [0, 20, 80, 280]
+            dist = [
+                0,
+                20,
+                80,
+                280]
         elif avatarDetail == 'med':
-            dist = [0, 10, 40, 280]
+            dist = [
+                0,
+                10,
+                40,
+                280]
         elif avatarDetail == 'low':
-            dist = [0, 5, 20, 280]
+            dist = [
+                0,
+                5,
+                20,
+                280]
         else:
             raise StandardError, 'Invalid avatar-detail: %s' % avatarDetail
-
         self.addLOD(500, dist[3], dist[2])
         if self.optimizeLOD:
             lowLOD = self.getLOD('500')
             lowLOD.setTextureOff(1000)
             lowLOD.setTransparency(0, 1000)
-
+        
         self.addLOD(1000, dist[2], dist[1])
         self.addLOD(2000, dist[1], dist[0])
         self.getLODNode().setCenter(Point3(0, 0, 5))
-
+    
     def showLOD(self, lodName):
         if not self.model.loaded:
             self.model.setupHead(lodName)
@@ -585,12 +781,13 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             self.model.setupClothing(lodName)
             if self.master:
                 self.model.setupSelectionChoices('NPC')
+            
             self.model.loaded = 1
-
+        
         self.model.setFromDNA()
         self.generateTexture()
 
-    def loadHuman(self, gender='m', other=None):
+    def loadHuman(self, gender = 'm', other = None):
         self.gender = gender
         self.type = TempDict[self.style.body.shape]
         if self.gender == 'f':
@@ -599,7 +796,6 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         else:
             controlShapes = PirateMale.ControlShapes
             sliderNames = PirateMale.SliderNames
-
         self.setLODs()
         self.loadAnimatedHead = True
         self.generateBody()
@@ -607,7 +803,6 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             self.model = PirateFemale.PirateFemale(self, self.style)
         else:
             self.model = PirateMale.PirateMale(self, self.style)
-
         self.faceAwayFromViewer()
         self.lods = self.getLODNames()
         if self.gender == 'f':
@@ -616,11 +811,14 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         else:
             self.headFudgeHpr = Vec3(0, 0, 0)
             idx = 0
-
         self.showLOD(2000)
         self.showNormal()
         self.createAnimDict()
-        self.initAnimsOnAllLODs(['head', 'legs', 'torso', 'modelRoot'])
+        self.initAnimsOnAllLODs([
+            'head',
+            'legs',
+            'torso',
+            'modelRoot'])
         self.controlShapes = controlShapes
         self.sliderNames = sliderNames
         self.initHeadControlShapes()
@@ -645,14 +843,14 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         self.initializeNametag3d()
         self.initializeDropShadow()
         if self.getLOD('2000') == None:
-            return
-
+            return None
+        
         exposedHeadJoint = self.getLOD('2000').find('**/def_head01')
         if not exposedHeadJoint.isEmpty():
             idx = 0
             if self.gender == 'f':
                 idx = 1
-
+            
             exposedHeadJoint.setScale(1)
             self.headNode.reparentTo(exposedHeadJoint)
             self.headNode.setScale(HeadScales[idx][self.style.getBodyShape()])
@@ -662,8 +860,8 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         self.getGeomNode().getParent().findAllMatches('trs_*').detach()
         self.findAllMatches('def_*').detach()
         self.findAllMatches('trs_*').detach()
-
-    def cleanupHuman(self, gender='m'):
+    
+    def cleanupHuman(self, gender = 'm'):
         self.eyeFSM.request('off')
         self.undoExtraNodes()
         self.undoControlJoints()
@@ -674,12 +872,12 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         self.loaded = 0
         self.master = 0
 
-    def generateHuman(self, gender='m'):
+    def generateHuman(self, gender = 'm'):
         self.loadHuman(self.style.gender)
 
     def getShadowJoint(self):
         return self
-
+    
     def getNametagJoints(self):
         joints = []
         for lodName in self.getLODNames():
@@ -687,19 +885,18 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             joint = bundle.findChild('name_tag')
             if joint:
                 joints.append(joint)
-
+        
         return joints
 
     def __blinkOpenEyes(self, task):
         if self.eyeFSM.getCurrentState().getName() == 'closed':
             self.eyeFSM.request('open')
-
+        
         r = self.randGen.random()
         if r < 0.1:
             t = 0.2
         else:
             t = r * 4.0 + 1.0
-
         taskMgr.doMethodLater(t, self.__blinkCloseEyes, self.__blinkName)
         return Task.done
 
@@ -709,31 +906,29 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         else:
             self.eyeFSM.request('closed')
             taskMgr.doMethodLater(0.125, self.__blinkOpenEyes, self.__blinkName)
-
         return Task.done
-
+    
     def startBlink(self):
-        taskMgr.remove(self.__blinkName)
+        taskMgr.remove(self._MasterHuman__blinkName)
         if self.eyeLids:
             self.openEyes()
-
-        taskMgr.doMethodLater(self.randGen.random() * 4.0 + 1, self.__blinkCloseEyes,
-            self.__blinkName)
-
+        
+        taskMgr.doMethodLater(self.randGen.random() * 4.0 + 1, self.__blinkCloseEyes, self.__blinkName)
+    
     def stopBlink(self):
         taskMgr.remove(self.__blinkName)
         if self.eyeLids:
             self.eyeFSM.request('open')
-
+    
     def closeEyes(self):
         self.eyeFSM.request('closed')
 
     def openEyes(self):
         self.eyeFSM.request('open')
-
+    
     def enterEyeFSMOff(self):
         pass
-
+    
     def exitEyeFSMOff(self):
         pass
 
@@ -746,7 +941,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
 
     def exitEyeFSMOpen(self):
         pass
-
+    
     def enterEyeFSMClosed(self):
         return
         for lodName in self.getLODNames():
@@ -757,7 +952,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
 
     def exitEyeFSMClosed(self):
         pass
-
+    
     def setControlValue(self, r, name):
         if self.style.getGender() == 'f':
             matrixF = FemaleHeadShapeControlJointMatrix
@@ -771,6 +966,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         if r < 0.0:
             if len(ctl) > 1:
                 slider = ctl[1]
+        
         for i in range(0, len(slider)):
             jointName = slider[i][0]
             jointCtls = self.findAllMatches(jointName)
@@ -820,7 +1016,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
                                 sclDelta.setZ(sclDelta.getZ() + jointSet[jointIdx][5])
                         else:
                             self.notify.warning('scv:wrong element = %s' % jointSet[jointIdx][1])
-
+            
             self.notify.debug('scv: %s composite posDelta = %s' % (jointName, posDelta))
             posF.setX(posI[0] + posDelta[0])
             posF.setY(posI[1] + posDelta[1])
@@ -853,38 +1049,39 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         for jointName in tjs:
             transform = TransformState.makeMat(self.quickGetJointTransform(jointName))
             vector = Vec3(matrix[jointName][type])
-            self.quickFreezeJoint(jointName, pos=vector, hpr=Vec3(transform.getHpr()), scale=Vec3(transform.getScale()))
-
+            self.quickFreezeJoint(jointName, pos = vector, hpr = Vec3(transform.getHpr()), scale = Vec3(transform.getScale()))
+        
         for jointName in sjs:
             transform = TransformState.makeMat(self.quickGetJointTransform(jointName))
             vector = Vec3(matrix[jointName][type])
-            self.quickFreezeJoint(jointName, pos=Vec3(transform.getPos()), hpr=Vec3(transform.getHpr()), scale=vector)
-
+            self.quickFreezeJoint(jointName, pos = Vec3(transform.getPos()), hpr = Vec3(transform.getHpr()), scale = vector)
+        
         value = self.style.getHeadSize()
         mappedValue = 0.9 + (1 + value) * 0.1
         transform = TransformState.makeMat(self.quickGetJointTransform('def_extra_jt'))
-        self.quickFreezeJoint('def_extra_jt', pos=Vec3(transform.getPos()), hpr=Vec3(transform.getHpr()), scale=Vec3(2 - mappedValue, mappedValue, 1))
+        self.quickFreezeJoint('def_extra_jt', pos = Vec3(transform.getPos()), hpr = Vec3(transform.getHpr()), scale = Vec3(2 - mappedValue, mappedValue, 1))
         transform = TransformState.makeMat(self.quickGetJointTransform('def_head01'))
         idx = 0
         if self.style.gender == 'f':
             idx = 1
-        self.quickFreezeJoint('def_head01', pos=Vec3(transform.getPos()), hpr=Vec3(transform.getHpr()), scale=Vec3(HeadScales[idx][self.style.getBodyShape()]))
+        
+        self.quickFreezeJoint('def_head01', pos = Vec3(transform.getPos()), hpr = Vec3(transform.getHpr()), scale = Vec3(HeadScales[idx][self.style.getBodyShape()]))
         self.setGlobalScale(self.calcBodyScale())
 
     def undoBodyShaper(self):
         if self.style.getGender() == 'f':
             cjs = FemaleBodyShapeControlJoints
-            return
-        cjs = MaleBodyShapeControlJoints
-
+        else:
+            cjs = MaleBodyShapeControlJoints
+    
     def applyHeadShaper(self):
         self.setHeadControlShapeValues()
 
     def undoHeadShaper(self):
         if self.style.getGender() == 'f':
             cjs = FemaleHeadShapeControlJoints
-            return
-        cjs = MaleHeadShapeControlJoints
+        else:
+            cjs = MaleHeadShapeControlJoints
 
     def createControlJoints(self):
         if self.style.getGender() == 'f':
@@ -911,6 +1108,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             matrixI = MaleHeadShapeInitialControlJointMatrix
         if len(matrixF['initialized']) > 0:
             return
+        
         initializedMatrixI = len(matrixI['initialized'])
         initializedMatrixF = len(matrixF['initialized'])
         for jointName in cjs:
@@ -921,7 +1119,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             matrixI[jointName].append(pos)
             matrixI[jointName].append(hpr)
             matrixI[jointName].append(scale)
-
+        
         matrixI['initialized'].append('initialized')
         shapes = self.controlShapes
         names = self.sliderNames
@@ -931,7 +1129,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
                 slider[0][k][4] = slider[0][k][2]
                 if len(slider) > 1:
                     slider[1][k][4] = slider[1][k][2]
-
+        
         for i in xrange(0, len(shapes)):
             slider = shapes[names[i]]
             for k in xrange(0, len(slider[0])):
@@ -947,6 +1145,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
                     if len(slider) > 1:
                         jointCtl = slider[1][k]
                         jointCtl[4] = posDelta
+
                 elif jointCtl[1] > 2 and jointCtl[1] < 6:
                     hprDelta = jointCtl[4] - hpr[jointCtl[1] - 3]
                     jointCtl[4] = hprDelta
@@ -959,7 +1158,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
                     if len(slider) > 1:
                         jointCtl = slider[1][k]
                         jointCtl[4] = sclDelta
-
+        
         matrixF['initialized'].append('initialized')
 
     def setHeadControlShapeValues_old(self):
@@ -990,7 +1189,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         self.setControlValue(self.style.getEarScale(), 'earScale')
         self.setControlValue(self.style.getEarFlapAngle(), 'earFlap')
         self.setControlValue(self.style.getEarPosition(), 'earPosition')
-
+    
     def getGlobalScale(self):
         return self.scaleNode.getScale()
 
@@ -998,13 +1197,14 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         transform = TransformState.makeMat(self.quickGetJointTransform('def_head01'))
         pos = Vec3(transform.getPos())
         pos.setZ(-(self.floorOffsetZ * (1 - scale)))
-        self.quickFreezeJoint('def_scale_jt', pos=pos, hpr=Vec3(transform.getHpr()), scale=Vec3(scale))
+        self.quickFreezeJoint('def_scale_jt', pos = pos, hpr = Vec3(transform.getHpr()), scale = Vec3(scale))
         self.scale = scale
 
     def calcBodyScale(self):
         idx = 0
         if self.gender == 'f':
             idx = 1
+        
         mappedValue = (0.8 + (1 + self.style.getBodyHeight()) * 0.2) * BodyScales[idx][self.style.getBodyShape()]
         return mappedValue
 
@@ -1018,16 +1218,16 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         self.model.faces[0].unstash()
         self.model.faceZomb.stash()
 
-    def takeAwayTexture(self, geoms, omitFace=False):
+    def takeAwayTexture(self, geoms, omitFace = False):
         emptyRenderState = RenderState.makeEmpty()
         eyeIrisColor = VBase4(0, 0, 0, 1)
         for i in range(0, geoms.getNumPaths()):
             element = geoms[i]
             if 'eye_iris' in element.getName():
                 element.setColorScale(eyeIrisColor)
-            else:
-                if omitFace and 'master_face' in element.getName():
-                    continue
+            elif omitFace and 'master_face' in element.getName():
+                continue
+            
             element.setTextureOff()
             geom = element.node()
             for j in range(0, geom.getNumGeoms()):
@@ -1043,6 +1243,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             self.medSkinGone = True
             geoms = medLOD.findAllMatches('**/body_*')
             self.takeAwayTexture(geoms, True)
+        
         geoms = medLOD.findAllMatches('**/hair_*')
         self.takeAwayTexture(geoms)
         if self.gender != 'f':
@@ -1050,6 +1251,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             self.takeAwayTexture(geoms)
             geoms = medLOD.findAllMatches('**/mustache_*')
             self.takeAwayTexture(geoms)
+        
         geoms = medLOD.findAllMatches('**/eye_*')
         self.takeAwayTexture(geoms)
         geoms = medLOD.findAllMatches('**/clothing_layer2_belt_*')
@@ -1063,7 +1265,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         geoms.stash()
         geoms = lowLOD.findAllMatches('**/+GeomNode')
         self.takeAwayTexture(geoms)
-
+    
     def setHeadControlShapeValues(self):
         value = self.style.getHeadSize()
         mappedValue = 0.9 + (1 + value) * 0.1
@@ -1101,9 +1303,10 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         if r < 0.0:
             if len(ctl) > 1:
                 sliders = ctl[1]
+
         for i in range(0, len(sliders)):
             zeroindex[i][5] = sliders[i][4] * r
-
+    
     def postProcess_setHeadControlShapeValues(self):
         if self.style.getGender() == 'f':
             cjs = FemaleHeadShapeControlJoints
@@ -1113,7 +1316,6 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             cjs = MaleHeadShapeControlJoints
             matrixF = MaleHeadShapeControlJointMatrix
             matrixI = MaleHeadShapeInitialControlJointMatrix
-
         posDelta = VBase3()
         hprDelta = VBase3()
         sclDelta = VBase3()
@@ -1127,7 +1329,6 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             6: sclDelta.addX,
             7: sclDelta.addY,
             8: sclDelta.addZ}
-
         for jointName in cjs:
             posDelta.assign(matrixI[jointName][0])
             hprDelta.assign(matrixI[jointName][1])
@@ -1139,15 +1340,15 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
                     if sliderJoint[0] == jointName:
                         fdict2[sliderJoint[1]](sliderJoint[5])
 
-            self.quickFreezeJoint(jointName, pos=posDelta, hpr=hprDelta, scale=sclDelta)
+            self.quickFreezeJoint(jointName, pos = posDelta, hpr = hprDelta, scale = sclDelta)
 
-    def quickFreezeJoint(self, jointName, pos=Vec3(0, 0, 0), hpr=Vec3(0, 0, 0), scale=Vec3(1, 1, 1)):
+    def quickFreezeJoint(self, jointName, pos = Vec3(0, 0, 0), hpr = Vec3(0, 0, 0), scale = Vec3(1, 1, 1)):
         transform = TransformState.makePosHprScale(pos, hpr, scale)
         for joint in self.joints[jointName]:
             joint.applyFreeze(transform)
 
     def quickGetJointTransform(self, jointName):
-        return self.joints[jointName][0].getDefaultValue()
+        return self.joints[jointName][0].getInitialValue()
 
     def storeJoints(self):
         if self.style.gender == 'm':
@@ -1156,10 +1357,14 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         else:
             bJoints = FemaleBodyShapeControlJoints
             hJoints = FemaleHeadShapeControlJoints
-
-        for name in bJoints + hJoints + ('def_head01', 'def_extra_jt', 'def_scale_jt'):
-            joint = self.getJoints(jointName=name)
-            self.joints[name] = joint
+        for joint in bJoints + hJoints:
+            self.joints[joint] = self.getJoints(joint)
+        
+        for joint in [
+            'def_head01',
+            'def_extra_jt',
+            'def_scale_jt']:
+            self.joints[joint] = self.getJoints(joint)
 
     @classmethod
     def setupAnimDicts(cls):
@@ -1178,9 +1383,10 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
                 if anim[0] == CustomAnimDict[qualifier][i]:
                     animSuffix = '_' + gender + NewModelDict.get(type)
                     break
-
+            
             cls.prebuiltAnimData[qualifier][anim[0]] = prefix + '_' + anim[1] + animSuffix
-
+        
         cls.prebuiltAnimData[qualifier].pop('intro')
+
 
 MasterHuman.setupAnimDicts()

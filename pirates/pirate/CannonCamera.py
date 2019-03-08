@@ -1,27 +1,28 @@
-from direct.directnotify import DirectNotifyGlobal
-from direct.fsm import ClassicFSM, State
-from direct.interval.IntervalGlobal import *
+from pandac.PandaModules import *
 from direct.showbase.InputStateGlobal import inputState
-from direct.showbase.PythonUtil import (ParamObj, clampScalar,
-                                        fitSrcAngle2Dest, getSetter,
-                                        reduceAngle)
+from direct.fsm import ClassicFSM, State
+from direct.directnotify import DirectNotifyGlobal
+from direct.interval.IntervalGlobal import *
+from direct.showbase.PythonUtil import reduceAngle, fitSrcAngle2Dest
+from direct.showbase.PythonUtil import clampScalar, getSetter
+from direct.showbase.PythonUtil import ParamObj
 from direct.task import Task
 from otp.otpbase import OTPGlobals
-from panda3d.core import *
 from pirates.pirate import CameraMode
 from pirates.piratesbase import PiratesGlobals
 
-
 class CannonCamera(CameraMode.CameraMode, NodePath, ParamObj):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('CannonCamera')
 
     class ParamSet(ParamObj.ParamSet):
-        
-        Params = {'minH': -60.0, 'maxH': 60.0, 'minP': -12.0, 'maxP': 24, 'sensitivityH': 0.07, 'sensitivityP': 0.03}
+        Params = {'minH': -60.0,
+                  'maxH': 60.0,
+                  'minP': -12.0,
+                  'maxP': 24,
+                  'sensitivityH': 0.07,
+                  'sensitivityP': 0.03}
 
-    CamParentPos = (
-     Vec3(0, -6, 3), Vec3(0, -2, 0))
+    CamParentPos = (Vec3(0, -6, 3), Vec3(0, -2, 0))
 
     def __init__(self, params=None):
         ParamObj.__init__(self)
@@ -35,7 +36,6 @@ class CannonCamera(CameraMode.CameraMode, NodePath, ParamObj):
             self.setDefaultParams()
         else:
             params.applyTo(self)
-        return
 
     def destroy(self):
         self._paramStack = None
@@ -44,7 +44,6 @@ class CannonCamera(CameraMode.CameraMode, NodePath, ParamObj):
         CameraMode.CameraMode.destroy(self)
         NodePath.removeNode(self)
         ParamObj.destroy(self)
-        return
 
     def _getTopNodeName(self):
         return 'CannonCam'
@@ -145,34 +144,34 @@ class CannonCamera(CameraMode.CameraMode, NodePath, ParamObj):
         self.cannonProp = None
         base.camNode.setLodCenter(NodePath())
         CameraMode.CameraMode.exitActive(self)
-        return
 
     def _keyboardUpdateTask(self, task):
         rate = 1000
         if inputState.isSet('forward'):
             dy = -rate
+        elif inputState.isSet('reverse'):
+            dy = rate
         else:
-            if inputState.isSet('reverse'):
-                dy = rate
-            else:
-                dy = 0
+            dy = 0
         if inputState.isSet('turnRight'):
             dx = rate
+        elif inputState.isSet('turnLeft'):
+            dx = -rate
         else:
-            if inputState.isSet('turnLeft'):
-                dx = -rate
-            else:
-                dx = 0
-        dt = globalClock.getDt()
-        dx *= dt
-        dy *= dt
-        self.keyboardDelta = (dx, dy)
-        self.__moveCamera(dx, dy)
+            dx = 0
+        if 1:
+            dt = globalClock.getDt()
+            dx *= dt
+            dy *= dt
+            self.keyboardDelta = (dx, dy)
+            self.__moveCamera(dx, dy)
         return Task.cont
 
     def _mouseUpdateTask(self, task):
-        dx, dy = self.mouseDelta
-        self.__moveCamera(dx, dy)
+        if 1:
+            dx, dy = self.mouseDelta
+            self.__moveCamera(dx, dy)
+
         return Task.cont
 
     def __moveCamera(self, dx, dy):
@@ -183,13 +182,14 @@ class CannonCamera(CameraMode.CameraMode, NodePath, ParamObj):
             curH = self.cannonProp.currentHpr[0]
             curP = ship.avCannonRotate.getP()
             shipH = (self.cannonProp.ship.getH(self.cannonProp) + 360) % 360
+
             if self.cannonProp.oldShipH >= 270 and shipH < 90:
                 self.cannonProp.shipH += shipH
+            elif self.cannonProp.oldShipH < 90 and shipH >= 270:
+                self.cannonProp.shipH += 360 - shipH
             else:
-                if self.cannonProp.oldShipH < 90 and shipH >= 270:
-                    self.cannonProp.shipH += 360 - shipH
-                else:
-                    self.cannonProp.shipH += shipH - self.cannonProp.oldShipH
+                self.cannonProp.shipH += shipH - self.cannonProp.oldShipH
+
             self.cannonProp.oldShipH = shipH
             newH = min(max(curH + -dx * self.sensitivityH, self.minH + self.cannonProp.shipH), self.maxH + self.cannonProp.shipH)
             newP = min(max(curP + -dy * self.sensitivityP, self.minP), self.maxP)
@@ -220,5 +220,4 @@ class CannonCamera(CameraMode.CameraMode, NodePath, ParamObj):
             self.camParent.setR(render, 0.0)
             self.cannonProp.pivot.setH(0.0)
             self.cannonProp.pivot.setP(newP)
-            self.cannonProp.currentHpr = (
-             newH, newP, 0)
+            self.cannonProp.currentHpr = (newH, newP, 0)

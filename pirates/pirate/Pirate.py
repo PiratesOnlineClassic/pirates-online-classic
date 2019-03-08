@@ -1,15 +1,16 @@
-from pirates.pirate import AvatarTypes
-from Human import Human
 from pirates.piratesbase import PiratesGlobals
+from Human import Human
+import AvatarTypes
 
 class Pirate(Human):
-
-    def __init__(self, other=None):
+    
+    def __init__(self, other = None):
         Human.__init__(self, other)
         self.avatarType = AvatarTypes.Pirate
 
-class PirateHeadPortrait(Human):
 
+class PirateHeadPortrait(Human):
+    
     def __init__(self):
         Human.__init__(self)
         self.avatarType = AvatarTypes.Townfolk
@@ -32,3 +33,5 @@ class PirateHeadPortrait(Human):
         pdb.set_trace()
         self.style = other.style
         self.generateHuman(self.style.gender, base.cr.human)
+
+

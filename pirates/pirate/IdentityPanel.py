@@ -1,15 +1,18 @@
-from direct.gui.DirectGui import *
 from direct.showbase.ShowBaseGlobal import *
+from direct.gui.DirectGui import *
+from pandac.PandaModules import *
 from otp.avatar import Avatar
 from otp.otpbase import OTPGlobals
-from panda3d.core import *
 from pirates.friends import PirateFriendSecret
-from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
-from pirates.piratesgui import GuiPanel, PirateButtonChain, PiratesGuiGlobals
-
+from pirates.piratesgui import GuiPanel
+from pirates.piratesgui import PirateButtonChain
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.piratesbase import Freebooter
 
 class IdentityPanel(GuiPanel.GuiPanel):
-
+    
     def __init__(self, Id, Name, width, height, **kw):
         self.width = width
         GuiPanel.GuiPanel.__init__(self, Name, self.width, height, False, 1, **kw)
@@ -20,7 +23,7 @@ class IdentityPanel(GuiPanel.GuiPanel):
         self.chain = PirateButtonChain.PirateButtonChain(width, self)
         self.load()
         self.determineButtonState()
-
+    
     def load(self):
         pass
 
@@ -28,9 +31,12 @@ class IdentityPanel(GuiPanel.GuiPanel):
         self.ignoreAll()
         if hasattr(self, 'destroyed'):
             return
+        
         self.destroyed = 1
         self.chain.destroy()
         GuiPanel.GuiPanel.destroy(self)
-
+    
     def determineButtonState(self):
         pass
+
+

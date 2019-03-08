@@ -1,6 +1,5 @@
-import copy
-
 from pirates.pirate import HumanDNA
+import copy
 
 
 class HumanBase:
@@ -235,7 +234,8 @@ class HumanBase:
         self.style.setBrowProtruding(val)
 
     def d_setBrowProtruding(self, val):
-        self.sendUpdate('setBrowProtruding', [val])
+        self.sendUpdate('setBrowProtruding', [
+            val])
 
     def b_setBrowProtruding(self, val):
         self.setBrowProtruding(val)
@@ -245,7 +245,8 @@ class HumanBase:
         self.style.setBrowAngle(val)
 
     def d_setBrowAngle(self, val):
-        self.sendUpdate('setBrowAngle', [val])
+        self.sendUpdate('setBrowAngle', [
+            val])
 
     def b_setBrowAngle(self, val):
         self.setBrowAngle(val)
@@ -255,7 +256,8 @@ class HumanBase:
         self.style.setBrowHeight(val)
 
     def d_setBrowHeight(self, val):
-        self.sendUpdate('setBrowHeight', [val])
+        self.sendUpdate('setBrowHeight', [
+            val])
 
     def b_setBrowHeight(self, val):
         self.setBrowHeight(val)
@@ -265,7 +267,8 @@ class HumanBase:
         self.style.setEyeCorner(val)
 
     def d_setEyeCorner(self, val):
-        self.sendUpdate('setEyeCorner', [val])
+        self.sendUpdate('setEyeCorner', [
+            val])
 
     def b_setEyeCorner(self, val):
         self.setEyeCorner(val)
@@ -275,7 +278,8 @@ class HumanBase:
         self.style.setEyeOpeningSize(val)
 
     def d_setEyeOpeningSize(self, val):
-        self.sendUpdate('setEyeOpeningSize', [val])
+        self.sendUpdate('setEyeOpeningSize', [
+            val])
 
     def b_setEyeOpeningSize(self, val):
         self.setEyeOpeningSize(val)
@@ -285,7 +289,8 @@ class HumanBase:
         self.style.setEyeBulge(val)
 
     def d_setEyeBulge(self, val):
-        self.sendUpdate('setEyeBulge', [val])
+        self.sendUpdate('setEyeBulge', [
+            val])
 
     def b_setEyeBulge(self, val):
         self.setEyeBulge(val)
@@ -295,7 +300,8 @@ class HumanBase:
         self.style.setNoseBridgeWidth(val)
 
     def d_setNoseBridgeWidth(self, val):
-        self.sendUpdate('setNoseBridgeWidth', [val])
+        self.sendUpdate('setNoseBridgeWidth', [
+            val])
 
     def b_setNoseBridgeWidth(self, val):
         self.setNoseBridgeWidth(val)
@@ -305,7 +311,8 @@ class HumanBase:
         self.style.setNoseNostrilWidth(val)
 
     def d_setNoseNostrilWidth(self, val):
-        self.sendUpdate('setNoseNostrilWidth', [val])
+        self.sendUpdate('setNoseNostrilWidth', [
+            val])
 
     def b_setNoseNostrilWidth(self, val):
         self.setNoseNostrilWidth(val)
@@ -315,7 +322,8 @@ class HumanBase:
         self.style.setNoseLength(val)
 
     def d_setNoseLength(self, val):
-        self.sendUpdate('setNoseLength', [val])
+        self.sendUpdate('setNoseLength', [
+            val])
 
     def b_setNoseLength(self, val):
         self.setNoseLength(val)
@@ -325,7 +333,8 @@ class HumanBase:
         self.style.setNoseBump(val)
 
     def d_setNoseBump(self, val):
-        self.sendUpdate('setNoseBump', [val])
+        self.sendUpdate('setNoseBump', [
+            val])
 
     def b_setNoseBump(self, val):
         self.setNoseBump(val)
@@ -335,7 +344,8 @@ class HumanBase:
         self.style.setNoseNostrilHeight(val)
 
     def d_setNoseNostrilHeight(self, val):
-        self.sendUpdate('setNoseNostrilHeight', [val])
+        self.sendUpdate('setNoseNostrilHeight', [
+            val])
 
     def b_setNoseNostrilHeight(self, val):
         self.setNoseNostrilHeight(val)
@@ -345,7 +355,8 @@ class HumanBase:
         self.style.setNoseNostrilAngle(val)
 
     def d_setNoseNostrilAngle(self, val):
-        self.sendUpdate('setNoseNostrilAngle', [val])
+        self.sendUpdate('setNoseNostrilAngle', [
+            val])
 
     def b_setNoseNostrilAngle(self, val):
         self.setNoseNostrilAngle(val)
@@ -355,7 +366,8 @@ class HumanBase:
         self.style.setNoseNostrilIndent(val)
 
     def d_setNoseNostrilIndent(self, val):
-        self.sendUpdate('setNoseNostrilIndent', [val])
+        self.sendUpdate('setNoseNostrilIndent', [
+            val])
 
     def b_setNoseNostrilIndent(self, val):
         self.setNoseNostrilIndent(val)
@@ -365,7 +377,8 @@ class HumanBase:
         self.style.setNoseBridgeBroke(val)
 
     def d_setNoseBridgeBroke(self, val):
-        self.sendUpdate('setNoseBridgeBroke', [val])
+        self.sendUpdate('setNoseBridgeBroke', [
+            val])
 
     def b_setNoseBridgeBroke(self, val):
         self.setNoseBridgeBroke(val)
@@ -375,7 +388,8 @@ class HumanBase:
         self.style.setNoseNostrilBroke(val)
 
     def d_setNoseNostrilBroke(self, val):
-        self.sendUpdate('setNoseNostrilBroke', [val])
+        self.sendUpdate('setNoseNostrilBroke', [
+            val])
 
     def b_setNoseNostrilBroke(self, val):
         self.setNoseNostrilBroke(val)
@@ -385,7 +399,8 @@ class HumanBase:
         self.style.setEarScale(val)
 
     def d_setEarScale(self, val):
-        self.sendUpdate('setEarScale', [val])
+        self.sendUpdate('setEarScale', [
+            val])
 
     def b_setEarScale(self, val):
         self.setEarScale(val)
@@ -395,7 +410,8 @@ class HumanBase:
         self.style.setEarFlapAngle(val)
 
     def d_setEarFlapAngle(self, val):
-        self.sendUpdate('setEarFlapAngle', [val])
+        self.sendUpdate('setEarFlapAngle', [
+            val])
 
     def b_setEarFlapAngle(self, val):
         self.setEarFlapAngle(val)
@@ -405,7 +421,8 @@ class HumanBase:
         self.style.setEarPosition(val)
 
     def d_setEarPosition(self, val):
-        self.sendUpdate('setEarPosition', [val])
+        self.sendUpdate('setEarPosition', [
+            val])
 
     def b_setEarPosition(self, val):
         self.setEarPosition(val)
@@ -415,7 +432,8 @@ class HumanBase:
         self.style.setEarLobe(val)
 
     def d_setEarLobe(self, val):
-        self.sendUpdate('setEarLobe', [val])
+        self.sendUpdate('setEarLobe', [
+            val])
 
     def b_setEarLobe(self, val):
         self.setEarLobe(val)
@@ -425,7 +443,8 @@ class HumanBase:
         self.style.setHeadTexture(val)
 
     def d_setHeadTexture(self, val):
-        self.sendUpdate('setHeadTexture', [val])
+        self.sendUpdate('setHeadTexture', [
+            val])
 
     def b_setHeadTexture(self, val):
         self.setHeadTexture(val)
@@ -435,7 +454,8 @@ class HumanBase:
         self.style.setEyesColor(val)
 
     def d_setEyesColor(self, val):
-        self.sendUpdate('setEyesColor', [val])
+        self.sendUpdate('setEyesColor', [
+            val])
 
     def b_setEyesColor(self, val):
         self.setEyesColor(val)
@@ -445,7 +465,8 @@ class HumanBase:
         self.style.setHairHair(val)
 
     def d_setHairHair(self, val):
-        self.sendUpdate('setHairHair', [val])
+        self.sendUpdate('setHairHair', [
+            val])
 
     def b_setHairHair(self, val):
         self.setHairHair(val)
@@ -455,7 +476,8 @@ class HumanBase:
         self.style.setHairBeard(val)
 
     def d_setHairBeard(self, val):
-        self.sendUpdate('setHairBeard', [val])
+        self.sendUpdate('setHairBeard', [
+            val])
 
     def b_setHairBeard(self, val):
         self.setHairBeard(val)
@@ -465,7 +487,8 @@ class HumanBase:
         self.style.setHairMustache(val)
 
     def d_setHairMustache(self, val):
-        self.sendUpdate('setHairMustache', [val])
+        self.sendUpdate('setHairMustache', [
+            val])
 
     def b_setHairMustache(self, val):
         self.setHairMustache(val)
@@ -475,7 +498,8 @@ class HumanBase:
         self.style.setHairColor(val)
 
     def d_setHairColor(self, val):
-        self.sendUpdate('setHairColor', [val])
+        self.sendUpdate('setHairColor', [
+            val])
 
     def b_setHairColor(self, val):
         self.setHairColor(val)
@@ -485,7 +509,8 @@ class HumanBase:
         self.style.setHatIdx(val)
 
     def d_setHatIdx(self, val):
-        self.sendUpdate('setHatIdx', [val])
+        self.sendUpdate('setHatIdx', [
+            val])
 
     def b_setHatIdx(self, val):
         self.setHatIdx(val)
@@ -498,7 +523,8 @@ class HumanBase:
         self.style.setHatColor(val)
 
     def d_setHatColor(self, val):
-        self.sendUpdate('setHatColor', [val])
+        self.sendUpdate('setHatColor', [
+            val])
 
     def b_setHatColor(self, val):
         self.setHatColor(val)
@@ -511,7 +537,9 @@ class HumanBase:
         self.style.setClothesShirt(val1, val2)
 
     def d_setClothesShirt(self, val1, val2):
-        self.sendUpdate('setClothesShirt', [val1, val2])
+        self.sendUpdate('setClothesShirt', [
+            val1,
+            val2])
 
     def b_setClothesShirt(self, val1, val2):
         self.setClothesShirt(val1, val2)
@@ -521,7 +549,9 @@ class HumanBase:
         self.style.setClothesPant(val1, val2)
 
     def d_setClothesPant(self, val1, val2):
-        self.sendUpdate('setClothesPant', [val1, val2])
+        self.sendUpdate('setClothesPant', [
+            val1,
+            val2])
 
     def b_setClothesPant(self, val1, val2):
         self.setClothesPant(val1, val2)
@@ -531,7 +561,9 @@ class HumanBase:
         self.style.setClothesSock(val1, val2)
 
     def d_setClothesSock(self, val1, val2):
-        self.sendUpdate('setClothesSock', [val1, val2])
+        self.sendUpdate('setClothesSock', [
+            val1,
+            val2])
 
     def b_setClothesSock(self, val1, val2):
         self.setClothesSock(val1, val2)
@@ -541,7 +573,9 @@ class HumanBase:
         self.style.setClothesShoe(val1, val2)
 
     def d_setClothesShoe(self, val1, val2):
-        self.sendUpdate('setClothesShoe', [val1, val2])
+        self.sendUpdate('setClothesShoe', [
+            val1,
+            val2])
 
     def b_setClothesShoe(self, val1, val2):
         self.setClothesShoe(val1, val2)
@@ -551,7 +585,9 @@ class HumanBase:
         self.style.setClothesVest(val1, val2)
 
     def d_setClothesVest(self, val1, val2):
-        self.sendUpdate('setClothesVest', [val1, val2])
+        self.sendUpdate('setClothesVest', [
+            val1,
+            val2])
 
     def b_setClothesVest(self, val1, val2):
         self.setClothesVest(val1, val2)
@@ -561,7 +597,9 @@ class HumanBase:
         self.style.setClothesCoat(val1, val2)
 
     def d_setClothesCoat(self, val1, val2):
-        self.sendUpdate('setClothesCoat', [val1, val2])
+        self.sendUpdate('setClothesCoat', [
+            val1,
+            val2])
 
     def b_setClothesCoat(self, val1, val2):
         self.setClothesCoat(val1, val2)
@@ -571,7 +609,9 @@ class HumanBase:
         self.style.setClothesBelt(val1, val2)
 
     def d_setClothesBelt(self, val1, val2):
-        self.sendUpdate('setClothesBelt', [val1, val2])
+        self.sendUpdate('setClothesBelt', [
+            val1,
+            val2])
 
     def b_setClothesBelt(self, val1, val2):
         self.setClothesBelt(val1, val2)
@@ -581,7 +621,10 @@ class HumanBase:
         self.style.setClothesTopColor(val1, val2, val3)
 
     def d_setClothesTopColor(self, val1, val2, val3):
-        self.sendUpdate('setClothesTopColor', [val1, val2, val3])
+        self.sendUpdate('setClothesTopColor', [
+            val1,
+            val2,
+            val3])
 
     def b_setClothesTopColor(self, val1, val2, val3):
         self.setClothesTopColor(val1, val2, val3)
@@ -591,7 +634,10 @@ class HumanBase:
         self.style.setClothesBotColor(val1, val2, val3)
 
     def d_setClothesBotColor(self, val1, val2, val3):
-        self.sendUpdate('setClothesBotColor', [val1, val2, val3])
+        self.sendUpdate('setClothesBotColor', [
+            val1,
+            val2,
+            val3])
 
     def b_setClothesBotColor(self, val1, val2, val3):
         self.setClothesBotColor(val1, val2, val3)
@@ -599,10 +645,21 @@ class HumanBase:
 
     def setTattooChest(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooChest = [
-         tattoo, offsetX, offsetY, scale, rotate, color]
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color]
 
     def d_setTattooChest(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooChest', [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooChest', [
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color])
 
     def b_setTattooChest(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooChest(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -610,10 +667,21 @@ class HumanBase:
 
     def setTattooZone2(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooZone2 = [
-         tattoo, offsetX, offsetY, scale, rotate, color]
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color]
 
     def d_setTattooZone2(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooZone2', [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooZone2', [
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color])
 
     def b_setTattooZone2(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooZone2(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -621,10 +689,21 @@ class HumanBase:
 
     def setTattooZone3(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooZone3 = [
-         tattoo, offsetX, offsetY, scale, rotate, color]
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color]
 
     def d_setTattooZone3(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooZone3', [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooZone3', [
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color])
 
     def b_setTattooZone3(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooZone3(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -632,10 +711,21 @@ class HumanBase:
 
     def setTattooZone4(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooZone4 = [
-         tattoo, offsetX, offsetY, scale, rotate, color]
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color]
 
     def d_setTattooZone4(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooZone4', [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooZone4', [
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color])
 
     def b_setTattooZone4(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooZone4(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -643,10 +733,21 @@ class HumanBase:
 
     def setTattooZone5(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooZone5 = [
-         tattoo, offsetX, offsetY, scale, rotate, color]
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color]
 
     def d_setTattooZone5(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooZone5', [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooZone5', [
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color])
 
     def b_setTattooZone5(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooZone5(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -654,10 +755,21 @@ class HumanBase:
 
     def setTattooZone6(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooZone6 = [
-         tattoo, offsetX, offsetY, scale, rotate, color]
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color]
 
     def d_setTattooZone6(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooZone6', [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooZone6', [
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color])
 
     def b_setTattooZone6(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooZone6(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -665,10 +777,21 @@ class HumanBase:
 
     def setTattooZone7(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooZone7 = [
-         tattoo, offsetX, offsetY, scale, rotate, color]
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color]
 
     def d_setTattooZone7(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooZone7', [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooZone7', [
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color])
 
     def b_setTattooZone7(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooZone7(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -676,10 +799,21 @@ class HumanBase:
 
     def setTattooZone8(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.style.tattooZone8 = [
-         tattoo, offsetX, offsetY, scale, rotate, color]
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color]
 
     def d_setTattooZone8(self, tattoo, offsetX, offsetY, scale, rotate, color):
-        self.sendUpdate('setTattooZone8', [tattoo, offsetX, offsetY, scale, rotate, color])
+        self.sendUpdate('setTattooZone8', [
+            tattoo,
+            offsetX,
+            offsetY,
+            scale,
+            rotate,
+            color])
 
     def b_setTattooZone8(self, tattoo, offsetX, offsetY, scale, rotate, color):
         self.setTattooZone8(tattoo, offsetX, offsetY, scale, rotate, color)
@@ -689,7 +823,10 @@ class HumanBase:
         self.style.setJewelryZone1(val, primary, secondary)
 
     def d_setJewelryZone1(self, val, primary, secondary):
-        self.sendUpdate('setJewelryZone1', [val, primary, secondary])
+        self.sendUpdate('setJewelryZone1', [
+            val,
+            primary,
+            secondary])
 
     def b_setJewelryZone1(self, val, primary, secondary):
         self.setJewelryZone1(val, primary, secondary)
@@ -699,7 +836,10 @@ class HumanBase:
         self.style.setJewelryZone2(val, primary, secondary)
 
     def d_setJewelryZone2(self, val, primary, secondary):
-        self.sendUpdate('setJewelryZone2', [val, primary, secondary])
+        self.sendUpdate('setJewelryZone2', [
+            val,
+            primary,
+            secondary])
 
     def b_setJewelryZone2(self, val, primary, secondary):
         self.setJewelryZone2(val, primary, secondary)
@@ -709,7 +849,10 @@ class HumanBase:
         self.style.setJewelryZone3(val, primary, secondary)
 
     def d_setJewelryZone3(self, val, primary, secondary):
-        self.sendUpdate('setJewelryZone3', [val, primary, secondary])
+        self.sendUpdate('setJewelryZone3', [
+            val,
+            primary,
+            secondary])
 
     def b_setJewelryZone3(self, val, primary, secondary):
         self.setJewelryZone3(val, primary, secondary)
@@ -719,7 +862,10 @@ class HumanBase:
         self.style.setJewelryZone4(val, primary, secondary)
 
     def d_setJewelryZone4(self, val, primary, secondary):
-        self.sendUpdate('setJewelryZone4', [val, primary, secondary])
+        self.sendUpdate('setJewelryZone4', [
+            val,
+            primary,
+            secondary])
 
     def b_setJewelryZone4(self, val, primary, secondary):
         self.setJewelryZone4(val, primary, secondary)
@@ -729,7 +875,10 @@ class HumanBase:
         self.style.setJewelryZone5(val, primary, secondary)
 
     def d_setJewelryZone5(self, val, primary, secondary):
-        self.sendUpdate('setJewelryZone5', [val, primary, secondary])
+        self.sendUpdate('setJewelryZone5', [
+            val,
+            primary,
+            secondary])
 
     def b_setJewelryZone5(self, val, primary, secondary):
         self.setJewelryZone5(val, primary, secondary)
@@ -739,7 +888,10 @@ class HumanBase:
         self.style.setJewelryZone6(val, primary, secondary)
 
     def d_setJewelryZone6(self, val, primary, secondary):
-        self.sendUpdate('setJewelryZone6', [val, primary, secondary])
+        self.sendUpdate('setJewelryZone6', [
+            val,
+            primary,
+            secondary])
 
     def b_setJewelryZone6(self, val, primary, secondary):
         self.setJewelryZone6(val, primary, secondary)
@@ -749,7 +901,10 @@ class HumanBase:
         self.style.setJewelryZone7(val, primary, secondary)
 
     def d_setJewelryZone7(self, val, primary, secondary):
-        self.sendUpdate('setJewelryZone7', [val, primary, secondary])
+        self.sendUpdate('setJewelryZone7', [
+            val,
+            primary,
+            secondary])
 
     def b_setJewelryZone7(self, val, primary, secondary):
         self.setJewelryZone7(val, primary, secondary)
@@ -759,7 +914,10 @@ class HumanBase:
         self.style.setJewelryZone8(val, primary, secondary)
 
     def d_setJewelryZone8(self, val, primary, secondary):
-        self.sendUpdate('setJewelryZone8', [val, primary, secondary])
+        self.sendUpdate('setJewelryZone8', [
+            val,
+            primary,
+            secondary])
 
     def b_setJewelryZone8(self, val, primary, secondary):
         self.setJewelryZone8(val, primary, secondary)

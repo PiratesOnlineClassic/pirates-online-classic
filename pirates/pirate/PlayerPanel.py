@@ -1,15 +1,16 @@
-from direct.gui.DirectGui import *
 from direct.showbase.ShowBaseGlobal import *
+from direct.gui.DirectGui import *
+from pandac.PandaModules import *
 from otp.avatar import Avatar
 from otp.friends import FriendSecret
-from panda3d.core import *
+from pirates.piratesgui import GuiPanel
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
 from pirates.pirate import IdentityPanel
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
-
 
 class PlayerPanel(IdentityPanel.IdentityPanel):
-
+    
     def __init__(self, pId):
         self.width = 0.5
         self.pId = pId
@@ -18,7 +19,7 @@ class PlayerPanel(IdentityPanel.IdentityPanel):
         self.avId = base.cr.playerFriendsManager.findAvIdFromPlayerId(self.pId)
         IdentityPanel.IdentityPanel.__init__(self, pId, self.pName, self.width, 0.2)
         self.initialiseoptions(PlayerPanel)
-
+    
     def load(self):
         IdentityPanel.IdentityPanel.load(self)
         self.whisperButton = self.chain.premakeButton(PLocalizer.AvatarPanelWhisper, self.__handleWhisper)
@@ -27,10 +28,9 @@ class PlayerPanel(IdentityPanel.IdentityPanel):
         self.chain.makeButtons()
         gui = loader.loadModelCopy('models/gui/toplevel_gui')
         self.x = gui.find('**/generic_x')
-        xLabel = DirectLabel(parent=self.closeButton, relief=None, image=self.x, image_scale=0.35, image_color=PiratesGuiGlobals.ButtonColor3[0])
+        xLabel = DirectLabel(parent = self.closeButton, relief = None, image = self.x, image_scale = 0.35, image_color = PiratesGuiGlobals.ButtonColor3[0])
         xLabel.setPos(-0.09, 0.0, 0.036)
-        return
-
+    
     def determineButtonState(self):
         IdentityPanel.IdentityPanel.determineButtonState(self)
         self.whisperButton['state'] = DGG.DISABLED
@@ -53,21 +53,22 @@ class PlayerPanel(IdentityPanel.IdentityPanel):
 
     def __handleRelationships(self):
         base.localAvatar.guiMgr.handleRelationships(None, self.pName, self.pId)
-        return
 
     def __handleList(self):
         messenger.send('guiMgrToggleSocial')
-
+    
     def __handleWhisper(self):
         localAvatar.chatMgr.activateWhisperChat(self.pId, True)
-
+    
     def __handleSecrets(self):
         localAvatar.chatMgr.noWhisper()
         FriendSecret.showFriendSecret()
-
+    
     def __handleFriend(self):
         localAvatar.chatMgr.noWhisper()
         localAvatar.guiMgr.handlePlayerFriendInvite(self.pId, self.pName)
-
+    
     def closePanel(self):
         self.destroy()
+
+
