@@ -1,14 +1,13 @@
 from direct.distributed.DistributedObject import DistributedObject
-from direct.fsm.StatePush import FunctionCall
-from otp.speedchat import SCDecoders
-from pirates.piratesbase import PLocalizer
 from pirates.pvp.SiegeManagerBase import SiegeManagerBase
+from otp.speedchat import SCDecoders
 from pirates.speedchat import PSCDecoders
+from pirates.piratesbase import PLocalizer
+from direct.fsm.StatePush import FunctionCall
 
 class SiegeManager(DistributedObject, SiegeManagerBase):
-    
     TeamJoinableChangedEvent = 'PVPTeamJoinableChanged'
-
+    
     def __init__(self, cr):
         DistributedObject.__init__(self, cr)
         SiegeManagerBase.__init__(self)
@@ -31,29 +30,34 @@ class SiegeManager(DistributedObject, SiegeManagerBase):
 
     def setPvpEnabled(self, enabled):
         self._pvpEnabled = enabled
-
+    
     def getPvpEnabled(self):
         return self._pvpEnabled
 
     def setTeamsJoinable(self, teamJoinableItems):
-        for teamId, joinable in teamJoinableItems:
+        for (teamId, joinable) in teamJoinableItems:
             self._pvpTeamJoinable[teamId] = joinable
-
+        
         messenger.send(SiegeManager.TeamJoinableChangedEvent)
 
     def teamIsJoinable(self, teamId):
         if not config.GetBool('want-pvp-team-balance', 1):
             return True
+        
         return self._pvpTeamJoinable.get(teamId, True)
 
     def sendChat(self, message):
         self.sendUpdate('sendChat', [message, 0, 0])
 
     def sendWLChat(self, message):
-        self.sendUpdate('sendWLChat', [message, 0, 0])
+        self.sendUpdate('sendWLChat', [
+            message,
+            0,
+            0])
 
     def sendSC(self, msgIndex):
-        self.sendUpdate('sendSC', [msgIndex])
+        self.sendUpdate('sendSC', [
+            msgIndex])
 
     def recvChat(self, avatarId, message, chatFlags, DISLid, name):
         if not self.cr.avatarFriendsManager.checkIgnored(avatarId):
@@ -92,4 +96,7 @@ class SiegeManager(DistributedObject, SiegeManagerBase):
             self._addAnnouncerInterest()
         elif not siegeTeam and self._siegeTeam:
             self._removeAnnouncerInterest()
+        
         self._siegeTeam = siegeTeam
+
+

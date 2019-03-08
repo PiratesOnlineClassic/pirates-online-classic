@@ -1,13 +1,13 @@
-from pirates.interact import InteractiveBase
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 from pirates.pvp.PVPGameBase import PVPGameBase
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.interact import InteractiveBase
 from pirates.ship import DistributedShip
+from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 
 class PVPGameCTL(PVPGameBase):
-    
     notify = directNotify.newCategory('PVPGameCTL')
-
+    
     def __init__(self, cr):
         PVPGameBase.__init__(self, cr)
         self.dropDisabled = 0
@@ -17,7 +17,7 @@ class PVPGameCTL(PVPGameBase):
         self.shipsNearBase = {}
         self.maxTeamScore = 0
         self.prevTeamScore = None
-        self.depositSound = base.loader.loadSfx('audio/treasure_hit_1.mp3')
+        self.depositSound = base.loadSfx('audio/treasure_hit_1.mp3')
         self.maxCarry = None
         self.pendingInstanceRequest = None
 
@@ -30,7 +30,8 @@ class PVPGameCTL(PVPGameBase):
 
     def announceGenerate(self):
         PVPGameBase.announceGenerate(self)
-        self.pendingInstanceRequest = base.cr.relatedObjectMgr.requestObjects([self.instanceId], eachCallback=self.instanceGenerated)
+        self.pendingInstanceRequest = base.cr.relatedObjectMgr.requestObjects([
+            self.instanceId], eachCallback = self.instanceGenerated)
 
     def instanceGenerated(self, instanceObj):
         self.instance = instanceObj
@@ -40,6 +41,7 @@ class PVPGameCTL(PVPGameBase):
         if self.pendingInstanceRequest:
             base.cr.relatedObjectMgr.abortRequest(self.pendingInstanceRequest)
             self.pendingInstanceRequest = None
+        
         base.localAvatar.guiMgr.hidePVPUI()
 
     def delete(self):
@@ -57,13 +59,17 @@ class PVPGameCTL(PVPGameBase):
     def handleEnterPort(self, depositType, shipId):
         self.notify.debug('<HCLAY> ------- handleEnterPort')
         currVal = self.shipsNearBase.get(shipId)
-        self.sendUpdate('portEntered', [depositType, shipId])
+        self.sendUpdate('portEntered', [
+            depositType,
+            shipId])
         self.shipsNearBase[shipId] = depositType
 
     def handleExitPort(self, depositType, shipId):
         self.notify.debug('<HCLAY> ------- handleEnterPort')
         currVal = self.shipsNearBase.get(shipId)
-        self.sendUpdate('portExited', [depositType, shipId])
+        self.sendUpdate('portExited', [
+            depositType,
+            shipId])
         if self.shipsNearBase.get(shipId):
             del self.shipsNearBase[shipId]
 
@@ -72,21 +78,24 @@ class PVPGameCTL(PVPGameBase):
 
     def setMaxTeamScore(self, maxScore):
         self.maxTeamScore = maxScore
-
+    
     def updateShipProximityText(self, ship):
         if localAvatar.lootCarried > 0:
             ship.proximityText = PLocalizer.ShipDepositInstructions
-            return
-        ship.b_setIsBoardable(ship.isBoardable)
+        else:
+            ship.b_setIsBoardable(ship.isBoardable)
 
     def handleShipUse(self, ship):
         amt = localAvatar.lootCarried
         self.notify.debug('<HCLAY> ----- loot carried %s' % amt)
         if amt > 0:
-            self.sendUpdate('shipDeposit', [ship.getDoId()])
+            self.sendUpdate('shipDeposit', [
+                ship.getDoId()])
             if localAvatar.gameFSM.getCurrentOrNextState() != localAvatar.gameFSM.defaultState:
                 localAvatar.b_setGameState(localAvatar.gameFSM.defaultState)
+            
             return True
+        
         return False
 
     def shipDeposited(self, shipDoId):
@@ -100,6 +109,7 @@ class PVPGameCTL(PVPGameBase):
         print 'start treasure carry'
         if localAvatar.gameFSM.getCurrentOrNextState() != 'LandTreasureRoam' and localAvatar.gameFSM.getCurrentOrNextState() != 'WaterTreasureRoam':
             return
+        
         self.dropDisabled = 0
         self.acceptOnce(InteractiveBase.USE_KEY_EVENT, self.dropTreasure)
         self.ignore('exitProximityOfInteractive')
@@ -143,13 +153,14 @@ class PVPGameCTL(PVPGameBase):
         if localAvatar.lootCarried > 0 and interactiveObj.isExclusiveInteraction():
             print 'dropping treasure now...'
             self.requestDropTreasure()
+        
         if isinstance(interactiveObj, DistributedShip.DistributedShip):
             self.handleShipUse(interactiveObj)
 
     def complete(self):
         PVPGameBase.complete(self)
         self.prevTeamScore = None
-
+    
     def getScoreList(self):
         return self.scoreList
 
@@ -158,8 +169,11 @@ class PVPGameCTL(PVPGameBase):
         for currIdx in range(len(teams)):
             if teams[currIdx] > 1000 and teams[currIdx] != localAvatar.getDoId():
                 continue
-            self.scoreList.append({'Team': teams[currIdx], 'Score': scores[currIdx]})
-
+            
+            self.scoreList.append({
+                'Team': teams[currIdx],
+                'Score': scores[currIdx]})
+        
         self.scoreList.sort(self.sortScores)
         print 'got new score list %s' % self.scoreList
         messenger.send(self.getItemChangeMsg())
@@ -174,7 +188,7 @@ class PVPGameCTL(PVPGameBase):
         else:
             return team1 - team2
 
-    def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
+    def createNewItem(self, item, parent, itemType = None, columnWidths = [], color = None):
         itemColorScale = None
         blink = False
         team = item.get('Team')
@@ -182,7 +196,9 @@ class PVPGameCTL(PVPGameBase):
         if team == localAvatar.getTeam():
             if self.prevTeamScore != None and score < self.prevTeamScore:
                 blink = True
+            
             self.prevTeamScore = score
+        
         return MiniScoreItemGui(item, parent, self.instance, itemColorScale, self.instance.gameRules, blink)
 
     def getScoreText(self, scoreValue):
@@ -197,3 +213,5 @@ class PVPGameCTL(PVPGameBase):
         else:
             maxTeamScore = str(self.maxTeamScore)
             return PLocalizer.PVPOtherTeam + str(score) + '/' + str(maxTeamScore) + PLocalizer.PVPGoldAbbrev
+
+

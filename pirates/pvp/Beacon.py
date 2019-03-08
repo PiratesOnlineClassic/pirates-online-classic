@@ -17,3 +17,4 @@ initBeacon()
 
 def getBeacon(parent):
     return __beacon.copyTo(parent)
+
