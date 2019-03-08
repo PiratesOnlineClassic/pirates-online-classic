@@ -1,6 +1,5 @@
 from pirates.battle import WeaponGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
-
 NONE = 0
 VELVET_ROPE = 1
 FULL = 2
@@ -13,16 +12,14 @@ FreeExpNerf = 0.7
 FreeNametagChange = True
 AllAccessHoliday = False
 
-
 def getPaidStatus(avId):
     av = base.cr.getDo(avId)
-    if not config.GetBool('want-membership', False):
-        return FULL
     if av:
         if AllAccessHoliday:
             return FULL
         else:
             return av.getGameAccess() == FULL
+    
     return False
 
 
@@ -30,16 +27,16 @@ def getFounderStatus(avId):
     av = base.cr.getDo(avId)
     if av:
         return av.getFounder()
+    
     return False
 
 
 def getPaidStatusAI(playerID):
     playerOb = simbase.air.getDo(playerID)
-    if not config.GetBool('want-membership', False):
-        return FULL
     if playerOb:
         if AllAccessHoliday:
             return FULL
+        
         return hasattr(playerOb, 'getGameAccess') and playerOb.getGameAccess() == FULL
     else:
         return NONE
@@ -63,3 +60,4 @@ def allowedFreebooterWeapon(repId):
         return True
     else:
         return True
+

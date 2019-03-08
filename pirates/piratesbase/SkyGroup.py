@@ -1,6 +1,6 @@
+from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from otp.otpbase import OTPRender
-from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
 
 class SkyGroup(NodePath):
@@ -17,11 +17,11 @@ class SkyGroup(NodePath):
         self.clearFog()
         self.setFogOff()
         self.setLightOff()
-        self.setHpr(0, 0, 0)
+        self.setHpr(0.0, 0.0, 0.0)
         self.setScale(10)
         self.setZ(-10)
         skydome = loader.loadModel('models/sky/PiratesSkyDome')
-        geoms = skydome.findAllMatches('**/+GeomNode')
+        geoms = skydome.findAllMatches('**/+GeomNode').asList()
         for geom in geoms:
             self._clearTexAttrib(geom)
 
@@ -50,8 +50,19 @@ class SkyGroup(NodePath):
         self.texStars = textures.find('**/stars').findAllTextures()[0]
         textures = loader.loadModel('models/effects/particleCards')
         self.texStar = textures.find('**/particleSparkle').findAllTextures()[0]
-        self.cloudSettings = {0: (self.texTransparent, ''), 1: (self.texCloudsLight, ''), 2: (self.texCloudsMedium, ''), 3: (self.texCloudsHeavy, '')}
-        self.skySettings = {PiratesGlobals.TOD_DAWN: [(self.texTransparent, '', VBase4(0, 0, 0, 0), VBase4(0.8, 0.5, 0.2, 1)), (self.texOpaque, '', VBase4(0, 0, 0, 0), VBase4(0.4, 0.58, 0.6, 1)), VBase4(0.8, 0.8, 0.6, 1), VBase4(0.3, 0.2, 0.15, 1)], PiratesGlobals.TOD_DAY: [(self.texTransparent, '', VBase4(0, 0, 0, 0), VBase4(1, 1, 1, 0.7)), (self.texOpaque, '', VBase4(0, 0, 0, 0), VBase4(0.45, 0.55, 0.7, 0)), VBase4(1, 1, 1, 1), VBase4(0.6, 0.7, 0.9, 1)], PiratesGlobals.TOD_DUSK: [(self.texTransparent, '', VBase4(0, 0, 0, 0), VBase4(0.7, 0.4, 0.2, 1)), (self.texOpaque, '', VBase4(0, 0, 0, 0), VBase4(0.45, 0.4, 0.52, 1)), VBase4(0.75, 0.35, 0.22, 1), VBase4(0.3, 0.18, 0.15, 1)], PiratesGlobals.TOD_NIGHT: [(self.texStars, 'map2', VBase4(0.1, 0.1, 0.1, 0.1), VBase4(0.36, 0.48, 0.74, 0.8)), (self.texStars, 'map2', VBase4(0, 0, 0, 0), VBase4(0.36, 0.48, 0.74, 0.2)), VBase4(0.34, 0.45, 0.7, 0.8), VBase4(0.15, 0.2, 0.35, 1)], PiratesGlobals.TOD_STARS: [(self.texStars, 'map2', VBase4(0.85, 0.8, 0.5, 0.5), VBase4(1, 1, 1, 1)), (self.texStars, 'map2', VBase4(0, 0, 0, 0), VBase4(1, 1, 1, 1)), VBase4(0.45, 0.45, 0.7, 0.6), VBase4(0.05, 0.06, 0.17, 1)], PiratesGlobals.TOD_HALLOWEEN: [(self.texStars, 'map2', VBase4(0, 0, 0, 0.2), VBase4(0.5, 0.6, 0.15, 1)), (self.texStars, 'map2', VBase4(0, 0, 0, 0), VBase4(1, 1, 1, 0.4)), VBase4(0.5, 0.6, 0.15, 1), VBase4(0.1, 0.12, 0.03, 1)], PiratesGlobals.TOD_SWAMP: [(self.texTransparent, '', VBase4(0, 0, 0, 0), VBase4(0.35, 0.5, 0.6, 1)), (self.texOpaque, '', VBase4(0, 0, 0, 0), VBase4(0.35, 0.5, 0.6, 0)), VBase4(0.35, 0.5, 0.6, 1), VBase4(0.15, 0.2, 0.35, 1)]}
+        self.cloudSettings = {
+            0: (self.texTransparent, ''),
+            1: (self.texCloudsLight, ''),
+            2: (self.texCloudsMedium, ''),
+            3: (self.texCloudsHeavy, '')
+        }
+        self.skySettings = {PiratesGlobals.TOD_DAWN: [(self.texTransparent, '', VBase4(0, 0, 0, 0), VBase4(0.8, 0.5, 0.2, 1)), (self.texOpaque, '', VBase4(0, 0, 0, 0), VBase4(0.4, 0.58, 0.6, 1)), VBase4(0.8, 0.8, 0.6, 1), VBase4(0.3, 0.2, 0.15, 1)],
+                            PiratesGlobals.TOD_DAY: [(self.texTransparent, '', VBase4(0, 0, 0, 0), VBase4(1, 1, 1, 0.7)), (self.texOpaque, '', VBase4(0, 0, 0, 0), VBase4(0.45, 0.55, 0.7, 0)), VBase4(1, 1, 1, 1), VBase4(0.6, 0.7, 0.9, 1)],
+                            PiratesGlobals.TOD_DUSK: [(self.texTransparent, '', VBase4(0, 0, 0, 0), VBase4(0.7, 0.4, 0.2, 1)), (self.texOpaque, '', VBase4(0, 0, 0, 0), VBase4(0.45, 0.4, 0.52, 1)), VBase4(0.75, 0.35, 0.22, 1), VBase4(0.3, 0.18, 0.15, 1)],
+                            PiratesGlobals.TOD_NIGHT: [(self.texStars, 'map2', VBase4(0.1, 0.1, 0.1, 0.1), VBase4(0.36, 0.48, 0.74, 0.8)), (self.texStars, 'map2', VBase4(0, 0, 0, 0), VBase4(0.36, 0.48, 0.74, 0.2)), VBase4(0.34, 0.45, 0.7, 0.8), VBase4(0.15, 0.2, 0.35, 1)],
+                            PiratesGlobals.TOD_STARS: [(self.texStars, 'map2', VBase4(0.85, 0.8, 0.5, 0.5), VBase4(1, 1, 1, 1)), (self.texStars, 'map2', VBase4(0, 0, 0, 0), VBase4(1, 1, 1, 1)), VBase4(0.45, 0.45, 0.7, 0.6), VBase4(0.05, 0.06, 0.17, 1)],
+                            PiratesGlobals.TOD_HALLOWEEN: [(self.texStars, 'map2', VBase4(0, 0, 0, 0.2), VBase4(0.5, 0.6, 0.15, 1)), (self.texStars, 'map2', VBase4(0, 0, 0, 0), VBase4(1, 1, 1, 0.4)), VBase4(0.5, 0.6, 0.15, 1), VBase4(0.1, 0.12, 0.03, 1)],
+                            PiratesGlobals.TOD_SWAMP: [(self.texTransparent, '', VBase4(0, 0, 0, 0), VBase4(0.35, 0.5, 0.6, 1)), (self.texOpaque, '', VBase4(0, 0, 0, 0), VBase4(0.35, 0.5, 0.6, 0)), VBase4(0.35, 0.5, 0.6, 1), VBase4(0.15, 0.2, 0.35, 1)]}
         self.tsSides = []
         self.tsSides.append(self._setupTexStageA('tsSidesA'))
         self.tsSides.append(self._setupTexStageB('tsSidesB'))
@@ -74,7 +85,6 @@ class SkyGroup(NodePath):
         self.sunLight = self.sunWheel.attachNewNode('sunLight')
         self.sunLight.setPosHpr(0, 2300, 0, 180, 0, 0)
         dl = DirectionalLight('directionalLightSun')
-        dl.setSpecularColor(VBase4(1, 1, 1, 1))
         self.dirLightSun = self.sunLight.attachNewNode(dl)
         al = AmbientLight('grassLight')
         al.setColor(VBase4(1, 1, 1, 1))
@@ -83,10 +93,9 @@ class SkyGroup(NodePath):
         al.setColor(VBase4(1, 1, 1, 1))
         self.ambLight = self.sunLight.attachNewNode(al)
         self.sunModel = loader.loadModel('models/sky/sun')
-        if base.config.GetBool('prepare-scene', True):
+        if base.config.GetBool('prepare-scene', 1):
             if base.win.getGsg():
                 self.sunModel.prepareScene(base.win.getGsg())
-
         self.sunModel.setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
         self.sunModel.setBillboardPointEye()
         self.sunModel.setBin('background', 120)
@@ -109,7 +118,7 @@ class SkyGroup(NodePath):
         self.moonGlow.reparentTo(self.moonModel)
         self.moonGlow.setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
         self.moonGlow.setBin('background', 109, 1)
-        self.moonGlow.setPos(0, 0, -0.2)
+        self.moonGlow.setPos(0, 0, -.2)
         self.moonGlow.setColorScale(0.7, 0.8, 1, 1)
         self.moonGlow.setScale(5)
         self.tsMoon = self._setupTexStageAlpha('tsMoon')
@@ -133,12 +142,11 @@ class SkyGroup(NodePath):
             PiratesGlobals.TOD_DUSK: self.dirLightSun,
             PiratesGlobals.TOD_NIGHT: self.dirLightMoon,
             PiratesGlobals.TOD_STARS: self.dirLightMoon,
-            PiratesGlobals.TOD_HALLOWEEN: self.dirLightMoon}
-
+            PiratesGlobals.TOD_HALLOWEEN: self.dirLightMoon
+        }
         render.setLight(self.ambLight)
         render.setLight(self.dirLightSun)
         render.setLight(self.dirLightMoon)
-
         try:
             areg = AttribNodeRegistry.getGlobalPtr()
         except:
@@ -162,9 +170,7 @@ class SkyGroup(NodePath):
     def _setupTexStageAlpha(self, name):
         ts = TextureStage(name)
         ts.setCombineRgb(TextureStage.CMReplace, TextureStage.CSPrevious, TextureStage.COSrcColor)
-        ts.setCombineAlpha(TextureStage.CMModulate, TextureStage.CSPrevious, TextureStage.COSrcAlpha,
-            TextureStage.CSTexture, TextureStage.COSrcAlpha)
-
+        ts.setCombineAlpha(TextureStage.CMModulate, TextureStage.CSPrevious, TextureStage.COSrcAlpha, TextureStage.CSTexture, TextureStage.COSrcAlpha)
         ts.setSort(2)
         return ts
 
@@ -178,24 +184,16 @@ class SkyGroup(NodePath):
     def _setupTexStageB(self, name):
         ts = TextureStage(name)
         ts.setColor(Vec4(0, 0, 0, 0))
-        ts.setCombineRgb(TextureStage.CMInterpolate, TextureStage.CSTexture, TextureStage.COSrcColor, TextureStage.CSPrevious,
-            TextureStage.COSrcColor, TextureStage.CSConstant, TextureStage.COSrcColor)
-
-        ts.setCombineAlpha(TextureStage.CMInterpolate, TextureStage.CSTexture, TextureStage.COSrcAlpha, TextureStage.CSPrevious,
-            TextureStage.COSrcAlpha, TextureStage.CSConstant, TextureStage.COSrcAlpha)
-
+        ts.setCombineRgb(TextureStage.CMInterpolate, TextureStage.CSTexture, TextureStage.COSrcColor, TextureStage.CSPrevious, TextureStage.COSrcColor, TextureStage.CSConstant, TextureStage.COSrcColor)
+        ts.setCombineAlpha(TextureStage.CMInterpolate, TextureStage.CSTexture, TextureStage.COSrcAlpha, TextureStage.CSPrevious, TextureStage.COSrcAlpha, TextureStage.CSConstant, TextureStage.COSrcAlpha)
         ts.setSort(2)
         return ts
 
     def _setupTexStageC(self, name):
         ts = TextureStage(name)
         ts.setColor(Vec4(0, 0, 0, 0))
-        ts.setCombineRgb(TextureStage.CMInterpolate, TextureStage.CSTexture, TextureStage.COSrcColor, TextureStage.CSPrevious,
-            TextureStage.COSrcColor, TextureStage.CSConstant, TextureStage.COSrcColor)
-
-        ts.setCombineAlpha(TextureStage.CMInterpolate, TextureStage.CSTexture, TextureStage.COSrcAlpha, TextureStage.CSPrevious,
-            TextureStage.COSrcAlpha, TextureStage.CSConstant, TextureStage.COSrcAlpha)
-
+        ts.setCombineRgb(TextureStage.CMInterpolate, TextureStage.CSTexture, TextureStage.COSrcColor, TextureStage.CSPrevious, TextureStage.COSrcColor, TextureStage.CSConstant, TextureStage.COSrcColor)
+        ts.setCombineAlpha(TextureStage.CMInterpolate, TextureStage.CSTexture, TextureStage.COSrcAlpha, TextureStage.CSPrevious, TextureStage.COSrcAlpha, TextureStage.CSConstant, TextureStage.COSrcAlpha)
         ts.setSort(3)
         return ts
 
@@ -227,25 +225,25 @@ class SkyGroup(NodePath):
         self.moonModel.setScale(1000)
 
     def fadeInMoon(self, duration):
-        return LerpColorScaleInterval(self.moonModel, duration, Vec4(1, 1, 1, 1), startColorScale=Vec4(1, 1, 1, 0))
+        return LerpColorScaleInterval(self.moonModel, duration, Vec4(1, 1, 1, 1), startColorScale = Vec4(1, 1, 1, 0))
 
     def fadeOutMoon(self, duration):
-        return LerpColorScaleInterval(self.moonModel, duration, Vec4(1, 1, 1, 0), startColorScale=Vec4(1, 1, 1, 1))
-
-    def fadeInMoonOverlay(self, duration=1.0):
+        return LerpColorScaleInterval(self.moonModel, duration, Vec4(1, 1, 1, 0), startColorScale = Vec4(1, 1, 1, 1))
+    
+    def fadeInMoonOverlay(self, duration = 1.0):
         self.moonOverlay.unstash()
-        return LerpColorScaleInterval(self.moonOverlay, duration, Vec4(1, 1, 1, 0.35), startColorScale=Vec4(1, 1, 1, 0))
+        return LerpColorScaleInterval(self.moonOverlay, duration, Vec4(1, 1, 1, 0.35), startColorScale = Vec4(1, 1, 1, 0))
 
-    def fadeOutMoonOverlay(self, duration=1.0):
+    def fadeOutMoonOverlay(self, duration = 1.0):
         self.moonOverlay.unstash()
-        return LerpColorScaleInterval(self.moonOverlay, duration, Vec4(1, 1, 1, 0), startColorScale=Vec4(1, 1, 1, 0.35))
+        return LerpColorScaleInterval(self.moonOverlay, duration, Vec4(1, 1, 1, 0), startColorScale = Vec4(1, 1, 1, 0.35))
 
     def setMoonState(self, state):
         pos = 0.1 - state * 0.8
         self.moonAlphaNode.setPos(0, pos, 0)
-
-    def transitionMoon(self, fromState, toState, duration=10.0):
-        return LerpFunctionInterval(self.setMoonState, duration, fromData=fromState, toData=toState)
+    
+    def transitionMoon(self, fromState, toState, duration = 10.0):
+        return LerpFunctionInterval(self.setMoonState, duration, fromData = fromState, toData = toState)
 
     def stashSun(self):
         self.sunWheel.stash()
@@ -253,47 +251,47 @@ class SkyGroup(NodePath):
     def unstashSun(self):
         self.sunWheel.unstash()
         self.sunTrack.setColorScale(1, 1, 1, 1)
-
+    
     def fadeInSun(self, duration):
-        return LerpColorScaleInterval(self.sunTrack, duration, Vec4(1, 1, 1, 1), startColorScale=Vec4(0, 0, 0, 0))
-
+        return LerpColorScaleInterval(self.sunTrack, duration, Vec4(1, 1, 1, 1), startColorScale = Vec4(0, 0, 0, 0))
+    
     def fadeOutSun(self, duration):
-        return LerpColorScaleInterval(self.sunTrack, duration, Vec4(0, 0, 0, 0), startColorScale=Vec4(1, 1, 1, 1))
+        return LerpColorScaleInterval(self.sunTrack, duration, Vec4(0, 0, 0, 0), startColorScale = Vec4(1, 1, 1, 1))
 
     def setSunAngle(self, t):
         h = t * 360.0 % 360.0
         self.sunWheel.setH(h)
         if self.shadowCaster and self.shadowCaster.shadowsEnabled:
             self.shadowCaster.updateShadows(h)
-
+        
         return h
 
-    def transitionSun(self, beginTime, endTime, duration=10.0):
-        return LerpFunctionInterval(self.setSunAngle, duration, fromData=beginTime, toData=endTime)
-
+    def transitionSun(self, beginTime, endTime, duration = 10.0):
+        return LerpFunctionInterval(self.setSunAngle, duration, fromData = beginTime, toData = endTime)
+    
     def stashStars(self):
         self.sunWheel.stash()
-
+    
     def unstashStars(self):
         self.sunWheel.unstash()
         self.sunModel.setColorScale(1, 1, 1, 1)
 
     def fadeInStars(self, duration):
-        return LerpColorScaleInterval(self.stars, duration, Vec4(1, 1, 1, 0.25), startColorScale=Vec4(1, 1, 1, 0))
+        return LerpColorScaleInterval(self.stars, duration, Vec4(1, 1, 1, 0.25), startColorScale = Vec4(1, 1, 1, 0))
 
     def fadeInStarsMore(self, duration):
-        return LerpColorScaleInterval(self.stars, duration, Vec4(1, 1, 1, 1), startColorScale=Vec4(1, 1, 1, 0.25))
-
+        return LerpColorScaleInterval(self.stars, duration, Vec4(1, 1, 1, 1), startColorScale = Vec4(1, 1, 1, 0.25))
+    
     def fadeOutStars(self, duration):
-        return LerpColorScaleInterval(self.stars, duration, Vec4(1, 1, 1, 0), startColorScale=Vec4(1, 1, 1, 1))
+        return LerpColorScaleInterval(self.stars, duration, Vec4(1, 1, 1, 0), startColorScale = Vec4(1, 1, 1, 1))
 
     def setupCloudIval(self):
-        ival = Parallel(name='CloudIval')
+        ival = Parallel(name = 'CloudIval')
         cloudNodeA = NodePath('CloudNodeA')
-        anim = LerpPosInterval(cloudNodeA, startPos=VBase3(0.0, 0.0, 0.0), pos=VBase3(2.0, 1.0, 0.0), duration=400.0)
+        anim = LerpPosInterval(cloudNodeA, startPos = VBase3(0.0, 0.0, 0.0), pos = VBase3(2.0, 1.0, 0.0), duration = 400.0)
         ival.append(anim)
         cloudNodeB = NodePath('CloudNodeB')
-        anim = LerpPosInterval(cloudNodeB, startPos=VBase3(0.0, 0.0, 0.0), pos=VBase3(-2.0, 0.0, 0.0), duration=400.0)
+        anim = LerpPosInterval(cloudNodeB, startPos = VBase3(0.0, 0.0, 0.0), pos = VBase3(-2.0, 0.0, 0.0), duration = 400.0)
         ival.append(anim)
         self.clouds.setTexProjector(self.tsSides[0], cloudNodeA, NodePath())
         self.sides.setTexProjector(self.tsSides[0], cloudNodeB, NodePath())
@@ -302,6 +300,7 @@ class SkyGroup(NodePath):
     def startCloudIval(self):
         if not self.cloudIval:
             self.cloudIval = self.setupCloudIval()
+        
         self.cloudIval.loop()
 
     def stopCloudIval(self):
@@ -318,16 +317,17 @@ class SkyGroup(NodePath):
         self.tsSides[0].setTexcoordName(uvSetName)
         self.tsSides[1].setColor(Vec4(0, 0, 0, 0))
 
-    def transitionClouds(self, level, duration=5.0):
+    def transitionClouds(self, level, duration = 5.0):
         self.stopCloudIval()
         cloudTex = self.cloudSettings.get(level)[0]
         uvSetName = self.cloudSettings.get(level)[1]
         self.sides.setTexture(self.tsSides[1], cloudTex)
         self.clouds.setTexture(self.tsSides[1], cloudTex)
         self.tsSides[1].setTexcoordName(uvSetName)
-        ival = Sequence(LerpFunctionInterval(self.setStageColor, duration, fromData=0.0, toData=1.0, extraArgs=[self.tsSides[1],
-            Vec4(0, 0, 0, 0), Vec4(1, 1, 1, 1)]), Func(self.setCloudLevel, level))
-
+        ival = Sequence(LerpFunctionInterval(self.setStageColor, duration, fromData = 0.0, toData = 1.0, extraArgs = [
+            self.tsSides[1],
+            Vec4(0, 0, 0, 0),
+            Vec4(1, 1, 1, 1)]), Func(self.setCloudLevel, level))
         return ival
 
     def setSky(self, tod):
@@ -343,8 +343,8 @@ class SkyGroup(NodePath):
         self.top.setColorScale(settings[1][3])
         self.clouds.setColorScale(settings[2])
         self.horizon.setColorScale(settings[3])
-
-    def transitionSky(self, todA, todB, duration=10.0):
+    
+    def transitionSky(self, todA, todB, duration = 10.0):
         self.setSky(todA)
         settingsA = self.skySettings.get(todA)
         settingsB = self.skySettings.get(todB)
@@ -352,10 +352,19 @@ class SkyGroup(NodePath):
         self.tsSides[1].setTexcoordName(settingsB[0][1])
         self.top.setTexture(self.tsTop[1], settingsB[1][0])
         self.tsTop[1].setTexcoordName(settingsB[1][1])
-        ival = Parallel(LerpFunctionInterval(self.setStageColor, duration, fromData=0.0, toData=1.0, extraArgs=[self.tsSides[2], settingsA[0][2], Vec4(0, 0, 0, 0)]),
-            LerpFunctionInterval(self.setStageColor, duration, fromData=0.0, toData=1.0, extraArgs=[self.tsSides[1], Vec4(0, 0, 0, 0), settingsB[0][2]]),
-            LerpFunctionInterval(self.setStageColor, duration, fromData=0.0, toData=1.0, extraArgs=[self.tsTop[1], Vec4(0, 0, 0, 0), Vec4(1, 1, 1, 1)]),
-            LerpColorScaleInterval(self.sides, duration, settingsB[0][3]), LerpColorScaleInterval(self.top, duration, settingsB[1][3]),
-            LerpColorScaleInterval(self.clouds, duration, settingsB[2]), LerpColorScaleInterval(self.horizon, duration, settingsB[3]))
-
+        ival = Parallel(LerpFunctionInterval(self.setStageColor, duration, fromData = 0.0, toData = 1.0, extraArgs = [
+            self.tsSides[2],
+            settingsA[0][2],
+            Vec4(0, 0, 0, 0)]), LerpFunctionInterval(self.setStageColor, duration, fromData = 0.0, toData = 1.0, extraArgs = [
+            self.tsSides[1],
+            Vec4(0, 0, 0, 0),
+            settingsB[0][2]]), LerpFunctionInterval(self.setStageColor, duration, fromData = 0.0, toData = 1.0, extraArgs = [
+            self.tsTop[1],
+            Vec4(0, 0, 0, 0),
+            Vec4(1, 1, 1, 1)]), LerpColorScaleInterval(self.sides, duration, settingsB[0][3]),
+                                LerpColorScaleInterval(self.top, duration, settingsB[1][3]),
+                                LerpColorScaleInterval(self.clouds, duration, settingsB[2]),
+                                LerpColorScaleInterval(self.horizon, duration, settingsB[3]))
         return ival
+
+

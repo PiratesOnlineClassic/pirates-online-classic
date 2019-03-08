@@ -367,7 +367,7 @@ QuestStrings = {
   'pa2.recoverClothes': {
     'title': 'Smuggling Disguises',
     'description': 'Perla Alodia and Olivier need to outfit their smuggling crew. Gather Navy and EITC outfits before they can go back to business.',
-    'dialogAfter': 'Perfect, we are almost ready to set sail.\x07We would have already left if were it not for the fact that half of our crew is in jail.\x07This tends to happen often when your crew is made up of pirates.\x07I need to get my hands on their warrants as well as some prison keys so I can break them out.\x07You should be able to find all these items hidden somewhere in Fort Dundee.\x07Be careful though, the Navy does not take too kindly to pirates lurking around.'
+    'dialogAfter': 'Perfect.  We are almost ready to set sail.\x07We would have left already if were it not for the fact that half of our crew is in jail.\x07This tends to happen often when your crew is made up of pirates.\x07I need to get my hands on their warrants as well as some prison keys so I can break them out.\x07You should be able to find all these items hidden somewhere in Fort Dundee.\x07Be careful though.  The Navy does not take too kindly to pirates lurking around.'
   },
   'pa2.recoverNavyCoats': {
     'title': 'Navy Coats',
@@ -387,24 +387,24 @@ QuestStrings = {
   },
   'pa2.recoverSupplies': {
     'title': 'Prison Break',
-    'description': "Half of Perla Alodia and Olivier's crew is in jail. To break them out, they need to acquire the crew's warrants, some prison keys and a Navy schedule.",
-    'dialogAfter': 'Right on time. The crew is getting a bit rowdy in prison I hear.\x07Go speak with Perla, she just got in your reward.'
+    'description': "Half of Perla Alodia and Olivier's crew is in jail.  To break them out,  they need to acquire the crew's warrants,  some prison keys and a Navy schedule.",
+    'dialogAfter': 'Right on time.  The crew is getting a bit rowdy in prison I hear.\x07Go speak with Perla.  She just got in your reward.'
   },
   'pa2.recoverWarrants': {
     'title': 'Crew Warrants',
-    'description': "Half of Perla Alodia and Olivier's crew is in jail. Recover the crew's warrants from containers in Fort Dundee so they can break them out."
+    'description': "Half of Perla Alodia and Olivier's crew is in jail.  Recover the crew's warrants from containers in Fort Dundee so they can break them out."
   },
   'pa2.recoverPrisonKeys': {
     'title': 'Prison Keys',
-    'description': "Half of Perla Alodia and Olivier's crew is in jail. Recover prison keys so they can break them out."
+    'description': "Half of Perla Alodia and Olivier's crew is in jail.  Recover prison keys so they can break them out."
   },
   'pa2.recoverSchedule': {
     'title': 'Navy Schedule',
-    'description': "Half of Perla Alodia and Olivier's crew is in jail. Recover a Navy schedule from a desk in Fort Dundee so they can break them out."
+    'description': "Half of Perla Alodia and Olivier's crew is in jail.  Recover a Navy schedule from a desk in Fort Dundee so they can break them out."
   },
   'pa2.visitPerla': {
     'title': 'Claiming Reward',
-    'description': 'You have assisted Perla Aloida and Olivier with their smuggling business. Return to Perla in order to claim your jewelry.'
+    'description': 'You have assisted Perla Alodia and Olivier with their smuggling business.  Return to Perla in order to claim your jewelry.'
   },
   'PerlaAlodiaJewels': {
     'title': 'Helping Perla Alodia',
@@ -612,7 +612,7 @@ QuestStrings = {
     'title': "Smitty's Debt",
     'description': 'Jeweler Smitty has built up some debt playing poker with the Navy. As he cannot pay, they have decided to have him work off the debt. He has asked you to help work off the rest of the debt.',
     'dialogBefore': 'Unfortunately I seem to have taken on a bit of debt from the local Navy.\x07One cannot be too careful at the poker tables you know.\x07Seeing as I cannot pay them, they have chosen to have me work it off.\x07If you could help me with some of the jobs, I would be willing to part with some of my finest wares.\x07Visit Bingham and he will tell you what is left to clear out the debt.',
-    'dialogAfter': "So, Smitty is having you handle the rest of his debts?\x07I hope you're more talented than him at a poker table...\x07Here is part of what Smitty needs to finish, do not mess it up."
+    'dialogAfter': "So, Smitty is having you handle the rest of his debts,  is he?\x07I hope you're more talented than him at a poker table...\x07Here is part of what Smitty needs to finish. Do not mess it up."
   },
   'js1.defeatBinghamListA': {
     'title': 'Skeleton Hunt',
@@ -637,11 +637,11 @@ QuestStrings = {
   'js1.defeatBinghamsList': {
     'title': 'Navy Rounds',
     'description': "The Navy is having you take care of some of their daily duties as part of paying off Jeweler Smitty's debt.",
-    'dialogAfter': "Well, I did not expect to see you so soon. Don't worry though, I have more for you.\x07I owe some favors to a fellow named Jim Wavemonger.\x07He is expecting you, go see him and come back to me when he is done with you."
+    'dialogAfter': "Well,  I did not expect to see you so soon.  Don't worry, though.  I have more for you.\x07I owe some favors to a fellow named Jim Wavemonger.\x07He is expecting you.  Go see him and come back to me when he is done with you."
   },
   'js1.visitJimWavemonger': {
     'title': 'Navy Obligations',
-    'description': "Bingham owes some favors to Jim Wavemonger. As part of paying off Smitty's debt, he wants you to handle them. Go speak with Jim Wavemonger, he can be found in a mine in Port Royal named Royal Caverns.",
+    'description': "Bingham owes some favors to Jim Wavemonger.  As part of paying off Smitty's debt,  he wants you to handle them.  Jim Wavemonger can be found in a mine in Port Royal named Royal Caverns.",
     'dialogAfter': "What?! Oh, sorry, you startled me. I don't get many chances to take a nap.\x07Bingham wants you to take care of his obligations to me? Sounds like him.\x07I guess it makes no difference to me who does what.\x07As you can tell, resources are a bit sparse here.\x07We'll need some building supplies in order to extend the camp. We also would rather not pay.\x07Take down some EITC ships and recover some building supplies and Bingham will be square with me."
   },
   'js1.defeatWavemongersList': {
@@ -1292,7 +1292,7 @@ QuestStrings = {
     'title': "Balthasar's Ship Parts",
     'description': "Hunt Navy and EITC ships for Balthasar's parts.",
     'dialogBefore': 'Dialog DB Error cul5_3',
-    'dialogAfter': "Nice work, mate.  Now find an old gent name of Miquel Montoya, here on Padres.\x07Got into some trouble, he did.  Now he's doing hard labor in Beckett's Quarry.\x07He holds the secret to making top-notch Spanish swords.\x07But take care in there.  Lots tough lads who'd rather you not talk to him."
+    'dialogAfter': 'Nice work, mate.  Now find a gent name of Miquel Montoya, here on Padres.\x07Got into some trouble, he did.\x07But if you can help him, he holds the secret to making top-notch Spanish swords.'
   },
   'cul5r1.1acquireSailcloth': {
     'title': 'Sail Cloth',
@@ -1320,9 +1320,9 @@ QuestStrings = {
   },
   'cul5.2visitMiguel': {
     'title': 'Visit Miguel Montoya',
-    'description': "Visit Miguel Montoya who's serving hard time inside Beckett's Quarry on Padres.",
+    'description': 'Miguel Montoya is swapping stories with the local blacksmiths on Padres.',
     'dialogBefore': 'Dialog DB Error cul5_12',
-    'dialogAfter': "Bollard sent you, eh?  Rascal.\x07I'll not divulge my secret without some assistance getting out of this hole.\x07My captor's son was killed by the French muerte. Go defeat some of these diablos and he'll set me free\x07and you can have your precious sword."
+    'dialogAfter': "Bollard sent you, eh?  Rascal.\x07I'll not divulge my secret without some assistance getting out of a mess of my own.\x07I have a debt to repay.\x07Seeing how my debtor's son was killed by the French muerte,  could you defeat some of these diablos in my name?\x07This might just free me of my debt."
   },
   'cul5.3defeatUndeadFrench': {
     'title': 'Undead French',
@@ -1543,13 +1543,13 @@ QuestStrings = {
   },
   'dul5.10visitGrimm': {
     'title': 'Visit Ensign Grimm',
-    'description': 'Ensign Grimm is serving time for looting the royal storehouse on Port Royal.',
+    'description': 'Ensign Grimm is passing the time pretending to do his duty guarding the Port Royal jail.',
     'dialogBefore': 'Dialog DB Error dul5_13',
-    'dialogAfter': "Why should I tell you, you filthy pirate?!  Hey, sorry about the remark, you seem like a decent chap.\x07But I needs some gold coins to pay my...uh..debts. Slip me a proper sum and I'll tell ya where I buried the goods. Honest."
+    'dialogAfter': "Why should I tell you, you filthy pirate?!  Hey, sorry about the remark,  you seem like a decent chap.\x07But I needs some gold coins to loosen my tongue.  Slip me a proper sum and I'll tell ya where I buried the goods.  Honest."
   },
   'dul5.10.5bribeGrimm': {
     'title': 'Bribe Ensign Grimm',
-    'description': 'Bribe the jailer.  He needs gold to pay some gambling debts.',
+    'description': 'Bribe the jailer for information about the daggers.',
     'dialogBefore': 'Dialog DB Error dul5_14',
     'dialogAfter': "Thanks much, mate.  I buried the daggers here on Port Royal somewhere 'round the Governors mansion.\x07Don't know where exactly seeing as how I was full of grog at the time.  Cheers!"
   },
@@ -1560,7 +1560,7 @@ QuestStrings = {
     'dialogAfter': 'Dialog DB Error dul5_16'
   },
   'dul5.12visitFerrar': {
-    'title': 'Visit Ferrar',
+    'title': 'Visit Ferrera',
     'description': 'Return to Ferrera on Padres Del Fuego.',
     'dialogBefore': 'Dialog DB Error dul5_17',
     'dialogAfter': 'Dialog DB Error dul5_18'
@@ -1711,7 +1711,7 @@ QuestStrings = {
     'title': "Excavate Delilah's Gems",
     'description': "Beckett's Quarry is the mine on Padres del Fuego owned and heavily guarded by the East India Trading Company. Delilah's gems are found there.",
     'dialogBefore': 'Dialog DB Error pul5_6',
-    'dialogAfter': "Thanks.  You're as good as they say.\x07 Next...let the fair winds take you to Kingshead and get the musket stocks from 10 Navy officers.\x07 They're made of a rare wood ole Grimsditch needs to make his new invention.\x07 When you're done, return 'em to him.  God speed, friend."
+    'dialogAfter': "Thanks.  You're as good as they say.\x07 Next...let the fair winds take you to Kingshead and get the musket stocks from 8 Navy officers.\x07 They're made of a rare wood ole Grimsditch needs to make his new invention.\x07 When you're done, return 'em to him.  God speed, friend."
   },
   'pul5.6acquireWoodStocks': {
     'title': 'Wood Stocks',
@@ -2457,23 +2457,23 @@ QuestStrings = {
     'title': 'Visit Roland Raggart',
     'description': 'Rolland Raggart has sent for you. He offers a Voodoo Staff upgrade.',
     'dialogBefore': '',
-    'dialogAfter': 'For you, I have an even more powerful staff if you once again assist me in achieving my ends.\x07First,  I need to have a conversation with an East India Trading Company Captain named Edward Stormwind.'
+    'dialogAfter': 'For you, I have an even more powerful staff if you once again assist me in achieving my ends.\x07First,  I need to have a conversation with an East India Trading Company Captain named Elliot Ackers.'
   },
   'vsul5.2captureEITCCaptain': {
-    'title': 'Capture Captain Stormwind',
-    'description': 'Captain Edward Stormwind helms an EITC vessel.  Sink his ship to capture him. Then, bring him back to Roland.',
+    'title': 'Capture Captain Ackers',
+    'description': 'Captain Ackers helms an EITC vessel.  Sink his ship to capture him. Then, bring him back to Roland.',
     'dialogBefore': '',
     'dialogAfter': ''
   },
   'vsul5.3visitRoland': {
-    'title': 'Escort Captain Stormwind',
-    'description': 'Escort Captain Stormwind to Roland',
+    'title': 'Escort Captain Ackers',
+    'description': 'Escort Captain Ackers to Roland',
     'dialogBefore': '',
-    'dialogAfter': "Captain Stormwind was very forthcoming.\x07Five Wooden Statuettes found at the same dig site as the Orb are currently being transported via EITC ships.\x07I want those statuettes. But first, find the good Captain a new home. I hear Rumrunner's Isle is lovely this time of year.\x07Then, find those ships carrying the statuettes."
+    'dialogAfter': "Captain Ackers was very forthcoming.\x07Five Wooden Statuettes found at the same dig site as the Orb are currently being transported via EITC ships.\x07I want those statuettes. But first, find the good Captain a new home. I hear Rumrunner's Isle is lovely this time of year.\x07Then, find those ships carrying the statuettes."
   },
   'vsul5.4maroonEITCCaptain': {
-    'title': 'Maroon Captain Stormwind',
-    'description': "Maroon Captain Stormwind by docking on Rumsrunner's Isle.",
+    'title': 'Maroon Captain Ackers',
+    'description': "Maroon Captain Ackers by docking on Rumsrunner's Isle.",
     'dialogBefore': '',
     'dialogAfter': ''
   },
@@ -2992,7 +2992,7 @@ QuestStrings = {
   'tptpdf.1visitRomany': {
     'title': 'Visit Romany Bev',
     'description': 'Find Romany Bev in Padres Del Fuego to acquire teleportation access to Padres Del Fuego',
-    'dialogAfter': 'So you would like to visit my home by only a thought? This is possible. \x07However, before I can grant this request, I must enlist your aid in our struggle \x07against powerful Undead forces that have overrun much of the island. \x07Do your part in our struggle and return to me for your reward.'
+    'dialogAfter': 'So, you would like to visit my home by only the whimsy of your thoughts? This is possible. \x07However, before I can grant this request, I must enlist your aid in our struggle \x07against powerful Undead forces that have overrun much of the island. \x07Do your part in our struggle and return to me for your reward.'
   },
   'tptpdfr1.1FaceWeakUndead': {
     'title': 'Defeat Undead Brigands',
@@ -5027,7 +5027,7 @@ QuestStrings = {
     'dialogAfter': "THAT'S NOT HALF BAD! YE BE STARTIN' TO LEARN, MATE!\x07OKAY, LET'S TRY MAKIN' SWEET, DARK RUM. I DON'T FANCY IT... BUT HERE'S HOW TO MIX IT..."
   },
   'c3r3r1r13r4r3.1recoverMolasses': {
-    'title': '1 Cup Molasses',
+    'title': 'Cups of Molasses',
     'description': 'Steal molasses from Navy ships.',
     'dialogBefore': 'MOLASSES IS MIGHTY HARD TO COME BY. BEST TRY NAVY SHIPS.',
     'dialogAfter': 'NASTY STUFF, MOLASSES!'
@@ -6092,9 +6092,9 @@ QuestStrings = {
     'dialogAfter': "Take this. Your friend's memory will be as good as new."
   },
   'c3r3r3r9r5r2.1recoverTeeth': {
-    'title': 'Big Alligator Teeth',
-    'description': 'Recover big alligator teeth to be ground into powder.',
-    'dialogBefore': "We'll need big alligator teeth. Lots of 'em.",
+    'title': 'Alligator Teeth',
+    'description': 'Recover alligator teeth to be ground into powder.',
+    'dialogBefore': "We'll need gator teeth. Lots of 'em.",
     'dialogAfter': "Now we just grind 'em into powder."
   },
   'c3r3r3r9r5r2.2recoverVenom': {
@@ -7990,3 +7990,4 @@ NPCNames = {
   'tutorial_dan': 'Doggerel Dan',
   'tutorial_stumpy': 'Captain Bo Beck'
 }
+
