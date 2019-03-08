@@ -1,31 +1,31 @@
 from direct.directnotify import DirectNotifyGlobal
-from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.task.Task import Task
-from panda3d.core import *
-from pirates.distributed import DistributedInteractive
-from pirates.interact import InteractionManager, InteractiveBase
-from pirates.minigame import LockGlobals, LockGUI
-from pirates.pirate import HumanDNA
+from direct.gui.DirectGui import *
+from pandac.PandaModules import *
+from pirates.minigame import LockGUI
+from pirates.minigame import LockGlobals
 from pirates.piratesbase import PLocalizer
-
+from pirates.distributed import DistributedInteractive
+from pirates.interact import InteractiveBase
+from pirates.interact import InteractionManager
+from pirates.pirate import HumanDNA
 
 class DistributedLock(DistributedInteractive.DistributedInteractive):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLock')
-
+    
     def __init__(self, cr):
         print 'DistributedLock:__init__'
         NodePath.__init__(self, 'DistributedLock')
         DistributedInteractive.DistributedInteractive.__init__(self, cr)
         self.isDoor = 0
-
+    
     def generate(self):
         print 'DistributedLock:generate'
         DistributedInteractive.DistributedInteractive.generate(self)
         self.setName(self.uniqueName('DistributedLock'))
         self.loadModel()
-        self.setInteractOptions(proximityText=PLocalizer.InteractLock, sphereScale=12, diskRadius=12)
+        self.setInteractOptions(proximityText = PLocalizer.InteractLock, sphereScale = 12, diskRadius = 12)
         self.reparentTo(render)
 
     def loadModel(self):
@@ -33,14 +33,14 @@ class DistributedLock(DistributedInteractive.DistributedInteractive):
         self.table.setScale(0.5, 0.5, 0.5)
         self.table.reparentTo(self)
 
-    def requestInteraction(self, avId, interactType=0):
+    def requestInteraction(self, avId, interactType = 0):
         base.localAvatar.motionFSM.off()
         DistributedInteractive.DistributedInteractive.requestInteraction(self, avId, interactType)
 
     def rejectInteraction(self):
         base.localAvatar.motionFSM.on()
         DistributedInteractive.DistributedInteractive.rejectInteraction(self)
-
+    
     def disable(self):
         print 'DistributedLock:disable'
         DistributedInteractive.DistributedInteractive.disable(self)
@@ -50,7 +50,7 @@ class DistributedLock(DistributedInteractive.DistributedInteractive):
         DistributedInteractive.DistributedInteractive.delete(self)
         del self.table
         self.removeNode()
-
+    
     def getTableModel(self):
         print 'DistributedLock:getTableModel'
         table = loader.loadModel('models/props/treasureChest')
@@ -75,10 +75,14 @@ class DistributedLock(DistributedInteractive.DistributedInteractive):
         self.gui = LockGUI.LockGUI(self, avId, difficulty)
         camera.setPosHpr(self, 0, -5, 4, 0, -30, 0)
         base.camLens.setMinFov(55)
-        self.accept('escape', self.guiCallback, extraArgs=[LockGlobals.LGUI_EXIT])
-        self.accept('arrow_left', self.guiCallback, extraArgs=[LockGlobals.LGUI_MECHLEFT])
-        self.accept('arrow_right', self.guiCallback, extraArgs=[LockGlobals.LGUI_MECHRIGHT])
-        self.accept('space', self.guiCallback, extraArgs=[LockGlobals.LGUI_TRYLOCK])
+        self.accept('escape', self.guiCallback, extraArgs = [
+            LockGlobals.LGUI_EXIT])
+        self.accept('arrow_left', self.guiCallback, extraArgs = [
+            LockGlobals.LGUI_MECHLEFT])
+        self.accept('arrow_right', self.guiCallback, extraArgs = [
+            LockGlobals.LGUI_MECHRIGHT])
+        self.accept('space', self.guiCallback, extraArgs = [
+            LockGlobals.LGUI_TRYLOCK])
         taskMgr.add(self.movePick, 'lockpick')
         self.acceptInteraction()
 
@@ -109,17 +113,17 @@ class DistributedLock(DistributedInteractive.DistributedInteractive):
         if answer == 1:
             self.localAvatarSatDown()
             localAvatar.b_setGameState('ParlorGame')
+        elif answer == 2:
+            self.localAvatarGotUp()
+            localAvatar.b_setGameState(localAvatar.gameFSM.defaultState)
         else:
-            if answer == 2:
-                self.localAvatarGotUp()
-                localAvatar.b_setGameState(localAvatar.gameFSM.defaultState)
-            else:
-                localAvatar.motionFSM.on()
+            localAvatar.motionFSM.on()
 
     def setOpen(self, open):
         if open:
             if 'gui' in vars(self):
                 self.gui.toolState = LockGlobals.LSTATE_OPEN
+            
             self.finalOpen()
 
     def finalOpen(self):
@@ -127,3 +131,5 @@ class DistributedLock(DistributedInteractive.DistributedInteractive):
         lidopener = LerpHprInterval(self.chestLid, 1, Vec3(0, -40, 0))
         lidopener.start()
         self.setAllowInteract(False)
+
+

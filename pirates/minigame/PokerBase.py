@@ -1,12 +1,19 @@
 from pirates.minigame import PlayingCardGlobals
 
-
 class PokerBase:
-    
     debug = False
     handCodeArray = [
-     'Nothing', 'NoPair', 'OnePair', 'TwoPair', 'Trips', 'Straight', 'Flush', 'FlHouse', 'Quads', 'StFlush']
-
+        'Nothing',
+        'NoPair',
+        'OnePair',
+        'TwoPair',
+        'Trips',
+        'Straight',
+        'Flush',
+        'FlHouse',
+        'Quads',
+        'StFlush']
+    
     def __init__(self):
         self.debug = PokerBase.debug
 
@@ -15,12 +22,14 @@ class PokerBase:
         if bet:
             if self.round >= 3:
                 bet = bet * 2
+            
         else:
             bet = self.anteList[0]
             if bet:
                 if self.getGameType() == PlayingCardGlobals.SevenStud:
                     if self.checkForVisiblePair():
                         bet = bet * 2
+
             else:
                 bet = PlayingCardGlobals.DefaultBetAmount
         return bet
@@ -30,9 +39,9 @@ class PokerBase:
         minimum_bet_multiplier = 10
         if self.anteList[2] > 0:
             minimum_chips = minimum_bet_multiplier * self.anteList[2]
-        else:
-            if self.anteList[0] > 0:
-                minimum_chips = minimum_bet_multiplier * self.anteList[0]
+        elif self.anteList[0] > 0:
+            minimum_chips = minimum_bet_multiplier * self.anteList[0]
+        
         return minimum_chips
 
     def handCodeToHandId(self, handCode):
@@ -58,15 +67,17 @@ class PokerBase:
                 handId = PlayingCardGlobals.Quads
             elif handCode == 'StFlush':
                 handId = PlayingCardGlobals.StFlush
-        return handId
 
+        return handId
+    
     def handIdToHandCode(self, handId):
         return self.handCodeArray[handId]
-
+    
     def checkCondition(self):
         check = False
         if self.maxBet == 0:
             check = True
+        
         return check
 
     def checkForVisiblePair(self):
@@ -79,9 +90,22 @@ class PokerBase:
                 length = len(hand)
                 if length >= 4:
                     rank_array = [
-                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0]
                     if length >= 7:
                         length = 6
+                    
                     i = 2
                     while i < length:
                         rank = hand[i] % 13
@@ -92,8 +116,10 @@ class PokerBase:
                             pair = True
                             break
                         i = i + 1
-
+                
                 if pair:
                     break
 
         return pair
+
+

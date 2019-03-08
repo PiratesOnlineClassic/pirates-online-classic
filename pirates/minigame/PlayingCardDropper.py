@@ -1,13 +1,10 @@
 import random
-
-from pirates.minigame import PlayingCardGlobals
 from direct.gui.DirectGui import *
+from pandac.PandaModules import *
 from direct.task import Task
-from panda3d.core import *
 from pirates.piratesbase import PLocalizer
-
+import PlayingCardGlobals
 chanceOfHigherCard = 50
-
 
 def dropTier0():
     chance100 = random.randrange(1, 100, 1)
@@ -36,17 +33,17 @@ def dropTier1():
         rank = '07'
     elif chance5 == 3:
         rank = '06'
+    elif chance5 == 2:
+        rank = '05'
     else:
-        if chance5 == 2:
-            rank = '05'
-        else:
-            rank = '04'
-        if chance4 == 4:
-            suit = 's'
-        if chance4 == 3:
-            suit = 'c'
-        if chance4 == 2:
-            suit = 'd'
+        rank = '04'
+    if chance4 == 4:
+        suit = 's'
+    elif chance4 == 3:
+        suit = 'c'
+    elif chance4 == 2:
+        suit = 'd'
+    else:
         suit = 'h'
     return PlayingCardGlobals.getCardEncoding(suit, rank)
 
@@ -58,19 +55,18 @@ def dropTier2():
         rank = '12'
     elif chanceSuit4 == 3:
         rank = '11'
+    elif chanceSuit4 == 2:
+        rank = '10'
     else:
-        if chanceSuit4 == 2:
-            rank = '10'
-        else:
-            rank = '09'
-        if chance4 == 4:
-            suit = 's'
-        else:
-            if chance4 == 3:
-                suit = 'c'
-            if chance4 == 2:
-                suit = 'd'
-            suit = 'h'
+        rank = '09'
+    if chance4 == 4:
+        suit = 's'
+    elif chance4 == 3:
+        suit = 'c'
+    elif chance4 == 2:
+        suit = 'd'
+    else:
+        suit = 'h'
     return PlayingCardGlobals.getCardEncoding(suit, rank)
 
 
@@ -90,3 +86,4 @@ def dropTier3():
     else:
         suit = 'h'
     return PlayingCardGlobals.getCardEncoding(suit, rank)
+

@@ -1,19 +1,18 @@
 import random
-
-from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
-from panda3d.core import *
-from pirates.minigame import DiceGlobals, DistributedDiceGame
+from direct.gui.DirectGui import *
+from pandac.PandaModules import *
+from pirates.minigame import DistributedDiceGame
+from pirates.minigame import DiceGlobals
+from pirates.piratesgui import GuiTray
+from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesbase import PLocalizer
-from pirates.piratesgui import GuiTray, PiratesGuiGlobals
-
 
 class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
     
-
     def __init__(self, cr):
-        DistributedDiceGame.DistributedDiceGame.__init__(self, cr, numdice=5, public=0, name="Liar's Dice")
+        DistributedDiceGame.DistributedDiceGame.__init__(self, cr, numdice = 5, public = 0, name = "Liar's Dice")
         self.animPlaying = 0
 
     def rollResults(self, seat, dice):
@@ -22,7 +21,7 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
         if seat == self.mySeat:
             if self.gameState == DiceGlobals.DSTATE_WAIT:
                 self.gameState = DiceGlobals.DSTATE_PLAY
-
+    
     def extraGuiSetup(self):
         self.betDice = 1
         self.betValue = 1
@@ -32,134 +31,196 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
         self.challSeq = {}
         self.cheatDetect = 0
         self.mojoDetect = 0
-        self.checkButton = DirectButton(parent=self.gui, relief=DGG.RAISED, state=DGG.DISABLED, text='CALL BLUFF', text_align=TextNode.ACenter, text_scale=0.08, text_fg=(0.5,
-                                                                                                                                                                          0.5,
-                                                                                                                                                                          0.4,
-                                                                                                                                                                          1), frameColor=(1,
-                                                                                                                                                                                          0.9,
-                                                                                                                                                                                          0.6,
-                                                                                                                                                                                          1), frameSize=(0,
-                                                                                                                                                                                                         0.47,
-                                                                                                                                                                                                         0,
-                                                                                                                                                                                                         0.12), borderWidth=PiratesGuiGlobals.BorderWidth, text_pos=(0.23,
-                                                                                                                                                                                                                                                                     0.033), textMayChange=1, pos=(-0.23, 0, -0.31), command=self.guiCallback, extraArgs=['call bluff'])
+        self.checkButton = DirectButton(parent = self.gui,
+                                        relief = DGG.RAISED,
+                                        state = DGG.DISABLED,
+                                        text = 'CALL BLUFF',
+                                        text_align = TextNode.ACenter,
+                                        text_scale = 0.08,
+                                        text_fg = (0.5, 0.5, 0.4, 1),
+                                        frameColor = (1, 0.9, 0.6, 1),
+                                        frameSize = (0, 0.47, 0, 0.12),
+                                        borderWidth = PiratesGuiGlobals.BorderWidth,
+                                        text_pos = (0.23, 0.033),
+                                        textMayChange = 1, pos = (-0.23, 0, -0.31),
+                                        command = self.guiCallback,
+                                        extraArgs = ['call bluff']
+                                        )
         self.checkButton.hide()
-        self.claimButton = DirectButton(parent=self.gui, relief=DGG.RAISED, state=DGG.DISABLED, text='MAKE CLAIM', text_align=TextNode.ACenter, text_scale=0.08, text_fg=PiratesGuiGlobals.TextFG2, frameColor=(0.2,
-                                                                                                                                                                                                                0.6,
-                                                                                                                                                                                                                0.1,
-                                                                                                                                                                                                                1), frameSize=(0,
-                                                                                                                                                                                                                               0.47,
-                                                                                                                                                                                                                               0,
-                                                                                                                                                                                                                               0.12), borderWidth=PiratesGuiGlobals.BorderWidth, text_pos=(0.23,
-                                                                                                                                                                                                                                                                                           0.033), textMayChange=1, pos=(-0.23, 0, -0.02), command=self.guiCallback, extraArgs=['make claim'])
+        self.claimButton = DirectButton(parent = self.gui,
+                                        relief = DGG.RAISED,
+                                        state = DGG.DISABLED,
+                                        text = 'MAKE CLAIM',
+                                        text_align = TextNode.ACenter,
+                                        text_scale = 0.08,
+                                        text_fg = PiratesGuiGlobals.TextFG2,
+                                        frameColor = (0.2, 0.6, 0.1, 1),
+                                        frameSize = (0, 0.47, 0, 0.12),
+                                        borderWidth = PiratesGuiGlobals.BorderWidth,
+                                        text_pos = (0.23, 0.033),
+                                        textMayChange = 1,
+                                        pos = (-0.23, 0, -0.02),
+                                        command = self.guiCallback,
+                                        extraArgs = ['make claim'])
         self.claimButton.hide()
-        self.mojoButton = DirectButton(parent=self.gui, relief=DGG.RAISED, state=DGG.DISABLED, text='USE MOJO', text_align=TextNode.ACenter, text_scale=0.08, text_fg=(0.2,
-                                                                                                                                                                       0.35,
-                                                                                                                                                                       0.6,
-                                                                                                                                                                       1), frameColor=(0.4,
-                                                                                                                                                                                       0.6,
-                                                                                                                                                                                       1.0,
-                                                                                                                                                                                       1), frameSize=(0,
-                                                                                                                                                                                                      0.45,
-                                                                                                                                                                                                      0,
-                                                                                                                                                                                                      0.12), borderWidth=PiratesGuiGlobals.BorderWidth, text_pos=(0.23,
-                                                                                                                                                                                                                                                                  0.033), textMayChange=1, pos=(0.7, 0, -0.4), command=self.guiCallback, extraArgs=['mojo'])
+        self.mojoButton = DirectButton(parent = self.gui,
+                                       relief = DGG.RAISED,
+                                       state = DGG.DISABLED,
+                                       text = 'USE MOJO',
+                                       text_align = TextNode.ACenter,
+                                       text_scale = 0.08,
+                                       text_fg = (0.2, 0.35, 0.6, 1),
+                                       frameColor = (0.4, 0.6, 1.0, 1),
+                                       frameSize = (0, 0.45, 0, 0.12),
+                                       borderWidth = PiratesGuiGlobals.BorderWidth,
+                                       text_pos = (0.23, 0.033),
+                                       textMayChange = 1, pos = (0.7, 0, -0.4),
+                                       command = self.guiCallback,
+                                       extraArgs = ['mojo']
+                                       )
         self.mojoButton.hide()
-        self.catchCheat = DirectButton(parent=self.gui, relief=DGG.RAISED, state=DGG.DISABLED, text='CATCH CHEATER', text_align=TextNode.ACenter, text_scale=0.04, text_fg=(0.8,
-                                                                                                                                                                            0.4,
-                                                                                                                                                                            0.4,
-                                                                                                                                                                            1), frameColor=(0.6,
-                                                                                                                                                                                            0.3,
-                                                                                                                                                                                            0.3,
-                                                                                                                                                                                            1), frameSize=(0,
-                                                                                                                                                                                                           0.45,
-                                                                                                                                                                                                           0,
-                                                                                                                                                                                                           0.12), borderWidth=PiratesGuiGlobals.BorderWidth, text_pos=(0.23,
-                                                                                                                                                                                                                                                                       0.033), textMayChange=1, pos=(0.84,
-                                                                                                                                                                                                                                                                                                     0,
-                                                                                                                                                                                                                                                                                                     0.84), command=self.guiCallback, extraArgs=['catch cheat'])
+        self.catchCheat = DirectButton(parent = self.gui,
+                                       relief = DGG.RAISED,
+                                       state = DGG.DISABLED,
+                                       text = 'CATCH CHEATER',
+                                       text_align = TextNode.ACenter,
+                                       text_scale = 0.04,
+                                       text_fg = (0.8, 0.4, 0.4, 1),
+                                       frameColor = (0.6, 0.3, 0.3, 1),
+                                       frameSize = (0, 0.45, 0, 0.12),
+                                       borderWidth = PiratesGuiGlobals.BorderWidth,
+                                       text_pos = (0.23, 0.033),
+                                       textMayChange = 1,
+                                       pos = (0.84, 0, 0.84),
+                                       command = self.guiCallback,
+                                       extraArgs = ['catch cheat']
+                                       )
         self.catchCheat.hide()
-        self.cheatButton = DirectButton(parent=self.gui, relief=DGG.RAISED, state=DGG.DISABLED, text='CHEAT', text_align=TextNode.ACenter, text_scale=0.08, text_fg=(0.7,
-                                                                                                                                                                     0.4,
-                                                                                                                                                                     0.3,
-                                                                                                                                                                     1), frameColor=(1,
-                                                                                                                                                                                     0.7,
-                                                                                                                                                                                     0.5,
-                                                                                                                                                                                     1), frameSize=(0,
-                                                                                                                                                                                                    0.45,
-                                                                                                                                                                                                    0,
-                                                                                                                                                                                                    0.12), borderWidth=PiratesGuiGlobals.BorderWidth, text_pos=(0.23,
-                                                                                                                                                                                                                                                                0.033), textMayChange=1, pos=(-1.1, 0, -0.4), command=self.guiCallback, extraArgs=['cheat'])
+        self.cheatButton = DirectButton(parent = self.gui,
+                                        relief = DGG.RAISED,
+                                        state = DGG.DISABLED,
+                                        text = 'CHEAT',
+                                        text_align = TextNode.ACenter,
+                                        text_scale = 0.08,
+                                        text_fg = (0.7, 0.4, 0.3, 1),
+                                        frameColor = (1, 0.7, 0.5, 1),
+                                        frameSize = (0, 0.45, 0, 0.12),
+                                        borderWidth = PiratesGuiGlobals.BorderWidth,
+                                        text_pos = (0.23, 0.033),
+                                        textMayChange = 1,
+                                        pos = (-1.1, 0, -0.4),
+                                        command = self.guiCallback,
+                                        extraArgs = ['cheat']
+                                        )
         self.cheatButton.hide()
-        self.diceNumText = DirectLabel(parent=self.gui, relief=None, text='Num Dice', text_align=TextNode.ALeft, text_scale=0.1, pos=(-0.4, 0, -0.5), text_fg=(1,
-                                                                                                                                                               0.9,
-                                                                                                                                                               0.6,
-                                                                                                                                                               1), text_shadow=(0,
-                                                                                                                                                                                0,
-                                                                                                                                                                                0,
-                                                                                                                                                                                1))
+        self.diceNumText = DirectLabel(parent = self.gui,
+                                       relief = None,
+                                       text = 'Num Dice',
+                                       text_align = TextNode.ALeft,
+                                       text_scale = 0.1,
+                                       pos = (-0.4, 0, -0.5),
+                                       text_fg = (1, 0.9, 0.6, 1),
+                                       text_shadow = (0, 0, 0, 1)
+                                       )
         self.diceNumText.hide()
-        self.diceNumLabel = DirectLabel(parent=self.gui, relief=None, text='1', text_align=TextNode.ALeft, text_scale=0.2, pos=(-0.28, 0, -0.7), text_fg=(1,
-                                                                                                                                                          0.9,
-                                                                                                                                                          0.6,
-                                                                                                                                                          1), text_shadow=(0,
-                                                                                                                                                                           0,
-                                                                                                                                                                           0,
-                                                                                                                                                                           1))
+        self.diceNumLabel = DirectLabel(parent = self.gui,
+                                        relief = None,
+                                        text = '1',
+                                        text_align = TextNode.ALeft,
+                                        text_scale = 0.2,
+                                        pos = (-0.28, 0, -0.7),
+                                        text_fg = (1, 0.9, 0.6, 1),
+                                        text_shadow = (0, 0, 0, 1)
+                                        )
         self.diceNumLabel.hide()
-        self.diceValText = DirectLabel(parent=self.gui, relief=None, text='Value', text_align=TextNode.ALeft, text_scale=0.1, pos=(0.27, 0, -0.5), text_fg=(1,
-                                                                                                                                                            0.9,
-                                                                                                                                                            0.6,
-                                                                                                                                                            1), text_shadow=(0,
-                                                                                                                                                                             0,
-                                                                                                                                                                             0,
-                                                                                                                                                                             1))
+        self.diceValText = DirectLabel(parent = self.gui,
+                                       relief = None,
+                                       text = 'Value',
+                                       text_align = TextNode.ALeft,
+                                       text_scale = 0.1,
+                                       pos = (0.27, 0, -0.5),
+                                       text_fg = (1, 0.9, 0.6, 1),
+                                       text_shadow = (0, 0, 0, 1)
+                                       )
         self.diceValText.hide()
-        self.diceValLabel = DirectLabel(parent=self.gui, relief=None, text='1', text_align=TextNode.ALeft, text_scale=0.2, pos=(0.33, 0, -0.7), text_fg=(1,
-                                                                                                                                                         0.9,
-                                                                                                                                                         0.6,
-                                                                                                                                                         1), text_shadow=(0,
-                                                                                                                                                                          0,
-                                                                                                                                                                          0,
-                                                                                                                                                                          1))
+        self.diceValLabel = DirectLabel(parent = self.gui,
+                                        relief = None,
+                                        text = '1',
+                                        text_align = TextNode.ALeft,
+                                        text_scale = 0.2,
+                                        pos = (0.33, 0, -0.7),
+                                        text_fg = (1, 0.9, 0.6, 1),
+                                        text_shadow = (0, 0, 0, 1)
+                                        )
         self.diceValLabel.hide()
-        self.diceUpButton = DirectButton(parent=self.gui, relief=DGG.RAISED, text='>', text_align=TextNode.ACenter, text_scale=0.05, text_pos=(0.02,
-                                                                                                                                               0.01), text_fg=(0,
-                                                                                                                                                               0,
-                                                                                                                                                               0,
-                                                                                                                                                               1), text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=0, frameColor=PiratesGuiGlobals.ButtonColor2, borderWidth=PiratesGuiGlobals.BorderWidthSmall, frameSize=(0,
-                                                                                                                                                                                                                                                                                                                                    0.05,
-                                                                                                                                                                                                                                                                                                                                    0,
-                                                                                                                                                                                                                                                                                                                                    0.05), pos=(-0.1, 0, -0.69), command=self.guiCallback, extraArgs=['dice up'])
+        self.diceUpButton = DirectButton(parent = self.gui,
+                                         relief = DGG.RAISED,
+                                         text = '>',
+                                         text_align = TextNode.ACenter,
+                                         text_scale = 0.05,
+                                         text_pos = (0.02, 0.01),
+                                         text_fg = (0, 0, 0, 1),
+                                         text_shadow = PiratesGuiGlobals.TextShadow,
+                                         textMayChange = 0,
+                                         frameColor = PiratesGuiGlobals.ButtonColor2,
+                                         borderWidth = PiratesGuiGlobals.BorderWidthSmall,
+                                         frameSize = (0, 0.05, 0, 0.05),
+                                         pos = (-0.1, 0, -0.69),
+                                         command = self.guiCallback,
+                                         extraArgs = ['dice up']
+                                         )
         self.diceUpButton.hide()
-        self.diceDownButton = DirectButton(parent=self.gui, relief=DGG.RAISED, text='<', text_align=TextNode.ACenter, text_scale=0.05, text_pos=(0.02,
-                                                                                                                                                 0.01), text_fg=(0,
-                                                                                                                                                                 0,
-                                                                                                                                                                 0,
-                                                                                                                                                                 1), text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=0, frameColor=PiratesGuiGlobals.ButtonColor2, borderWidth=PiratesGuiGlobals.BorderWidthSmall, frameSize=(0,
-                                                                                                                                                                                                                                                                                                                                      0.05,
-                                                                                                                                                                                                                                                                                                                                      0,
-                                                                                                                                                                                                                                                                                                                                      0.05), pos=(-0.38, 0, -0.69), command=self.guiCallback, extraArgs=['dice down'])
+        self.diceDownButton = DirectButton(parent = self.gui,
+                                           relief = DGG.RAISED,
+                                           text = '<',
+                                           text_align = TextNode.ACenter,
+                                           text_scale = 0.05,
+                                           text_pos = (0.02, 0.01),
+                                           text_fg = (0, 0, 0, 1),
+                                           text_shadow = PiratesGuiGlobals.TextShadow,
+                                           textMayChange = 0,
+                                           frameColor = PiratesGuiGlobals.ButtonColor2,
+                                           borderWidth = PiratesGuiGlobals.BorderWidthSmall,
+                                           frameSize = (0, 0.05, 0, 0.05),
+                                           pos = (-0.38, 0, -0.69),
+                                           command = self.guiCallback,
+                                           extraArgs = ['dice down']
+                                           )
         self.diceDownButton.hide()
-        self.valueUpButton = DirectButton(parent=self.gui, relief=DGG.RAISED, text='>', text_align=TextNode.ACenter, text_scale=0.05, text_pos=(0.02,
-                                                                                                                                                0.01), text_fg=(0,
-                                                                                                                                                                0,
-                                                                                                                                                                0,
-                                                                                                                                                                1), text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=0, frameColor=PiratesGuiGlobals.ButtonColor2, borderWidth=PiratesGuiGlobals.BorderWidthSmall, frameSize=(0,
-                                                                                                                                                                                                                                                                                                                                     0.05,
-                                                                                                                                                                                                                                                                                                                                     0,
-                                                                                                                                                                                                                                                                                                                                     0.05), pos=(0.51, 0, -0.69), command=self.guiCallback, extraArgs=['value up'])
+        self.valueUpButton = DirectButton(parent = self.gui,
+                                          relief = DGG.RAISED,
+                                          text = '>',
+                                          text_align = TextNode.ACenter,
+                                          text_scale = 0.05,
+                                          text_pos = (0.02, 0.01),
+                                          text_fg = (0, 0, 0, 1),
+                                          text_shadow = PiratesGuiGlobals.TextShadow,
+                                          textMayChange = 0,
+                                          frameColor = PiratesGuiGlobals.ButtonColor2,
+                                          borderWidth = PiratesGuiGlobals.BorderWidthSmall,
+                                          frameSize = (0, 0.05, 0, 0.05),
+                                          pos = (0.51, 0, -0.69),
+                                          command = self.guiCallback,
+                                          extraArgs = ['value up']
+                                          )
         self.valueUpButton.hide()
-        self.valueDownButton = DirectButton(parent=self.gui, relief=DGG.RAISED, text='<', text_align=TextNode.ACenter, text_scale=0.05, text_pos=(0.02,
-                                                                                                                                                  0.01), text_fg=(0,
-                                                                                                                                                                  0,
-                                                                                                                                                                  0,
-                                                                                                                                                                  1), text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=0, frameColor=PiratesGuiGlobals.ButtonColor2, borderWidth=PiratesGuiGlobals.BorderWidthSmall, frameSize=(0,
-                                                                                                                                                                                                                                                                                                                                       0.05,
-                                                                                                                                                                                                                                                                                                                                       0,
-                                                                                                                                                                                                                                                                                                                                       0.05), pos=(0.26, 0, -0.69), command=self.guiCallback, extraArgs=['value down'])
+        self.valueDownButton = DirectButton(parent = self.gui,
+                                            relief = DGG.RAISED,
+                                            text = '<',
+                                            text_align = TextNode.ACenter,
+                                            text_scale = 0.05,
+                                            text_pos = (0.02, 0.01),
+                                            text_fg = (0, 0, 0, 1),
+                                            text_shadow = PiratesGuiGlobals.TextShadow,
+                                            textMayChange = 0,
+                                            frameColor = PiratesGuiGlobals.ButtonColor2,
+                                            borderWidth = PiratesGuiGlobals.BorderWidthSmall,
+                                            frameSize = (0, 0.05, 0, 0.05),
+                                            pos = (0.26, 0, -0.69),
+                                            command = self.guiCallback,
+                                            extraArgs = ['value down']
+                                            )
         self.valueDownButton.hide()
-        return
 
     def extraGuiDestroy(self):
         self.valueUpButton.destroy()
@@ -179,75 +240,74 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
             self.challDice[i].removeNode()
             del self.challDice[i]
             i -= 1
-
         self.challDice = []
         self.challSeq.clear()
-
+    
     def extraGuiCallback(self, action):
         if action == 'value up':
             if self.betValue < 6:
                 self.sendChat(DiceGlobals.CHAT_DICEUP)
                 self.betValue += 1
                 self.diceValLabel['text'] = '%d' % self.betValue
+            
+            return 1
+        elif action == 'value down':
+            if self.betValue > 1 and (self.betValue > self.oldValue or self.betDice > self.oldDice):
+                self.sendChat(DiceGlobals.CHAT_DICEDOWN)
+                self.betValue -= 1
+                self.diceValLabel['text'] = '%d' % self.betValue
+                
+            return 1
+        elif action == 'dice up':
+            if self.betDice < self.numDice * self.NumSeats:
+                self.sendChat(DiceGlobals.CHAT_DICEUP)
+                self.betDice += 1
+                if self.betDice == 10:
+                    self.diceNumLabel.setPos(-0.34, 0, -0.7)
+                
+                self.diceNumLabel['text'] = '%d' % self.betDice
+            
+            return 1
+        elif action == 'dice down':
+            if self.betDice > 1 and self.betDice > self.oldDice:
+                self.sendChat(DiceGlobals.CHAT_DICEDOWN)
+                self.betDice -= 1
+                if self.betDice == 9:
+                    self.diceNumLabel.setPos(-0.28, 0, -0.7)
+                
+                self.diceNumLabel['text'] = '%d' % self.betDice
+                if self.betDice == self.oldDice and self.betValue < self.oldValue:
+                    self.betValue = self.oldValue
+                    self.diceValLabel['text'] = '%d' % self.betValue
+
+            return 1
+        elif action == 'make claim':
+            self.makeClaim()
+            return 1
+        elif action == 'call bluff':
+            self.callBluff()
+            return 1
+        elif action == 'cheat':
+            self.tryToCheat()
+            return 1
+        elif action == 'mojo':
+            self.useMojo()
+            return 1
+        elif action == 'catch cheat':
+            self.caughtYou()
             return 1
         else:
-            if action == 'value down':
-                if self.betValue > 1 and (self.betValue > self.oldValue or self.betDice > self.oldDice):
-                    self.sendChat(DiceGlobals.CHAT_DICEDOWN)
-                    self.betValue -= 1
-                    self.diceValLabel['text'] = '%d' % self.betValue
-                return 1
-            else:
-                if action == 'dice up':
-                    if self.betDice < self.numDice * self.NumSeats:
-                        self.sendChat(DiceGlobals.CHAT_DICEUP)
-                        self.betDice += 1
-                        if self.betDice == 10:
-                            self.diceNumLabel.setPos(-0.34, 0, -0.7)
-                        self.diceNumLabel['text'] = '%d' % self.betDice
-                    return 1
-                else:
-                    if action == 'dice down':
-                        if self.betDice > 1 and self.betDice > self.oldDice:
-                            self.sendChat(DiceGlobals.CHAT_DICEDOWN)
-                            self.betDice -= 1
-                            if self.betDice == 9:
-                                self.diceNumLabel.setPos(-0.28, 0, -0.7)
-                            self.diceNumLabel['text'] = '%d' % self.betDice
-                            if self.betDice == self.oldDice and self.betValue < self.oldValue:
-                                self.betValue = self.oldValue
-                                self.diceValLabel['text'] = '%d' % self.betValue
-                        return 1
-                    else:
-                        if action == 'make claim':
-                            self.makeClaim()
-                            return 1
-                        else:
-                            if action == 'call bluff':
-                                self.callBluff()
-                                return 1
-                            else:
-                                if action == 'cheat':
-                                    self.tryToCheat()
-                                    return 1
-                                else:
-                                    if action == 'mojo':
-                                        self.useMojo()
-                                        return 1
-                                    else:
-                                        if action == 'catch cheat':
-                                            self.caughtYou()
-                                            return 1
-                                        else:
-                                            return 0
+            return 0
 
     def extraYourTurn(self):
         self.cheatDetect -= 20
         if self.cheatDetect < 0:
             self.cheatDetect = 0
+        
         self.mojoDetect -= 20
         if self.mojoDetect < 0:
             self.mojoDetect = 0
+        
         self.catchCheat['state'] = DGG.DISABLED
         self.catchCheat.hide()
         taskMgr.remove('doneCheat')
@@ -313,7 +373,7 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
             self.diceNumLabel.setPos(-0.28, 0, -0.7)
             self.diceNumLabel['text'] = '%d' % self.betDice
             self.diceValLabel['text'] = '%d' % self.betValue
-
+    
     def notYourTurn(self):
         self.diceUpButton['state'] = DGG.DISABLED
         self.diceDownButton['state'] = DGG.DISABLED
@@ -334,43 +394,53 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
             base.localAvatar.setChatAbsolute('Mojo flows smoothly.', CFThought | CFTimeout)
             self.gui.bounceDie()
             self.mojoDetect += random.randint(0, 40)
-            self.sendUpdate('cheatResult', [self.mySeat, self.betValue, 0])
+            self.sendUpdate('cheatResult', [
+                self.mySeat,
+                self.betValue,
+                0])
+        elif attempt < 80:
+            base.localAvatar.setChatAbsolute('Your mojo twists.', CFThought | CFTimeout)
+            self.mojoDetect += random.randint(0, 20)
+            self.gui.bounceDie()
+            self.sendUpdate('cheatResult', [
+                self.mySeat,
+                0,
+                0])
+        elif attempt < 120:
+            base.localAvatar.setChatAbsolute('The Mojo works roughly.', CFThought | CFTimeout)
+            self.mojoDetect += random.randint(0, 60)
+            self.gui.bounceDie()
+            self.sendUpdate('cheatResult', [
+                self.mySeat,
+                self.betValue,
+                2])
         else:
-            if attempt < 80:
-                base.localAvatar.setChatAbsolute('Your mojo twists.', CFThought | CFTimeout)
-                self.mojoDetect += random.randint(0, 20)
-                self.gui.bounceDie()
-                self.sendUpdate('cheatResult', [self.mySeat, 0, 0])
-            else:
-                if attempt < 120:
-                    base.localAvatar.setChatAbsolute('The Mojo works roughly.', CFThought | CFTimeout)
-                    self.mojoDetect += random.randint(0, 60)
-                    self.gui.bounceDie()
-                    self.sendUpdate('cheatResult', [self.mySeat, self.betValue, 2])
-                else:
-                    base.localAvatar.setChatAbsolute('You botch the Mojo.', CFThought | CFTimeout)
-                    self.gui.bounceDie()
-                    self.mojoDetect = 150
-                    self.sendUpdate('cheatResult', [self.mySeat, 0, 4])
+            base.localAvatar.setChatAbsolute('You botch the Mojo.', CFThought | CFTimeout)
+            self.gui.bounceDie()
+            self.mojoDetect = 150
+            self.sendUpdate('cheatResult', [
+                self.mySeat,
+                0,
+                4])
 
     def incomingCheat(self, seat, catchTime, dieV):
         if seat != self.mySeat:
             return
+        
         if catchTime > 0:
             self.catchCheat['state'] = DGG.NORMAL
             rndr = random.randint(1, 4)
             if rndr == 1:
                 self.catchCheat.setPos(0.84, 0, 0.84)
+            elif rndr == 2:
+                self.catchCheat.setPos(-0.84, 0, 0.84)
+            elif rndr == 3:
+                self.catchCheat.setPos(0.84, 0, -.84)
             else:
-                if rndr == 2:
-                    self.catchCheat.setPos(-0.84, 0, 0.84)
-                else:
-                    if rndr == 3:
-                        self.catchCheat.setPos(0.84, 0, -0.84)
-                    else:
-                        self.catchCheat.setPos(-0.84, 0, -0.84)
+                self.catchCheat.setPos(-.84, 0, -.84)
             self.catchCheat.show()
             taskMgr.doMethodLater(catchTime, self.doneCheating, 'doneCheat')
+        
         if dieV > 0:
             self.gui.nudgeDie(random.randint(0, self.numDice - 1), dieV)
         else:
@@ -386,32 +456,45 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
             base.localAvatar.setChatAbsolute('You jostle the table.', CFThought | CFTimeout)
             self.cheatDetect += random.randint(0, 40)
             self.gui.nudgeDie(random.randint(0, self.numDice - 1), self.betValue)
-            self.sendUpdate('cheatResult', [self.mySeat, 0, 0])
+            self.sendUpdate('cheatResult', [
+                self.mySeat,
+                0,
+                0])
+        elif attempt < 80:
+            base.localAvatar.setChatAbsolute('You jostle the table.', CFThought | CFTimeout)
+            self.cheatDetect += random.randint(0, 20)
+            self.gui.bounceDie()
+            self.sendUpdate('cheatResult', [
+                self.mySeat,
+                0,
+                0])
+        elif attempt < 120:
+            base.localAvatar.setChatAbsolute('You roughly thump the table.', CFThought | CFTimeout)
+            self.gui.nudgeDie(random.randint(0, self.numDice - 1), self.betValue)
+            self.cheatDetect += random.randint(0, 60)
+            self.sendUpdate('cheatResult', [
+                self.mySeat,
+                0,
+                2])
         else:
-            if attempt < 80:
-                base.localAvatar.setChatAbsolute('You jostle the table.', CFThought | CFTimeout)
-                self.cheatDetect += random.randint(0, 20)
-                self.gui.bounceDie()
-                self.sendUpdate('cheatResult', [self.mySeat, 0, 0])
-            else:
-                if attempt < 120:
-                    base.localAvatar.setChatAbsolute('You roughly thump the table.', CFThought | CFTimeout)
-                    self.gui.nudgeDie(random.randint(0, self.numDice - 1), self.betValue)
-                    self.cheatDetect += random.randint(0, 60)
-                    self.sendUpdate('cheatResult', [self.mySeat, 0, 2])
-                else:
-                    base.localAvatar.setChatAbsolute('You roughly thump the table.', CFThought | CFTimeout)
-                    self.gui.bounceDie()
-                    self.cheatDetect = 150
-                    self.sendUpdate('cheatResult', [self.mySeat, 0, 4])
+            base.localAvatar.setChatAbsolute('You roughly thump the table.', CFThought | CFTimeout)
+            self.gui.bounceDie()
+            self.cheatDetect = 150
+            self.sendUpdate('cheatResult', [
+                self.mySeat,
+                0,
+                4])
 
     def makeClaim(self):
         if self.betDice > self.oldDice or self.betValue > self.oldValue:
-            self.sendUpdate('betUpdate', [self.mySeat, self.betDice, self.betValue])
+            self.sendUpdate('betUpdate', [
+                self.mySeat,
+                self.betDice,
+                self.betValue])
             self.notYourTurn()
         else:
             self.gui.gameStatus['text'] = PLocalizer.DiceText_LowBet
-
+    
     def tableStatus(self, betDice, betValue):
         self.betDice = betDice
         self.oldDice = betDice
@@ -427,18 +510,23 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
     def gotCaught(self, seat, name):
         if seat == self.mySeat:
             self.notYourTurn()
+        
         self.gui.gameStatus['text'] = PLocalizer.DiceText_Caught % name
 
     def caughtYou(self):
         print 'DistributedLiarsDice:caughtYou'
-        self.sendUpdate('catchCheater', [self.mySeat])
+        self.sendUpdate('catchCheater', [
+            self.mySeat])
 
     def callBluff(self):
         if self.oldDice == 1 and self.oldValue == 1:
             self.gui.gameStatus['text'] = PLocalizer.DiceText_FirstClaim
         else:
-            self.sendUpdate('callBluff', [self.mySeat, self.oldDice, self.oldValue])
-
+            self.sendUpdate('callBluff', [
+                self.mySeat,
+                self.oldDice,
+                self.oldValue])
+    
     def displayChallenge(self, dieN, dieV, player1, player2, elimName):
         print 'Entering displayChallenge with %d dice' % len(self.challDice)
         self.animPlaying = 1
@@ -456,7 +544,7 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
         self.gui.gameStatus['text'] = '%s %s' % (elimName, PLocalizer.DiceText_Call)
         diceCount = 0
         curCount = 0
-        for who, dlist in self.dicevals.iteritems():
+        for (who, dlist) in self.dicevals.iteritems():
             diceCount += dlist.count(dieV)
             counter = 0
             for i in range(len(dlist)):
@@ -469,12 +557,13 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
                 self.challDice.append(die)
                 self.challDice[len(self.challDice) - 1].show()
                 pos = Vec3(-5.0 + 1.2 * counter, -6.4 + 0.9 * who, DiceGlobals.PIT_HEIGHT + 5)
-                lerp = LerpPosInterval(self.challDice[len(self.challDice) - 1], 3.0, pos, blendType='easeOut')
+                lerp = LerpPosInterval(self.challDice[len(self.challDice) - 1], 3.0, pos, blendType = 'easeOut')
                 if curCount == 0:
                     self.challSeq[curCount] = Sequence(lerp)
                     if dlist[i] == dieV:
                         func = Func(self.hiliteDice, curCount)
                         self.challSeq[curCount].append(func)
+                    
                     self.challSeq[curCount].append(Wait(6.0))
                     self.challSeq[curCount].append(Func(self.endChallenge))
                 else:
@@ -482,11 +571,12 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
                     if dlist[i] == dieV:
                         func = Func(self.hiliteDice, curCount)
                         self.challSeq[curCount].append(func)
+                    
                 curCount += 1
 
         for i in range(0, curCount):
             self.challSeq[i].start()
-
+        
         self.gui.gameStatus['text'] = '%s is Eliminated' % elimName
 
     def hiliteDice(self, dieN):
@@ -506,13 +596,13 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
             self.challDice[i].removeNode()
             del self.challDice[i]
             i -= 1
-
         self.challDice = []
         self.challSeq = {}
         if self.animPlaying == 2:
             if self.gui:
                 self.gui.mainButton['state'] = DGG.NORMAL
                 self.gui.mainButton['frameColor'] = (0.0, 0.8, 0.1, 1)
+        
         self.animPlaying = 0
         self.diceValLabel.hide()
         self.diceValText.hide()
@@ -534,3 +624,5 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
         else:
             self.gui.mainButton['state'] = DGG.NORMAL
             self.gui.mainButton['frameColor'] = (0.0, 0.8, 0.1, 1)
+
+

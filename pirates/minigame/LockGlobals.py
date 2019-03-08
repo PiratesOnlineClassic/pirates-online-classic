@@ -1,5 +1,4 @@
 from pirates.piratesbase import PLocalizer
-
 LSTATE_ACTIVE = 1
 LSTATE_TRY = 2
 LSTATE_FAIL = 3
