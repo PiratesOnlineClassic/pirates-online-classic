@@ -2,7 +2,6 @@ from pirates.piratesbase import PLocalizer
 
 class SiegeManagerBase:
     
-
     def __init__(self):
         self._useIslandRegen = False
         self._useRepairSpots = False
@@ -13,14 +12,17 @@ class SiegeManagerBase:
             self._disableUseIslandRegen()
         elif not self._useIslandRegen and useIslandRegen:
             self._enableUseIslandRegen()
+        
         self._useIslandRegen = useIslandRegen
 
     def _enableUseIslandRegen(self):
-        messenger.send(self.getUseIslandRegenEvent(), [True])
+        messenger.send(self.getUseIslandRegenEvent(), [
+            True])
 
     def _disableUseIslandRegen(self):
-        messenger.send(self.getUseIslandRegenEvent(), [False])
-
+        messenger.send(self.getUseIslandRegenEvent(), [
+            False])
+    
     def getUseIslandRegenEvent(self):
         return 'useIslandRegen-%s' % self.doId
 
@@ -32,14 +34,17 @@ class SiegeManagerBase:
             self._disableRepairSpots()
         elif not self._useRepairSpots and useRepairSpots:
             self._enableRepairSpots()
+        
         self._useRepairSpots = useRepairSpots
 
     def _enableRepairSpots(self):
-        messenger.send(self.getUseRepairSpotsEvent(), [True])
-
+        messenger.send(self.getUseRepairSpotsEvent(), [
+            True])
+    
     def _disableRepairSpots(self):
-        messenger.send(self.getUseRepairSpotsEvent(), [False])
-
+        messenger.send(self.getUseRepairSpotsEvent(), [
+            False])
+    
     def getUseRepairSpotsEvent(self):
         return 'useRepairSpots-%s' % self.doId
 
@@ -51,16 +56,21 @@ class SiegeManagerBase:
             self._disableRepairKit()
         elif not self._useRepairKit and useRepairKit:
             self._enableRepairKit()
+        
         self._useRepairKit = useRepairKit
 
     def _enableRepairKit(self):
-        messenger.send(self.getUseRepairKitEvent(), [True])
+        messenger.send(self.getUseRepairKitEvent(), [
+            True])
 
     def _disableRepairKit(self):
-        messenger.send(self.getUseRepairKitEvent(), [False])
-
+        messenger.send(self.getUseRepairKitEvent(), [
+            False])
+    
     def getUseRepairKitEvent(self):
         return 'useRepairKit-%s' % self.doId
 
     def getUseRepairKit(self):
         return self._useRepairKit
+
+

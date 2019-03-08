@@ -1,13 +1,13 @@
-from pirates.interact import InteractiveBase
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 from pirates.pvp.PVPGameBase import PVPGameBase
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.interact import InteractiveBase
 from pirates.ship import DistributedShip
+from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 
 class PVPGameShipBattle(PVPGameBase):
-    
     notify = directNotify.newCategory('PVPGameShipBattle')
-
+    
     def __init__(self, cr):
         PVPGameBase.__init__(self, cr)
         self.teamScore = 0
@@ -16,17 +16,18 @@ class PVPGameShipBattle(PVPGameBase):
         self.shipsNearBase = {}
         self.maxTeamScore = 0
         self.prevTeamScore = None
-        self.depositSound = base.loader.loadSfx('audio/treasure_hit_1.mp3')
+        self.depositSound = base.loadSfx('audio/treasure_hit_1.mp3')
         self.maxCarry = None
         self.localShip = None
         self.pendingInstanceRequest = None
 
     def announceGenerate(self):
         PVPGameBase.announceGenerate(self)
-        self.pendingInstanceRequest = base.cr.relatedObjectMgr.requestObjects([self.instanceId], eachCallback=self.instanceGenerated)
+        self.pendingInstanceRequest = base.cr.relatedObjectMgr.requestObjects([
+            self.instanceId], eachCallback = self.instanceGenerated)
         self.cr.loadingScreen.show()
         localAvatar.motionFSM.off()
-
+    
     def instanceGenerated(self, instanceObj):
         self.instance = instanceObj
 
@@ -35,6 +36,7 @@ class PVPGameShipBattle(PVPGameBase):
         if self.pendingInstanceRequest:
             base.cr.relatedObjectMgr.abortRequest(self.pendingInstanceRequest)
             self.pendingInstanceRequest = None
+        
         base.localAvatar.guiMgr.hidePVPUI()
 
     def delete(self):
@@ -49,12 +51,13 @@ class PVPGameShipBattle(PVPGameBase):
 
     def handleUseKey(self, interactiveObj):
         pass
-
+    
     def setMaxTeamScore(self, maxScore):
         self.maxTeamScore = maxScore
-
+    
     def setShipDoId(self, shipId):
-        self.shipRequest = base.cr.relatedObjectMgr.requestObjects([shipId], eachCallback=self._shipArrived)
+        self.shipRequest = base.cr.relatedObjectMgr.requestObjects([
+            shipId], eachCallback = self._shipArrived)
 
     def _shipArrived(self, ship):
         self.localShip = ship
@@ -68,7 +71,7 @@ class PVPGameShipBattle(PVPGameBase):
         self.sendUpdate('setBoarded', [])
         localAvatar.motionFSM.on()
         base.cr.loadingScreen.hide()
-
+    
     def updateShipProximityText(self, ship):
         ship.b_setIsBoardable(ship.isBoardable)
 
@@ -82,18 +85,22 @@ class PVPGameShipBattle(PVPGameBase):
             if self.localShip.sinkTrack:
                 self.localShip.sinkTrack.pause()
                 self.localShip.sinkTrack = None
+
         self.prevTeamScore = None
 
     def getScoreList(self):
         return self.scoreList
-
+    
     def setScoreList(self, teams, scores):
         self.scoreList = []
         for currIdx in range(len(teams)):
             if teams[currIdx] > 1000 and teams[currIdx] != localAvatar.getDoId():
                 continue
-            self.scoreList.append({'Team': teams[currIdx], 'Score': scores[currIdx]})
-
+            
+            self.scoreList.append({
+                'Team': teams[currIdx],
+                'Score': scores[currIdx]})
+        
         self.scoreList.sort(self.sortScores)
         print 'got new score list %s' % self.scoreList
         messenger.send(self.getItemChangeMsg())
@@ -108,14 +115,16 @@ class PVPGameShipBattle(PVPGameBase):
         else:
             return team1 - team2
 
-    def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
+    def createNewItem(self, item, parent, itemType = None, columnWidths = [], color = None):
         itemColorScale = None
         team = item.get('Team')
         score = item.get('Score')
         if team == localAvatar.getTeam():
             if self.prevTeamScore != None and score < self.prevTeamScore:
                 itemColorScale = (1, 0, 0)
+            
             self.prevTeamScore = score
+        
         return MiniScoreItemGui(item, parent, self.instance, itemColorScale, self.instance.gameRules)
 
     def getScoreText(self, scoreValue):
@@ -130,8 +139,10 @@ class PVPGameShipBattle(PVPGameBase):
         else:
             maxTeamScore = str(self.maxTeamScore)
             return PLocalizer.PVPOtherTeam + str(score)
-
+    
     def respawn(self):
         posHpr = self.instance.cr.activeWorld.spawnInfo[0]
         localAvatar.setPos(posHpr[0], posHpr[1], posHpr[2])
         localAvatar.b_setGameState('Spawn')
+
+

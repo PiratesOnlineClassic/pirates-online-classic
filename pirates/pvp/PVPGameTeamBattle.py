@@ -1,14 +1,14 @@
-from pirates.interact import InteractiveBase
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.pvp import PVPGlobals
-from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 from pirates.pvp.PVPGameBase import PVPGameBase
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.interact import InteractiveBase
 from pirates.ship import DistributedShip
+from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
+from pirates.pvp import PVPGlobals
 
 class PVPGameTeamBattle(PVPGameBase):
-    
     notify = directNotify.newCategory('PVPGameTeamBattle')
-
+    
     def __init__(self, cr):
         PVPGameBase.__init__(self, cr)
         self.teamScore = 0
@@ -17,37 +17,39 @@ class PVPGameTeamBattle(PVPGameBase):
         self.shipsNearBase = {}
         self.maxTeamScore = 0
         self.prevTeamScore = None
-        self.depositSound = base.loader.loadSfx('audio/treasure_hit_1.mp3')
+        self.depositSound = base.loadSfx('audio/treasure_hit_1.mp3')
         self.maxCarry = None
         self.pendingInstanceRequest = None
-
+    
     def announceGenerate(self):
         PVPGameBase.announceGenerate(self)
-        self.pendingInstanceRequest = base.cr.relatedObjectMgr.requestObjects([self.instanceId], eachCallback=self.instanceGenerated)
-
+        self.pendingInstanceRequest = base.cr.relatedObjectMgr.requestObjects([
+            self.instanceId], eachCallback = self.instanceGenerated)
+    
     def instanceGenerated(self, instanceObj):
         self.instance = instanceObj
-
+    
     def disable(self):
         PVPGameBase.disable(self)
         if self.pendingInstanceRequest:
             base.cr.relatedObjectMgr.abortRequest(self.pendingInstanceRequest)
             self.pendingInstanceRequest = None
+        
         base.localAvatar.guiMgr.hidePVPUI()
 
     def delete(self):
         self.ignoreAll()
         PVPGameBase.delete(self)
-
+    
     def getTitle(self):
         return PLocalizer.TBTGame
 
     def getInstructions(self):
         return PLocalizer.PVPTeamBattleInstructions
-
+    
     def handleUseKey(self, interactiveObj):
         pass
-
+    
     def setMaxTeamScore(self, maxScore):
         self.maxTeamScore = maxScore
 
@@ -56,21 +58,21 @@ class PVPGameTeamBattle(PVPGameBase):
         self.prevTeamScore = None
 
     def setResults(self, stats, rank):
-        for playerId, playerStats in stats:
-            for stat, value in playerStats:
+        for (playerId, playerStats) in stats:
+            for (stat, value) in playerStats:
                 self.stats[playerId][stat] = value
 
         self.statsChanged()
         localAvatar.guiMgr.createPVPCompleteUI(self.instance)
         localAvatar.guiMgr.setPVPResult('team', rank)
         localAvatar.guiMgr.showPVPCompleteUI()
-
+    
     def hasTimeLimit(self):
         return True
 
     def getTimeLimit(self):
         return self._timeLimit
-
+    
     def setTimeLimit(self, timeLimit):
         self._timeLimit = timeLimit
 
@@ -79,12 +81,13 @@ class PVPGameTeamBattle(PVPGameBase):
         team2 = item2.get('Team')
         if team1 == localAvatar.getDoId():
             return 1000
-        return item2.get('Score') - item1.get('Score')
+        else:
+            return item2.get('Score') - item1.get('Score')
 
     def getScoreList(self):
         scoreList = []
         teamScores = {}
-        for playerId, stats in self.stats.items():
+        for (playerId, stats) in self.stats.items():
             playerScore = stats[PVPGlobals.SCORE]
             if playerId in base.cr.doId2do:
                 playerTeam = base.cr.doId2do.get(playerId).getTeam()
@@ -93,15 +96,19 @@ class PVPGameTeamBattle(PVPGameBase):
                 else:
                     teamScores[playerTeam] = playerScore
                 if playerId == localAvatar.doId:
-                    scoreList.append({'Team': playerId, 'Score': playerScore})
+                    scoreList.append({
+                        'Team': playerId,
+                        'Score': playerScore})
 
-        for teamName, teamScore in teamScores.items():
-            scoreList.append({'Team': teamName, 'Score': teamScore})
-
+        for (teamName, teamScore) in teamScores.items():
+            scoreList.append({
+                'Team': teamName,
+                'Score': teamScore})
+        
         scoreList.sort(self.sortScores)
         return scoreList
 
-    def createScoreboardItem(self, item, parent, itemType=None, columnWidths=[], color=None):
+    def createScoreboardItem(self, item, parent, itemType = None, columnWidths = [], color = None):
         itemColorScale = None
         blink = False
         team = item.get('Team')
@@ -109,7 +116,9 @@ class PVPGameTeamBattle(PVPGameBase):
         if team == localAvatar.getTeam():
             if self.prevTeamScore != None and score < self.prevTeamScore:
                 blink = True
+            
             self.prevTeamScore = score
+        
         if team != localAvatar.doId:
             itemColorScale = PVPGlobals.TEAM_COLOR[team]
         else:
@@ -130,25 +139,37 @@ class PVPGameTeamBattle(PVPGameBase):
             return PLocalizer.PVPOtherTeam + str(score)
 
     def getColumnStats(self):
-        return [PVPGlobals.SCORE, PVPGlobals.DEATHS]
-
+        return [
+            PVPGlobals.SCORE,
+            PVPGlobals.DEATHS]
+    
     def getColumnLabels(self):
-        return [PLocalizer.PVPPlayer, PLocalizer.PVPScore, PLocalizer.PVPTimesDefeated]
+        return [
+            PLocalizer.PVPPlayer,
+            PLocalizer.PVPScore,
+            PLocalizer.PVPTimesDefeated]
 
     def addPlayer(self, playerId):
-        self.stats[playerId] = {PVPGlobals.SCORE: 0, PVPGlobals.KILLS: 0, PVPGlobals.DEATHS: 0, PVPGlobals.TEAM: 0}
+        self.stats[playerId] = {
+            PVPGlobals.SCORE: 0,
+            PVPGlobals.KILLS: 0,
+            PVPGlobals.DEATHS: 0,
+            PVPGlobals.TEAM: 0}
         PVPGameBase.addPlayer(self, playerId)
 
     def setPlayerStat(self, playerId, stat, value):
         if playerId in base.cr.doId2do:
             playerName = base.cr.doId2do.get(playerId).getName()
+        
         self.stats[playerId][stat] = value
         self.statsChanged()
         if stat == PVPGlobals.SCORE:
             self.scoreChanged()
 
     def sortStats(self, stats):
-        return sorted(sorted(stats, key=lambda x: int(x[1][1][1])), key=lambda x: int(x[1][0][1]), reverse=True)
+        return sorted(sorted(stats, key = lambda x: int(x[1][1][1])), key = lambda x: int(x[1][0][1]), reverse = True)
 
     def getStats(self):
         return self.getTeamStats()
+
+

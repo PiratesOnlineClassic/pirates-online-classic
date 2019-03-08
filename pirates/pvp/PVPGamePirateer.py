@@ -1,18 +1,17 @@
+from direct.gui.DirectGui import *
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from pirates.pvp.PVPGameBase import PVPGameBase
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.interact import InteractiveBase
+from pirates.ship import DistributedShip
+from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 import random
 
-from direct.gui.DirectGui import *
-from direct.interval.IntervalGlobal import *
-from panda3d.core import *
-from pirates.interact import InteractiveBase
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
-from pirates.pvp.PVPGameBase import PVPGameBase
-from pirates.ship import DistributedShip
-
 class PVPGamePirateer(PVPGameBase):
-    
     notify = directNotify.newCategory('PVPGamePirateer')
-
+    
     def __init__(self, cr):
         PVPGameBase.__init__(self, cr)
         self.teamScore = 0
@@ -23,7 +22,7 @@ class PVPGamePirateer(PVPGameBase):
         self.maxCarry = 0
         self.prevTeamScore = 0
         self.prevLoadScore = 0
-        self.depositSound = base.loader.loadSfx('audio/treasure_hit_1.mp3')
+        self.depositSound = base.loadSfx('audio/treasure_hit_1.mp3')
         self.pendingInstanceRequest = None
 
     def generate(self):
@@ -35,40 +34,46 @@ class PVPGamePirateer(PVPGameBase):
 
     def announceGenerate(self):
         PVPGameBase.announceGenerate(self)
-        self.pendingInstanceRequest = base.cr.relatedObjectMgr.requestObjects([self.instanceId], eachCallback=self.instanceGenerated)
-
+        self.pendingInstanceRequest = base.cr.relatedObjectMgr.requestObjects([
+            self.instanceId], eachCallback = self.instanceGenerated)
+    
     def instanceGenerated(self, instanceObj):
         self.instance = instanceObj
         localAvatar.guiMgr.showPVPUI(self)
-
+    
     def disable(self):
         PVPGameBase.disable(self)
         if self.pendingInstanceRequest:
             base.cr.relatedObjectMgr.abortRequest(self.pendingInstanceRequest)
             self.pendingInstanceRequest = None
+        
         base.localAvatar.guiMgr.hidePVPUI()
 
     def delete(self):
         self.ignoreAll()
         PVPGameBase.delete(self)
-
+    
     def isObjInteractionAllowed(self, object, avatar):
         return 0
 
     def handleEnterPort(self, depositType, shipId):
         self.notify.debug('<PIRATEER> ------- handleEnterPort')
-        self.sendUpdate('portEntered', [depositType, shipId])
+        self.sendUpdate('portEntered', [
+            depositType,
+            shipId])
 
     def handleExitPort(self, depositType, shipId):
         self.notify.debug('<PIRATEER> ------- handleEnterPort')
-        self.sendUpdate('portExited', [depositType, shipId])
+        self.sendUpdate('portExited', [
+            depositType,
+            shipId])
 
     def setMaxTeamScore(self, maxScore):
         self.maxTeamScore = maxScore
-
+    
     def setMaxCarry(self, maxCarry):
         self.maxCarry = maxCarry
-
+    
     def updateShipProximityText(self, ship):
         ship.b_setIsBoardable(ship.isBoardable)
 
@@ -77,7 +82,7 @@ class PVPGamePirateer(PVPGameBase):
 
     def updateTreasureProximityText(self, treasure):
         treasure.proximityText = PLocalizer.PirateerDeckTreasure
-
+    
     def handleUseKey(self, interactiveObj):
         if isinstance(interactiveObj, DistributedShip.DistributedShip):
             self.handleShipUse(interactiveObj)
@@ -87,7 +92,7 @@ class PVPGamePirateer(PVPGameBase):
 
     def getInstructions(self):
         return PLocalizer.PirateerInstructions
-
+    
     def displayCoins(self, shipIds):
         for i in shipIds:
             if i not in self.coinCarriers:
@@ -99,7 +104,7 @@ class PVPGamePirateer(PVPGameBase):
         self.notify.debug('<PIRATEER> ------ we gots us a coin thief %s' % shipId)
         ship.stats['maxSpeed'] = ship.stats['maxSpeed'] * 3 / 4
         barUI = loader.loadModelCopy('models/gui/treasure_loaded')
-        self.titleFrameImage = OnscreenImage(image=barUI, pos=(0, -45, 210), scale=(45, 45, 45), parent=ship)
+        self.titleFrameImage = OnscreenImage(image = barUI, pos = (0, -45, 210), scale = (45, 45, 45), parent = ship)
         self.titleFrameImage.setBillboardPointEye()
         self.titleFrameImage.setLightOff()
 
@@ -121,15 +126,19 @@ class PVPGamePirateer(PVPGameBase):
         if collEntry.getFromNodePath().hasNetTag('shipId'):
             shipId = int(collEntry.getFromNodePath().getNetTag('shipId'))
             self.notify.debug('<PIRATEER> ------ %s approaches wreck %s' % (str(shipId), str(wid)))
-            self.sendUpdate('lootWreck', [wid, shipId])
+            self.sendUpdate('lootWreck', [
+                wid,
+                shipId])
 
     def leaveWreck(self, collEntry):
         wid = int(collEntry.getIntoNodePath().getNetTag('avId'))
         if collEntry.getFromNodePath().hasNetTag('shipId'):
             shipId = int(collEntry.getFromNodePath().getNetTag('shipId'))
             self.notify.debug('<PIRATEER> ------ %s leaves wreck %s' % (str(shipId), str(wid)))
-            self.sendUpdate('unLootWreck', [wid, shipId])
-
+            self.sendUpdate('unLootWreck', [
+                wid,
+                shipId])
+    
     def getScoreList(self):
         return self.scoreList
 
@@ -138,8 +147,11 @@ class PVPGamePirateer(PVPGameBase):
         for currIdx in range(len(teams)):
             if teams[currIdx] > 10 and teams[currIdx] % 10 != localAvatar.getTeam():
                 continue
-            self.scoreList.append({'Team': teams[currIdx], 'Score': scores[currIdx]})
-
+            
+            self.scoreList.append({
+                'Team': teams[currIdx],
+                'Score': scores[currIdx]})
+        
         self.scoreList.sort(self.sortScores)
         print 'got new score list %s' % self.scoreList
         messenger.send(self.getItemChangeMsg())
@@ -149,9 +161,10 @@ class PVPGamePirateer(PVPGameBase):
         team2 = item2.get('Team')
         if team1 == 0:
             return 100
-        return team1 - team2
+        else:
+            return team1 - team2
 
-    def createNewItem(self, item, parent, itemType=None, columnWidths=[], color=None):
+    def createNewItem(self, item, parent, itemType = None, columnWidths = [], color = None):
         itemColorScale = None
         blink = False
         team = item.get('Team')
@@ -160,9 +173,11 @@ class PVPGamePirateer(PVPGameBase):
             if score < self.prevTeamScore:
                 blink = True
                 self.prevTeamScore = score
+
         if team > 10 and team < 20 and score != self.prevLoadScore:
             blink = True
             self.prevLoadScore = score
+        
         return MiniScoreItemGui(item, parent, self.instance, itemColorScale, self.instance.gameRules, blink)
 
     def getScoreText(self, scoreValue):
@@ -172,19 +187,20 @@ class PVPGamePirateer(PVPGameBase):
         maxCarry = str(self.maxCarry)
         if team > 20:
             return PLocalizer.PVPYourShip + str(score) + '/' + str(maxCarry)
-        else:
-            if team > 10:
-                if score > 4:
-                    return 'Loading [.....]'
-                elif score > 3:
-                    return 'Loading [.... ]'
-                elif score > 2:
-                    return 'Loading [...  ]'
-                elif score > 1:
-                    return 'Loading [..   ]'
-                elif score > 0:
-                    return 'Loading [.    ]'
-                else:
-                    return 'Loading [     ]'
+        elif team > 10:
+            if score > 4:
+                return 'Loading [.....]'
+            elif score > 3:
+                return 'Loading [.... ]'
+            elif score > 2:
+                return 'Loading [...  ]'
+            elif score > 1:
+                return 'Loading [..   ]'
+            elif score > 0:
+                return 'Loading [.    ]'
             else:
-                return PLocalizer.PVPTeam % str(team) + str(score) + '/' + str(maxTeamScore)
+                return 'Loading [     ]'
+        else:
+            return PLocalizer.PVPTeam % str(team) + str(score) + '/' + str(maxTeamScore)
+
+

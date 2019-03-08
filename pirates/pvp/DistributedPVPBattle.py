@@ -1,14 +1,14 @@
-from pirates.interact import InteractiveBase
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.pvp import PVPGlobals
 from pirates.pvp.DistributedPVPInstance import DistributedPVPInstance
-from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
+from pirates.piratesbase import PiratesGlobals
+from pirates.pvp import PVPGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.interact import InteractiveBase
 from pirates.ship import DistributedShip
+from pirates.pvp.MiniScoreItemGui import MiniScoreItemGui
 
 class DistributedPVPBattle(DistributedPVPInstance):
-    
     notify = directNotify.newCategory('DistributedPVPBattle')
-
+    
     def __init__(self, cr):
         DistributedPVPInstance.__init__(self, cr)
 
@@ -31,27 +31,30 @@ class DistributedPVPBattle(DistributedPVPInstance):
 
     def getInstructions(self):
         return PLocalizer.PVPBattleInstructions
-
+    
     def hasTimeLimit(self):
         return True
-
+    
     def getTimeLimit(self):
         return self._timeLimit
-
+    
     def setTimeLimit(self, timeLimit):
         self._timeLimit = timeLimit
 
     def getScoreList(self):
         scoreList = []
-        for playerId, stats in self.stats.items():
+        for (playerId, stats) in self.stats.items():
             if playerId not in self.names:
                 continue
-            scoreList.append({'Player': playerId, 'Score': stats[PVPGlobals.SCORE]})
-
+            
+            scoreList.append({
+                'Player': playerId,
+                'Score': stats[PVPGlobals.SCORE]})
+        
         scoreList.sort(self.sortScores)
         return scoreList
 
-    def createScoreboardItem(self, item, parent, itemType=None, columnWidths=[], color=None):
+    def createScoreboardItem(self, item, parent, itemType = None, columnWidths = [], color = None):
         itemColorScale = None
         player = item.get('Player')
         score = item.get('Score')
@@ -59,23 +62,31 @@ class DistributedPVPBattle(DistributedPVPInstance):
         playerTeam = self.teams[player]
         if player == localAvatar.doId:
             itemColorScale = (1, 1, 1, 1)
-        else:
-            if playerTeam != None:
-                itemColorScale = PVPGlobals.getTeamColor(playerTeam)
+        elif playerTeam != None:
+            itemColorScale = PVPGlobals.getTeamColor(playerTeam)
+        
         item['Player'] = playerName
         return MiniScoreItemGui(item, parent, self, itemColorScale)
-
+    
     def getScoreText(self, scoreValue):
         return '     ' + str(scoreValue.get('Score')) + ' ' + str(scoreValue.get('Player'))
-
+    
     def getColumnStats(self):
-        return [PVPGlobals.SCORE, PVPGlobals.DEATHS]
+        return [
+            PVPGlobals.SCORE,
+            PVPGlobals.DEATHS]
 
     def getColumnLabels(self):
-        return [PLocalizer.PVPPlayer, PLocalizer.PVPScore, PLocalizer.PVPTimesDefeated]
-
+        return [
+            PLocalizer.PVPPlayer,
+            PLocalizer.PVPScore,
+            PLocalizer.PVPTimesDefeated]
+    
     def addPlayerStats(self, playerId):
-        self.stats[playerId] = {PVPGlobals.SCORE: 0, PVPGlobals.KILLS: 0, PVPGlobals.DEATHS: 0}
+        self.stats[playerId] = {
+            PVPGlobals.SCORE: 0,
+            PVPGlobals.KILLS: 0,
+            PVPGlobals.DEATHS: 0}
 
     def setPlayerStat(self, playerId, stat, value):
         playerName = self.names[playerId]
@@ -85,4 +96,6 @@ class DistributedPVPBattle(DistributedPVPInstance):
             self.scoreChanged()
 
     def sortStats(self, stats):
-        return sorted(sorted(stats, key=lambda x: int(x[1][1][1])), key=lambda x: int(x[1][0][1]), reverse=True)
+        return sorted(sorted(stats, key = lambda x: int(x[1][1][1])), key = lambda x: int(x[1][0][1]), reverse = True)
+
+
