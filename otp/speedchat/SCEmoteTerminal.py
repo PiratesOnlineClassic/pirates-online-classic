@@ -51,7 +51,7 @@ class SCEmoteTerminal(SCTerminal):
         if not self.__ltHasAccess():
             args.update({
                 'text_align': TextNode.ACenter})
-        elif not self._SCEmoteTerminal__emoteEnabled():
+        elif not self.__emoteEnabled():
             args.update({
                 'clickSound': None})
         
@@ -67,7 +67,7 @@ class SCEmoteTerminal(SCTerminal):
             self.notify.error('SCEmoteTerminal is not marked as dirty, but has no button!')
         
         btn = self.button
-        if self._SCEmoteTerminal__emoteEnabled():
+        if self.__emoteEnabled():
             rolloverColor = self.getColorScheme().getRolloverColor() + (1,)
             pressedColor = self.getColorScheme().getPressedColor() + (1,)
             btn.frameStyle[DGG.BUTTON_ROLLOVER_STATE].setColor(*rolloverColor)
