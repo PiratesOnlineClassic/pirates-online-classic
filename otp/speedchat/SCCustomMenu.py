@@ -1,10 +1,9 @@
+from SCMenu import SCMenu
+from SCCustomTerminal import SCCustomTerminal
 from otp.otpbase.OTPLocalizer import CustomSCStrings
-from otp.speedchat.SCCustomTerminal import SCCustomTerminal
-from otp.speedchat.SCMenu import SCMenu
-
 
 class SCCustomMenu(SCMenu):
-
+    
     def __init__(self):
         SCMenu.__init__(self)
         self.accept('customMessagesChanged', self.__customMessagesChanged)
@@ -15,13 +14,15 @@ class SCCustomMenu(SCMenu):
 
     def __customMessagesChanged(self):
         self.clearMenu()
-
+        
         try:
             lt = base.localAvatar
-        except BaseException:
+        except:
             return
 
-        if lt:
-            for msgIndex in lt.customMessages:
-                if msgIndex in CustomSCStrings:
-                    self.append(SCCustomTerminal(msgIndex))
+        for msgIndex in lt.customMessages:
+            if CustomSCStrings.has_key(msgIndex):
+                self.append(SCCustomTerminal(msgIndex))
+        
+
+

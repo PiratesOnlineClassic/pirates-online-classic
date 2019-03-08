@@ -1,15 +1,13 @@
+from SCTerminal import SCTerminal
 from otp.otpbase.OTPLocalizer import SpeedChatStaticText
-from otp.speedchat.SCTerminal import SCTerminal
-
 SCStaticTextMsgEvent = 'SCStaticTextMsg'
-
 
 def decodeSCStaticTextMsg(textId):
     return SpeedChatStaticText.get(textId, None)
 
 
 class SCStaticTextTerminal(SCTerminal):
-
+    
     def __init__(self, textId):
         SCTerminal.__init__(self)
         self.textId = textId
@@ -17,4 +15,7 @@ class SCStaticTextTerminal(SCTerminal):
 
     def handleSelect(self):
         SCTerminal.handleSelect(self)
-        messenger.send(self.getEventName(SCStaticTextMsgEvent), [self.textId])
+        messenger.send(self.getEventName(SCStaticTextMsgEvent), [
+            self.textId])
+
+

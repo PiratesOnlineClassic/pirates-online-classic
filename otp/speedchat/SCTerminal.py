@@ -1,16 +1,14 @@
+from SCElement import SCElement
+from SCObject import SCObject
+from SCMenu import SCMenu
 from otp.avatar import Emote
-from otp.speedchat.SCElement import SCElement
-from otp.speedchat.SCMenu import SCMenu
-from otp.speedchat.SCObject import SCObject
-
 SCTerminalSelectedEvent = 'SCTerminalSelected'
 SCTerminalLinkedEmoteEvent = 'SCTerminalLinkedEmoteEvent'
 SCWhisperModeChangeEvent = 'SCWhisperModeChange'
 
-
 class SCTerminal(SCElement):
-
-    def __init__(self, linkedEmote=None):
+    
+    def __init__(self, linkedEmote = None):
         SCElement.__init__(self)
         self.setLinkedEmote(linkedEmote)
         scGui = loader.loadModelOnce(SCMenu.GuiModelName)
@@ -33,17 +31,17 @@ class SCTerminal(SCElement):
     def setLinkedEmote(self, linkedEmote):
         self.linkedEmote = linkedEmote
         self.invalidate()
-
+    
     def hasLinkedEmote(self):
         return self.linkedEmote is not None
-
+    
     def linkedEmoteEnabled(self):
         if Emote.globalEmote:
             return Emote.globalEmote.isEnabled(self.linkedEmote)
-
+    
     def getCharges(self):
         return self.__numCharges
-
+    
     def setCharges(self, nCharges):
         self.__numCharges = nCharges
         if nCharges is 0:
@@ -61,51 +59,48 @@ class SCTerminal(SCElement):
             self.handleSelect()
 
     def getMinDimensions(self):
-        width, height = SCElement.getMinDimensions(self)
+        (width, height) = SCElement.getMinDimensions(self)
         if self.hasLinkedEmote():
             width += 1.3
+        
         return (width, height)
 
-    def finalize(self, dbArgs={}):
+    def finalize(self, dbArgs = {}):
         if not self.isDirty():
             return
+        
         args = {}
         if self.hasLinkedEmote():
             self.lastEmoteIconColor = self.getEmoteIconColor()
             self.emotionIcon.setColorScale(*self.lastEmoteIconColor)
-            args.update({'image': self.emotionIcon, 'image_pos': (
-                self.width - 0.6, 0, -self.height * 0.5)})
+            args.update({
+                'image': self.emotionIcon,
+                'image_pos': (self.width - 0.6, 0, -self.height * 0.5)})
+        
         if self.isDisabled():
-            args.update({'rolloverColor': (0,
-                                           0,
-                                           0,
-                                           0),
-                         'pressedColor': (0,
-                                          0,
-                                          0,
-                                          0),
-                         'rolloverSound': None,
-                         'clickSound': None,
-                         'text_fg': self.getColorScheme().getTextDisabledColor() + (1,
-                                                                                    )})
+            args.update({
+                'rolloverColor': (0, 0, 0, 0),
+                'pressedColor': (0, 0, 0, 0),
+                'rolloverSound': None,
+                'clickSound': None,
+                'text_fg': self.getColorScheme().getTextDisabledColor() + (1,)})
+        
         args.update(dbArgs)
-        SCElement.finalize(self, dbArgs=args)
-        return
-
+        SCElement.finalize(self, dbArgs = args)
+    
     def getEmoteIconColor(self):
         if self.linkedEmoteEnabled() and not self.isWhispering():
-            r, g, b = self.getColorScheme().getEmoteIconColor()
+            (r, g, b) = self.getColorScheme().getEmoteIconColor()
         else:
-            r, g, b = self.getColorScheme().getEmoteIconDisabledColor()
+            (r, g, b) = self.getColorScheme().getEmoteIconDisabledColor()
         return (r, g, b, 1)
 
     def updateEmoteIcon(self):
         if hasattr(self, 'button'):
             self.lastEmoteIconColor = self.getEmoteIconColor()
             for i in range(self.button['numStates']):
-                self.button['image%s_image' %
-                            i].setColorScale(*self.lastEmoteIconColor)
-
+                self.button['image%s_image' % i].setColorScale(*self.lastEmoteIconColor)
+            
         else:
             self.invalidate()
 
@@ -114,26 +109,22 @@ class SCTerminal(SCElement):
         if hasattr(self, 'lastEmoteIconColor'):
             if self.getEmoteIconColor() != self.lastEmoteIconColor:
                 self.invalidate()
-
-        def handleWhisperModeChange(whisperMode, self=self):
+        
+        def handleWhisperModeChange(whisperMode, self = self):
             if self.hasLinkedEmote():
                 if self.isVisible() and not self.isWhispering():
                     self.updateEmoteIcon()
 
-        self.accept(
-            self.getEventName(SCWhisperModeChangeEvent),
-            handleWhisperModeChange)
-
-        def handleEmoteEnableStateChange(self=self):
+        self.accept(self.getEventName(SCWhisperModeChangeEvent), handleWhisperModeChange)
+        
+        def handleEmoteEnableStateChange(self = self):
             if self.hasLinkedEmote():
                 if self.isVisible() and not self.isWhispering():
                     self.updateEmoteIcon()
 
         if self.hasLinkedEmote():
             if Emote.globalEmote:
-                self.accept(
-                    Emote.globalEmote.EmoteEnableStateChanged,
-                    handleEmoteEnableStateChange)
+                self.accept(Emote.globalEmote.EmoteEnableStateChanged, handleEmoteEnableStateChange)
 
     def exitVisible(self):
         SCElement.exitVisible(self)
@@ -146,3 +137,5 @@ class SCTerminal(SCElement):
             return self.text + ' (%s)' % self.getCharges()
         else:
             return self.text
+
+

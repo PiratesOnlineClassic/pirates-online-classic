@@ -1,31 +1,29 @@
 from direct.showbase.PythonUtil import boolEqual
+from SpeedChatTypes import *
+from SCSettings import SCSettings
+from SCTerminal import SCWhisperModeChangeEvent
 from otp.otpbase import OTPLocalizer
-from otp.speedchat.SCSettings import SCSettings
-from otp.speedchat.SCTerminal import SCWhisperModeChangeEvent
-from otp.speedchat.SpeedChatTypes import *
-
 
 class SpeedChat(SCMenu):
-
-    def __init__(self, name='', structure=None,
-                 backgroundModelName=None, guiModelName=None):
+    
+    def __init__(self, name = '', structure = None, backgroundModelName = None, guiModelName = None):
         SCMenu.BackgroundModelName = backgroundModelName
         SCMenu.GuiModelName = guiModelName
         SCMenu.__init__(self)
         self.name = name
-        self.settings = SCSettings(eventPrefix=self.name)
+        self.settings = SCSettings(eventPrefix = self.name)
         self.privSetSettingsRef(self.settings)
         if structure is not None:
             self.rebuildFromStructure(structure)
+        
         self._lastTransform = None
-        return
 
     def destroy(self):
         if self.isVisible():
             self.exitVisible()
+        
         self._lastTransform = None
         SCMenu.destroy(self)
-        return
 
     def __str__(self):
         return "%s: '%s'" % (self.__class__.__name__, self.name)
@@ -42,8 +40,8 @@ class SpeedChat(SCMenu):
         if self._lastTransform is not None:
             if newTransform != self._lastTransform:
                 self.invalidateAll()
+
         self._lastTransform = newTransform
-        return
 
     def setWhisperMode(self, whisperMode):
         if not boolEqual(self.settings.whisperMode, whisperMode):
@@ -67,3 +65,5 @@ class SpeedChat(SCMenu):
         self.notify.debug('finalizing entire SpeedChat tree')
         self._detectTransformChange()
         SCMenu.finalizeAll(self)
+
+

@@ -1,4 +1,3 @@
-from otp.speedchat.SCCustomTerminal import decodeSCCustomMsg
-from otp.speedchat.SCEmoteTerminal import decodeSCEmoteWhisperMsg
-from otp.speedchat.SCStaticTextTerminal import decodeSCStaticTextMsg
-
+from SCStaticTextTerminal import decodeSCStaticTextMsg
+from SCCustomTerminal import decodeSCCustomMsg
+from SCEmoteTerminal import decodeSCEmoteWhisperMsg

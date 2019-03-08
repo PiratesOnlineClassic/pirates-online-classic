@@ -1,9 +1,8 @@
-from otp.speedchat.SCEmoteTerminal import SCEmoteTerminal
-from otp.speedchat.SCMenu import SCMenu
-
+from SCMenu import SCMenu
+from SCEmoteTerminal import SCEmoteTerminal
 
 class SCEmoteMenu(SCMenu):
-
+    
     def __init__(self):
         SCMenu.__init__(self)
         self.accept('emotesChanged', self.__emoteAccessChanged)
@@ -14,13 +13,15 @@ class SCEmoteMenu(SCMenu):
 
     def __emoteAccessChanged(self):
         self.clearMenu()
-
+        
         try:
             lt = base.localAvatar
-        except BaseException:
+        except:
             return
 
-        if lt:
-            for i in range(len(lt.emoteAccess)):
-                if lt.emoteAccess[i]:
-                    self.append(SCEmoteTerminal(i))
+        for i in range(len(lt.emoteAccess)):
+            if lt.emoteAccess[i]:
+                self.append(SCEmoteTerminal(i))
+        
+
+
