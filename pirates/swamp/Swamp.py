@@ -1,23 +1,30 @@
-import math
 import os
-
-from direct.directnotify.DirectNotifyGlobal import directNotify
+import math
 from direct.gui.DirectGui import *
-from direct.showbase.DirectObject import DirectObject
+from pandac.PandaModules import *
 from direct.task import Task
-from otp.otpbase import OTPRender
-from panda3d.core import *
+from direct.directnotify.DirectNotifyGlobal import directNotify
+from direct.showbase.DirectObject import DirectObject
 from pirates.piratesbase import PiratesGlobals
+from otp.otpbase import OTPRender
 from pirates.seapatch.Reflection import Reflection
 from pirates.seapatch.Water import Water
-
 if base.config.GetBool('want-water-panel', False):
     from pirates.seapatch.WaterPanel import *
 
-class Swamp(Water):  
-    notify = directNotify.newCategory('Swamp')
 
-    def __init__(self, swamp_model_file_path, parentNP=render, reflection=None, input_swamp_model=None, input_shader_file_path=None, input_water_color=None):
+class Swamp(Water):
+    notify = directNotify.newCategory('Swamp')
+    
+    def __init__(self,
+                 swamp_model_file_path,
+                 parentNP = render,
+                 reflection = None,
+                 input_swamp_model = None,
+                 input_shader_file_path = None,
+                 input_water_color = None
+                 ):
+
         if input_swamp_model:
             swamp_name = 'Swamp I'
         else:
@@ -67,18 +74,22 @@ class Swamp(Water):
             self.model.setAttrib(stencil)
             stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 0, mask, mask)
             self.model3.setAttrib(stencil)
+        
         if self.use_water_bin:
             self.patchNP.setBin('water', 10)
         else:
             self.patchNP.setBin('ground', -10)
+        
         try:
             self.todMgr = base.cr.timeOfDayManager
         except:
             self.todMgr = None
+
         if self.todMgr:
             self.patchNP.setLightOff()
             self.patchNP.setLight(self.todMgr.alight)
-        seaMin, seaMax = self.seamodel.getTightBounds()
+        
+        (seaMin, seaMax) = self.seamodel.getTightBounds()
         seaDelta = seaMax - seaMin
         cp = CollisionPolygon(Point3(-1.0, -1.0, 0), Point3(1.0, -1.0, 0), Point3(1.0, 1.0, 0), Point3(-1.0, 1.0, 0))
         cNode = CollisionNode('seaCollision')
@@ -116,8 +127,10 @@ class Swamp(Water):
         if self.use_alpha_map:
             if self.enable_alpha_map:
                 self.patchNP.setTransparency(1)
+
         if self.water_panel != None:
             self.water_panel.setSeaPatch(self)
+        
         if input_shader_file_path == None:
             shader_file_path = 'models/swamps/swamp002_2X.cg'
         else:
@@ -143,6 +156,7 @@ class Swamp(Water):
                 self.set_reflection_parameters_np()
                 if self.use_alpha_map:
                     self.patchNP.setTransparency(1)
+                
                 self.texture_extension = '.jpg'
                 default_water_color_texture_filename = 'maps/ocean_color_1' + self.texture_extension
                 default_water_alpha_texture_filename = 'maps/default_inv_alpha' + self.texture_extension
@@ -165,6 +179,7 @@ class Swamp(Water):
                             card_node_path.node().setBounds(OmniBoundingVolume())
                             card_node_path.node().setFinal(1)
                             card_node_path.reparentTo(render2d)
+                        
                         self.texture_d = loader.loadTexture('maps/oceanWater2-d' + self.texture_extension)
                         self.texture_n = loader.loadTexture('maps/oceanWater2-n' + self.texture_extension)
                         self.texture_bb = loader.loadTexture('maps/oceanWater2-bb' + self.texture_extension)
@@ -188,6 +203,7 @@ class Swamp(Water):
                 if self.enable_water_panel:
                     self.water_panel.set_texture(default_water_color_texture_filename)
                     self.water_panel.set_shader(shader_file_path)
+
         buffer_width = 512
         buffer_height = 512
         if True:
@@ -207,12 +223,13 @@ class Swamp(Water):
         if not self.shader:
             if True:
                 self.reflection.createCard('water', 6)
+            
             self.setting_0()
             self.reflection_factor = 0.34
             self.set_reflection_parameters_np()
-
+        
         self.create_interface()
-
+    
     def hide(self):
         self.patchNP.hide()
         self.hidden = True
@@ -220,18 +237,19 @@ class Swamp(Water):
     def show(self):
         self.patchNP.show()
         self.hidden = False
-
+    
     def toggle_display(self):
         if self.hidden:
             self.show()
-            return
-        self.hide()
+        else:
+            self.hide()
 
     def delete(self):
         self.ccNodePath.removeNode()
         self.cNodePath.removeNode()
         if self.swamp_model == None:
             self.seamodel.removeNode()
+        
         self.patchNP.removeNode()
         self.parentNP = None
         self.todMgr = None
@@ -244,6 +262,7 @@ class Swamp(Water):
             self.enabled = False
             if self.patchNP.getParent().isEmpty() == False:
                 self.patchNP.stash()
+            
             taskMgr.remove('swampCamTask-' + str(id(self)))
 
     def enable(self):
@@ -251,7 +270,8 @@ class Swamp(Water):
             self.enabled = True
             if self.patchNP.getParent().isEmpty() == False:
                 self.patchNP.unstash()
-            taskMgr.add(self.camTask, 'swampCamTask-' + str(id(self)), priority=49)
+            
+            taskMgr.add(self.camTask, 'swampCamTask-' + str(id(self)), priority = 49)
 
     def camTask(self, task):
         refNode = base.cam
@@ -297,10 +317,14 @@ class Swamp(Water):
                 self.s = 2.0 * (1.0 / (x * sigma * math.sqrt(2.0 * math.pi))) * math.exp(-a / (2 * sigma * sigma))
                 if self.s < 0.0:
                     self.s = 0.0
+                
                 self.p = 80.0
             else:
                 self.s = 0.0
                 self.p = 80.0
             self.d = 1.0
+        
         self.update_water(task.time)
         return Task.cont
+
+
