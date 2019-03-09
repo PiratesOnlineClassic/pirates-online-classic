@@ -961,11 +961,14 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
     @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
     def teleportToShard(self, shardId, zoneId, callbackEvent):
         self.notify.debug('teleportToShard %s,%s' % (shardId, zoneId))
+        self.cr.loadingScreen.show()
         if 1:
-            self.cr.loadingScreen.show()
             addEvent = self.getAddInterestEventName()
             self.setInterest(shardId, zoneId, ['instanceInterest'], addEvent)
-            self.acceptOnce(addEvent, self.handleTeleportToShardDone, extraArgs = [shardId, zoneId, callbackEvent])
+            self.acceptOnce(addEvent, self.handleTeleportToShardDone,
+                extraArgs = [shardId, zoneId, callbackEvent])
+        else:
+            self.handleTeleportToShardDone(shardId, zoneId, callbackEvent)
 
     @report(types=['deltaStamp', 'module', 'args'], prefix='------', dConfigParam='want-teleport-report')
     def handleTeleportToShardDone(self, shardId, zoneId, callbackEvent):
