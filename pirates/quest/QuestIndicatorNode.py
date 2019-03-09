@@ -15,7 +15,7 @@ class QuestIndicatorNode(NodePath, FSM, ZoneLOD):
             1000000]
         NodePath.__init__(self, name)
         FSM.__init__(self, '%sFSM' % name)
-        ZoneLOD.__init__(self, self._QuestIndicatorNode__uniqueName, zoneRadii)
+        ZoneLOD.__init__(self, self.__uniqueName, zoneRadii)
         self.questStep = questStep
         self.pendingOriginObj = None
         self.farEffect = None
