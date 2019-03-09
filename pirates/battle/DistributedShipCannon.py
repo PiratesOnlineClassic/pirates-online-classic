@@ -1,20 +1,19 @@
-from pirates.battle import Cannon
-from pirates.battle import DistributedPCCannon
-from pirates.battle import DistributedWeapon
 from direct.showbase.PythonUtil import quickProfile
+from pirates.shipparts import DistributedShippart
+from pirates.shipparts import CannonDNA
 from direct.task import Task
-from panda3d.core import *
-from pirates.shipparts import CannonDNA, DistributedShippart
-
+from pandac.PandaModules import *
+import DistributedPCCannon
+import DistributedWeapon
+import Cannon
 
 class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, DistributedShippart.DistributedShippart):
-
+    
     def __init__(self, cr):
         DistributedPCCannon.DistributedPCCannon.__init__(self, cr)
         DistributedShippart.DistributedShippart.__init__(self, cr)
         self.ship = None
         self.pendingPlaceCannon = None
-        return
 
     def generate(self):
         self.setDefaultDNA()
@@ -26,24 +25,25 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, Distributed
         DistributedShippart.DistributedShippart.announceGenerate(self)
         if self.proximityCollisionNodePath:
             self.proximityCollisionNodePath.reparentTo(self.prop.propCollisions)
+        
         self.setAllowInteract(1)
-
+    
     def disable(self):
         if self.pendingPlaceCannon:
             base.cr.relatedObjectMgr.abortRequest(self.pendingPlaceCannon)
             self.pendingPlaceCannon = None
+        
         DistributedPCCannon.DistributedPCCannon.disable(self)
         DistributedShippart.DistributedShippart.disable(self)
-        return
 
     def delete(self):
         if self.ship.cannons.get(self.cannonIndex, 0):
             self.ship.cannons[self.cannonIndex][1] = None
+        
         del self.dna
         self.ship = None
         DistributedPCCannon.DistributedPCCannon.delete(self)
         DistributedShippart.DistributedShippart.delete(self)
-        return
 
     def createProp(self):
         cannon = self.ship.cannons.get(self.cannonIndex, 0)
@@ -52,8 +52,11 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, Distributed
                 self.prop = cannon[0]
                 self.ship.cannons[self.cannonIndex][1] = self
                 return
+        
         self.prop = Cannon.Cannon(self.cr, True)
-        self.ship.cannons[self.cannonIndex] = [self.prop, self]
+        self.ship.cannons[self.cannonIndex] = [
+            self.prop,
+            self]
 
     def loadModel(self):
         self.prop.cannonPost = self.ship.locators.find('**/cannon_%s;+s' % self.cannonIndex)
@@ -62,7 +65,7 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, Distributed
         self.prop.reparentTo(self)
         self.prop.loadModel(self.dna)
         self.prop.initializeCollisions()
-
+    
     def setupParent(self, parent):
         DistributedShippart.DistributedShippart.setupParent(self, parent)
 
@@ -70,21 +73,22 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, Distributed
         ship.cannons.append(self)
         self.ship = ship
         DistributedShippart.DistributedShippart.linkToShip(self, ship)
-
+    
     def setShipId(self, shipId):
         self.shipId = shipId
-
-        def putCannonOnShip(ship, self=self):
+        
+        def putCannonOnShip(ship, self = self):
             self.ship = ship
 
-        self.pendingPlaceCannon = base.cr.relatedObjectMgr.requestObjects([self.shipId], eachCallback=putCannonOnShip)
-
+        self.pendingPlaceCannon = base.cr.relatedObjectMgr.requestObjects([
+            self.shipId], eachCallback = putCannonOnShip)
+    
     def setGeomParentId(self, geomParentId):
         self.geomParentId = geomParentId
-
+    
     def setCannonIndex(self, cannonIndex):
         self.cannonIndex = cannonIndex
-
+    
     def shipSinking(self):
         if self.localAvatarUsingWeapon:
             self.stopWeapon(base.localAvatar)
@@ -98,7 +102,6 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, Distributed
             self.av = None
             self.prop.av = None
             self.setLocalAvatarUsingWeapon(0)
-        return
 
     def enterFireCannon(self):
         DistributedPCCannon.DistributedPCCannon.enterFireCannon(self)
@@ -131,8 +134,8 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, Distributed
             self.updateDNA(dna)
         else:
             self.dna = dna
-
-    def updateDNA(self, newDNA, fForce=0):
+    
+    def updateDNA(self, newDNA, fForce = 0):
         oldDna = self.dna
         self.dna = newDNA
 
@@ -141,7 +144,7 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, Distributed
 
     def setCannonType(self, val):
         self.dna.setCannonType(val)
-
+    
     def addPropToShip(self):
         cannonPost = self.prop.cannonPost
         self.accept(self.ship.uniqueName('shipSinking'), self.shipSinking)
@@ -172,11 +175,12 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, Distributed
         self.ship.avCannonRotate.setHpr(0, 0, 0)
         self.ship.avCannonPivot.setPos(0, 6, 0)
         DistributedPCCannon.DistributedPCCannon.enterFireCannon(self)
-
+    
     def startWeapon(self, av):
         if av == base.localAvatar:
             if base.localAvatar.cannon:
                 return
+            
             base.localAvatar.b_setGameState('Cannon')
             self.acceptInteraction()
             self.setLocalAvatarUsingWeapon(1)
@@ -185,9 +189,11 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, Distributed
                 self.ship.hideMasts()
                 self.ship.hull[0].hideSmoke()
                 self.ship.listenForFloorEvents(0)
+            
             localAvatar.guiMgr.request('MouseLook')
             self.modeFSM.request('fireCannon')
             base.localAvatar.collisionsOn()
+        
         self.prop.hNode.setHpr(0, 0, 0)
         self.prop.pivot.setHpr(0, 0, 0)
         shipH = (self.ship.getH(self.prop) + 360) % 360
@@ -197,7 +203,7 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, Distributed
         av.stopSmooth()
         av.setPos(self.prop.cannonPost, 0, -2.5, 0)
         av.setHpr(self.prop.cannonPost, 0, 0, 0)
-        av.play('kneel_fromidle', toFrame=16)
+        av.play('kneel_fromidle', toFrame = 16)
         self.av = av
         self.prop.av = av
 
@@ -206,4 +212,7 @@ class DistributedShipCannon(DistributedPCCannon.DistributedPCCannon, Distributed
             self.ship.hull[0].showSmoke()
             self.ship.showMasts()
             self.ship.listenForFloorEvents(1)
+        
         DistributedPCCannon.DistributedPCCannon.stopWeapon(self, av)
+
+

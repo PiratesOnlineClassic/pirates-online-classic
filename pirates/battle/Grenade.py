@@ -1,20 +1,26 @@
-from pirates.battle import Weapon
+from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
-from panda3d.core import *
 from pirates.battle.WeaponGlobals import *
-from pirates.piratesbase import PiratesGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
-
+from pirates.piratesbase import PiratesGlobals
+import Weapon
+import WeaponGlobals
 
 class Grenade(Weapon.Weapon):
-    modelTypes = {InventoryType.GrenadeWeaponL1: ('models/ammunition/grenade', Vec4(1, 1, 1, 1)), InventoryType.GrenadeWeaponL2: ('models/ammunition/grenade', Vec4(1, 1, 1, 1)), InventoryType.GrenadeWeaponL3: ('models/ammunition/grenade', Vec4(1, 1, 1, 1)), InventoryType.GrenadeWeaponL4: ('models/ammunition/grenade', Vec4(1, 1, 1, 1)), InventoryType.GrenadeWeaponL5: ('models/ammunition/grenade', Vec4(1, 1, 1, 1)), InventoryType.GrenadeWeaponL6: ('models/ammunition/grenade', Vec4(1, 1, 1, 1))}
+    modelTypes = {
+        InventoryType.GrenadeWeaponL1: ('models/ammunition/grenade', Vec4(1, 1, 1, 1)),
+        InventoryType.GrenadeWeaponL2: ('models/ammunition/grenade', Vec4(1, 1, 1, 1)),
+        InventoryType.GrenadeWeaponL3: ('models/ammunition/grenade', Vec4(1, 1, 1, 1)),
+        InventoryType.GrenadeWeaponL4: ('models/ammunition/grenade', Vec4(1, 1, 1, 1)),
+        InventoryType.GrenadeWeaponL5: ('models/ammunition/grenade', Vec4(1, 1, 1, 1)),
+        InventoryType.GrenadeWeaponL6: ('models/ammunition/grenade', Vec4(1, 1, 1, 1))}
     walkAnim = 'walk'
     runAnim = 'run_with_weapon'
     neutralAnim = 'bomb_idle'
     strafeLeftAnim = 'strafe_left'
     strafeRightAnim = 'strafe_right'
     painAnim = 'bomb_hurt'
-
+    
     def __init__(self, itemId):
         Weapon.Weapon.__init__(self, itemId, 'grenade')
         self.ammoSkillId = 0
@@ -26,6 +32,7 @@ class Grenade(Weapon.Weapon):
     def changeStance(self, av):
         if av.gameFSM.state == 'WaterRoam' or av.gameFSM.state == 'WaterTreasureRoam':
             return
+        
         if not self.ammoSkillId:
             self.walkAnim = 'walk'
             self.runAnim = 'run'
@@ -43,6 +50,7 @@ class Grenade(Weapon.Weapon):
             av.speedIndex = PiratesGlobals.SPEED_BATTLE_INDEX
             if av.isLocal():
                 av.controlManager.setSpeeds(*PiratesGlobals.PirateSpeeds[av.speedIndex])
+            
         elif self.ammoSkillId == InventoryType.GrenadeSiege:
             self.walkAnim = 'bigbomb_walk'
             self.runAnim = 'bigbomb_walk'
@@ -60,6 +68,7 @@ class Grenade(Weapon.Weapon):
             av.speedIndex = PiratesGlobals.SPEED_HEAVY_INDEX
             if av.isLocal():
                 av.controlManager.setSpeeds(*PiratesGlobals.PirateSpeeds[av.speedIndex])
+            
         else:
             self.walkAnim = 'walk'
             self.runAnim = 'run'
@@ -77,46 +86,49 @@ class Grenade(Weapon.Weapon):
             av.speedIndex = PiratesGlobals.SPEED_BATTLE_INDEX
             if av.isLocal():
                 av.controlManager.setSpeeds(*PiratesGlobals.PirateSpeeds[av.speedIndex])
+            
         av.setWalkForWeapon()
-
+    
     def setAmmoSkillId(self, ammoSkillId):
         self.ammoSkillId = ammoSkillId
 
-    def getDrawIval(self, av, ammoSkillId=0, blendInT=0.1, blendOutT=0):
+    def getDrawIval(self, av, ammoSkillId = 0, blendInT = 0.1, blendOutT = 0):
         if not ammoSkillId:
             track = Sequence(Func(self.setAmmoSkillId, 0), Func(self.changeStance, av), Func(self.detachFrom, av))
+        elif ammoSkillId == InventoryType.GrenadeSiege:
+            track = Parallel(av.actorInterval('bigbomb_draw', playRate = 1.5, endFrame = 40, blendInT = blendInT, blendOutT = blendOutT), Func(base.playSfx, self.drawSfx, node = av), Sequence(Wait(0.343), Func(self.attachTo, av), Func(self.setAmmoSkillId, ammoSkillId), Func(self.changeStance, av)))
         else:
-            if ammoSkillId == InventoryType.GrenadeSiege:
-                track = Parallel(av.actorInterval('bigbomb_draw', playRate=1.5, endFrame=40, blendInT=blendInT, blendOutT=blendOutT), Func(base.playSfx, self.drawSfx, node=av), Sequence(Wait(0.343), Func(self.attachTo, av), Func(self.setAmmoSkillId, ammoSkillId), Func(self.changeStance, av)))
-            else:
-                track = Parallel(av.actorInterval('bomb_draw', playRate=1.5, endFrame=30, blendInT=blendInT, blendOutT=blendOutT), Func(base.playSfx, self.drawSfx, node=av), Sequence(Wait(0.125), Func(self.attachTo, av), Func(self.setAmmoSkillId, ammoSkillId), Func(self.changeStance, av)))
+            track = Parallel(av.actorInterval('bomb_draw', playRate = 1.5, endFrame = 30, blendInT = blendInT, blendOutT = blendOutT), Func(base.playSfx, self.drawSfx, node = av), Sequence(Wait(0.125), Func(self.attachTo, av), Func(self.setAmmoSkillId, ammoSkillId), Func(self.changeStance, av)))
         return track
 
-    def getReturnIval(self, av, ammoSkillId=0, blendInT=0, blendOutT=0.1):
+    
+    def getReturnIval(self, av, ammoSkillId = 0, blendInT = 0, blendOutT = 0.1):
         if not ammoSkillId:
             ammoSkillId = self.ammoSkillId
+        
         if ammoSkillId == InventoryType.GrenadeSiege:
-            track = Parallel(av.actorInterval('bigbomb_draw', playRate=1.5, startFrame=28, endFrame=1, blendInT=blendInT, blendOutT=blendOutT), Func(base.playSfx, self.returnSfx, node=av), Sequence(Wait(0.5), Func(self.detachFrom, av), Func(self.setAmmoSkillId, 0), Func(self.changeStance, av)))
+            track = Parallel(av.actorInterval('bigbomb_draw', playRate = 1.5, startFrame = 28, endFrame = 1, blendInT = blendInT, blendOutT = blendOutT), Func(base.playSfx, self.returnSfx, node = av), Sequence(Wait(0.5), Func(self.detachFrom, av), Func(self.setAmmoSkillId, 0), Func(self.changeStance, av)))
         else:
-            track = Parallel(av.actorInterval('bomb_draw', playRate=1.5, startFrame=20, endFrame=1, blendInT=blendInT, blendOutT=blendOutT), Func(base.playSfx, self.returnSfx, node=av), Sequence(Wait(0.468), Func(self.detachFrom, av), Func(self.setAmmoSkillId, 0), Func(self.changeStance, av)))
+            track = Parallel(av.actorInterval('bomb_draw', playRate = 1.5, startFrame = 20, endFrame = 1, blendInT = blendInT, blendOutT = blendOutT), Func(base.playSfx, self.returnSfx, node = av), Sequence(Wait(0.468), Func(self.detachFrom, av), Func(self.setAmmoSkillId, 0), Func(self.changeStance, av)))
         return track
-
-    def getAmmoChangeIval(self, av, skillId, ammoSkillId, charge, target=None):
+    
+    def getAmmoChangeIval(self, av, skillId, ammoSkillId, charge, target = None):
         if self.ammoSkillId == InventoryType.GrenadeSiege:
-            track = Sequence(Func(self.lockInput, av), av.actorInterval('bigbomb_draw', startFrame=28, endFrame=11, blendInT=0.25, blendOutT=0), Func(self.detachFrom, av))
+            track = Sequence(Func(self.lockInput, av), av.actorInterval('bigbomb_draw', startFrame = 28, endFrame = 11, blendInT = 0.25, blendOutT = 0), Func(self.detachFrom, av))
         else:
-            track = Sequence(Func(self.lockInput, av), av.actorInterval('bomb_draw', startFrame=20, endFrame=11, blendInT=0.25, blendOutT=0), Func(self.detachFrom, av))
+            track = Sequence(Func(self.lockInput, av), av.actorInterval('bomb_draw', startFrame = 20, endFrame = 11, blendInT = 0.25, blendOutT = 0), Func(self.detachFrom, av))
         if ammoSkillId:
             track.append(Func(self.attachTo, av))
+        
         if ammoSkillId == InventoryType.GrenadeSiege:
             track.append(Func(self.setAmmoSkillId, ammoSkillId))
             track.append(Func(self.changeStance, av))
-            track.append(av.actorInterval('bigbomb_draw', startFrame=12, endFrame=40, blendInT=0, blendOutT=0.5))
+            track.append(av.actorInterval('bigbomb_draw', startFrame = 12, endFrame = 40, blendInT = 0, blendOutT = 0.5))
             track.append(Func(self.unlockInput, av))
         else:
             track.append(Func(self.setAmmoSkillId, ammoSkillId))
             track.append(Func(self.changeStance, av))
-            track.append(av.actorInterval('bomb_draw', startFrame=12, endFrame=30, blendInT=0, blendOutT=0.5))
+            track.append(av.actorInterval('bomb_draw', startFrame = 12, endFrame = 30, blendInT = 0, blendOutT = 0.5))
             track.append(Func(self.unlockInput, av))
         return track
 
@@ -124,7 +136,10 @@ class Grenade(Weapon.Weapon):
     def setupSounds(cls):
         Grenade.aimSfxs = (loader.loadSfx('audio/sfx_pistol_cock.mp3'),)
         Grenade.reloadSfxs = (loader.loadSfx('audio/sfx_pistol_reload.mp3'),)
-        Grenade.skillSfxs = {InventoryType.GrenadeThrow: loader.loadSfx('audio/sfx_grenade_throw.mp3'), InventoryType.GrenadeSiege: loader.loadSfx('audio/sfx_grenade_bigbomb_throw.mp3'), InventoryType.GrenadeLongVolley: loader.loadSfx('audio/sfx_grenade_long_volley_throw.mp3')}
+        Grenade.skillSfxs = {
+            InventoryType.GrenadeThrow: loader.loadSfx('audio/sfx_grenade_throw.mp3'),
+            InventoryType.GrenadeSiege: loader.loadSfx('audio/sfx_grenade_bigbomb_throw.mp3'),
+            InventoryType.GrenadeLongVolley: loader.loadSfx('audio/sfx_grenade_long_volley_throw.mp3')}
         Grenade.chargingSfx = loader.loadSfx('audio/sfx_grenade_long_volley_charging.mp3')
         Grenade.drawSfx = loader.loadSfx('audio/sfx_grenade_bigbomb_draw.mp3')
         Grenade.returnSfx = loader.loadSfx('audio/sfx_grenade_bigbomb_put_away.mp3')
@@ -132,18 +147,18 @@ class Grenade(Weapon.Weapon):
     def lockInput(self, av):
         if av.isLocal():
             messenger.send('skillStarted')
-
+    
     def unlockInput(self, av):
         if av.isLocal():
             messenger.send('skillFinished')
-
+        
 
 def getHitSfx():
-    return
+    return None
 
 
 def getMissSfx():
-    return
+    return None
 
 
 def getAimSfx():
@@ -152,3 +167,4 @@ def getAimSfx():
 
 def getReloadSfx():
     return Grenade.reloadSfxs
+

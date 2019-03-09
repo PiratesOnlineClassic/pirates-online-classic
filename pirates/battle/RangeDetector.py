@@ -1,9 +1,8 @@
-from panda3d.core import *
+from pandac.PandaModules import *
 from pirates.battle import WeaponGlobals
 
-
 class RangeDetector(NodePath):
-
+    
     def __init__(self):
         NodePath.__init__(self, 'rangeDetector')
         self.spheres = []
@@ -14,3 +13,6 @@ class RangeDetector(NodePath):
             sphereNode.addSolid(sphere)
             sphereNodePath = self.attachNewNode(sphereNode)
             self.spheres.append(sphereNodePath)
+        
+
+

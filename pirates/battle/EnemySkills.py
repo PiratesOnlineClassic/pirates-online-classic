@@ -1,5 +1,4 @@
 class EnemySkills:
-    
     CLAW_RAKE = 2000
     CLAW_STRIKE = 2001
     DUAL_CLAW = 2002
@@ -82,3 +81,4 @@ class EnemySkills:
     DUALCUTLASS_BARRAGE = 2292
     DUALCUTLASS_XSLASH = 2293
     DUALCUTLASS_GORE = 2294
+

@@ -1,14 +1,10 @@
 import types
-
 from direct.interval.IntervalGlobal import *
-from panda3d.core import *
 from pirates.battle import Weapon
 from pirates.battle.WeaponGlobals import *
 from pirates.effects import PolyTrail
 from pirates.pirate import AvatarTypes
-
 _sfxDict = {}
-
 
 def cacheSfx(name, file):
     sfx = _sfxDict.get(name)
@@ -18,6 +14,7 @@ def cacheSfx(name, file):
         else:
             sfx = loader.loadSfx(file)
         _sfxDict[name] = sfx
+    
     return sfx
 
 
@@ -34,8 +31,7 @@ def getEnsnareSfx():
 
 
 def getSmashSfx():
-    return cacheSfx('smash', ('audio/wood_impact_1.mp3', 'audio/wood_impact_3.mp3',
-                              'audio/wood_impact_4.mp3'))
+    return cacheSfx('smash', ('audio/wood_impact_1.mp3', 'audio/wood_impact_3.mp3', 'audio/wood_impact_4.mp3'))
 
 
 def getWaspStingSfx():
@@ -119,12 +115,15 @@ def getMossmanAttackJumpSfx():
 
 
 class MonsterMelee(Weapon.Weapon):
-    
     vertex_list = [
-     Vec4(0.0, 0.4, 0.0, 1.0), Vec4(0.0, 2.0, 0.0, 1.0), Vec4(-0.55, 2.95, 0.0, 1.0)]
+        Vec4(0.0, 0.4, 0.0, 1.0),
+        Vec4(0.0, 2.0, 0.0, 1.0),
+        Vec4(-0.55, 2.95, 0.0, 1.0)]
     motion_color = [
-     Vec4(0.1, 0.2, 0.4, 0.5), Vec4(0.25, 0.5, 1.0, 0.5), Vec4(0.5, 0.5, 0.6, 0.5)]
-
+        Vec4(0.1, 0.2, 0.4, 0.5),
+        Vec4(0.25, 0.5, 1.0, 0.5),
+        Vec4(0.5, 0.5, 0.6, 0.5)]
+    
     def __init__(self, itemId):
         Weapon.Weapon.__init__(self, itemId, 'monsterMelee')
         self.neutralAnim = 'idle'
@@ -137,38 +136,38 @@ class MonsterMelee(Weapon.Weapon):
 
     def detachFrom(self, av):
         pass
-
+    
     def delete(self):
         self.endAttack(None)
         self.removeTrail()
         Weapon.Weapon.delete(self)
-        return
-
+    
     def changeStance(self, av):
         if av.avatarType.isA(AvatarTypes.Wasp) or av.avatarType.isA(AvatarTypes.AngryWasp):
             self.walkAnim = 'idle_flying'
             self.neutralAnim = 'idle_flying'
+        
         av.setWalkForWeapon()
 
-    def getDrawIval(self, av, ammoSkillId=0, blendInT=0.1, blendOutT=0):
+    def getDrawIval(self, av, ammoSkillId = 0, blendInT = 0.1, blendOutT = 0):
         if av.avatarType.isA(AvatarTypes.Bat) or av.avatarType.isA(AvatarTypes.VampireBat):
             av.show()
-            track = Parallel(Func(self.attachTo, av), Func(self.changeStance, av), av.actorInterval('spawn', playRate=1.0))
+            track = Parallel(Func(self.attachTo, av), Func(self.changeStance, av), av.actorInterval('spawn', playRate = 1.0))
         else:
             track = Parallel(Func(self.attachTo, av), Func(self.changeStance, av))
         return track
 
-    def getReturnIval(self, av, blendInT=0, blendOutT=0.1):
-
+    def getReturnIval(self, av, blendInT = 0, blendOutT = 0.1):
+        
         def hideEnemy():
             av.hide()
 
         if av.avatarType.isA(AvatarTypes.Bat) or av.avatarType.isA(AvatarTypes.VampireBat):
-            track = Parallel(Func(self.detachFrom, av), Func(self.changeStance, av), av.actorInterval('spawn', playRate=1.0, startFrame=100, endFrame=20), Func(hideEnemy))
+            track = Parallel(Func(self.detachFrom, av), Func(self.changeStance, av), av.actorInterval('spawn', playRate = 1.0, startFrame = 100, endFrame = 20), Func(hideEnemy))
         else:
             track = Parallel(Func(self.detachFrom, av), Func(self.changeStance, av))
         return track
-
+    
     def createTrail(self, target):
         if not self.motion_trail:
             self.motion_trail = PolyTrail.PolyTrail(target, self.vertex_list, self.motion_color)
@@ -183,4 +182,6 @@ class MonsterMelee(Weapon.Weapon):
         if self.motion_trail:
             self.motion_trail.destroy()
             self.motion_trail = None
-        return
+        
+
+

@@ -1,30 +1,44 @@
 import random
-
-from pirates.battle import Weapon
+import Weapon
+import WeaponGlobals
 from direct.interval.IntervalGlobal import *
-from panda3d.core import *
-from pirates.effects.RayGlow import RayGlow
+from pandac.PandaModules import *
 from pirates.uberdog.UberDogGlobals import InventoryType
+from pirates.effects.RayGlow import RayGlow
 
 class Wand(Weapon.Weapon):
-    modelTypes = {InventoryType.WandWeaponL1: ('models/handheld/voodoo_staff_high', Vec4(1, 1, 1, 1)), InventoryType.WandWeaponL2: ('models/handheld/voodoo_staff_a_high', Vec4(1, 1, 1, 1)), InventoryType.WandWeaponL3: ('models/handheld/voodoo_staff_b_high', Vec4(1, 1, 1, 1)), InventoryType.WandWeaponL4: ('models/handheld/voodoo_staff_c_high', Vec4(1, 1, 1, 1)), InventoryType.WandWeaponL5: ('models/handheld/voodoo_staff_d_high', Vec4(1, 1, 1, 1)), InventoryType.WandWeaponL6: ('models/handheld/voodoo_staff_e_high', Vec4(1, 1, 1, 1))}
-    colorAndOffset = {InventoryType.WandWeaponL1: (Vec4(0.5, 0.2, 1, 1), Vec3(0, 1.6, 0)), InventoryType.WandWeaponL2: (Vec4(0, 1, 0, 1), Vec3(0, 1.1, 0)), InventoryType.WandWeaponL3: (Vec4(1, 0, 0, 1), Vec3(0, 1.7, 0)), InventoryType.WandWeaponL4: (Vec4(0, 0, 1, 1), Vec3(0, 1.5, 0)), InventoryType.WandWeaponL5: (Vec4(0, 1, 1, 1), Vec3(0, 1.6, 0)), InventoryType.WandWeaponL6: (Vec4(1, 0.6, 0, 1), Vec3(0, 1.7, 0))}
+    modelTypes = {
+        InventoryType.WandWeaponL1: ('models/handheld/voodoo_staff_high', Vec4(1, 1, 1, 1)),
+        InventoryType.WandWeaponL2: ('models/handheld/voodoo_staff_a_high', Vec4(1, 1, 1, 1)),
+        InventoryType.WandWeaponL3: ('models/handheld/voodoo_staff_b_high', Vec4(1, 1, 1, 1)),
+        InventoryType.WandWeaponL4: ('models/handheld/voodoo_staff_c_high', Vec4(1, 1, 1, 1)),
+        InventoryType.WandWeaponL5: ('models/handheld/voodoo_staff_d_high', Vec4(1, 1, 1, 1)),
+        InventoryType.WandWeaponL6: ('models/handheld/voodoo_staff_e_high', Vec4(1, 1, 1, 1))}
+    colorAndOffset = {
+        InventoryType.WandWeaponL1: (Vec4(0.5, 0.2, 1, 1), Vec3(0, 1.6, 0)),
+        InventoryType.WandWeaponL2: (Vec4(0, 1, 0, 1), Vec3(0, 1.1, 0)),
+        InventoryType.WandWeaponL3: (Vec4(1, 0, 0, 1), Vec3(0, 1.7, 0)),
+        InventoryType.WandWeaponL4: (Vec4(0, 0, 1, 1), Vec3(0, 1.5, 0)),
+        InventoryType.WandWeaponL5: (Vec4(0, 1, 1, 1), Vec3(0, 1.6, 0)),
+        InventoryType.WandWeaponL6: (Vec4(1, 0.6, 0, 1), Vec3(0, 1.7, 0))}
     runAnim = 'run_with_weapon'
     neutralAnim = 'wand_idle'
     strafeLeftAnim = 'strafe_left'
     strafeRightAnim = 'strafe_right'
     painAnim = 'wand_hurt'
-
-    def getEffectColor(self, itemId=None):
+    
+    def getEffectColor(self, itemId = None):
         if not itemId:
             itemId = self.itemId
+        
         color = self.colorAndOffset.get(itemId)
         if color:
             return color[0]
 
-    def getOffset(self, itemId=None):
+    def getOffset(self, itemId = None):
         if not itemId:
             itemId = self.itemId
+        
         offset = self.colorAndOffset.get(itemId)
         if offset:
             return offset[1]
@@ -49,18 +63,20 @@ class Wand(Weapon.Weapon):
         self.prop = self.getModel(self.itemId)
         self.prop.reparentTo(self)
 
-    def getDrawIval(self, av, ammoSkillId=0, blendInT=0.1, blendOutT=0):
+    def getDrawIval(self, av, ammoSkillId = 0, blendInT = 0.1, blendOutT = 0):
+        
         def playSfx():
-            base.playSfx(self.unsheathSfx, node=self)
+            base.playSfx(self.unsheathSfx, node = self)
 
-        track = Parallel(Func(playSfx), av.actorInterval('voodoo_draw', playRate=1.5, endFrame=35, blendInT=blendInT, blendOutT=blendOutT), Sequence(Wait(0.56), Func(self.attachTo, av)))
+        track = Parallel(Func(playSfx), av.actorInterval('voodoo_draw', playRate = 1.5, endFrame = 35, blendInT = blendInT, blendOutT = blendOutT), Sequence(Wait(0.56), Func(self.attachTo, av)))
         del playSfx
         return track
-
-    def getReturnIval(self, av, blendInT=0, blendOutT=0.1):
-        track = Parallel(av.actorInterval('sword_putaway', playRate=2, endFrame=35, blendInT=blendInT, blendOutT=blendOutT), Sequence(Wait(0.56), Func(self.detachFrom, av)))
+    
+    def getReturnIval(self, av, blendInT = 0, blendOutT = 0.1):
+        track = Parallel(av.actorInterval('sword_putaway', playRate = 2, endFrame = 35, blendInT = blendInT, blendOutT = blendOutT), Sequence(Wait(0.56), Func(self.detachFrom, av)))
         if base.cr.targetMgr:
             track.append(Func(base.cr.targetMgr.setWantAimAssist, 0))
+        
         return track
 
     def startChargeEffect(self):
@@ -71,8 +87,8 @@ class Wand(Weapon.Weapon):
             color = self.getEffectColor(self.itemId)
             offset = self.getOffset(self.itemId)
             self.gem.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OOne, ColorBlendAttrib.OIncomingAlpha))
-            fadeIn = LerpColorScaleInterval(self.gem, 0.5, color / 1.3, startColorScale=color)
-            fadeOut = LerpColorScaleInterval(self.gem, 0.5, color, startColorScale=color / 1.3)
+            fadeIn = LerpColorScaleInterval(self.gem, 0.5, color / 1.3, startColorScale = color)
+            fadeOut = LerpColorScaleInterval(self.gem, 0.5, color, startColorScale = color / 1.3)
             self.fadePulse = Sequence(fadeIn, fadeOut)
             self.fadePulse.loop()
             self.glowEffect = RayGlow.getEffect()
@@ -87,9 +103,11 @@ class Wand(Weapon.Weapon):
         if self.fadePulse:
             self.fadePulse.finish()
             self.fadePulse = None
+        
         if self.glowEffect:
             self.glowEffect.stopLoop()
             self.glowEffect = None
+        
         if self.gem and not self.gem.isEmpty():
             self.gem.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MNone))
             self.gem.clearColorScale()
@@ -126,86 +144,115 @@ class Wand(Weapon.Weapon):
         Wand.desolationHitSfx = loader.loadSfx('audio/sfx_wand_desolation_impact.mp3')
         Wand.unsheathSfx = loader.loadSfx('audio/sword-unsheath.mp3')
 
+
 def getSoulflayChargeSfx():
     return Wand.soulflayChargeSfx
+
 
 def getPestilenceChargeSfx():
     return Wand.pestilenceChargeSfx
 
+
 def getWitherChargeSfx():
     return Wand.witherChargeSfx
+
 
 def getHellfireChargeSfx():
     return Wand.hellfireChargeSfx
 
+
 def getBanishChargeSfx():
     return Wand.banishChargeSfx
+
 
 def getDesolationChargeSfx():
     return Wand.desolationChargeSfx
 
+
 def getSoulflayHoldSfx():
     return Wand.soulflayHoldSfx
+
 
 def getPestilenceHoldSfx():
     return Wand.pestilenceHoldSfx
 
+
 def getWitherHoldSfx():
     return Wand.witherHoldSfx
+
 
 def getHellfireHoldSfx():
     return Wand.hellfireHoldSfx
 
+
 def getBanishHoldSfx():
     return Wand.banishHoldSfx
+
 
 def getDesolationHoldSfx():
     return Wand.desolationHoldSfx
 
+
 def getBlastFireSfx():
     return Wand.blastFireSfx
+
 
 def getSoulflayFireSfx():
     return Wand.soulflayFireSfx
 
+
 def getPestilenceFireSfx():
     return Wand.pestilenceFireSfx
+
 
 def getWitherFireSfx():
     return Wand.witherFireSfx
 
+
 def getHellfireFireSfx():
     return Wand.hellfireFireSfx
+
 
 def getBanishFireSfx():
     return Wand.banishFireSfx
 
+
 def getDesolationFireSfx():
     return Wand.desolationFireSfx
+
 
 def getBlastHitSfx():
     return Wand.blastHitSfx
 
+
 def getSoulflayHitSfx():
     return Wand.soulflayHitSfx
+
 
 def getPestilenceHitSfx():
     return Wand.pestilenceHitSfx
 
+
 def getWitherHitSfx():
     return Wand.witherHitSfx
+
 
 def getHellfireHitSfx():
     return Wand.hellfireHitSfx
 
+
 def getBanishHitSfx():
     return Wand.banishHitSfx
+
 
 def getDesolationHitSfx():
     return Wand.desolationHitSfx
 
+
 def getChargeSfx():
     return Wand.chargeSfx
 
+
 def getChargeLoopSfx():
     return Wand.chargeLoopSfx
+

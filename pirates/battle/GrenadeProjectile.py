@@ -1,15 +1,13 @@
-import random
-
-from direct.directnotify import DirectNotifyGlobal
+from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
-from panda3d.core import *
-from pirates.battle.ProjectileAmmo import ProjectileAmmo
+from direct.directnotify import DirectNotifyGlobal
 from pirates.piratesbase import PiratesGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
-
+from pirates.battle.ProjectileAmmo import ProjectileAmmo
+import random
 
 class GrenadeProjectile(ProjectileAmmo):
-
+    
     def __init__(self, cr, ammoSkillId, event):
         ProjectileAmmo.__init__(self, cr, ammoSkillId, event)
         self.splashScale = 1.5
@@ -39,4 +37,7 @@ class GrenadeProjectile(ProjectileAmmo):
             elif self.ammoSkillId == InventoryType.GrenadeSiege:
                 grenade.setColorScale(0.2, 0.2, 1, 1)
                 grenade.setScale(1.5)
+            
         return grenade
+
+

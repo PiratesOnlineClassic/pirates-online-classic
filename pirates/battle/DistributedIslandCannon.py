@@ -1,20 +1,17 @@
-import DistributedPCCannon
 from otp.otpbase import OTPGlobals
-from pirates.effects.Bonfire import Bonfire
 from pirates.piratesbase import PiratesGlobals
-
+from pirates.effects.Bonfire import Bonfire
+import DistributedPCCannon
 
 class DistributedIslandCannon(DistributedPCCannon.DistributedPCCannon):
-    
     notify = directNotify.newCategory('DistributedIslandCannon')
-
+    
     def __init__(self, cr):
         DistributedPCCannon.DistributedPCCannon.__init__(self, cr)
         self.pendingPlacement = None
         self.bf = None
         self.destructState = None
         self.island = None
-        return
 
     def announceGenerate(self):
         DistributedPCCannon.DistributedPCCannon.announceGenerate(self)
@@ -25,23 +22,23 @@ class DistributedIslandCannon(DistributedPCCannon.DistributedPCCannon):
         if self.pendingPlacement:
             base.cr.relatedObjectMgr.abortRequest(self.pendingPlacement)
             self.pendingPlacement = None
+        
         del self.island
-        return
 
     def setIslandId(self, islandId):
         self.islandId = islandId
-
-        def putCannonOnIsland(island, self=self):
+        
+        def putCannonOnIsland(island, self = self):
             self.notify.debug('putCannon %s on island %s' % (self.doId, islandId))
             self.island = island
             self.island.attachCannon(self)
             self.accept(island.uniqueName('disable'), self.islandDisable)
             self.cannonExitEvent = island.uniqueName('stopCannon')
             self.pendingPlacement = None
-            return
 
         if islandId > 0:
-            self.pendingPlacement = base.cr.relatedObjectMgr.requestObjects([self.islandId], eachCallback=putCannonOnIsland)
+            self.pendingPlacement = base.cr.relatedObjectMgr.requestObjects([
+                self.islandId], eachCallback = putCannonOnIsland)
 
     def setCannonIndex(self, cannonIndex):
         self.cannonIndex = cannonIndex
@@ -63,13 +60,13 @@ class DistributedIslandCannon(DistributedPCCannon.DistributedPCCannon):
                 if self.bf:
                     self.bf.removeNode()
                     self.bf = None
-        return
 
     def addDestructableCollision(self):
         if self.__isDestructable:
             self.prop.coll.node().setIntoCollideMask(OTPGlobals.WallBitmask | PiratesGlobals.TargetBitmask)
             self.prop.coll.setTag('objType', str(PiratesGlobals.COLL_CANNON))
             self.prop.coll.setTag('cannonId', str(self.doId))
+        
         self.prop.propCollisions.reparentTo(self)
 
     def islandDisable(self):
@@ -79,3 +76,6 @@ class DistributedIslandCannon(DistributedPCCannon.DistributedPCCannon):
     def sendHitByProjectile(self):
         if self.__isDestructable:
             self.sendUpdate('hitByProjectile')
+        
+
+
