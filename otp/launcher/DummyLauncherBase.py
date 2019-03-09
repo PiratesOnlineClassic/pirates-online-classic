@@ -1,22 +1,20 @@
+from pandac.PandaModules import *
 import string
-
+from direct.showbase.MessengerGlobal import *
 from direct.showbase.DirectObject import DirectObject
 from direct.showbase.EventManagerGlobal import *
-from direct.showbase.MessengerGlobal import *
-from direct.task.Task import Task
 from direct.task.TaskManagerGlobal import *
-from panda3d.core import *
-
+from direct.task.Task import Task
 
 class DummyLauncherBase:
-
+    
     def __init__(self):
         self.logPrefix = ''
         self._downloadComplete = False
         self.phaseComplete = {}
         for phase in self.LauncherPhases:
             self.phaseComplete[phase] = 0
-
+        
         self.firstPhase = self.LauncherPhases[0]
         self.finalPhase = self.LauncherPhases[-1]
         self.launcherFileDbHash = HashVal()
@@ -31,15 +29,13 @@ class DummyLauncherBase:
         if ConfigVariableBool('fake-downloads', 0).getValue():
             from direct.showbase import Loader
             Loader.phaseChecker = self.loaderPhaseChecker
-            duration = ConfigVariableDouble(
-                'fake-download-duration', 60).getValue()
+            duration = ConfigVariableDouble('fake-download-duration', 60).getValue()
             self.fakeDownload(duration)
         else:
             for phase in self.LauncherPhases:
                 self.phaseComplete[phase] = 100
-
+            
             self.downloadDoneTask(None)
-        return
 
     def isTestServer(self):
         return base.config.GetBool('is-test-server', 0)
@@ -49,7 +45,7 @@ class DummyLauncherBase:
 
     def setPhaseComplete(self, phase, percent):
         self.phaseComplete[phase] = percent
-
+    
     def getPhaseComplete(self, phase):
         return self.phaseComplete[phase] >= 100
 
@@ -61,24 +57,25 @@ class DummyLauncherBase:
 
     def getPandaErrorCode(self):
         return self.pandaErrorCode
-
+    
     def getIsNewInstallation(self):
         return base.config.GetBool('new-installation', 0)
 
     def setIsNotNewInstallation(self):
         pass
-
+    
     def getLastLogin(self):
         if hasattr(self, 'lastLogin'):
             return self.lastLogin
+        
         return ''
 
     def setLastLogin(self, login):
         self.lastLogin = login
-
+    
     def setUserLoggedIn(self):
         self.userLoggedIn = 1
-
+    
     def setPaidUserLoggedIn(self):
         self.paidUserLoggedIn = 1
 
@@ -87,28 +84,29 @@ class DummyLauncherBase:
 
     def getAccountServer(self):
         return ''
-
+    
     def getDeployment(self):
         return 'US'
 
     def getBlue(self):
-        return
+        return None
 
     def getPlayToken(self):
-        return
-
+        return None
+    
     def getDISLToken(self):
-        return
+        return None
 
     def fakeDownloadPhaseTask(self, task):
-        percentComplete = min(
-            100, int(round(task.time / float(task.timePerPhase) * 100)))
+        percentComplete = min(100, int(round((task.time / float(task.timePerPhase)) * 100)))
         self.setPhaseComplete(task.phase, percentComplete)
-        messenger.send(
-            'launcherPercentPhaseComplete', [
-                task.phase, percentComplete, 0, 0])
+        messenger.send('launcherPercentPhaseComplete', [
+            task.phase,
+            percentComplete,
+            0,
+            0])
         if percentComplete >= 100.0:
-            messenger.send('phaseComplete-' + repr((task.phase)))
+            messenger.send('phaseComplete-' + `task.phase`)
             return Task.done
         else:
             return Task.cont
@@ -137,33 +135,34 @@ class DummyLauncherBase:
         phaseTaskList = []
         firstPhaseIndex = self.LauncherPhases.index(self.firstPhase)
         for phase in self.LauncherPhases[firstPhaseIndex:]:
-            phaseTask = Task(
-                self.fakeDownloadPhaseTask,
-                'phaseDownload' + str(phase))
+            phaseTask = Task(self.fakeDownloadPhaseTask, 'phaseDownload' + str(phase))
             phaseTask.timePerPhase = timePerPhase
             phaseTask.phase = phase
             phaseTaskList.append(phaseTask)
-
+        
         phaseTaskList.append(Task(self.downloadDoneTask))
         downloadSequence = Task.sequence(*phaseTaskList)
         taskMgr.remove('downloadSequence')
         taskMgr.add(downloadSequence, 'downloadSequence')
-
+    
     def loaderPhaseChecker(self, path):
         file = Filename(path)
         if not file.getExtension():
             file.setExtension('bam')
+        
         path = ConfigVariableSearchPath('model-path').findFile(file).cStr()
         if not path:
             path = ConfigVariableSearchPath('sound-path').findFile(file).cStr()
+        
         if not path:
             print 'ERROR: loaderPhaseChecker: could not verify path: ' + path
             return 1
+        
         if path.find('phase_') != -1:
             phaseStr = path[path.find('phase_') + 6]
             if path[path.find('phase_') + 7] == '.':
-                phaseStr = path[path.find(
-                    'phase_') + 6] + path[path.find('phase_') + 7] + path[path.find('phase_') + 8]
+                phaseStr = path[path.find('phase_') + 6] + path[path.find('phase_') + 7] + path[path.find('phase_') + 8]
+            
             phase = float(phaseStr)
             if phase in self.LauncherPhases:
                 if self.getPhaseComplete(phase):
@@ -177,3 +176,5 @@ class DummyLauncherBase:
         else:
             print 'ERROR: loaderPhaseChecker: loaded from NON phase directory: ' + path
             return 1
+
+
