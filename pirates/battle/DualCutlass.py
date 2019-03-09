@@ -1,66 +1,80 @@
+import Weapon
+import WeaponGlobals
+from direct.interval.IntervalGlobal import *
+from pandac.PandaModules import *
+from pirates.uberdog.UberDogGlobals import InventoryType
+from pirates.piratesbase import PLocalizer
+from pirates.effects import PolyTrail
 import random
 
-from pirates.battle import Weapon
-from direct.interval.IntervalGlobal import *
-from panda3d.core import *
-from pirates.effects import PolyTrail
-from pirates.piratesbase import PLocalizer
-from pirates.uberdog.UberDogGlobals import InventoryType
-
 class DualCutlass(Weapon.Weapon):
-    modelTypes = {InventoryType.DualCutlassL1: ('models/handheld/cutlass_rusty_high', Vec4(1, 1, 1, 1))}
+    modelTypes = {
+        InventoryType.DualCutlassL1: ('models/handheld/cutlass_rusty_high', Vec4(1, 1, 1, 1))}
     models = {}
     icons = {}
-    vertex_list = [Vec4(0.0, 0.4, 0.0, 1.0), Vec4(0.0, 2.0, 0.0, 1.0), Vec4(-0.55, 2.95, 0.0, 1.0)]
-    motion_color = {InventoryType.DualCutlassL1: [Vec4(0.3, 0.4, 0.1, 0.5), Vec4(0.3, 0.3, 0.3, 0.5), Vec4(0.6, 0.6, 0.6, 0.5)]}
+    vertex_list = [
+        Vec4(0.0, 0.4, 0.0, 1.0),
+        Vec4(0.0, 2.0, 0.0, 1.0),
+        Vec4(-0.55, 2.95, 0.0, 1.0)]
+    motion_color = {
+        InventoryType.DualCutlassL1: [
+            Vec4(0.3, 0.4, 0.1, 0.5),
+            Vec4(0.3, 0.3, 0.3, 0.5),
+            Vec4(0.6, 0.6, 0.6, 0.5)]}
     walkAnim = 'dualcutlass_walk'
     runAnim = 'dualcutlass_walk'
     neutralAnim = 'dualcutlass_idle'
     strafeLeftAnim = 'strafe_left'
     strafeRightAnim = 'strafe_right'
     painAnim = 'dualcutlass_hurt'
-
+    
     def __init__(self, itemId):
         Weapon.Weapon.__init__(self, itemId, 'dualcutlass')
-
+        self.leftHandWeaponNP = None
+    
     def loadModel(self):
         self.prop = self.getModel(self.itemId)
         self.prop.reparentTo(self)
         self.spinBlur = self.prop.find('**/motion_blur')
         self.spinBlur.setAlphaScale(0.25)
         self.hideSpinBlur()
-
+    
     def delete(self):
         self.endAttack(None)
         self.removeTrail()
         Weapon.Weapon.delete(self)
-        self.leftHandWeaponNP.removeNode()
+        if self.leftHandWeaponNP:
+            self.leftHandWeaponNP.removeNode()
+            self.leftHandWeaponNP = None
 
-    def getDrawIval(self, av, ammoSkillId=0, blendInT=0.1, blendOutT=0):
-        track = Parallel(Func(base.playSfx, self.drawSfx, node=av), av.actorInterval('dualcutlass_draw', playRate=1, blendInT=blendInT, blendOutT=blendOutT), Sequence(Wait(0.187), Func(self.attachTo, av)))
+    def getDrawIval(self, av, ammoSkillId = 0, blendInT = 0.1, blendOutT = 0):
+        track = Parallel(Func(base.playSfx, self.drawSfx, node = av), av.actorInterval('dualcutlass_draw', playRate = 1, blendInT = blendInT, blendOutT = blendOutT), Sequence(Wait(0.187), Func(self.attachTo, av)))
         return track
 
-    def getReturnIval(self, av, blendInT=0, blendOutT=0.1):
-        track = Parallel(Func(base.playSfx, self.returnSfx, node=av), av.actorInterval('sword_putaway', playRate=2, endFrame=35, blendInT=blendInT, blendOutT=blendOutT), Sequence(Wait(0.56), Func(self.detachFrom, av)))
+    def getReturnIval(self, av, blendInT = 0, blendOutT = 0.1):
+        track = Parallel(Func(base.playSfx, self.returnSfx, node = av), av.actorInterval('sword_putaway', playRate = 2, endFrame = 35, blendInT = blendInT, blendOutT = blendOutT), Sequence(Wait(0.56), Func(self.detachFrom, av)))
         return track
-
+    
     def attachTo(self, av):
         Weapon.Weapon.attachTo(self, av)
         if not self.isEmpty():
             if av.leftHandNode:
                 self.leftHandWeaponNP = self.instanceTo(av.leftHandNode)
+
         self.createTrail(av)
 
     def detachFrom(self, av):
         Weapon.Weapon.detachFrom(self, av)
-        if not self.isEmpty():
-            if self.leftHandWeaponNP.isEmpty():
-                self.leftHandWeaponNP.detachNode()
+        if self.leftHandWeaponNP:
+            self.leftHandWeaponNP.detachNode()
+            self.leftHandWeaponNP = None
+        
         self.removeTrail()
 
     def createTrail(self, target):
         if self.isEmpty():
             return
+        
         if not self.motion_trail:
             self.motion_trail = PolyTrail.PolyTrail(target, self.vertex_list, self.motion_color.get(self.itemId))
             self.motion_trail.reparentTo(self)
@@ -101,8 +115,11 @@ class DualCutlass(Weapon.Weapon):
         DualCutlass.drawSfx = loader.loadSfx('audio/sfx_cutlass_draw.mp3')
         DualCutlass.returnSfx = loader.loadSfx('audio/sfx_cutlass_sheathe.mp3')
 
+
 def getHitSfx():
     return DualCutlass.hitSfxs
 
+
 def getMissSfx():
     return DualCutlass.missSfxs
+

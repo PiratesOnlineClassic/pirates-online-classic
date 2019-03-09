@@ -1,8 +1,8 @@
 import math
-
-from panda3d.core import *
-from pirates.battle import WeaponGlobals
-from pirates.piratesbase import PiratesGlobals, TeamUtils
+from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import TeamUtils
+import WeaponGlobals
 
 class WeaponBaseBase:
     areaCollisionsCreated = 0
@@ -17,6 +17,7 @@ class WeaponBaseBase:
     def createCollisions(self):
         if self.areaCollisionsCreated:
             return
+        
         self.areaCollTrav = CollisionTraverser('WeaponBase.collTrav')
         collSphere = CollisionSphere(0, 0, 0, 1)
         node = CollisionNode('areaTargetCollSphere')
@@ -31,7 +32,7 @@ class WeaponBaseBase:
         for i in range(12):
             collSphere = CollisionSphere(0, r + i * r * 1.5, z, r)
             node.addSolid(collSphere)
-
+        
         node.setFromCollideMask(PiratesGlobals.BattleAimBitmask)
         node.setIntoCollideMask(BitMask32.allOff())
         self.areaCollTube = NodePath(node)
@@ -49,7 +50,7 @@ class WeaponBaseBase:
             r = angleFactor * y
             collSphere = CollisionSphere(0, y, z, r)
             node.addSolid(collSphere)
-
+        
         node.setFromCollideMask(PiratesGlobals.BattleAimBitmask)
         node.setIntoCollideMask(BitMask32.allOff())
         self.areaCollCone = NodePath(node)
@@ -62,19 +63,17 @@ class WeaponBaseBase:
         self.areaCollHandler = CollisionHandlerEvent()
         self.areaCollTrav.addCollider(self.areaCollSphere, self.areaCollQueue)
         self.areaCollisionsCreated = 1
-
+    
     def __init__(self, avatar, repository):
         self.repository = repository
         self.avatar = avatar
-
-        if self.avatar:
-            if not hasattr(self.avatar, 'aimTubeNodePaths'):
-                self.avatar.aimTubeNodePaths = []
+        if not hasattr(self.avatar, 'aimTubeNodePaths'):
+            self.avatar.aimTubeNodePaths = []
 
     def delete(self):
         self.repository = None
         self.avatar = None
-
+    
     def runSphereAreaCollisions(self, skillId, ammoSkillId, target, pos):
         self.createCollisions()
         self.areaCollSphere.reparentTo(self.getRender())
@@ -125,13 +124,14 @@ class WeaponBaseBase:
             self.runConeAreaCollisions(skillId, ammoSkillId, target, pos)
         elif areaShape == WeaponGlobals.AREA_OFF:
             return targets
+        
         numEntries = self.areaCollQueue.getNumEntries()
         if numEntries == 0:
             return targets
-
+        
         if numEntries > WeaponGlobals.MAX_AREA_TARGETS:
             numEntries = WeaponGlobals.MAX_AREA_TARGETS
-
+        
         avTeam = self.avatar.getTeam()
         for i in range(numEntries):
             entry = self.areaCollQueue.getEntry(i)
@@ -139,17 +139,15 @@ class WeaponBaseBase:
             if potentialTargetColl in self.avatar.aimTubeNodePaths:
                 potentialTarget = self.avatar
             else:
-                potentialTarget = self.repository.targetMgr.getObjectFromNodepath(
-                    potentialTargetColl)
-
+                potentialTarget = self.repository.targetMgr.getObjectFromNodepath(potentialTargetColl)
             if potentialTarget:
                 potentialTargetId = potentialTarget.getDoId()
                 if potentialTargetId == target.getDoId():
                     continue
-
+                
                 if potentialTargetId in targets:
                     continue
-
+                
                 if not TeamUtils.damageAllowed(potentialTarget, self.avatar):
                     if attackerId and potentialTargetId == attackerId:
                         if not WeaponGlobals.isAttackAreaSelfDamaging(skillId, ammoSkillId):
@@ -159,12 +157,15 @@ class WeaponBaseBase:
 
                 if potentialTarget.gameFSM.state == 'Death':
                     continue
-
+                
                 if not self.repository.battleMgr.obeysPirateCode(self.avatar, potentialTarget):
                     continue
-
+                
                 targets.append(potentialTargetId)
             else:
                 continue
-
+        
+        print 'getting area list of %s' % targets
         return targets
+
+

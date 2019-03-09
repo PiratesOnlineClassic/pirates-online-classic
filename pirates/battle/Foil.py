@@ -1,26 +1,33 @@
+import Weapon
+import WeaponGlobals
+from direct.interval.IntervalGlobal import *
+from pandac.PandaModules import *
+from pirates.uberdog.UberDogGlobals import InventoryType
+from pirates.piratesbase import PLocalizer
+from pirates.effects import PolyTrail
 import random
 
-from pirates.battle import Weapon
-from direct.interval.IntervalGlobal import *
-from panda3d.core import *
-from pirates.effects import PolyTrail
-from pirates.piratesbase import PLocalizer
-from pirates.uberdog.UberDogGlobals import InventoryType
-
 class Foil(Weapon.Weapon):
-    modelTypes = {InventoryType.FoilL1: ('models/handheld/cutlass_rusty_high', Vec4(1, 1, 1, 1))}
+    modelTypes = {
+        InventoryType.FoilL1: ('models/handheld/cutlass_rusty_high', Vec4(1, 1, 1, 1))}
     models = {}
     icons = {}
     vertex_list = [
-     Vec4(0.0, 0.4, 0.0, 1.0), Vec4(0.0, 2.0, 0.0, 1.0), Vec4(-0.55, 2.95, 0.0, 1.0)]
-    motion_color = {InventoryType.FoilL1: [Vec4(0.3, 0.4, 0.1, 0.5), Vec4(0.3, 0.3, 0.3, 0.5), Vec4(0.6, 0.6, 0.6, 0.5)]}
+        Vec4(0.0, 0.4, 0.0, 1.0),
+        Vec4(0.0, 2.0, 0.0, 1.0),
+        Vec4(-0.55, 2.95, 0.0, 1.0)]
+    motion_color = {
+        InventoryType.FoilL1: [
+            Vec4(0.3, 0.4, 0.1, 0.5),
+            Vec4(0.3, 0.3, 0.3, 0.5),
+            Vec4(0.6, 0.6, 0.6, 0.5)]}
     walkAnim = 'sword_advance'
     runAnim = 'sword_advance'
     neutralAnim = 'foil_idle'
     strafeLeftAnim = 'strafe_left'
     strafeRightAnim = 'strafe_right'
     painAnim = 'boxing_hit_head_right'
-
+    
     def __init__(self, itemId):
         Weapon.Weapon.__init__(self, itemId, 'foil')
 
@@ -35,13 +42,13 @@ class Foil(Weapon.Weapon):
         self.endAttack(None)
         self.removeTrail()
         Weapon.Weapon.delete(self)
-
-    def getDrawIval(self, av, ammoSkillId=0, blendInT=0.1, blendOutT=0):
-        track = Parallel(Func(base.playSfx, self.drawSfx, node=av), av.actorInterval('sword_draw', playRate=1.5, endFrame=15, blendInT=blendInT, blendOutT=blendOutT), Sequence(Wait(0.187), Func(self.attachTo, av)))
+    
+    def getDrawIval(self, av, ammoSkillId = 0, blendInT = 0.1, blendOutT = 0):
+        track = Parallel(Func(base.playSfx, self.drawSfx, node = av), av.actorInterval('sword_draw', playRate = 1.5, endFrame = 15, blendInT = blendInT, blendOutT = blendOutT), Sequence(Wait(0.187), Func(self.attachTo, av)))
         return track
 
-    def getReturnIval(self, av, blendInT=0, blendOutT=0.1):
-        track = Parallel(Func(base.playSfx, self.returnSfx, node=av), av.actorInterval('sword_putaway', playRate=2, endFrame=35, blendInT=blendInT, blendOutT=blendOutT), Sequence(Wait(0.56), Func(self.detachFrom, av)))
+    def getReturnIval(self, av, blendInT = 0, blendOutT = 0.1):
+        track = Parallel(Func(base.playSfx, self.returnSfx, node = av), av.actorInterval('sword_putaway', playRate = 2, endFrame = 35, blendInT = blendInT, blendOutT = blendOutT), Sequence(Wait(0.56), Func(self.detachFrom, av)))
         return track
 
     def attachTo(self, av):
@@ -55,6 +62,7 @@ class Foil(Weapon.Weapon):
     def createTrail(self, target):
         if self.isEmpty():
             return
+        
         if not self.motion_trail:
             self.motion_trail = PolyTrail.PolyTrail(target, self.vertex_list, self.motion_color.get(self.itemId))
             self.motion_trail.reparentTo(self)
@@ -65,6 +73,7 @@ class Foil(Weapon.Weapon):
             self.motion_trail.setBlendModeOn()
             if self.itemId == InventoryType.CutlassWeaponL6:
                 self.motion_trail.setBlendModeOff()
+            
             card.removeNode()
 
     def removeTrail(self):
@@ -92,15 +101,16 @@ class Foil(Weapon.Weapon):
 
     @classmethod
     def setupSounds(cls):
-        Foil.hitSfxs = (
-         loader.loadSfx('audio/sword-clashNclang.mp3'), loader.loadSfx('audio/sword-swipeNclang1.mp3'), loader.loadSfx('audio/sword-swipeNclang2.mp3'), loader.loadSfx('audio/sword-swipeNclang3.mp3'))
-        Foil.missSfxs = (
-         loader.loadSfx('audio/sword-swoosh1.mp3'), loader.loadSfx('audio/sword-swoosh2.mp3'))
+        Foil.hitSfxs = (loader.loadSfx('audio/sword-clashNclang.mp3'), loader.loadSfx('audio/sword-swipeNclang1.mp3'), loader.loadSfx('audio/sword-swipeNclang2.mp3'), loader.loadSfx('audio/sword-swipeNclang3.mp3'))
+        Foil.missSfxs = (loader.loadSfx('audio/sword-swoosh1.mp3'), loader.loadSfx('audio/sword-swoosh2.mp3'))
         Foil.drawSfx = loader.loadSfx('audio/sfx_cutlass_draw.mp3')
         Foil.returnSfx = loader.loadSfx('audio/sfx_cutlass_sheathe.mp3')
+
 
 def getHitSfx():
     return Foil.hitSfxs
 
+
 def getMissSfx():
     return Foil.missSfxs
+

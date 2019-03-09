@@ -1,12 +1,12 @@
-from direct.directnotify import DirectNotifyGlobal
-from direct.gui.DirectGui import *
-from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from panda3d.core import *
+from direct.gui.DirectGui import *
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.directnotify import DirectNotifyGlobal
 from pirates.effects.SmokeCloud import SmokeCloud
+import WeaponGlobals
 
 class Weapon(NodePath):
-
     notify = DirectNotifyGlobal.directNotify.newCategory('Weapon')
     models = {}
     icons = {}
@@ -25,8 +25,8 @@ class Weapon(NodePath):
     spinLeftAnim = 'spin_left'
     spinRightAnim = 'spin_right'
     painAnim = 'boxing_hit_head_right'
-
-    def __init__(self, itemId=None, name='weapon'):
+    
+    def __init__(self, itemId = None, name = 'weapon'):
         NodePath.__init__(self, name)
         self.itemId = itemId
         self.effect = None
@@ -47,27 +47,44 @@ class Weapon(NodePath):
         pass
 
     def getWalkForWeapon(self, av):
-        return [self.walkAnim, self.runAnim, self.walkBackAnim, self.neutralAnim, self.strafeLeftAnim, self.strafeRightAnim, self.strafeDiagLeftAnim, self.strafeDiagRightAnim, self.strafeRevDiagLeftAnim, self.strafeRevDiagRightAnim, self.fallGroundAnim, self.fallWaterAnim, self.spinLeftAnim, self.spinRightAnim]
+        return [
+            self.walkAnim,
+            self.runAnim,
+            self.walkBackAnim,
+            self.neutralAnim,
+            self.strafeLeftAnim,
+            self.strafeRightAnim,
+            self.strafeDiagLeftAnim,
+            self.strafeDiagRightAnim,
+            self.strafeRevDiagLeftAnim,
+            self.strafeRevDiagRightAnim,
+            self.fallGroundAnim,
+            self.fallWaterAnim,
+            self.spinLeftAnim,
+            self.spinRightAnim]
 
     def getAutoAttackIval(self, av, blendInT, blendOutT):
-        return
+        return None
 
     def getAttackIval(self, av, blendInT, blendOutT):
-        return
+        return None
 
     def getDrawIval(self, av, ammoSkillId, blendInT, blendOutT):
-        return
-
+        return None
+    
     def getReturnIval(self, av, blendInT, blendOutT):
-        return
+        return None
 
     def getNeutralIval(self, av, blendInT, blendOutT):
-        return
+        return None
 
-    def getAmmoChangeIval(self, av, skillId, ammoSkillId, charge, target=None):
-        return
+    def getAmmoChangeIval(self, av, skillId, ammoSkillId, charge, target = None):
+        return None
 
     def updateItemId(self, itemId):
+        if self.itemId == itemId:
+            return
+        
         self.itemId = itemId
         if hasattr(self, 'prop'):
             self.prop.removeNode()
@@ -92,7 +109,7 @@ class Weapon(NodePath):
     def showWeapon(self):
         if not self.isEmpty():
             self.show()
-
+    
     def beginAttack(self, av):
         if self.motion_trail:
             self.motion_trail.beginTrail()
@@ -119,23 +136,23 @@ class Weapon(NodePath):
     def hideMouse(self, av):
         pass
 
-    def playSkillSfx(self, skillId, node, startTime=0):
+    def playSkillSfx(self, skillId, node, startTime = 0):
         if self.getName() not in ['sword', 'pistol', 'daggers', 'grenade']:
             return
+        
         sfx = self.skillSfxs.get(skillId)
         if sfx:
-            base.playSfx(sfx, node=node, cutoff=100, time=startTime)
-
+            base.playSfx(sfx, node = node, cutoff = 100, time = startTime)
+    
     def getModel(self, itemId):
         model = self.models.get(itemId)
         if not model:
             base.buildAssets()
             model = self.models.get(itemId)
-        if model:
-            model = model.copyTo(hidden)
-            model.detachNode()
-            return model
-        return None
+        
+        model = model.copyTo(hidden)
+        model.detachNode()
+        return model
 
     def getIcon(self, itemId):
         model = self.icons[itemId]
@@ -148,24 +165,30 @@ class Weapon(NodePath):
         for item in cls.modelTypes.keys():
             data = cls.modelTypes[item]
             model = loader.loadModel(data[0])
+            
             try:
                 model.flattenLight()
             except AttributeError:
                 cls.notify.error('Could not load %s model: %s' % (cls.__name__, data[0]))
-            else:
-                cls.models[item] = model
 
+            cls.models[item] = model
+        
         cls.setupSounds()
 
     @classmethod
     def setupSounds(cls):
         pass
-
+    
     def getAnimState(self, animState):
         return animState
 
-    def getEffectColor(self, itemId=None):
+    def getEffectColor(self, itemId = None):
         return Vec4(1, 1, 1, 1)
-
+    
     def getBlurColor(self):
         return Vec4(1, 1, 1, 1)
+    
+    def getOffset(self, itemId = None):
+        return Vec3(0, 0, 0)
+
+

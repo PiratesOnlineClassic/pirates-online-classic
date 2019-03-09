@@ -1,12 +1,11 @@
 from otp.otpbase import OTPGlobals
-from pirates.battle import DistributedIslandCannon
-from pirates.effects.Bonfire import Bonfire
 from pirates.piratesbase import PiratesGlobals
-
+from pirates.effects.Bonfire import Bonfire
+from pirates.battle import DistributedIslandCannon
 
 class DistributedFortCannon(DistributedIslandCannon.DistributedIslandCannon):
     notify = directNotify.newCategory('DistributedFortCannon')
-
+    
     def __init__(self, cr):
         DistributedIslandCannon.DistributedIslandCannon.__init__(self, cr)
         base.fortCannon = self
@@ -32,4 +31,6 @@ class DistributedFortCannon(DistributedIslandCannon.DistributedIslandCannon):
                 if self.bf:
                     self.bf.removeNode()
                     self.bf = None
-        return
+        
+
+

@@ -1,8 +1,12 @@
-from direct.distributed.DistributedObject import DistributedObject
-from direct.directnotify import DirectNotifyGlobal
+from direct.distributed import DistributedObject
 
-class DistributedEnemySpawner(DistributedObject):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedEnemySpawner')
-
+class DistributedEnemySpawner(DistributedObject.DistributedObject):
+    
     def __init__(self, cr):
-        DistributedObject.__init__(self, cr)
+        DistributedObject.DistributedObject.__init__(self, cr)
+
+    def announceGenerate(self):
+        DistributedObject.DistributedObject.announceGenerate(self)
+        print 'created enemy'
+
+
