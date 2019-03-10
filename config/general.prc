@@ -71,8 +71,6 @@ enable-frame-rate-counter #t
 framebuffer-hardware #t
 framebuffer-software #f
 framebuffer-alpha 1
-framebuffer-multisample #t
-multisamples 2
 prefer-parasite-buffer #t
 force-parasite-buffer #f
 alpha-bits 8
