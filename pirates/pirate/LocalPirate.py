@@ -522,87 +522,95 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         inventory = self.getInventory()
         if not inventory:
             return
-        self.equippedWeapons = [0, 0, 0, 0, 0, 0]
+
+        self.equippedWeapons = [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0]
         if inventory.getStackQuantity(InventoryType.CutlassWeaponL6) > 0:
             self.equippedWeapons[0] = InventoryType.CutlassWeaponL6
-        else:
-            if inventory.getStackQuantity(InventoryType.CutlassWeaponL5) > 0:
-                self.equippedWeapons[0] = InventoryType.CutlassWeaponL5
-            elif inventory.getStackQuantity(InventoryType.CutlassWeaponL4) > 0:
-                self.equippedWeapons[0] = InventoryType.CutlassWeaponL4
-            elif inventory.getStackQuantity(InventoryType.CutlassWeaponL3) > 0:
-                self.equippedWeapons[0] = InventoryType.CutlassWeaponL3
-            else:
-                if inventory.getStackQuantity(InventoryType.CutlassWeaponL2) > 0:
-                    self.equippedWeapons[0] = InventoryType.CutlassWeaponL2
-                elif inventory.getStackQuantity(InventoryType.CutlassWeaponL1) > 0:
-                    self.equippedWeapons[0] = InventoryType.CutlassWeaponL1
-                if inventory.getStackQuantity(InventoryType.PistolWeaponL6) > 0:
-                    self.equippedWeapons[1] = InventoryType.PistolWeaponL6
-                elif inventory.getStackQuantity(InventoryType.PistolWeaponL5) > 0:
-                    self.equippedWeapons[1] = InventoryType.PistolWeaponL5
-                elif inventory.getStackQuantity(InventoryType.PistolWeaponL4) > 0:
-                    self.equippedWeapons[1] = InventoryType.PistolWeaponL4
-                else:
-                    if inventory.getStackQuantity(InventoryType.PistolWeaponL3) > 0:
-                        self.equippedWeapons[1] = InventoryType.PistolWeaponL3
-                    else:
-                        if inventory.getStackQuantity(InventoryType.PistolWeaponL2) > 0:
-                            self.equippedWeapons[1] = InventoryType.PistolWeaponL2
-                        elif inventory.getStackQuantity(InventoryType.PistolWeaponL1) > 0:
-                            self.equippedWeapons[1] = InventoryType.PistolWeaponL1
-                        if inventory.getStackQuantity(InventoryType.DollWeaponL6) > 0:
-                            self.equippedWeapons[2] = InventoryType.DollWeaponL6
-                        elif inventory.getStackQuantity(InventoryType.DollWeaponL5) > 0:
-                            self.equippedWeapons[2] = InventoryType.DollWeaponL5
-                        elif inventory.getStackQuantity(InventoryType.DollWeaponL4) > 0:
-                            self.equippedWeapons[2] = InventoryType.DollWeaponL4
-                        elif inventory.getStackQuantity(InventoryType.DollWeaponL3) > 0:
-                            self.equippedWeapons[2] = InventoryType.DollWeaponL3
-                        else:
-                            if inventory.getStackQuantity(InventoryType.DollWeaponL2) > 0:
-                                self.equippedWeapons[2] = InventoryType.DollWeaponL2
-                            elif inventory.getStackQuantity(InventoryType.DollWeaponL1) > 0:
-                                self.equippedWeapons[2] = InventoryType.DollWeaponL1
-                            if inventory.getStackQuantity(InventoryType.DaggerWeaponL6) > 0:
-                                self.equippedWeapons[3] = InventoryType.DaggerWeaponL6
-                            else:
-                                if inventory.getStackQuantity(InventoryType.DaggerWeaponL5) > 0:
-                                    self.equippedWeapons[3] = InventoryType.DaggerWeaponL5
-                                elif inventory.getStackQuantity(InventoryType.DaggerWeaponL4) > 0:
-                                    self.equippedWeapons[3] = InventoryType.DaggerWeaponL4
-                                elif inventory.getStackQuantity(InventoryType.DaggerWeaponL3) > 0:
-                                    self.equippedWeapons[3] = InventoryType.DaggerWeaponL3
-                                elif inventory.getStackQuantity(InventoryType.DaggerWeaponL2) > 0:
-                                    self.equippedWeapons[3] = InventoryType.DaggerWeaponL2
-                                elif inventory.getStackQuantity(InventoryType.DaggerWeaponL1) > 0:
-                                    self.equippedWeapons[3] = InventoryType.DaggerWeaponL1
-                                if inventory.getStackQuantity(InventoryType.GrenadeWeaponL6) > 0:
-                                    self.equippedWeapons[4] = InventoryType.GrenadeWeaponL6
-                                if inventory.getStackQuantity(InventoryType.GrenadeWeaponL5) > 0:
-                                    self.equippedWeapons[4] = InventoryType.GrenadeWeaponL5
-                                if inventory.getStackQuantity(InventoryType.GrenadeWeaponL4) > 0:
-                                    self.equippedWeapons[4] = InventoryType.GrenadeWeaponL4
-                                if inventory.getStackQuantity(InventoryType.GrenadeWeaponL3) > 0:
-                                    self.equippedWeapons[4] = InventoryType.GrenadeWeaponL3
-                                if inventory.getStackQuantity(InventoryType.GrenadeWeaponL2) > 0:
-                                    self.equippedWeapons[4] = InventoryType.GrenadeWeaponL2
-                                if inventory.getStackQuantity(InventoryType.GrenadeWeaponL1) > 0:
-                                    self.equippedWeapons[4] = InventoryType.GrenadeWeaponL1
-                    if inventory.getStackQuantity(InventoryType.WandWeaponL6) > 0:
-                        self.equippedWeapons[5] = InventoryType.WandWeaponL6
-                    if inventory.getStackQuantity(InventoryType.WandWeaponL5) > 0:
-                        self.equippedWeapons[5] = InventoryType.WandWeaponL5
-                    if inventory.getStackQuantity(InventoryType.WandWeaponL4) > 0:
-                        self.equippedWeapons[5] = InventoryType.WandWeaponL4
-                    if inventory.getStackQuantity(InventoryType.WandWeaponL3) > 0:
-                        self.equippedWeapons[5] = InventoryType.WandWeaponL3
-                    if inventory.getStackQuantity(InventoryType.WandWeaponL2) > 0:
-                        self.equippedWeapons[5] = InventoryType.WandWeaponL2
-                    if inventory.getStackQuantity(InventoryType.WandWeaponL1) > 0:
-                        self.equippedWeapons[5] = InventoryType.WandWeaponL1
-            if not self.currentWeaponId:
-                self.currentWeaponId = self.equippedWeapons[0]
+        elif inventory.getStackQuantity(InventoryType.CutlassWeaponL5) > 0:
+            self.equippedWeapons[0] = InventoryType.CutlassWeaponL5
+        elif inventory.getStackQuantity(InventoryType.CutlassWeaponL4) > 0:
+            self.equippedWeapons[0] = InventoryType.CutlassWeaponL4
+        elif inventory.getStackQuantity(InventoryType.CutlassWeaponL3) > 0:
+            self.equippedWeapons[0] = InventoryType.CutlassWeaponL3
+        elif inventory.getStackQuantity(InventoryType.CutlassWeaponL2) > 0:
+            self.equippedWeapons[0] = InventoryType.CutlassWeaponL2
+        elif inventory.getStackQuantity(InventoryType.CutlassWeaponL1) > 0:
+            self.equippedWeapons[0] = InventoryType.CutlassWeaponL1
+
+        if inventory.getStackQuantity(InventoryType.PistolWeaponL6) > 0:
+            self.equippedWeapons[1] = InventoryType.PistolWeaponL6
+        elif inventory.getStackQuantity(InventoryType.PistolWeaponL5) > 0:
+            self.equippedWeapons[1] = InventoryType.PistolWeaponL5
+        elif inventory.getStackQuantity(InventoryType.PistolWeaponL4) > 0:
+            self.equippedWeapons[1] = InventoryType.PistolWeaponL4
+        elif inventory.getStackQuantity(InventoryType.PistolWeaponL3) > 0:
+            self.equippedWeapons[1] = InventoryType.PistolWeaponL3
+        elif inventory.getStackQuantity(InventoryType.PistolWeaponL2) > 0:
+            self.equippedWeapons[1] = InventoryType.PistolWeaponL2
+        elif inventory.getStackQuantity(InventoryType.PistolWeaponL1) > 0:
+            self.equippedWeapons[1] = InventoryType.PistolWeaponL1
+
+        if inventory.getStackQuantity(InventoryType.DollWeaponL6) > 0:
+            self.equippedWeapons[2] = InventoryType.DollWeaponL6
+        elif inventory.getStackQuantity(InventoryType.DollWeaponL5) > 0:
+            self.equippedWeapons[2] = InventoryType.DollWeaponL5
+        elif inventory.getStackQuantity(InventoryType.DollWeaponL4) > 0:
+            self.equippedWeapons[2] = InventoryType.DollWeaponL4
+        elif inventory.getStackQuantity(InventoryType.DollWeaponL3) > 0:
+            self.equippedWeapons[2] = InventoryType.DollWeaponL3
+        elif inventory.getStackQuantity(InventoryType.DollWeaponL2) > 0:
+            self.equippedWeapons[2] = InventoryType.DollWeaponL2
+        elif inventory.getStackQuantity(InventoryType.DollWeaponL1) > 0:
+            self.equippedWeapons[2] = InventoryType.DollWeaponL1
+
+        if inventory.getStackQuantity(InventoryType.DaggerWeaponL6) > 0:
+            self.equippedWeapons[3] = InventoryType.DaggerWeaponL6
+        elif inventory.getStackQuantity(InventoryType.DaggerWeaponL5) > 0:
+            self.equippedWeapons[3] = InventoryType.DaggerWeaponL5
+        elif inventory.getStackQuantity(InventoryType.DaggerWeaponL4) > 0:
+            self.equippedWeapons[3] = InventoryType.DaggerWeaponL4
+        elif inventory.getStackQuantity(InventoryType.DaggerWeaponL3) > 0:
+            self.equippedWeapons[3] = InventoryType.DaggerWeaponL3
+        elif inventory.getStackQuantity(InventoryType.DaggerWeaponL2) > 0:
+            self.equippedWeapons[3] = InventoryType.DaggerWeaponL2
+        elif inventory.getStackQuantity(InventoryType.DaggerWeaponL1) > 0:
+            self.equippedWeapons[3] = InventoryType.DaggerWeaponL1
+
+        if inventory.getStackQuantity(InventoryType.GrenadeWeaponL6) > 0:
+            self.equippedWeapons[4] = InventoryType.GrenadeWeaponL6
+        elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL5) > 0:
+            self.equippedWeapons[4] = InventoryType.GrenadeWeaponL5
+        elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL4) > 0:
+            self.equippedWeapons[4] = InventoryType.GrenadeWeaponL4
+        elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL3) > 0:
+            self.equippedWeapons[4] = InventoryType.GrenadeWeaponL3
+        elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL2) > 0:
+            self.equippedWeapons[4] = InventoryType.GrenadeWeaponL2
+        elif inventory.getStackQuantity(InventoryType.GrenadeWeaponL1) > 0:
+            self.equippedWeapons[4] = InventoryType.GrenadeWeaponL1
+
+        if inventory.getStackQuantity(InventoryType.WandWeaponL6) > 0:
+            self.equippedWeapons[5] = InventoryType.WandWeaponL6
+        elif inventory.getStackQuantity(InventoryType.WandWeaponL5) > 0:
+            self.equippedWeapons[5] = InventoryType.WandWeaponL5
+        elif inventory.getStackQuantity(InventoryType.WandWeaponL4) > 0:
+            self.equippedWeapons[5] = InventoryType.WandWeaponL4
+        elif inventory.getStackQuantity(InventoryType.WandWeaponL3) > 0:
+            self.equippedWeapons[5] = InventoryType.WandWeaponL3
+        elif inventory.getStackQuantity(InventoryType.WandWeaponL2) > 0:
+            self.equippedWeapons[5] = InventoryType.WandWeaponL2
+        elif inventory.getStackQuantity(InventoryType.WandWeaponL1) > 0:
+            self.equippedWeapons[5] = InventoryType.WandWeaponL1
+
+        if not self.currentWeaponId:
+            self.currentWeaponId = self.equippedWeapons[0]
+
         self.guiMgr.setEquippedWeapons(self.equippedWeapons)
         self.l_setCurrentWeapon(self.currentWeaponId, self.isWeaponDrawn)
         self.d_requestCurrentWeapon(self.currentWeaponId, self.isWeaponDrawn)
