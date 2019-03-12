@@ -9,7 +9,7 @@ class GuiTray(DirectFrame):
     def __init__(self, parent, w = 0.5, h = 0.1, draggable = 0, **kw):
         self.width = w
         self.height = h
-        self._GuiTray__fader = None
+        self.__fader = None
         if draggable:
             optiondefs = (('relief', DGG.RIDGE, None), ('state', DGG.NORMAL, None), ('frameColor', PiratesGuiGlobals.FrameColor, None), ('borderWidth', PiratesGuiGlobals.BorderWidth, None), ('frameSize', (0, self.width, 0, self.height), None))
         else:
