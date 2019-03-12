@@ -1,13 +1,12 @@
 from direct.gui.DirectGui import *
-from panda3d.core import *
+from pandac.PandaModules import *
+from pirates.piratesbase import PiratesGlobals
 from pirates.battle import WeaponGlobals
-from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import BuffIcon
-
 
 class StatusEffectsPanel(DirectFrame):
     
-
     def __init__(self, parent, **kw):
         DirectFrame.__init__(self, parent, **kw)
         self.initialiseoptions(StatusEffectsPanel)
@@ -18,11 +17,11 @@ class StatusEffectsPanel(DirectFrame):
     def destroy(self):
         for buffIcon in self.buffIcons:
             buffIcon.destroy()
-
+        
         del self.buffIcons
         del self.buffs
         DirectFrame.destroy(self)
-
+    
     def addStatusEffect(self, effectId, maxDuration, effectDuration, attackerId):
         id = '%s-%s' % (effectId, attackerId)
         myIcon = BuffIcon.BuffIcon(self, effectId, maxDuration, attackerId)
@@ -37,7 +36,8 @@ class StatusEffectsPanel(DirectFrame):
     def removeStatusEffect(self, effectId, attackerId):
         id = '%s-%s' % (effectId, attackerId)
         if id not in self.buffs:
-            return
+            return None
+        
         index = self.buffs.index(id)
         buff = self.buffIcons[index]
         buff.destroy()
@@ -54,7 +54,10 @@ class StatusEffectsPanel(DirectFrame):
             if buff.effectId == effectId:
                 buff.maxDuration = maxDuration
                 buff.startTimestamp = effectDuration
-
+    
     def updateDurations(self):
         for i in self.buffIcons:
             i.updateIconInfo()
+        
+
+

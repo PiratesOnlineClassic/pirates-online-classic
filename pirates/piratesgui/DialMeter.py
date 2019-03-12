@@ -1,16 +1,12 @@
 from direct.gui.DirectGui import *
-from panda3d.core import *
-
+from pandac.PandaModules import *
 
 class DialMeter(DirectFrame):
-    
     MeterFull = None
     MeterHalf = None
-
+    
     def __init__(self, parent, **kw):
-        optiondefs = (
-         (
-          'state', DGG.DISABLED, None), ('relief', None, None), ('meterColor', VBase4(0, 0, 0, 1), None), ('baseColor', VBase4(1, 1, 1, 1), None), ('wantCover', True, None))
+        optiondefs = (('state', DGG.DISABLED, None), ('relief', None, None), ('meterColor', VBase4(0, 0, 0, 1), None), ('baseColor', VBase4(1, 1, 1, 1), None), ('wantCover', True, None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, parent, **kw)
         self.initialiseoptions(DialMeter)
@@ -18,6 +14,7 @@ class DialMeter(DirectFrame):
             card = loader.loadModelCopy('models/textureCards/dialmeter')
             self.MeterFull = card.find('**/dialmeter_full')
             self.MeterHalf = card.find('**/dialmeter_half')
+        
         self.meterFace = self.MeterFull.copyTo(self)
         self.meterFace.setTransparency(1)
         self.meterFace.setScale(1.15)
@@ -39,12 +36,12 @@ class DialMeter(DirectFrame):
             cover.setTransparency(1)
             cover.setScale(0.87)
             cover.flattenStrong()
-        return
-
+    
     def update(self, val, max):
         progress = 0
         if max > 0:
             progress = float(val) / max
+        
         if progress <= 0.25:
             meterColor = Vec4(0.8, 0.0, 0.0, 1.0)
         else:
@@ -55,20 +52,21 @@ class DialMeter(DirectFrame):
             self.meterFaceHalf1.hide()
             self.meterFaceHalf2.hide()
             self.meterFace.setColor(self['baseColor'])
+        elif progress == 1:
+            self.meterFaceHalf1.hide()
+            self.meterFaceHalf2.hide()
+            self.meterFace.setColor(meterColor)
         else:
-            if progress == 1:
-                self.meterFaceHalf1.hide()
-                self.meterFaceHalf2.hide()
-                self.meterFace.setColor(meterColor)
+            self.meterFaceHalf1.show()
+            self.meterFaceHalf2.show()
+            self.meterFace.setColor(self['baseColor'])
+            if progress < 0.5:
+                self.meterFaceHalf1.setColor(meterColor)
+                self.meterFaceHalf2.setColor(self['baseColor'])
             else:
-                self.meterFaceHalf1.show()
-                self.meterFaceHalf2.show()
-                self.meterFace.setColor(self['baseColor'])
-                if progress < 0.5:
-                    self.meterFaceHalf1.setColor(meterColor)
-                    self.meterFaceHalf2.setColor(self['baseColor'])
-                else:
-                    self.meterFaceHalf1.setColor(meterColor)
-                    self.meterFaceHalf2.setColor(meterColor)
-                    progress = progress - 0.5
-                self.meterFaceHalf2.setR(-180 * (progress / 0.5))
+                self.meterFaceHalf1.setColor(meterColor)
+                self.meterFaceHalf2.setColor(meterColor)
+                progress = progress - 0.5
+            self.meterFaceHalf2.setR(-180 * (progress / 0.5))
+
+

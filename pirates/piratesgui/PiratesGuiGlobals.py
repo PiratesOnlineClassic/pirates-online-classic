@@ -151,13 +151,16 @@ CREW_HUD_ICON_CARDGAME = 10
 def getDefaultRolloverSound():
     global defaultRolloverSound
     if defaultRolloverSound == None:
-        defaultRolloverSound = base.loader.loadSfx('audio/sfx_gui_click_08.mp3')
+        defaultRolloverSound = base.loadSfx('audio/sfx_gui_click_08.mp3')
         defaultRolloverSound.setVolume(0.5)
+    
     return defaultRolloverSound
 
 
 def getDefaultClickSound():
     global defaultClickSound
     if defaultClickSound == None:
-        defaultClickSound = base.loader.loadSfx('audio/sfx_gui_click_22.mp3')
+        defaultClickSound = base.loadSfx('audio/sfx_gui_click_22.mp3')
+    
     return defaultClickSound
+

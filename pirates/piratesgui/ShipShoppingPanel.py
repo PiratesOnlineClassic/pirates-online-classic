@@ -1,19 +1,18 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
-from panda3d.core import *
-from pirates.band.DistributedBandMember import DistributedBandMember
-from pirates.distributed import InteractGlobals
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui.ShipFrameShopping import ShipFrameShopping
-from pirates.piratesgui.ShipSelectionPanel import ShipSelectionPanel
+from pandac.PandaModules import *
 from pirates.ship import ShipGlobals
-
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesgui.ShipFrameShopping import ShipFrameShopping
+from pirates.piratesbase import PLocalizer
+from pirates.band.DistributedBandMember import DistributedBandMember
+from pirates.piratesgui.ShipSelectionPanel import ShipSelectionPanel
+from pirates.distributed import InteractGlobals
 
 class ShipShoppingPanel(ShipSelectionPanel):
-    
     notify = directNotify.newCategory('ShipShoppingPanel')
-
+    
     def __init__(self, title, doneCallback, mode):
         ShipSelectionPanel.__init__(self, title, doneCallback)
         self.initialiseoptions(ShipShoppingPanel)
@@ -25,7 +24,7 @@ class ShipShoppingPanel(ShipSelectionPanel):
             frameCallback = frame['command']
             frameIndex = self.getFrameIndex(frame)
             self.removeFrame(frame)
-            self.addOwnShip(shipId, frameCallback, frameIndex, repaired=True)
+            self.addOwnShip(shipId, frameCallback, frameIndex, repaired = True)
             interactNPC = base.cr.interactionMgr.getCurrent()
             if interactNPC is not None:
                 repairButtonState = DGG.DISABLED
@@ -46,16 +45,18 @@ class ShipShoppingPanel(ShipSelectionPanel):
                             button['image_color'] = VBase4(0.8, 0.8, 0.8, 1.0)
                         button['state'] = repairButtonState
 
-        return
-
-    def addOwnShip(self, shipId, callback, index=None, repaired=False):
+    def addOwnShip(self, shipId, callback, index = None, repaired = False):
         shipOV = base.cr.getOwnerView(shipId)
         if not shipOV:
-            return
-        shipFrame = ShipFrameShopping(parent=self.scrollFrame.getCanvas(), relief=None, shipId=shipId, shipName=shipOV.name, shipClass=shipOV.shipClass, mode=self.mode, command=callback, extraArgs=[shipId])
+            return None
+        
+        shipFrame = ShipFrameShopping(parent = self.scrollFrame.getCanvas(), relief = None, shipId = shipId, shipName = shipOV.name, shipClass = shipOV.shipClass, mode = self.mode, command = callback, extraArgs = [
+            shipId])
         if repaired:
             shipOV.setHp(shipOV.maxHp)
             shipOV.setSp(shipOV.maxSp)
+        
         shipFrame.enableStatsOV(shipOV)
         self.addFrame(shipFrame, index)
-        return
+
+

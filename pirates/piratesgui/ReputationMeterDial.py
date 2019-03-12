@@ -1,17 +1,17 @@
 from direct.gui.DirectGui import *
-from direct.interval.IntervalGlobal import *
-from panda3d.core import *
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.piratesgui import PiratesGuiGlobals
-from pirates.piratesgui.DialMeter import DialMeter
+from pandac.PandaModules import *
 from pirates.reputation import ReputationGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesgui.DialMeter import DialMeter
 from pirates.uberdog.UberDogGlobals import InventoryType
-
+from direct.interval.IntervalGlobal import *
 
 class ReputationMeterDial(DirectFrame):
-
-    def __init__(self, category, width=0.4):
-        DirectFrame.__init__(self, state=DGG.DISABLED, relief=None)
+    
+    def __init__(self, category, width = 0.4):
+        DirectFrame.__init__(self, state = DGG.DISABLED, relief = None)
         self.initialiseoptions(ReputationMeterDial)
         self.category = category
         self.level = 0
@@ -19,39 +19,29 @@ class ReputationMeterDial(DirectFrame):
         self.max = 0
         self.masteredIval = None
         name = self.getCategoryName()
-        self.meter = DialMeter(parent=self, meterColor=VBase4(0.7, 0.0, 0.0, 1), baseColor=VBase4(0.1, 0.1, 0.1, 1), wantCover=0, scale=0.5)
+        self.meter = DialMeter(parent = self, meterColor = VBase4(0.7, 0.0, 0.0, 1), baseColor = VBase4(0.1, 0.1, 0.1, 1), wantCover = 0, scale = 0.5)
         self.lastLevel = None
         self.lastExp = None
         self.mastered = False
-        self.categoryLabel = DirectLabel(parent=self, state=DGG.DISABLED, relief=None, text=name, text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_font=PiratesGlobals.getInterfaceFont(), pos=(0,
-                                                                                                                                                                                                                                                                                                           0,
-                                                                                                                                                                                                                                                                                                           0), textMayChange=1)
-        self.levelLabel = DirectLabel(parent=self, state=DGG.DISABLED, relief=None, text='', text_scale=0.08, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_font=PiratesGlobals.getPirateFont(), pos=(-0.015, 0, -0.08), textMayChange=1)
+        self.categoryLabel = DirectLabel(parent = self, state = DGG.DISABLED, relief = None, text = name, text_scale = PiratesGuiGlobals.TextScaleLarge, text_align = TextNode.ACenter, text_fg = PiratesGuiGlobals.TextFG2, text_shadow = PiratesGuiGlobals.TextShadow, text_font = PiratesGlobals.getInterfaceFont(), pos = (0, 0, 0), textMayChange = 1)
+        self.levelLabel = DirectLabel(parent = self, state = DGG.DISABLED, relief = None, text = '', text_scale = 0.08, text_align = TextNode.ACenter, text_fg = PiratesGuiGlobals.TextFG2, text_font = PiratesGlobals.getPirateFont(), pos = (-0.015, 0, -0.08), textMayChange = 1)
         logoModel = loader.loadModel('models/gui/potcLogo')
         guiModel = loader.loadModel('models/gui/toplevel_gui')
-        self.valueLabel = DirectLabel(parent=self, state=DGG.DISABLED, relief=None, text='', text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ACenter, text_fg=PiratesGuiGlobals.TextFG2, text_shadow=PiratesGuiGlobals.TextShadow, text_font=PiratesGlobals.getInterfaceFont(), pos=(0.0,
-                                                                                                                                                                                                                                                                                                      0,
-                                                                                                                                                                                                                                                                                                      -0.2), textMayChange=1)
-        self.levelCapScroll = DirectFrame(parent=self, relief=None, image=guiModel.find('**/main_gui_quest_scroll'), image_scale=(0.13,
-                                                                                                                                  1.0,
-                                                                                                                                  0.09), pos=(0.0, 0.0, -0.1625))
+        self.valueLabel = DirectLabel(parent = self, state = DGG.DISABLED, relief = None, text = '', text_scale = PiratesGuiGlobals.TextScaleLarge, text_align = TextNode.ACenter, text_fg = PiratesGuiGlobals.TextFG2, text_shadow = PiratesGuiGlobals.TextShadow, text_font = PiratesGlobals.getInterfaceFont(), pos = (0.0, 0, -0.2), textMayChange = 1)
+        self.levelCapScroll = DirectFrame(parent = self, relief = None, image = guiModel.find('**/main_gui_quest_scroll'), image_scale = (0.13, 1.0, 0.09), pos = (0.0, 0.0, -0.1625))
         self.levelCapScroll.hide()
-        self.levelCapIcon = DirectFrame(parent=self, relief=None, image=logoModel.find('**/skull'), image_pos=(0.0,
-                                                                                                               0.0,
-                                                                                                               0.0), image_scale=0.9, pos=(-0.0275, 0.0, -0.105))
+        self.levelCapIcon = DirectFrame(parent = self, relief = None, image = logoModel.find('**/skull'), image_pos = (0.0, 0.0, 0.0), image_scale = 0.9, pos = (-0.0275, 0.0, -0.105))
         self.levelCapIcon.hide()
         self.levelCapScroll.setTransparency(1)
         self.levelCapIcon.setTransparency(1)
         self.valueLabel.setTransparency(1)
         self.update(self.value)
-        return
 
     def destroy(self):
         DirectFrame.destroy(self)
         if self.masteredIval:
             self.masteredIval.pause()
             self.masteredIval = None
-        return
 
     def hideMasterOrnament(self):
         self.levelCapScroll.hide()
@@ -67,23 +57,25 @@ class ReputationMeterDial(DirectFrame):
     def masteredFX(self):
         if self.masteredIval:
             self.masteredIval.start()
-            return
+            return None
+        
         startColor = Vec4(1.0, 1.0, 1.0, 0.0)
         endColor = Vec4(1.0, 1.0, 1.0, 1.0)
         duration = 1.5
-        fade = Parallel(LerpColorScaleInterval(self.levelCapScroll, duration, endColor, startColor, blendType='easeInOut'), LerpColorScaleInterval(self.levelCapIcon, duration, endColor, startColor, blendType='easeInOut'), LerpColorScaleInterval(self.valueLabel, duration, endColor, startColor, blendType='easeInOut'))
+        fade = Parallel(LerpColorScaleInterval(self.levelCapScroll, duration, endColor, startColor, blendType = 'easeInOut'), LerpColorScaleInterval(self.levelCapIcon, duration, endColor, startColor, blendType = 'easeInOut'), LerpColorScaleInterval(self.valueLabel, duration, endColor, startColor, blendType = 'easeInOut'))
         startScale = Vec3(0.75, 0.75, 0.75)
         endScale = Vec3(1.0, 1.0, 1.0)
         duration = 1.0
-        scale = Parallel(LerpScaleInterval(self.levelCapScroll, duration, endScale, startScale, blendType='easeInOut'), LerpScaleInterval(self.levelCapIcon, duration, endScale, startScale * 0.1, blendType='easeInOut'), LerpScaleInterval(self.valueLabel, duration, endScale, startScale, blendType='easeInOut'))
+        scale = Parallel(LerpScaleInterval(self.levelCapScroll, duration, endScale, startScale, blendType = 'easeInOut'), LerpScaleInterval(self.levelCapIcon, duration, endScale, startScale * 0.1, blendType = 'easeInOut'), LerpScaleInterval(self.valueLabel, duration, endScale, startScale, blendType = 'easeInOut'))
         self.masteredIval = Parallel(fade, scale)
         self.masteredIval.start()
 
     def update(self, value):
         if self.mastered:
-            return
+            return None
+        
         self.value = value
-        level, leftoverValue = ReputationGlobals.getLevelFromTotalReputation(self.category, value)
+        (level, leftoverValue) = ReputationGlobals.getLevelFromTotalReputation(self.category, value)
         self.max = ReputationGlobals.getReputationNeededToLevel(self.category, level)
         self.levelLabel['text'] = '%s' % level
         if self.category == InventoryType.OverallRep:
@@ -114,14 +106,16 @@ class ReputationMeterDial(DirectFrame):
             self.hideMasterOrnament()
             if self.lastLevel == None:
                 self.lastLevel = level
+            
             if self.lastExp == None:
                 if hasattr(base, 'localAvatar'):
-                    if base.localAvatar:
-                        self.lastExp = localAvatar.getInventory().getReputation(self.category)
+                    self.lastExp = localAvatar.getInventory().getReputation(self.category)
+
             if self.lastExp:
                 expChange = value - self.lastExp
                 if expChange:
                     localAvatar.guiMgr.gameGui.createExpAlert(expChange, 4.0, Vec3(-0.93, 0.0, 0.75), Vec3(0.0, 0.0, 0.25))
+
             if self.lastLevel != level:
                 self.lastLevel = level
                 glowFrameColor = Vec4(0.7, 0.0, 0.0, 1.0)
@@ -133,26 +127,25 @@ class ReputationMeterDial(DirectFrame):
                 scale = Vec3(1.2, 1.2, 1.2)
                 objFrame = self.meter.meterFace
                 objLevel = self.levelLabel
-                levelUpIval = Sequence(Func(self.meter.meterFaceHalf1.hide), Func(self.meter.meterFaceHalf2.hide), Parallel(LerpColorInterval(objFrame, 3.0, startFrameColor, glowFrameColor, blendType='easeInOut'), LerpColorInterval(objLevel, 3.0, startLevelColor, glowLevelColor, blendType='easeInOut'), Sequence(LerpScaleInterval(objLevel, 0.25, scale, startFrameScale, blendType='easeInOut'), LerpScaleInterval(objLevel, 2.0, startFrameScale, blendType='easeInOut'))), Func(self.meter.meterFaceHalf1.show), Func(self.meter.meterFaceHalf2.show), Func(objLevel.clearColor))
+                levelUpIval = Sequence(Func(self.meter.meterFaceHalf1.hide), Func(self.meter.meterFaceHalf2.hide), Parallel(LerpColorInterval(objFrame, 3.0, startFrameColor, glowFrameColor, blendType = 'easeInOut'), LerpColorInterval(objLevel, 3.0, startLevelColor, glowLevelColor, blendType = 'easeInOut'), Sequence(LerpScaleInterval(objLevel, 0.25, scale, startFrameScale, blendType = 'easeInOut'), LerpScaleInterval(objLevel, 2.0, startFrameScale, blendType = 'easeInOut'))), Func(self.meter.meterFaceHalf1.show), Func(self.meter.meterFaceHalf2.show), Func(objLevel.clearColor))
                 levelUpIval.start()
+            elif self.lastExp is not None:
+                if self.lastExp == value:
+                    return None
+            
+            self.lastExp = value
+            glowFrameColor = Vec4(1.0, 0, 0, 1.0)
+            startFrameColorA = self.meter.meterFaceHalf1.getColor()
+            startFrameColorB = self.meter.meterFaceHalf2.getColor()
+            objFrameA = self.meter.meterFaceHalf1
+            objFrameB = self.meter.meterFaceHalf2
+            objFrameC = self.meter.meterFace
+            if leftoverValue and float(self.max) / float(leftoverValue) > 2.0:
+                expUpIval = Sequence(LerpColorScaleInterval(objFrameA, 0.2, glowFrameColor, blendType = 'easeInOut'), Wait(0.2), LerpColorScaleInterval(objFrameA, 0.5, startFrameColorA, blendType = 'easeInOut'), LerpColorScaleInterval(objFrameA, 0.1, glowFrameColor, blendType = 'easeInOut'), Wait(0.1), LerpColorScaleInterval(objFrameA, 0.3, startFrameColorA, blendType = 'easeInOut'))
             else:
-                if self.lastExp is not None:
-                    if self.lastExp == value:
-                        return
-                self.lastExp = value
-                glowFrameColor = Vec4(1.0, 0, 0, 1.0)
-                startFrameColorA = self.meter.meterFaceHalf1.getColor()
-                startFrameColorB = self.meter.meterFaceHalf2.getColor()
-                objFrameA = self.meter.meterFaceHalf1
-                objFrameB = self.meter.meterFaceHalf2
-                objFrameC = self.meter.meterFace
-                if leftoverValue and float(self.max) / float(leftoverValue) > 2.0:
-                    expUpIval = Sequence(LerpColorScaleInterval(objFrameA, 0.2, glowFrameColor, blendType='easeInOut'), Wait(0.2), LerpColorScaleInterval(objFrameA, 0.5, startFrameColorA, blendType='easeInOut'), LerpColorScaleInterval(objFrameA, 0.1, glowFrameColor, blendType='easeInOut'), Wait(0.1), LerpColorScaleInterval(objFrameA, 0.3, startFrameColorA, blendType='easeInOut'))
-                else:
-                    expUpIval = Sequence(Parallel(LerpColorScaleInterval(objFrameA, 0.2, glowFrameColor, blendType='easeInOut'), LerpColorScaleInterval(objFrameB, 0.2, glowFrameColor, blendType='easeInOut')), Wait(0.2), Parallel(LerpColorScaleInterval(objFrameA, 0.5, startFrameColorA, blendType='easeInOut'), LerpColorScaleInterval(objFrameB, 0.5, startFrameColorA, blendType='easeInOut')), Parallel(LerpColorScaleInterval(objFrameA, 0.1, glowFrameColor, blendType='easeInOut'), LerpColorScaleInterval(objFrameB, 0.1, glowFrameColor, blendType='easeInOut')), Wait(0.1), Parallel(LerpColorScaleInterval(objFrameA, 0.3, startFrameColorA, blendType='easeInOut'), LerpColorScaleInterval(objFrameB, 0.3, startFrameColorA, blendType='easeInOut')))
-                expUpIval.start()
-        return
-
+                expUpIval = Sequence(Parallel(LerpColorScaleInterval(objFrameA, 0.2, glowFrameColor, blendType = 'easeInOut'), LerpColorScaleInterval(objFrameB, 0.2, glowFrameColor, blendType = 'easeInOut')), Wait(0.2), Parallel(LerpColorScaleInterval(objFrameA, 0.5, startFrameColorA, blendType = 'easeInOut'), LerpColorScaleInterval(objFrameB, 0.5, startFrameColorA, blendType = 'easeInOut')), Parallel(LerpColorScaleInterval(objFrameA, 0.1, glowFrameColor, blendType = 'easeInOut'), LerpColorScaleInterval(objFrameB, 0.1, glowFrameColor, blendType = 'easeInOut')), Wait(0.1), Parallel(LerpColorScaleInterval(objFrameA, 0.3, startFrameColorA, blendType = 'easeInOut'), LerpColorScaleInterval(objFrameB, 0.3, startFrameColorA, blendType = 'easeInOut')))
+            expUpIval.start()
+    
     def setCategory(self, category):
         self.category = category
         name = self.getCategoryName()
@@ -163,3 +156,5 @@ class ReputationMeterDial(DirectFrame):
 
     def getCategoryName(self):
         return PLocalizer.InventoryTypeNames[self.category]
+
+

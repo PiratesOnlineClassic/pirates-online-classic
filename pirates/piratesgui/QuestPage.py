@@ -42,24 +42,25 @@ class QuestPage(InventoryPage.InventoryPage):
         InventoryPage.InventoryPage.__init__(self)
         self.initialiseoptions(QuestPage)
         self.detailId = None
-        self.titleBorder = BorderFrame.BorderFrame(parent=self, frameSize=(-0.02, 0.97, -0.02, 0.65))
+        self.titleBorder = BorderFrame.BorderFrame(parent = self, frameSize = (-0.02, 0.97, -0.02, 0.65))
         self.titleBorder.setPos(0.06, 0, 0.01)
         self.titleList = QuestTitleList.QuestTitleList()
         self.titleList.reparentTo(self.titleBorder)
         self.titleList.setPos(0.005, 0, 0)
         gui = loader.loadModel('models/gui/compass_main')
-        self.trackedQuestLabel = DirectLabel(parent=base.a2dTopRight, relief=None, image=gui.find('**/icon_objective_grey'), image_color=Vec4(1, 1, 0, 1), image_scale=0.14, image_pos=(-0.03, 0, 0.012), text='', text_fg=PiratesGuiGlobals.TextFG2, text_scale=PiratesGuiGlobals.TextScaleLarge, text_align=TextNode.ALeft, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=12, pos=(-0.9, 0, -0.05))
+        self.trackedQuestLabel = DirectLabel(parent = base.a2dTopRight, relief = None, image = gui.find('**/icon_objective_grey'), image_color = Vec4(1, 1, 0, 1), image_scale = 0.14, image_pos = (-0.03, 0, 0.012), text = '', text_fg = PiratesGuiGlobals.TextFG2, text_scale = PiratesGuiGlobals.TextScaleLarge, text_align = TextNode.ALeft, text_shadow = PiratesGuiGlobals.TextShadow, text_wordwrap = 12, pos = (-0.9, 0, -0.05))
         self.trackedQuestLabel.hide()
-        self.detailFrame = QuestDetailBase(parent=self, pos=(0.54, 0, 1.06))
-        self.dropButton = GuiButton.GuiButton(parent=self, state=DGG.DISABLED, text=PLocalizer.DropQuest, textMayChange=0, text_scale=PiratesGuiGlobals.TextScaleMed, text_pos=(0, -0.01), pos=(0.91, 0, 0.72), command=self.dropQuest, helpText=PLocalizer.DropQuestHelp, helpDelay=PiratesGuiGlobals.HelpPopupTime, helpPos=(-0.335, 0, 0.125))
+        self.detailFrame = QuestDetailBase(parent = self, pos = (0.54, 0, 1.06))
+        self.dropButton = GuiButton.GuiButton(parent = self, state = DGG.DISABLED, text = PLocalizer.DropQuest, textMayChange = 0, text_scale = PiratesGuiGlobals.TextScaleMed, text_pos = (0, -0.01), pos = (0.91, 0, 0.72), command = self.dropQuest, helpText = PLocalizer.DropQuestHelp, helpDelay = PiratesGuiGlobals.HelpPopupTime, helpPos = (-0.335, 0, 0.125))
         objectiveGrey = gui.find('**/icon_objective_grey')
-        self.trackButton = GuiButton.GuiButton(parent=self, state=DGG.DISABLED, text=PLocalizer.TrackQuest, textMayChange=0, text_pos=(0.035, -0.014), pos=(0.66, 0, 0.72), command=self.trackQuest, helpText=PLocalizer.TrackQuestHelp, helpDelay=PiratesGuiGlobals.HelpPopupTime, helpPos=(-0.08, 0, 0.125), geom=objectiveGrey, geom_color=Vec4(1, 1, 0, 1), geom_scale=0.2, geom_pos=(-0.07, 0, -0.002))
+        self.trackButton = GuiButton.GuiButton(parent = self, state = DGG.DISABLED, text = PLocalizer.TrackQuest, textMayChange = 0, text_pos = (0.035, -0.014), pos = (0.66, 0, 0.72), command = self.trackQuest, helpText = PLocalizer.TrackQuestHelp, helpDelay = PiratesGuiGlobals.HelpPopupTime, helpPos = (-0.08, 0, 0.125), geom = objectiveGrey, geom_color = Vec4(1, 1, 0, 1), geom_scale = 0.2, geom_pos = (-0.07, 0, -0.002))
         tPos = (0.33, 0, 0.33)
         if base.config.GetBool('want-blackpearl-gui', 0):
             self.blackPearlCrew = BlackPearlCrew.BlackPearlCrew()
             self.blackPearlCrew.hide()
-            self.crewButton = GuiButton.GuiButton(parent=self, text=PLocalizer.BPCrew, textMayChange=0, text_pos=(0.035, -0.014), pos=(0.33, 0, 0.95), command=self.showBlackPearlCrew)
+            self.crewButton = GuiButton.GuiButton(parent = self, text = PLocalizer.BPCrew, textMayChange = 0, text_pos = (0.035, -0.014), pos = (0.33, 0, 0.95), command = self.showBlackPearlCrew)
             self.crewButton.hide()
+        
         self.accept('questGuiSelect', self.showQuestDetails)
         self.accept('localAvatarQuestComplete', self.updateQuestDetails)
         self.accept('localAvatarQuestUpdate', self.updateQuestDetails)
@@ -71,7 +72,7 @@ class QuestPage(InventoryPage.InventoryPage):
         self.tmButtonQuick = None
         self.tmButtonSearch = None
         self.tmReadyDialog = None
-    
+
     def destroy(self):
         self.trackedQuestLabel.destroy()
         self.titleList.destroy()
@@ -87,7 +88,7 @@ class QuestPage(InventoryPage.InventoryPage):
         localAvatar.guiMgr.removeNewQuestIndicator()
         if not self.trackedQuestLabel.isHidden():
             self.updateQuestTitles()
-    
+
     def dropQuest(self):
         self.dropButton['state'] = DGG.DISABLED
         localAvatar.requestDropQuest(self.detailId)
@@ -120,10 +121,10 @@ class QuestPage(InventoryPage.InventoryPage):
                             localAvatar.guiMgr.mapPage.worldMap.mapBall.updateDart('questStep', pos)
                         else:
                             localAvatar.guiMgr.mapPage.addQuestDart('questStep', pos)
-    
+
     def updateQuestTitlesNewQuest(self, quest):
-        self.updateQuestTitles(quest, newQuest=True)
-    
+        self.updateQuestTitles(quest, newQuest = True)
+
     def updateQuestTitles(self, quest = None, newQuest = False):
         questIds = map(lambda q: q.getQuestId(), localAvatar.getQuests())
         self.titleList.update(questIds, quest, newQuest)
@@ -151,13 +152,13 @@ class QuestPage(InventoryPage.InventoryPage):
         self.detailId = questId
         self.updateQuestIdDetails(questId)
 
-    def updateQuestDetails(self, quest, item=None, note=None):
+    def updateQuestDetails(self, quest, item = None, note = None):
         questId = quest.getQuestId()
         self.updateQuestIdDetails(questId)
         self.updateQuestTitles(quest)
         if questId == localAvatar.activeQuestId:
             self.updateTrackedQuestLabel(questId)
-
+    
     def updateTrackedQuestLabel(self, questId):
         quest = localAvatar.getQuestById(questId)
         if quest:
@@ -166,7 +167,7 @@ class QuestPage(InventoryPage.InventoryPage):
             self.trackedQuestLabel.show()
         else:
             self.trackedQuestLabel.hide()
-
+    
     def updateQuestIdDetails(self, questId):
         self.removeTreasureMapButtons()
         if not questId:
@@ -251,7 +252,7 @@ class QuestPage(InventoryPage.InventoryPage):
             else:
                 self.dropButton['state'] = DGG.DISABLED
         self.detailFrame['text'] = questText
-
+    
     def checkButtonDisplay(self, quest):
         questDNA = quest.getQuestDNA()
         questTasks = questDNA.getTasks()
@@ -273,11 +274,25 @@ class QuestPage(InventoryPage.InventoryPage):
                                 break
 
                 self.invRequest = DistributedInventoryBase.DistributedInventoryBase.getInventory(localAvatar.getInventoryId(), inventoryReceived)
-    
+
     def addTreasureMapButtons(self, tm, buttonOffset):
         self.removeTreasureMapButtons()
         helpPos = (-0.26, 0, 0.095)
-        self.tmButtonSearch = GuiButton.GuiButton(parent=self, text=PLocalizer.PlayTMLookout, text_align=TextNode.ACenter, text_scale=PiratesGuiGlobals.TextScaleLarge, text_pos=(0.0, -0.01), text_fg=PiratesGuiGlobals.TextFG1, text_shadow=PiratesGuiGlobals.TextShadow, text_wordwrap=40, image_scale=(0.45, 1, 0.25), command=self.startTreasureMap, extraArgs=[tm, False], pos=(0.54, 0, buttonOffset), helpText=PLocalizer.PlayTMLookoutHelp, helpPos=helpPos)
+        self.tmButtonSearch = GuiButton.GuiButton(parent = self,
+                                                  text = PLocalizer.PlayTMLookout,
+                                                  text_align = TextNode.ACenter,
+                                                  text_scale = PiratesGuiGlobals.TextScaleLarge,
+                                                  text_pos = (0.0, -0.01),
+                                                  text_fg = PiratesGuiGlobals.TextFG1,
+                                                  text_shadow = PiratesGuiGlobals.TextShadow,
+                                                  text_wordwrap = 40,
+                                                  image_scale = (0.45, 1, 0.25),
+                                                  command = self.startTreasureMap,
+                                                  extraArgs = [tm, False],
+                                                  pos = (0.54, 0, buttonOffset),
+                                                  helpText = PLocalizer.PlayTMLookoutHelp,
+                                                  helpPos = helpPos
+                                                  )
         if base.cr.teleportMgr.inInstanceType == PiratesGlobals.INSTANCE_TM:
             self.disableTreasureMapButtons()
         else:
@@ -316,24 +331,24 @@ class QuestPage(InventoryPage.InventoryPage):
     
     def startTreasureMap(self, tm, quick = True):
         if localAvatar.getAccess() != OTPGlobals.AccessFull:
-            self.tmReadyDialog = PDialog.PDialog(text=PLocalizer.PlayTMVelvetRope, style=OTPDialog.Acknowledge, giveMouse=False, command=self.notReadyCallback)
+            self.tmReadyDialog = PDialog.PDialog(text = PLocalizer.PlayTMVelvetRope, style = OTPDialog.Acknowledge, giveMouse = False, command = self.notReadyCallback)
             self.tmReadyDialog.show()
-            return
+            return None
         
         if tm.getIsEnabled() or base.config.GetBool('black-pearl-ready', 0):
             from pirates.band.DistributedBandMember import DistributedBandMember
             if not DistributedBandMember.getBandMember(localAvatar.doId):
-                localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.LookoutInviteNeedCrew,
-                                                               icon=('lookout', None))
-                return
+                localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.LookoutInviteNeedCrew, icon = ('lookout', None))
+                return None
             
             if localAvatar.testTeleportFlag(PiratesGlobals.TFNoTeleport) == False:
                 if base.cr.teleportMgr.inInstanceType == PiratesGlobals.INSTANCE_MAIN:
                     tm.requestTreasureMapGo(quick)
                 elif base.cr.teleportMgr.inInstanceType == PiratesGlobals.INSTANCE_TM:
                     tm.requestTreasureMapLeave()
+
         else:
-            self.tmReadyDialog = PDialog.PDialog(text=PLocalizer.PlayTMBlackPearlNotReady, style=OTPDialog.Acknowledge, giveMouse=False, command=self.notReadyCallback)
+            self.tmReadyDialog = PDialog.PDialog(text = PLocalizer.PlayTMBlackPearlNotReady, style = OTPDialog.Acknowledge, giveMouse = False, command = self.notReadyCallback)
             self.tmReadyDialog.show()
 
     def notReadyCallback(self, args):
@@ -342,3 +357,5 @@ class QuestPage(InventoryPage.InventoryPage):
     def showBlackPearlCrew(self):
         self.blackPearlCrew.showCrewStatus()
         self.blackPearlCrew.show()
+
+

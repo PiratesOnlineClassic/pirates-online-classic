@@ -1,21 +1,23 @@
-from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
-from otp.otpgui import OTPDialog
-from panda3d.core import *
-from pirates.battle import WeaponGlobals
-from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
-from pirates.piratesgui import (InventoryPage, PDialog, PiratesGuiGlobals,
-                                RadialMenu, SkillpageGuiButton)
-from pirates.piratesgui.ReputationMeter import ReputationMeter
-from pirates.piratesgui.SkillButton import SkillButton
+from pandac.PandaModules import *
+from direct.directnotify import DirectNotifyGlobal
+from pirates.piratesgui import InventoryPage
 from pirates.reputation import ReputationGlobals
-from pirates.uberdog.UberDogGlobals import (InventoryCategory, InventoryId,
-                                            InventoryType)
-
+from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType, InventoryId
+from pirates.piratesbase import PLocalizer
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesgui import RadialMenu
+from pirates.piratesgui.ReputationMeter import ReputationMeter
+from pirates.piratesgui import SkillpageGuiButton
+from pirates.piratesgui import PiratesGuiGlobals
+from pirates.battle import WeaponGlobals
+from pirates.piratesbase import Freebooter
+from pirates.piratesgui.SkillButton import SkillButton
+from pirates.piratesgui import PDialog
+from otp.otpgui import OTPDialog
 MAX_REP = 6
 
 class SkillPage(InventoryPage.InventoryPage):
-    
     MAX_UPGRADE_DOTS = 5
     EXCLUDED_SKILLS = [
      InventoryType.CannonGrappleHook]
@@ -59,13 +61,7 @@ class SkillPage(InventoryPage.InventoryPage):
         self.repMeter = ReputationMeter(self.getRep(), width=0.7)
         self.repMeter.reparentTo(self)
         self.repMeter.setPos(0.55, 0, 1.24)
-        self.unspent = DirectLabel(parent=self, relief=None, text=PLocalizer.SkillPageUnspentPoints % 0, text_scale=0.04, text_align=TextNode.ACenter, text_pos=(0, -0.01), text_fg=(1,
-                                                                                                                                                                                     1,
-                                                                                                                                                                                     1,
-                                                                                                                                                                                     1), pos=(0.8,
-                                                                                                                                                                                              0,
-                                                                                                                                                                                              0.02))
-        return
+        self.unspent = DirectLabel(parent=self, relief=None, text=PLocalizer.SkillPageUnspentPoints % 0, text_scale=0.04, text_align=TextNode.ACenter, text_pos=(0, -0.01), text_fg=(1, 1, 1, 1), pos=(0.8, 0, 0.02))
 
     def destroy(self):
         for spot in self.skillFrames.keys():
@@ -76,17 +72,17 @@ class SkillPage(InventoryPage.InventoryPage):
             self.tabBar = None
         self.__handleFreeDialog()
         InventoryPage.InventoryPage.destroy(self)
-        return
 
     def __handleFreeDialog(self, value=None):
         if self.spentDialog:
             self.spentDialog.destroy()
             self.spentDialog = None
-        return
 
     def createTabs(self):
         repIds = [
-         InventoryType.CannonRep, InventoryType.SailingRep]
+            InventoryType.CannonRep,
+            InventoryType.SailingRep
+        ]
         for weaponId in localAvatar.equippedWeapons:
             if weaponId:
                 repIds.append(WeaponGlobals.getRepId(weaponId))
@@ -104,9 +100,7 @@ class SkillPage(InventoryPage.InventoryPage):
         asset = ReputationGlobals.RepIcons.get(repId)
         image = model.find('**/%s' % asset)
         name = PLocalizer.InventoryTypeNames[repId]
-        newTab.nameTag = DirectLabel(parent=newTab, relief=None, state=DGG.DISABLED, image=image, image_scale=0.1, image_color=Vec4(0.8, 0.8, 0.8, 1), pos=(0,
-                                                                                                                                                            0,
-                                                                                                                                                            0))
+        newTab.nameTag = DirectLabel(parent=newTab, relief=None, state=DGG.DISABLED, image=image, image_scale=0.1, image_color=Vec4(0.8, 0.8, 0.8, 1), pos=(0, 0, 0))
 
         def mouseOver(tab=newTab):
             tab.nameTag.setScale(1.1)
@@ -122,7 +116,6 @@ class SkillPage(InventoryPage.InventoryPage):
 
         newTab['mouseEntered'] = mouseOver
         newTab['mouseLeft'] = mouseOff
-        return
 
     def show(self):
         if self.tabBar == None:
@@ -132,7 +125,6 @@ class SkillPage(InventoryPage.InventoryPage):
         self.createTabs()
         InventoryPage.InventoryPage.show(self)
         self.update()
-        return
 
     def update(self, repId=None, fromUser=0):
         inv = localAvatar.getInventory()
@@ -257,7 +249,6 @@ class SkillPage(InventoryPage.InventoryPage):
             count += 1
 
         self.dataChanged = False
-        return
 
     def hide(self):
         if self.tabBar:
@@ -276,24 +267,19 @@ class SkillPage(InventoryPage.InventoryPage):
             if i in self.dots[skillId]:
                 if points > 0:
                     self.dots[skillId][i].show()
-            else:
-                if skillId in self.skillFrames:
-                    self.dots[skillId][i] = DirectFrame(parent=self.skillFrames[skillId], relief=None, image=SkillPage.FrameTex, image_scale=0.029)
-                    if i == 0:
-                        self.dots[skillId][i].setPos(-0.0736, 0, 0.0)
-                    else:
-                        if i == 1:
-                            self.dots[skillId][i].setPos(-0.0637, 0, -0.0368)
-                        else:
-                            if i == 2:
-                                self.dots[skillId][i].setPos(-0.0368, 0, -0.0637)
-                            else:
-                                if i == 3:
-                                    self.dots[skillId][i].setPos(0.0, 0, -0.0736)
-                                else:
-                                    if i == 4:
-                                        self.dots[skillId][i].setPos(0.0368, 0, -0.0637)
-                    self.dots[skillId][i].setColorScale(1, 1, 1, 0.7)
+            elif skillId in self.skillFrames:
+                self.dots[skillId][i] = DirectFrame(parent=self.skillFrames[skillId], relief=None, image=SkillPage.FrameTex, image_scale=0.029)
+                if i == 0:
+                    self.dots[skillId][i].setPos(-0.0736, 0, 0.0)
+                elif i == 1:
+                    self.dots[skillId][i].setPos(-0.0637, 0, -0.0368)
+                elif i == 2:
+                    self.dots[skillId][i].setPos(-0.0368, 0, -0.0637)
+                elif i == 3:
+                    self.dots[skillId][i].setPos(0.0, 0, -0.0736)
+                elif i == 4:
+                    self.dots[skillId][i].setPos(0.0368, 0, -0.0637)
+                self.dots[skillId][i].setColorScale(1, 1, 1, 0.7)
             dotNum = i + self.MAX_UPGRADE_DOTS
             if i < points:
                 if dotNum in self.dots[skillId]:
@@ -304,59 +290,44 @@ class SkillPage(InventoryPage.InventoryPage):
             elif dotNum in self.dots[skillId]:
                 self.dots[skillId][dotNum].hide()
 
-        return
-
     def addPoint(self, skillId):
         if skillId == InventoryType.SailPowerRecharge:
             return
-
         inv = localAvatar.getInventory()
-        #if self.currentRep == InventoryType.CutlassRep and localAvatar.style.tutorial < PiratesGlobals.TUT_GOT_CUTLASS:
-        #    if inv.getStackQuantity(InventoryType.CutlassSweep) < 2:
-        #        if skillId != InventoryType.CutlassSweep:
-        #            return
-        #    elif skillId == InventoryType.CutlassSweep:
-        #        messenger.send('skillImprovementAttempted')
-
+        if self.currentRep == InventoryType.CutlassRep and localAvatar.style.tutorial < PiratesGlobals.TUT_GOT_CUTLASS:
+            if inv.getStackQuantity(InventoryType.CutlassSweep) < 2:
+                if skillId != InventoryType.CutlassSweep:
+                    return
+            elif skillId == InventoryType.CutlassSweep:
+                messenger.send('skillImprovementAttempted')
         unSpentId = self.getUnspent()
         unSp = inv.getStackQuantity(unSpentId)
         if unSpentId in self.localMods:
             unSp = self.localMods[unSpentId]
-
-        #if unSp < 1:
-        #    return
-
+        if unSp < 1:
+            return
         if inv.getStackLimit(skillId):
             curAmt = inv.getStackQuantity(skillId)
             if skillId in self.localMods:
                 curAmt = self.localMods[skillId]
             if curAmt > 5:
-                pass#return
+                return
             else:
                 curAmt += 1
         else:
-            curAmt = 1
-        #else:
-        #    return
-
+            return
         self.__handleFreeDialog()
         if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
-            #if curAmt > Freebooter.FreeSkillCap:
-            #    self.spentDialog = PDialog.PDialog(text=PLocalizer.FreebooterSkillMax, style=OTPDialog.CancelOnly,
-            #        command=self.__handleFreeDialog)
-            #
-            #    return
-
+            if curAmt > Freebooter.FreeSkillCap:
+                self.spentDialog = PDialog.PDialog(text=PLocalizer.FreebooterSkillMax, style=OTPDialog.CancelOnly, command=self.__handleFreeDialog)
+                return
             playerExp = inv.getAccumulator(self.currentRep)
             categoryLevel, extra = ReputationGlobals.getLevelFromTotalReputation(self.currentRep, playerExp)
             alreadySpent = categoryLevel - 1 - unSp
-            #if alreadySpent > 5:
-            #    self.spentDialog = PDialog.PDialog(text=PLocalizer.FreebooterSkillLock, style=OTPDialog.CancelOnly,
-            #        command=self.__handleFreeDialog)
-            #
-            #    return
-
-        if not base.config.GetBool('want-combo-skips', False):
+            if alreadySpent > 5:
+                self.spentDialog = PDialog.PDialog(text=PLocalizer.FreebooterSkillLock, style=OTPDialog.CancelOnly, command=self.__handleFreeDialog)
+                return
+        if not base.config.GetBool('want-combo-skips', 0):
             comboSkills = [
                 InventoryType.CutlassSlash,
                 InventoryType.CutlassCleave,
@@ -364,12 +335,11 @@ class SkillPage(InventoryPage.InventoryPage):
                 InventoryType.CutlassStab,
                 InventoryType.DaggerSwipe,
                 InventoryType.DaggerGouge,
-                InventoryType.DaggerEviscerate]
-
-            #if skillId in comboSkills and inv.getStackQuantity(skillId - 1) <= 1:
-            #    base.localAvatar.guiMgr.createWarning(PLocalizer.ComboOrderWarn, PiratesGuiGlobals.TextFG6)
-            #    return
-
+                InventoryType.DaggerEviscerate
+            ]
+            if skillId in comboSkills and inv.getStackQuantity(skillId - 1) <= 1:
+                base.localAvatar.guiMgr.createWarning(PLocalizer.ComboOrderWarn, PiratesGuiGlobals.TextFG6)
+                return
         messenger.send('skillImprovementAttempted')
         localAvatar.spendSkillPoint(skillId)
         self.localMods[skillId] = curAmt
@@ -416,7 +386,6 @@ class SkillPage(InventoryPage.InventoryPage):
     def updateUnspent(self, category, value):
         if category in self.localMods:
             del self.localMods[category]
-
         self.dataChanged = True
         self.update(self.currentRep)
 
@@ -427,51 +396,38 @@ class SkillPage(InventoryPage.InventoryPage):
     def getUnspent(self):
         if self.currentRep == InventoryType.CutlassRep:
             return InventoryType.UnspentCutlass
+        elif self.currentRep == InventoryType.DaggerRep:
+            return InventoryType.UnspentDagger
+        elif self.currentRep == InventoryType.PistolRep:
+            return InventoryType.UnspentPistol
+        elif self.currentRep == InventoryType.GrenadeRep:
+            return InventoryType.UnspentGrenade
+        elif self.currentRep == InventoryType.DollRep:
+            return InventoryType.UnspentDoll
+        elif self.currentRep == InventoryType.WandRep:
+            return InventoryType.UnspentWand
+        elif self.currentRep == InventoryType.SailingRep:
+            return InventoryType.UnspentSailing
         else:
-            if self.currentRep == InventoryType.DaggerRep:
-                return InventoryType.UnspentDagger
-            else:
-                if self.currentRep == InventoryType.PistolRep:
-                    return InventoryType.UnspentPistol
-                else:
-                    if self.currentRep == InventoryType.GrenadeRep:
-                        return InventoryType.UnspentGrenade
-                    else:
-                        if self.currentRep == InventoryType.DollRep:
-                            return InventoryType.UnspentDoll
-                        else:
-                            if self.currentRep == InventoryType.WandRep:
-                                return InventoryType.UnspentWand
-                            else:
-                                if self.currentRep == InventoryType.SailingRep:
-                                    return InventoryType.UnspentSailing
-                                else:
-                                    return InventoryType.UnspentCannon
+            return InventoryType.UnspentCannon
 
     def ringOffset(self, num):
         if num == 0:
             return (-0.175, 0.175)
-        else:
-            if num == 1:
-                return (0.0, 0.25)
-            else:
-                if num == 2:
-                    return (0.175, 0.175)
-                else:
-                    if num == 3:
-                        return (0.25, 0.0)
-                    else:
-                        if num == 4:
-                            return (0.175, -0.175)
-                        else:
-                            if num == 5:
-                                return (0.0, -0.25)
-                            else:
-                                if num == 6:
-                                    return (-0.175, -0.175)
-                                else:
-                                    if num == 7:
-                                        return (-0.25, 0.0)
+        elif num == 1:
+            return (0.0, 0.25)
+        elif num == 2:
+            return (0.175, 0.175)
+        elif num == 3:
+            return (0.25, 0.0)
+        elif num == 4:
+            return (0.175, -0.175)
+        elif num == 5:
+            return (0.0, -0.25)
+        elif num == 6:
+            return (-0.175, -0.175)
+        elif num == 7:
+            return (-0.25, 0.0)
 
     def slideOpenPrecall(self):
         self.dataChanged = True
@@ -496,65 +452,60 @@ class SkillPage(InventoryPage.InventoryPage):
                     begin = InventoryType.begin_WeaponSkillDagger
                     end = InventoryType.end_WeaponSkillDagger
                     unSpentId = InventoryType.UnspentDagger
+                elif weaponRep == InventoryType.GrenadeRep:
+                    begin = InventoryType.begin_WeaponSkillGrenade
+                    end = InventoryType.end_WeaponSkillGrenade
+                    unSpentId = InventoryType.UnspentGrenade
+                elif weaponRep == InventoryType.DollRep:
+                    begin = InventoryType.begin_WeaponSkillDoll
+                    end = InventoryType.end_WeaponSkillDoll
+                    unSpentId = InventoryType.UnspentDoll
+                elif weaponRep == InventoryType.WandRep:
+                    begin = InventoryType.begin_WeaponSkillWand
+                    end = InventoryType.end_WeaponSkillWand
+                    unSpentId = InventoryType.UnspentWand
+                elif weaponRep == InventoryType.SailingRep:
+                    begin = InventoryType.begin_SkillSailing
+                    end = InventoryType.end_SkillSailing
+                    unSpentId = InventoryType.UnspentSailing
+                elif weaponRep == InventoryType.CannonRep:
+                    begin = InventoryType.begin_WeaponSkillCannon
+                    end = InventoryType.end_WeaponSkillCannon
+                    unSpentId = InventoryType.UnspentCannon
                 else:
-                    if weaponRep == InventoryType.GrenadeRep:
-                        begin = InventoryType.begin_WeaponSkillGrenade
-                        end = InventoryType.end_WeaponSkillGrenade
-                        unSpentId = InventoryType.UnspentGrenade
-                    else:
-                        if weaponRep == InventoryType.DollRep:
-                            begin = InventoryType.begin_WeaponSkillDoll
-                            end = InventoryType.end_WeaponSkillDoll
-                            unSpentId = InventoryType.UnspentDoll
-                        else:
-                            if weaponRep == InventoryType.WandRep:
-                                begin = InventoryType.begin_WeaponSkillWand
-                                end = InventoryType.end_WeaponSkillWand
-                                unSpentId = InventoryType.UnspentWand
-                            else:
-                                if weaponRep == InventoryType.SailingRep:
-                                    begin = InventoryType.begin_SkillSailing
-                                    end = InventoryType.end_SkillSailing
-                                    unSpentId = InventoryType.UnspentSailing
-                                else:
-                                    if weaponRep == InventoryType.CannonRep:
-                                        begin = InventoryType.begin_WeaponSkillCannon
-                                        end = InventoryType.end_WeaponSkillCannon
-                                        unSpentId = InventoryType.UnspentCannon
-                                    else:
-                                        return
-        localAvatar.resetSkillPoints(weaponRep)
-        inv = localAvatar.getInventory()
-        extra = 0
-        for skillId in range(begin, end):
-            if skillId in InventoryType.DontResetSkills:
-                continue
-            curAmt = inv.getStackQuantity(skillId)
-            if skillId in self.localMods:
-                curAmt = self.localMods[skillId]
-            resetAmt = 1
-            if skillId in listReset1:
-                resetAmt = 2
-            if curAmt > resetAmt:
-                extra += curAmt - resetAmt
-                self.localMods[skillId] = resetAmt
-                if self.tabBar and skillId in self.skillFrames:
-                    self.skillFrames[skillId].skillRank = resetAmt - 1
-                if self.tabBar:
-                    try:
-                        self.makeDots(skillId, resetAmt - 1)
-                    except:
-                        pass
+                    return
+                localAvatar.resetSkillPoints(weaponRep)
+                inv = localAvatar.getInventory()
+                extra = 0
+                for skillId in range(begin, end):
+                    if skillId in InventoryType.DontResetSkills:
+                        continue
+                    curAmt = inv.getStackQuantity(skillId)
+                    if skillId in self.localMods:
+                        curAmt = self.localMods[skillId]
+                    resetAmt = 1
+                    if skillId in listReset1:
+                        resetAmt = 2
+                    if curAmt > resetAmt:
+                        extra += curAmt - resetAmt
+                        self.localMods[skillId] = resetAmt
+                        if self.tabBar and skillId in self.skillFrames:
+                            self.skillFrames[skillId].skillRank = resetAmt - 1
+                        if self.tabBar:
+                            try:
+                                self.makeDots(skillId, resetAmt - 1)
+                            except:
+                                pass
 
-                if resetAmt == 1 and self.tabBar:
-                    try:
-                        self.dots[skillId][0].hide()
-                        self.dots[skillId][1].hide()
-                        self.dots[skillId][2].hide()
-                        self.dots[skillId][3].hide()
-                        self.dots[skillId][4].hide()
-                    except:
-                        pass
+                        if resetAmt == 1 and self.tabBar:
+                            try:
+                                self.dots[skillId][0].hide()
+                                self.dots[skillId][1].hide()
+                                self.dots[skillId][2].hide()
+                                self.dots[skillId][3].hide()
+                                self.dots[skillId][4].hide()
+                            except:
+                                pass
 
-        if unSpentId in self.localMods:
-            self.localMods[unSpentId] += extra
+            if unSpentId in self.localMods:
+                self.localMods[unSpentId] += extra

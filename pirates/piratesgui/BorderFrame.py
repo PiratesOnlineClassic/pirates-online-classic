@@ -1,19 +1,14 @@
 import types
-
+from pandac.PandaModules import *
 from direct.gui.DirectGui import *
 from direct.task.Task import Task
-from panda3d.core import *
 from pirates.piratesgui import PiratesGuiGlobals
 
-
 class BorderFrame(DirectFrame):
+    pieceNames = ('background', 'top', 'right', 'bottom', 'left', 'topRight', 'bottomRight', 'bottomLeft', 'topLeft')
+    nodeNames = dict(zip(pieceNames, ('middle', 'top1', 'right', 'bottom', 'left', 'topRight', 'bottomRight', 'bottomLeft', 'topLeft')))
     
-    pieceNames = ('background', 'top', 'right', 'bottom', 'left', 'topRight', 'bottomRight',
-                  'bottomLeft', 'topLeft')
-    nodeNames = dict(zip(pieceNames, ('middle', 'top1', 'right', 'bottom', 'left',
-                                      'topRight', 'bottomRight', 'bottomLeft', 'topLeft')))
-
-    def __init__(self, parent=None, **kw):
+    def __init__(self, parent = None, **kw):
         optiondefs = (('relief', None, None), ('borderScale', 0.3, self.setBorderScale), ('bgBuffer', 0.025, self.setBgBuffer), ('bgColorScale', VBase4(1, 1, 1, 1), self.setBgColorScale), ('bgTransparency', 0, self.setBgTransparent), ('cornerWidth', 0.15, None), ('draggable', 0, None), ('frameSize', (-0.5, 0.5, -0.5, 0.5), self.setFrameSize), ('suffix', '_f', None), ('state', DGG.NORMAL, self.setState), ('showBackground', True, None), ('flatten', 1, None))
         self.pieces = None
         self.guiComponents = {}
@@ -23,37 +18,37 @@ class BorderFrame(DirectFrame):
         self.loadGeometry()
         self.initialiseoptions(BorderFrame)
         self.setupGeometry()
-        return
 
     def destroy(self):
         if hasattr(self, 'frameParent') and self.frameParent:
-            for child in self.frameParent.getChildren():
+            for child in self.frameParent.getChildrenAsList():
                 childGui = self.guiDict.get(child.getName())
                 if childGui:
                     childGui.destroy()
-                else:
-                    parts = child.getName().split('-')
-                    simpleChildGui = self.guiDict.get(parts[-1])
-                    if simpleChildGui:
-                        simpleChildGui.destroy()
 
+                parts = child.getName().split('-')
+                simpleChildGui = self.guiDict.get(parts[-1])
+                if simpleChildGui:
+                    simpleChildGui.destroy()
+            
             self.frameParent.removeNode()
             self.frameParent = None
+        
         if hasattr(self, 'behindParent') and self.behindParent:
-            for child in self.behindParent.getChildren():
+            for child in self.behindParent.getChildrenAsList():
                 childGui = self.guiDict.get(child.getName())
                 if childGui:
                     childGui.destroy()
-                else:
-                    parts = child.getName().split('-')
-                    simpleChildGui = self.guiDict.get(parts[-1])
-                    if simpleChildGui:
-                        simpleChildGui.destroy()
 
+                parts = child.getName().split('-')
+                simpleChildGui = self.guiDict.get(parts[-1])
+                if simpleChildGui:
+                    simpleChildGui.destroy()
+            
             self.behindParent.removeNode()
             self.behindParent = None
+        
         DirectFrame.destroy(self)
-        return
 
     def loadGeometry(self):
         if not self.pieces:
@@ -71,15 +66,17 @@ class BorderFrame(DirectFrame):
         childCopy.setTransform(node.getTransform())
         childCopy.flattenStrong()
         return childCopy
-
+    
     def setupGeometry(self):
         self.frameParent = self.attachNewNode(ModelNode('frameParent'))
         self.frameParent.stash()
         self.background = self.frameParent.attachNewNode('background')
         if not self['suffix']:
             self.background.setColor(0.5, 0.5, 0.5, 1)
+        
         self.behindParent = self.frameParent.attachNewNode(ModelNode('behindParent'))
-        self.guiComponents = {self.pieceNames[0]: self.copyFlattenedChild(self.pieces[self.pieceNames[0]], self.background)}
+        self.guiComponents = {
+            self.pieceNames[0]: self.copyFlattenedChild(self.pieces[self.pieceNames[0]], self.background) }
         if self['draggable']:
             self.guiComponents.update(dict(zip(self.pieceNames[1:], [ DirectButton(parent=self.frameParent, guiId=self.guiId + '-' + pieceName, relief=None, state=self['state'], geom=self.pieces[pieceName], rolloverSound=None, clickSound=None, pressEffect=0) for pieceName in self.pieceNames[1:] ])))
         else:
@@ -89,6 +86,7 @@ class BorderFrame(DirectFrame):
         self.guiComponents['background'].setTransparency(self['bgTransparency'])
         if not self['showBackground']:
             self.guiComponents['background'].stash()
+        
         if self['draggable']:
             for piece in self.getDraggableGeometry():
                 piece.bind(DGG.B1PRESS, self.dragStart)
@@ -97,9 +95,9 @@ class BorderFrame(DirectFrame):
                 piece.bind(DGG.B2RELEASE, self.dragStop)
                 piece.bind(DGG.B3PRESS, self.dragStart)
                 piece.bind(DGG.B3RELEASE, self.dragStop)
-
+            
+        
         self.resetDecorations()
-        return
 
     def resetHBorder(self, scale, frameSize):
         bScale = scale * (frameSize / self['borderScale'] - self['cornerWidth'] * 2.0 / scale)
@@ -149,13 +147,17 @@ class BorderFrame(DirectFrame):
         self.frameParent.setScale(invScale)
         frameSize = self['frameSize']
         if frameSize:
-            xFrameSize, xFramePos = frameSize[1] - frameSize[0], frameSize[0]
-            yFrameSize, yFramePos = frameSize[3] - frameSize[2], frameSize[2]
+            xFrameSize = frameSize[1] - frameSize[0]
+            xFramePos = frameSize[0]
+            yFrameSize = frameSize[3] - frameSize[2]
+            yFramePos = frameSize[2]
         else:
-            xFrameSize, xFramePos = 1, -0.5
-            yFrameSize, yFramePos = 1, -0.5
-        self.frameParent.setX(xFramePos + self['cornerWidth'] / scale[0] * self['borderScale'])
-        self.frameParent.setZ(yFrameSize + yFramePos - self['cornerWidth'] / scale[2] * self['borderScale'])
+            xFrameSize = 1
+            xFramePos = -0.5
+            yFrameSize = 1
+            yFramePos = -0.5
+        self.frameParent.setX(xFramePos + (self['cornerWidth'] / scale[0]) * self['borderScale'])
+        self.frameParent.setZ(yFrameSize + yFramePos - (self['cornerWidth'] / scale[2]) * self['borderScale'])
         ts = self.frameParent.getTransform().getInverse()
         self.behindParent.setTransform(ts)
         self.resetHBorder(scale[0], xFrameSize)
@@ -165,8 +167,10 @@ class BorderFrame(DirectFrame):
         temp.unstash()
         if self['flatten']:
             temp.flattenStrong()
+        
         if self.frameParent.getTransparency():
             temp.setTransparency(self.frameParent.getTransparency(), 1)
+        
         self['geom'] = None
         if self['flatten']:
             self['geom'] = temp
@@ -174,8 +178,8 @@ class BorderFrame(DirectFrame):
         else:
             self.temp = temp
             self.frameParent.unstash()
-        return
 
+    
     def setScale(self, *args, **kwargs):
         DirectFrame.setScale(self, *args, **kwargs)
         if self.guiComponents:
@@ -189,13 +193,14 @@ class BorderFrame(DirectFrame):
     def setBorderScale(self):
         if self.guiComponents:
             self.resetDecorations()
-
+    
     def setBgBuffer(self):
         if self.guiComponents:
             self.resetDecorations()
+        
 
     def getDraggableGeometry(self):
-        return [self.guiComponents[piece] for piece in self.pieceNames[1:]]
+        return [ self.guiComponents[piece] for piece in self.pieceNames[1:] ]
 
     def setBackgroundVisible(self, visible):
         if visible:
@@ -205,7 +210,7 @@ class BorderFrame(DirectFrame):
             self.guiComponents['background'].hide()
             self['state'] = DGG.DISABLED
         self.resetDecorations()
-
+    
     def setBackgroundTexture(self, texture):
         pass
 
@@ -246,26 +251,29 @@ class BorderFrame(DirectFrame):
             x = min(base.a2dRight - w, max(base.a2dLeft, x))
             z = min(base.a2dTop - h, max(base.a2dBottom, z))
             self.setPos(aspect2d, x, y, z)
+        
         return Task.cont
-
+    
     def dragStop(self, event):
         if self['draggable']:
             taskMgr.remove(self.taskName('dragTask'))
 
     def setBringToFront(self, bringIt):
         self.canBringToFront = bringIt
-
+    
     def bringToFront(self):
         if self.canBringToFront:
             self.reparentTo(self.getParent())
 
     def getInnerFrameSize(self):
         frameSize = self['frameSize']
-        scaleX, scaleZ = self.getScale()[0], self.getScale()[2]
+        scaleX = self.getScale()[0]
+        scaleZ = self.getScale()[2]
         borderScale = self['borderScale']
-        factorX, factorZ = borderScale / scaleX, borderScale / scaleZ
+        factorX = borderScale / scaleX
+        factorZ = borderScale / scaleZ
         return Vec4(frameSize[0] + self['bgBuffer'] * factorX, frameSize[1] - self['bgBuffer'] * factorX, frameSize[2] + self['bgBuffer'] * factorZ, frameSize[3] - self['bgBuffer'] * factorZ)
-
+    
     def setBgTransparent(self):
         if self.guiComponents:
             self.guiComponents['background'].setTransparency(self['bgTransparency'])
@@ -273,3 +281,6 @@ class BorderFrame(DirectFrame):
     def setBgColorScale(self):
         if self.guiComponents:
             self.guiComponents['background'].setColorScale(self['bgColorScale'])
+        
+
+
