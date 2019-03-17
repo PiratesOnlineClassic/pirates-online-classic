@@ -97,11 +97,11 @@ class PirateButtonChain:
             formingButton.setPos(self.offX, 0, self.startZ)
             formingButton['geom'] = self.topButton
         elif inLast and not self.fromBottom:
-            formingButton.setPos(self.offX, 0, self.startZ - self.topZ + self.midZ * (self.buttonCount - 2) + self.endZ)
+            formingButton.setPos(self.offX, 0, self.startZ - (self.topZ + self.midZ * (self.buttonCount - 2) + self.endZ))
             formingButton['geom'] = self.bottomButton
             formingButton['text_pos'] = self.tBPos
         else:
-            formingButton.setPos(self.offX, 0, self.startZ - self.topZ + self.midZ * (self.buttonCount - 1))
+            formingButton.setPos(self.offX, 0, self.startZ - (self.topZ + self.midZ * (self.buttonCount - 1)))
             formingButton['geom'] = self.middleButton
         formingButton.resetFrameSize()
         self.buttonCount += 1

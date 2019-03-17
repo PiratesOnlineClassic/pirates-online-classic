@@ -154,13 +154,13 @@ class LookoutRequestLVL2(DirectFrame):
             
         newItem.setup()
         if item['Value'] == PiratesGlobals.CREW_STYLE_FIND_A_CREW:
-            if localAvatar.guiMgr.crewPage.crew and localAvatar.guiMgr.crewPage.startACrewState or localAvatar.guiMgr.crewPage.joinACrewStatusPVP:
+            if localAvatar.guiMgr.crewPage.crew or localAvatar.guiMgr.crewPage.startACrewState or localAvatar.guiMgr.crewPage.joinACrewStatusPVP:
                 newItem['state'] = DGG.DISABLED
                 newItem.title['text_fg'] = PiratesGuiGlobals.TextFG9
                 newItem.desc['text_fg'] = PiratesGuiGlobals.TextFG9
 
         if item['Value'] == PiratesGlobals.CREW_STYLE_RECRUIT_MEMBERS:
-            if not (localAvatar.guiMgr.crewPage.crew) or DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand() == 0:
+            if not localAvatar.guiMgr.crewPage.crew or DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand() == 0:
                 newItem['state'] = DGG.DISABLED
                 newItem.title['text_fg'] = PiratesGuiGlobals.TextFG9
                 newItem.desc['text_fg'] = PiratesGuiGlobals.TextFG9
@@ -171,7 +171,7 @@ class LookoutRequestLVL2(DirectFrame):
                 newItem.desc['text_fg'] = PiratesGuiGlobals.TextFG1
 
         if item['Value'] == PiratesGlobals.CREW_STYLE_FIND_A_PVP_CREW:
-            if localAvatar.guiMgr.crewPage.crew and localAvatar.guiMgr.crewPage.startACrewState or localAvatar.guiMgr.crewPage.joinACrewStatus:
+            if localAvatar.guiMgr.crewPage.crew or localAvatar.guiMgr.crewPage.startACrewState or localAvatar.guiMgr.crewPage.joinACrewStatus:
                 newItem['state'] = DGG.DISABLED
                 newItem.title['text_fg'] = PiratesGuiGlobals.TextFG9
                 newItem.desc['text_fg'] = PiratesGuiGlobals.TextFG9
@@ -209,9 +209,9 @@ class LookoutRequestLVL2(DirectFrame):
         return availItems
 
     def itemSelect(self, item):
-        if item.value == PiratesGlobals.CREW_STYLE_FIND_A_CREW and item.value == PiratesGlobals.CREW_STYLE_RECRUIT_MEMBERS or item.value == PiratesGlobals.CREW_STYLE_FIND_A_PVP_CREW:
+        if item.value == PiratesGlobals.CREW_STYLE_FIND_A_CREW or item.value == PiratesGlobals.CREW_STYLE_RECRUIT_MEMBERS or item.value == PiratesGlobals.CREW_STYLE_FIND_A_PVP_CREW:
             self.toggleAICrewLookout(item.value)
-            return None
+            return
         
         for currItem in self.activityListItems.items:
             currItem.setSelected(False)
@@ -287,6 +287,7 @@ class LookoutRequestLVL2(DirectFrame):
             for currOption in currOptions:
                 if currOption[0] == currOptionPair[0]:
                     currOption[1] = currOptionPair[1]
+                    continue
             
             currOptions.append(currOptionPair)
     

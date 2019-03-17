@@ -232,7 +232,7 @@ class RadarGui(GuiTray, FSM):
     
     def resetRadius(self, radius):
         if self.radius == radius:
-            return None
+            return
         
         self.radius = radius
         self.__normalizeWithRadius()
@@ -333,7 +333,7 @@ class RadarGui(GuiTray, FSM):
     def removeRadarObject(self, objId, force = False):
         objInfo = self.__radarObjects.get(objId)
         if objInfo:
-            if objInfo['type'] == RADAR_OBJ_TYPE_DEFAULT and objInfo['type'] == RADAR_OBJ_TYPE_EXIT or force:
+            if objInfo['type'] == RADAR_OBJ_TYPE_DEFAULT or objInfo['type'] == RADAR_OBJ_TYPE_EXIT or force:
                 self.moveRadarObjToCache(objId, skipCache = force)
             else:
                 self.updateObjRef(objInfo['dummySrcObjNode'], objId)
@@ -396,7 +396,7 @@ class RadarGui(GuiTray, FSM):
         if outOfRangeNode:
             outOfRangeNode.removeNode()
         
-        if (objInfo['type'] != RADAR_OBJ_TYPE_DEFAULT or objInfo['type'] != RADAR_OBJ_TYPE_EXIT) and skipCache == False:
+        if (objInfo['type'] != RADAR_OBJ_TYPE_DEFAULT and objInfo['type'] != RADAR_OBJ_TYPE_EXIT) and skipCache == False:
             objInfo['radarObjNode'] = None
             objInfo['outOfRangeNode'] = None
             objInfo['srcObjNode'] = None
@@ -438,19 +438,18 @@ class RadarGui(GuiTray, FSM):
             status = PiratesGlobals.NEUTRAL
             if teamId:
                 status = TeamUtils.teamStatus(localAvatar.getTeam(), teamId)
-            elif not objDoId:
-                pass
-            avId = obj.getNetTag('avId')
-            if avId:
-                avId = int(avId)
-                av = base.cr.doId2do.get(avId)
-                if av:
-                    if DistributedBandMember.areSameCrew(localAvatar.doId, avId):
-                        status = PiratesGlobals.CREW
+            else:
+                avId = objDoId or obj.getNetTag('avId')
+                if avId:
+                    avId = int(avId)
+                    av = base.cr.doId2do.get(avId)
+                    if av:
+                        if DistributedBandMember.areSameCrew(localAvatar.doId, avId):
+                            status = PiratesGlobals.CREW
+                        else:
+                            status = TeamUtils.friendOrFoe(localAvatar, av)
                     else:
-                        status = TeamUtils.friendOrFoe(localAvatar, av)
-                else:
-                    return (model, outOfRangeNode)
+                        return (model, outOfRangeNode)
             
             if status == PiratesGlobals.ENEMY or status == PiratesGlobals.PVP_ENEMY:
                 model.setColorScale(1.0, 0.1, 0.1, 0.6)
@@ -609,7 +608,7 @@ class RadarGui(GuiTray, FSM):
         if self.zoomFSM.state == 'Off':
             self.zoomFSM.request('Zoom1')
         elif self.zoomFSM.state == 'Zoom1':
-            return None
+            return
         elif self.zoomFSM.state == 'Zoom2':
             self.zoomFSM.request('Zoom1')
         elif self.zoomFSM.state == 'Zoom3':
@@ -624,7 +623,7 @@ class RadarGui(GuiTray, FSM):
         elif self.zoomFSM.state == 'Zoom2':
             self.zoomFSM.request('Zoom3')
         elif self.zoomFSM.state == 'Zoom3':
-            return None
+            return
 
     def loadMap(self, modelPath):
         if self.map:
@@ -718,9 +717,7 @@ class RadarGui(GuiTray, FSM):
         if not objectInfo:
             return True
         
-        if objectInfo['srcObjNode'] is objectInfo['dummySrcObjNode']:
-            pass
-        offRadar = objectInfo['dummySrcObjNode'] != None
+        offRadar = objectInfo['srcObjNode'] is objectInfo['dummySrcObjNode'] and objectInfo['dummySrcObjNode'] != None
         if objectInfo and not offRadar:
             if objectInfo.has_key('oldInfo'):
                 objectInfo['type'] = objectInfo['oldInfo']['type']

@@ -46,7 +46,7 @@ class CrewMatchInvitee(GuiPanel.GuiPanel):
 
     def destroy(self):
         if hasattr(self, 'destroyed'):
-            return None
+            return
         
         self.destroyed = 1
         self.ignore('Esc')

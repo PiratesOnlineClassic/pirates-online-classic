@@ -20,7 +20,7 @@ class SongItemGui(SongListItem):
     available = True
     
     def __init__(self, data, trade = 0, buy = 0, sell = 0, use = 0, weapon = 0, isDisabled = 0, **kw):
-        if (trade and buy and sell and use or weapon) and not isDisabled:
+        if (trade or buy or sell or use or weapon) and not isDisabled:
             buttonRelief = DGG.RAISED
             buttonState = DGG.NORMAL
         else:
@@ -36,7 +36,7 @@ class SongItemGui(SongListItem):
 
     def loadGui(self):
         if SongItemGui.guiLoaded:
-            return None
+            return
         
         SongListItem.loadGui(self)
         SongItemGui.parchmentImage = loader.loadModel('models/gui/panel_parchment')
@@ -84,20 +84,19 @@ class SongItemGui(SongListItem):
                 self.picture['geom_scale'] = 0.11
                 self.picture['geom_pos'] = (0.08, 0, 0.068)
 
-        if not InventoryType.begin_WeaponCannonAmmo <= itemId or itemId <= InventoryType.end_WeaponCannonAmmo:
-            if (InventoryType.begin_WeaponPistolAmmo <= itemId or itemId <= InventoryType.end_WeaponGrenadeAmmo or InventoryType.begin_WeaponDaggerAmmo <= itemId) and itemId <= InventoryType.end_WeaponDaggerAmmo:
-                skillId = WeaponGlobals.getSkillIdForAmmoSkillId(itemId)
-                if skillId:
-                    asset = WeaponGlobals.getSkillIcon(skillId)
-                    if asset:
-                        self.picture['geom'] = SongListItem.skillIcons.find('**/%s' % asset)
-                        self.picture['geom_scale'] = 0.15
-                        self.picture['geom_pos'] = (0.069, 0, 0.069)
+        if InventoryType.begin_WeaponCannonAmmo <= itemId and itemId <= InventoryType.end_WeaponCannonAmmo or InventoryType.begin_WeaponPistolAmmo <= itemId and itemId <= InventoryType.end_WeaponGrenadeAmmo or InventoryType.begin_WeaponDaggerAmmo <= itemId and itemId <= InventoryType.end_WeaponDaggerAmmo:
+            skillId = WeaponGlobals.getSkillIdForAmmoSkillId(itemId)
+            if skillId:
+                asset = WeaponGlobals.getSkillIcon(skillId)
+                if asset:
+                    self.picture['geom'] = SongListItem.skillIcons.find('**/%s' % asset)
+                    self.picture['geom_scale'] = 0.15
+                    self.picture['geom_pos'] = (0.069, 0, 0.069)
 
-            elif InventoryType.SmallBottle <= itemId and itemId <= InventoryType.LargeBottle:
-                self.picture['geom'] = SongListItem.topGui.find('**/main_gui_ship_bottle')
-                self.picture['geom_scale'] = 0.1
-                self.picture['geom_pos'] = (0.069, 0, 0.069)
+        elif InventoryType.SmallBottle <= itemId and itemId <= InventoryType.LargeBottle:
+            self.picture['geom'] = SongListItem.topGui.find('**/main_gui_ship_bottle')
+            self.picture['geom_scale'] = 0.1
+            self.picture['geom_pos'] = (0.069, 0, 0.069)
             
         self.flattenStrong()
 
@@ -156,7 +155,7 @@ class SongItemGui(SongListItem):
 
     def createHelpbox(self, args = None):
         if self.helpBox:
-            return None
+            return
         
         weaponInfo = PLocalizer.WeaponDescriptions.get(self.data[0])
         weaponDesc = weaponInfo

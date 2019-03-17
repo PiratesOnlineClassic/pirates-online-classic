@@ -20,7 +20,7 @@ class ScreenshotViewer:
         imY = imX * 3 / 4.0
         self.imageObj = OnscreenImage(image = self.screens[0], scale = (imX, 1, imY), pos = (0, 0, -0.025))
         self.imageObj.reparentTo(imageFrame)
-        self.imageLabel = DirectLabel(imageFrame, relief = None, state = DGG.DISABLED, pos = (0, 0, -0.75), textMayChange = 1)
+        self.imageLabel = DirectLabel(imageFrame, relief = None, state = DGG.DISABLED, pos = (0, 0, -.75), textMayChange = 1)
         self.imageLabel['text_fg'] = (0.6, 0.6, 0.6, 1)
         self.imageLabel['text_scale'] = 0.04
         self.imageLabel.hide()
@@ -30,9 +30,9 @@ class ScreenshotViewer:
         closeButton = (buttons.find('**/lookout_close_window'), buttons.find('**/lookout_close_window_down'), buttons.find('**/lookout_close_window_over'))
         xs = 1.2
         self.nextButton = DirectButton(imageFrame, relief = None, command = self.next, pos = (0.7, 0, 0), image = arrow, image_scale = (-xs, xs, xs), sortOrder = -5)
-        self.prevButton = DirectButton(imageFrame, relief = None, command = self.prev, pos = (-0.7, 0, 0), image = arrow, image_scale = xs, sortOrder = -5)
-        self.closeButton = DirectButton(imageFrame, relief = None, command = self.close, pos = (0.78, 0, -0.5), image = closeButton, image_scale = 0.3, text = 'close', text_fg = PiratesGuiGlobals.TextFG1, text_scale = 0.05, text_pos = (0, -0.1), sortOrder = -5)
-        self.showIval = Sequence(Func(imageFrame.show), Wait(1), Parallel(LerpPosInterval(self.closeButton, 0.2, Vec3(0.78, 0, -0.8), Vec3(0.78, 0, -0.5)), LerpPosInterval(self.nextButton, 0.2, Vec3(1, 0, 0), Vec3(0.7, 0, 0)), LerpPosInterval(self.prevButton, 0.2, Vec3(-1, 0, 0), Vec3(-0.7, 0, 0))), Func(self.imageLabel.show))
+        self.prevButton = DirectButton(imageFrame, relief = None, command = self.prev, pos = (-.7, 0, 0), image = arrow, image_scale = xs, sortOrder = -5)
+        self.closeButton = DirectButton(imageFrame, relief = None, command = self.close, pos = (0.78, 0, -.5), image = closeButton, image_scale = 0.3, text = 'close', text_fg = PiratesGuiGlobals.TextFG1, text_scale = 0.05, text_pos = (0, -.1), sortOrder = -5)
+        self.showIval = Sequence(Func(imageFrame.show), Wait(1), Parallel(LerpPosInterval(self.closeButton, 0.2, Vec3(0.78, 0, -.8), Vec3(0.78, 0, -.5)), LerpPosInterval(self.nextButton, 0.2, Vec3(1, 0, 0), Vec3(0.7, 0, 0)), LerpPosInterval(self.prevButton, 0.2, Vec3(-1, 0, 0), Vec3(-.7, 0, 0))), Func(self.imageLabel.show))
         self.imageFrame = imageFrame
 
     def destroy(self):
@@ -48,9 +48,9 @@ class ScreenshotViewer:
         self.currentIndex = 0
 
     def resetButtons(self):
-        self.closeButton.setPos(Vec3(0.78, 0, -0.5))
+        self.closeButton.setPos(Vec3(0.78, 0, -.5))
         self.nextButton.setPos(Vec3(0.7, 0, 0))
-        self.prevButton.setPos(Vec3(-0.7, 0, 0))
+        self.prevButton.setPos(Vec3(-.7, 0, 0))
     
     def showImage(self, index):
         if index >= 0 and index < len(self.screens):

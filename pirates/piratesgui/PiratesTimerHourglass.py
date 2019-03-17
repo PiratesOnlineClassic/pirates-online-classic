@@ -63,7 +63,7 @@ class PiratesTimerHourglass(OTPTimer.OTPTimer):
                 self.setPos(self.endPosition)
 
         if currTime == self.currentTime:
-            return None
+            return
         
         self.currentTime = currTime
         if currTime > 60 and self.showMinutes:
@@ -97,10 +97,10 @@ class PiratesTimerHourglass(OTPTimer.OTPTimer):
 
     def createCancelButton(self, cancelCallback, cancelText):
         if self.mode != PiratesGlobals.HIGHSEAS_ADV_WAIT:
-            return None
+            return
         
         if not base.localAvatar.isCrewCaptain():
-            return None
+            return
         
         self.cancelButton = GuiButton.GuiButton(helpText = cancelText, command = cancelCallback, borderWidth = PiratesGuiGlobals.BorderWidth, text = PLocalizer.Cancel, frameColor = PiratesGuiGlobals.ButtonColor3, text_fg = PiratesGuiGlobals.TextFG2, text_pos = (0, 0.015), frameSize = (-0.09, 0.09, -0.015, 0.065), text_scale = PiratesGuiGlobals.TextScaleLarge, pad = (0.01, 0.01), parent = self, pos = (0, 0, -1.55), scale = 2.3)
 

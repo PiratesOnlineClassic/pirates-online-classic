@@ -62,7 +62,7 @@ class GameGui(DirectFrame):
         self.healthAlertRate = 1.0
 
     def updateHealthAlert(self, task):
-        if not hasattr(base, 'localAvatar') and not base.localAvatar or not localAvatar.isGenerated():
+        if not hasattr(base, 'localAvatar') or not base.localAvatar or not localAvatar.isGenerated():
             return task.done
         
         hpFraction = float(base.localAvatar.hp) / float(base.localAvatar.maxHp)

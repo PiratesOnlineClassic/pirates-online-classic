@@ -56,7 +56,7 @@ class TradePanel(GuiPanel.GuiPanel):
         self.updateTrade()
         if base.cr.avatarFriendsManager.checkIgnored(self.trade.firstAvatarId) or base.cr.avatarFriendsManager.checkIgnored(self.trade.secondAvatarId):
             self.closePanel()
-            return None
+            return
 
     def closePanel(self):
         self.trade.tradeCanceled()
@@ -68,7 +68,7 @@ class TradePanel(GuiPanel.GuiPanel):
 
     def destroy(self):
         if hasattr(self, 'destroyed'):
-            return None
+            return
         
         self.destroyed = 1
         del self.trade

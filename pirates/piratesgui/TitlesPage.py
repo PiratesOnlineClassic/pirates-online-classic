@@ -207,7 +207,7 @@ class TitlesPage(InventoryPage.InventoryPage):
 
     def setLandActive(self, panelIndex, value):
         if panelIndex >= len(self.titles) or panelIndex < 0:
-            return None
+            return
         
         if panelIndex == self.selectedLandIndex and value == 0:
             self.selectedLandIndex = -1
@@ -225,7 +225,7 @@ class TitlesPage(InventoryPage.InventoryPage):
 
     def setSeaActive(self, panelIndex, value):
         if panelIndex >= len(self.titles) or panelIndex < 0:
-            return None
+            return
         
         if panelIndex == self.selectedSeaIndex and value == 0:
             self.selectedSeaIndex = -1
@@ -237,10 +237,10 @@ class TitlesPage(InventoryPage.InventoryPage):
 
     def initLandTitleActive(self, titleId):
         if titleId < 0:
-            return None
+            return
         
         if self.selectedLandIndex >= 0:
-            return None
+            return
         
         for panel in self.titles:
             if panel.titleId == titleId:

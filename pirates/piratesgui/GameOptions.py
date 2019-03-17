@@ -237,12 +237,11 @@ class Options(OptionSpace):
         except:
             return default
 
-
     def load(self, file_path):
         state = False
-        
+
         try:
-            
+
             try:
                 input_file = open(Options.DEFAULT_API_FILE_PATH, 'r')
                 file_data = [x.strip() for x in input_file.read().split('\n')]
@@ -252,7 +251,9 @@ class Options(OptionSpace):
             else:
                 input_file = open(file_path, 'r')
                 file_data = [x.strip() for x in input_file.read().split('\n')]
+
             self.tokenDict = dict([x for x in zip(file_data[:-1], file_data[1:]) if x[0][0].isalpha() or x[0].isalnum()])
+
             self.version = self.validate(int, 'version', 0)
             self.state = self.validate(str, 'state', 'default', [
                 'new',
@@ -269,12 +270,12 @@ class Options(OptionSpace):
             self.window_height = self.validate(int, 'window_height', 0)
             if (self.window_width, self.window_height) not in base.windowed_resolution_table:
                 (self.window_width, self.window_height) = base.windowed_resolution_table[0]
-            
+
             self.fullscreen_width = self.validate(int, 'fullscreen_width', 0)
             self.fullscreen_height = self.validate(int, 'fullscreen_height', 0)
             if (self.fullscreen_width, self.fullscreen_height) not in base.fullscreen_resolution_table:
                 (self.fullscreen_width, self.fullscreen_height) = base.fullscreen_resolution_table[0]
-            
+
             self.resolution = self.validate(int, 'resolution', 0, [
                 0,
                 1])
@@ -302,7 +303,7 @@ class Options(OptionSpace):
             self.texture_scale = self.validate(float, 'texture_scale', 1.0)
             if self.texture_scale <= 0.0:
                 self.texture_scale = 1.0
-            
+
             self.character_detail_level = self.validate(int, 'character_detail_level', 2)
             self.terrain_detail_level = self.validate(int, 'terrain_detail_level', 2)
             self.memory = self.validate(int, 'memory', 0)
@@ -329,6 +330,7 @@ class Options(OptionSpace):
                     2])
             else:
                 self.ocean_visibility = 0
+
             self.simple_display_option = self.validate(int, 'simple_display_option', 3, [
                 0,
                 1,
@@ -448,7 +450,7 @@ class Options(OptionSpace):
 
     def pipeOptionsToPrcData(self):
         string = None
-        if self.api == 'pandagl' and self.api == 'pandadx9' or self.api == 'pandadx8':
+        if self.api == 'pandagl' or self.api == 'pandadx9' or self.api == 'pandadx8':
             string = '*********************'
             string = string + 'load-display ' + self.api + string
             print string
@@ -589,9 +591,7 @@ class Options(OptionSpace):
             state = True
             di = pipe.getDisplayInformation()
             if self.window_width <= di.getMaximumWindowWidth() and self.window_height <= di.getMaximumWindowHeight():
-                if state:
-                    pass
-                state = True
+                state = state and True
             else:
                 state = False
                 if di.getMaximumWindowWidth() > 0 and di.getMaximumWindowHeight() > 0 and self.findResolution(di.getMaximumWindowWidth(), di.getMaximumWindowHeight(), bits_per_pixel, pipe):
@@ -706,7 +706,7 @@ class Options(OptionSpace):
         self.setPrc(string)
 
     def setGeomCacheSize(self, pipe):
-        return None
+        return
         if base.config.GetInt('ignore-game-options', 0) == 0:
             size = self.physicalMemoryToGeomCacheSize(pipe)
             if size > 0:
@@ -741,7 +741,7 @@ class Options(OptionSpace):
                 for i in range(length):
                     entry = sis_device_list[i]
                     if entry[0] == device_id:
-                        continue
+                        pass
                 
                 api = 'pandadx9'
                 api2 = 'pandadx8'
@@ -779,7 +779,7 @@ class Options(OptionSpace):
                 today = datetime.date.today()
                 days = self.compareDates(today.year, today.month, today.day, driver_year, driver_month, driver_day)
             
-            if driver_product and driver_version and driver_sub_version or driver_build:
+            if driver_product or driver_version or driver_sub_version or driver_build:
                 product = 0
                 version = 0
                 sub_version = 0
@@ -3146,7 +3146,7 @@ class Options(OptionSpace):
         if not realtime:
             self.runtime()
         
-        return None
+        return
 
     def getSpecialEffectsSetting(self):
         return self.special_effects
@@ -3158,8 +3158,7 @@ class Options(OptionSpace):
             if isinstance(gamearea, DistributedGameArea) and gamearea.envEffects:
                 gamearea.envEffects.unloadEffects()
                 gamearea.envEffects.loadEffects()
-            
-        
+
         if self.special_effects == Options.SpecialEffectsLow:
             MotionTrail.setGlobalEnable(False)
         
@@ -3257,8 +3256,8 @@ class Options(OptionSpace):
         state = self.compareNumbers(year1, month1, day1, 0, year2, month2, day2, 0)
         if state[0] == 0:
             pass
-
-        delta_days = state[2] * 365.25 + state[3] * 30.4375 + state[4]
+        else:
+            delta_days = state[2] * 365.25 + state[3] * 30.4375 + state[4]
         return delta_days
 
 
@@ -3269,11 +3268,9 @@ class KeyMappings(OptionSpace):
     def __init__(self):
         self.startWatcher()
 
-    
     def startWatcher(self):
         self.notify.debug('Starting key watcher')
         base.buttonThrowers[0].node().setButtonDownEvent('GameOptions-buttonWatcher')
-
     
     def destroy(self):
         self.notify.debug('Stopping key watcher')
@@ -3328,10 +3325,10 @@ class GameOptions(BorderFrame):
             self.options = Options()
             if self.options.load(self.file_path):
                 pass
-
-            self.options = Options()
-            self.options.config_to_options()
-            self.options.recommendedOptions(base.pipe, True)
+            else:
+                self.options = Options()
+                self.options.config_to_options()
+                self.options.recommendedOptions(base.pipe, True)
         if keyMappings:
             self.keyMappings = keyMappings
         else:
@@ -3365,7 +3362,7 @@ class GameOptions(BorderFrame):
         
         if base.config.GetBool('use-simple-gameoptions-gui', 1):
             self.gui = GameOptionsGui(self, title, x, y, width, height, options, file_path, pipe, access, chooser, keyMappings)
-            return None
+            return
         else:
             self.gui = None
         BorderFrame.__init__(self, relief = None, state = DGG.NORMAL, frameColor = PiratesGuiGlobals.FrameColor, borderWidth = PiratesGuiGlobals.BorderWidth, pos = (x, 0.0, y), frameSize = (0, width, 0, height), sortOrder = 20)
@@ -3882,7 +3879,6 @@ class GameOptions(BorderFrame):
 
             if gui_manager:
                 gui_manager.setUIScale(value * 0.6 + 0.7)
-            
 
         text = PLocalizer.GameOptionsGUIScale
         self.gui_scale_label = self.create_label(x + label_x_offset, y + label_y_offset, text, parent)
@@ -4036,7 +4032,7 @@ class GameOptions(BorderFrame):
         from pirates.piratesgui import FeedbackPanel
         guiQMark = loader.loadModel('models/gui/toplevel_gui')
         questionMark = guiQMark.find('**/generic_question*')
-        button = DirectButton(parent = parent, relief = 0, pos = (1.345, 0, -0.2), scale = 3.2, geom = questionMark, geom_scale = 0.18, geom_pos = (0.06, 0, 0.087), text = '', textMayChange = 1, command = self.__loadFeedbackPanel)
+        button = DirectButton(parent = parent, relief = 0, pos = (1.345, 0, -.2), scale = 3.2, geom = questionMark, geom_scale = 0.18, geom_pos = (0.06, 0, 0.087), text = '', textMayChange = 1, command = self.__loadFeedbackPanel)
         button.setColor(0.8, 0.7, 0.5, 1)
         self.selected_color = 1.0
         self.not_selected_color = 0.5
@@ -4072,9 +4068,9 @@ class GameOptions(BorderFrame):
     def create_slider(self, update_function, default_value, x, y, resolution, label, parent):
         slider_x = self.x_to_gui_coordinate(x)
         slider_y = self.y_to_gui_coordinate(y)
-        
+
         def update_slider(slider, update_function):
-            string = slider.label + '  (%.0f)' % slider['value'] * 100.0
+            string = slider.label + '  (%.0f)' % (slider['value'] * 100.0)
             slider['text'] = string
             update_function(slider['value'])
 
@@ -4366,28 +4362,29 @@ class GameOptions(BorderFrame):
                 print 'Window did not open, removing.'
                 base.closeWindow(base.win)
                 return 0
-            
-        elif self.debug:
-            print 'Adjusting properties'
-        
-        base.win.requestProperties(properties)
-        base.graphicsEngine.renderFrame()
+        else:
+            if self.debug:
+                print 'Adjusting properties'
+
+            base.win.requestProperties(properties)
+            base.graphicsEngine.renderFrame()
         return 1
 
     def restore_display_properties(self):
         if self.resetDisplayProperties(self.current_pipe, self.current_properties):
             self.options = self.current_options
             self.set_options(False, True)
-        elif self.current_properties.getFullscreen():
-            self.current_options.fullscreen = 0
-            self.current_properties.setFullscreen(0)
-            if self.resetDisplayProperties(self.current_pipe, self.current_properties):
-                self.options = self.current_options
-                self.set_options(False, True)
-                return None
+        else:
+            if self.current_properties.getFullscreen():
+                self.current_options.fullscreen = 0
+                self.current_properties.setFullscreen(0)
+                if self.resetDisplayProperties(self.current_pipe, self.current_properties):
+                    self.options = self.current_options
+                    self.set_options(False, True)
+                    return
 
-        base.panda3dRenderError()
-        self.restore_failed = True
+            base.panda3dRenderError()
+            self.restore_failed = True
 
     def set_fullscreen_button2(self, enable):
         if self.velvet:
@@ -4785,7 +4782,7 @@ class GameOptions(BorderFrame):
     def set_options(self, change_display, restore = False):
         if self.gui:
             self.gui.set_options(change_display)
-            return None
+            return
         
         if change_display:
             self.set_display(self.options, base.pipe, self.options.getWidth(), self.options.getHeight())
@@ -4828,27 +4825,27 @@ class GameOptions(BorderFrame):
         if self.options.texture_scale_mode:
             if self.options.texture_scale == Options.texture_scale_low:
                 self.texture_low_button_function()
-            
+
             if self.options.texture_scale == Options.texture_scale_medium:
                 self.texture_medium_button_function()
-            
+
             if self.options.texture_scale == Options.texture_scale_high:
                 self.texture_high_button_function()
-            
+
             if self.texture_maximum_button and self.options.texture_scale == Options.texture_scale_maximum:
                 self.texture_maximum_button_function()
-            
-        elif self.options.texture == Options.texture_low:
-            self.texture_low_button_function()
-        
-        if self.options.texture == Options.texture_medium:
-            self.texture_medium_button_function()
-        
-        if self.options.texture == Options.texture_high:
-            self.texture_high_button_function()
-        
-        if self.options.texture == Options.texture_maximum or self.options.texture > Options.texture_high:
-            self.texture_maximum_button_function()
+        else:
+            if self.options.texture == Options.texture_low:
+                self.texture_low_button_function()
+
+            if self.options.texture == Options.texture_medium:
+                self.texture_medium_button_function()
+
+            if self.options.texture == Options.texture_high:
+                self.texture_high_button_function()
+
+            if self.options.texture == Options.texture_maximum or self.options.texture > Options.texture_high:
+                self.texture_maximum_button_function()
         
         self.texture_compression_button_display()
         if self.options.character_detail_level == Options.option_low:
@@ -4979,9 +4976,9 @@ class GameOptions(BorderFrame):
                 aspect_ratio = di.getDisplayModeHeight(index) * 10000 / di.getDisplayModeWidth(index)
                 if aspect_ratio == 7500:
                     pass
-
-                if aspect_ratio == 5625:
-                    pass
+                else:
+                    if aspect_ratio == 5625:
+                        pass
 
                 index += 1
             size = di.getVideoMemory()
@@ -5076,17 +5073,19 @@ class GameOptions(BorderFrame):
                             print 'DISPLAY CHANGE VERIFIED'
                         
                         state = True
-                    elif self.debug:
-                        print 'VERIFY DISPLAY CHANGE FAILED, RESTORING PREVIOUS DISPLAY'
-                    
+                    else:
+                        if self.debug:
+                            print 'VERIFY DISPLAY CHANGE FAILED, RESTORING PREVIOUS DISPLAY'
+
+                        self.restore_display_properties()
+                else:
+                    if self.debug:
+                        print 'DISPLAY CHANGE FAILED'
+                        print 'BEFORE RESTORE'
+
                     self.restore_display_properties()
-                elif self.debug:
-                    print 'DISPLAY CHANGE FAILED'
-                    print 'BEFORE RESTORE'
-                
-                self.restore_display_properties()
-                if self.debug:
-                    print 'AFTER RESTORE'
+                    if self.debug:
+                        print 'AFTER RESTORE'
                 
                 base.graphicsEngine.renderFrame()
                 base.graphicsEngine.renderFrame()
@@ -5108,7 +5107,6 @@ class GameOptions(BorderFrame):
         
         for button in self.fullscreen_resolutions_button_array:
             button.show()
-        
 
     def initDisplayButtons(self):
         self.inAdFrame = base.inAdFrame
@@ -5164,18 +5162,19 @@ class GameOptions(BorderFrame):
                             
                         if base.hasEmbedded:
                             self.options.resolution = index
-                        
-                    elif self.options.fullscreen_runtime:
-                        self.inactive_highlight_button(b)
                     else:
-                        self.highlight_button(b)
-                        if restore == False:
-                            self.set_display(self.options, base.pipe, base.windowed_resolution_table[button.identifier][0], base.windowed_resolution_table[button.identifier][1])
-                        
-                    self.options.window_width = base.windowed_resolution_table[button.identifier][0]
-                    self.options.window_height = base.windowed_resolution_table[button.identifier][1]
-                
+                        if self.options.fullscreen_runtime:
+                            self.inactive_highlight_button(b)
+                        else:
+                            self.highlight_button(b)
+                            if restore == False:
+                                self.set_display(self.options, base.pipe, base.windowed_resolution_table[button.identifier][0], base.windowed_resolution_table[button.identifier][1])
+
+                        self.options.window_width = base.windowed_resolution_table[button.identifier][0]
+                        self.options.window_height = base.windowed_resolution_table[button.identifier][1]
+
                 index += 1
+
         elif base.inAdFrame:
             total_modes = embedded.getCountWindowModes()
             current_mode = embedded.getCurrentWindowModeDef()
@@ -5197,27 +5196,27 @@ class GameOptions(BorderFrame):
             index += 1
         if base.inAdFrame:
             pass
+        else:
+            if button:
+                if self.debug:
+                    print 'fullscreen_resolution_button_function', button.identifier
+                    print base.fullscreen_resolution_table[button.identifier]
 
-        if button:
-            if self.debug:
-                print 'fullscreen_resolution_button_function', button.identifier
-                print base.fullscreen_resolution_table[button.identifier]
-            
-            index = 0
-            while index < total_resolutions:
-                b = self.fullscreen_resolutions_button_array[index]
-                if index == button.identifier:
-                    if self.options.fullscreen_runtime:
-                        self.highlight_button(b)
-                        if restore == False:
-                            self.set_display(self.options, base.pipe, base.fullscreen_resolution_table[button.identifier][0], base.fullscreen_resolution_table[button.identifier][1])
-                        
-                    else:
-                        self.inactive_highlight_button(b)
-                    self.options.fullscreen_width = base.fullscreen_resolution_table[button.identifier][0]
-                    self.options.fullscreen_height = base.fullscreen_resolution_table[button.identifier][1]
-                
-                index += 1
+                index = 0
+                while index < total_resolutions:
+                    b = self.fullscreen_resolutions_button_array[index]
+                    if index == button.identifier:
+                        if self.options.fullscreen_runtime:
+                            self.highlight_button(b)
+                            if restore == False:
+                                self.set_display(self.options, base.pipe, base.fullscreen_resolution_table[button.identifier][0], base.fullscreen_resolution_table[button.identifier][1])
+
+                        else:
+                            self.inactive_highlight_button(b)
+                        self.options.fullscreen_width = base.fullscreen_resolution_table[button.identifier][0]
+                        self.options.fullscreen_height = base.fullscreen_resolution_table[button.identifier][1]
+
+                    index += 1
 
     def resolutionToIndex(self, width, height, fullscreen):
         resolution_index = -1

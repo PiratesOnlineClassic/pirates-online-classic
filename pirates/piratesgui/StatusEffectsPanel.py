@@ -36,7 +36,7 @@ class StatusEffectsPanel(DirectFrame):
     def removeStatusEffect(self, effectId, attackerId):
         id = '%s-%s' % (effectId, attackerId)
         if id not in self.buffs:
-            return None
+            return
         
         index = self.buffs.index(id)
         buff = self.buffIcons[index]

@@ -67,20 +67,19 @@ class PurchaseListItem(InventoryListItem):
                 self.picture['geom_scale'] = 0.04
                 self.picture['geom_pos'] = (0, 0, 0)
 
-        if not InventoryType.begin_WeaponCannonAmmo <= itemId or itemId <= InventoryType.end_WeaponCannonAmmo:
-            if (InventoryType.begin_WeaponPistolAmmo <= itemId or itemId <= InventoryType.end_WeaponGrenadeAmmo or InventoryType.begin_WeaponDaggerAmmo <= itemId) and itemId <= InventoryType.end_WeaponDaggerAmmo:
-                skillId = WeaponGlobals.getSkillIdForAmmoSkillId(itemId)
-                if skillId:
-                    asset = WeaponGlobals.getSkillIcon(skillId)
-                    if asset:
-                        self.picture['geom'] = InventoryListItem.skillIcons.find('**/%s' % asset)
-                        self.picture['geom_scale'] = 0.06
-                        self.picture['geom_pos'] = (0, 0, 0)
+        if InventoryType.begin_WeaponCannonAmmo <= itemId and itemId <= InventoryType.end_WeaponCannonAmmo or InventoryType.begin_WeaponPistolAmmo <= itemId and itemId <= InventoryType.end_WeaponGrenadeAmmo or InventoryType.begin_WeaponDaggerAmmo <= itemId and itemId <= InventoryType.end_WeaponDaggerAmmo:
+            skillId = WeaponGlobals.getSkillIdForAmmoSkillId(itemId)
+            if skillId:
+                asset = WeaponGlobals.getSkillIcon(skillId)
+                if asset:
+                    self.picture['geom'] = InventoryListItem.skillIcons.find('**/%s' % asset)
+                    self.picture['geom_scale'] = 0.06
+                    self.picture['geom_pos'] = (0, 0, 0)
 
-            elif InventoryType.SmallBottle <= itemId and itemId <= InventoryType.LargeBottle:
-                self.picture['geom'] = self.topGui.find('**/main_gui_ship_bottle')
-                self.picture['geom_scale'] = 0.1
-                self.picture['geom_pos'] = (0, 0, 0)
+        elif InventoryType.SmallBottle <= itemId and itemId <= InventoryType.LargeBottle:
+            self.picture['geom'] = self.topGui.find('**/main_gui_ship_bottle')
+            self.picture['geom_scale'] = 0.1
+            self.picture['geom_pos'] = (0, 0, 0)
             
         self.flattenStrong()
     
@@ -90,9 +89,7 @@ class PurchaseListItem(InventoryListItem):
         InventoryListItem.destroy(self)
     
     def createHighlight(self, args = None):
-        self.quantityLabel['text_fg'] = PiratesGuiGlobals.TextFG6
-        self.costText['text_fg'] = PiratesGuiGlobals.TextFG6
-        self.nameTag['text_fg'] = PiratesGuiGlobals.TextFG6
+        self.quantityLabel['text_fg'] = self.costText['text_fg'] = self.nameTag['text_fg'] = PiratesGuiGlobals.TextFG6
     
     def highlightStart(self, event = None):
         taskMgr.doMethodLater(PiratesGuiGlobals.HelpPopupTime, self.createHighlight, 'itemHighlightTask')
@@ -100,8 +97,6 @@ class PurchaseListItem(InventoryListItem):
 
     def highlightStop(self, event = None):
         taskMgr.remove('itemHighlightTask')
-        self.quantityLabel['text_fg'] = PiratesGuiGlobals.TextFG2
-        self.costText['text_fg'] = PiratesGuiGlobals.TextFG2
-        self.nameTag['text_fg'] = PiratesGuiGlobals.TextFG2
+        self.quantityLabel['text_fg'] = self.costText['text_fg'] = self.nameTag['text_fg'] = PiratesGuiGlobals.TextFG2
 
 

@@ -73,7 +73,7 @@ class BuffIcon(DirectFrame):
 
     def makeDetails(self):
         if self.detailFrame:
-            return None
+            return
         
         durationStr = str(int(self.maxDuration))
         text = buffTable[self.effectId][1] + PLocalizer.BuffDuration % durationStr

@@ -17,7 +17,29 @@ class InventoryList(DirectScrolledFrame):
         self.width = self.listItemWidth + PiratesGuiGlobals.ScrollbarSize
         self.height = height
         charGui = loader.loadModel('models/gui/char_gui')
-        DirectScrolledFrame.__init__(self, relief = None, state = DGG.NORMAL, manageScrollBars = 0, autoHideScrollBars = 1, frameSize = (0, self.width, 0, self.height), canvasSize = (0, self.width - 0.05, 0.025, self.height - 0.025), verticalScroll_relief = None, verticalScroll_image = charGui.find('**/chargui_slider_small'), verticalScroll_frameSize = (0, PiratesGuiGlobals.ScrollbarSize, 0, self.height), verticalScroll_image_scale = (self.height + 0.05, 1, 0.75), verticalScroll_image_hpr = (0, 0, 90), verticalScroll_image_pos = (self.width - PiratesGuiGlobals.ScrollbarSize * 0.5 - 0.004, 0, self.height * 0.5), verticalScroll_image_color = (0.61, 0.6, 0.6, 1), verticalScroll_thumb_image = (charGui.find('**/chargui_slider_node'), charGui.find('**/chargui_slider_node_down'), charGui.find('**/chargui_slider_node_over')), verticalScroll_thumb_relief = None, verticalScroll_thumb_image_scale = 0.25, verticalScroll_resizeThumb = 0, horizontalScroll_relief = None, sortOrder = 5)
+        DirectScrolledFrame.__init__(self,
+                                     relief = None,
+                                     state = DGG.NORMAL,
+                                     manageScrollBars = 0,
+                                     autoHideScrollBars = 1,
+                                     frameSize = (0, self.width, 0, self.height),
+                                     canvasSize = (0, self.width - 0.05, 0.025, self.height - 0.025),
+                                     verticalScroll_relief = None,
+                                     verticalScroll_image = charGui.find('**/chargui_slider_small'),
+                                     verticalScroll_frameSize = (0, PiratesGuiGlobals.ScrollbarSize, 0, self.height),
+                                     verticalScroll_image_scale = (self.height + 0.05, 1, 0.75),
+                                     verticalScroll_image_hpr = (0, 0, 90),
+                                     verticalScroll_image_pos = (self.width - PiratesGuiGlobals.ScrollbarSize * 0.5 - 0.004, 0, self.height * 0.5),
+                                     verticalScroll_image_color = (0.61, 0.6, 0.6, 1),
+                                     verticalScroll_thumb_image = (charGui.find('**/chargui_slider_node'),
+                                                                   charGui.find('**/chargui_slider_node_down'),
+                                                                   charGui.find('**/chargui_slider_node_over')),
+                                     verticalScroll_thumb_relief = None,
+                                     verticalScroll_thumb_image_scale = 0.25,
+                                     verticalScroll_resizeThumb = 0,
+                                     horizontalScroll_relief = None,
+                                     sortOrder = 5
+                                     )
         self.initialiseoptions(InventoryList)
         self.verticalScroll.incButton.destroy()
         self.verticalScroll.decButton.destroy()
@@ -38,7 +60,7 @@ class InventoryList(DirectScrolledFrame):
     
     def mouseWheelUp(self, task = None):
         if self.verticalScroll.isHidden():
-            return None
+            return
         
         amountScroll = 0.075
         if self.verticalScroll['value'] > 0:
@@ -46,7 +68,7 @@ class InventoryList(DirectScrolledFrame):
 
     def mouseWheelDown(self, task = None):
         if self.verticalScroll.isHidden():
-            return None
+            return
         
         amountScroll = 0.075
         if self.verticalScroll['value'] < 1.0:
@@ -85,7 +107,7 @@ class InventoryList(DirectScrolledFrame):
     def addPanel(self, data, repack = 1):
         itemId = data[0]
         if itemId == InventoryType.MeleeWeaponL1:
-            return None
+            return
         
         isDisabled = 0
         panel = self.ListItem(data, trade = self.trade, buy = self.buy, sell = self.sell, use = self.use, weapon = self.weapon, isDisabled = isDisabled)
@@ -106,7 +128,7 @@ class InventoryList(DirectScrolledFrame):
                 if repack:
                     self.repackPanels()
                 
-                return None
+                return
 
     def getPanel(self, data):
         for panel in self.panels:

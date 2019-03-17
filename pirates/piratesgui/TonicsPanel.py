@@ -37,7 +37,7 @@ class TonicsPanel(DirectFrame):
 
     def loadGui(self):
         if TonicsPanel.guiLoaded:
-            return None
+            return
         
         TonicsPanel.topGui = loader.loadModel('models/gui/toplevel_gui')
         TonicsPanel.weaponIcons = loader.loadModel('models/textureCards/weapon_icons')

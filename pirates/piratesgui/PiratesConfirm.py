@@ -30,7 +30,7 @@ class PiratesConfirm(GuiPanel.GuiPanel):
         self.barber = barber
         if base.cr.avatarFriendsManager.checkIgnored(self.avId):
             self.__handleNo()
-            return None
+            return
         
         text = message
         self.message = DirectLabel(parent = self, relief = None, text = message, text_scale = PiratesGuiGlobals.TextScaleLarge, text_align = TextNode.ACenter, text_fg = PiratesGuiGlobals.TextFG2, text_shadow = PiratesGuiGlobals.TextShadow, text_wordwrap = 11, pos = (0.25, 0, 0.35), textMayChange = 1)
@@ -44,7 +44,7 @@ class PiratesConfirm(GuiPanel.GuiPanel):
 
     def destroy(self):
         if hasattr(self, 'destroyed'):
-            return None
+            return
         
         self.destroyed = 1
         self.ignore('BandRequestCancel-%s' % (self.avId,))

@@ -94,7 +94,7 @@ class NamePanelGui(GuiPanel.GuiPanel):
             problem = self.nameIsValid(name)
             if problem:
                 self.rejectName(problem)
-                return None
+                return
             else:
                 messenger.send('nameChosen', [
                     (name, [])])
@@ -108,7 +108,7 @@ class NamePanelGui(GuiPanel.GuiPanel):
         self.notify.debug('nameIsValid')
         inventory = base.localAvatar.getInventory()
         if not inventory:
-            return None
+            return
         
         usedNames = []
         shipList = inventory.getShipDoIdList()
@@ -122,6 +122,7 @@ class NamePanelGui(GuiPanel.GuiPanel):
         problem = NameCheck.checkName(name)
         if problem:
             return problem
+        return None
 
     def rejectName(self, errorStr):
         self.notify.debug('rejectName')

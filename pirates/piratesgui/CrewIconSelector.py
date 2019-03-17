@@ -12,7 +12,7 @@ from pirates.piratesgui.RequestButton import RequestButton
 CREW_ICON_BAM = 'models/gui/gui_main'
 CREW_ICONS = {
     1: 'crew_member/crew_member',
-    2: 'crew_member/crew_member' }
+    2: 'crew_member/crew_member'}
 
 class CrewIconSelectorConfirmButton(RequestButton):
     
@@ -53,7 +53,7 @@ class CrewIconSelector(GuiPanel.GuiPanel):
 
         crewIconParent.flattenStrong()
         self.iconFrame = DirectFrame(parent = self, relief = None, geom = crewIconParent)
-        self.iconFrame.setPos(-0.1, 0, -0.12)
+        self.iconFrame.setPos(-.1, 0, -.12)
         self.bOk = CrewIconSelectorConfirmButton(text = PLocalizer.GenericConfirmOK, command = self.__handleOK)
         self.bCancel = CrewIconSelectorCancelButton(text = PLocalizer.DialogCancel, command = self.__handleCancel)
         self.bOk.reparentTo(self)
@@ -64,7 +64,7 @@ class CrewIconSelector(GuiPanel.GuiPanel):
 
     def destroy(self):
         if hasattr(self, 'destroyed'):
-            return None
+            return
         
         self.destroyed = 1
         self.ignore('Esc')

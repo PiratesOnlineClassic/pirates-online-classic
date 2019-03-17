@@ -73,7 +73,27 @@ class OptionItemGui(DirectFrame):
             self.optionItems = ListFrame(0.4, None, 'blah', self, frameColor = (0, 0, 0, 0))
             self.optionItems.itemBuffer = 0.008
             self.optionItems.setup()
-            self.optionUI = DirectScrolledFrame(parent = self, frameSize = (0, 0.45, 0, 0.3), relief = DGG.GROOVE, state = DGG.NORMAL, frameColor = (0, 0, 0, 0), borderWidth = PiratesGuiGlobals.BorderWidth, canvasSize = (0, 0.38, 0, self.optionItems['frameSize'][3]), verticalScroll_frameColor = (0, 0, 0, 0), verticalScroll_thumb_frameColor = (0, 0, 0, 0), verticalScroll_incButton_frameColor = (0, 0, 0, 0), verticalScroll_decButton_frameColor = (0, 0, 0, 0), verticalScroll_image = charGui_slider, verticalScroll_image_scale = (0.12, 1, 0.28), verticalScroll_image_pos = (0.4195, 0, 0.15), verticalScroll_image_hpr = (0, 0, 90), verticalScroll_frameSize = (0, PiratesGuiGlobals.ScrollbarSize, 0, OptionItemGui.Height * 3), verticalScroll_thumb_image = charGui_slider_thumb, verticalScroll_thumb_image_scale = (0.35, 0.35, 0.35), sortOrder = 5, pos = (0.3, 0, self.getHeight() / 2 - 0.15))
+            self.optionUI = DirectScrolledFrame(parent = self,
+                                                frameSize = (0, 0.45, 0, 0.3),
+                                                relief = DGG.GROOVE,
+                                                state = DGG.NORMAL,
+                                                frameColor = (0, 0, 0, 0),
+                                                borderWidth = PiratesGuiGlobals.BorderWidth,
+                                                canvasSize = (0, 0.38, 0, self.optionItems['frameSize'][3]),
+                                                verticalScroll_frameColor = (0, 0, 0, 0),
+                                                verticalScroll_thumb_frameColor = (0, 0, 0, 0),
+                                                verticalScroll_incButton_frameColor = (0, 0, 0, 0),
+                                                verticalScroll_decButton_frameColor = (0, 0, 0, 0),
+                                                verticalScroll_image = charGui_slider,
+                                                verticalScroll_image_scale = (0.12, 1, 0.28),
+                                                verticalScroll_image_pos = (0.4195, 0, 0.15),
+                                                verticalScroll_image_hpr = (0, 0, 90),
+                                                verticalScroll_frameSize = (0, PiratesGuiGlobals.ScrollbarSize, 0, OptionItemGui.Height * 3),
+                                                verticalScroll_thumb_image = charGui_slider_thumb,
+                                                verticalScroll_thumb_image_scale = (0.35, 0.35, 0.35),
+                                                sortOrder = 5,
+                                                pos = (0.3, 0, self.getHeight() / 2 - 0.15)
+                                                )
             self.optionUI.guiItem.getVerticalSlider().clearLeftButton()
             self.optionUI.guiItem.getVerticalSlider().clearRightButton()
             self.optionUI.guiItem.getVerticalSlider().setRange(-1, 1)

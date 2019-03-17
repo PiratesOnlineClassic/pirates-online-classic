@@ -25,11 +25,11 @@ class BorderFrame(DirectFrame):
                 childGui = self.guiDict.get(child.getName())
                 if childGui:
                     childGui.destroy()
-
-                parts = child.getName().split('-')
-                simpleChildGui = self.guiDict.get(parts[-1])
-                if simpleChildGui:
-                    simpleChildGui.destroy()
+                else:
+                    parts = child.getName().split('-')
+                    simpleChildGui = self.guiDict.get(parts[-1])
+                    if simpleChildGui:
+                        simpleChildGui.destroy()
             
             self.frameParent.removeNode()
             self.frameParent = None
@@ -39,11 +39,11 @@ class BorderFrame(DirectFrame):
                 childGui = self.guiDict.get(child.getName())
                 if childGui:
                     childGui.destroy()
-
-                parts = child.getName().split('-')
-                simpleChildGui = self.guiDict.get(parts[-1])
-                if simpleChildGui:
-                    simpleChildGui.destroy()
+                else:
+                    parts = child.getName().split('-')
+                    simpleChildGui = self.guiDict.get(parts[-1])
+                    if simpleChildGui:
+                        simpleChildGui.destroy()
             
             self.behindParent.removeNode()
             self.behindParent = None
@@ -95,8 +95,7 @@ class BorderFrame(DirectFrame):
                 piece.bind(DGG.B2RELEASE, self.dragStop)
                 piece.bind(DGG.B3PRESS, self.dragStart)
                 piece.bind(DGG.B3RELEASE, self.dragStop)
-            
-        
+
         self.resetDecorations()
 
     def resetHBorder(self, scale, frameSize):
@@ -147,17 +146,13 @@ class BorderFrame(DirectFrame):
         self.frameParent.setScale(invScale)
         frameSize = self['frameSize']
         if frameSize:
-            xFrameSize = frameSize[1] - frameSize[0]
-            xFramePos = frameSize[0]
-            yFrameSize = frameSize[3] - frameSize[2]
-            yFramePos = frameSize[2]
+            xFrameSize, xFramePos = frameSize[1] - frameSize[0], frameSize[0]
+            yFrameSize, yFramePos = frameSize[3] - frameSize[2], frameSize[2]
         else:
-            xFrameSize = 1
-            xFramePos = -0.5
-            yFrameSize = 1
-            yFramePos = -0.5
-        self.frameParent.setX(xFramePos + (self['cornerWidth'] / scale[0]) * self['borderScale'])
-        self.frameParent.setZ(yFrameSize + yFramePos - (self['cornerWidth'] / scale[2]) * self['borderScale'])
+            xFrameSize, xFramePos = 1, -0.5
+            yFrameSize, yFramePos = 1, -0.5
+        self.frameParent.setX(xFramePos + self['cornerWidth'] / scale[0] * self['borderScale'])
+        self.frameParent.setZ(yFrameSize + yFramePos - self['cornerWidth'] / scale[2] * self['borderScale'])
         ts = self.frameParent.getTransform().getInverse()
         self.behindParent.setTransform(ts)
         self.resetHBorder(scale[0], xFrameSize)
@@ -178,7 +173,6 @@ class BorderFrame(DirectFrame):
         else:
             self.temp = temp
             self.frameParent.unstash()
-
     
     def setScale(self, *args, **kwargs):
         DirectFrame.setScale(self, *args, **kwargs)
@@ -267,11 +261,9 @@ class BorderFrame(DirectFrame):
 
     def getInnerFrameSize(self):
         frameSize = self['frameSize']
-        scaleX = self.getScale()[0]
-        scaleZ = self.getScale()[2]
+        scaleX, scaleZ = self.getScale()[0], self.getScale()[2]
         borderScale = self['borderScale']
-        factorX = borderScale / scaleX
-        factorZ = borderScale / scaleZ
+        factorX, factorZ = borderScale / scaleX, borderScale / scaleZ
         return Vec4(frameSize[0] + self['bgBuffer'] * factorX, frameSize[1] - self['bgBuffer'] * factorX, frameSize[2] + self['bgBuffer'] * factorZ, frameSize[3] - self['bgBuffer'] * factorZ)
     
     def setBgTransparent(self):

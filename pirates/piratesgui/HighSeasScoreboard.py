@@ -169,7 +169,7 @@ class HighSeasScoreboard(GuiPanel.GuiPanel):
                 bonusGold = int(totalGold * EconomyGlobals.CAPTAIN_LOOT_MULTIPLIER)
                 totalGold += bonusGold
         
-        if base.getHoliday(PiratesGlobals.DOUBLEGOLDHOLIDAYPAID) or Freebooter.getPaidStatus(avId) or base.getHoliday(PiratesGlobals.DOUBLEGOLDHOLIDAY):
+        if base.getHoliday(PiratesGlobals.DOUBLEGOLDHOLIDAYPAID) and Freebooter.getPaidStatus(avId) or base.getHoliday(PiratesGlobals.DOUBLEGOLDHOLIDAY):
             totalGold *= 2
         
         netGold = totalGold - pRepairCost
@@ -211,7 +211,7 @@ class HighSeasScoreboard(GuiPanel.GuiPanel):
                 'Value1': str(bonusGold) + ' ' + PLocalizer.MoneyName,
                 'UnwrapMode': 1})
         
-        if base.getHoliday(PiratesGlobals.DOUBLEGOLDHOLIDAYPAID) or Freebooter.getPaidStatus(avId) or base.getHoliday(PiratesGlobals.DOUBLEGOLDHOLIDAY):
+        if base.getHoliday(PiratesGlobals.DOUBLEGOLDHOLIDAYPAID) and Freebooter.getPaidStatus(avId) or base.getHoliday(PiratesGlobals.DOUBLEGOLDHOLIDAY):
             self.results.append({
                 'Type': 'Space',
                 'Text': '',

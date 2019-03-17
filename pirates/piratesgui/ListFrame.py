@@ -17,7 +17,7 @@ class ListFrame(DirectFrame, DirectObject):
             h = 1
             self.adjustHeight = True
         
-        DirectFrame.__init__(self, relief = None, state = DGG.NORMAL, frameColor = frameColor, borderWidth = PiratesGuiGlobals.BorderWidth, frameSize = (0.0, w, 0.0, h), pos = (PiratesGuiGlobals.BorderWidth[0], 0, PiratesGuiGlobals.BorderWidth[0]), **None)
+        DirectFrame.__init__(self, relief = None, state = DGG.NORMAL, frameColor = frameColor, borderWidth = PiratesGuiGlobals.BorderWidth, frameSize = (0.0, w, 0.0, h), pos = (PiratesGuiGlobals.BorderWidth[0], 0, PiratesGuiGlobals.BorderWidth[0]), **kw)
         self.initialiseoptions(ListFrame)
         self.delayedReveal = delayedReveal
         self.items = []
@@ -104,7 +104,6 @@ class ListFrame(DirectFrame, DirectObject):
             totalY += currHeight
             if self.hideAll == False:
                 gui.descText.wrtReparentTo(self.getParent().getParent())
-                continue
         
         if self.adjustHeight:
             newSize = self['frameSize']
@@ -124,11 +123,11 @@ class ListFrame(DirectFrame, DirectObject):
         revealTime = self.revealSpeed
         if base.config.GetBool('fast-gui', 0) is 1:
             self.revealSpeed = 0
-        
+
         numItems = len(itemList)
         if numItems > 0:
             min(self.revealSpeed, self.maxTotalWait / numItems)
-        
+
         revealTime = 0
         for currItem in itemList:
             if currItem is not None:
@@ -145,7 +144,7 @@ class ListFrame(DirectFrame, DirectObject):
                         itmPtr = self.createListItem(currItem, revealTime)
                         itemText = currItem.get('Text')
                         if itemText:
-                            if itemText[0] == PLocalizer.TBTGame and itemText[0] == PLocalizer.CTLGame and itemText[0] == PLocalizer.SBTGame or itemText[0] == PLocalizer.PokerGame:
+                            if itemText[0] == PLocalizer.TBTGame or itemText[0] == PLocalizer.CTLGame or itemText[0] == PLocalizer.SBTGame or itemText[0] == PLocalizer.PokerGame:
                                 if 0:
                                     itmPtr.setColorScale(0.3, 0.3, 0.3, 1)
                                     lock = DirectFrame(parent = itmPtr, relief = None, image = self.lockArt, image_scale = 0.2, image_pos = (0.55, 0, 0.09))
@@ -157,40 +156,31 @@ class ListFrame(DirectFrame, DirectObject):
 
                     if (itemType == None or itemType != 'Space') and self.delayedReveal:
                         revealTime += self.revealSpeed
-                    
-        
 
-    
     def sendFinished(args = None):
         messenger.send(self.getListFinishedMessage())
         taskMgr.doMethodLater(self.pageFinishWait + revealTime, sendFinished, 'scoreboardWait')
-
     
     def _destroyIface(self):
         for gui in self.items:
             gui.destroy()
         
         self.items = []
-
     
     def removeItem(self, item):
         item.detachNode()
         self.items.remove(item)
 
-    
     def redraw(self):
         self._destroyIface()
         self.items = []
         self._createIface()
 
-    
     def _handleItemChange(self):
         self.redraw()
         if self.holder and hasattr(self.holder, 'handleChildChange'):
             self.holder.handleChildChange()
-        
 
-    
     def cleanup(self):
         for currItem in self.items:
             currItem.descText.wrtReparentTo(currItem)

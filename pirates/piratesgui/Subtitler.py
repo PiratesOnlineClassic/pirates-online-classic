@@ -56,7 +56,7 @@ class Subtitler(DirectObject.DirectObject):
             self.clearTextOverride = False
         
         if self.clearTextOverride:
-            return None
+            return
         
         taskMgr.remove('clearSubtitleTask')
         self.event = None
@@ -152,7 +152,7 @@ class Subtitler(DirectObject.DirectObject):
         self.text['text'] = text
         self.text.show()
         self.accept('letterboxOff', self.clearText)
-        if self.getNumChatPages() > 1 and self.__optionButtons or confirm:
+        if self.getNumChatPages() > 1 or self.__optionButtons or confirm:
             self.confirmButton.show()
             if self.__chatPageNumber == len(self.__chatPages) - 1:
                 messenger.send('lastSubtitlePage')

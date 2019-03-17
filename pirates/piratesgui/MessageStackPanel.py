@@ -71,10 +71,9 @@ class StackMessage(BorderFrame):
 
     def loadModels(self):
         if StackMessage.guiLoaded:
-            return None
+            return
         
-        StackMessage.TopLevel = loader.loadModel('models/gui/toplevel_gui')
-        gui = loader.loadModel('models/gui/toplevel_gui')
+        StackMessage.TopLevel = gui = loader.loadModel('models/gui/toplevel_gui')
         StackMessage.corner = gui.find('**/topgui_general_corner')
         StackMessage.CoinTex = gui.find('**/treasure_w_coin*')
         StackMessage.SkillTex = gui.find('**/topgui_icon_skills')
@@ -172,7 +171,9 @@ class StackMessage(BorderFrame):
                 elif detail == ItemId.CARGO_SKCHEST:
                     image = StackMessage.RoyalChestTex
                 elif detail == ItemId.GOLD:
-                    pass
+                    StackMessage.CoinTex
+                else:
+                    StackMessage.CoinTex
                 
                 imageScale = 0.35
                 command = localAvatar.guiMgr.showShipPanel
@@ -247,12 +248,12 @@ class ModalStackMessage(StackMessage):
     
     def setupButtons(self):
         if self['buttonStyle'] == OTPDialog.YesNo:
-            self.yesButton = GuiButton(parent = self, image_scale = (0.22, 0.22, 0.15), pos = (0.275, 0, -0.1), text = PLocalizer.DialogYes, command = self.handleYes)
-            self.noButton = GuiButton(parent = self, image_scale = (0.22, 0.22, 0.15), pos = (0.55, 0, -0.1), text = PLocalizer.DialogNo, command = self.handleNo)
+            self.yesButton = GuiButton(parent = self, image_scale = (0.22, 0.22, 0.15), pos = (0.275, 0, -.1), text = PLocalizer.DialogYes, command = self.handleYes)
+            self.noButton = GuiButton(parent = self, image_scale = (0.22, 0.22, 0.15), pos = (0.55, 0, -.1), text = PLocalizer.DialogNo, command = self.handleNo)
             self.adjustFrameForButtons()
         elif self['buttonStyle'] == OTPDialog.CancelOnly:
             lookoutUI = loader.loadModel('models/gui/lookout_gui')
-            self.cancelButton = DirectButton(parent = self, relief = None, image = (lookoutUI.find('**/lookout_close_window'), lookoutUI.find('**/lookout_close_window_down'), lookoutUI.find('**/lookout_close_window_over'), lookoutUI.find('**/lookout_close_window_disabled')), pos = (0.75, 0, -0.05), scale = 0.12, command = self.handleCancel)
+            self.cancelButton = DirectButton(parent = self, relief = None, image = (lookoutUI.find('**/lookout_close_window'), lookoutUI.find('**/lookout_close_window_down'), lookoutUI.find('**/lookout_close_window_over'), lookoutUI.find('**/lookout_close_window_disabled')), pos = (0.75, 0, -.05), scale = 0.12, command = self.handleCancel)
 
     def adjustFrameForButtons(self):
         zOffset = self['frameSize'][2]
@@ -479,7 +480,7 @@ class MessageStackPanel(DirectFrame):
 
     def addTextMessage(self, text, seconds = 7, priority = 0, color = (0, 0, 0, 1), icon = (), suffix = '_b'):
         if self.lastMessage == text:
-            return None
+            return
         
         msg = StackMessage(parent = self, text = text, text_wordwrap = 16.5, text_align = TextNode.ALeft, text_scale = 0.035, text_fg = color, text_pos = (0.17, -0.072, 0), textMayChange = 1, time = seconds, priority = priority, icon = icon, suffix = suffix)
         self.addMessage(msg)
@@ -488,7 +489,7 @@ class MessageStackPanel(DirectFrame):
 
     def addModalTextMessage(self, text, buttonStyle = OTPDialog.CancelOnly, noCallback = None, yesCallback = None, cancelCallback = None, seconds = 120, priority = 0, color = (1, 1, 1, 1), icon = (), suffix = '_f'):
         if self.lastMessage == text:
-            return None
+            return
         
         msg = ModalStackMessage(parent = self, buttonStyle = buttonStyle, noCallback = noCallback, yesCallback = yesCallback, cancelCallback = cancelCallback, text = text, text_wordwrap = 16.5, text_align = TextNode.ALeft, text_scale = 0.035, text_fg = color, text_pos = (0.17, -0.072, 0), textMayChange = 1, time = seconds, priority = priority, icon = icon, suffix = suffix)
         self.addMessage(msg)

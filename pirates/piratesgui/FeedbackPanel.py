@@ -53,7 +53,7 @@ class FeedbackInput(GuiPanel.GuiPanel):
     def __init__(self, commandToExe):
         currentInteraction = base.cr.interactionMgr.getCurrent()
         if not hasattr(currentInteraction, 'storeType'):
-            GuiPanel.GuiPanel.__init__(self, '', 0.735, 0.47, 0, '', pos = (0.42999999999999999, 0, -0.71999999999999997))
+            GuiPanel.GuiPanel.__init__(self, '', 0.735, 0.47, 0, '', pos = (0.43, 0, -0.72))
         elif currentInteraction.storeType in [
             InteractGlobals.ACCESSORIES_STORE,
             InteractGlobals.TATTOO_STORE,
@@ -68,7 +68,7 @@ class FeedbackInput(GuiPanel.GuiPanel):
 
     def destroy(self):
         if hasattr(self, 'destroyed'):
-            return None
+            return
         
         self.destroyed = 1
         self.ignore('Esc')
@@ -86,7 +86,7 @@ class FeedbackPanel(GuiPanel.GuiPanel):
     def __init__(self):
         if hasattr(base, 'localAvatar'):
             if base.localAvatar.guiMgr.feedbackFormActive:
-                return None
+                return
             else:
                 base.localAvatar.guiMgr.feedbackFormActive = True
         
@@ -133,7 +133,7 @@ class FeedbackPanel(GuiPanel.GuiPanel):
             base.localAvatar.guiMgr.feedbackFormActive = False
         
         if hasattr(self, 'destroyed'):
-            return None
+            return
         
         self.destroyed = 1
         self.ignore('Esc')

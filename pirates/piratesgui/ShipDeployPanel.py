@@ -63,7 +63,7 @@ class ShipDeployPanel(ShipSelectionPanel):
     def addOwnShip(self, shipId, callback):
         shipOV = base.cr.getOwnerView(shipId)
         if not shipOV:
-            return None
+            return
         
         shipFrame = self.getFrame(shipId)
         if not shipFrame:

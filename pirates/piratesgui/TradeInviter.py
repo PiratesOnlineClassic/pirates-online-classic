@@ -32,18 +32,25 @@ class TradeInviter(GuiPanel.GuiPanel):
         self.avDisableName = 'disable-%s' % self.avId
         self.fsm = ClassicFSM.ClassicFSM('TradeInviter', [
             State.State('off', self.enterOff, self.exitOff),
-            State.State('getNewTrade', self.enterGetNewTrade, self.exitGetNewTrade),
+            State.State('getNewTrade', self.enterGetNewTrade,
+                        self.exitGetNewTrade),
             State.State('begin', self.enterBegin, self.exitBegin),
             State.State('notYet', self.enterNotYet, self.exitNotYet),
-            State.State('checkAvailability', self.enterCheckAvailability, self.exitCheckAvailability),
-            State.State('notAvailable', self.enterNotAvailable, self.exitNotAvailable),
-            State.State('notAcceptingTrades', self.enterNotAcceptingTrades, self.exitNotAcceptingTrades),
+            State.State('checkAvailability', self.enterCheckAvailability,
+                        self.exitCheckAvailability),
+            State.State('notAvailable', self.enterNotAvailable,
+                        self.exitNotAvailable),
+            State.State('notAcceptingTrades', self.enterNotAcceptingTrades,
+                        self.exitNotAcceptingTrades),
             State.State('wentAway', self.enterWentAway, self.exitWentAway),
-            State.State('alreadyTrading', self.enterAlreadyTrading, self.exitAlreadyTrading),
-            State.State('alreadyInvited', self.enterAlreadyInvited, self.exitAlreadyInvited),
+            State.State('alreadyTrading', self.enterAlreadyTrading,
+                        self.exitAlreadyTrading),
+            State.State('alreadyInvited', self.enterAlreadyInvited,
+                        self.exitAlreadyInvited),
             State.State('askingNPC', self.enterAskingNPC, self.exitAskingNPC),
             State.State('endTrade', self.enterEndTrade, self.exitEndTrade),
-            State.State('tradeNoMore', self.enterTradeNoMore, self.exitTradeNoMore),
+            State.State('tradeNoMore', self.enterTradeNoMore,
+                        self.exitTradeNoMore),
             State.State('self', self.enterSelf, self.exitSelf),
             State.State('ignored', self.enterIgnored, self.exitIgnored),
             State.State('asking', self.enterAsking, self.exitAsking),
@@ -51,7 +58,8 @@ class TradeInviter(GuiPanel.GuiPanel):
             State.State('no', self.enterNo, self.exitNo),
             State.State('maybe', self.enterMaybe, self.exitMaybe),
             State.State('down', self.enterDown, self.exitDown),
-            State.State('cancel', self.enterCancel, self.exitCancel)], 'off', 'off')
+            State.State('cancel', self.enterCancel, self.exitCancel)
+        ], 'off', 'off')
         self.message = DirectLabel(parent = self, relief = None, text = '', text_scale = PiratesGuiGlobals.TextScaleLarge, text_align = TextNode.ACenter, text_fg = PiratesGuiGlobals.TextFG2, text_shadow = PiratesGuiGlobals.TextShadow, text_wordwrap = 11, pos = (0.25, 0, 0.35), textMayChange = 1)
         self.context = None
         self.bOk = TradeInviterButton(text = PLocalizer.TradeInviterOK, command = self.__handleOk)
@@ -82,7 +90,7 @@ class TradeInviter(GuiPanel.GuiPanel):
 
     def destroy(self):
         if hasattr(self, 'destroyed'):
-            return None
+            return
         
         self.destroyed = 1
         self.fsm.request('cancel')
@@ -137,11 +145,11 @@ class TradeInviter(GuiPanel.GuiPanel):
         avatar = base.cr.doId2do.get(self.avId)
         if not avatar:
             self.fsm.request('wentAway')
-            return None
+            return
         
         if isinstance(avatar, DistributedBattleNPC):
             self.fsm.request('askingNPC')
-            return None
+            return
         
         base.cr.tradeManager.sendRequestCreateTrade(self.avId)
         self.message['text'] = PLocalizer.TradeInviterCheckAvailability % self.avName
@@ -357,10 +365,10 @@ class TradeInviter(GuiPanel.GuiPanel):
         if reason == RejectCode.NO_TRADES_LIST:
             pass
 
-        if reason == RejectCode.TRADES_LIST_NOT_HANDY:
+        elif reason == RejectCode.TRADES_LIST_NOT_HANDY:
             pass
 
-        if reason == RejectCode.INVITEE_NOT_ONLINE:
+        elif reason == RejectCode.INVITEE_NOT_ONLINE:
             self.fsm.request('notAvailable')
         elif reason == RejectCode.ALREADY_INVITED:
             self.fsm.request('alreadyInvited')

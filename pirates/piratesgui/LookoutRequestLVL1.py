@@ -90,22 +90,23 @@ class LookoutRequestLVL1(InventoryPage):
         if active:
             taskMgr.doMethodLater(0.1, self.updateActiveLookout, self.getUpdateActiveLookoutTaskName())
             self.guiMgr.chestTray.buildShowHideButtonsIvals(includeSticky = False)
-        elif hasattr(base, 'localAvatar'):
-            self.guiMgr.chestTray.buildShowHideButtonsIvals(includeSticky = True)
-            self.searchIconImg = 0
-        
-        if taskMgr.hasTaskNamed(self.getUpdateActiveLookoutTaskName()):
-            taskMgr.remove(self.getUpdateActiveLookoutTaskName())
-            self.clearActiveLookout()
-        
-        self.invitedTimedOut()
+        else:
+            if hasattr(base, 'localAvatar'):
+                self.guiMgr.chestTray.buildShowHideButtonsIvals(includeSticky = True)
+                self.searchIconImg = 0
+
+            if taskMgr.hasTaskNamed(self.getUpdateActiveLookoutTaskName()):
+                taskMgr.remove(self.getUpdateActiveLookoutTaskName())
+                self.clearActiveLookout()
+
+            self.invitedTimedOut()
         self.updateMode(mode)
 
     def updateMode(self, mode):
         if mode != self.currMode:
             self.stopTimer(self.TIMER_AUTO_HIDE_MODE_PAGECHANGE)
         
-        if self.currMode == PiratesGuiGlobals.SEARCH_MODE and self.currMode == PiratesGuiGlobals.INVITE_MODE and self.currMode == PiratesGuiGlobals.CHALLENGE_MODE or self.currMode == PiratesGuiGlobals.INVITE_ACCEPTED_MODE:
+        if self.currMode == PiratesGuiGlobals.SEARCH_MODE or self.currMode == PiratesGuiGlobals.INVITE_MODE or self.currMode == PiratesGuiGlobals.CHALLENGE_MODE or self.currMode == PiratesGuiGlobals.INVITE_ACCEPTED_MODE:
             self.hideStatus()
         elif self.currMode == PiratesGuiGlobals.REQUEST_CAT_MODE:
             self.hideRequestCat()
@@ -120,7 +121,7 @@ class LookoutRequestLVL1(InventoryPage):
             self.hideRequestType()
         
         self.currMode = mode
-        if mode == PiratesGuiGlobals.SEARCH_MODE and mode == PiratesGuiGlobals.INVITE_MODE and mode == PiratesGuiGlobals.INVITE_ACCEPTED_MODE or mode == PiratesGuiGlobals.CHALLENGE_MODE:
+        if mode == PiratesGuiGlobals.SEARCH_MODE or mode == PiratesGuiGlobals.INVITE_MODE or mode == PiratesGuiGlobals.INVITE_ACCEPTED_MODE or mode == PiratesGuiGlobals.CHALLENGE_MODE:
             self.showStatus()
         elif mode == PiratesGuiGlobals.REQUEST_CAT_MODE:
             self.showRequestCat()
@@ -488,7 +489,7 @@ class LookoutRequestLVL1(InventoryPage):
                 self.submitButton['state'] = DGG.NORMAL
             else:
                 self.submitRequest()
-                return None
+                return
             self.updateMode(PiratesGuiGlobals.REQUEST_TYPE_MODE)
             messenger.send('lookoutChoseGame')
 
@@ -630,7 +631,7 @@ class LookoutRequestLVL1(InventoryPage):
 
     def stopTimer(self, hideMode = TIMER_AUTO_HIDE_MODE_TIMEOUT):
         if self.timerAutoHide != hideMode:
-            return None
+            return
         
         if self.timerTask:
             taskMgr.remove(self.timerTask)
@@ -852,18 +853,18 @@ class LookoutRequestLVL1(InventoryPage):
         elif mode == PiratesGuiGlobals.INVITE_ACCEPTED_MODE:
             iconName = GameTypeGlobals.GameTypeStrings['icon'][selectedVal]
             return (PLocalizer.LookoutPanelJoined, PLocalizer.LookoutJoinStatus, iconName)
-        elif self.selectedItem:
-            iconName = GameTypeGlobals.GameTypeStrings['icon'][self.selectedItem.value]
         else:
-            iconName = 'lookout_win_logo'
-        title = PLocalizer.LookoutPanelTitle
-        titleDesc = PLocalizer.LookoutPanelTitleDesc
-        if mode == PiratesGuiGlobals.REQUEST_TYPE_MODE:
-            gameTitle = GameTypeGlobals.getGameTypeString(selectedVal, 'type')
-            titleDesc = PLocalizer.LookoutPanelTitleDescGame
-            title = gameTitle
-        
-        return (title, titleDesc, iconName)
+            if self.selectedItem:
+                iconName = GameTypeGlobals.GameTypeStrings['icon'][self.selectedItem.value]
+            else:
+                iconName = 'lookout_win_logo'
+            title = PLocalizer.LookoutPanelTitle
+            titleDesc = PLocalizer.LookoutPanelTitleDesc
+            if mode == PiratesGuiGlobals.REQUEST_TYPE_MODE:
+                gameTitle = GameTypeGlobals.getGameTypeString(selectedVal, 'type')
+                titleDesc = PLocalizer.LookoutPanelTitleDescGame
+                title = gameTitle
+            return (title, titleDesc, iconName)
 
     def updateTitle(self, mode = PiratesGuiGlobals.REQUEST_CAT_MODE):
         (titleText, titleDesc, iconName) = self._determineTitle(mode)
@@ -991,7 +992,7 @@ class LookoutRequestLVL1(InventoryPage):
                 self.requestJoin()
 
     def matchFailed(self, restartRequest):
-        if self.currMode == PiratesGuiGlobals.REQUEST_FOUND_MODE and self.currMode == PiratesGuiGlobals.REQUEST_JOIN_MODE and self.currMode == PiratesGuiGlobals.SEARCH_MODE or self.currMode == PiratesGuiGlobals.REQUEST_TYPE_DIRECT_MODE:
+        if self.currMode == PiratesGuiGlobals.REQUEST_FOUND_MODE or self.currMode == PiratesGuiGlobals.REQUEST_JOIN_MODE or self.currMode == PiratesGuiGlobals.SEARCH_MODE or self.currMode == PiratesGuiGlobals.REQUEST_TYPE_DIRECT_MODE:
             if restartRequest and self.searchParams:
                 self.updateMode(PiratesGuiGlobals.SEARCH_MODE)
                 description = PLocalizer.LookoutFailedMsg
@@ -1085,7 +1086,6 @@ class LookoutRequestLVL1(InventoryPage):
                 for currInvitee in invitees:
                     if currInvitee != localAvatar.doId:
                         inviteesStr = inviteesStr + ',' + str(currInvitee)
-                        continue
                 
                 options.append([
                     str(GameTypeGlobals.GAME_OPTION_DESIRED_PLAYERS),

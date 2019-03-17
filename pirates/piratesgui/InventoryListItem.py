@@ -43,7 +43,7 @@ class InventoryListItem(DirectButton):
     
     def loadGui(self):
         if InventoryListItem.guiLoaded:
-            return None
+            return
         
         InventoryListItem.topGui = loader.loadModel('models/gui/toplevel_gui')
         InventoryListItem.coinImage = InventoryListItem.topGui.find('**/treasure_w_coin*')

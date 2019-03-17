@@ -40,7 +40,7 @@ class WeaponPanel(DirectFrame):
 
     def loadGui(self):
         if WeaponPanel.guiLoaded:
-            return None
+            return
         
         WeaponPanel.topGui = loader.loadModel('models/gui/toplevel_gui')
         WeaponPanel.genericButton = (WeaponPanel.topGui.find('**/generic_button'), WeaponPanel.topGui.find('**/generic_button_down'), WeaponPanel.topGui.find('**/generic_button_over'), WeaponPanel.topGui.find('**/generic_button_disabled'))

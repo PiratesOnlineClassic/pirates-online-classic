@@ -114,7 +114,7 @@ class PVPRankGui(DirectFrame):
     def loadRank(self):
         inv = localAvatar.getInventory()
         if not inv:
-            return None
+            return
         
         if self.displayType == SHIP_RENOWN_DISPLAY:
             renown = inv.getStackQuantity(InventoryType.PVPTotalInfamySea)
@@ -128,7 +128,7 @@ class PVPRankGui(DirectFrame):
     def updateRank(self, extraRenown):
         inv = localAvatar.getInventory()
         if not inv:
-            return None
+            return
         
         limit = self.renown
         if self.displayType == SHIP_RENOWN_DISPLAY:

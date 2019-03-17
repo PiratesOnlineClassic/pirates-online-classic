@@ -1538,14 +1538,14 @@ class GuiManager(FSM.FSM):
 
     def hidePirateCode(self, task = None):
         if not self.pirateCode:
-            return None
+            return
         
         self.pirateCode.hide()
         self.pirateCodeDialog.stop()
 
     def toggleSocialPanel(self, args = None):
         if self.ignoreAllKeys:
-            return None
+            return
         
         if self.socialPanel.isHidden():
             self.socialPanel.show()

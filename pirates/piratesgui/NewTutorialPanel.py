@@ -214,19 +214,20 @@ class NewTutorialPanel(GuiPanel.GuiPanel):
                     text += localText
                 else:
                     text += addText
-            
+
             self.modifyText = text
             self.modifyTextAdd = '0/3\x02'
             text += self.modifyTextAdd
+
         elif listLen >= 3:
             buttonPos = (0.7 + textXOffset, 0, 0.11)
             self.noTutorial = DialogButton.DialogButton(self, text = PLocalizer.lNo, buttonStyle = DialogButton.DialogButton.NO, pos = buttonPos)
             buttonPos = (0.4 + textXOffset, 0, 0.11)
             yesButtonText = PLocalizer.lYes
-        
+
         if listLen >= 2:
             self.yesTutorial = DialogButton.DialogButton(self, text = yesButtonText, buttonStyle = DialogButton.DialogButton.YES, pos = buttonPos)
-        
+
         self.createTextIcons()
         yOffsetFudge = 0.0
         ratio = width / height
@@ -248,7 +249,7 @@ class NewTutorialPanel(GuiPanel.GuiPanel):
         self.helpText = DirectLabel(parent = self, relief = None, text = text[start:len(text)], text_scale = PiratesGuiGlobals.TextScaleLarge * aspectRatio, text_align = TextNode.ALeft, text_fg = PiratesGuiGlobals.TextFG8, text_shadow = PiratesGuiGlobals.TextShadow, text_wordwrap = wordWrap, pos = (textXOffset, 0, textYOffset))
         if ignoreEscape:
             self.ignore('escape')
-        
+
         self.hide()
 
     def createTextIcons(self):
@@ -292,7 +293,7 @@ class NewTutorialPanel(GuiPanel.GuiPanel):
             skillPageCardRoot = NodePath('skillCardRoot')
             skillPageCard = skButton.copyTo(skButton)
             skillPageCard.setScale(3.0)
-            skillPageCard.setPos(0, 0, -0.1)
+            skillPageCard.setPos(0, 0, -.1)
             skillPageCard.reparentTo(skillPageCardRoot)
             weapon1Card = kbButton.copyTo(kbButton)
             weapon2Card = kbButton.copyTo(kbButton)
@@ -357,7 +358,7 @@ class NewTutorialPanel(GuiPanel.GuiPanel):
 
     def activate(self):
         if self.isEmpty():
-            return None
+            return
         
         base.tPanel = self
         self.showPanel()
@@ -401,7 +402,7 @@ class NewTutorialPanel(GuiPanel.GuiPanel):
     
     def setWreckButtonText(self, hitCount):
         if hitCount < 1 or hitCount > 3:
-            return None
+            return
         
         modText = '%s/3' % hitCount
         self.helpText['text'] = self.modifyText + modText

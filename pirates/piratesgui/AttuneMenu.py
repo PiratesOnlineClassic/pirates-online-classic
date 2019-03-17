@@ -124,7 +124,7 @@ class AttuneMenu(DirectFrame):
         if avId < 0:
             pass
 
-        if avId == 0:
+        elif avId == 0:
             self.unattuneAll()
         else:
             localAvatar.sendRequestRemoveStickyTargets([
@@ -132,7 +132,7 @@ class AttuneMenu(DirectFrame):
 
     def destroy(self):
         if hasattr(self, 'destroyed'):
-            return None
+            return
         
         self.destroyed = 1
         for button in self.buttons.values():

@@ -18,7 +18,7 @@ class GuiButton(DirectButton):
         self.helpBox = None
         self.helpWatcher = None
         self.canRepositon = False
-        optiondefs = (('relief', None, None), ('pos', (0, 0, 0), None), ('image', GuiButton.genericButton, None), ('image_scale', (0.24, 0.22, 0.22), None), ('image_pos', (0, 0, 0), None), ('pressEffect', 0, None), ('text', '', None), ('text_font', PiratesGlobals.getInterfaceFont(), None), ('text_scale', PiratesGuiGlobals.TextScaleLarge, None), ('text0_fg', PiratesGuiGlobals.TextFG2, None), ('text1_fg', PiratesGuiGlobals.TextFG2, None), ('text2_fg', PiratesGuiGlobals.TextFG2, None), ('text3_fg', PiratesGuiGlobals.TextFG3, None), ('text_shadow', PiratesGuiGlobals.TextShadow, None), ('text_pos', (0, -0.01), None), ('text_wordwrap', 8, None), ('text_align', TextNode.ACenter, None), ('textMayChange', 1, None), ('helpText', helpText, self.helpTextUpdated), ('helpPos', helpPos, self.setHelpPos), ('helpDelay', helpDelay, None), ('helpColorOff', helpColorOff, None), ('helpLeftAlign', helpLeftAlign, None), ('helpBin', 'gui-popup', None), ('helpBinSort', 0, None), ('helpOpaque', 0, None), ('canReposition', False, None), ('sortOrder', 100, None), ('baseImage', None, None), ('selected', False, None), ('selectedImage', GuiButton.genericButton, None), ('state', DGG.NORMAL, self.setState))
+        optiondefs = (('relief', None, None), ('pos', (0, 0, 0), None), ('image', GuiButton.genericButton, None), ('image_scale', (0.24, 0.22, 0.22), None), ('image_pos', (0, 0, 0), None), ('pressEffect', 0, None), ('text', '', None), ('text_font', PiratesGlobals.getInterfaceFont(), None), ('text_scale', PiratesGuiGlobals.TextScaleLarge, None), ('text0_fg', PiratesGuiGlobals.TextFG2, None), ('text1_fg', PiratesGuiGlobals.TextFG2, None), ('text2_fg', PiratesGuiGlobals.TextFG2, None), ('text3_fg', PiratesGuiGlobals.TextFG3, None), ('text_shadow', PiratesGuiGlobals.TextShadow, None), ('text_pos', (0, -.01), None), ('text_wordwrap', 8, None), ('text_align', TextNode.ACenter, None), ('textMayChange', 1, None), ('helpText', helpText, self.helpTextUpdated), ('helpPos', helpPos, self.setHelpPos), ('helpDelay', helpDelay, None), ('helpColorOff', helpColorOff, None), ('helpLeftAlign', helpLeftAlign, None), ('helpBin', 'gui-popup', None), ('helpBinSort', 0, None), ('helpOpaque', 0, None), ('canReposition', False, None), ('sortOrder', 100, None), ('baseImage', None, None), ('selected', False, None), ('selectedImage', GuiButton.genericButton, None), ('state', DGG.NORMAL, self.setState))
         self.defineoptions(kw, optiondefs)
         DirectButton.__init__(self, parent = parent, **kw)
         self.initialiseoptions(GuiButton)
@@ -38,7 +38,7 @@ class GuiButton(DirectButton):
     
     def loadGui(self):
         if GuiButton.genericButton:
-            return None
+            return
         
         gui = loader.loadModel('models/gui/toplevel_gui')
         GuiButton.genericButton = (gui.find('**/generic_button'), gui.find('**/generic_button_down'), gui.find('**/generic_button_over'), gui.find('**/generic_button_disabled'))
@@ -105,7 +105,7 @@ class GuiButton(DirectButton):
             pos = [
                 width / 2.0,
                 0,
-                -0.01]
+                -.01]
         else:
             fs = [
                 0.25 - width,
@@ -115,7 +115,7 @@ class GuiButton(DirectButton):
             pos = [
                 0.25 - width / 2.0,
                 0,
-                -0.01]
+                -.01]
         self.helpBox = BorderFrame(parent = self, state = DGG.DISABLED, frameSize = (fs[0], fs[1], fs[2], fs[3]), suffix = '_f', pos = self['helpPos'], sortOrder = 90)
         helpLabel.reparentTo(self.helpBox)
         helpLabel.setPos(pos[0], pos[1], pos[2])
@@ -148,7 +148,7 @@ class GuiButton(DirectButton):
         try:
             self['helpDelay']
         except AttributeError:
-            return None
+            return
 
         if not self.helpBox:
             self.createHelpBox()

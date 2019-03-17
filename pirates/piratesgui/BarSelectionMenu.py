@@ -93,7 +93,7 @@ class BarSelectionMenu(GuiPanel.GuiPanel):
     
     def selectPrev(self):
         if len(self.items) < 1:
-            return None
+            return
         
         self.show()
         if len(self.items) > 1:
@@ -110,15 +110,14 @@ class BarSelectionMenu(GuiPanel.GuiPanel):
                 category = WeaponGlobals.getRepId(self.items[self.choice])
                 if not Freebooter.allowedFreebooterWeapon(category):
                     keepTrying = True
-                
-            Freebooter.allowedFreebooterWeapon(category)
+
         self.cursor.setPos(self.ICON_WIDTH * self.choice + 0.08, 0, 0.072)
         taskMgr.remove('BarSelectHideTask' + str(self.getParent()))
         self.hideTask = taskMgr.doMethodLater(self.SelectionDelay, self.confirmSelection, 'BarSelectHideTask' + str(self.getParent()), extraArgs = [])
 
     def selectNext(self):
         if len(self.items) < 1:
-            return None
+            return
         
         self.show()
         if len(self.items) > 1:
@@ -135,18 +134,17 @@ class BarSelectionMenu(GuiPanel.GuiPanel):
                 category = WeaponGlobals.getRepId(self.items[self.choice])
                 if not Freebooter.allowedFreebooterWeapon(category):
                     keepTrying = True
-                
-            Freebooter.allowedFreebooterWeapon(category)
+
         self.cursor.setPos(self.ICON_WIDTH * self.choice + 0.08, 0, 0.072)
         taskMgr.remove('BarSelectHideTask' + str(self.getParent()))
         self.hideTask = taskMgr.doMethodLater(self.SelectionDelay, self.confirmSelection, 'BarSelectHideTask' + str(self.getParent()), extraArgs = [])
 
     def selectChoice(self, weaponId):
         if len(self.items) < 1:
-            return None
+            return
         
         if weaponId not in self.items:
-            return None
+            return
         
         self.show()
         self.choice = self.items.index(weaponId)
@@ -176,7 +174,7 @@ class BarSelectionMenu(GuiPanel.GuiPanel):
 
     def destroy(self):
         if hasattr(self, 'destroyed'):
-            return None
+            return
         
         self.destroyed = 1
         taskMgr.remove('BarSelectHideTask' + str(self.getParent()))

@@ -262,8 +262,7 @@ class RadarUtil(DirectFrame):
         model = render.find('**/' + modelName + '*')
         if not model.isEmpty():
             self.findNameEntry.set(model.getName())
-            pos = model.getPos(render)
-            h = model.getH(render)
+            pos, h = model.getPos(render), model.getH(render)
             self.camRoot.setX(pos[0])
             self.camRoot.setY(pos[1])
             self.camRoot.setH(h)

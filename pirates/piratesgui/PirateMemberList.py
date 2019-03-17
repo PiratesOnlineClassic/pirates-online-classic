@@ -90,7 +90,7 @@ class PirateMemberButton(GuiButton.GuiButton):
         elif not self.online and other.online:
             return 1
         
-        if self.mode == MODE_CREW and self.mode == MODE_CREW_HUD or self.mode == MODE_CREW_HUD_SEA:
+        if self.mode == MODE_CREW or self.mode == MODE_CREW_HUD or self.mode == MODE_CREW_HUD_SEA:
             if not hasattr(other, 'modeInfo') or not other.modeInfo:
                 return 1
             elif self.modeInfo:
@@ -198,7 +198,7 @@ class PirateMemberButton(GuiButton.GuiButton):
                 text_cap = 18
             else:
                 self.updateShip(None)
-        elif self.mode == MODE_CREW and self.mode == MODE_CREW_HUD or self.mode == MODE_CREW_HUD_SEA:
+        elif self.mode == MODE_CREW or self.mode == MODE_CREW_HUD or self.mode == MODE_CREW_HUD_SEA:
             text = self.modeInfo.name
             self.avName = text
             self.updateHp(self.modeInfo.hp, self.modeInfo.maxHp)
@@ -282,7 +282,7 @@ class PirateMemberList(DirectObject):
     def __init__(self, numShown, parent, title = None, height = 0.6, memberHeight = 0.065, memberOffset = 0.021, memberWidth = 0.45, bottom = 0, hud = False, width = 0.48):
         if hasattr(self, 'initialized'):
             self.arrangeMembers()
-            return None
+            return
         
         self.shown = numShown
         self.memberHeight = memberHeight
@@ -305,12 +305,12 @@ class PirateMemberList(DirectObject):
 
     def mouseWheelUp(self, task = None):
         if len(self.members) > self.shown:
-            amountScroll = self.shown / 1.0 * len(self.members)
+            amountScroll = self.shown / (1.0 * len(self.members))
             self.memberFrame.verticalScroll['value'] -= amountScroll
 
     def mouseWheelDown(self, task = None):
         if len(self.members) > self.shown:
-            amountScroll = self.shown / 1.0 * len(self.members)
+            amountScroll = self.shown / (1.0 * len(self.members))
             self.memberFrame.verticalScroll['value'] += amountScroll
 
     def countMembers(self):
@@ -349,7 +349,27 @@ class PirateMemberList(DirectObject):
     def setup(self):
         charGui = loader.loadModel('models/gui/char_gui')
         knob = (charGui.find('**/chargui_slider_node'), charGui.find('**/chargui_slider_node_down'), charGui.find('**/chargui_slider_node_over'))
-        self.memberFrame = DirectScrolledFrame(parent = self.baseFrame, relief = None, state = DGG.NORMAL, manageScrollBars = 0, autoHideScrollBars = 1, frameSize = (0, self.width, self.bottom, self.height), canvasSize = (0, self.width - 0.05, self.bottom + 0.025, self.height - 0.025), verticalScroll_relief = None, verticalScroll_frameSize = (0, PiratesGuiGlobals.ScrollbarSize, self.bottom, self.height), verticalScroll_image = charGui.find('**/chargui_slider_small'), verticalScroll_image_scale = ((self.height - self.bottom) + 0.05, 1, 0.75), verticalScroll_image_hpr = (0, 0, 90), verticalScroll_image_pos = (self.width - PiratesGuiGlobals.ScrollbarSize * 0.5 - 0.004, 0, (self.bottom + self.height) * 0.5), verticalScroll_image_color = (0.61, 0.6, 0.6, 1), verticalScroll_thumb_image = knob, verticalScroll_thumb_relief = None, verticalScroll_thumb_image_scale = 0.3, verticalScroll_resizeThumb = 0, horizontalScroll_relief = None, sortOrder = 5)
+        self.memberFrame = DirectScrolledFrame(parent = self.baseFrame,
+                                               relief = None,
+                                               state = DGG.NORMAL,
+                                               manageScrollBars = 0,
+                                               autoHideScrollBars = 1,
+                                               frameSize = (0, self.width, self.bottom, self.height),
+                                               canvasSize = (0, self.width - 0.05, self.bottom + 0.025, self.height - 0.025),
+                                               verticalScroll_relief = None,
+                                               verticalScroll_frameSize = (0, PiratesGuiGlobals.ScrollbarSize, self.bottom, self.height),
+                                               verticalScroll_image = charGui.find('**/chargui_slider_small'),
+                                               verticalScroll_image_scale = ((self.height - self.bottom) + 0.05, 1, 0.75),
+                                               verticalScroll_image_hpr = (0, 0, 90),
+                                               verticalScroll_image_pos = (self.width - PiratesGuiGlobals.ScrollbarSize * 0.5 - 0.004, 0, (self.bottom + self.height) * 0.5),
+                                               verticalScroll_image_color = (0.61, 0.6, 0.6, 1),
+                                               verticalScroll_thumb_image = knob,
+                                               verticalScroll_thumb_relief = None,
+                                               verticalScroll_thumb_image_scale = 0.3,
+                                               verticalScroll_resizeThumb = 0,
+                                               horizontalScroll_relief = None,
+                                               sortOrder = 5
+                                               )
         if self.hud:
             self.memberFrame['state'] = DGG.DISABLED
         
@@ -397,7 +417,7 @@ class PirateMemberList(DirectObject):
                 if self.members[index].playerId == playerId:
                     removeIndex = index
 
-            if self.members[index].avId == avId and mode == self.members[index].mode:
+            elif self.members[index].avId == avId and mode == self.members[index].mode:
                 removeIndex = index
         
         if removeIndex != None:
@@ -412,7 +432,7 @@ class PirateMemberList(DirectObject):
     def arrangeMembers(self):
         numMembers = len(self.members)
         if numMembers == 0:
-            return None
+            return
         
         self.members.sort()
         self.memberFrame['canvasSize'] = (0, 0.0, 0, numMembers * self.memberHeight)

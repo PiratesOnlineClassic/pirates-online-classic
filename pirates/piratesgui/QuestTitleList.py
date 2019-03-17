@@ -53,7 +53,29 @@ class QuestTitleList(DirectScrolledFrame):
             self.charGui = loader.loadModel('models/gui/char_gui')
             self.compassGui = loader.loadModel('models/gui/compass_main')
         
-        DirectScrolledFrame.__init__(self, relief = None, state = DGG.NORMAL, manageScrollBars = 0, autoHideScrollBars = 1, frameSize = (0, self.width, 0, self.height), canvasSize = (0, self.width - 0.05, 0.025, self.height - 0.025), verticalScroll_relief = None, verticalScroll_image = self.charGui.find('**/chargui_slider_small'), verticalScroll_frameSize = (0, PiratesGuiGlobals.ScrollbarSize, 0, self.height), verticalScroll_image_scale = (self.height + 0.05, 1, 0.75), verticalScroll_image_hpr = (0, 0, 90), verticalScroll_image_pos = (self.width - PiratesGuiGlobals.ScrollbarSize * 0.5 - 0.004, 0, self.height * 0.5), verticalScroll_image_color = (0.61, 0.6, 0.6, 1), verticalScroll_thumb_image = (self.charGui.find('**/chargui_slider_node'), self.charGui.find('**/chargui_slider_node_down'), self.charGui.find('**/chargui_slider_node_over')), verticalScroll_thumb_relief = None, verticalScroll_thumb_image_scale = 0.4, verticalScroll_resizeThumb = 0, horizontalScroll_relief = None, sortOrder = 5)
+        DirectScrolledFrame.__init__(self,
+                                     relief = None,
+                                     state = DGG.NORMAL,
+                                     manageScrollBars = 0,
+                                     autoHideScrollBars = 1,
+                                     frameSize = (0, self.width, 0, self.height),
+                                     canvasSize = (0, self.width - 0.05, 0.025, self.height - 0.025),
+                                     verticalScroll_relief = None,
+                                     verticalScroll_image = self.charGui.find('**/chargui_slider_small'),
+                                     verticalScroll_frameSize = (0, PiratesGuiGlobals.ScrollbarSize, 0, self.height),
+                                     verticalScroll_image_scale = (self.height + 0.05, 1, 0.75),
+                                     verticalScroll_image_hpr = (0, 0, 90),
+                                     verticalScroll_image_pos = (self.width - PiratesGuiGlobals.ScrollbarSize * 0.5 - 0.004, 0, self.height * 0.5),
+                                     verticalScroll_image_color = (0.61, 0.6, 0.6, 1),
+                                     verticalScroll_thumb_image = (self.charGui.find('**/chargui_slider_node'),
+                                                                   self.charGui.find('**/chargui_slider_node_down'),
+                                                                   self.charGui.find('**/chargui_slider_node_over')),
+                                     verticalScroll_thumb_relief = None,
+                                     verticalScroll_thumb_image_scale = 0.4,
+                                     verticalScroll_resizeThumb = 0,
+                                     horizontalScroll_relief = None,
+                                     sortOrder = 5
+                                     )
         self.initialiseoptions(QuestTitleList)
         self.verticalScroll.incButton.destroy()
         self.verticalScroll.decButton.destroy()
@@ -67,7 +89,7 @@ class QuestTitleList(DirectScrolledFrame):
 
     def mouseWheelUp(self, task = None):
         if self.verticalScroll.isHidden():
-            return None
+            return
         
         amountScroll = 0.05
         if self.verticalScroll['value'] > 0:
@@ -75,7 +97,7 @@ class QuestTitleList(DirectScrolledFrame):
 
     def mouseWheelDown(self, task = None):
         if self.verticalScroll.isHidden():
-            return None
+            return
         
         amountScroll = 0.05
         if self.verticalScroll['value'] < 1.0:
@@ -121,17 +143,17 @@ class QuestTitleList(DirectScrolledFrame):
                 pathName = path[0].getName()
                 tree = self.trees.get(pathName)
                 self.trees[pathName] = self.__makeTree(path, tree)
+            else:
+                path = QuestLadderDB.getFortunePath(questId)
+                if path:
+                    pathName = path[0].getName()
+                    tree = self.trees.get(pathName)
+                    self.trees[pathName] = self.__makeTree(path, tree)
+                else:
+                    path = [
+                        QuestDB.QuestDict.get(questId)]
+                    self.trees[questId] = self.__makeTree(path, tree = None)
 
-            path = QuestLadderDB.getFortunePath(questId)
-            if path:
-                pathName = path[0].getName()
-                tree = self.trees.get(pathName)
-                self.trees[pathName] = self.__makeTree(path, tree)
-
-            path = [
-                QuestDB.QuestDict.get(questId)]
-            self.trees[questId] = self.__makeTree(path, tree = None)
-        
         if len(questIdList) == 1:
             localAvatar.b_requestActiveQuest(questIdList[0])
         
@@ -147,8 +169,9 @@ class QuestTitleList(DirectScrolledFrame):
         parent = tree
         for node in path:
             if self.chapter4Lockout and node.getQuestId() == 'c4.1visitValentina':
-                continue
-            parent = parent.addChild(QuestTitleNode(node))
+                pass
+            else:
+                parent = parent.addChild(QuestTitleNode(node))
         
         return tree
 
@@ -176,23 +199,24 @@ class QuestTitleList(DirectScrolledFrame):
                 text += localizerText.get('title', questId)
             else:
                 text += questId
-        elif indent == 0:
-            format = '\x01questTitle\x01%s\x02'
         else:
-            format = '%s'
-        localizerText = PLocalizer.QuestStrings.get(questId)
-        if localizerText:
-            text += format % localizerText.get('title', questId)
-        else:
-            text += format % questId
+            if indent == 0:
+                format = '\x01questTitle\x01%s\x02'
+            else:
+                format = '%s'
+            localizerText = PLocalizer.QuestStrings.get(questId)
+            if localizerText:
+                text += format % localizerText.get('title', questId)
+            else:
+                text += format % questId
         localAvatar.questStatus.forceInit()
         container = localAvatar.questStatus.getContainer(questId)
         if not container:
             container = localAvatar.getQuestById(questId)
-        
+
         if not container:
             return text
-        
+
         if container.isComplete(showComplete = True):
             text += '   \x01questComplete\x01' + PLocalizer.QuestTitleComplete + '\x02'
         elif not container.viewedInGUI:
@@ -205,9 +229,9 @@ class QuestTitleList(DirectScrolledFrame):
                 if progress < goal:
                     if goal > 1:
                         text += '   \x01questPercent\x01%d of %d\x02' % (progress, goal)
+                else:
+                    text += '   \x01questComplete\x01' + PLocalizer.QuestTitleComplete + '\x02'
 
-                text += '   \x01questComplete\x01' + PLocalizer.QuestTitleComplete + '\x02'
-            
         elif container.isChoice():
             (count, total, length) = container.getProgress(showComplete = True)
             if total == length:
@@ -224,7 +248,7 @@ class QuestTitleList(DirectScrolledFrame):
             compNum = int((float(compCont) / float(cont)) * 100.0)
             if compNum > 0:
                 text += '   \x01questPercent\x01(%d%%)\x02' % compNum
-            
+
         return text
     
     def __makeButtons(self, guiParent, tree):

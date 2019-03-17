@@ -333,13 +333,13 @@ class QuestPage(InventoryPage.InventoryPage):
         if localAvatar.getAccess() != OTPGlobals.AccessFull:
             self.tmReadyDialog = PDialog.PDialog(text = PLocalizer.PlayTMVelvetRope, style = OTPDialog.Acknowledge, giveMouse = False, command = self.notReadyCallback)
             self.tmReadyDialog.show()
-            return None
+            return
         
         if tm.getIsEnabled() or base.config.GetBool('black-pearl-ready', 0):
             from pirates.band.DistributedBandMember import DistributedBandMember
             if not DistributedBandMember.getBandMember(localAvatar.doId):
                 localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.LookoutInviteNeedCrew, icon = ('lookout', None))
-                return None
+                return
             
             if localAvatar.testTeleportFlag(PiratesGlobals.TFNoTeleport) == False:
                 if base.cr.teleportMgr.inInstanceType == PiratesGlobals.INSTANCE_MAIN:

@@ -91,7 +91,29 @@ class ShipSelectionPanel(GuiPanel.GuiPanel):
         self.title = DirectLabel(parent = self, relief = None, text = self.titleText, text_fg = PiratesGuiGlobals.TextFG1, text_font = PiratesGlobals.getPirateFont(), text_scale = PiratesGuiGlobals.TextScaleTitleSmall, text_shadow = PiratesGuiGlobals.TextShadow, pos = (self.width * 0.5, 0, 1.343))
         self.tabBackParent = self.attachNewNode('tabBackParent')
         self.tabBackParent.setZ(1.11)
-        self.scrollFrame = DirectScrolledFrame(parent = self, relief = None, state = DGG.NORMAL, manageScrollBars = 0, autoHideScrollBars = 1, frameSize = (0.05, self.width - 0.1, 0.14, self.height - 0.25), canvasSize = (0.05, self.width - 0.1, 0.14, self.height - 0.25), verticalScroll_relief = None, verticalScroll_image = self.charGui.find('**/chargui_slider_small'), verticalScroll_frameSize = (0.0, PiratesGuiGlobals.ScrollbarSize, 0.142, self.height - 0.26), verticalScroll_image_scale = (self.height - 0.3, 1, 0.75), verticalScroll_image_hpr = (0, 0, 90), verticalScroll_image_pos = (self.width - PiratesGuiGlobals.ScrollbarSize * 0.5 - 0.06, 0, self.height * 0.46), verticalScroll_image_color = (0.61, 0.6, 0.6, 1), verticalScroll_thumb_image = (self.charGui.find('**/chargui_slider_node'), self.charGui.find('**/chargui_slider_node_down'), self.charGui.find('**/chargui_slider_node_over')), verticalScroll_thumb_relief = None, verticalScroll_thumb_image_scale = 0.4, verticalScroll_thumb_image_pos = (-0.005, 0, 0), verticalScroll_resizeThumb = 0, horizontalScroll_relief = None)
+        self.scrollFrame = DirectScrolledFrame(parent = self,
+                                               relief = None,
+                                               state = DGG.NORMAL,
+                                               manageScrollBars = 0,
+                                               autoHideScrollBars = 1,
+                                               frameSize = (0.05, self.width - 0.1, 0.14, self.height - 0.25),
+                                               canvasSize = (0.05, self.width - 0.1, 0.14, self.height - 0.25),
+                                               verticalScroll_relief = None,
+                                               verticalScroll_image = self.charGui.find('**/chargui_slider_small'),
+                                               verticalScroll_frameSize = (0.0, PiratesGuiGlobals.ScrollbarSize, 0.142, self.height - 0.26),
+                                               verticalScroll_image_scale = (self.height - 0.3, 1, 0.75),
+                                               verticalScroll_image_hpr = (0, 0, 90),
+                                               verticalScroll_image_pos = (self.width - PiratesGuiGlobals.ScrollbarSize * 0.5 - 0.06, 0, self.height * 0.46),
+                                               verticalScroll_image_color = (0.61, 0.6, 0.6, 1),
+                                               verticalScroll_thumb_image = (self.charGui.find('**/chargui_slider_node'),
+                                                                             self.charGui.find('**/chargui_slider_node_down'),
+                                                                             self.charGui.find('**/chargui_slider_node_over')),
+                                               verticalScroll_thumb_relief = None,
+                                               verticalScroll_thumb_image_scale = 0.4,
+                                               verticalScroll_thumb_image_pos = (-0.005, 0, 0),
+                                               verticalScroll_resizeThumb = 0,
+                                               horizontalScroll_relief = None
+                                               )
         self.scrollFrame.verticalScroll.incButton.destroy()
         self.scrollFrame.verticalScroll.decButton.destroy()
         self.scrollFrame.horizontalScroll.incButton.destroy()
@@ -115,7 +137,7 @@ class ShipSelectionPanel(GuiPanel.GuiPanel):
 
     def mouseWheelUp(self, task = None):
         if self.scrollFrame.verticalScroll.isHidden():
-            return None
+            return
         
         amountScroll = 0.05
         if self.scrollFrame.verticalScroll['value'] > 0:
@@ -123,7 +145,7 @@ class ShipSelectionPanel(GuiPanel.GuiPanel):
 
     def mouseWheelDown(self, task = None):
         if self.scrollFrame.verticalScroll.isHidden():
-            return None
+            return
         
         amountScroll = 0.05
         if self.scrollFrame.verticalScroll['value'] < 1.0:
@@ -222,6 +244,7 @@ class ShipSelectionPanel(GuiPanel.GuiPanel):
             for frame in frameList:
                 if frame['shipId'] == shipDoId:
                     return frame
+        return None
 
     def getFrameIndex(self, frame):
         for frameList in self.shipFrames.itervalues():

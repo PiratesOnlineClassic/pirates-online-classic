@@ -110,26 +110,26 @@ class CrewPage(SocialPage.SocialPage):
         self.addAvatarToListPVPIconRing = self.ring.find('**/icon_torus').copyTo(self.addAvatarToListPVP)
         self.addAvatarToListPVPIconRing.reparentTo(self.addAvatarToListPVPIcon, -1)
         self.addAvatarToListPVPIconRing.setColor(1, 0.9, 0.7, 1)
-        self.onlineIcon.setPos(-0.19, 0, 0)
+        self.onlineIcon.setPos(-.19, 0, 0)
         self.onlineIcon.setScale(0.2)
         currentVal = localAvatar.getLookingForCrew()
         if currentVal == 0:
             self.onlineIcon.setColor(1, 0, 0, 0.6)
         else:
             self.onlineIcon.setColor(0, 1, 0, 0.6)
-        self.joinACrewIcon.setPos(-0.19, 0, 0)
+        self.joinACrewIcon.setPos(-.19, 0, 0)
         self.joinACrewIcon.setScale(0.2)
         if self.joinACrewStatus == 0:
             self.joinACrewIcon.setColor(1, 0, 0, 0.6)
         else:
             self.joinACrewIcon.setColor(0, 1, 0, 0.6)
-        self.recruitCrewmatesIcon.setPos(-0.19, 0, 0)
+        self.recruitCrewmatesIcon.setPos(-.19, 0, 0)
         self.recruitCrewmatesIcon.setScale(0.2)
         if self.recruitCrewMatesStatus == 0:
             self.recruitCrewmatesIcon.setColor(1, 0, 0, 0.6)
         else:
             self.recruitCrewmatesIcon.setColor(0, 1, 0, 0.6)
-        self.addAvatarToListPVPIcon.setPos(-0.19, 0, 0)
+        self.addAvatarToListPVPIcon.setPos(-.19, 0, 0)
         self.addAvatarToListPVPIcon.setScale(0.2)
         if self.joinACrewStatusPVP == 0:
             self.addAvatarToListPVPIcon.setColor(1, 0, 0, 0.6)
@@ -154,19 +154,19 @@ class CrewPage(SocialPage.SocialPage):
                 self.selectCrewIcon['state'] = DGG.DISABLED
         
         if self.addCrewLookout:
-            if self.crew or DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand() == 1 or self.startACrewState:
+            if self.crew and DistributedBandMember.DistributedBandMember.IsLocalAvatarHeadOfBand() == 1 or self.startACrewState:
                 self.addCrewLookout['state'] = DGG.NORMAL
             else:
                 self.addCrewLookout['state'] = DGG.DISABLED
         
         if self.addAvatarToList:
-            if self.crew and self.startACrewState or self.joinACrewStatusPVP:
+            if self.crew or self.startACrewState or self.joinACrewStatusPVP:
                 self.addAvatarToList['state'] = DGG.DISABLED
             else:
                 self.addAvatarToList['state'] = DGG.NORMAL
         
         if self.addAvatarToListPVP:
-            if self.crew and self.startACrewState or self.joinACrewStatus:
+            if self.crew or self.startACrewState or self.joinACrewStatus:
                 self.addAvatarToListPVP['state'] = DGG.DISABLED
             else:
                 self.addAvatarToListPVP['state'] = DGG.NORMAL
@@ -187,7 +187,7 @@ class CrewPage(SocialPage.SocialPage):
         else:
             self.blinkSearchDot(self.recruitCrewmatesIcon, 1)
         if self.startACrewButton:
-            if self.crew and self.startACrewState and self.joinACrewStatus or self.joinACrewStatusPVP:
+            if self.crew or self.startACrewState or self.joinACrewStatus or self.joinACrewStatusPVP:
                 self.startACrewButton['state'] = DGG.DISABLED
             else:
                 self.startACrewButton['state'] = DGG.NORMAL
@@ -274,7 +274,7 @@ class CrewPage(SocialPage.SocialPage):
             for id in self.crew:
                 localAvatar.guiMgr.radarGui.refreshRadarObject(id)
             
-            return None
+            return
         
         if avId not in self.crew:
             button = self.membersList.addMember(avId, None, PirateMemberList.MODE_CREW, member)
@@ -388,7 +388,7 @@ class CrewPage(SocialPage.SocialPage):
         for (avId, avButton) in self.crew.iteritems():
             av = base.cr.doId2do.get(avId)
             if not av:
-                return None
+                return
             
             av.refreshName()
             crewMembersIconId = av.getCrewIcon()
@@ -622,7 +622,7 @@ class CrewPage(SocialPage.SocialPage):
             self.startACrewState = 0
             self.recruitCrewMatesStatus = 0
             self.determineOptionsButtonsState()
-            return None
+            return
         
         base.cr.pirateCrewMatch.requestCrewOfOne()
         self.startACrewState = 1

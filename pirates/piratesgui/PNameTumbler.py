@@ -56,7 +56,39 @@ class PNameTumbler(NameTumbler.NameTumbler):
     
     def makeScrollList(self, items, nitemMakeExtraArgs):
         lst = items[:]
-        dsl = DirectScrolledList(parent = self, relief = None, items = lst, itemMakeFunction = self.makeLabel, itemMakeExtraArgs = nitemMakeExtraArgs, command = None, text_fg = PiratesGuiGlobals.TextFG2, pos = (-0.08, 0, 0.03), scale = 0.06, incButton_pos = (1.5, 0, -6.5), incButton_relief = None, incButton_image = (self.triangleGui.find('**/triangle'), self.triangleGui.find('**/triangle_down'), self.triangleGui.find('**/triangle_over')), incButton_image_scale = 2, incButton_image_hpr = (0, 0, 90), decButton_pos = (1.5, 0, 2.5), decButton_relief = None, decButton_image = (self.triangleGui.find('**/triangle'), self.triangleGui.find('**/triangle_down'), self.triangleGui.find('**/triangle_over')), decButton_image_scale = 2, decButton_image_hpr = (0, 0, 270), itemFrame_relief = None, itemFrame_pos = (-1, 0, 0), itemFrame_scale = 1.0, itemFrame_image = self.charGui.find('**/chargui_frame04'), itemFrame_image_scale = (13, 10, 10), itemFrame_image_pos = (2.4, 0, -2), itemFrame_text_fg = (1, 1, 1, 1), forceHeight = 1.1, numItemsVisible = 5)
+        dsl = DirectScrolledList(parent = self,
+                                 relief = None,
+                                 items = lst,
+                                 itemMakeFunction = self.makeLabel,
+                                 itemMakeExtraArgs = nitemMakeExtraArgs,
+                                 command = None,
+                                 text_fg = PiratesGuiGlobals.TextFG2,
+                                 pos = (-0.08, 0, 0.03),
+                                 scale = 0.06,
+                                 incButton_pos = (1.5, 0, -6.5),
+                                 incButton_relief = None,
+                                 incButton_image = (self.triangleGui.find('**/triangle'),
+                                                    self.triangleGui.find('**/triangle_down'),
+                                                    self.triangleGui.find('**/triangle_over')),
+                                 incButton_image_scale = 2,
+                                 incButton_image_hpr = (0, 0, 90),
+                                 decButton_pos = (1.5, 0, 2.5),
+                                 decButton_relief = None,
+                                 decButton_image = (self.triangleGui.find('**/triangle'),
+                                                    self.triangleGui.find('**/triangle_down'),
+                                                    self.triangleGui.find('**/triangle_over')),
+                                 decButton_image_scale = 2,
+                                 decButton_image_hpr = (0, 0, 270),
+                                 itemFrame_relief = None,
+                                 itemFrame_pos = (-1, 0, 0),
+                                 itemFrame_scale = 1.0,
+                                 itemFrame_image = self.charGui.find('**/chargui_frame04'),
+                                 itemFrame_image_scale = (13, 10, 10),
+                                 itemFrame_image_pos = (2.4, 0, -2),
+                                 itemFrame_text_fg = (1, 1, 1, 1),
+                                 forceHeight = 1.1,
+                                 numItemsVisible = 5
+                                 )
         return dsl
 
     def makeLabel(self, te, index, others = []):

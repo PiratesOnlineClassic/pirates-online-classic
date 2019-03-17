@@ -95,7 +95,7 @@ class StatusTray(GuiTray.GuiTray):
 
     def show(self):
         if not self.doId:
-            return None
+            return
         
         if base.cr.doId2do[self.doId].state != 'Spawn' and base.cr.doId2do[self.doId].state != 'Death' and base.cr.doId2do[self.doId].state != 'Waiting':
             GuiTray.GuiTray.show(self)
@@ -130,7 +130,7 @@ class StatusTray(GuiTray.GuiTray):
         self.doId = doId
         target = base.cr.doId2do.get(doId)
         if not target:
-            return None
+            return
         
         color = base.cr.battleMgr.getExperienceColor(base.localAvatar, target)
         if color:
@@ -143,7 +143,7 @@ class StatusTray(GuiTray.GuiTray):
     def updateIcon(self, doId):
         target = base.cr.doId2do.get(doId)
         if not target:
-            return None
+            return
         
         if self.currentIcon:
             self.currentIcon.hide()
@@ -168,10 +168,10 @@ class StatusTray(GuiTray.GuiTray):
             hp = 0
         
         if not maxHp:
-            return None
+            return
         
         if srcDoId != self.doId and srcDoId:
-            return None
+            return
         
         if self.doId != self.prevDoId and self.doId:
             self.prevDoId = self.doId
@@ -199,7 +199,7 @@ class StatusTray(GuiTray.GuiTray):
             elif self.hpMeterUpYellowIval.isPlaying():
                 self.hpMeterUpYellowIval.finish()
             
-            return None
+            return
         
         hpFraction = float(hp) / float(maxHp)
         if hpFraction >= 0.5:
@@ -268,7 +268,7 @@ class StatusTray(GuiTray.GuiTray):
             self.prevValue = hp
             if currentTime is None:
                 self.hpMeterDownIval.start()
-                return None
+                return
             
             if currentTime >= 0.5:
                 self.hpMeterDownIval.start()
@@ -317,7 +317,7 @@ class StatusTray(GuiTray.GuiTray):
         self.voodooMeter['range'] = maxVoodoo
         self.voodooMeter['value'] = voodoo
         if srcDoId != self.doId and srcDoId:
-            return None
+            return
         
         if localAvatar.guiMgr.gameGui.voodooModMeter:
             if not self.doId:
@@ -403,7 +403,7 @@ class StatusTray(GuiTray.GuiTray):
 
     def updateSkill(self, skillInfo, srcDoId = None):
         if srcDoId != self.doId:
-            return None
+            return
         
         if skillInfo:
             self.showSkill(skillInfo[0], skillInfo[1], skillInfo[2])

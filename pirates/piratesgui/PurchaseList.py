@@ -14,7 +14,7 @@ class PurchaseList(InventoryList):
         for panel in self.panels:
             if panel.data == data:
                 panel.addItem()
-                return None
+                return
         
         InventoryList.addPanel(self, data, repack)
         self.sortPanels()
@@ -27,7 +27,7 @@ class PurchaseList(InventoryList):
                     self.inventory.remove(panel.data)
                 else:
                     InventoryList.removePanel(self, data, repack)
-                return None
+                return
 
     def getItemQuantity(self, itemId):
         for panel in self.panels:

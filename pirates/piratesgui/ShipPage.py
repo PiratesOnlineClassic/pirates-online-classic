@@ -148,7 +148,7 @@ class ShipPage(InventoryPage):
 
     def refreshList(self):
         if not self.needRefresh():
-            return None
+            return
 
         def doRefresh(inventory):
             shipIds = localAvatar.getInventory().getShipDoIdList()

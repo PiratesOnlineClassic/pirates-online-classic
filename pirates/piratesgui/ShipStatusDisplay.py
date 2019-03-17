@@ -207,7 +207,7 @@ class ShipStatusDisplay(GuiTray.GuiTray):
     
     def loadLootPanel(self):
         if self.lootPanel:
-            return None
+            return
         
         self.lootPanel = LootPopupPanel.LootPopupPanel()
         self.lootPanel.reparentTo(self)
@@ -235,7 +235,7 @@ class ShipStatusDisplay(GuiTray.GuiTray):
     def setShipName(self, name, team):
         if (name, team) != self['shipName']:
             self['shipName'] = (name, team)
-            return None
+            return
         
         self.nameBox['text'] = name
         if team == PiratesGlobals.PLAYER_TEAM:
@@ -252,12 +252,12 @@ class ShipStatusDisplay(GuiTray.GuiTray):
     def setShipClass(self, shipClass):
         if shipClass != self['shipClass']:
             self['shipClass'] = shipClass
-            return None
+            return
 
     def setShipHp(self, hp, maxHp):
         if (hp, maxHp) != self['shipHp']:
             self['shipHp'] = (hp, maxHp)
-            return None
+            return
         
         if hp < 0:
             hp = 0
@@ -265,7 +265,7 @@ class ShipStatusDisplay(GuiTray.GuiTray):
             hp = maxHp
         
         if not maxHp:
-            return None
+            return
         
         hpFraction = float(hp) / float(maxHp)
         if hpFraction >= 0.5:
@@ -295,8 +295,7 @@ class ShipStatusDisplay(GuiTray.GuiTray):
 
         if prevValue > hp:
             self.hpMeterChange.setColor(1.0, 0.0, 0.0, 1.0)
-            self.prevChange = float(prevValue - hp)
-            change = float(prevValue - hp)
+            self.prevChange = change = float(prevValue - hp)
             valueScale = float(hp) / float(maxHp)
             changeScale = float(change) / float(maxHp)
             frameRight = float(changeScale * 0.399)
@@ -306,7 +305,7 @@ class ShipStatusDisplay(GuiTray.GuiTray):
             self.hpMeterChange['frameSize'] = (0.0, frameRight, -0.011, 0.008)
             if currentTime is None:
                 self.hpMeterDownIval.start()
-                return None
+                return
             
             if currentTime >= 0.5:
                 self.hpMeterDownIval.start()
@@ -320,7 +319,7 @@ class ShipStatusDisplay(GuiTray.GuiTray):
             frameRight = float(changeScale * 0.399)
             frameLeft = float(valueScale * 0.399)
             if frameLeft < 0.025:
-                return None
+                return
             
             frameX = frameLeft - frameRight
             self.hpMeterChange.setPos(frameX - 0.1945, 0.0, 0.0)
@@ -339,7 +338,7 @@ class ShipStatusDisplay(GuiTray.GuiTray):
     def setShipSp(self, sp, maxSp):
         if (sp, maxSp) != self['shipSp']:
             self['shipSp'] = (sp, maxSp)
-            return None
+            return
         
         self.speedMeter['range'] = maxSp
         self.speedMeter['value'] = sp
@@ -347,7 +346,7 @@ class ShipStatusDisplay(GuiTray.GuiTray):
     def setShipCargo(self, cargo, maxCargo):
         if (cargo, maxCargo) != self['shipCargo']:
             self['shipCargo'] = (cargo, maxCargo)
-            return None
+            return
         
         if self['oldCargo'] != cargo:
             self['oldCargo'] = cargo
@@ -366,12 +365,12 @@ class ShipStatusDisplay(GuiTray.GuiTray):
     def setShipCrew(self, crew, maxCrew):
         if (crew, maxCrew) != self['shipCrew']:
             self['shipCrew'] = (crew, maxCrew)
-            return None
+            return
         
         if self['oldCrew'] != crew:
             self['oldCrew'] = crew
             if self['oldCrew'] == 0:
-                return None
+                return
             
             self.crewLabel['text'] = '%s/%s' % (len(crew), maxCrew)
             if len(crew) >= maxCrew:

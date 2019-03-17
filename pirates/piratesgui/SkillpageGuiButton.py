@@ -116,7 +116,7 @@ class SkillpageGuiButton(DirectButton):
 
     def createHelpbox(self, args = None):
         if self.helpBox:
-            return None
+            return
         
         baseRank = max(self.skillRank, 1)
         lvlDamageMod = WeaponGlobals.getLevelDamageModifier(localAvatar.getLevel())

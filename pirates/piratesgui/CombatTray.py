@@ -57,7 +57,7 @@ class WeaponButton(GuiButton):
 
     def refreshStock(self):
         if not self.weaponId:
-            return None
+            return
         
         inventory = localAvatar.getInventory()
         if inventory:
@@ -487,35 +487,35 @@ class CombatTray(GuiTray):
 
     def toggleWeapon(self, weaponId, args = None, fromWheel = 0):
         if localAvatar.guiMgr.ignoreAllKeys:
-            return None
+            return
         
         if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
             category = WeaponGlobals.getRepId(weaponId)
             if not Freebooter.allowedFreebooterWeapon(category):
                 base.localAvatar.guiMgr.showNonPayer(quest = 'Restricted_Weapon_Selection', focus = 5)
-                return None
+                return
         
         state = localAvatar.getGameState()
         if state in ('Spawn', 'Stunned', 'Death', 'WaterRoam', 'WaterTreasureRoam', 'Cutscene', 'MakeAPirate', 'TeleportOut', 'TeleportIn', 'ParlorGame', 'NPCInteract', 'ShipBoarding', 'Ensnared', 'Thrown', 'Knockdown', 'Unconcious', 'ThrownInJail', 'DoorKicking', 'EnterTunnel', 'LeaveTunnel', 'PVPWait'):
-            return None
+            return
         
         if self.isMouseMode:
-            return None
+            return
         
         if not weaponId:
             localAvatar.guiMgr.createWarning(PLocalizer.NothingEquippedWarning, PiratesGuiGlobals.TextFG6)
-            return None
+            return
         
         if self.isDrawingWeapon and self.isUsingSkill or self.isCharging:
             if localAvatar.currentWeaponId != weaponId:
                 self.weaponQueue = weaponId
                 self.skillQueue = 0
             
-            return None
+            return
         
         if fromWheel and weaponId == localAvatar.currentWeaponId:
             self.skillTray.showSkillTray()
-            return None
+            return
         
         if EconomyGlobals.getItemCategory(weaponId) == ItemType.CONSUMABLE:
             self.trySkill(InventoryType.UseItem, weaponId, 0)
@@ -783,7 +783,7 @@ class CombatTray(GuiTray):
                 target = base.cr.targetMgr.takeAim(localAvatar, skillId, ammoSkillId)
                 if target:
                     inView = localAvatar.checkViewingArc(target)
-                
+
             if not inView:
                 if target or self.aimAssistTarget:
                     localAvatar.guiMgr.createWarning(PLocalizer.OutOfSightWarning, PiratesGuiGlobals.TextFG6)
@@ -1084,7 +1084,7 @@ class CombatTray(GuiTray):
             if self.weaponMode == WeaponGlobals.STAFF:
                 if self.chargeTime >= self.CHARGE_MODE_TIME_THRESHOLD:
                     localAvatar.guiMgr.createWarning(PLocalizer.AmmoChargingWarning, PiratesGuiGlobals.TextFG6)
-                    return None
+                    return
                 
                 if self.skillTray.traySkillMap:
                     if skillId in self.skillTray.traySkillMap:
@@ -1092,9 +1092,9 @@ class CombatTray(GuiTray):
                             if self.skillTray.traySkillMap[i] == skillId:
                                 if self.skillTray.origMap[i][1]:
                                     self.skillTray.tray[i + 1].toggleButton(True)
-
-                            if self.skillTray.origMap[i][1]:
-                                self.skillTray.tray[i + 1].toggleButton(False)
+                            else:
+                                if self.skillTray.origMap[i][1]:
+                                    self.skillTray.tray[i + 1].toggleButton(False)
 
             if self.weaponMode in (WeaponGlobals.FIREARM, WeaponGlobals.STAFF, WeaponGlobals.CANNON, WeaponGlobals.GRENADE):
                 if self.weaponMode == WeaponGlobals.CANNON:
@@ -1106,7 +1106,7 @@ class CombatTray(GuiTray):
                     ammoChoice = skillId
                     inv = localAvatar.getInventory()
                     if inv is None:
-                        return None
+                        return
                     
                     maxQuant = WeaponGlobals.getSkillMaxQuantity(ammoChoice)
                     if not maxQuant == WeaponGlobals.INF_QUANT:
@@ -1125,9 +1125,9 @@ class CombatTray(GuiTray):
                                         if self.skillTray.traySkillMap[i] == skillId:
                                             if self.skillTray.origMap[i][1]:
                                                 self.skillTray.tray[i + 1].toggleButton(True)
-
-                                        if self.skillTray.origMap[i][1]:
-                                            self.skillTray.tray[i + 1].toggleButton(False)
+                                        else:
+                                            if self.skillTray.origMap[i][1]:
+                                                self.skillTray.tray[i + 1].toggleButton(False)
 
                         else:
                             localAvatar.guiMgr.createWarning(PLocalizer.OutOfAmmoWarning, PiratesGuiGlobals.TextFG6)
@@ -1144,9 +1144,9 @@ class CombatTray(GuiTray):
                                     if self.skillTray.traySkillMap[i] == skillId:
                                         if self.skillTray.origMap[i][1]:
                                             self.skillTray.tray[i + 1].toggleButton(True)
-
-                                    if self.skillTray.origMap[i][1]:
-                                        self.skillTray.tray[i + 1].toggleButton(False)
+                                    else:
+                                        if self.skillTray.origMap[i][1]:
+                                            self.skillTray.tray[i + 1].toggleButton(False)
 
                 else:
                     ammoChoice = skillId
@@ -1188,7 +1188,7 @@ class CombatTray(GuiTray):
 
     def beginButtonCharge(self):
         if not self.ammoSkillId:
-            return None
+            return
         
         self.chargeTime = 0
         self.maxCharge = 0
@@ -1207,7 +1207,7 @@ class CombatTray(GuiTray):
             self.maxCharge = self.maxCharge * amt
         
         if self.maxCharge == 0:
-            return None
+            return
         
         self.maxCharge += self.CHARGE_MODE_TIME_THRESHOLD
         if self.weaponMode == WeaponGlobals.STAFF:
@@ -1226,7 +1226,6 @@ class CombatTray(GuiTray):
         self.taskTime = task.time
         if self.chargeWeapon != self.weaponMode:
             self.endButtonCharge()
-        
         if self.chargeTime > 0:
             if self.weaponMode == WeaponGlobals.FIREARM or self.weaponMode == WeaponGlobals.GRENADE:
                 weaponVolley = WeaponGlobals.getWeaponVolley(localAvatar.currentWeaponId)
@@ -1234,51 +1233,45 @@ class CombatTray(GuiTray):
                     self.chargeTime = 0
                     self.offsetTime = task.time
                     return Task.cont
-
             if localAvatar.isAirborne():
                 if self.weaponMode == WeaponGlobals.STAFF or self.weaponMode == WeaponGlobals.GRENADE:
                     self.chargeTime = 0
                     self.offsetTime = task.time
                     return Task.cont
-
             skillEffects = localAvatar.getSkillEffects()
             if WeaponGlobals.C_STUN in skillEffects:
                 self.chargeTime = 0
                 self.offsetTime = task.time
-            
             if self.isUsingSkill and self.weaponMode != WeaponGlobals.VOODOO:
                 self.chargeTime = 0
                 self.offsetTime = task.time
-            elif self.weaponMode == WeaponGlobals.STAFF:
-                cost = -1 * WeaponGlobals.getMojoCost(self.ammoSkillId)
-                if localAvatar.mojo < cost:
-                    self.endButtonCharge()
-                    localAvatar.guiMgr.createWarning(PLocalizer.NoManaWarning, PiratesGuiGlobals.TextFG6)
-                    return Task.done
-            
-            if not self.thresholdHit:
-                if self.weaponMode == WeaponGlobals.FIREARM:
-                    self.trySkill(EnemySkills.PISTOL_CHARGE, 0)
-                elif self.weaponMode == WeaponGlobals.GRENADE:
-                    self.trySkill(EnemySkills.GRENADE_CHARGE, 0)
-                elif self.weaponMode == WeaponGlobals.STAFF:
-                    skillId = WeaponGlobals.getChargeSkill(self.ammoSkillId)
-                    self.trySkill(skillId, 0)
-                
-                self.thresholdHit = 1
-                self.isCharging = 1
-                if self.ammoSkillId:
-                    if not WeaponGlobals.isInfiniteAmmo(self.ammoSkillId):
-                        ammoInvId = WeaponGlobals.getSkillAmmoInventoryId(self.ammoSkillId)
-                        inv = localAvatar.getInventory()
-                        amt = inv.getStackQuantity(ammoInvId)
-                        if amt < 1:
-                            self.endButtonCharge()
-                            return Task.done
-
+            else:
+                if self.weaponMode == WeaponGlobals.STAFF:
+                    cost = -1 * WeaponGlobals.getMojoCost(self.ammoSkillId)
+                    if localAvatar.mojo < cost:
+                        self.endButtonCharge()
+                        localAvatar.guiMgr.createWarning(PLocalizer.NoManaWarning, PiratesGuiGlobals.TextFG6)
+                        return Task.done
+                if not self.thresholdHit:
+                    if self.weaponMode == WeaponGlobals.FIREARM:
+                        self.trySkill(EnemySkills.PISTOL_CHARGE, 0)
+                    elif self.weaponMode == WeaponGlobals.GRENADE:
+                        self.trySkill(EnemySkills.GRENADE_CHARGE, 0)
+                    elif self.weaponMode == WeaponGlobals.STAFF:
+                        skillId = WeaponGlobals.getChargeSkill(self.ammoSkillId)
+                        self.trySkill(skillId, 0)
+                    self.thresholdHit = 1
+                    self.isCharging = 1
+                    if self.ammoSkillId:
+                        if not WeaponGlobals.isInfiniteAmmo(self.ammoSkillId):
+                            ammoInvId = WeaponGlobals.getSkillAmmoInventoryId(self.ammoSkillId)
+                            inv = localAvatar.getInventory()
+                            amt = inv.getStackQuantity(ammoInvId)
+                            if amt < 1:
+                                self.endButtonCharge()
+                                return Task.done
             if self.weaponMode != WeaponGlobals.VOODOO:
                 self.chargeMeter.show()
-
         if self.chargeTime > 0:
             self.chargeMeterBar['value'] = self.chargeTime
             if self.chargeTime >= self.maxCharge:
@@ -1286,7 +1279,6 @@ class CombatTray(GuiTray):
                     self.chargeMeterBar['barColor'] = Vec4(0.7, 0.7, 1.0, 1.0)
                 else:
                     self.chargeMeterBar['barColor'] = Vec4(1.0, 0.6, 0.3, 1.0)
-            
         else:
             self.chargeMeterBar['value'] = 0
         self.chargeMeterBar['range'] = self.maxCharge
@@ -1298,11 +1290,11 @@ class CombatTray(GuiTray):
 
     def processInput(self, button):
         if not self.skillMapping:
-            return None
+            return
         
         inventory = localAvatar.getInventory()
         if not inventory:
-            return None
+            return
         elif button == 'action-up':
             self.endButtonCharge()
             if self.chargeTime >= 0:
@@ -1319,7 +1311,7 @@ class CombatTray(GuiTray):
             
             if self.weaponMode == WeaponGlobals.VOODOO:
                 self.trySkill(InventoryType.DollAttune, 0)
-                return None
+                return
             elif self.weaponMode == WeaponGlobals.STAFF:
                 maxCharge = WeaponGlobals.getAttackMaxCharge(skillId, self.ammoSkillId)
                 inv = localAvatar.getInventory()
@@ -1335,7 +1327,7 @@ class CombatTray(GuiTray):
                         self.trySkill(EnemySkills.STAFF_FIZZLE, 0)
                 else:
                     self.trySkill(InventoryType.StaffBlast, 0)
-                return None
+                return
             elif self.weaponMode == WeaponGlobals.FIREARM:
                 if localAvatar.currentTarget:
                     if not base.cr.battleMgr.obeysPirateCode(localAvatar, localAvatar.currentTarget):
@@ -1347,51 +1339,52 @@ class CombatTray(GuiTray):
                                 localAvatar.guiMgr.showPirateCode()
 
                 self.trySkill(skillId, self.ammoSkillId, charge = self.chargeTime)
-                return None
+                return
             elif self.weaponMode == WeaponGlobals.GRENADE:
                 self.trySkill(skillId, self.ammoSkillId, charge = self.chargeTime)
-                return None
+                return
             
         elif button == 'action':
             if self.weaponMode == WeaponGlobals.VOODOO or self.weaponMode == WeaponGlobals.STAFF:
                 self.beginButtonCharge()
-                return None
+                return
             elif self.weaponMode == WeaponGlobals.FIREARM:
                 if inventory.getStackQuantity(InventoryType.PistolTakeAim) > 1:
                     self.beginButtonCharge()
-                elif localAvatar.currentTarget:
-                    if not base.cr.battleMgr.obeysPirateCode(localAvatar, localAvatar.currentTarget):
-                        if localAvatar.guiMgr.codeShown:
-                            self.tryShoot += 1
-                            if self.tryShoot > 5:
-                                self.tryShoot = 0
-                                localAvatar.guiMgr.codeShown = 0
-                                localAvatar.guiMgr.showPirateCode()
+                else:
+                    if localAvatar.currentTarget:
+                        if not base.cr.battleMgr.obeysPirateCode(localAvatar, localAvatar.currentTarget):
+                            if localAvatar.guiMgr.codeShown:
+                                self.tryShoot += 1
+                                if self.tryShoot > 5:
+                                    self.tryShoot = 0
+                                    localAvatar.guiMgr.codeShown = 0
+                                    localAvatar.guiMgr.showPirateCode()
 
-                skillId = self.skillMapping[button][0]
-                self.trySkill(skillId, self.ammoSkillId)
-                return None
+                    skillId = self.skillMapping[button][0]
+                    self.trySkill(skillId, self.ammoSkillId)
+                return
             elif self.weaponMode == WeaponGlobals.GRENADE:
                 if inventory.getStackQuantity(InventoryType.GrenadeLongVolley) > 1:
                     self.beginButtonCharge()
                 else:
                     skillId = self.skillMapping[button][0]
                     self.trySkill(skillId, self.ammoSkillId)
-                return None
+                return
             elif self.weaponMode == WeaponGlobals.MELEE:
                 self.trySkill(InventoryType.MeleePunch, 0, 0)
-                return None
+                return
             
-            if self.weaponMode == WeaponGlobals.COMBAT and self.weaponMode == WeaponGlobals.VOODOO or self.weaponMode == WeaponGlobals.THROWING:
+            if self.weaponMode == WeaponGlobals.COMBAT or self.weaponMode == WeaponGlobals.VOODOO or self.weaponMode == WeaponGlobals.THROWING:
                 origTrack = self.skillMapping.get(button)
                 skillTrack = Freebooter.pruneFreebooterSkills(origTrack)
                 if not skillTrack:
-                    return None
+                    return
                 
                 combo = self.checkCombo()
                 if self.combatChainLvl > len(skillTrack) - 1:
                     self.ignoreInput()
-                    return None
+                    return
                 elif self.combatChainLvl == 0 and not (combo == -1):
                     self.resetComboLevel()
                 
@@ -1402,7 +1395,7 @@ class CombatTray(GuiTray):
                             messenger.send('tooFast')
                             self.combatChainLvl = 0
                             combo = 0
-                            return None
+                            return
 
                 skillId = skillTrack[self.combatChainLvl]
                 isSkillUsed = self.trySkill(skillId, 0, combo)
@@ -1430,10 +1423,10 @@ class CombatTray(GuiTray):
 
     def acceptInput(self, args = None):
         if self.isAcceptingInput:
-            return None
+            return
         
         if not self.isEnabled:
-            return None
+            return
         
         if self.rep != InventoryType.CannonRep:
             self.accept('action', self.processInput, [
@@ -1468,7 +1461,7 @@ class CombatTray(GuiTray):
     
     def ignoreInput(self):
         if not self.isAcceptingInput:
-            return None
+            return
         
         self.isAcceptingInput = 0
 
@@ -1536,12 +1529,12 @@ class CombatTray(GuiTray):
                 ammoInvId = WeaponGlobals.getSkillAmmoInventoryId(self.ammoSkillId)
                 if not inv:
                     self.outOfAmmo()
-                    return None
+                    return
                 else:
                     ammoAmt = inv.getStackQuantity(ammoInvId)
                     if ammoAmt <= 0:
                         self.outOfAmmo()
-                        return None
+                        return
 
         if self.weaponMode == WeaponGlobals.FIREARM:
             self.trySkill(EnemySkills.PISTOL_RELOAD, 0)

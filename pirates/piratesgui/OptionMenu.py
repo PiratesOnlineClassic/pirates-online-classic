@@ -50,10 +50,7 @@ class OptionMenu(DirectOptionMenu):
             return None
         
         itemIndex = 0
-        self.minX = None
-        self.maxX = None
-        self.minZ = None
-        self.maxZ = None
+        self.minX = self.maxX = self.minZ = self.maxZ = None
         self.maxX = self['popupHalfWidth']
         self.minX = -1 * self.maxX
         for item in self['items']:

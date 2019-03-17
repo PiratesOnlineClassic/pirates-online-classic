@@ -48,7 +48,7 @@ class ShipShoppingPanel(ShipSelectionPanel):
     def addOwnShip(self, shipId, callback, index = None, repaired = False):
         shipOV = base.cr.getOwnerView(shipId)
         if not shipOV:
-            return None
+            return
         
         shipFrame = ShipFrameShopping(parent = self.scrollFrame.getCanvas(), relief = None, shipId = shipId, shipName = shipOV.name, shipClass = shipOV.shipClass, mode = self.mode, command = callback, extraArgs = [
             shipId])

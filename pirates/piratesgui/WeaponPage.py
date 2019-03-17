@@ -91,11 +91,11 @@ class WeaponPage(InventoryPage.InventoryPage):
     
     def updateTonics(self):
         if not hasattr(base, 'localAvatar'):
-            return None
+            return
         
         inv = localAvatar.getInventory()
         if not inv:
-            return None
+            return
         
         items = inv.getConsumables()
         for i in range(len(InventoryType.Potions) - 1):

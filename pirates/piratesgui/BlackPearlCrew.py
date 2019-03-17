@@ -166,51 +166,41 @@ class BlackPearlCrew(DirectFrame):
             print item.getQuestId(), len(item.getQuestId())
             if item.getQuestId()[0] == 'c' and item.getQuestId()[1] == '3':
                 currQuest = item.getQuestId()
-        
+
         if currQuest[0] != 'c' or currQuest[1] != '3':
             self.resetCrewAquired()
             self.drawCrew()
-            return None
-        
+            return
         self.resetCrewAquired()
         if currQuest[1].isdigit():
             chapterInt = int(currQuest[1])
-        
         if currQuest[3].isdigit():
             sectionInt = int(currQuest[3])
         else:
             sectionInt = -1
         if currQuest[5].isdigit():
-            partInt = int(currQuest[5])
-            partInt = int(currQuest[5])
+            partInt = partInt = int(currQuest[5])
         else:
             partInt = -1
         eventInt = self.getEventInt(currQuest)
         if chapterInt < 3:
             print 'Draw Silouettes'
-        
         if chapterInt == 3:
             print 'During Chapter 3'
             if sectionInt < 2:
                 print 'Draw Silouettes'
-            
             if sectionInt == 2:
                 print 'During Section 2'
-                if partInt == 1 or eventInt >= 15 or partInt > 1:
+                if partInt == 1 and eventInt >= 15 or partInt > 1:
                     self.carverAquired = True
-                
-                if partInt == 2 or eventInt >= 11 or partInt > 2:
+                if partInt == 2 and eventInt >= 11 or partInt > 2:
                     self.gordonAquired = True
-                
-                if partInt == 3 or eventInt >= 14 or partInt > 3:
+                if partInt == 3 and eventInt >= 14 or partInt > 3:
                     self.hendryAquired = True
-                
-                if partInt == 4 or eventInt >= 12 or partInt > 4:
+                if partInt == 4 and eventInt >= 12 or partInt > 4:
                     self.nillAquired = True
-                
-                if partInt == 5 or eventInt >= 11 or partInt > 5:
+                if partInt == 5 and eventInt >= 11 or partInt > 5:
                     self.docAquired = True
-
             if sectionInt == 3:
                 self.carverAquired = True
                 self.gordonAquired = True
@@ -218,18 +208,14 @@ class BlackPearlCrew(DirectFrame):
                 self.nillAquired = True
                 self.docAquired = True
                 print 'During Section 3'
-                if partInt == 1 or eventInt >= 53 or partInt > 1:
+                if partInt == 1 and eventInt >= 53 or partInt > 1:
                     self.gunnerAquired = True
-                
-                if partInt == 2 or eventInt >= 21 or partInt > 2:
+                if partInt == 2 and eventInt >= 21 or partInt > 2:
                     self.scaryMaryAquired = True
-                
-                if partInt == 3 or eventInt >= 14 or partInt > 3:
+                if partInt == 3 and eventInt >= 14 or partInt > 3:
                     self.giladogaAquired = True
-                
-                if partInt == 4 or eventInt >= 13 or partInt > 4:
+                if partInt == 4 and eventInt >= 13 or partInt > 4:
                     self.johnAquired = True
-
             if sectionInt > 3:
                 self.carverAquired = True
                 self.gordonAquired = True
@@ -240,7 +226,6 @@ class BlackPearlCrew(DirectFrame):
                 self.scaryMaryAquired = True
                 self.giladogaAquired = True
                 self.johnAquired = True
-
         if chapterInt > 3:
             print 'Draw everybody'
             self.carverAquired = True
@@ -252,7 +237,6 @@ class BlackPearlCrew(DirectFrame):
             self.scaryMaryAquired = True
             self.giladogaAquired = True
             self.johnAquired = True
-        
         self.drawCrew()
 
     def getEventInt(self, currQuest):

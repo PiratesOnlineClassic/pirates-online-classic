@@ -82,12 +82,32 @@ class PiratesOffLineRequest(GuiPanel.GuiPanel):
             if self.preExistPerm and LAST_BUTTON_SELECTION == 3:
                 pass
 
-            if LAST_BUTTON_SELECTION == 2:
+            elif LAST_BUTTON_SELECTION == 2:
                 self.cBox1['indicatorValue'] = 0
                 self.cBox2['indicatorValue'] = 1
                 self.currentCodeOption = 2
             
-            self.rotateSlider = DirectSlider(parent = self, relief = None, range = (1, 100), value = 10, pageSize = 2, scale = 0.25, text = self.sliderOutputValue, text_scale = 0.18, text_pos = (0, 0.075), text_align = TextNode.ACenter, text_fg = PiratesGuiGlobals.TextFG1, textMayChange = 1, frameColor = (0.5, 0.5, 0.5, 0.3), image = self.charGui.find('**/chargui_slider_small'), thumb_relief = None, image_scale = (2.15, 2.15, 1.5), thumb_image = (self.charGui.find('**/chargui_slider_node'), self.charGui.find('**/chargui_slider_node_down'), self.charGui.find('**/chargui_slider_node_over')), command = self.__showSliderValue)
+            self.rotateSlider = DirectSlider(parent = self,
+                                             relief = None,
+                                             range = (1, 100),
+                                             value = 10,
+                                             pageSize = 2,
+                                             scale = 0.25,
+                                             text = self.sliderOutputValue,
+                                             text_scale = 0.18,
+                                             text_pos = (0, 0.075),
+                                             text_align = TextNode.ACenter,
+                                             text_fg = PiratesGuiGlobals.TextFG1,
+                                             textMayChange = 1,
+                                             frameColor = (0.5, 0.5, 0.5, 0.3),
+                                             image = self.charGui.find('**/chargui_slider_small'),
+                                             thumb_relief = None,
+                                             image_scale = (2.15, 2.15, 1.5),
+                                             thumb_image = (self.charGui.find('**/chargui_slider_node'),
+                                                            self.charGui.find('**/chargui_slider_node_down'),
+                                                            self.charGui.find('**/chargui_slider_node_over')),
+                                             command = self.__showSliderValue
+                                             )
             self.rotateSlider.reparentTo(self)
             self.rotateSlider.setPos(0.33, 0, 0.27)
         
@@ -95,7 +115,7 @@ class PiratesOffLineRequest(GuiPanel.GuiPanel):
 
     def destroy(self):
         if hasattr(self, 'destroyed'):
-            return None
+            return
         
         self.destroyed = 1
         self.ignore('Esc')
@@ -109,16 +129,17 @@ class PiratesOffLineRequest(GuiPanel.GuiPanel):
             npTokenCount += 1
             base.localAvatar.guiMgr.guildPage.receiveNonPermTokenCount(npTokenCount)
             self.destroy()
-            return None
-        elif self.currentCodeOption == 2:
-            base.cr.guildManager.updateTokenRValue(self.tokenString, self.sliderOutputValue)
-            npTokenCount = base.localAvatar.guiMgr.guildPage.getNonPermTokenCount()
-            npTokenCount += 1
-            base.localAvatar.guiMgr.guildPage.receiveNonPermTokenCount(npTokenCount)
+            return
         else:
-            base.cr.guildManager.updateTokenRValue(self.tokenString, -1)
-        self.destroy()
-        return None
+            if self.currentCodeOption == 2:
+                base.cr.guildManager.updateTokenRValue(self.tokenString, self.sliderOutputValue)
+                npTokenCount = base.localAvatar.guiMgr.guildPage.getNonPermTokenCount()
+                npTokenCount += 1
+                base.localAvatar.guiMgr.guildPage.receiveNonPermTokenCount(npTokenCount)
+            else:
+                base.cr.guildManager.updateTokenRValue(self.tokenString, -1)
+            self.destroy()
+            return
 
     def __handleNo(self):
         self.destroy()
@@ -173,7 +194,33 @@ class PiratesOffLineRequest(GuiPanel.GuiPanel):
             charGui.find('**/generic_check'),
             charGui.find('**/generic_check'),
             None]
-        c = DirectCheckButton(parent = self, relief = None, scale = 0.064, boxBorder = 0.08, boxRelief = None, boxImage = geomCheck, boxImageScale = 6.0, boxImageColor = VBase4(0, 1, 0, 1), pos = pos, text = text, text_fg = (1, 1, 1, 1), text_scale = 0.6, text_pos = (-0.5, 0, -2.8), indicator_pos = (-1, 0, 0.15), command = command, text_align = TextNode.ALeft, indicatorValue = initialState, extraArgs = extraArgs, text0_fg = PiratesGuiGlobals.TextFG2, text1_fg = PiratesGuiGlobals.TextFG3, text2_fg = PiratesGuiGlobals.TextFG1, text3_fg = PiratesGuiGlobals.TextFG9, text_shadow = PiratesGuiGlobals.TextShadow, image = buttonImage, image_pos = (1.8, 0, 0.15), image_scale = (7.5, 1, 3.5))
+        c = DirectCheckButton(parent = self,
+                              relief = None,
+                              scale = 0.064,
+                              boxBorder = 0.08,
+                              boxRelief = None,
+                              boxImage = geomCheck,
+                              boxImageScale = 6.0,
+                              boxImageColor = VBase4(0, 1, 0, 1),
+                              pos = pos,
+                              text = text,
+                              text_fg = (1, 1, 1, 1),
+                              text_scale = 0.6,
+                              text_pos = (-.5, 0, -2.8),
+                              indicator_pos = (-1, 0, 0.15),
+                              command = command,
+                              text_align = TextNode.ALeft,
+                              indicatorValue = initialState,
+                              extraArgs = extraArgs,
+                              text0_fg = PiratesGuiGlobals.TextFG2,
+                              text1_fg = PiratesGuiGlobals.TextFG3,
+                              text2_fg = PiratesGuiGlobals.TextFG1,
+                              text3_fg = PiratesGuiGlobals.TextFG9,
+                              text_shadow = PiratesGuiGlobals.TextShadow,
+                              image = buttonImage,
+                              image_pos = (1.8, 0, 0.15),
+                              image_scale = (7.5, 1, 3.5)
+                              )
         c.setIndicatorValue()
         return c
 

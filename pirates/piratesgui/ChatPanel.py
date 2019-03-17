@@ -376,8 +376,7 @@ class ChatPanel(DirectFrame, FSM):
             if message.getType() == SPEEDCHAT_NORMAL:
                 someMessage = SCDecoders.decodeSCStaticTextMsg(message.getBody())
             elif message.getType() == SPEEDCHAT_EMOTE:
-                PLocalizer = PLocalizer
-                import pirates.piratesbase
+                from pirates.piratesbase import PLocalizer
                 if message.sentRatherThanReceived:
                     someMessage = PLocalizer.EmoteMessagesSelf.get(message.getBody(), None)
                     if someMessage is None:
@@ -514,7 +513,7 @@ class ChatPanel(DirectFrame, FSM):
         numLines = base.chatAssistant.getSizeOpenText()
         if self.getCurrentOrNextState() != 'Tall':
             self.index = 0
-            return None
+            return
         
         if numLines > self.NumVisible:
             if self.getCurrentOrNextState() == 'Tall':

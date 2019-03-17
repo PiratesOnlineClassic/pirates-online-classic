@@ -61,22 +61,22 @@ class BoardingPermissionPanel(GuiPanel):
                 'text_shadow': (0, 0, 0, 1),
                 'text_align': TextNode.ALeft,
                 'command': self.allowFriends}
-            self.friendsButton = CheckButton(**kw)
+            self.friendsButton = CheckButton(**buttonOptions)
             buttonOptions['text'] = PLocalizer.CrewBoardingAccessAllowCrew
             buttonOptions['pos'] = (buttonOptions['pos'][0], buttonOptions['pos'][1], buttonOptions['pos'][2] - 0.12)
             buttonOptions['command'] = self.allowCrew
             buttonOptions['value'] = localAvatar.getShip().getAllowCrewState()
-            self.crewButton = CheckButton(**kw)
+            self.crewButton = CheckButton(**buttonOptions)
             buttonOptions['text'] = PLocalizer.CrewBoardingAccessAllowGuild
             buttonOptions['pos'] = (buttonOptions['pos'][0], buttonOptions['pos'][1], buttonOptions['pos'][2] - 0.12)
             buttonOptions['command'] = self.allowGuild
             buttonOptions['value'] = localAvatar.getShip().getAllowGuildState()
-            self.guildButton = CheckButton(**kw)
+            self.guildButton = CheckButton(**buttonOptions)
             buttonOptions['text'] = PLocalizer.CrewBoardingAccessAllowPublic
             buttonOptions['pos'] = (buttonOptions['pos'][0], buttonOptions['pos'][1], buttonOptions['pos'][2] - 0.12)
             buttonOptions['command'] = self.allowPublic
             buttonOptions['value'] = localAvatar.getShip().getAllowPublicState()
-            self.publicButton = CheckButton(**kw)
+            self.publicButton = CheckButton(**buttonOptions)
             self.guiSetup = True
     
     def destroyGui(self):

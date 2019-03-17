@@ -635,12 +635,12 @@ class GameOptionsGui(DirectFrame):
             self.gameOptions.set_display(self.gameOptions.options, base.pipe, base.windowed_resolution_table[index][0], base.windowed_resolution_table[index][1])
             if base.hasEmbedded:
                 self.gameOptions.options.resolution = index
-            
-        elif not self.gameOptions.options.fullscreen_runtime:
-            self.gameOptions.set_display(self.gameOptions.options, base.pipe, base.windowed_resolution_table[index][0], base.windowed_resolution_table[index][1])
-        
-        self.gameOptions.options.window_width = base.windowed_resolution_table[index][0]
-        self.gameOptions.options.window_height = base.windowed_resolution_table[index][1]
+        else:
+            if not self.gameOptions.options.fullscreen_runtime:
+                self.gameOptions.set_display(self.gameOptions.options, base.pipe, base.windowed_resolution_table[index][0], base.windowed_resolution_table[index][1])
+
+            self.gameOptions.options.window_width = base.windowed_resolution_table[index][0]
+            self.gameOptions.options.window_height = base.windowed_resolution_table[index][1]
 
     def fullscreenResolutionMenuCB(self, val, index):
         if self.gameOptions is None:
@@ -648,12 +648,12 @@ class GameOptionsGui(DirectFrame):
         
         if base.inAdFrame:
             pass
+        else:
+            if self.gameOptions.options.fullscreen_runtime:
+                self.gameOptions.set_display(self.gameOptions.options, base.pipe, base.fullscreen_resolution_table[index][0], base.fullscreen_resolution_table[index][1])
 
-        if self.gameOptions.options.fullscreen_runtime:
-            self.gameOptions.set_display(self.gameOptions.options, base.pipe, base.fullscreen_resolution_table[index][0], base.fullscreen_resolution_table[index][1])
-        
-        self.gameOptions.options.fullscreen_width = base.fullscreen_resolution_table[index][0]
-        self.gameOptions.options.fullscreen_height = base.fullscreen_resolution_table[index][1]
+            self.gameOptions.options.fullscreen_width = base.fullscreen_resolution_table[index][0]
+            self.gameOptions.options.fullscreen_height = base.fullscreen_resolution_table[index][1]
 
     def shaderLevelCheckCB(self, val):
         if self.gameOptions is None:

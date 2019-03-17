@@ -122,9 +122,10 @@ class SkillPage(InventoryPage.InventoryPage):
             self.tabBar = localAvatar.guiMgr.chestPanel.makeTabBar()
         else:
             self.tabBar.unstash()
-        self.createTabs()
-        InventoryPage.InventoryPage.show(self)
-        self.update()
+        if 1:
+            self.createTabs()
+            InventoryPage.InventoryPage.show(self)
+            self.update()
 
     def update(self, repId=None, fromUser=0):
         inv = localAvatar.getInventory()
@@ -442,70 +443,69 @@ class SkillPage(InventoryPage.InventoryPage):
             begin = InventoryType.begin_WeaponSkillCutlass
             end = InventoryType.end_WeaponSkillCutlass
             unSpentId = InventoryType.UnspentCutlass
+        elif weaponRep == InventoryType.PistolRep:
+            begin = InventoryType.begin_WeaponSkillPistol
+            end = InventoryType.end_WeaponSkillPistol
+            unSpentId = InventoryType.UnspentPistol
+        elif weaponRep == InventoryType.DaggerRep:
+            begin = InventoryType.begin_WeaponSkillDagger
+            end = InventoryType.end_WeaponSkillDagger
+            unSpentId = InventoryType.UnspentDagger
+        elif weaponRep == InventoryType.GrenadeRep:
+            begin = InventoryType.begin_WeaponSkillGrenade
+            end = InventoryType.end_WeaponSkillGrenade
+            unSpentId = InventoryType.UnspentGrenade
+        elif weaponRep == InventoryType.DollRep:
+            begin = InventoryType.begin_WeaponSkillDoll
+            end = InventoryType.end_WeaponSkillDoll
+            unSpentId = InventoryType.UnspentDoll
+        elif weaponRep == InventoryType.WandRep:
+            begin = InventoryType.begin_WeaponSkillWand
+            end = InventoryType.end_WeaponSkillWand
+            unSpentId = InventoryType.UnspentWand
+        elif weaponRep == InventoryType.SailingRep:
+            begin = InventoryType.begin_SkillSailing
+            end = InventoryType.end_SkillSailing
+            unSpentId = InventoryType.UnspentSailing
+        elif weaponRep == InventoryType.CannonRep:
+            begin = InventoryType.begin_WeaponSkillCannon
+            end = InventoryType.end_WeaponSkillCannon
+            unSpentId = InventoryType.UnspentCannon
         else:
-            if weaponRep == InventoryType.PistolRep:
-                begin = InventoryType.begin_WeaponSkillPistol
-                end = InventoryType.end_WeaponSkillPistol
-                unSpentId = InventoryType.UnspentPistol
-            else:
-                if weaponRep == InventoryType.DaggerRep:
-                    begin = InventoryType.begin_WeaponSkillDagger
-                    end = InventoryType.end_WeaponSkillDagger
-                    unSpentId = InventoryType.UnspentDagger
-                elif weaponRep == InventoryType.GrenadeRep:
-                    begin = InventoryType.begin_WeaponSkillGrenade
-                    end = InventoryType.end_WeaponSkillGrenade
-                    unSpentId = InventoryType.UnspentGrenade
-                elif weaponRep == InventoryType.DollRep:
-                    begin = InventoryType.begin_WeaponSkillDoll
-                    end = InventoryType.end_WeaponSkillDoll
-                    unSpentId = InventoryType.UnspentDoll
-                elif weaponRep == InventoryType.WandRep:
-                    begin = InventoryType.begin_WeaponSkillWand
-                    end = InventoryType.end_WeaponSkillWand
-                    unSpentId = InventoryType.UnspentWand
-                elif weaponRep == InventoryType.SailingRep:
-                    begin = InventoryType.begin_SkillSailing
-                    end = InventoryType.end_SkillSailing
-                    unSpentId = InventoryType.UnspentSailing
-                elif weaponRep == InventoryType.CannonRep:
-                    begin = InventoryType.begin_WeaponSkillCannon
-                    end = InventoryType.end_WeaponSkillCannon
-                    unSpentId = InventoryType.UnspentCannon
-                else:
-                    return
-                localAvatar.resetSkillPoints(weaponRep)
-                inv = localAvatar.getInventory()
-                extra = 0
-                for skillId in range(begin, end):
-                    if skillId in InventoryType.DontResetSkills:
-                        continue
-                    curAmt = inv.getStackQuantity(skillId)
-                    if skillId in self.localMods:
-                        curAmt = self.localMods[skillId]
-                    resetAmt = 1
-                    if skillId in listReset1:
-                        resetAmt = 2
-                    if curAmt > resetAmt:
-                        extra += curAmt - resetAmt
-                        self.localMods[skillId] = resetAmt
-                        if self.tabBar and skillId in self.skillFrames:
-                            self.skillFrames[skillId].skillRank = resetAmt - 1
-                        if self.tabBar:
-                            try:
-                                self.makeDots(skillId, resetAmt - 1)
-                            except:
-                                pass
+            return
 
-                        if resetAmt == 1 and self.tabBar:
-                            try:
-                                self.dots[skillId][0].hide()
-                                self.dots[skillId][1].hide()
-                                self.dots[skillId][2].hide()
-                                self.dots[skillId][3].hide()
-                                self.dots[skillId][4].hide()
-                            except:
-                                pass
+        localAvatar.resetSkillPoints(weaponRep)
+        inv = localAvatar.getInventory()
+        extra = 0
+        for skillId in range(begin, end):
+            if skillId in InventoryType.DontResetSkills:
+                continue
+            curAmt = inv.getStackQuantity(skillId)
+            if skillId in self.localMods:
+                curAmt = self.localMods[skillId]
+            resetAmt = 1
+            if skillId in listReset1:
+                resetAmt = 2
+            if curAmt > resetAmt:
+                extra += curAmt - resetAmt
+                self.localMods[skillId] = resetAmt
+                if self.tabBar and skillId in self.skillFrames:
+                    self.skillFrames[skillId].skillRank = resetAmt - 1
+                if self.tabBar:
+                    try:
+                        self.makeDots(skillId, resetAmt - 1)
+                    except:
+                        pass
 
-            if unSpentId in self.localMods:
-                self.localMods[unSpentId] += extra
+                if resetAmt == 1 and self.tabBar:
+                    try:
+                        self.dots[skillId][0].hide()
+                        self.dots[skillId][1].hide()
+                        self.dots[skillId][2].hide()
+                        self.dots[skillId][3].hide()
+                        self.dots[skillId][4].hide()
+                    except:
+                        pass
+
+        if unSpentId in self.localMods:
+            self.localMods[unSpentId] += extra

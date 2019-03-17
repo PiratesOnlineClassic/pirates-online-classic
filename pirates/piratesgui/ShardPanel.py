@@ -119,15 +119,15 @@ class ShardPanel(DirectFrame):
     def getShowIval(self):
         if self.showIval and 0:
             pass
-
-        self.showIval = Sequence(Func(self.cancelIval, 'hide'), Func(self.toggleUpState, 0), Parallel(self.gear.hprInterval(self['showtime'], Vec3(0, 0, -180), blendType = 'easeInOut'), self.posInterval(self['showtime'], self['downpos'], blendType = 'easeInOut')))
+        else:
+            self.showIval = Sequence(Func(self.cancelIval, 'hide'), Func(self.toggleUpState, 0), Parallel(self.gear.hprInterval(self['showtime'], Vec3(0, 0, -180), blendType = 'easeInOut'), self.posInterval(self['showtime'], self['downpos'], blendType = 'easeInOut')))
         return self.showIval
 
     def getHideIval(self):
         if self.hideIval and 0:
             pass
-
-        self.hideIval = Sequence(Func(self.cancelIval, 'show'), Func(self.toggleUpState, 1), Parallel(self.gear.hprInterval(self['showtime'], Vec3(0, 0, 0), blendType = 'easeInOut'), self.posInterval(self['showtime'], self['uppos'], blendType = 'easeInOut')))
+        else:
+            self.hideIval = Sequence(Func(self.cancelIval, 'show'), Func(self.toggleUpState, 1), Parallel(self.gear.hprInterval(self['showtime'], Vec3(0, 0, 0), blendType = 'easeInOut'), self.posInterval(self['showtime'], self['uppos'], blendType = 'easeInOut')))
         return self.hideIval
     
     def cancelIval(self, type = ['show', 'hide']):

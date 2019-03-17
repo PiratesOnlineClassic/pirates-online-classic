@@ -63,7 +63,7 @@ class ReputationMeter(DirectFrame):
     def masteredFX(self):
         if self.masteredIval:
             self.masteredIval.start()
-            return None
+            return
         
         startColor = Vec4(1.0, 1.0, 1.0, 0.0)
         endColor = Vec4(1.0, 1.0, 1.0, 1.0)

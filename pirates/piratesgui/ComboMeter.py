@@ -76,7 +76,7 @@ class ComboMeter(DirectObject.DirectObject):
             self.resetMeter()
         
         if value <= 1:
-            return None
+            return
         
         self.__showMeter()
         if self.combo < value:

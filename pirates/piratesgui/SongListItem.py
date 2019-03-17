@@ -43,7 +43,7 @@ class SongListItem(DirectButton):
     
     def loadGui(self):
         if SongListItem.guiLoaded:
-            return None
+            return
         
         SongListItem.topGui = loader.loadModel('models/gui/toplevel_gui')
         SongListItem.coinImage = SongListItem.topGui.find('**/treasure_w_coin*')

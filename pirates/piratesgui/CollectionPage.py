@@ -130,7 +130,7 @@ class CollectionPage(InventoryPage.InventoryPage):
                     if setItem in self.setHowMany:
                         self.setHowMany[setItem].hide()
 
-            if setItem in self.setFrames:
+            elif setItem in self.setFrames:
                 self.setFrames[setItem].show()
             else:
                 frameImg = gui.find('**/treasure_w_b_slot_empty')
