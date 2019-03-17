@@ -506,7 +506,7 @@ class CombatTray(GuiTray):
             localAvatar.guiMgr.createWarning(PLocalizer.NothingEquippedWarning, PiratesGuiGlobals.TextFG6)
             return
         
-        if self.isDrawingWeapon and self.isUsingSkill or self.isCharging:
+        if self.isDrawingWeapon or self.isUsingSkill or self.isCharging:
             if localAvatar.currentWeaponId != weaponId:
                 self.weaponQueue = weaponId
                 self.skillQueue = 0
