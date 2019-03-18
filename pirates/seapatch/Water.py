@@ -1,13 +1,13 @@
-from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
+from pandac.PandaModules import *
 from direct.showbase.DirectObject import DirectObject
+from direct.directnotify.DirectNotifyGlobal import directNotify
 from otp.otpbase import OTPRender
-from panda3d.core import *
 
 class Water(DirectObject):
     notify = directNotify.newCategory('water')
     water_array = []
-
+    
     def __init__(self, name):
         DirectObject.__init__(self)
         self.water_array.append(self)
@@ -16,47 +16,50 @@ class Water(DirectObject):
         self.texture_d = None
         self.texture_n = None
         self.texture_bb = None
+        
         try:
             self.reflect_show_through_only = base.options.reflection == 1
         except:
             self.reflect_show_through_only = base.config.GetBool('want-water-reflection-show-through-only', False)
-        else:
-            self.enable_debug_keys = base.config.GetBool('want-water-debug-keys', False)
-            self.enable_parameter_keys = base.config.GetBool('want-water-parameter-ui', False)
-            self.enable_water_panel = base.config.GetBool('want-water-panel', False)
-            self.use_alpha_map = base.config.GetBool('want-water-alpha', True) and base.win and base.win.getGsg() and base.win.getGsg().getSupportsBasicShaders()
-            self.enable_animate_uv = True
-            self.enable_ui = True
-            self.display_ui = True
-            self.first_tick = True
-            self.shader = None
-            self.shader_file_path = None
-            self.reflection = None
-            self.reflection_state = False
-            self.water_panel = None
-            self.use_water_bin = True
-            self.enable_alpha_map = True
-            self.clamp = True
-            self.alpha_clamp = True
-            self.texture_filtering = False
-            self.water_color_texture = None
-            self.water_alpha_texture = None
-            self.water_speed = 10.0
-            self.water_direction_x = 0.7071
-            self.water_direction_y = 0.7071
-            self.water_direction = Vec2(self.water_direction_x, self.water_direction_y)
-            self.ds_increment = 1.0 / 128.0
-            self.p_increment = 0.0005
-            self.reflection_increment = 0.005
-            self.xyz_increment = 100.0
-            self.uv_increment = 0.01
-            self.uv_increment2 = 0.005
-            self.clear_color = None
-            if self.enable_water_panel:
-                from pirates.seapatch import WaterPanel
-                self.water_panel = WaterPanel.WaterPanel(self.name)
-                if self.water_panel == None:
-                    self.enable_water_panel = False
+
+        self.enable_debug_keys = base.config.GetBool('want-water-debug-keys', False)
+        self.enable_parameter_keys = base.config.GetBool('want-water-parameter-ui', False)
+        self.enable_water_panel = base.config.GetBool('want-water-panel', False)
+        if base.config.GetBool('want-water-alpha', True) and base.win and base.win.getGsg():
+            pass
+        self.use_alpha_map = base.win.getGsg().getSupportsBasicShaders()
+        self.enable_animate_uv = True
+        self.enable_ui = True
+        self.display_ui = True
+        self.first_tick = True
+        self.shader = None
+        self.shader_file_path = None
+        self.reflection = None
+        self.reflection_state = False
+        self.water_panel = None
+        self.use_water_bin = True
+        self.enable_alpha_map = True
+        self.clamp = True
+        self.alpha_clamp = True
+        self.texture_filtering = False
+        self.water_color_texture = None
+        self.water_alpha_texture = None
+        self.water_speed = 10.0
+        self.water_direction_x = 0.7071
+        self.water_direction_y = 0.7071
+        self.water_direction = Vec2(self.water_direction_x, self.water_direction_y)
+        self.ds_increment = 1.0 / 128.0
+        self.p_increment = 0.0005
+        self.reflection_increment = 0.005
+        self.xyz_increment = 100.0
+        self.uv_increment = 0.01
+        self.uv_increment2 = 0.005
+        self.clear_color = None
+        if self.enable_water_panel:
+            from pirates.seapatch import WaterPanel
+            self.water_panel = WaterPanel.WaterPanel(self.name)
+            if self.water_panel == None:
+                self.enable_water_panel = False
 
         self.vector = Vec4(0.0, 0.0, 0.0, 0.0)
         self.map_name = InternalName.make('map')
@@ -88,10 +91,10 @@ class Water(DirectObject):
         self.color_map_texture_stage.setMode(TextureStage.MReplace)
         self.seamodel.setTexGen(self.color_map_texture_stage, TexGenAttrib.MWorldPosition)
         self.seamodel.setTexture(self.color_map_texture_stage, self.water_color_texture)
-
+    
     def reflection_enabled(self):
         return base.config.GetBool('want-water-reflection', True)
-
+    
     def delete_water(self):
         if self.enable_ui and self.enable_parameter_keys:
             self.red_slider.destroy()
@@ -113,9 +116,11 @@ class Water(DirectObject):
             self.alpha_map_y_origin_slider.destroy()
             self.alpha_map_x_scale_slider.destroy()
             self.alpha_map_y_scale_slider.destroy()
+        
         if self.reflection:
             self.reflection.delete()
             self.reflection = None
+        
         self.ignoreAll()
         if self in self.water_array:
             self.water_array.remove(self)
@@ -189,11 +194,12 @@ class Water(DirectObject):
             self.accept('shift-4', self.toggle_wrap_or_clamp)
             self.accept('shift-9', self.toggle_show_through_only)
             self.accept('shift-0', self.display_state)
+        
         if self.enable_parameter_keys:
             self.accept('shift-1', self.toggle_ui)
             self.accept('shift-2', self.reflection_on)
             self.accept('shift-3', self.reflection_off)
-
+            
             def display_water_panel():
                 from pirates.seapatch import WaterPanel
                 self.enable_water_panel = False
@@ -208,13 +214,13 @@ class Water(DirectObject):
             string = slider.label + ' %.5f' % slider['value']
             slider['text'] = string
             update_function(slider['value'])
-
+        
         def create_slider(update_function, default_value, x, y, resolution, label):
-            slider = DirectSlider(parent=None, command=update_slider, thumb_relief=DGG.FLAT, pos=(x, 0.0, y), text_align=TextNode.ARight, text_scale=(0.1,
-                                                                                                                                                      0.1), text_pos=(0.5,
-                                                                                                                                                                      0.1), scale=0.5, pageSize=resolution, text='default', value=default_value)
+            slider = DirectSlider(parent = None, command = update_slider, thumb_relief = DGG.FLAT, pos = (x, 0.0, y), text_align = TextNode.ARight, text_scale = (0.1, 0.1), text_pos = (0.5, 0.1), scale = 0.5, pageSize = resolution, text = 'default', value = default_value)
             slider.label = label
-            slider['extraArgs'] = [slider, update_function]
+            slider['extraArgs'] = [
+                slider,
+                update_function]
             return slider
 
         def update_water_r(value):
@@ -236,7 +242,7 @@ class Water(DirectObject):
         def update_reflection_factor(value):
             self.reflection_factor = value
             self.set_reflection_parameters_np()
-
+        
         def update_water_px(value):
             self.px = value
             self.set_reflection_parameters_np()
@@ -255,7 +261,7 @@ class Water(DirectObject):
         def update_water_direction_x(value):
             self.water_direction_x = value
             self.water_direction = Vec2(self.water_direction_x, self.water_direction_y)
-
+        
         def update_water_direction_y(value):
             self.water_direction_y = value
             self.water_direction = Vec2(self.water_direction_x, self.water_direction_y)
@@ -263,15 +269,15 @@ class Water(DirectObject):
         def update_map_x_origin(value):
             self.map_x_origin = value
             self.set_map_parameters_np()
-
+        
         def update_map_y_origin(value):
             self.map_y_origin = value
             self.set_map_parameters_np()
-
+        
         def update_map_x_scale(value):
             self.map_x_scale = value
             self.set_map_parameters_np()
-
+        
         def update_map_y_scale(value):
             self.map_y_scale = value
             self.set_map_parameters_np()
@@ -279,7 +285,7 @@ class Water(DirectObject):
         def update_alpha_map_x_origin(value):
             self.alpha_map_x_origin = value
             self.set_alpha_map_parameters_np()
-
+        
         def update_alpha_map_y_origin(value):
             self.alpha_map_y_origin = value
             self.set_alpha_map_parameters_np()
@@ -287,7 +293,7 @@ class Water(DirectObject):
         def update_alpha_map_x_scale(value):
             self.alpha_map_x_scale = value
             self.set_alpha_map_parameters_np()
-
+        
         def update_alpha_map_y_scale(value):
             self.alpha_map_y_scale = value
             self.set_alpha_map_parameters_np()
@@ -354,12 +360,12 @@ class Water(DirectObject):
             self.alpha_map_y_scale_slider['range'] = (-map_y_scale_range, map_y_scale_range)
             y += y_increment
             self.toggle_ui()
-
+    
     def toggle_show_through_only(self):
         if self.reflection:
             self.reflect_show_through_only = not self.reflect_show_through_only
             self.reflection.reflectShowThroughOnly(self.reflect_show_through_only)
-
+    
     def update_map_sliders(self):
         if self.enable_ui:
             self.map_x_origin_slider['value'] = self.map_x_origin
@@ -370,7 +376,7 @@ class Water(DirectObject):
             self.alpha_map_y_origin_slider['value'] = self.alpha_map_y_origin
             self.alpha_map_x_scale_slider['value'] = self.alpha_map_x_scale
             self.alpha_map_y_scale_slider['value'] = self.alpha_map_y_scale
-
+    
     def toggle_alpha_map(self):
         if self.use_alpha_map:
             self.enable_alpha_map = not self.enable_alpha_map
@@ -379,7 +385,7 @@ class Water(DirectObject):
     def update_map_x_origin(self, value):
         self.map_x_origin = value
         self.set_map_parameters_np()
-
+    
     def update_map_y_origin(self, value):
         self.map_y_origin = value
         self.set_map_parameters_np()
@@ -387,11 +393,11 @@ class Water(DirectObject):
     def update_map_x_scale(self, value):
         self.map_x_scale = value
         self.set_map_parameters_np()
-
+    
     def update_map_y_scale(self, value):
         self.map_y_scale = value
         self.set_map_parameters_np()
-
+    
     def update_alpha_map_x_origin(self, value):
         self.alpha_map_x_origin = value
         self.set_map_parameters_np()
@@ -407,19 +413,20 @@ class Water(DirectObject):
     def update_alpha_map_y_scale(self, value):
         self.alpha_map_y_scale = value
         self.set_map_parameters_np()
-
+    
     def update_water_direction_and_speed(self, x, y, speed):
         self.water_speed = speed
         self.water_direction_x = x
         self.water_direction_y = y
         self.water_direction = Vec2(self.water_direction_x, self.water_direction_y)
 
-    def set_shader(self, input_file_path, unload_previous_shader=False):
+    def set_shader(self, input_file_path, unload_previous_shader = False):
         file_path = Filename.fromOsSpecific(input_file_path)
         file_name = file_path.getBasename()
         directory = file_path.getDirname()
         if self.shader != None and unload_previous_shader:
             self.unload_shader()
+        
         self.shader_file_path = file_path.getFullpath()
         shader = loader.loadShader(self.shader_file_path)
         self.shader = shader
@@ -430,7 +437,7 @@ class Water(DirectObject):
         loader.unloadShader(self.shader_file_path)
         self.shader_file_path = None
 
-    def set_water_color_texture(self, input_file_path, unload_previous_texture=False, texture=None):
+    def set_water_color_texture(self, input_file_path, unload_previous_texture = False, texture = None):
         if texture:
             water_color_texture = texture
         else:
@@ -443,9 +450,11 @@ class Water(DirectObject):
                 water_color_texture = loader.loadTexture(file_path)
             if water_color_texture == None:
                 pass
+
         if water_color_texture != None:
             if unload_previous_texture:
                 self.unload_water_color_texture()
+            
             self.water_color_texture = water_color_texture
             self.seamodel.setShaderInput(self.watercolortexture_name, self.water_color_texture)
         else:
@@ -458,8 +467,8 @@ class Water(DirectObject):
         if self.water_color_texture != None:
             loader.unloadTexture(self.water_color_texture)
             self.water_color_texture = None
-
-    def set_water_alpha_texture(self, input_file_path, unload_previous_texture=False, texture=None):
+    
+    def set_water_alpha_texture(self, input_file_path, unload_previous_texture = False, texture = None):
         if texture:
             water_alpha_texture = texture
         else:
@@ -472,9 +481,11 @@ class Water(DirectObject):
                 water_alpha_texture = loader.loadTexture(file_path)
             if water_alpha_texture == None:
                 pass
+
         if water_alpha_texture != None:
             if unload_previous_texture:
                 self.unload_water_alpha_texture()
+            
             self.water_alpha_texture = water_alpha_texture
             self.seamodel.setShaderInput(self.wateralphatexture_name, self.water_alpha_texture)
         else:
@@ -482,7 +493,6 @@ class Water(DirectObject):
         self.set_alpha_wrap_or_clamp(self.alpha_clamp)
         self.set_water_alpha_texture_filtering()
         water_alpha_texture = None
-        return
 
     def unload_water_alpha_texture(self):
         if self.water_alpha_texture:
@@ -497,6 +507,7 @@ class Water(DirectObject):
             else:
                 self.water_color_texture.setWrapU(Texture.WMClamp)
                 self.water_color_texture.setWrapV(Texture.WMClamp)
+        
         self.clamp = wrap
 
     def toggle_wrap_or_clamp(self):
@@ -510,6 +521,7 @@ class Water(DirectObject):
             else:
                 self.water_alpha_texture.setWrapU(Texture.WMClamp)
                 self.water_alpha_texture.setWrapV(Texture.WMClamp)
+        
         self.alpha_clamp = wrap
 
     def toggle_alpha_wrap_or_clamp(self):
@@ -522,11 +534,13 @@ class Water(DirectObject):
     def reflection_on(self):
         if self.reflection:
             self.reflection.enable(True)
+        
         self.reflection_state = True
-
+    
     def reflection_off(self):
         if self.reflection:
             self.reflection.enable(False)
+        
         self.reflection_state = False
 
     def update_reflection(self):
@@ -536,9 +550,9 @@ class Water(DirectObject):
     def toggle_reflection(self):
         if self.reflection_state:
             self.reflection_off()
-            return
-        self.reflection_on()
-
+        else:
+            self.reflection_on()
+    
     def toggle_ui(self):
         if self.enable_ui:
             if self.display_ui:
@@ -590,12 +604,15 @@ class Water(DirectObject):
         if self.texture_d:
             self.texture_d.setMinfilter(Texture.FTLinearMipmapLinear)
             self.texture_d.setAnisotropicDegree(2)
+        
         if self.texture_n:
             self.texture_n.setMinfilter(Texture.FTLinearMipmapLinear)
             self.texture_n.setAnisotropicDegree(2)
+        
         if self.texture_bb:
             self.texture_bb.setMinfilter(Texture.FTLinearMipmapLinear)
             self.texture_bb.setAnisotropicDegree(2)
+        
         self.texture_filtering = True
         self.set_water_color_texture_filtering()
 
@@ -603,12 +620,15 @@ class Water(DirectObject):
         if self.texture_d:
             self.texture_d.setMinfilter(Texture.FTLinear)
             self.texture_d.setAnisotropicDegree(1)
+        
         if self.texture_n:
             self.texture_n.setMinfilter(Texture.FTLinear)
             self.texture_n.setAnisotropicDegree(1)
+        
         if self.texture_bb:
             self.texture_bb.setMinfilter(Texture.FTLinear)
             self.texture_bb.setAnisotropicDegree(1)
+        
         self.texture_filtering = False
         self.set_water_color_texture_filtering()
 
@@ -634,19 +654,18 @@ class Water(DirectObject):
         if self.shader:
             self.vector.set(self.map_x_origin, self.map_y_origin, 1.0 / self.map_x_scale, 1.0 / self.map_y_scale)
             self.seamodel.setShaderInput(self.map_name, self.vector)
-        else:
-            if self.color_map_texture_stage:
-                self.seamodel.setTexOffset(self.color_map_texture_stage, float(self.map_x_origin), float(self.map_y_origin))
-                self.seamodel.setTexScale(self.color_map_texture_stage, 1.0 / self.map_x_scale, 1.0 / self.map_y_scale)
+        elif self.color_map_texture_stage:
+            self.seamodel.setTexOffset(self.color_map_texture_stage, float(self.map_x_origin), float(self.map_y_origin))
+            self.seamodel.setTexScale(self.color_map_texture_stage, 1.0 / self.map_x_scale, 1.0 / self.map_y_scale)
 
     def set_alpha_map_parameters_np(self):
         self.vector.set(self.alpha_map_x_origin, self.alpha_map_y_origin, 1.0 / self.alpha_map_x_scale, 1.0 / self.alpha_map_y_scale)
         self.seamodel.setShaderInput(self.alphamap_name, self.vector)
-
+    
     def set_water_color_factor_np(self):
         self.vector.set(self.water_color_factor_r, self.water_color_factor_g, self.water_color_factor_b, 1.0)
         self.seamodel.setShaderInput(self.watercolorfactor_name, self.vector)
-
+    
     def set_water_color_add_np(self):
         self.vector.set(self.water_color_add_r, self.water_color_add_g, self.water_color_add_b, 1.0)
         self.seamodel.setShaderInput(self.watercoloradd_name, self.vector)
@@ -658,24 +677,24 @@ class Water(DirectObject):
     def set_fog_exp_density_np(self):
         self.vector.set(self.fog_exp_density, 0.0, 0.0, 0.0)
         self.seamodel.setShaderInput(self.fogexpdensity_name, self.vector)
-
+    
     def set_uvanim(self):
         self.vector.set(self.u, self.v, self.u2, self.v2)
         self.seamodel.setShaderInput(self.uvanim_name, self.vector)
 
     def print_camera(self):
         print 'camera_position', base.cam.getPos(render)
-
+    
     def set_camera_position_2(self):
         self.vector.set(self.camera_x, self.camera_y, self.camera_z, 1.0)
         self.seamodel.setShaderInput(self.cameraposition_name, self.vector)
-
+    
     def set_camera_position(self):
         self.camera_position = base.cam.getPos(render)
         self.vector.set(self.camera_position[0], self.camera_position[1], self.camera_position[2], 1.0)
         self.seamodel.setShaderInput(self.cameraposition_name, self.vector)
         self.print_camera()
-
+    
     def toggle_wire_frame(self):
         base.toggleWireframe()
 
@@ -685,11 +704,11 @@ class Water(DirectObject):
     def set_ambient_color_np(self):
         self.vector.set(self.ar / 255.0, self.ag / 255.0, self.ab / 255.0, 1.0)
         self.seamodel.setShaderInput(self.ambientcolor_name, self.vector)
-
+    
     def set_ambient_color(self):
         self.set_ambient_color_np()
         self.print_ambient_color()
-
+    
     def print_diffuse_color(self):
         print 'diffuse red', self.dr, 'diffuse green', self.dg, 'diffuse blue', self.db
 
@@ -700,14 +719,14 @@ class Water(DirectObject):
     def set_diffuse_color(self):
         self.set_diffuse_color_np()
         self.print_diffuse_color()
-
+    
     def print_specular_color(self):
         print 'red', self.r, 'green', self.g, 'blue', self.b
-
+    
     def set_specular_color_np(self):
         self.vector.set(self.r / 255.0, self.g / 255.0, self.b / 255.0, 1.0)
         self.seamodel.setShaderInput(self.specularcolor_name, self.vector)
-
+    
     def set_specular_color(self):
         self.set_specular_color_np()
         self.print_specular_color()
@@ -728,7 +747,7 @@ class Water(DirectObject):
 
     def print_water_color_map_parameters(self):
         print 'map x', self.map_x_origin, 'map y', self.map_y_origin, 'map size', self.map_x_scale, 'map size', self.map_y_scale
-
+    
     def set_reflection_parameters_np(self):
         self.vector.set(self.px, self.py, self.reflection_factor, self.ps)
         self.seamodel.setShaderInput(self.reflectionparameters_name, self.vector)
@@ -749,125 +768,145 @@ class Water(DirectObject):
 
     def set_water_color(self):
         self.set_water_color_np()
-
+    
     def add_water_r(self):
         self.water_r = self.water_r + 1.0
         if self.water_r > 255:
             self.water_r = 255.0
+        
         self.set_water_color()
 
     def sub_water_r(self):
         self.water_r = self.water_r - 1.0
         if self.water_r < 0.0:
             self.water_r = 0.0
+        
         self.set_water_color()
 
     def add_water_g(self):
         self.water_g = self.water_g + 1.0
         if self.water_g > 255:
             self.water_g = 255.0
+        
         self.set_water_color()
-
+    
     def sub_water_g(self):
         self.water_g = self.water_g - 1.0
         if self.water_g < 0.0:
             self.water_g = 0.0
+        
         self.set_water_color()
-
+    
     def add_water_b(self):
         self.water_b = self.water_b + 1.0
         if self.water_b > 255:
             self.water_b = 255.0
+        
         self.set_water_color()
-
+    
     def sub_water_b(self):
         self.water_b = self.water_b - 1.0
         if self.water_b < 0.0:
             self.water_b = 0.0
+        
         self.set_water_color()
-
+    
     def add_water_a(self):
         self.water_a = self.water_a + 1.0
         if self.water_a > 255:
             self.water_a = 255.0
+        
         self.set_water_color()
-
+    
     def sub_water_a(self):
         self.water_a = self.water_a - 1.0
         if self.water_a < 0.0:
             self.water_a = 0.0
+        
         self.set_water_color()
-
+    
     def add_dr(self):
         self.dr = self.dr + 1.0
         if self.dr > 255.0:
             self.dr = 255.0
+        
         self.set_diffuse_color()
-
+    
     def add_dg(self):
         self.dg = self.dg + 1.0
         if self.dg > 255.0:
             self.dg = 255.0
+        
         self.set_diffuse_color()
-
+    
     def add_db(self):
         self.db = self.db + 1.0
         if self.db > 255:
             self.db = 255.0
+        
         self.set_diffuse_color()
-
+    
     def sub_dr(self):
         self.dr = self.dr - 1.0
         if self.dr < 0.0:
             self.dr = 0.0
+        
         self.set_diffuse_color()
-
+    
     def sub_dg(self):
         self.dg = self.dg - 1.0
         if self.dg < 0.0:
             self.dg = 0.0
+        
         self.set_diffuse_color()
-
+    
     def sub_db(self):
         self.db = self.db - 1.0
         if self.db < 0.0:
             self.db = 0.0
+        
         self.set_diffuse_color()
-
+    
     def add_r(self):
         self.r = self.r + 1.0
         if self.r > 255.0:
             self.r = 255.0
+        
         self.set_specular_color()
-
+    
     def add_g(self):
         self.g = self.g + 1.0
         if self.g > 255.0:
             self.g = 255.0
+        
         self.set_specular_color()
-
+    
     def add_b(self):
         self.b = self.b + 1.0
         if self.b > 255:
             self.b = 255.0
+        
         self.set_specular_color()
-
+    
     def sub_r(self):
         self.r = self.r - 1.0
         if self.r < 0.0:
             self.r = 0.0
+        
         self.set_specular_color()
-
+    
     def sub_g(self):
         self.g = self.g - 1.0
         if self.g < 0.0:
             self.g = 0.0
+        
         self.set_specular_color()
-
+    
     def sub_b(self):
         self.b = self.b - 1.0
         if self.b < 0.0:
             self.b = 0.0
+        
         self.set_specular_color()
 
     def print_light_position(self):
@@ -896,7 +935,7 @@ class Water(DirectObject):
     def sub_x(self):
         self.x = self.x - self.xyz_increment
         self.set_light_position()
-
+    
     def sub_y(self):
         self.y = self.y - self.xyz_increment
         self.set_light_position()
@@ -913,6 +952,7 @@ class Water(DirectObject):
         self.d = self.d - self.ds_increment
         if self.d < 0.0:
             self.d = 0.0
+
         self.set_light_parameters()
 
     def add_s(self):
@@ -923,6 +963,7 @@ class Water(DirectObject):
         self.s = self.s - self.ds_increment
         if self.s < 0.0:
             self.s = 0.0
+
         self.set_light_parameters()
 
     def add_p(self):
@@ -933,6 +974,7 @@ class Water(DirectObject):
         self.p = self.p - 1.0
         if self.p < 1.0:
             self.p = 1.0
+
         self.set_light_parameters()
 
     def add_px(self):
@@ -943,6 +985,7 @@ class Water(DirectObject):
         self.px = self.px - self.p_increment
         if self.px < 0.0:
             self.px = 0.0
+
         self.set_reflection_parameters()
 
     def add_py(self):
@@ -953,16 +996,18 @@ class Water(DirectObject):
         self.py = self.py - self.p_increment
         if self.py < 0.0:
             self.py = 0.0
+
         self.set_reflection_parameters()
 
     def add_m(self):
         self.reflection_factor = self.reflection_factor + self.reflection_increment
         self.set_reflection_parameters()
-
+    
     def sub_m(self):
         self.reflection_factor = self.reflection_factor - self.reflection_increment
         if self.reflection_factor < 0.0:
             self.reflection_factor = 0.0
+        
         self.set_reflection_parameters()
 
     def add_u(self):
@@ -970,8 +1015,10 @@ class Water(DirectObject):
         self.u2 += self.uv_increment2
         if self.u > 1.0:
             self.u -= 1.0
+
         if self.u2 > 1.0:
             self.u2 -= 1.0
+
         self.set_uvanim()
 
     def add_v(self):
@@ -979,8 +1026,10 @@ class Water(DirectObject):
         self.v2 += self.uv_increment2
         if self.v > 1.0:
             self.v -= 1.0
+
         if self.v2 > 1.0:
             self.v2 -= 1.0
+
         self.set_uvanim()
 
     def sub_u(self):
@@ -988,8 +1037,10 @@ class Water(DirectObject):
         self.u2 -= self.uv_increment2
         if self.u < 0.0:
             self.u += 1.0
+
         if self.u2 < 0.0:
             self.u2 += 1.0
+
         self.set_uvanim()
 
     def sub_v(self):
@@ -997,8 +1048,10 @@ class Water(DirectObject):
         self.v2 -= self.uv_increment2
         if self.v < 0.0:
             self.v += 1.0
+
         if self.v2 < 0.0:
             self.v2 += 1.0
+
         self.set_uvanim()
 
     def space(self):
@@ -1011,7 +1064,7 @@ class Water(DirectObject):
         self.print_water_color()
         self.print_reflection_parameters()
         self.print_water_color_map_parameters()
-
+    
     def setting_0(self):
         self.ds_increment = 1.0 / 128.0
         self.xyz_increment = 100.0
@@ -1144,7 +1197,7 @@ class Water(DirectObject):
         self.water_b = 179
         self.water_a = 255
         self.set_water_color()
-
+    
     def setting_7(self):
         self.d = 1.0
         self.s = 2.5
@@ -1184,28 +1237,39 @@ class Water(DirectObject):
                 self.v2 += self.water_direction[1] * distance * self.uv_increment2
                 if self.u > 1.0:
                     self.u -= 1.0
+                
                 if self.u2 > 1.0:
                     self.u2 -= 1.0
+                
                 if self.v > 1.0:
                     self.v -= 1.0
+                
                 if self.v2 > 1.0:
                     self.v2 -= 1.0
+                
                 if self.u < 0.0:
                     self.u += 1.0
+                
                 if self.u2 < 0.0:
                     self.u2 += 1.0
+                
                 if self.v < 0.0:
                     self.v += 1.0
+                
                 if self.v2 < 0.0:
                     self.v2 += 1.0
+                
                 self.set_uvanim()
+            
             if self.reflection:
                 if self.reflection_state and self.clear_color:
                     self.reflection.setClearColor(self.clear_color)
                 else:
                     self.reflection.setClearColor(self.reflection.black_clear_color)
+            
             if self.reflection:
                 self.reflection.update_reflection(base.camLens, base.cam, self.supports_sky_only)
+            
             if self.update_parameters:
                 self.set_fog_np()
                 self.set_fog_exp_density_np()
@@ -1219,17 +1283,19 @@ class Water(DirectObject):
                 if self.reflection_enabled():
                     if self.reflection:
                         self.seamodel.setShaderInput(self.reflectiontexture_name, self.reflection.reflection_texture)
+                    
                 elif self.reflection:
                     self.seamodel.setShaderInput(self.reflectiontexture_name, self.reflection.black_reflection_texture)
-        else:
-            if self.reflection:
-                if self.reflection_state and self.clear_color:
-                    self.reflection.setClearColor(self.clear_color)
-                else:
-                    self.reflection.setClearColor(self.reflection.black_clear_color)
-                if self.reflection_enabled():
-                    self.reflection.update_reflection(base.camLens, base.cam)
-                self.reflection.update_reflectuion_no_shader()
+
+        elif self.reflection:
+            if self.reflection_state and self.clear_color:
+                self.reflection.setClearColor(self.clear_color)
+            else:
+                self.reflection.setClearColor(self.reflection.black_clear_color)
+            if self.reflection_enabled():
+                self.reflection.update_reflection(base.camLens, base.cam)
+            
+            self.reflection.update_reflectuion_no_shader()
 
     @classmethod
     def all_reflections_off(self):
@@ -1252,6 +1318,7 @@ class Water(DirectObject):
                     water.reflection.reflectShowThroughOnly(True)
                 else:
                     water.reflection.reflectShowThroughOnly(False)
+            
             index += 1
 
     @classmethod
@@ -1263,15 +1330,15 @@ class Water(DirectObject):
             water.reflection_on()
             if water.reflection:
                 water.reflection.reflectShowThroughOnly(False)
+            
             index += 1
 
 
 class IslandWaterParameters:
-    
     debug = False
     default_water_alpha_file_path = 'maps/default_inv_alpha.jpg'
     default_water_color_file_path = 'maps/ocean_color_default.jpg'
-
+    
     def __init__(self):
         self.map_x_origin = 0.0
         self.map_y_origin = 0.0
@@ -1305,11 +1372,13 @@ class IslandWaterParameters:
                 water.set_water_alpha_texture(self.water_alpha_file_path, self.unload_previous_texture, self.water_alpha_texture)
                 if self.debug:
                     print 'WATER ALPHA ON'
+                
             else:
                 water.set_water_color_texture(self.default_water_color_file_path, self.unload_previous_texture, None)
                 water.set_water_alpha_texture(self.default_water_alpha_file_path, self.unload_previous_texture, None)
                 if self.debug:
                     print 'WATER ALPHA OFF'
+
         if self.swamp_water:
             self.swamp_water.map_x_origin = self.swamp_map_x_origin
             self.swamp_water.map_y_origin = self.swamp_map_y_origin
@@ -1326,3 +1395,6 @@ class IslandWaterParameters:
             self.swamp_water.water_b = self.swamp_color_b
             self.swamp_water.set_water_color_np()
             self.swamp_water.update_water_direction_and_speed(self.swamp_direction_x, self.swamp_direction_y, self.swamp_speed)
+        
+
+
