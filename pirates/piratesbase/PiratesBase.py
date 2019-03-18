@@ -95,8 +95,8 @@ class PiratesBase(OTPBase):
             options.config_to_options()
             if base.config.GetBool('want-dev', False):
                 pass
-
-            use_recommended_options = True
+            else:
+                use_recommended_options = True
         if options.api == 'default':
             pass
 
