@@ -784,10 +784,9 @@ class CombatTray(GuiTray):
                 if target:
                     inView = localAvatar.checkViewingArc(target)
 
-            if not inView:
-                if target or self.aimAssistTarget:
-                    localAvatar.guiMgr.createWarning(PLocalizer.OutOfSightWarning, PiratesGuiGlobals.TextFG6)
-                    return 0
+            if not inView and (target or self.aimAssistTarget):
+                localAvatar.guiMgr.createWarning(PLocalizer.OutOfSightWarning, PiratesGuiGlobals.TextFG6)
+                return 0
 
         rechargingTime = localAvatar.skillDiary.getTimeRemaining(skillId)
         if rechargingTime > 0:
@@ -877,11 +876,12 @@ class CombatTray(GuiTray):
         allTargets = []
         if WeaponGlobals.getIsShipSkill(skillId):
             allTargets.append(localAvatar.ship)
-        elif localAvatar.currentTarget:
-            allTargets.append(localAvatar.currentTarget)
-        
-        if WeaponGlobals.isAttackAreaSelfDamaging(skillId, ammoSkillId):
-            allTargets.append(localAvatar)
+        else:
+            if localAvatar.currentTarget:
+                allTargets.append(localAvatar.currentTarget)
+
+            if WeaponGlobals.isAttackAreaSelfDamaging(skillId, ammoSkillId):
+                allTargets.append(localAvatar)
         
         effectId = WeaponGlobals.getSkillEffectFlag(skillId)
         newPriority = WeaponGlobals.getBuffPriority(effectId)
