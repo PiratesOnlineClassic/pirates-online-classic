@@ -239,60 +239,38 @@ class Options(OptionSpace):
 
     def load(self, file_path):
         state = False
-
         try:
-
             try:
                 input_file = open(Options.DEFAULT_API_FILE_PATH, 'r')
                 file_data = [x.strip() for x in input_file.read().split('\n')]
                 self.desiredApi = file_data[0]
             except:
                 pass
-            else:
-                input_file = open(file_path, 'r')
-                file_data = [x.strip() for x in input_file.read().split('\n')]
 
+            input_file = open(file_path, 'r')
+            file_data = [x.strip() for x in input_file.read().split('\n')]
             self.tokenDict = dict([x for x in zip(file_data[:-1], file_data[1:]) if x[0][0].isalpha() or x[0].isalnum()])
-
             self.version = self.validate(int, 'version', 0)
-            self.state = self.validate(str, 'state', 'default', [
-                'new',
-                'attempt',
-                'default',
-                'working'])
-            self.api = self.validate(str, 'api', 'default', [
-                'default',
-                'pandagl',
-                'pandadx7',
-                'pandadx8',
-                'pandadx9'])
+            self.state = self.validate(str, 'state', 'default', ['new', 'attempt', 'default', 'working'])
+            self.api = self.validate(str, 'api', 'default',
+                    ['default', 'pandagl', 'pandadx7', 'pandadx8', 'pandadx9'])
             self.window_width = self.validate(int, 'window_width', 0)
             self.window_height = self.validate(int, 'window_height', 0)
             if (self.window_width, self.window_height) not in base.windowed_resolution_table:
-                (self.window_width, self.window_height) = base.windowed_resolution_table[0]
-
+                self.window_width, self.window_height = base.windowed_resolution_table[0]
             self.fullscreen_width = self.validate(int, 'fullscreen_width', 0)
             self.fullscreen_height = self.validate(int, 'fullscreen_height', 0)
             if (self.fullscreen_width, self.fullscreen_height) not in base.fullscreen_resolution_table:
-                (self.fullscreen_width, self.fullscreen_height) = base.fullscreen_resolution_table[0]
-
-            self.resolution = self.validate(int, 'resolution', 0, [
-                0,
-                1])
-            self.fullscreen = self.validate(int, 'fullscreen', 0, [
-                0,
-                1])
+                self.fullscreen_width, self.fullscreen_height = base.fullscreen_resolution_table[0]
+            self.resolution = self.validate(int, 'resolution', 0, [0, 1])
+            self.fullscreen = self.validate(int, 'fullscreen', 0, [0, 1])
             self.widescreen = self.validate(int, 'widescreen', 0)
             self.widescreen_resolution = self.validate(int, 'widescreen_resolution', 0)
             self.widescreen_fullscreen = self.validate(int, 'widescreen_fullscreen', 0)
             self.reflection = self.validate(int, 'reflection', 0)
             self.shader = self.validate(int, 'shader', 0)
             self.shadow = self.validate(int, 'shadow', 0)
-            self.texture = self.validate(int, 'texture', -1, [
-                -1,
-                256,
-                512,
-                1024])
+            self.texture = self.validate(int, 'texture', -1, [-1, 256, 512, 1024])
             self.textureCompression = self.validate(int, 'texture_compression', 1)
             self.sound = self.validate(int, 'sound', 1)
             self.sound_volume = self.validate(float, 'sound_volume', 1.0)
@@ -303,18 +281,13 @@ class Options(OptionSpace):
             self.texture_scale = self.validate(float, 'texture_scale', 1.0)
             if self.texture_scale <= 0.0:
                 self.texture_scale = 1.0
-
             self.character_detail_level = self.validate(int, 'character_detail_level', 2)
             self.terrain_detail_level = self.validate(int, 'terrain_detail_level', 2)
             self.memory = self.validate(int, 'memory', 0)
-            self.mouse_look = self.validate(int, 'mouse_look', 0, [
-                0,
-                1])
+            self.mouse_look = self.validate(int, 'mouse_look', 0, [0, 1])
             self.gamma = self.validate(float, 'gamma', 0.0)
             self.gamma += self.gamma_save_offset
-            self.gamma_enable = self.validate(int, 'gamma_enable', 0, [
-                0,
-                1])
+            self.gamma_enable = self.validate(int, 'gamma_enable', 0, [0, 1])
             token = self.read_string(input_file)
             cpu_frequency_warning = self.validate(int, 'cpu_frequency_warning', 0)
             if cpu_frequency_warning:
@@ -324,18 +297,11 @@ class Options(OptionSpace):
             self.hdr = self.validate(int, 'hdr', 0)
             self.hdr_factor = self.validate(float, 'hdr_factor', 1.0)
             if base.config.GetInt('want-game-options-ship-visibility', 0):
-                self.ocean_visibility = self.validate(int, 'ocean_visibility', 1, [
-                    0,
-                    1,
-                    2])
+                self.ocean_visibility = self.validate(int, 'ocean_visibility', 1, [0, 1, 2])
             else:
                 self.ocean_visibility = 0
 
-            self.simple_display_option = self.validate(int, 'simple_display_option', 3, [
-                0,
-                1,
-                2,
-                3])
+            self.simple_display_option = self.validate(int, 'simple_display_option', 3, [0, 1, 2, 3])
             state = True
         except:
             pass
