@@ -165,7 +165,7 @@ class NewTutorialPanel(GuiPanel.GuiPanel):
         self.icon = guiFile.find('**/' + iconName)
         if self.icon.isEmpty():
             self.icon = None
-        
+
         if self.icon:
             self.icon.reparentTo(self)
             self.icon.setPos(0.17, 0, 0.12 * aspectRatio)
@@ -178,7 +178,7 @@ class NewTutorialPanel(GuiPanel.GuiPanel):
             self.arrow = loader.loadModel('models/gui/arrow_with_halo')
             if self.arrow.isEmpty():
                 self.arrow = loader.loadModel('models/gui/compass_arrow')
-            
+
             self.arrow.setBin('gui-popup', 0)
             arrowScale = 0.75
             self.arrow.reparentTo(arrowParent)
@@ -200,10 +200,9 @@ class NewTutorialPanel(GuiPanel.GuiPanel):
             loc2 = string.find(text, ']')
             start = loc2 + 1
             title = text[loc + 1:loc2]
-        
+
         listLen = len(tutorialList)
-        self.yesTutorial = None
-        self.noTutorial = None
+        self.yesTutorial = self.noTutorial = None
         buttonPos = (0.6 + textXOffset, 0, 0.11)
         yesButtonText = PLocalizer.lOk
         if listLen > 3:
@@ -219,14 +218,15 @@ class NewTutorialPanel(GuiPanel.GuiPanel):
             self.modifyTextAdd = '0/3\x02'
             text += self.modifyTextAdd
 
-        elif listLen >= 3:
-            buttonPos = (0.7 + textXOffset, 0, 0.11)
-            self.noTutorial = DialogButton.DialogButton(self, text = PLocalizer.lNo, buttonStyle = DialogButton.DialogButton.NO, pos = buttonPos)
-            buttonPos = (0.4 + textXOffset, 0, 0.11)
-            yesButtonText = PLocalizer.lYes
+        else:
+            if listLen >= 3:
+                buttonPos = (0.7 + textXOffset, 0, 0.11)
+                self.noTutorial = DialogButton.DialogButton(self, text = PLocalizer.lNo, buttonStyle = DialogButton.DialogButton.NO, pos = buttonPos)
+                buttonPos = (0.4 + textXOffset, 0, 0.11)
+                yesButtonText = PLocalizer.lYes
 
-        if listLen >= 2:
-            self.yesTutorial = DialogButton.DialogButton(self, text = yesButtonText, buttonStyle = DialogButton.DialogButton.YES, pos = buttonPos)
+            if listLen >= 2:
+                self.yesTutorial = DialogButton.DialogButton(self, text = yesButtonText, buttonStyle = DialogButton.DialogButton.YES, pos = buttonPos)
 
         self.createTextIcons()
         yOffsetFudge = 0.0
