@@ -1,13 +1,10 @@
-from otp.login import LoginTTAccount
+from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
-from panda3d.core import *
-
+import LoginTTAccount
 
 class LoginWebPlayTokenAccount(LoginTTAccount.LoginTTAccount):
-
-    notify = DirectNotifyGlobal.directNotify.newCategory(
-        'LoginWebPlayTokenAccount')
-
+    notify = DirectNotifyGlobal.directNotify.newCategory('LoginWebPlayTokenAccount')
+    
     def supportsRelogin(self):
         return 0
 
@@ -19,7 +16,7 @@ class LoginWebPlayTokenAccount(LoginTTAccount.LoginTTAccount):
         self.playTokenIsEncrypted = 1
         self.freeTimeExpires = -1
         self.cr.freeTimeExpiresAt = self.freeTimeExpires
-
+    
     def createBilling(self, loginName, password, data):
         pass
 
@@ -31,20 +28,23 @@ class LoginWebPlayTokenAccount(LoginTTAccount.LoginTTAccount):
 
     def changePassword(self, loginName, password, newPassword):
         pass
-
-    def requestPwdReminder(self, email=None, acctName=None):
+    
+    def requestPwdReminder(self, email = None, acctName = None):
         pass
-
+    
     def cancelAccount(self, loginName, password):
         pass
-
+    
     def getAccountData(self, loginName, password):
         pass
 
     def getErrorCode(self):
-        if 'response' not in self:
+        if not self.has_key('response'):
             return 0
+        
         return self.response.getInt('errorCode', 0)
 
     def needToSetParentPassword(self):
         return 0
+
+

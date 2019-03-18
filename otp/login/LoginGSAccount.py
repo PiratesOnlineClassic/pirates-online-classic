@@ -1,12 +1,11 @@
-from otp.login import LoginBase
-from direct.directnotify import DirectNotifyGlobal
+from pandac.PandaModules import *
 from direct.distributed.MsgTypes import *
+from direct.directnotify import DirectNotifyGlobal
+import LoginBase
 from direct.distributed.PyDatagram import PyDatagram
-from panda3d.core import *
-
 
 class LoginGSAccount(LoginBase.LoginBase):
-
+    
     def __init__(self, cr):
         LoginBase.LoginBase.__init__(self, cr)
 
@@ -16,19 +15,19 @@ class LoginGSAccount(LoginBase.LoginBase):
         self.createFlag = 1
         self.cr.freeTimeExpiresAt = -1
         self.cr.setIsPaid(1)
-        return
-
+        return None
+    
     def authorize(self, loginName, password):
         self.loginName = loginName
         self.password = password
         self.createFlag = 0
         self.cr.freeTimeExpiresAt = -1
         self.cr.setIsPaid(1)
-        return
+        return None
 
     def supportsRelogin(self):
         return 1
-
+    
     def sendLoginMsg(self):
         cr = self.cr
         datagram = PyDatagram()
@@ -47,13 +46,13 @@ class LoginGSAccount(LoginBase.LoginBase):
         datagram.addString(cr.wantMagicWords)
         datagram.addUint32(config.GetInt('fake-DISL-PlayerAccountId', 0))
         cr.send(datagram)
-
+    
     def resendPlayToken(self):
         pass
 
-    def requestPwdReminder(self, email=None, acctName=None):
+    def requestPwdReminder(self, email = None, acctName = None):
         return 0
-
+    
     def getAccountData(self, loginName, password):
         return 'Unsupported'
 
@@ -61,17 +60,15 @@ class LoginGSAccount(LoginBase.LoginBase):
         return 1
 
     def authenticateParentPassword(self, loginName, password, parentPassword):
-        return (
-            password == parentPassword, None)
-
+        return (password == parentPassword, None)
+    
     def supportsAuthenticateDelete(self):
         return 1
-
+    
     def authenticateDelete(self, loginName, password):
-        return (
-            password == self.cr.password, None)
+        return (password == self.cr.password, None)
+    
+    def enableSecretFriends(self, loginName, password, parentPassword, enable = 1):
+        return (password == parentPassword, None)
 
-    def enableSecretFriends(self, loginName, password,
-                            parentPassword, enable=1):
-        return (
-            password == parentPassword, None)
+

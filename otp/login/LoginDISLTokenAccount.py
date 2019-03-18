@@ -1,22 +1,21 @@
-from otp.login import LoginBase
-from direct.directnotify import DirectNotifyGlobal
-from direct.distributed.MsgTypes import *
-from direct.distributed.PyDatagram import PyDatagram
 from direct.showbase.ShowBaseGlobal import *
-
+from direct.distributed.MsgTypes import *
+from direct.directnotify import DirectNotifyGlobal
+import LoginBase
+from direct.distributed.PyDatagram import PyDatagram
 
 class LoginDISLTokenAccount(LoginBase.LoginBase):
-
+    
     def __init__(self, cr):
         LoginBase.LoginBase.__init__(self, cr)
 
     def supportsRelogin(self):
         return 0
-
+    
     def authorize(self, loginName, password):
         self.loginName = loginName
         self.DISLToken = password
-
+    
     def sendLoginMsg(self):
         cr = self.cr
         datagram = PyDatagram()
@@ -31,6 +30,8 @@ class LoginDISLTokenAccount(LoginBase.LoginBase):
 
     def supportsParentPassword(self):
         return 0
-
+    
     def supportsAuthenticateDelete(self):
         return 0
+
+
