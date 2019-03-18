@@ -1,13 +1,13 @@
+from direct.gui.DirectGui import *
+from pandac.PandaModules import *
+from direct.tkwidgets.AppShell import *
+from direct.tkwidgets import Slider
+from tkFileDialog import askopenfilename
 import math
 import string
-from tkFileDialog import askopenfilename
-from Tkinter import *
 import Pmw
+from Tkinter import *
 
-from direct.gui.DirectGui import *
-from direct.tkwidgets import Slider
-from direct.tkwidgets.AppShell import *
-from panda3d.core import *
 
 class WaterPanel(AppShell):
     appversion = '1.0'
@@ -17,9 +17,7 @@ class WaterPanel(AppShell):
     def __init__(self, name, **kw):
         self.name = name
         DGG.INITOPT = Pmw.INITOPT
-        optiondefs = (
-         (
-          'title', name + ' Panel', None),)
+        optiondefs = (('title', name + ' Panel', None),)
         self.defineoptions(kw, optiondefs)
         AppShell.__init__(self)
         self.initialiseoptions(WaterPanel)
@@ -31,7 +29,6 @@ class WaterPanel(AppShell):
         self.shader_filename = None
         self.seapatch = None
         self.enable_region_update = True
-        return
 
     def appInit(self):
         self.widgetDict = {}
@@ -40,27 +37,22 @@ class WaterPanel(AppShell):
     def toggle_reflection(self):
         if self.seapatch != None:
             self.seapatch.toggle_reflection()
-        return
 
     def toggle_clamp(self):
         if self.seapatch != None:
             self.seapatch.toggle_wrap_or_clamp()
-        return
 
     def toggle_alpha_clamp(self):
         if self.seapatch != None:
             self.seapatch.toggle_alpha_wrap_or_clamp()
-        return
 
     def toggle_alpha_map(self):
         if self.seapatch != None:
             self.seapatch.toggle_alpha_map()
-        return
 
     def toggle_realtime_controls(self):
         if self.seapatch != None:
             self.seapatch.toggle_ui()
-        return
 
     def get_region_x_offset(self):
         self.region_x_offset = self.region_thousands_x_offset + self.region_hundreds_x_offset + self.region_ones_x_offset
@@ -132,7 +124,6 @@ class WaterPanel(AppShell):
             self.write_float(output_file, self.region_alpha_hundreds_y_size)
             self.write_float(output_file, self.region_alpha_ones_y_size)
             output_file.close()
-        return
 
     def read_integer(self, input_file):
         s = string.strip(input_file.readline())
@@ -191,21 +182,28 @@ class WaterPanel(AppShell):
                 self.getWidget(category, self.region_hundreds_y_size_text).set(self.region_hundreds_y_size, 0)
                 self.getWidget(category, self.region_ones_y_size_text).set(self.region_ones_y_size, 0)
                 category = self.alpha_region_text + '1'
-                self.getWidget(category, self.region_alpha_thousands_x_offset_text).set(self.region_alpha_thousands_x_offset, 0)
-                self.getWidget(category, self.region_alpha_hundreds_x_offset_text).set(self.region_alpha_hundreds_x_offset, 0)
+                self.getWidget(category, self.region_alpha_thousands_x_offset_text).set(
+                    self.region_alpha_thousands_x_offset, 0)
+                self.getWidget(category, self.region_alpha_hundreds_x_offset_text).set(
+                    self.region_alpha_hundreds_x_offset, 0)
                 self.getWidget(category, self.region_alpha_ones_x_offset_text).set(self.region_alpha_ones_x_offset, 0)
-                self.getWidget(category, self.region_alpha_thousands_y_offset_text).set(self.region_alpha_thousands_y_offset, 0)
-                self.getWidget(category, self.region_alpha_hundreds_y_offset_text).set(self.region_alpha_hundreds_y_offset, 0)
+                self.getWidget(category, self.region_alpha_thousands_y_offset_text).set(
+                    self.region_alpha_thousands_y_offset, 0)
+                self.getWidget(category, self.region_alpha_hundreds_y_offset_text).set(
+                    self.region_alpha_hundreds_y_offset, 0)
                 self.getWidget(category, self.region_alpha_ones_y_offset_text).set(self.region_alpha_ones_y_offset, 0)
-                self.getWidget(category, self.region_alpha_hundreds_x_size_text).set(self.region_alpha_hundreds_x_size, 0)
+                self.getWidget(category, self.region_alpha_hundreds_x_size_text).set(self.region_alpha_hundreds_x_size,
+                                                                                     0)
                 self.getWidget(category, self.region_alpha_ones_x_size_text).set(self.region_alpha_ones_x_size, 0)
-                self.getWidget(category, self.region_alpha_hundreds_y_size_text).set(self.region_alpha_hundreds_y_size, 0)
+                self.getWidget(category, self.region_alpha_hundreds_y_size_text).set(self.region_alpha_hundreds_y_size,
+                                                                                     0)
                 self.getWidget(category, self.region_alpha_ones_y_size_text).set(self.region_alpha_ones_y_size, 0)
                 self.set_message_bar_text(self.region_file_path_message_bar, filename)
                 state = True
             else:
                 print 'ERROR: incorrect version number'
             input_file.close()
+
         return state
 
     def createInterface(self):
@@ -213,7 +211,8 @@ class WaterPanel(AppShell):
         mainFrame = Frame(interior)
         mainFrame.pack()
         fileMenu = self.menuBar.component('File-menu')
-        fileMenu.insert_command(fileMenu.index('Quit'), label='Load and Apply Parameters', command=self.load_and_apply_water_parameters)
+        fileMenu.insert_command(fileMenu.index('Quit'), label='Load and Apply Parameters',
+                                command=self.load_and_apply_water_parameters)
         fileMenu.insert_command(fileMenu.index('Quit'), label='Save Parameters', command=self.save_water_parameters)
         fileMenu.insert_command(fileMenu.index('Quit'), label='Load Parameters', command=self.load_water_parameters)
         self.menuBar.addmenu('Texture', 'Texture-menu')
@@ -259,9 +258,40 @@ class WaterPanel(AppShell):
         self.region_ones_x_size_text = 'Map X Size (0 - 100)'
         self.region_hundreds_y_size_text = 'Map Y Size (hundreds)'
         self.region_ones_y_size_text = 'Map Y Size (0 - 100)'
-        texture_slider_definitions = (
-         (
-          self.region_text, self.region_thousands_x_offset_text, 'x-axis offset in world coordinates', self.set_x_offset, minimum_offset, maximum_offset, offset_resolution, default_offset), (self.region_text, self.region_hundreds_x_offset_text, 'x-axis offset in world coordinates', self.set_hundreds_x_offset, hundreds_minimum_offset, hundreds_maximum_offset, hundreds_offset_resolution, default_offset), (self.region_text, self.region_ones_x_offset_text, 'x-axis offset in world coordinates', self.set_ones_x_offset, ones_minimum_offset, ones_maximum_offset, ones_offset_resolution, default_offset), (self.region_text, self.region_thousands_y_offset_text, 'y-axis offset in world coordinates', self.set_y_offset, minimum_offset, maximum_offset, offset_resolution, default_offset), (self.region_text, self.region_hundreds_y_offset_text, 'y-axis offset in world coordinates', self.set_hundreds_y_offset, hundreds_minimum_offset, hundreds_maximum_offset, hundreds_offset_resolution, default_offset), (self.region_text, self.region_ones_y_offset_text, 'y-axis offset in world coordinates', self.set_ones_y_offset, ones_minimum_offset, ones_maximum_offset, ones_offset_resolution, default_offset), (self.region_text, self.region_hundreds_x_size_text, 'x-axis size in world coordinates', self.set_hundreds_x_size, hundreds_minimum_size, hundreds_maximum_size, hundreds_size_resolution, default_hundreds_size), (self.region_text, self.region_ones_x_size_text, 'x-axis size in world coordinates', self.set_ones_x_size, ones_minimum_size, ones_maximum_size, ones_size_resolution, default_size), (self.region_text, self.region_hundreds_y_size_text, 'y-axis size in world coordinates', self.set_hundreds_y_size, hundreds_minimum_size, hundreds_maximum_size, hundreds_size_resolution, default_hundreds_size), (self.region_text, self.region_ones_y_size_text, 'y-axis size in world coordinates', self.set_ones_y_size, ones_minimum_size, ones_maximum_size, ones_size_resolution, default_size))
+        texture_slider_definitions = ((self.region_text, self.region_thousands_x_offset_text,
+                                       'x-axis offset in world coordinates', self.set_x_offset, minimum_offset,
+                                       maximum_offset, offset_resolution, default_offset), (
+                                      self.region_text, self.region_hundreds_x_offset_text,
+                                      'x-axis offset in world coordinates', self.set_hundreds_x_offset,
+                                      hundreds_minimum_offset, hundreds_maximum_offset, hundreds_offset_resolution,
+                                      default_offset), (self.region_text, self.region_ones_x_offset_text,
+                                                        'x-axis offset in world coordinates', self.set_ones_x_offset,
+                                                        ones_minimum_offset, ones_maximum_offset,
+                                                        ones_offset_resolution, default_offset), (
+                                      self.region_text, self.region_thousands_y_offset_text,
+                                      'y-axis offset in world coordinates', self.set_y_offset, minimum_offset,
+                                      maximum_offset, offset_resolution, default_offset), (
+                                      self.region_text, self.region_hundreds_y_offset_text,
+                                      'y-axis offset in world coordinates', self.set_hundreds_y_offset,
+                                      hundreds_minimum_offset, hundreds_maximum_offset, hundreds_offset_resolution,
+                                      default_offset), (self.region_text, self.region_ones_y_offset_text,
+                                                        'y-axis offset in world coordinates', self.set_ones_y_offset,
+                                                        ones_minimum_offset, ones_maximum_offset,
+                                                        ones_offset_resolution, default_offset), (
+                                      self.region_text, self.region_hundreds_x_size_text,
+                                      'x-axis size in world coordinates', self.set_hundreds_x_size,
+                                      hundreds_minimum_size, hundreds_maximum_size, hundreds_size_resolution,
+                                      default_hundreds_size), (self.region_text, self.region_ones_x_size_text,
+                                                               'x-axis size in world coordinates', self.set_ones_x_size,
+                                                               ones_minimum_size, ones_maximum_size,
+                                                               ones_size_resolution, default_size), (
+                                      self.region_text, self.region_hundreds_y_size_text,
+                                      'y-axis size in world coordinates', self.set_hundreds_y_size,
+                                      hundreds_minimum_size, hundreds_maximum_size, hundreds_size_resolution,
+                                      default_hundreds_size), (self.region_text, self.region_ones_y_size_text,
+                                                               'y-axis size in world coordinates', self.set_ones_y_size,
+                                                               ones_minimum_size, ones_maximum_size,
+                                                               ones_size_resolution, default_size))
         self.region_thousands_x_offset = default_offset
         self.region_hundreds_x_offset = default_offset
         self.region_ones_x_offset = default_offset
@@ -283,9 +313,42 @@ class WaterPanel(AppShell):
         self.region_alpha_ones_x_size_text = 'Alpha Map X Size (0 - 100)'
         self.region_alpha_hundreds_y_size_text = 'Alpha Map Y Size (hundreds)'
         self.region_alpha_ones_y_size_text = 'Alpha Map Y Size (0 - 100)'
-        alpha_texture_slider_definitions = (
-         (
-          self.alpha_region_text, self.region_alpha_thousands_x_offset_text, 'x-axis offset in world coordinates', self.set_alpha_x_offset, minimum_offset, maximum_offset, offset_resolution, default_offset), (self.alpha_region_text, self.region_alpha_hundreds_x_offset_text, 'x-axis offset in world coordinates', self.set_alpha_hundreds_x_offset, hundreds_minimum_offset, hundreds_maximum_offset, hundreds_offset_resolution, default_offset), (self.alpha_region_text, self.region_alpha_ones_x_offset_text, 'x-axis offset in world coordinates', self.set_alpha_ones_x_offset, ones_minimum_offset, ones_maximum_offset, ones_offset_resolution, default_offset), (self.alpha_region_text, self.region_alpha_thousands_y_offset_text, 'y-axis offset in world coordinates', self.set_alpha_y_offset, minimum_offset, maximum_offset, offset_resolution, default_offset), (self.alpha_region_text, self.region_alpha_hundreds_y_offset_text, 'y-axis offset in world coordinates', self.set_alpha_hundreds_y_offset, hundreds_minimum_offset, hundreds_maximum_offset, hundreds_offset_resolution, default_offset), (self.alpha_region_text, self.region_alpha_ones_y_offset_text, 'y-axis offset in world coordinates', self.set_alpha_ones_y_offset, ones_minimum_offset, ones_maximum_offset, ones_offset_resolution, default_offset), (self.alpha_region_text, self.region_alpha_hundreds_x_size_text, 'x-axis size in world coordinates', self.set_alpha_hundreds_x_size, hundreds_minimum_size, hundreds_maximum_size, hundreds_size_resolution, default_hundreds_size), (self.alpha_region_text, self.region_alpha_ones_x_size_text, 'x-axis size in world coordinates', self.set_alpha_ones_x_size, ones_minimum_size, ones_maximum_size, ones_size_resolution, default_size), (self.alpha_region_text, self.region_alpha_hundreds_y_size_text, 'y-axis size in world coordinates', self.set_alpha_hundreds_y_size, hundreds_minimum_size, hundreds_maximum_size, hundreds_size_resolution, default_hundreds_size), (self.alpha_region_text, self.region_alpha_ones_y_size_text, 'y-axis size in world coordinates', self.set_alpha_ones_y_size, ones_minimum_size, ones_maximum_size, ones_size_resolution, default_size))
+        alpha_texture_slider_definitions = ((self.alpha_region_text, self.region_alpha_thousands_x_offset_text,
+                                             'x-axis offset in world coordinates', self.set_alpha_x_offset,
+                                             minimum_offset, maximum_offset, offset_resolution, default_offset), (
+                                            self.alpha_region_text, self.region_alpha_hundreds_x_offset_text,
+                                            'x-axis offset in world coordinates', self.set_alpha_hundreds_x_offset,
+                                            hundreds_minimum_offset, hundreds_maximum_offset,
+                                            hundreds_offset_resolution, default_offset), (
+                                            self.alpha_region_text, self.region_alpha_ones_x_offset_text,
+                                            'x-axis offset in world coordinates', self.set_alpha_ones_x_offset,
+                                            ones_minimum_offset, ones_maximum_offset, ones_offset_resolution,
+                                            default_offset), (
+                                            self.alpha_region_text, self.region_alpha_thousands_y_offset_text,
+                                            'y-axis offset in world coordinates', self.set_alpha_y_offset,
+                                            minimum_offset, maximum_offset, offset_resolution, default_offset), (
+                                            self.alpha_region_text, self.region_alpha_hundreds_y_offset_text,
+                                            'y-axis offset in world coordinates', self.set_alpha_hundreds_y_offset,
+                                            hundreds_minimum_offset, hundreds_maximum_offset,
+                                            hundreds_offset_resolution, default_offset), (
+                                            self.alpha_region_text, self.region_alpha_ones_y_offset_text,
+                                            'y-axis offset in world coordinates', self.set_alpha_ones_y_offset,
+                                            ones_minimum_offset, ones_maximum_offset, ones_offset_resolution,
+                                            default_offset), (
+                                            self.alpha_region_text, self.region_alpha_hundreds_x_size_text,
+                                            'x-axis size in world coordinates', self.set_alpha_hundreds_x_size,
+                                            hundreds_minimum_size, hundreds_maximum_size, hundreds_size_resolution,
+                                            default_hundreds_size), (
+                                            self.alpha_region_text, self.region_alpha_ones_x_size_text,
+                                            'x-axis size in world coordinates', self.set_alpha_ones_x_size,
+                                            ones_minimum_size, ones_maximum_size, ones_size_resolution, default_size), (
+                                            self.alpha_region_text, self.region_alpha_hundreds_y_size_text,
+                                            'y-axis size in world coordinates', self.set_alpha_hundreds_y_size,
+                                            hundreds_minimum_size, hundreds_maximum_size, hundreds_size_resolution,
+                                            default_hundreds_size), (
+                                            self.alpha_region_text, self.region_alpha_ones_y_size_text,
+                                            'y-axis size in world coordinates', self.set_alpha_ones_y_size,
+                                            ones_minimum_size, ones_maximum_size, ones_size_resolution, default_size))
         self.region_alpha_thousands_x_offset = default_offset
         self.region_alpha_hundreds_x_offset = default_offset
         self.region_alpha_ones_x_offset = default_offset
@@ -301,48 +364,50 @@ class WaterPanel(AppShell):
         if True:
             tab_name = 'Texture'
             page = self.mainNotebook.add(tab_name)
-            button_list = (
-             (
-              'Apply Region Parameters', self.apply_region_parameters),)
+            button_list = (('Apply Region Parameters', self.apply_region_parameters),)
             self.create_button_box(page, tab_name, 'Region Options:', 'help', button_list)
             button_list = (
-             (
-              'Assign Current Texture', self.assign_texture_to_region), ('Update Texture', self.update_texture), ('Update Shader', self.update_shader))
+            ('Assign Current Texture', self.assign_texture_to_region), ('Update Texture', self.update_texture),
+            ('Update Shader', self.update_shader))
             self.create_button_box(page, tab_name, 'Options:', 'help', button_list)
             self.region_texture_message_bar = self.create_message_bar(page, tab_name, 'Texture:', 'Texture')
             self.texture_sliders_array = self.createSliders(id, page, texture_slider_definitions)
             id = id + 1
+
         if True:
             tab_name = 'Alpha'
             page = self.mainNotebook.add(tab_name)
-            button_list = (
-             (
-              'Apply Region Parameters', self.apply_region_parameters),)
+            button_list = (('Apply Region Parameters', self.apply_region_parameters),)
             self.create_button_box(page, tab_name, 'Region Options:', 'help', button_list)
-            button_list = (
-             (
-              'Assign Current Alpha Texture', self.assign_alpha_texture_to_region), ('Update Alpha Texture', self.update_alpha_texture))
+            button_list = (('Assign Current Alpha Texture', self.assign_alpha_texture_to_region),
+                           ('Update Alpha Texture', self.update_alpha_texture))
             self.create_button_box(page, tab_name, 'Options:', 'help', button_list)
-            self.region_alpha_texture_message_bar = self.create_message_bar(page, tab_name, 'Alpha Texture:', 'Alpha Texture')
+            self.region_alpha_texture_message_bar = self.create_message_bar(page, tab_name, 'Alpha Texture:',
+                                                                            'Alpha Texture')
             self.alpha_sliders_array = self.createSliders(id, page, alpha_texture_slider_definitions)
             id = id + 1
-        self.region_file_path_message_bar = self.create_message_bar(water_page, tab_name + 'file_path', 'File:', 'Filename')
+
+        self.region_file_path_message_bar = self.create_message_bar(water_page, tab_name + 'file_path', 'File:',
+                                                                    'Filename')
         self.texture_message_bar = self.create_message_bar(water_page, 'Water', 'Current Texture:', 'Current Texture')
-        self.alpha_texture_message_bar = self.create_message_bar(water_page, 'Water', 'Current Alpha Texture:', 'Current Alpha Texture')
+        self.alpha_texture_message_bar = self.create_message_bar(water_page, 'Water', 'Current Alpha Texture:',
+                                                                 'Current Alpha Texture')
         self.shader_message_bar = self.create_message_bar(water_page, 'Shader', 'Current Shader:', 'Current Shader')
         self.createCheckbutton(water_page, 'Water', 'Display Water', 'Turn Water on/off', self.toggle_display, 1)
         self.createCheckbutton(water_page, 'Water', 'Reflection', 'Turn relfection on/off', self.toggle_reflection, 1)
-        self.createCheckbutton(water_page, 'Water', 'Texture Clamp', 'Turn texture clamping on/off', self.toggle_clamp, 1)
-        self.createCheckbutton(water_page, 'Water', 'Alpha Texture Clamp', 'Turn alpha texture clamping on/off', self.toggle_alpha_clamp, 1)
+        self.createCheckbutton(water_page, 'Water', 'Texture Clamp', 'Turn texture clamping on/off', self.toggle_clamp,
+                               1)
+        self.createCheckbutton(water_page, 'Water', 'Alpha Texture Clamp', 'Turn alpha texture clamping on/off',
+                               self.toggle_alpha_clamp, 1)
         self.createCheckbutton(water_page, 'Water', 'Alpha Map', 'Turn alpha map on/off', self.toggle_alpha_map, 1)
-        self.createCheckbutton(water_page, 'Water', 'Real-Time Controls', 'Turn real-time controls on/off', self.toggle_realtime_controls, 0)
+        self.createCheckbutton(water_page, 'Water', 'Real-Time Controls', 'Turn real-time controls on/off',
+                               self.toggle_realtime_controls, 0)
         geomPage = self.mainNotebook.add('Geometry')
         self.createCheckbutton(geomPage, 'Geom', 'WireFrame', 'Toggle WireFrame', self.toggleWF, 0)
 
     def toggle_display(self):
         if self.seapatch != None:
             self.seapatch.toggle_display()
-        return
 
     def update_region_shader_parameters(self):
         if self.seapatch != None and self.enable_region_update:
@@ -355,27 +420,25 @@ class WaterPanel(AppShell):
             self.seapatch.update_alpha_map_x_scale(self.get_region_alpha_x_size())
             self.seapatch.update_alpha_map_y_scale(self.get_region_alpha_y_size())
             self.seapatch.update_map_sliders()
-        return
 
     def apply_region_parameters(self):
         if self.region_texture_filename != None:
             self.set_texture(self.region_texture_filename)
+
         if self.region_alpha_texture_filename != None:
             self.set_alpha_texture(self.region_alpha_texture_filename)
+
         self.update_region_shader_parameters()
-        return
 
     def assign_texture_to_region(self):
         if self.texture_filename != None:
             self.set_message_bar_text(self.region_texture_message_bar, self.texture_filename)
             self.region_texture_filename = self.texture_filename
-        return
 
     def assign_alpha_texture_to_region(self):
         if self.alpha_texture_filename != None:
             self.set_message_bar_text(self.region_alpha_texture_message_bar, self.alpha_texture_filename)
             self.region_alpha_texture_filename = self.alpha_texture_filename
-        return
 
     def set_x_offset(self, value, command_data):
         self.region_thousands_x_offset = value
@@ -498,9 +561,11 @@ class WaterPanel(AppShell):
 
     def _load_water_parameters(self):
         default_directory = base.config.GetString('water-panel-default-path', '.')
-        filename = askopenfilename(initialdir=default_directory, filetypes=[('WTR', 'wtr')], title='Open Water File')
+        filename = askopenfilename(initialdir=default_directory, filetypes=[
+            ('WTR', 'wtr')], title='Open Water File')
         if not filename:
             return False
+
         return self.load_region(filename)
 
     def load_water_parameters(self):
@@ -515,9 +580,11 @@ class WaterPanel(AppShell):
     def save_water_parameters(self):
         if self.region_texture_filename != None and self.region_alpha_texture_filename != None:
             default_directory = base.config.GetString('water-panel-default-path', '.')
-            filename = asksaveasfilename(initialdir=default_directory, filetypes=[('WTR', 'wtr')], title='Save Water File')
+            filename = asksaveasfilename(initialdir=default_directory, filetypes=[
+                ('WTR', 'wtr')], title='Save Water File')
             if not filename:
-                return
+                return None
+
             if string.find(filename, '.wtr') != -1:
                 output_file = open(filename, 'w')
             else:
@@ -526,7 +593,6 @@ class WaterPanel(AppShell):
             self.set_message_bar_text(self.region_file_path_message_bar, filename)
         else:
             print 'ERROR: texture(s) not selected'
-        return
 
     def set_texture(self, filename):
         if filename != None:
@@ -539,18 +605,17 @@ class WaterPanel(AppShell):
                 self.seapatch.set_water_color_texture(filename, True)
             self.texture_filename = filename
             self.set_message_bar_text(self.texture_message_bar, filename)
-        return
 
     def update_texture(self):
         if self.texture_filename != None:
             self.set_texture(self.texture_filename)
-        return
 
     def select_texture(self):
         default_directory = base.config.GetString('water-panel-default-texture-path', '.')
-        filename = askopenfilename(initialdir=default_directory, filetypes=[('BMP JPG TIF', 'bmp jpg tif')], title='Select Texture')
+        filename = askopenfilename(initialdir=default_directory, filetypes=[
+            ('BMP JPG TIF', 'bmp jpg tif')], title='Select Texture')
         if not filename:
-            return
+            return None
         else:
             print filename
             self.set_texture(filename)
@@ -566,18 +631,17 @@ class WaterPanel(AppShell):
                 self.seapatch.set_water_alpha_texture(filename, True)
             self.alpha_texture_filename = filename
             self.set_message_bar_text(self.alpha_texture_message_bar, filename)
-        return
 
     def update_alpha_texture(self):
         if self.alpha_texture_filename != None:
             self.set_alpha_texture(self.alpha_texture_filename)
-        return
 
     def select_alpha_texture(self):
         default_directory = base.config.GetString('water-panel-default-texture-path', '.')
-        filename = askopenfilename(initialdir=default_directory, filetypes=[('BMP JPG TIF', 'bmp jpg tif')], title='Select Alpha Texture')
+        filename = askopenfilename(initialdir=default_directory, filetypes=[
+            ('BMP JPG TIF', 'bmp jpg tif')], title='Select Alpha Texture')
         if not filename:
-            return
+            return None
         else:
             print filename
             self.set_alpha_texture(filename)
@@ -590,18 +654,17 @@ class WaterPanel(AppShell):
             self.seapatch.set_shader(filename, True)
             self.shader_filename = filename
             self.set_message_bar_text(self.shader_message_bar, filename)
-        return
 
     def update_shader(self):
         if self.shader_filename != None:
             self.set_shader(self.shader_filename)
-        return
 
     def select_shader(self):
         default_directory = base.config.GetString('water-panel-default-shader-path', '.')
-        filename = askopenfilename(initialdir=default_directory, filetypes=[('CG', 'cg')], title='Select Shader')
+        filename = askopenfilename(initialdir=default_directory, filetypes=[
+            ('CG', 'cg')], title='Select Shader')
         if not filename:
-            return
+            return None
         else:
             print filename
             self.set_shader(filename)
@@ -630,12 +693,13 @@ class WaterPanel(AppShell):
 
     def createFloaters(self, parent, widgetDefinitions):
         widgets = []
-        for category, label, balloonHelp, command, min, resolution in widgetDefinitions:
+        for (category, label, balloonHelp, command, min, resolution) in widgetDefinitions:
             widgets.append(self.createFloater(parent, category, label, balloonHelp, command, min, resolution))
 
         return widgets
 
-    def createFloater(self, parent, category, text, balloonHelp, command=None, min=0.0, resolution=None, numDigits=4, **kw):
+    def createFloater(self, parent, category, text, balloonHelp, command=None, min=0.0, resolution=None, numDigits=4,
+                      **kw):
         kw['text'] = text
         kw['min'] = min
         kw['resolution'] = resolution
@@ -657,7 +721,8 @@ class WaterPanel(AppShell):
         self.widgetDict[category + '-' + text] = widget
         return widget
 
-    def createSlider(self, id, parent, category, text, balloonHelp, command=None, min=0.0, max=1.0, resolution=0.001, default=0.0, **kw):
+    def createSlider(self, id, parent, category, text, balloonHelp, command=None, min=0.0, max=1.0, resolution=0.001,
+                     default=0.0, **kw):
         kw['text'] = text
         kw['min'] = min
         kw['max'] = max
@@ -666,7 +731,8 @@ class WaterPanel(AppShell):
         widget = apply(Slider.Slider, (parent,), kw)
         widget.id = id
         widget['command'] = command
-        widget['commandData'] = [widget]
+        widget['commandData'] = [
+            widget]
         widget.pack(fill=X)
         self.bind(widget, balloonHelp)
         self.widgetDict[category + id.__repr__() + '-' + text] = widget
@@ -674,8 +740,9 @@ class WaterPanel(AppShell):
 
     def createSliders(self, id, parent, widgetDefinitions):
         widgets = []
-        for category, label, balloonHelp, command, min, max, resolution, default in widgetDefinitions:
-            widgets.append(self.createSlider(id, parent, category, label, balloonHelp, command, min, max, resolution, default))
+        for (category, label, balloonHelp, command, min, max, resolution, default) in widgetDefinitions:
+            widgets.append(
+                self.createSlider(id, parent, category, label, balloonHelp, command, min, max, resolution, default))
 
         return widgets
 
@@ -710,7 +777,9 @@ class WaterPanel(AppShell):
         optionVar = StringVar()
         if len(items) > 0:
             optionVar.set(items[0])
-        widget = Pmw.OptionMenu(parent, labelpos=W, label_text=text, label_width=12, menu_tearoff=1, menubutton_textvariable=optionVar, items=items)
+
+        widget = Pmw.OptionMenu(parent, labelpos=W, label_text=text, label_width=12, menu_tearoff=1,
+                                menubutton_textvariable=optionVar, items=items)
         widget['command'] = command
         widget.pack(fill=X)
         self.bind(widget.component('menubutton'), balloonHelp)
@@ -719,9 +788,11 @@ class WaterPanel(AppShell):
         return optionVar
 
     def createComboBox(self, parent, category, text, balloonHelp, items, command, history=0):
-        widget = Pmw.ComboBox(parent, labelpos=W, label_text=text, label_anchor='w', label_width=12, entry_width=16, history=history, scrolledlist_items=items)
+        widget = Pmw.ComboBox(parent, labelpos=W, label_text=text, label_anchor='w', label_width=12, entry_width=16,
+                              history=history, scrolledlist_items=items)
         if len(items) > 0:
             widget.selectitem(items[0])
+
         widget['selectioncommand'] = command
         widget.pack(side='left', expand=0)
         self.bind(widget, balloonHelp)
@@ -738,12 +809,11 @@ class WaterPanel(AppShell):
     def set_message_bar_text(self, message_bar, text):
         if message_bar != None:
             message_bar.message('state', text)
-        return
 
     def create_button_box(self, parent, category, text, balloonHelp, button_list):
         widget = Pmw.ButtonBox(parent, labelpos='nw', label_text=text, frame_borderwidth=2, frame_relief='groove')
         widget.pack(side='top', fill='both', expand=0, padx=0, pady=4)
-        for button_text, function in button_list:
+        for (button_text, function) in button_list:
             widget.add(button_text, command=function)
 
         widget.alignbuttons()
@@ -759,7 +829,6 @@ class WaterPanel(AppShell):
 
 
 class BaseTen:
-
 
     def __init__(self, value):
         original_value = value
