@@ -1112,50 +1112,53 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
                     doId = self.getDoId()
                     if areaIdList.count(doId):
                         areaIdList.remove(doId)
-        else:
-            if WeaponGlobals.getIsDollAttackSkill(skillId):
-                targetId = 0
-                areaIdList = copy.copy(self.stickyTargets)
-                friendlySkill = WeaponGlobals.isFriendlyFire(skillId)
-                toRemove = []
-                for avId in areaIdList:
-                    av = self.cr.doId2do.get(avId)
-                    if av:
-                        if friendlySkill and TeamUtils.damageAllowed(self, av):
-                            toRemove.append(avId)
-                        elif not friendlySkill and not TeamUtils.damageAllowed(self, av):
-                            toRemove.append(avId)
-                    else:
-                        toRemove.append(avId)
 
-                for currToRemove in toRemove:
-                    areaIdList.remove(currToRemove)
-
-            else:
-                if self.currentTarget and WeaponGlobals.getNeedTarget(skillId, ammoSkillId):
-                    targetId = self.currentTarget.getDoId()
-                    areaCenter = self.currentTarget
-                else:
-                    targetId = 0
-                    areaCenter = self
-                areaIdList = self.getAreaList(skillId, ammoSkillId, areaCenter, Point3(*pos), self.doId)
-            skillResult = self.cr.battleMgr.doAttack(self, skillId, ammoSkillId, targetId, areaIdList, Point3(*pos), combo, charge)
-            if skillResult == WeaponGlobals.RESULT_NOT_AVAILABLE and WeaponGlobals.getNeedTarget(skillId, ammoSkillId):
-                messenger.send('skillFinished')
-                return
-            timestamp32 = 0
-            self.sendRequestTargetedSkill(skillId, ammoSkillId, skillResult, targetId, areaIdList, timestamp32, pos, charge)
-            attackerEffects, targetEffects = self.cr.battleMgr.getModifiedSkillEffects(self, self.currentTarget, skillId, ammoSkillId, charge)
-            areaEffects = []
+        elif WeaponGlobals.getIsDollAttackSkill(skillId):
+            targetId = 0
+            areaIdList = copy.copy(self.stickyTargets)
+            friendlySkill = WeaponGlobals.isFriendlyFire(skillId)
+            toRemove = []
             for avId in areaIdList:
-                av = base.cr.doId2do.get(avId)
+                av = self.cr.doId2do.get(avId)
                 if av:
-                    skillTargetEffects = self.cr.battleMgr.getModifiedSkillEffects(self, av, skillId, ammoSkillId, charge)[1]
-                    areaEffects.append(skillTargetEffects)
+                    if friendlySkill and TeamUtils.damageAllowed(self, av):
+                        toRemove.append(avId)
+                    elif not friendlySkill and not TeamUtils.damageAllowed(self, av):
+                        toRemove.append(avId)
+                else:
+                    toRemove.append(avId)
 
-            self.useTargetedSkill(skillId, ammoSkillId, skillResult, targetId, areaIdList, attackerEffects, targetEffects, areaEffects, timestamp32, pos, charge, localSignal=1)
-            if attackerEffects != [0, 0, 0, 0, 0]:
-                self.targetedWeaponHit(skillId, ammoSkillId, WeaponGlobals.RESULT_HIT, attackerEffects, self, pos)
+            for currToRemove in toRemove:
+                areaIdList.remove(currToRemove)
+        else:
+            if self.currentTarget and WeaponGlobals.getNeedTarget(skillId, ammoSkillId):
+                targetId = self.currentTarget.getDoId()
+                areaCenter = self.currentTarget
+            else:
+                targetId = 0
+                areaCenter = self
+
+            areaIdList = self.getAreaList(skillId, ammoSkillId, areaCenter, Point3(*pos), self.doId)
+
+        skillResult = self.cr.battleMgr.doAttack(self, skillId, ammoSkillId, targetId, areaIdList, Point3(*pos), combo, charge)
+
+        if skillResult == WeaponGlobals.RESULT_NOT_AVAILABLE and WeaponGlobals.getNeedTarget(skillId, ammoSkillId):
+            messenger.send('skillFinished')
+            return
+
+        timestamp32 = 0
+        self.sendRequestTargetedSkill(skillId, ammoSkillId, skillResult, targetId, areaIdList, timestamp32, pos, charge)
+        attackerEffects, targetEffects = self.cr.battleMgr.getModifiedSkillEffects(self, self.currentTarget, skillId, ammoSkillId, charge)
+        areaEffects = []
+        for avId in areaIdList:
+            av = base.cr.doId2do.get(avId)
+            if av:
+                skillTargetEffects = self.cr.battleMgr.getModifiedSkillEffects(self, av, skillId, ammoSkillId, charge)[1]
+                areaEffects.append(skillTargetEffects)
+
+        self.useTargetedSkill(skillId, ammoSkillId, skillResult, targetId, areaIdList, attackerEffects, targetEffects, areaEffects, timestamp32, pos, charge, localSignal=1)
+        if attackerEffects != [0, 0, 0, 0, 0]:
+            self.targetedWeaponHit(skillId, ammoSkillId, WeaponGlobals.RESULT_HIT, attackerEffects, self, pos)
 
     def composeRequestShipSkill(self, skillId, ammoSkillId):
         targetId = self.ship.getDoId()
@@ -1326,6 +1329,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             else:
                 self.notify.warning('quest %s: does not contain a dna; is it a rogue quest, given in error?' % currQuest.getQuestId())
                 return
+
             for currTask in questTasks:
                 autoTriggerInfo = currTask.getAutoTriggerInfo()
                 if len(autoTriggerInfo) > 0 and autoTriggerInfo[0] == QuestDB.AUTO_TRIGGER_OBJ_EXISTS:
