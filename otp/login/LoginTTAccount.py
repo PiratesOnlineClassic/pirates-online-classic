@@ -1,15 +1,13 @@
-from otp.login import LoginBase
-from otp.login import TTAccount
-from direct.directnotify import DirectNotifyGlobal
+from pandac.PandaModules import *
 from direct.distributed.MsgTypes import *
+from direct.directnotify import DirectNotifyGlobal
+import LoginBase
+import TTAccount
 from direct.distributed.PyDatagram import PyDatagram
-from panda3d.core import *
-
 
 class LoginTTAccount(LoginBase.LoginBase, TTAccount.TTAccount):
-
     notify = DirectNotifyGlobal.directNotify.newCategory('LoginTTAcct')
-
+    
     def __init__(self, cr):
         LoginBase.LoginBase.__init__(self, cr)
         TTAccount.TTAccount.__init__(self, cr)
@@ -49,6 +47,8 @@ class LoginTTAccount(LoginBase.LoginBase, TTAccount.TTAccount):
 
     def getErrorCode(self):
         return self.response.getInt('errorCode', 0)
-
+    
     def needToSetParentPassword(self):
         return self.response.getBool('secretsPasswordNotSet', 0)
+
+
