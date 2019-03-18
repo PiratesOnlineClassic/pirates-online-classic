@@ -61,7 +61,7 @@ class QuestMenuGUI(DirectFrame):
             self.questButtons.append(questButton)
         
         z -= 0.155
-        questButton = DirectButton(parent = self, relief = None, pressEffect = 0, text = PLocalizer.lBack, text_fg = PiratesGuiGlobals.TextFG1, text_shadow = PiratesGuiGlobals.TextShadow, text_align = TextNode.ACenter, text_scale = PiratesGuiGlobals.TextScaleLarge, text_pos = (0, 0.033000000000000002), textMayChange = 0, image = (bottomPanel, bottomPanel, bottomPanelOver, bottomPanel), image_scale = 0.40000000000000002, pos = (0, 0, z), command = self.callback, extraArgs = [
+        questButton = DirectButton(parent = self, relief = None, pressEffect = 0, text = PLocalizer.lBack, text_fg = PiratesGuiGlobals.TextFG1, text_shadow = PiratesGuiGlobals.TextShadow, text_align = TextNode.ACenter, text_scale = PiratesGuiGlobals.TextScaleLarge, text_pos = (0, 0.033), textMayChange = 0, image = (bottomPanel, bottomPanel, bottomPanelOver, bottomPanel), image_scale = 0.4, pos = (0, 0, z), command = self.callback, extraArgs = [
             QuestConstants.CANCEL_QUEST])
         self.questButtons.append(questButton)
         gui.removeNode()

@@ -753,7 +753,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
         return Sequence(Func(localAvatar.guiMgr.radarGui.addRadarObjectAtLoc, pos, objectType, targetObjId, teamId), Func(localAvatar.guiMgr.radarGui.flashRadarObject, targetObjId), fadeInFunc)
 
     def parseDemoCompassIconHide(self, line):
-        return Sequence(Func(localAvatar.guiMgr.radarGui.removeRadarObject, localAvatar.doId, True), Func(localAvatar.guiMgr.radarGui.removeRadarObject, self.npc.doId, True), Func(localAvatar.guiMgr.radarGui.removeRadarObject, 'enemy', True), Func(localAvatar.guiMgr.radarGui.removeRadarObject, 'friend', True), Func(localAvatar.guiMgr.radarGui.setPos, -0.40000000000000002, 0, -0.40000000000000002))
+        return Sequence(Func(localAvatar.guiMgr.radarGui.removeRadarObject, localAvatar.doId, True), Func(localAvatar.guiMgr.radarGui.removeRadarObject, self.npc.doId, True), Func(localAvatar.guiMgr.radarGui.removeRadarObject, 'enemy', True), Func(localAvatar.guiMgr.radarGui.removeRadarObject, 'friend', True), Func(localAvatar.guiMgr.radarGui.setPos, -0.4, 0, -0.4))
 
     def parseToggleCompass(self, line):
         receive = False

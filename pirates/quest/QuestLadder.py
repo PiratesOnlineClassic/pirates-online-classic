@@ -522,7 +522,7 @@ class QuestChoice(QuestContainer):
             self.completeCountVerified = True
 
     def getProgress(self, showComplete = False):
-        self._QuestChoice__verifyCompleteCount()
+        self.__verifyCompleteCount()
         compCont = 0
         history = []
         if self.av:

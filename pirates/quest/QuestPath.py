@@ -386,10 +386,10 @@ class QuestPath:
             else:
                 finalPath = []
                 needToStore = True
-            if needToStore and self.doId in finalPath:
-                self._storeQuestStep(finalPath, questDestUid, questDest)
-            if not finalPath:
-                self._storeQuestStep(finalPath, questDestUid, questStep=QuestStep.getNullStep())
+        if needToStore and self.doId in finalPath:
+            self._storeQuestStep(finalPath, questDestUid, questDest)
+        if not finalPath:
+            self._storeQuestStep(finalPath, questDestUid, questStep=QuestStep.getNullStep())
         return finalPath
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
