@@ -1,11 +1,10 @@
-from panda3d.core import *
+from pandac.PandaModules import *
 from otp.otpbase import OTPGlobals
 from pirates.shader.Blur import *
 
-
 class Hdr:
-
-    def __init__(self, display_width=1024, display_height=1024, glow=1, glow_glitter=1, dynamic_exposure=1):
+    
+    def __init__(self, display_width = 1024, display_height = 1024, glow = 1, glow_glitter = 1, dynamic_exposure = 1):
         base.hdr = None
         base.main_rtt = None
         self.success = 0
@@ -17,6 +16,7 @@ class Hdr:
                 if base.win and base.win.getGsg() and base.win.getGsg().getShaderModel() >= GraphicsStateGuardian.SM20:
                     if base.options.hdr:
                         enable = enable_post_processing
+
         attrib = DepthTestAttrib.make(RenderAttrib.MLessEqual)
         render.setAttrib(attrib)
         width = display_width
@@ -29,7 +29,7 @@ class Hdr:
                 activeDisplayRegion = dr
                 order = 50
                 format = 0
-
+                
                 def createCallback():
                     camera = base.cam
                     camera_parent = camera.getParent()
@@ -51,17 +51,19 @@ class Hdr:
 
                 dependency_array = DependencyArray(createCallback)
                 base.dependency_array = dependency_array
-                main_rtt = RenderToTexture('main', width, height, order, format, dependency_array=dependency_array)
+                main_rtt = RenderToTexture('main', width, height, order, format, dependency_array = dependency_array)
                 base.main_rtt = main_rtt
                 mbuffer = main_rtt.getTextureBuffer()
                 if mbuffer:
                     dependency_array.enable(True)
                     dependency_array.checkDependencies()
+                
                 if base.main_rtt.created:
                     dr.setActive(0)
                 else:
                     base.main_rtt.delete()
                     base.main_rtt = None
+
         source_rtt = base.main_rtt
         if source_rtt:
             base.glow = None
@@ -70,12 +72,13 @@ class Hdr:
                 camera = base.cam
                 add = 0
                 order = 51
-                base.glow = Glow(width, height, source_rtt, scene, camera, add=add, order=order, glitter=glow_glitter)
+                base.glow = Glow(width, height, source_rtt, scene, camera, add = add, order = order, glitter = glow_glitter)
                 if base.glow.success:
                     pass
                 else:
                     base.glow.delete()
                     base.glow = None
+            
             if base.post_processing:
                 width = 512
                 height = 512
@@ -90,11 +93,13 @@ class Hdr:
                 if base.glow:
                     add_glow = 1
                     glow_rtt = base.glow.glow_rtt
+                
                 if base.main_rtt:
-                    base.hdr = Blur(width, height, source_rtt, luminance=luminance, add=add, order=order, hdr=hdr, hdr_output=hdr_output, add_glow=add_glow, glow_rtt=glow_rtt, average=average)
+                    base.hdr = Blur(width, height, source_rtt, luminance = luminance, add = add, order = order, hdr = hdr, hdr_output = hdr_output, add_glow = add_glow, glow_rtt = glow_rtt, average = average)
                     if base.hdr.success:
                         if base.glow:
                             base.glow.hdr = base.hdr
+                        
                         self.success = 1
                         c = 0.58
                         NametagGlobals.setBalloonModulationColor(VBase4(c, c, c, 1.0))
@@ -102,13 +107,18 @@ class Hdr:
                         if base.glow:
                             base.glow.delete()
                             base.glow = None
+
                         base.hdr.delete()
                         base.hdr = None
                         base.main_rtt.delete()
                         base.main_rtt = None
                         if activeDisplayRegion:
                             activeDisplayRegion.setActive(1)
-        else:
-            if base.post_processing:
-                if activeDisplayRegion:
-                    activeDisplayRegion.setActive(1)
+
+        elif base.post_processing:
+            if activeDisplayRegion:
+                activeDisplayRegion.setActive(1)
+            
+        
+
+
