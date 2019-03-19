@@ -1,13 +1,11 @@
-import random
-
+from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from EffectController import EffectController
-from pandac.PandaModules import *
 from PooledEffect import PooledEffect
-
+import random
 
 class SoulSpiral(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -42,14 +40,18 @@ class SoulSpiral(PooledEffect, EffectController):
         self.effectModel2.setTexOffset(textureStage, 0.0, 1.0)
         duration = 1.5
         self.setColorScale(1.0, 1.0, 1.0, 0.75)
-        fadeOut = LerpColorScaleInterval(self, 0.5, Vec4(0.0, 0.0, 0.0, 0.0), startColorScale=Vec4(1.0, 1.0, 1.0, 0.75))
-        uvScrollA = LerpFunctionInterval(self.setNewUVs, duration, toData=-2.5, fromData=1.0, extraArgs=[self.effectModel2, textureStage])
-        uvScrollB = LerpFunctionInterval(self.setNewUVs, duration, toData=-2.5, fromData=1.0, extraArgs=[self.effectModel, textureStage])
-        rotate = LerpHprInterval(self.effectModel, 1.5 * duration, Vec3(360, 0, 0), startHpr=Vec3(0, 0, 0))
+        fadeOut = LerpColorScaleInterval(self, 0.5, Vec4(0.0, 0.0, 0.0, 0.0), startColorScale = Vec4(1.0, 1.0, 1.0, 0.75))
+        uvScrollA = LerpFunctionInterval(self.setNewUVs, duration, toData = -2.5, fromData = 1.0, extraArgs = [
+            self.effectModel2,
+            textureStage])
+        uvScrollB = LerpFunctionInterval(self.setNewUVs, duration, toData = -2.5, fromData = 1.0, extraArgs = [
+            self.effectModel,
+            textureStage])
+        rotate = LerpHprInterval(self.effectModel, 1.5 * duration, Vec3(360, 0, 0), startHpr = Vec3(0, 0, 0))
         self.startEffect = Sequence(Func(rotate.loop), Func(uvScrollA.loop), Wait(duration / 2.0), Func(uvScrollB.loop))
         self.endEffect = Sequence(fadeOut, Func(uvScrollA.finish), Func(uvScrollB.finish), Func(rotate.finish), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(duration), self.endEffect)
-
+    
     def setNewUVs(self, offset, part, ts):
         part.setTexOffset(ts, 0.0, offset)
 
@@ -57,7 +59,7 @@ class SoulSpiral(PooledEffect, EffectController):
         self.effectColor = color + Vec4(0.7, 0.7, 0.7, 1.0)
         self.effectModel.setColorScale(self.effectColor)
         self.effectModel2.setColorScale(self.effectColor)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
@@ -67,7 +69,9 @@ class SoulSpiral(PooledEffect, EffectController):
         self.stop()
         if self.track:
             self.track = None
+        
         self.removeNode()
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-        return
+
+

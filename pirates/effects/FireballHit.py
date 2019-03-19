@@ -1,15 +1,15 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class FireballHit(PooledEffect, EffectController):
     cardScale = 128.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -21,6 +21,7 @@ class FireballHit(PooledEffect, EffectController):
             FireballHit.particleDummy.setDepthWrite(0)
             FireballHit.particleDummy.setLightOff()
             FireballHit.particleDummy.setColorScaleOff()
+        
         self.f = ParticleEffect.ParticleEffect('FireballHit')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -78,3 +79,5 @@ class FireballHit(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

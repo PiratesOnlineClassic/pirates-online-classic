@@ -1,21 +1,22 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from pirates.piratesgui.GameOptions import Options
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class SteamCloud(PooledEffect, EffectController):
     cardScale = 64.0
-
-    def __init__(self, parent=None):
+    
+    def __init__(self, parent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if parent is not None:
             self.reparentTo(parent)
+        
         self.setDepthWrite(0)
         self.setLightOff()
         self.setBin('fixed', 120)
@@ -65,18 +66,19 @@ class SteamCloud(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setMinBound(Point2(-15.0, -1.0))
         self.p0.emitter.setMaxBound(Point2(15.0, 1.0))
-        return
 
-    def createTrack(self, lod=Options.SpecialEffectsHigh):
+    def createTrack(self, lod = Options.SpecialEffectsHigh):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.75), Func(self.p0.clearToInitial), Func(self.f.start, self, self), Func(self.f.reparentTo, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 0.0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool and self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

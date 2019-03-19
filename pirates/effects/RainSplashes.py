@@ -1,15 +1,14 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
-
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from EffectController import EffectController
+import random
 
 class RainSplashes(EffectController, NodePath):
     cardScale = 32.0
-
-    def __init__(self, reference=None):
+    
+    def __init__(self, reference = None):
         NodePath.__init__(self, 'RainSplashes')
         EffectController.__init__(self)
         model = loader.loadModel('models/effects/particleCards')
@@ -23,6 +22,7 @@ class RainSplashes(EffectController, NodePath):
             mask = 16777215
             stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
             RainSplashes.particleDummy.setAttrib(stencil)
+        
         self.reference = reference
         self.f = ParticleEffect.ParticleEffect('RainSplashes')
         self.f.reparentTo(self)
@@ -74,7 +74,7 @@ class RainSplashes(EffectController, NodePath):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(posUpdate.loop))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(1.0), Func(posUpdate.finish), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
-
+    
     def updatePos(self, t):
         if self.reference:
             pos = self.reference.getPos(self.getParent())
@@ -85,3 +85,5 @@ class RainSplashes(EffectController, NodePath):
 
     def destroy(self):
         EffectController.destroy(self)
+
+

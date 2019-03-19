@@ -1,16 +1,14 @@
+from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from pirates.piratesbase import PiratesGlobals
+from EffectController import EffectController
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
-from EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.piratesbase import PiratesGlobals
-
-
 class CandleFlame(EffectController, NodePath):
-
-    def __init__(self, newParent=render, billboardOffset=1.0):
+    
+    def __init__(self, newParent = render, billboardOffset = 1.0):
         NodePath.__init__(self, 'CandleFlame')
         EffectController.__init__(self)
         self.newParent = newParent
@@ -35,7 +33,6 @@ class CandleFlame(EffectController, NodePath):
         self.glowHalo.setColorScale(1.0, 1.0, 1.0, 1)
         self.glowHalo.setPos(0, 0, 0.15)
         self.glowHalo.reparentTo(self)
-        return
 
     def createTrack(self):
         baseScale = Vec3(1.1, 1.1, 1.1)
@@ -43,29 +40,29 @@ class CandleFlame(EffectController, NodePath):
         randomness1 = random.random() / 10
         randomness2 = random.random() / 10
         randomness3 = random.random() / 10
-        scaleUp1 = self.glow.scaleInterval(0.1 + randomness1, endScale, startScale=baseScale, blendType='easeInOut')
-        scaleDown1 = self.glow.scaleInterval(0.1 + randomness1, baseScale, startScale=endScale, blendType='easeInOut')
-        scaleUp2 = self.glow.scaleInterval(0.1 + randomness2, endScale, startScale=baseScale, blendType='easeInOut')
-        scaleDown2 = self.glow.scaleInterval(0.1 + randomness2, baseScale, startScale=endScale, blendType='easeInOut')
-        scaleUp3 = self.glow.scaleInterval(0.1 + randomness3, endScale, startScale=baseScale, blendType='easeInOut')
-        scaleDown3 = self.glow.scaleInterval(0.1 + randomness3, baseScale, startScale=endScale, blendType='easeInOut')
+        scaleUp1 = self.glow.scaleInterval(0.1 + randomness1, endScale, startScale = baseScale, blendType = 'easeInOut')
+        scaleDown1 = self.glow.scaleInterval(0.1 + randomness1, baseScale, startScale = endScale, blendType = 'easeInOut')
+        scaleUp2 = self.glow.scaleInterval(0.1 + randomness2, endScale, startScale = baseScale, blendType = 'easeInOut')
+        scaleDown2 = self.glow.scaleInterval(0.1 + randomness2, baseScale, startScale = endScale, blendType = 'easeInOut')
+        scaleUp3 = self.glow.scaleInterval(0.1 + randomness3, endScale, startScale = baseScale, blendType = 'easeInOut')
+        scaleDown3 = self.glow.scaleInterval(0.1 + randomness3, baseScale, startScale = endScale, blendType = 'easeInOut')
         self.track = Sequence(scaleUp1, scaleDown1, scaleUp2, scaleDown2, scaleUp3, scaleDown3)
         randomness = random.random() / 20
-        scaleUpHalo = self.glowHalo.scaleInterval(0.1 + randomness, 2.0, startScale=2.2, blendType='easeInOut')
-        scaleDownHalo = self.glowHalo.scaleInterval(0.1 + randomness, 2.2, startScale=2.0, blendType='easeInOut')
+        scaleUpHalo = self.glowHalo.scaleInterval(0.1 + randomness, 2.0, startScale = 2.2, blendType = 'easeInOut')
+        scaleDownHalo = self.glowHalo.scaleInterval(0.1 + randomness, 2.2, startScale = 2.0, blendType = 'easeInOut')
         self.haloTrack = Sequence(scaleUpHalo, scaleDownHalo)
         self.reparentTo(self.newParent)
 
-    def play(self, rate=1):
+    def play(self, rate = 1):
         EffectController.play(self)
         self.haloTrack.start()
-
-    def startLoop(self, rate=1):
+    
+    def startLoop(self, rate = 1):
         self.createTrack()
         self.track.loop()
         self.haloTrack.loop()
 
-    def stopLoop(self, rate=1):
+    def stopLoop(self, rate = 1):
         self.track.finish()
         self.haloTrack.finish()
 
@@ -79,4 +76,6 @@ class CandleFlame(EffectController, NodePath):
         if self.haloTrack:
             self.haloTrack.finish()
             self.haloTrack = None
-        return
+        
+
+

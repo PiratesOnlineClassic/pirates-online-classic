@@ -1,15 +1,15 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+import random
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class Pestilence(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -19,6 +19,7 @@ class Pestilence(PooledEffect, EffectController):
         if not Pestilence.particleDummy:
             Pestilence.particleDummy = render.attachNewNode(ModelNode('PestilenceParticleDummy'))
             Pestilence.particleDummy.setDepthWrite(0)
+        
         self.f = ParticleEffect.ParticleEffect('Pestilence')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -78,7 +79,7 @@ class Pestilence(PooledEffect, EffectController):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(1.5), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
-
+    
     def cleanUpEffect(self):
         self.f.disable()
         self.detachNode()
@@ -88,3 +89,5 @@ class Pestilence(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

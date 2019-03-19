@@ -1,22 +1,23 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+import random
 from pirates.piratesgui.GameOptions import Options
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class LightSmoke(PooledEffect, EffectController):
     cardScale = 64.0
-
-    def __init__(self, parent=None):
+    
+    def __init__(self, parent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if parent is not None:
             self.reparentTo(parent)
+        
         self._accelerateTime = 0
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleGunSmoke')
@@ -25,6 +26,7 @@ class LightSmoke(PooledEffect, EffectController):
             LightSmoke.particleDummy.setDepthWrite(0)
             LightSmoke.particleDummy.setLightOff()
             LightSmoke.particleDummy.setColorScaleOff()
+        
         self.duration = 10.0
         self.f = ParticleEffect.ParticleEffect('LightSmoke')
         self.f.reparentTo(self)
@@ -73,16 +75,16 @@ class LightSmoke(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 1.0))
         self.p0.emitter.setRadius(4.0)
-        return
 
-    def startLoop(self, lod=None, accelerateTime=0):
+    def startLoop(self, lod = None, accelerateTime = 0):
         self._accelerateTime = accelerateTime
         EffectController.startLoop(self, lod)
 
-    def createTrack(self, lod=Options.SpecialEffectsHigh):
+    def createTrack(self, lod = Options.SpecialEffectsHigh):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.2), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
         if self._accelerateTime > 0:
             self.startEffect.append(Func(self.accelerate, self._accelerateTime))
+        
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(6.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(self.duration), self.endEffect)
 
@@ -97,3 +99,5 @@ class LightSmoke(PooledEffect, EffectController):
 
     def accelerate(self, time):
         self.p0.accelerate(time, 1, 0.05)
+
+

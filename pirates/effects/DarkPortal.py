@@ -1,13 +1,11 @@
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.interval.IntervalGlobal import *
-from EffectController import EffectController
-from pandac.PandaModules import *
-from PooledEffect import PooledEffect
-
-
 class DarkPortal(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -25,12 +23,12 @@ class DarkPortal(PooledEffect, EffectController):
         self.explosion.setBin('shadow', 0)
         self.explosion.setTransparency(TransparencyAttrib.MAlpha)
         self.explosion.setDepthWrite(0)
-
-    def createTrack(self, rate=1):
+    
+    def createTrack(self, rate = 1):
         self.explosion.setScale(1)
         self.explosion.setColorScale(1, 1, 1, 0.75)
-        scaleUp = self.explosion.scaleInterval(self.speed, self.size, startScale=0.0, blendType='easeIn', other=render)
-        scaleDown = self.explosion.scaleInterval(self.speed, 0.0, startScale=self.size, blendType='easeIn', other=render)
+        scaleUp = self.explosion.scaleInterval(self.speed, self.size, startScale = 0.0, blendType = 'easeIn', other = render)
+        scaleDown = self.explosion.scaleInterval(self.speed, 0.0, startScale = self.size, blendType = 'easeIn', other = render)
         self.track = Sequence(Func(self.show), scaleUp, Wait(self.holdTime), scaleDown, Func(self.hide), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
@@ -41,3 +39,5 @@ class DarkPortal(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

@@ -1,17 +1,28 @@
-import random
-
+from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects.SparksTrailLong import SparksTrailLong
 from PooledEffect import PooledEffect
-
+from pirates.effects.SparksTrailLong import SparksTrailLong
+import random
 
 class TrailExplosion(PooledEffect, EffectController):
     trailsVel = [
-     [
-      Vec3(150, -50, 100), Vec3(-150, -50, 100), Vec3(0, 150, 100)], [Vec3(120, 120, 100), Vec3(120, -120, 100), Vec3(-120, 120, 100), Vec3(-120, -120, 100)], [Vec3(0, 150, 100), Vec3(140, 30, 100), Vec3(-140, 30, 100), Vec3(30, -60, 100), Vec3(-30, -60, 100)]]
-
+        [
+            Vec3(150, -50, 100),
+            Vec3(-150, -50, 100),
+            Vec3(0, 150, 100)],
+        [
+            Vec3(120, 120, 100),
+            Vec3(120, -120, 100),
+            Vec3(-120, 120, 100),
+            Vec3(-120, -120, 100)],
+        [
+            Vec3(0, 150, 100),
+            Vec3(140, 30, 100),
+            Vec3(-140, 30, 100),
+            Vec3(30, -60, 100),
+            Vec3(-30, -60, 100)]]
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -29,6 +40,7 @@ class TrailExplosion(PooledEffect, EffectController):
         vels = None
         if self.numTrails >= 3 and self.numTrails <= 5:
             vels = self.trailsVel[self.numTrails - 3]
+        
         for i in range(self.numTrails):
             self.trails.append(self.attachNewNode('trail'))
             vel = Vec3(0, 0, 0)
@@ -38,7 +50,7 @@ class TrailExplosion(PooledEffect, EffectController):
                 vel = Vec3(random.randint(-200, 200), random.randint(-200, 200), random.randint(80, 150))
             vel *= self.effectScale
             dur = 2.0 + random.random() / 4.0
-            self.trailIval.append(ProjectileInterval(self.trails[i], startVel=vel, duration=dur, gravityMult=2.0))
+            self.trailIval.append(ProjectileInterval(self.trails[i], startVel = vel, duration = dur, gravityMult = 2.0))
             self.trailEffects.append(SparksTrailLong.getEffect())
             if self.trailEffects[i]:
                 self.trailEffects[i].reparentTo(self.trails[i])
@@ -48,25 +60,25 @@ class TrailExplosion(PooledEffect, EffectController):
                 self.trailIval.append(Sequence(Func(self.trailEffects[i].startLoop), Wait(dur), Func(self.trailEffects[i].stopLoop)))
 
         self.track = Sequence(self.trailIval, Func(self.cleanUpEffect))
-        return
-
+    
     def setEffectScale(self, scale):
         self.effectScale = scale
-
+    
     def setEffectColor(self, color):
         self.effectColor = color
-
+    
     def cleanUpEffect(self):
         for effect in self.trailEffects:
             if effect:
                 effect.stopLoop()
                 effect = None
-
+        
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-        return
 
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

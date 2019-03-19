@@ -1,13 +1,11 @@
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.interval.IntervalGlobal import *
-from EffectController import EffectController
-from pandac.PandaModules import *
-from PooledEffect import PooledEffect
-
-
 class DomeExplosion(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -22,12 +20,12 @@ class DomeExplosion(PooledEffect, EffectController):
         self.explosion.setDepthWrite(0)
         self.hide()
 
-    def createTrack(self, rate=1):
+    def createTrack(self, rate = 1):
         self.explosion.setScale(1)
         self.explosion.setColorScale(0, 0, 0, 0.65)
         fadeBlast = self.explosion.colorScaleInterval(self.speed * 0.5, Vec4(0, 0, 0, 0))
         waitFade = Sequence(Wait(self.speed * 0.5), fadeBlast)
-        scaleUp = self.explosion.scaleInterval(self.speed, self.size, startScale=0.0, blendType='easeIn', other=render)
+        scaleUp = self.explosion.scaleInterval(self.speed, self.size, startScale = 0.0, blendType = 'easeIn', other = render)
         self.track = Sequence(Func(self.show), Parallel(scaleUp, waitFade), Func(self.hide), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
@@ -38,3 +36,5 @@ class DomeExplosion(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

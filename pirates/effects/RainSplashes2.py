@@ -1,15 +1,14 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
-
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from EffectController import EffectController
+import random
 
 class RainSplashes2(EffectController, NodePath):
     cardScale = 64.0
-
-    def __init__(self, reference=None):
+    
+    def __init__(self, reference = None):
         NodePath.__init__(self, 'RainSplashes2')
         EffectController.__init__(self)
         model = loader.loadModel('models/effects/particleCards')
@@ -23,6 +22,7 @@ class RainSplashes2(EffectController, NodePath):
             mask = 16777215
             stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
             RainSplashes2.particleDummy.setAttrib(stencil)
+        
         self.reference = reference
         self.f = ParticleEffect.ParticleEffect('RainSplashes2')
         self.f.reparentTo(self)
@@ -82,6 +82,8 @@ class RainSplashes2(EffectController, NodePath):
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
+
+

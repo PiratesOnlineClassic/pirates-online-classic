@@ -1,19 +1,17 @@
+from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.showbase.PythonUtil import *
+from pirates.piratesbase import PiratesGlobals
+from pirates.effects import PolyTrail
+from PooledEffect import PooledEffect
+from EffectController import EffectController
+from direct.showbase import PythonUtil
+from direct.task import Task
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.showbase import PythonUtil
-from direct.showbase.DirectObject import *
-from direct.showbase.PythonUtil import *
-from direct.task import Task
-from EffectController import EffectController
-from pandac.PandaModules import *
-from pirates.effects import PolyTrail
-from pirates.piratesbase import PiratesGlobals
-from PooledEffect import PooledEffect
-
-
 class HomingMissile(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -23,19 +21,22 @@ class HomingMissile(PooledEffect, EffectController):
         self.duration = 3.0
         self.wantTrail = 1
         self.particleEffect = None
-        self.motion_color = [Vec4(0.5, 0.6, 0.8, 1.0), Vec4(0.5, 0.6, 0.8, 1.0)]
+        self.motion_color = [
+            Vec4(0.5, 0.6, 0.8, 1.0),
+            Vec4(0.5, 0.6, 0.8, 1.0)]
         vertex_list = [
-         Vec4(0.0, 1.0, 0.0, 1.0), Vec4(0.0, -1.0, 0.0, 1.0)]
+            Vec4(0.0, 1.0, 0.0, 1.0),
+            Vec4(0.0, -1.0, 0.0, 1.0)]
         self.motion_trail = PolyTrail.PolyTrail(None, vertex_list, self.motion_color, 1.5)
         self.motion_trail.reparentTo(self)
         vertex_list = [
-         Vec4(1.0, 0.0, 0.0, 1.0), Vec4(-1.0, 0.0, 0.0, 1.0)]
+            Vec4(1.0, 0.0, 0.0, 1.0),
+            Vec4(-1.0, 0.0, 0.0, 1.0)]
         self.motion_trail2 = PolyTrail.PolyTrail(None, vertex_list, self.motion_color, 1.5)
         self.motion_trail2.reparentTo(self)
         self.motion_trail.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha))
         self.motion_trail2.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingColor, ColorBlendAttrib.OOneMinusIncomingAlpha))
-        return
-
+    
     def createTrack(self):
         self.timeLeft = self.duration
         self.startEffect = Sequence()
@@ -47,10 +48,12 @@ class HomingMissile(PooledEffect, EffectController):
             self.endEffect.append(Func(self.motion_trail2.endTrail))
             self.motion_trail.setVertexColors(self.motion_color)
             self.motion_trail2.setVertexColors(self.motion_color)
+        
         if self.particleEffect:
             self.particleEffect.reparentTo(self)
             self.startEffect.append(Func(self.particleEffect.startLoop))
             self.endEffect.append(Func(self.particleEffect.stopLoop))
+        
         self.startEffect.append(Func(taskMgr.add, self.__moveMissile, PythonUtil.uniqueName('homingMissileTask')))
         self.endEffect.append(Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(self.duration * 0.99), self.endEffect)
@@ -62,17 +65,19 @@ class HomingMissile(PooledEffect, EffectController):
         timeChange -= self.timeLeft
         if self.timeLeft <= 0.0:
             return Task.done
+        
         self.initialVelocity *= self.timeLeft / self.duration
         dist = currDistance * timeChange / self.timeLeft
         self.lookAt(self.target.getPos(render) + self.targetOffset)
         self.setPos(self, self.initialVelocity)
         self.setY(self, dist)
         return Task.cont
-
+    
     def cleanUpEffect(self):
         if self.wantTrail:
             self.motion_trail.endTrail()
             self.motion_trail2.endTrail()
+        
         taskMgr.remove(PythonUtil.uniqueName('homingMissileTask'))
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
@@ -84,3 +89,5 @@ class HomingMissile(PooledEffect, EffectController):
         taskMgr.remove(PythonUtil.uniqueName('homingMissileTask'))
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

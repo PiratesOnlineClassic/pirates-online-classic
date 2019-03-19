@@ -1,13 +1,11 @@
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.interval.IntervalGlobal import *
-from EffectController import EffectController
-from pandac.PandaModules import *
-from PooledEffect import PooledEffect
-
-
 class ShockwaveHit(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -27,9 +25,8 @@ class ShockwaveHit(PooledEffect, EffectController):
         self.explosion.reparentTo(self)
         self.explosion.hide()
         self.card = loader.loadModelCopy('models/effects/shockwaves')
-        return
 
-    def loadExplosion(self, hpr, type='Hit'):
+    def loadExplosion(self, hpr, type = 'Hit'):
         if self.currentType != type:
             self.currentType = type
             if type == 'Hit':
@@ -44,15 +41,17 @@ class ShockwaveHit(PooledEffect, EffectController):
             elif type == 'HitRay':
                 tex = self.card.find('**/effectFlashRays').findTexture('*')
                 self.explosion.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
+            
             self.explosion.setTexture(tex, 1)
+        
         self.explosion.setHpr(hpr)
 
     def createTrack(self):
         self.explosion.setScale(1)
         self.explosion.setColorScale(1, 1, 1, 1)
-        fadeBlast = self.explosion.colorScaleInterval(self.speed * 0.66, Vec4(0, 0, 0, 0), startColorScale=Vec4(1, 1, 1, 1))
+        fadeBlast = self.explosion.colorScaleInterval(self.speed * 0.66, Vec4(0, 0, 0, 0), startColorScale = Vec4(1, 1, 1, 1))
         waitFade = Sequence(Wait(self.speed * 0.33), fadeBlast)
-        scaleBlast = self.explosion.scaleInterval(self.speed, self.size, blendType='easeIn')
+        scaleBlast = self.explosion.scaleInterval(self.speed, self.size, blendType = 'easeIn')
         self.track = Sequence(Func(self.explosion.show), Parallel(scaleBlast, waitFade), Func(self.explosion.hide), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
@@ -64,6 +63,8 @@ class ShockwaveHit(PooledEffect, EffectController):
         if self.card:
             self.card.removeNode()
             self.card = None
+        
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-        return
+
+

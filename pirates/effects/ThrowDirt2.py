@@ -1,26 +1,28 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class ThrowDirt2(PooledEffect, EffectController):
     cardScale = 128.0
-
-    def __init__(self, parent=None):
+    
+    def __init__(self, parent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if parent is not None:
             self.reparentTo(parent)
+        
         if not self.particleDummy:
             self.particleDummy = render.attachNewNode(ModelNode('ThrowDirtParticleDummy'))
             self.particleDummy.setDepthWrite(0)
             self.particleDummy.setLightOff()
             self.particleDummy.setColorScaleOff()
             self.particleDummy.setFogOff()
+        
         self.f = ParticleEffect.ParticleEffect('ThrowDirt2')
         self.f.reparentTo(self)
         model = loader.loadModel('models/effects/particleMaps')
@@ -69,10 +71,9 @@ class ThrowDirt2(PooledEffect, EffectController):
         self.p0.emitter.setOffsetForce(Vec3(-3.0, 1.0, 4.0))
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
-        self.p0.emitter.setMinBound(Point2(-0.25, -0.25))
+        self.p0.emitter.setMinBound(Point2(-.25, -.25))
         self.p0.emitter.setMaxBound(Point2(0.25, 0.25))
-        return
-
+    
     def createTrack(self):
         self.startEffect = Sequence(Wait(0.65), Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
         self.endEffect = Sequence(Func(self.destroy))
@@ -86,3 +87,5 @@ class ThrowDirt2(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

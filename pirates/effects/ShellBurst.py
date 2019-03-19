@@ -1,12 +1,13 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
 
-
 class ShellBurst(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -62,23 +63,25 @@ class ShellBurst(PooledEffect, EffectController):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.1), Func(self.p0.clearToInitial), Func(self.f.start, self, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(0.2), self.endEffect)
-
+    
     def setEffectScale(self, scale):
         self.effectScale = scale
         self.p0.renderer.setInitialXScale(2.7 * self.cardScale * scale)
         self.p0.renderer.setFinalXScale(3.5 * self.cardScale * scale)
         self.p0.renderer.setInitialYScale(2.7 * self.cardScale * scale)
         self.p0.renderer.setFinalYScale(3.5 * self.cardScale * scale)
-
+    
     def setEffectColor(self, color):
         self.effectColor = color
         self.p0.renderer.setColor(self.effectColor)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

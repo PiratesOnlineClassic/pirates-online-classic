@@ -1,26 +1,28 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from pirates.piratesgui.GameOptions import Options
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class WaterSplash(PooledEffect, EffectController):
     card2Scale = 64.0
     cardScale = 64.0
-
-    def __init__(self, parent=None):
+    
+    def __init__(self, parent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if parent is not None:
             self.reparentTo(parent)
+        
         if not WaterSplash.particleDummy:
             WaterSplash.particleDummy = render.attachNewNode(ModelNode('WaterSplashParticleDummy'))
             WaterSplash.particleDummy.setDepthWrite(0)
             WaterSplash.particleDummy.setLightOff()
+        
         self.f = ParticleEffect.ParticleEffect('WaterSplash')
         self.f.reparentTo(self)
         model = loader.loadModel('models/effects/particleMaps')
@@ -70,7 +72,7 @@ class WaterSplash(PooledEffect, EffectController):
         self.p0.emitter.setOffsetForce(Vec3(0.0, -2.0, 5.0))
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
-        self.p0.emitter.setMinBound(Point2(-5.0, -0.25))
+        self.p0.emitter.setMinBound(Point2(-5.0, -.25))
         self.p0.emitter.setMaxBound(Point2(5.0, 0.25))
         self.p1.setPoolSize(12)
         self.p1.setBirthRate(0.02)
@@ -108,9 +110,8 @@ class WaterSplash(PooledEffect, EffectController):
         self.p1.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p1.emitter.setMinBound(Point2(-5.0, -0.25))
         self.p1.emitter.setMaxBound(Point2(5.0, 0.25))
-        return
 
-    def createTrack(self, lod=Options.SpecialEffectsHigh):
+    def createTrack(self, lod = Options.SpecialEffectsHigh):
         if lod >= Options.SpecialEffectsHigh:
             self.p0.setPoolSize(10)
         else:
@@ -120,7 +121,7 @@ class WaterSplash(PooledEffect, EffectController):
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
     def playSoundFX(self):
-        base.playSfx(self.waterfallSfx, volume=1, looping=1, node=self)
+        base.playSfx(self.waterfallSfx, volume = 1, looping = 1, node = self)
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -130,3 +131,5 @@ class WaterSplash(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

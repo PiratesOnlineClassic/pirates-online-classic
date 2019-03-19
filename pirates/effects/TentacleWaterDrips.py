@@ -1,13 +1,13 @@
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class TentacleWaterDrips(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -61,11 +61,11 @@ class TentacleWaterDrips(PooledEffect, EffectController):
         self.setEffectLength(self.effectScale)
 
     def createTrack(self):
-        self.decreaseIntensity = LerpFunctionInterval(self.setIntensity, 4.0 * self.effectScale, toData=0, fromData=0.5)
+        self.decreaseIntensity = LerpFunctionInterval(self.setIntensity, 4.0 * self.effectScale, toData = 0, fromData = 0.5)
         self.startEffect = Sequence(Func(self.p0.clearToInitial), Func(self.p0.setBirthRate, 0.02), Func(self.p0.renderer.setUserAlpha, 0.9), Func(self.f.start, self, self.particleDummy))
         self.endEffect = Sequence(self.decreaseIntensity, Func(self.p0.setBirthRate, 10.0), Wait(3.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
-
+    
     def setEffectLength(self, length):
         self.p0.emitter.setMinBound(Point2(0, -5 * self.effectScale))
         self.p0.emitter.setMaxBound(Point2(length, 5 * self.effectScale))
@@ -85,7 +85,9 @@ class TentacleWaterDrips(PooledEffect, EffectController):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

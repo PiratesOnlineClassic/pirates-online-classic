@@ -1,14 +1,14 @@
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
-from pandac.PandaModules import *
-from PooledEffect import PooledEffect
-
-
 class WaspCloud(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -16,6 +16,7 @@ class WaspCloud(PooledEffect, EffectController):
         if not WaspCloud.particleDummy:
             WaspCloud.particleDummy = render.attachNewNode(ModelNode('WaspCloudParticleDummy'))
             WaspCloud.particleDummy.setDepthWrite(0)
+        
         self.f = ParticleEffect.ParticleEffect('WaspCloud')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -75,13 +76,13 @@ class WaspCloud(PooledEffect, EffectController):
         self.p0.emitter.setRadius(3.0)
 
     def createTrack(self):
-        fadeIn = self.particleDummy.colorInterval(1.0, Vec4(1, 1, 1, 1), startColor=Vec4(0.0, 0.0, 0.0, 1))
-        fadeOut = self.particleDummy.colorInterval(0.5, Vec4(0, 0, 0, 1), startColor=Vec4(1, 1, 1, 1))
+        fadeIn = self.particleDummy.colorInterval(1.0, Vec4(1, 1, 1, 1), startColor = Vec4(0.0, 0.0, 0.0, 1))
+        fadeOut = self.particleDummy.colorInterval(0.5, Vec4(0, 0, 0, 1), startColor = Vec4(1, 1, 1, 1))
         self.setScale(0.5, 1, 1)
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.05), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), fadeIn)
         self.endEffect = Sequence(Func(self.wrtReparentTo, render), Parallel(fadeOut, Func(self.p0.setBirthRate, 100)), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(2.0), self.endEffect)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
@@ -90,3 +91,5 @@ class WaspCloud(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

@@ -1,21 +1,20 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
+from pandac.PandaModules import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
 from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from pirates.piratesbase import PiratesGlobals
+from pirates.effects import PolyTrail
+from PooledEffect import PooledEffect
 from EffectController import EffectController
 from otp.otpbase import OTPRender
-from pandac.PandaModules import *
-from pirates.effects import PolyTrail
-from pirates.piratesbase import PiratesGlobals
-from PooledEffect import PooledEffect
-
+import random
 
 class JollySoulDrain(PooledEffect, EffectController):
     cardScale = 64.0
-
-    def __init__(self, type=None):
+    
+    def __init__(self, type = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         model = loader.loadModel('models/effects/particleMaps')
@@ -28,6 +27,7 @@ class JollySoulDrain(PooledEffect, EffectController):
             self.particleDummy.setFogOff()
             self.particleDummy.hide(OTPRender.ShadowCameraBitmask)
             self.particleDummy.setBin('fixed', 160)
+        
         self.f = ParticleEffect.ParticleEffect('JollySoulDrain')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -83,11 +83,16 @@ class JollySoulDrain(PooledEffect, EffectController):
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Wait(1.5), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(3.0), self.endEffect)
 
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
+        
 
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

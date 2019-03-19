@@ -1,23 +1,25 @@
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
-from pandac.PandaModules import *
-from PooledEffect import PooledEffect
-
-
 class AttuneEffect(PooledEffect, EffectController):
-
-    def __init__(self, parent=None):
+    
+    def __init__(self, parent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if parent is not None:
             self.reparentTo(parent)
+        
         if not self.particleDummy:
             self.particleDummy = render.attachNewNode(ModelNode('AttuneParticleDummy'))
             self.particleDummy.setDepthWrite(0)
             self.particleDummy.setLightOff()
+        
         self.f = ParticleEffect.ParticleEffect('AttuneEffect')
         self.f.reparentTo(self)
         self.effectGeom = loader.loadModel('models/effects/voodooRing')
@@ -59,14 +61,13 @@ class AttuneEffect(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.75)
-        return
-
+    
     def createTrack(self):
         posIval = LerpPosInterval(self, 0.75, Point3(0, 0, 0.5))
         self.startEffect = Sequence(Func(self.p0.clearToInitial), Func(self.p0.setBirthRate, 0.01), Func(self.p0.factory.setLifespanBase, 0.75), Func(self.particleDummy.reparentTo, render), Func(self.f.start, self, self.particleDummy), posIval, Func(self.p0.setBirthRate, 0.03), Func(self.p0.factory.setLifespanBase, 1.75), Wait(1.0), Func(self.particleDummy.wrtReparentTo, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(3.0), Func(self.p0.setBirthRate, 0.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(2.0), self.endEffect)
-
+    
     def setEffectColor(self, color):
         self.effectColor = color
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
@@ -77,7 +78,9 @@ class AttuneEffect(PooledEffect, EffectController):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

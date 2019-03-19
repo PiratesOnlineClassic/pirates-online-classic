@@ -1,15 +1,15 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+import random
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class SpectralSmoke(PooledEffect, EffectController):
     cardScale = 128.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -61,12 +61,12 @@ class SpectralSmoke(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.5)
 
-    def createTrack(self, duration=1.0, delay=0.0):
+    def createTrack(self, duration = 1.0, delay = 0.0):
         self.startEffect = Sequence(Wait(delay), Func(self.p0.setBirthRate, 0.025), Func(self.p0.clearToInitial), Func(self.f.start, self, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Wait(3.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(duration), self.endEffect)
 
-    def play(self, duration=1.0, delay=0.0):
+    def play(self, duration = 1.0, delay = 0.0):
         self.createTrack(duration, delay)
         self.track.start()
 
@@ -74,7 +74,9 @@ class SpectralSmoke(PooledEffect, EffectController):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

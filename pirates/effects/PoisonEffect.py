@@ -1,13 +1,14 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class PoisonEffect(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -18,6 +19,7 @@ class PoisonEffect(PooledEffect, EffectController):
             PoisonEffect.particleDummy = render.attachNewNode(ModelNode('PoisonParticleDummy'))
             PoisonEffect.particleDummy.setDepthWrite(0)
             PoisonEffect.particleDummy.setLightOff()
+        
         self.f = ParticleEffect.ParticleEffect('PoisonEffect')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -70,7 +72,7 @@ class PoisonEffect(PooledEffect, EffectController):
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.5)
         self.p0.emitter.setAmplitudeSpread(0.0)
-        self.p0.emitter.setOffsetForce(Vec3(0, -0.5, 1.0))
+        self.p0.emitter.setOffsetForce(Vec3(0, -.5, 1.0))
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
 
@@ -83,7 +85,7 @@ class PoisonEffect(PooledEffect, EffectController):
         self.startEffect = Sequence(Wait(1.5), Func(self.p0.setBirthRate, 0.25), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
@@ -92,3 +94,5 @@ class PoisonEffect(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

@@ -1,17 +1,17 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class ShipSinkSplashes(PooledEffect, EffectController):
     card2Scale = 64.0
     cardScale = 64.0
-
-    def __init__(self, parent=None):
+    
+    def __init__(self, parent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         self.setDepthWrite(0)
@@ -94,7 +94,7 @@ class ShipSinkSplashes(PooledEffect, EffectController):
 
     def createTrack(self):
         self.setEffectScale(self.effectScale)
-        shrink = LerpFunctionInterval(self.resize, 2.5, fromData=1.0, toData=0.25)
+        shrink = LerpFunctionInterval(self.resize, 2.5, fromData = 1.0, toData = 0.25)
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.1), Func(self.p0.clearToInitial), Func(self.p1.setBirthRate, 0.01), Func(self.p1.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
         self.endEffect = Sequence(shrink, Func(self.p0.setBirthRate, 100.0), Func(self.p1.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(7.0), self.endEffect)
@@ -112,15 +112,17 @@ class ShipSinkSplashes(PooledEffect, EffectController):
         self.p1.renderer.setFinalYScale(0.15 * self.card2Scale * scale)
         self.p1.emitter.setOffsetForce(Vec3(0.0, 0.0, 16.0 * scale))
         self.p1.emitter.setRadius(20.0 * scale)
-
+    
     def resize(self, t):
         self.setEffectScale(self.effectScale * t)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

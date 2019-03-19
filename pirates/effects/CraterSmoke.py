@@ -1,20 +1,21 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class CraterSmoke(PooledEffect, EffectController):
     cardScale = 64.0
-
-    def __init__(self, parent=None):
+    
+    def __init__(self, parent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if parent is not None:
             self.reparentTo(parent)
+        
         self.setDepthWrite(0)
         self.setLightOff()
         self.f = ParticleEffect.ParticleEffect('CraterSmoke')
@@ -31,9 +32,8 @@ class CraterSmoke(PooledEffect, EffectController):
         self.p1.setRenderer('SpriteParticleRenderer')
         self.p1.setEmitter('RectangleEmitter')
         self.f.addParticles(self.p1)
-        return
-
-    def createTrack(self, lod=None):
+    
+    def createTrack(self, lod = None):
         self.p0.setPoolSize(8)
         self.p0.setBirthRate(0.75)
         self.p0.setLitterSize(1)
@@ -109,7 +109,7 @@ class CraterSmoke(PooledEffect, EffectController):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.75), Func(self.p0.clearToInitial), Func(self.p1.setBirthRate, 1.0), Func(self.p1.clearToInitial), Func(self.f.start, self, self), Func(self.f.reparentTo, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 0.0), Func(self.p1.setBirthRate, 0.0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool and self.pool.isUsed(self):
@@ -118,3 +118,5 @@ class CraterSmoke(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

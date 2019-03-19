@@ -1,16 +1,15 @@
-import os
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import os
 
 class QuestIndicatorEffect(PooledEffect, EffectController):
     cardScale = 16.0
     cardScale2 = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -115,7 +114,6 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
         self.p1.emitter.setRadius(8.0)
         self.adjustIval = None
         self.effectScale = 1
-        return
 
     def createTrack(self):
         if self.wantBottomEffect:
@@ -126,7 +124,7 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
         self.endEffect = Sequence(Func(self.p0.softStop), Func(self.p1.softStop), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(2.5), self.endEffect)
 
-    def startLoop(self, pos=Point3(0), pdPos=Point3()):
+    def startLoop(self, pos = Point3(0), pdPos = Point3()):
         EffectController.startLoop(self)
         self.particleDummy.hide()
         self.hide()
@@ -136,9 +134,9 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
     def startAdjustTask(self):
         self.stopAdjustTask()
         task = taskMgr.doMethodLater(1, self.adjustTask, 'questIndicatorEffect-adjust')
-        self.adjustTask(task, force=True)
+        self.adjustTask(task, force = True)
 
-    def adjustTask(self, task, force=False):
+    def adjustTask(self, task, force = False):
         if base.localAvatar and not base.localAvatar.isEmpty():
             distance = self.getDistance(localAvatar)
             newFEScale = Vec3(0.25 * (1 + distance / 50)) * self.effectScale
@@ -146,6 +144,7 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
             if self.adjustIval:
                 self.adjustIval.pause()
                 self.adjustIval = None
+            
             if not force:
                 self.adjustIval = Parallel(self.scaleInterval(1, newFEScale), self.particleDummy.scaleInterval(1, newPDScale))
                 self.adjustIval.start()
@@ -153,6 +152,7 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
                 self.p0.clearToInitial()
                 self.setScale(newFEScale)
                 self.particleDummy.setScale(newPDScale)
+        
         return task.again
 
     def stopAdjustTask(self):
@@ -160,7 +160,6 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
         if self.adjustIval:
             self.adjustIval.pause()
             self.adjustIval = None
-        return
 
     def setEffectScale(self, scale):
         self.effectScale = scale
@@ -176,13 +175,14 @@ class QuestIndicatorEffect(PooledEffect, EffectController):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
         self.adjustIval = None
-        return
 
     def showEffect(self):
         self.particleDummy.unstash()
 
     def hideEffect(self):
         self.particleDummy.stash()
-
+    
     def setWantBottomEffect(self, want):
         self.wantBottomEffect = want
+
+

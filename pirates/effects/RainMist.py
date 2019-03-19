@@ -1,15 +1,14 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
-
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from EffectController import EffectController
+import random
 
 class RainMist(EffectController, NodePath):
     cardScale = 64.0
-
-    def __init__(self, reference=None):
+    
+    def __init__(self, reference = None):
         NodePath.__init__(self, 'RainMist')
         EffectController.__init__(self)
         model = loader.loadModel('models/effects/particleMaps')
@@ -20,6 +19,7 @@ class RainMist(EffectController, NodePath):
             RainMist.particleDummy.setColorScale(1.0, 1.0, 1.0, 1)
             RainMist.particleDummy.setLightOff()
             RainMist.particleDummy.setBin('water', 100)
+        
         self.reference = reference
         self.f = ParticleEffect.ParticleEffect('RainMist')
         self.f.reparentTo(self)
@@ -81,3 +81,5 @@ class RainMist(EffectController, NodePath):
 
     def destroy(self):
         EffectController.destroy(self)
+
+

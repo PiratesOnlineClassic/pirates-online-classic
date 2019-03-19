@@ -1,15 +1,15 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class SoulHarvest(PooledEffect, EffectController):
     cardScale = 128.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -19,6 +19,7 @@ class SoulHarvest(PooledEffect, EffectController):
             SoulHarvest.particleDummy = render.attachNewNode(ModelNode('SoulHarvestParticleDummy'))
             SoulHarvest.particleDummy.setDepthWrite(0)
             SoulHarvest.particleDummy.setLightOff()
+        
         self.radius = 8.0
         self.effectColor = Vec4(1, 1, 1, 1)
         self.f = ParticleEffect.ParticleEffect('SoulHarvest')
@@ -72,7 +73,7 @@ class SoulHarvest(PooledEffect, EffectController):
         self.effectColor = Vec4(1, 1, 1, 0) - (Vec4(1, 1, 1, 1) - color) / 2.0
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
         self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, self.effectColor, Vec4(0.59, 0.78, 0.7, 0.4), 1)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
@@ -81,3 +82,5 @@ class SoulHarvest(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

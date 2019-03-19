@@ -1,18 +1,20 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
 
 class MysticSmoke(PooledEffect, EffectController):
     cardScale = 64.0
-
-    def __init__(self, parent=None):
+    
+    def __init__(self, parent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if parent is not None:
             self.reparentTo(parent)
+        
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleWhiteSmoke')
         self.setDepthWrite(0)
@@ -68,9 +70,8 @@ class MysticSmoke(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 10.0))
         self.p0.emitter.setRadius(2.0)
         self.p0.emitter.setRadiusSpread(0.0)
-        return
-
-    def createTrack(self, lod=None):
+    
+    def createTrack(self, lod = None):
         self.startEffect = Parallel(Func(self.p0.setBirthRate, 0.015), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10), self.endEffect)
@@ -84,3 +85,5 @@ class MysticSmoke(PooledEffect, EffectController):
         self.removeNode()
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

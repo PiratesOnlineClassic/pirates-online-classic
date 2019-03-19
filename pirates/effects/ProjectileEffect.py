@@ -1,62 +1,67 @@
-import random
-
-from direct.directnotify import DirectNotifyGlobal
-from direct.interval.IntervalGlobal import *
 from pandac.PandaModules import *
-from pirates.effects.BlackSmoke import BlackSmoke
-from pirates.effects.CameraShaker import CameraShaker
+from direct.interval.IntervalGlobal import *
+from direct.directnotify import DirectNotifyGlobal
+from pirates.uberdog.UberDogGlobals import InventoryType
+from pirates.piratesbase import PiratesGlobals
 from pirates.effects.CannonExplosion import CannonExplosion
 from pirates.effects.CannonSplash import CannonSplash
-from pirates.effects.CurseHit import CurseHit
 from pirates.effects.DirtClod import DirtClod
-from pirates.effects.DrainLife import DrainLife
 from pirates.effects.DustCloud import DustCloud
+from pirates.effects.SmokeCloud import SmokeCloud
+from pirates.effects.RockShower import RockShower
+from pirates.effects.ShipSplintersA import ShipSplintersA
 from pirates.effects.DustRing import DustRing
-from pirates.effects.Explosion import Explosion
-from pirates.effects.ExplosionCloud import ExplosionCloud
+from pirates.effects.BlackSmoke import BlackSmoke
+from pirates.effects.LightSmoke import LightSmoke
 from pirates.effects.ExplosionFlip import ExplosionFlip
-from pirates.effects.ExplosionTip import ExplosionTip
-from pirates.effects.FadingSigil import FadingSigil
-from pirates.effects.Fire import Fire
-from pirates.effects.FireballHit import FireballHit
+from pirates.effects.ShockwaveRing import ShockwaveRing
+from pirates.effects.CameraShaker import CameraShaker
 from pirates.effects.FireTrail import FireTrail
-from pirates.effects.FlamingDebris import FlamingDebris
-from pirates.effects.FlashStar import FlashStar
 from pirates.effects.GreenBlood import GreenBlood
 from pirates.effects.HitFlashA import HitFlashA
-from pirates.effects.LightningStrike import LightningStrike
-from pirates.effects.LightSmoke import LightSmoke
-from pirates.effects.MuzzleFlame import MuzzleFlame
-from pirates.effects.MuzzleFlash import MuzzleFlash
-from pirates.effects.PoisonHit import PoisonHit
-from pirates.effects.RockDebris import RockDebris
-from pirates.effects.RockShower import RockShower
-from pirates.effects.ShipDebris import ShipDebris
-from pirates.effects.ShipSplintersA import ShipSplintersA
 from pirates.effects.ShockwaveHit import ShockwaveHit
-from pirates.effects.ShockwaveRing import ShockwaveRing
-from pirates.effects.SmokeBomb import SmokeBomb
-from pirates.effects.SmokeCloud import SmokeCloud
-from pirates.effects.SmokePillar import SmokePillar
-from pirates.effects.Sparks import Sparks
-from pirates.effects.SpectralSmoke import SpectralSmoke
-from pirates.effects.VoodooSmoke import VoodooSmoke
 from pirates.effects.WaspCloud import WaspCloud
-from pirates.piratesbase import PiratesGlobals
-from pirates.uberdog.UberDogGlobals import InventoryType
-
+from pirates.effects.PoisonHit import PoisonHit
+from pirates.effects.FireballHit import FireballHit
+from pirates.effects.CurseHit import CurseHit
+from pirates.effects.ExplosionCloud import ExplosionCloud
+from pirates.effects.FadingSigil import FadingSigil
+from pirates.effects.FlashStar import FlashStar
+from pirates.effects.VoodooSmoke import VoodooSmoke
+from pirates.effects.SpectralSmoke import SpectralSmoke
+from pirates.effects.DrainLife import DrainLife
+from pirates.effects.Fire import Fire
+from pirates.effects.MuzzleFlash import MuzzleFlash
+from pirates.effects.DustRing import DustRing
+from pirates.effects.Sparks import Sparks
+from pirates.effects.SmokeBomb import SmokeBomb
+from pirates.effects.SmokePillar import SmokePillar
+from pirates.effects.FlamingDebris import FlamingDebris
+from pirates.effects.ShipDebris import ShipDebris
+from pirates.effects.RockDebris import RockDebris
+from pirates.effects.Explosion import Explosion
+from pirates.effects.ExplosionTip import ExplosionTip
+from pirates.effects.LightningStrike import LightningStrike
+from pirates.effects.MuzzleFlame import MuzzleFlame
+import random
 skillSfxs = None
 
 def getSkillSfx():
     global skillSfxs
     if not skillSfxs:
-        skillSfxs = {InventoryType.GrenadeExplosion: loader.loadSfx('audio/sfx_grenade_impact.mp3'),InventoryType.GrenadeShockBomb: loader.loadSfx('audio/sfx_grenade_impact_stink_pot.mp3'),InventoryType.GrenadeFireBomb: loader.loadSfx('audio/sfx_grenade_impact_firebomb_explo.mp3'),InventoryType.GrenadeSmokeCloud: loader.loadSfx('audio/sfx_grenade_impact_smoke.mp3'),InventoryType.GrenadeSiege: loader.loadSfx('audio/sfx_grenade_impact.mp3')}
+        skillSfxs = {
+            InventoryType.GrenadeExplosion: loader.loadSfx('audio/sfx_grenade_impact.mp3'),
+            InventoryType.GrenadeShockBomb: loader.loadSfx('audio/sfx_grenade_impact_stink_pot.mp3'),
+            InventoryType.GrenadeFireBomb: loader.loadSfx('audio/sfx_grenade_impact_firebomb_explo.mp3'),
+            InventoryType.GrenadeSmokeCloud: loader.loadSfx('audio/sfx_grenade_impact_smoke.mp3'),
+            InventoryType.GrenadeSiege: loader.loadSfx('audio/sfx_grenade_impact.mp3')}
+    
 
 
-class ProjectileEffect():
+class ProjectileEffect:
     notify = DirectNotifyGlobal.directNotify.newCategory('ProjectileEffect')
-
-    def __init__(self, cr, attackerId, hitObject, objType, pos, skillId, ammoSkillId, normal=None):
+    
+    def __init__(self, cr, attackerId, hitObject, objType, pos, skillId, ammoSkillId, normal = None):
         self.cr = cr
         self.attackerId = attackerId
         self.normal = normal
@@ -65,8 +70,7 @@ class ProjectileEffect():
         from pirates.shipparts.DistributedShippart import DistributedShippart
         from pirates.battle.DistributedBattleAvatar import DistributedBattleAvatar
         from pirates.world.DistributedIsland import DistributedIsland
-        self.projVelocity = (
-         (25, 0), (0, 25), (-25, 0), (0, -25))
+        self.projVelocity = ((25, 0), (0, 25), (-25, 0), (0, -25))
         if not objType:
             if isinstance(hitObject, DistributedShip):
                 objType = PiratesGlobals.COLL_SHIPPART
@@ -79,6 +83,7 @@ class ProjectileEffect():
             else:
                 self.basicHitEffect(hitObject, pos, skillId, ammoSkillId)
                 return
+        
         if objType == PiratesGlobals.COLL_AV:
             self.avatarHitEffect(hitObject, pos, skillId, ammoSkillId)
         elif objType == PiratesGlobals.COLL_MONSTER:
@@ -104,11 +109,11 @@ class ProjectileEffect():
         else:
             self.notify.warning('playEffect: unknown objType: %s' % objType)
 
-    def playSfx(self, ammoSkillId, node, startTime=0):
+    def playSfx(self, ammoSkillId, node, startTime = 0):
         sfx = skillSfxs.get(ammoSkillId)
         if sfx:
-            base.playSfx(sfx, node=node, time=startTime, cutoff=400)
-
+            base.playSfx(sfx, node = node, time = startTime, cutoff = 400)
+    
     def basicHitEffect(self, hitObject, pos, skillId, ammoSkillId):
         from pirates.battle import WeaponGlobals
         attacker = self.cr.doId2do.get(self.attackerId)
@@ -120,6 +125,7 @@ class ProjectileEffect():
             s.setScale(aoeRadius)
             s.setTransparency(1)
             s.setColorScale(1.0, 0.5, 0.5, 0.4)
+        
         if ammoSkillId == InventoryType.CannonRoundShot or ammoSkillId == InventoryType.CannonChainShot or ammoSkillId == InventoryType.CannonBullet or ammoSkillId == InventoryType.CannonSkull or ammoSkillId == InventoryType.CannonBarShot or ammoSkillId == InventoryType.CannonFury:
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 explosionEffect = ExplosionFlip.getEffect()
@@ -128,11 +134,13 @@ class ProjectileEffect():
                     explosionEffect.setPos(hitObject, pos)
                     explosionEffect.setScale(0.8)
                     explosionEffect.play()
+                
                 shipSplintersAEffect = ShipSplintersA.getEffect()
                 if shipSplintersAEffect:
                     shipSplintersAEffect.reparentTo(hitObject)
                     shipSplintersAEffect.setPos(hitObject, pos)
                     shipSplintersAEffect.play()
+            
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 smokeCloudEffect = SmokeCloud.getEffect()
                 if smokeCloudEffect:
@@ -142,15 +150,18 @@ class ProjectileEffect():
                     smokeCloudEffect.spriteScale = 1.0
                     smokeCloudEffect.radius = 7.0
                     smokeCloudEffect.play()
+
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 shockwaveRingEffect = ShockwaveRing.getEffect()
                 if shockwaveRingEffect:
                     shockwaveRingEffect.wrtReparentTo(base.effectsRoot)
                     if self.normal:
                         shockwaveRingEffect.lookAt(shockwaveRingEffect.getPos() + self.normal)
+                    
                     shockwaveRingEffect.setPos(hitObject, pos)
                     shockwaveRingEffect.size = aoeRadius * 4
                     shockwaveRingEffect.play()
+                
                 cameraShakerEffect = CameraShaker()
                 cameraShakerEffect.wrtReparentTo(hitObject)
                 cameraShakerEffect.setPos(hitObject, pos)
@@ -159,6 +170,7 @@ class ProjectileEffect():
                 cameraShakerEffect.numShakes = 2
                 cameraShakerEffect.scalePower = 1
                 cameraShakerEffect.play(120.0)
+            
         elif ammoSkillId == InventoryType.CannonFirebrand or ammoSkillId == InventoryType.CannonFlamingSkull:
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 explosionEffect = ExplosionFlip.getEffect()
@@ -167,11 +179,13 @@ class ProjectileEffect():
                     explosionEffect.setPos(hitObject, pos)
                     explosionEffect.setScale(0.8)
                     explosionEffect.play()
+                
                 shipSplintersAEffect = ShipSplintersA.getEffect()
                 if shipSplintersAEffect:
                     shipSplintersAEffect.wrtReparentTo(hitObject)
                     shipSplintersAEffect.setPos(hitObject, pos)
                     shipSplintersAEffect.play()
+            
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 smokeCloudEffect = SmokeCloud.getEffect()
                 if smokeCloudEffect:
@@ -181,6 +195,7 @@ class ProjectileEffect():
                     smokeCloudEffect.spriteScale = 1.0
                     smokeCloudEffect.radius = 7.0
                     smokeCloudEffect.play()
+                
                 cameraShakerEffect = CameraShaker()
                 cameraShakerEffect.wrtReparentTo(hitObject)
                 cameraShakerEffect.setPos(hitObject, pos)
@@ -189,6 +204,7 @@ class ProjectileEffect():
                 cameraShakerEffect.numShakes = 2
                 cameraShakerEffect.scalePower = 1
                 cameraShakerEffect.play(100.0)
+            
         elif ammoSkillId == InventoryType.CannonExplosive:
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 effect = Explosion.getEffect()
@@ -198,12 +214,14 @@ class ProjectileEffect():
                     effect.effectScale = 1.0
                     effect.radius = aoeRadius / 1.5
                     effect.play()
+
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 dustRingEffect = DustRing.getEffect()
                 if dustRingEffect:
                     dustRingEffect.wrtReparentTo(hitObject)
                     dustRingEffect.setPos(hitObject, pos)
                     dustRingEffect.play()
+                
                 for i in range(2):
                     effect = FlamingDebris.getEffect()
                     if effect:
@@ -213,12 +231,13 @@ class ProjectileEffect():
                         effect.velocityX = self.projVelocity[i][0]
                         effect.velocityY = self.projVelocity[i][1]
                         effect.play()
-
+                
                 shipSplintersAEffect = ShipSplintersA.getEffect()
                 if shipSplintersAEffect:
                     shipSplintersAEffect.wrtReparentTo(hitObject)
                     shipSplintersAEffect.setPos(hitObject, pos)
                     shipSplintersAEffect.play()
+                
                 smokeCloudEffect = SmokeCloud.getEffect()
                 if smokeCloudEffect:
                     smokeCloudEffect.wrtReparentTo(hitObject)
@@ -227,6 +246,7 @@ class ProjectileEffect():
                     smokeCloudEffect.spriteScale = 4.0
                     smokeCloudEffect.radius = aoeRadius / 1.5
                     smokeCloudEffect.play()
+
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 for i in range(2):
                     effect = FlamingDebris.getEffect()
@@ -237,13 +257,14 @@ class ProjectileEffect():
                         effect.velocityX = self.projVelocity[i][0]
                         effect.velocityY = self.projVelocity[i][1]
                         effect.play()
-
+                
                 shockwaveRingEffect = ShockwaveRing.getEffect()
                 if shockwaveRingEffect:
                     shockwaveRingEffect.wrtReparentTo(base.effectsRoot)
                     shockwaveRingEffect.setPos(hitObject, pos)
                     shockwaveRingEffect.size = aoeRadius * 4
                     shockwaveRingEffect.play()
+                
                 cameraShakerEffect = CameraShaker()
                 cameraShakerEffect.wrtReparentTo(hitObject)
                 cameraShakerEffect.setPos(hitObject, pos)
@@ -252,6 +273,7 @@ class ProjectileEffect():
                 cameraShakerEffect.numShakes = 2
                 cameraShakerEffect.scalePower = 1
                 cameraShakerEffect.play(300.0)
+            
         elif ammoSkillId == InventoryType.CannonThunderbolt:
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 shockwaveRingEffect = ShockwaveRing.getEffect()
@@ -260,11 +282,13 @@ class ProjectileEffect():
                     shockwaveRingEffect.setPos(hitObject, pos)
                     shockwaveRingEffect.size = aoeRadius * 4
                     shockwaveRingEffect.play()
+                
                 shipSplintersAEffect = ShipSplintersA.getEffect()
                 if shipSplintersAEffect:
                     shipSplintersAEffect.wrtReparentTo(hitObject)
                     shipSplintersAEffect.setPos(hitObject, pos)
                     shipSplintersAEffect.play()
+
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 flashEffect = MuzzleFlash.getEffect()
                 if flashEffect:
@@ -275,6 +299,7 @@ class ProjectileEffect():
                     flashEffect.startCol = Vec4(0.5, 0.8, 1, 1)
                     flashEffect.fadeTime = 0.2
                     flashEffect.play()
+                
                 cameraShakerEffect = CameraShaker()
                 cameraShakerEffect.wrtReparentTo(hitObject)
                 cameraShakerEffect.setPos(hitObject, pos)
@@ -283,6 +308,7 @@ class ProjectileEffect():
                 cameraShakerEffect.numShakes = 2
                 cameraShakerEffect.scalePower = 1
                 cameraShakerEffect.play(300.0)
+            
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 smokeCloudEffect = SmokeCloud.getEffect()
                 if smokeCloudEffect:
@@ -292,11 +318,13 @@ class ProjectileEffect():
                     smokeCloudEffect.spriteScale = 1.0
                     smokeCloudEffect.radius = 7.0
                     smokeCloudEffect.play()
+                
                 effect = LightningStrike.getEffect()
                 if effect:
                     effect.wrtReparentTo(base.effectsRoot)
                     effect.setPos(hitObject, pos)
                     effect.play()
+
         elif ammoSkillId == InventoryType.GrenadeExplosion:
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 explosionEffect = ExplosionFlip.getEffect()
@@ -306,6 +334,7 @@ class ProjectileEffect():
                     explosionEffect.setScale(1.0)
                     explosionEffect.play()
                     self.playSfx(ammoSkillId, explosionEffect)
+                
                 if base.launcher.getPhaseComplete(3):
                     for i in range(random.randint(2, 4)):
                         debrisEffect = RockDebris.getEffect()
@@ -330,18 +359,21 @@ class ProjectileEffect():
                     flashEffect.startCol = Vec4(0.7, 0.7, 0.7, 1)
                     flashEffect.fadeTime = 0.2
                     flashEffect.play()
+
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 shipSplintersAEffect = ShipSplintersA.getEffect()
                 if shipSplintersAEffect:
                     shipSplintersAEffect.reparentTo(hitObject)
                     shipSplintersAEffect.setPos(hitObject, pos)
                     shipSplintersAEffect.play()
+                
                 shockwaveRingEffect = ShockwaveRing.getEffect()
                 if shockwaveRingEffect:
                     shockwaveRingEffect.reparentTo(base.effectsRoot)
                     shockwaveRingEffect.setPos(hitObject, pos)
                     shockwaveRingEffect.size = aoeRadius * 4
                     shockwaveRingEffect.play()
+                
                 cameraShakerEffect = CameraShaker()
                 cameraShakerEffect.reparentTo(hitObject)
                 cameraShakerEffect.setPos(hitObject, pos)
@@ -350,6 +382,7 @@ class ProjectileEffect():
                 cameraShakerEffect.numShakes = 2
                 cameraShakerEffect.scalePower = 1
                 cameraShakerEffect.play(80.0)
+            
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 smokeCloudEffect = SmokeCloud.getEffect()
                 if smokeCloudEffect:
@@ -359,6 +392,7 @@ class ProjectileEffect():
                     smokeCloudEffect.spriteScale = 1.0
                     smokeCloudEffect.radius = 7.0
                     smokeCloudEffect.play()
+
         elif ammoSkillId == InventoryType.GrenadeShockBomb:
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 explosionEffect = ExplosionFlip.getEffect()
@@ -368,6 +402,7 @@ class ProjectileEffect():
                     explosionEffect.setScale(1.0)
                     explosionEffect.play()
                     self.playSfx(ammoSkillId, explosionEffect)
+                
                 flashEffect = MuzzleFlash.getEffect()
                 if flashEffect:
                     flashEffect.reparentTo(base.effectsRoot)
@@ -376,6 +411,7 @@ class ProjectileEffect():
                     flashEffect.startCol = Vec4(0.7, 0.7, 0.7, 1)
                     flashEffect.fadeTime = 0.2
                     flashEffect.play()
+                
                 cameraShakerEffect = CameraShaker()
                 cameraShakerEffect.reparentTo(hitObject)
                 cameraShakerEffect.setPos(hitObject, pos)
@@ -384,6 +420,7 @@ class ProjectileEffect():
                 cameraShakerEffect.numShakes = 2
                 cameraShakerEffect.scalePower = 1
                 cameraShakerEffect.play(80.0)
+            
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 smokeCloudEffect = SmokeCloud.getEffect()
                 if smokeCloudEffect:
@@ -393,18 +430,21 @@ class ProjectileEffect():
                     smokeCloudEffect.spriteScale = 1.0
                     smokeCloudEffect.radius = 7.0
                     smokeCloudEffect.play()
+                
                 shockwaveRingEffect = ShockwaveRing.getEffect()
                 if shockwaveRingEffect:
                     shockwaveRingEffect.reparentTo(base.effectsRoot)
                     shockwaveRingEffect.setPos(hitObject, pos)
                     shockwaveRingEffect.size = aoeRadius * 4
                     shockwaveRingEffect.play()
+            
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 dustRingEffect = DustRing.getEffect()
                 if dustRingEffect:
                     dustRingEffect.reparentTo(hitObject)
                     dustRingEffect.setPos(hitObject, pos)
                     dustRingEffect.play()
+
         elif ammoSkillId == InventoryType.GrenadeSiege:
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 smokePillarEffect = SmokePillar.getEffect()
@@ -415,18 +455,21 @@ class ProjectileEffect():
                     smokePillarEffect.spriteScale = 1.0
                     smokePillarEffect.radius = 7.0
                     smokePillarEffect.play()
+                
                 shockwaveRingEffect = ShockwaveRing.getEffect()
                 if shockwaveRingEffect:
                     shockwaveRingEffect.reparentTo(base.effectsRoot)
                     shockwaveRingEffect.setPos(hitObject, pos)
                     shockwaveRingEffect.size = aoeRadius * 4
                     shockwaveRingEffect.play()
+
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 shipSplintersAEffect = ShipSplintersA.getEffect()
                 if shipSplintersAEffect:
                     shipSplintersAEffect.reparentTo(hitObject)
                     shipSplintersAEffect.setPos(hitObject, pos)
                     shipSplintersAEffect.play()
+                
                 explosionEffect = ExplosionFlip.getEffect()
                 if explosionEffect:
                     explosionEffect.reparentTo(base.effectsRoot)
@@ -434,6 +477,7 @@ class ProjectileEffect():
                     explosionEffect.setScale(2.0)
                     explosionEffect.play()
                     self.playSfx(ammoSkillId, explosionEffect)
+                
                 for i in range(random.randint(3, 6)):
                     debrisEffect = RockDebris.getEffect()
                     if debrisEffect:
@@ -448,7 +492,7 @@ class ProjectileEffect():
                             debrisEffect.play()
                         else:
                             debrisEffect.cleanUpEffect()
-
+                
                 flashEffect = MuzzleFlash.getEffect()
                 if flashEffect:
                     flashEffect.reparentTo(base.effectsRoot)
@@ -457,12 +501,14 @@ class ProjectileEffect():
                     flashEffect.startCol = Vec4(0.7, 0.7, 0.7, 1)
                     flashEffect.fadeTime = 0.2
                     flashEffect.play()
+
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 dustRingEffect = DustRing.getEffect()
                 if dustRingEffect:
                     dustRingEffect.reparentTo(hitObject)
                     dustRingEffect.setPos(hitObject, pos)
                     dustRingEffect.play()
+                
                 cameraShakerEffect = CameraShaker()
                 cameraShakerEffect.wrtReparentTo(hitObject)
                 cameraShakerEffect.setPos(hitObject, pos)
@@ -471,6 +517,7 @@ class ProjectileEffect():
                 cameraShakerEffect.numShakes = 2
                 cameraShakerEffect.scalePower = 1
                 cameraShakerEffect.play(80.0)
+            
         elif ammoSkillId == InventoryType.GrenadeFireBomb:
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 flashEffect = MuzzleFlash.getEffect()
@@ -482,20 +529,23 @@ class ProjectileEffect():
                     flashEffect.fadeTime = 0.2
                     flashEffect.play()
                     self.playSfx(ammoSkillId, flashEffect)
+                
                 shockwaveRingEffect = ShockwaveRing.getEffect()
                 if shockwaveRingEffect:
                     shockwaveRingEffect.wrtReparentTo(base.effectsRoot)
                     shockwaveRingEffect.setPos(hitObject, pos)
                     shockwaveRingEffect.size = aoeRadius * 4
                     shockwaveRingEffect.play()
+
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 fireEffect = Fire.getEffect()
                 if fireEffect:
                     fireEffect.wrtReparentTo(base.effectsRoot)
-                    fireEffect.setPos(hitObject, pos + Vec3(0, 0, -0.5))
+                    fireEffect.setPos(hitObject, pos + Vec3(0, 0, -.5))
                     fireEffect.effectScale = 0.5
                     fireEffect.duration = 2.5
                     fireEffect.play()
+
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 blackSmokeEffect = LightSmoke.getEffect()
                 if blackSmokeEffect:
@@ -503,6 +553,7 @@ class ProjectileEffect():
                     blackSmokeEffect.setPos(hitObject, pos)
                     blackSmokeEffect.duration = 4.0
                     blackSmokeEffect.play()
+                
                 cameraShakerEffect = CameraShaker()
                 cameraShakerEffect.wrtReparentTo(hitObject)
                 cameraShakerEffect.setPos(hitObject, pos)
@@ -511,6 +562,7 @@ class ProjectileEffect():
                 cameraShakerEffect.numShakes = 2
                 cameraShakerEffect.scalePower = 1
                 cameraShakerEffect.play(80.0)
+            
         elif ammoSkillId == InventoryType.GrenadeSmokeCloud:
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 smokeCloudEffect = SmokeBomb.getEffect()
@@ -520,6 +572,7 @@ class ProjectileEffect():
                     smokeCloudEffect.radius = aoeRadius / 1.5
                     smokeCloudEffect.play()
                     self.playSfx(ammoSkillId, smokeCloudEffect)
+
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 flashEffect = MuzzleFlash.getEffect()
                 if flashEffect:
@@ -529,6 +582,7 @@ class ProjectileEffect():
                     flashEffect.startCol = Vec4(0.7, 0.7, 0.7, 1)
                     flashEffect.fadeTime = 0.2
                     flashEffect.play()
+
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 shockwaveRingEffect = ShockwaveRing.getEffect()
                 if shockwaveRingEffect:
@@ -536,6 +590,7 @@ class ProjectileEffect():
                     shockwaveRingEffect.setPos(hitObject, pos)
                     shockwaveRingEffect.size = aoeRadius * 4
                     shockwaveRingEffect.play()
+                
                 cameraShakerEffect = CameraShaker()
                 cameraShakerEffect.wrtReparentTo(hitObject)
                 cameraShakerEffect.setPos(hitObject, pos)
@@ -547,13 +602,13 @@ class ProjectileEffect():
 
     def propHitEffect(self, hitObject, pos, skillId, ammoSkillId):
         self.basicHitEffect(hitObject, pos, skillId, ammoSkillId)
-
+    
     def shipHitEffect(self, hitObject, pos, skillId, ammoSkillId):
         self.basicHitEffect(hitObject, pos, skillId, ammoSkillId)
 
     def avatarHitEffect(self, hitObject, pos, skillId, ammoSkillId):
         self.basicHitEffect(hitObject, pos, skillId, ammoSkillId)
-
+    
     def blockerHitEffect(self, hitObject, pos, skillId, ammoSkillId):
         for i in range(random.randint(2, 4)):
             debrisEffect = RockDebris.getEffect()
@@ -569,7 +624,7 @@ class ProjectileEffect():
                     debrisEffect.play()
                 else:
                     debrisEffect.cleanUpEffect()
-
+    
     def groundHitEffect(self, hitObject, pos, skillId, ammoSkillId):
         if ammoSkillId == InventoryType.CannonRoundShot or ammoSkillId == InventoryType.CannonChainShot or ammoSkillId == InventoryType.CannonBullet or ammoSkillId == InventoryType.CannonSkull or ammoSkillId == InventoryType.CannonBarShot:
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
@@ -579,23 +634,27 @@ class ProjectileEffect():
                     cannonExplosion.setScale(1.0)
                     cannonExplosion.setPos(hitObject, pos)
                     cannonExplosion.play()
+                
                 rockShowerEffect = RockShower.getEffect()
                 if rockShowerEffect:
                     rockShowerEffect.wrtReparentTo(hitObject)
                     rockShowerEffect.setPos(hitObject, pos)
                     rockShowerEffect.play()
+
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 dustCloudEffect = DustCloud.getEffect()
                 if dustCloudEffect:
                     dustCloudEffect.wrtReparentTo(hitObject)
                     dustCloudEffect.setPos(hitObject, pos)
                     dustCloudEffect.play()
+                
                 shockwaveRingEffect = ShockwaveRing.getEffect()
                 if shockwaveRingEffect:
                     shockwaveRingEffect.wrtReparentTo(base.effectsRoot)
                     shockwaveRingEffect.size = 40
                     shockwaveRingEffect.setPos(hitObject, pos)
                     shockwaveRingEffect.play()
+                
                 cameraShakerEffect = CameraShaker()
                 cameraShakerEffect.wrtReparentTo(hitObject)
                 cameraShakerEffect.setPos(hitObject, pos)
@@ -604,12 +663,14 @@ class ProjectileEffect():
                 cameraShakerEffect.numShakes = 3
                 cameraShakerEffect.scalePower = 1
                 cameraShakerEffect.play(80.0)
+            
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 dirtClodEffect = DirtClod.getEffect()
                 if dirtClodEffect:
                     dirtClodEffect.wrtReparentTo(hitObject)
                     dirtClodEffect.setPos(hitObject, pos)
                     dirtClodEffect.play()
+
         else:
             self.basicHitEffect(hitObject, pos, skillId, ammoSkillId)
 
@@ -646,6 +707,7 @@ class ProjectileEffect():
                     hitFlashA.wrtReparentTo(base.effectsRoot)
                     hitFlashA.setPos(hitObject, pos)
                     hitFlashA.play()
+
         else:
             self.basicHitEffect(hitObject, pos, skillId, ammoSkillId)
 
@@ -654,3 +716,5 @@ class ProjectileEffect():
 
     def fortHitEffect(self, hitObject, pos, skillId, ammoSkillId):
         self.basicHitEffect(hitObject, pos, skillId, ammoSkillId)
+
+

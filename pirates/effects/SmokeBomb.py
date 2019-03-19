@@ -1,15 +1,15 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class SmokeBomb(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -23,6 +23,7 @@ class SmokeBomb(PooledEffect, EffectController):
             SmokeBomb.particleDummy.setLightOff()
             SmokeBomb.particleDummy.setFogOff()
             SmokeBomb.particleDummy.setBin('fixed', 120)
+        
         self.f = ParticleEffect.ParticleEffect('SmokeBomb')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -79,10 +80,10 @@ class SmokeBomb(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(8.0)
-
+    
     def createTrack(self):
         self.track = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.5), Func(self.p0.setBirthRate, 100), Wait(10.0), Func(self.cleanUpEffect))
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
@@ -91,3 +92,5 @@ class SmokeBomb(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

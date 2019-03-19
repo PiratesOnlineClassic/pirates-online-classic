@@ -1,20 +1,21 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class EvilRingEffect(PooledEffect, EffectController):
     cardScale = 64.0
-
-    def __init__(self, parent=None):
+    
+    def __init__(self, parent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if parent is not None:
             self.reparentTo(parent)
+        
         if not EvilRingEffect.particleDummy:
             EvilRingEffect.particleDummy = render.attachNewNode(ModelNode('EvilRingEffectParticleDummy'))
             EvilRingEffect.particleDummy.setColorScaleOff()
@@ -24,6 +25,7 @@ class EvilRingEffect(PooledEffect, EffectController):
             EvilRingEffect.particleDummy.setDepthTest(0)
             EvilRingEffect.particleDummy.setBin('shadow', 0)
             EvilRingEffect.particleDummy.setTransparency(TransparencyAttrib.MAlpha)
+        
         self.effectScale = 1.0
         self.effectColor = Vec4(1, 1, 1, 1)
         self.duration = 4.0
@@ -78,11 +80,10 @@ class EvilRingEffect(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.0)
         self.p0.emitter.setRadiusSpread(0.0)
-        return
 
     def createTrack(self):
-        expand = LerpFunctionInterval(self.reSize, 0.5, toData=1.0, fromData=0.0)
-        shrink = LerpFunctionInterval(self.reSize, 0.75, toData=0.0, fromData=1.0)
+        expand = LerpFunctionInterval(self.reSize, 0.5, toData = 1.0, fromData = 0.0)
+        shrink = LerpFunctionInterval(self.reSize, 0.75, toData = 0.0, fromData = 1.0)
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), expand)
         self.endEffect = Sequence(shrink, Func(self.p0.setBirthRate, 100), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(self.duration), self.endEffect)
@@ -94,7 +95,7 @@ class EvilRingEffect(PooledEffect, EffectController):
         self.effectColor = Vec4(1, 1, 1, 0) - (Vec4(1, 1, 1, 1) - color) / 2.0
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
         self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, self.effectColor, Vec4(0.6, 0.8, 0.7, 0.4), 1)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
@@ -103,3 +104,5 @@ class EvilRingEffect(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

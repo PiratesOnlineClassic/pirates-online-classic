@@ -1,18 +1,18 @@
-import random
-
-from direct.distributed import DistributedObject
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
 from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from pirates.piratesbase import PiratesGlobals
+from direct.distributed import DistributedObject
 from pirates.effects.DustRing import DustRing
 from pirates.effects.SmallSplash import SmallSplash
-from pirates.piratesbase import PiratesGlobals
+import random
 from PooledEffect import PooledEffect
-
-DebrisDict = {'0': 'models/props/testBoard','1': 'models/props/testBoard'}
+DebrisDict = {
+    '0': 'models/props/testBoard',
+    '1': 'models/props/testBoard'}
 
 class ShipDebris(PooledEffect):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         self.collSphereRadius = 2.0
@@ -35,8 +35,8 @@ class ShipDebris(PooledEffect):
         self.collHandler.addInPattern(self.weaponHitEvent)
         self.createTrack()
 
-    def createTrack(self, rate=1):
-        playProjectile = ProjectileInterval(self.transNode, startPos=self.startPos, startVel=self.startVel, endZ=self.endPlaneZ, gravityMult=4.0)
+    def createTrack(self, rate = 1):
+        playProjectile = ProjectileInterval(self.transNode, startPos = self.startPos, startVel = self.startVel, endZ = self.endPlaneZ, gravityMult = 4.0)
         randomNumX = random.uniform(360, 2880)
         randomNumY = random.uniform(360, 2880)
         randomNumZ = random.uniform(360, 2880)
@@ -45,17 +45,18 @@ class ShipDebris(PooledEffect):
         playDebris = Parallel(playProjectile, enableColl)
         self.track = Sequence(Func(self.transNode.reparentTo, self), playDebris, Func(self.cleanUpEffect))
 
-    def play(self, rate=1):
+    def play(self, rate = 1):
         if self.startPos[2] > self.endPlaneZ:
             base.cTrav.addCollider(self.collision, self.collHandler)
             self.track.start()
             self.playRotate.loop()
         else:
             self.finish()
-
+    
     def stop(self):
         if self.track:
             self.track.finish()
+        
         if self.playRotate:
             self.playRotate.finish()
 
@@ -66,6 +67,7 @@ class ShipDebris(PooledEffect):
     def cleanUpEffect(self):
         if base.cTrav:
             base.cTrav.removeCollider(self.collision)
+        
         self.detachNode()
         if self.pool.isUsed(self):
             self.pool.checkin(self)
@@ -80,12 +82,15 @@ class ShipDebris(PooledEffect):
     def weaponHitObject(self, entry):
         if not entry.hasSurfacePoint() or not entry.hasInto():
             return
+        
         if not entry.getInto().isTangible():
             return
+        
         hitObject = entry.getIntoNodePath()
         objType = hitObject.getNetTag('objType')
         if not objType:
             return
+        
         objType = int(objType)
         if objType == PiratesGlobals.COLL_SEA and base.cr.wantSpecialEffects:
             pos = entry.getSurfacePoint(render)
@@ -98,6 +103,7 @@ class ShipDebris(PooledEffect):
                 splashEffect.reparentTo(render)
                 splashEffect.setPos(pos[0], pos[1], entryWaterHeight)
                 splashEffect.play()
+            
             self.cnode.setFromCollideMask(PiratesGlobals.TargetBitmask.allOff())
         elif objType == PiratesGlobals.COLL_LAND and base.cr.wantSpecialEffects:
             pos = entry.getSurfacePoint(render)
@@ -106,4 +112,8 @@ class ShipDebris(PooledEffect):
                 dustRingEffect.reparentTo(render)
                 dustRingEffect.setPos(pos)
                 dustRingEffect.play()
+            
             self.cnode.setFromCollideMask(PiratesGlobals.TargetBitmask.allOff())
+        
+
+

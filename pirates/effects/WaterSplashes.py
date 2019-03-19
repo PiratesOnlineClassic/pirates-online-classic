@@ -1,13 +1,13 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from EffectController import EffectController
 from PooledEffect import PooledEffect
 
-
 class WaterSplashes(PooledEffect, EffectController):
-
-    def __init__(self, parent=None):
+    
+    def __init__(self, parent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         self.setDepthWrite(0)
@@ -66,12 +66,14 @@ class WaterSplashes(PooledEffect, EffectController):
         self.p1.renderer.setFinalYScale(0.1 * self.cardScale * scale)
         self.p1.emitter.setOffsetForce(Vec3(0.0, 0.0, 15.0 * scale))
         self.p1.emitter.setRadius(20.0 * scale)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

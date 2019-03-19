@@ -1,23 +1,24 @@
+from direct.interval.IntervalGlobal import *
+from pirates.piratesbase import PLocalizer
+from pandac.PandaModules import *
+from otp.otpbase import OTPRender
+from pirates.piratesbase import Freebooter
+from pirates.piratesbase import PiratesGlobals
 import random
 import weakref
-
-from direct.interval.IntervalGlobal import *
-from otp.otpbase import OTPRender
-from pandac.PandaModules import *
-from pirates.piratesbase import Freebooter, PiratesGlobals, PLocalizer
-
 MOD_TYPE_MULTIPLE = 0
 MOD_TYPE_MULTIPLE_COMPACT = 1
 MOD_TYPE_SEQUENTIAL = 2
 MOD_TYPE_SEQUENTIAL_CONTINUOUS = 3
 MOD_TYPE_SEQUENTIAL_COMPACT = 4
 MOD_TYPE_TOTAL = 5
+
 MOD_BASICPENALTY = 0
 MOD_CREWBONUS = 1
 MOD_2XPBONUS = 2
 MOD_HOLIDAYBONUS = 3
 
-def genText(value, type, modType=MOD_TYPE_MULTIPLE, modifiers={}):
+def genText(value, type, modType = MOD_TYPE_MULTIPLE, modifiers = {}):
     if value < 0:
         finalText = '%s'
         baseVal = value
@@ -48,24 +49,33 @@ def genText(value, type, modType=MOD_TYPE_MULTIPLE, modifiers={}):
     if MOD_HOLIDAYBONUS in modtypes:
         holidayBonus = modifiers.get(MOD_HOLIDAYBONUS)
         baseVal -= holidayBonus
+    
     if MOD_2XPBONUS in modtypes:
         doubleXPBonus = modifiers.get(MOD_2XPBONUS)
         baseVal -= doubleXPBonus
+    
     if MOD_CREWBONUS in modtypes:
         crewBonus = modifiers.get(MOD_CREWBONUS)
         baseVal -= crewBonus
+    
     if MOD_BASICPENALTY in modtypes:
         basicPenalty = modifiers.get(MOD_BASICPENALTY)
         baseVal += basicPenalty
+    
     if basicPenalty > 0:
         mods.append(TextEffect.TextEffectMod(0, -1 * basicPenalty, PLocalizer.EXP_Nerf, modType))
+    
     if crewBonus > 0:
         mods.append(TextEffect.TextEffectMod(0, crewBonus, PLocalizer.CrewBonus, modType))
+    
     if doubleXPBonus > 0:
         mods.append(TextEffect.TextEffectMod(0, doubleXPBonus, PLocalizer.DoubleRepBonus, modType))
+    
     if holidayBonus > 0:
         mods.append(TextEffect.TextEffectMod(0, holidayBonus, PLocalizer.HolidayBonus, modType))
+    
     return (finalText, baseVal, mods)
+
 
 def genColor(number, type, npc):
     if type == 1:
@@ -140,17 +150,15 @@ def genColor(number, type, npc):
 
 class TextEffect:
     
-
     class TextEffectMod:
         
-
-        def __init__(self, index, modValue, reason, type=0):
+        def __init__(self, index, modValue, reason, type = 0):
             self.modValue = modValue
             self.reason = reason
             self.index = index
             self.type = type
 
-    def __init__(self, textGenerator, type, targetObj, scale, startPos, duration, text, baseVal, mods, finishCallback=None, destPos=None, textColor=(1, 1, 1, 1)):
+    def __init__(self, textGenerator, type, targetObj, scale, startPos, duration, text, baseVal, mods, finishCallback = None, destPos = None, textColor = (1, 1, 1, 1)):
         self.textGenerator = textGenerator
         self.textNode = None
         self.type = type
@@ -172,13 +180,15 @@ class TextEffect:
         self.start()
         self.finishCallbackRef = weakref.ref(finishCallback)
 
-    def genTextNode(self, parent, satellite=False):
+    def genTextNode(self, parent, satellite = False):
         if satellite == False and self.hpText:
             self.hpText.removeNode()
+        
         self.textNode = self.textGenerator.generate()
         hpText = parent.attachNewNode(self.textNode)
         if satellite == False:
             self.hpText = hpText
+        
         if satellite:
             hpText.setScale(self.scale * 0.7)
         else:
@@ -204,6 +214,7 @@ class TextEffect:
         if self.destPos:
             hpTextDummy.setPos(self.targetObj, self.destPos[0], self.destPos[1], self.destPos[2])
             destPos = hpTextDummy.getPos()
+        
         if self.startPos:
             hpTextDummy.setPos(self.targetObj, self.startPos[0], self.startPos[1], self.startPos[2])
         else:
@@ -213,8 +224,9 @@ class TextEffect:
         tgtColor = Vec4(origColor[0], origColor[1], origColor[2], 0)
         if not self.destPos:
             destPos = Point3(hpTextDummy.getX(), hpTextDummy.getY(), hpTextDummy.getZ() + 3 * self.scale)
+        
         numberMoveUp = hpTextDummy.posInterval(self.duration, destPos)
-        fadeOut = hpTextDummy.colorScaleInterval(self.duration * 0.333, tgtColor, startColorScale=Vec4(*origColor))
+        fadeOut = hpTextDummy.colorScaleInterval(self.duration * 0.333, tgtColor, startColorScale = Vec4(*origColor))
         trackParallel = Parallel(numberMoveUp)
         numMods = len(self.mods)
         origModDelay = self.duration * 0.8 / (numMods + 1)
@@ -223,13 +235,13 @@ class TextEffect:
             nextModDelay = modDelay + origModDelay
             trackParallel.append(Sequence(Wait(modDelay), Func(self.playMod, hpTextDummy, mod, origModDelay)))
             modDelay = nextModDelay
-
+        
         trackParallel.append(Sequence(Wait(self.duration * 0.666), fadeOut))
         track = Sequence(trackParallel, Func(self.finish, hpTextDummy))
         track.start()
         self.textNodes.append(hpTextDummy)
         self.textIvals.append(track)
-
+    
     def playMod(self, parent, mod, fadeDelay):
         self.textGenerator.setText(self.staticText % str(self.baseVal + mod.modValue))
         self.baseVal += mod.modValue
@@ -241,6 +253,7 @@ class TextEffect:
         sign = ''
         if mod.modValue > 0:
             sign = '+'
+        
         finalText = sign + str(mod.modValue) + ' ' + mod.reason
         finalText = '( ' + finalText + ' )'
         self.textGenerator.setText(finalText)
@@ -251,15 +264,17 @@ class TextEffect:
             for currTextModNode in self.textModNodes:
                 if mod.type == MOD_TYPE_SEQUENTIAL_CONTINUOUS:
                     prevTextModPos = currTextModNode.getPos()
+                
                 currTextModNode.removeNode()
-
+            
             self.textModNodes = []
             for currTextModIval in self.textModIvals:
                 currTextModIval.finish()
-
+            
             self.textModIvals = []
+        
         if mod.type == MOD_TYPE_SEQUENTIAL_COMPACT or mod.type == MOD_TYPE_MULTIPLE_COMPACT:
-            zLoc = 1.9 - parentHeight + self.scale * 0.5
+            zLoc = (1.9 - parentHeight) + self.scale * 0.5
             modText.setPos(0, -0.1, zLoc)
             origColor = self.textColor
             origColorX = origColor[0]
@@ -273,16 +288,18 @@ class TextEffect:
                 startPos = modText.getPos()
                 finalPos = Point3(startPos.getX(), startPos.getY(), startPos.getZ() - 9 * self.scale)
                 fullTrack.append(modText.posInterval(14.0, finalPos))
-                fullTrack.append(Sequence(Wait(fadeDelay), modText.colorScaleInterval(3.0, tgtColor, startColorScale=startColor)))
-            modTextFade = Sequence(modText.colorScaleInterval(0.5, origColor, startColorScale=tgtColor))
+                fullTrack.append(Sequence(Wait(fadeDelay), modText.colorScaleInterval(3.0, tgtColor, startColorScale = startColor)))
+            
+            modTextFade = Sequence(modText.colorScaleInterval(0.5, origColor, startColorScale = tgtColor))
             if mod.type != MOD_TYPE_MULTIPLE_COMPACT:
                 modTextFade.append(Wait(fadeDelay - 0.15 - 0.5))
-                modTextFade.append(modText.colorScaleInterval(0.15, tgtColor, startColorScale=origColor))
+                modTextFade.append(modText.colorScaleInterval(0.15, tgtColor, startColorScale = origColor))
+            
             fullTrack.append(modTextFade)
             fullTrack.start()
             self.textModIvals.append(fullTrack)
         else:
-            modText.setPos(2 * (self.scale * 1.25), -0.1, 2 + self.scale * 0.9)
+            modText.setPos(2 * self.scale * 1.25, -0.1, 2 + self.scale * 0.9)
             if prevTextModPos:
                 startPos = modText.getPos()
                 modText.setPos(prevTextModPos)
@@ -295,27 +312,26 @@ class TextEffect:
             origColorZ = origColor[2]
             startColor = Vec4(origColorX, origColorY, origColorZ, 0.5)
             tgtColor = Vec4(origColorX, origColorY, origColorZ, 0)
-            modTextMove = Parallel(modText.posInterval(14.0, finalPos), Sequence(Wait(fadeDelay), modText.colorScaleInterval(3.0, tgtColor, startColorScale=startColor)))
+            modTextMove = Parallel(modText.posInterval(14.0, finalPos), Sequence(Wait(fadeDelay), modText.colorScaleInterval(3.0, tgtColor, startColorScale = startColor)))
             modTextMove.start()
             self.textModIvals.append(modTextMove)
         self.textModNodes.append(modText)
-        return
 
     def pause(self):
         for currIval in self.textIvals:
             currIval.pause()
-
+        
         for currIval in self.textModIvals:
             currIval.pause()
 
     def resume(self):
         for currIval in self.textIvals:
             currIval.resume()
-
+        
         for currIval in self.textModIvals:
             currIval.resume()
 
-    def finish(self, textNode=None):
+    def finish(self, textNode = None):
         if textNode:
             index = self.textNodes.index(textNode)
             self.textIvals[index].finish()
@@ -325,11 +341,11 @@ class TextEffect:
             finishCallback = self.finishCallbackRef()
             if finishCallback:
                 finishCallback()
+            
 
-
-def genTextEffect(targetObj, textGenerator, number, bonus, isNpc, cleanupCallback, startPos, destPos=None, scale=1.0, modifiers={}):
+def genTextEffect(targetObj, textGenerator, number, bonus, isNpc, cleanupCallback, startPos, destPos = None, scale = 1.0, modifiers = {}):
     textGenerator.setFont(PiratesGlobals.getPirateOutlineFont())
-    text, baseVal, mods = genText(number, bonus, MOD_TYPE_MULTIPLE, modifiers)
+    (text, baseVal, mods) = genText(number, bonus, MOD_TYPE_MULTIPLE, modifiers)
     duration = 2.0 + len(mods)
     textGenerator.setText(text % str(baseVal))
     textGenerator.clearShadow()
@@ -337,3 +353,4 @@ def genTextEffect(targetObj, textGenerator, number, bonus, isNpc, cleanupCallbac
     color = genColor(number, bonus, isNpc)
     newEffect = TextEffect(textGenerator, bonus, targetObj, scale, startPos, duration, text, baseVal, mods, cleanupCallback, destPos, color)
     return newEffect
+

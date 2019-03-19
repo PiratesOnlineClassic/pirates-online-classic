@@ -1,10 +1,11 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
 from pandac.PandaModules import *
-
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 
 class VolcanoSmoke(NodePath):
-
+    
     def __init__(self):
         NodePath.__init__(self, 'VolcanoSmoke')
         self.renderParent = self.attachNewNode('VolcanoSmoke-renderParent')
@@ -76,13 +77,13 @@ class VolcanoSmoke(NodePath):
         self.force2.setActive(1)
         self.f0.addForce(self.force2)
         self.f.addForceGroup(self.f0)
-
+    
     def enable(self):
         self.f.start(self, self.renderParent)
 
     def disable(self):
         self.f.disable()
-
+    
     def getRenderParent(self):
         return self.renderParent
 
@@ -99,3 +100,5 @@ class VolcanoSmoke(NodePath):
 
     def isEnabled(self):
         return self.f.isEnabled()
+
+

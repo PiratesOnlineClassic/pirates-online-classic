@@ -1,25 +1,27 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class WaterRippleSplash(PooledEffect, EffectController):
     cardScale = 64.0
-
-    def __init__(self, parent=None):
+    
+    def __init__(self, parent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if parent is not None:
             self.reparentTo(parent)
+        
         if not self.particleDummy:
             self.particleDummy = render.attachNewNode(ModelNode('WaterRippleSplashParticleDummy'))
             self.particleDummy.setDepthWrite(0)
             self.particleDummy.setLightOff()
             self.particleDummy.setFogOff()
+        
         self.setDepthWrite(0)
         self.setLightOff()
         self.setFogOff()
@@ -73,19 +75,20 @@ class WaterRippleSplash(PooledEffect, EffectController):
         self.p1.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p1.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p1.emitter.setRadius(0.75)
-        return
 
     def createTrack(self):
         self.startEffect = Sequence(Func(self.p1.setBirthRate, 0.02), Func(self.p1.clearToInitial), Func(self.f.start, self, self))
         self.endEffect = Sequence(Func(self.p1.setBirthRate, 100.0), Func(self.cleanUpEffect))
         self.endEffect2 = Sequence(Func(self.p1.setBirthRate, 100.0))
         self.track = Sequence(self.startEffect, Wait(0.5), self.endEffect2)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

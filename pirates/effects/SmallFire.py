@@ -1,19 +1,21 @@
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from pirates.piratesgui.GameOptions import Options
-
+from EffectController import EffectController
 
 class SmallFire(EffectController, NodePath):
     cardScale = 64.0
-
-    def __init__(self, effectParent=None):
+    
+    def __init__(self, effectParent = None):
         EffectController.__init__(self)
         NodePath.__init__(self, 'SmallFire')
         if effectParent:
             self.reparentTo(effectParent)
+        
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleFire2')
         if not SmallFire.particleDummy:
@@ -23,6 +25,7 @@ class SmallFire(EffectController, NodePath):
             SmallFire.particleDummy.setLightOff()
             SmallFire.particleDummy.setColorScaleOff()
             SmallFire.particleDummy.setBin('fixed', 60)
+        
         self.duration = 10.0
         self.effectScale = 1.0
         self.f = ParticleEffect.ParticleEffect('Fire')
@@ -67,12 +70,12 @@ class SmallFire(EffectController, NodePath):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.setScale(VBase3(1, 1, 1))
 
-    def createTrack(self, lod=None):
+    def createTrack(self, lod = None):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
-
-    def setScale(self, scale=VBase3(1, 1, 1)):
+    
+    def setScale(self, scale = VBase3(1, 1, 1)):
         self.effectScale = scale[0]
         self.p0.renderer.setInitialXScale(0.01 * self.cardScale * self.effectScale)
         self.p0.renderer.setInitialYScale(0.01 * self.cardScale * self.effectScale)
@@ -80,3 +83,5 @@ class SmallFire(EffectController, NodePath):
         self.p0.renderer.setFinalYScale(0.001 * self.cardScale * self.effectScale)
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 2.0 * self.effectScale))
         self.p0.emitter.setRadius(0.5 * self.effectScale)
+
+

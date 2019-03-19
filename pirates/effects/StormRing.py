@@ -1,12 +1,12 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
-
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from EffectController import EffectController
 
 class StormRing(EffectController, NodePath):
     cardScale = 64.0
-
+    
     def __init__(self):
         NodePath.__init__(self, 'StormRing')
         EffectController.__init__(self)
@@ -18,6 +18,7 @@ class StormRing(EffectController, NodePath):
             StormRing.particleDummy.setColorScale(1.0, 1.0, 1.0, 1.0)
             StormRing.particleDummy.setLightOff()
             StormRing.particleDummy.setBin('background', 116)
+        
         self.duration = 10
         self.f = ParticleEffect.ParticleEffect('StormRing')
         self.f.reparentTo(self)
@@ -61,8 +62,10 @@ class StormRing(EffectController, NodePath):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(160.0)
         self.p0.emitter.setRadiusSpread(5)
-
+    
     def createTrack(self):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(self.duration), self.endEffect)
+
+

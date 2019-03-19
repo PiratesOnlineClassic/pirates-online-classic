@@ -1,16 +1,16 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+import random
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class VoodooPestilence(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -23,6 +23,7 @@ class VoodooPestilence(PooledEffect, EffectController):
             self.particleDummy.setColorScaleOff()
             self.particleDummy.setLightOff()
             self.particleDummy.setFogOff()
+        
         self.f = ParticleEffect.ParticleEffect('VoodooPestilence')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -69,17 +70,18 @@ class VoodooPestilence(PooledEffect, EffectController):
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(0.3)
         self.p0.emitter.setAmplitudeSpread(0.0)
-        self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, -0.45))
+        self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, -.45))
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.01)
         if self.effectScale > 1.0:
             self.p0.emitter.setAmplitude(0.15)
-            self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, -0.1))
+            self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, -.1))
+        
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(2.5), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.25), self.endEffect)
-
+    
     def cleanUpEffect(self):
         self.f.disable()
         self.detachNode()
@@ -89,3 +91,5 @@ class VoodooPestilence(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

@@ -1,27 +1,29 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from pirates.piratesgui.GameOptions import Options
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class Fire(PooledEffect, EffectController):
     cardScale = 64.0
     burningSfx = None
-
-    def __init__(self, effectParent=None):
+    
+    def __init__(self, effectParent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if effectParent:
             self.reparentTo(effectParent)
+        
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleFire2')
         if not self.burningSfx:
             self.burningSfx = base.loadSfx('audio/sfx_grenade_impact_firebomb_loop.mp3')
+        
         if not Fire.particleDummy:
             Fire.particleDummy = base.effectsRoot.attachNewNode(ModelNode('FireParticleDummy'))
             Fire.particleDummy.setDepthWrite(0)
@@ -29,6 +31,7 @@ class Fire(PooledEffect, EffectController):
             Fire.particleDummy.setLightOff()
             Fire.particleDummy.setColorScaleOff()
             Fire.particleDummy.setBin('fixed', 60)
+        
         self.duration = 10.0
         self.effectScale = 1.0
         self.f = ParticleEffect.ParticleEffect('Fire')
@@ -83,7 +86,7 @@ class Fire(PooledEffect, EffectController):
     def disable(self):
         self.f.disable()
 
-    def createTrack(self, lod=Options.SpecialEffectsHigh):
+    def createTrack(self, lod = Options.SpecialEffectsHigh):
         if lod >= Options.SpecialEffectsHigh:
             self.p0.setPoolSize(96)
             self.p0.setLitterSize(4)
@@ -94,16 +97,16 @@ class Fire(PooledEffect, EffectController):
             self.p0.setPoolSize(48)
             self.p0.setLitterSize(2)
             self.p0.factory.enableAngularVelocity(0)
-        shrinkSize = LerpFunctionInterval(self.setNewSize, 2.5, toData=0.001, fromData=1.0)
+        shrinkSize = LerpFunctionInterval(self.setNewSize, 2.5, toData = 0.001, fromData = 1.0)
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
         self.endEffect = Sequence(shrinkSize, Func(self.p0.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
-        self.track = Sequence(self.startEffect, SoundInterval(self.burningSfx, loop=1, duration=self.duration), self.endEffect)
+        self.track = Sequence(self.startEffect, SoundInterval(self.burningSfx, loop = 1, duration = self.duration), self.endEffect)
 
     def setNewSize(self, time):
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 15.0 * self.effectScale * time))
         self.p0.renderer.setUserAlpha(1.0 * time)
 
-    def setScale(self, scale=VBase3(1, 1, 1)):
+    def setScale(self, scale = VBase3(1, 1, 1)):
         self.effectScale = scale[0]
         self.p0.renderer.setInitialXScale(0.05 * self.cardScale * self.effectScale)
         self.p0.renderer.setInitialYScale(0.05 * self.cardScale * self.effectScale)
@@ -111,7 +114,7 @@ class Fire(PooledEffect, EffectController):
         self.p0.renderer.setFinalYScale(0.045 * self.cardScale * self.effectScale)
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 15.0 * self.effectScale))
         self.p0.emitter.setRadius(6.0 * self.effectScale)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool and self.pool.isUsed(self):
@@ -120,3 +123,5 @@ class Fire(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

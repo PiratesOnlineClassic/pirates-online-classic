@@ -1,18 +1,18 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class GreenBlood(PooledEffect, EffectController):
     cardScale = 64.0
     SfxNames = ('wood_impact_1.mp3', 'wood_impact_3.mp3', 'wood_impact_4.mp3')
     splashSfx = []
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -25,6 +25,7 @@ class GreenBlood(PooledEffect, EffectController):
         if not GreenBlood.particleDummy:
             GreenBlood.particleDummy = render.attachNewNode(ModelNode('GreenBloodParticleDummy'))
             GreenBlood.particleDummy.setDepthWrite(0)
+        
         self.f = ParticleEffect.ParticleEffect('GreenBlood')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -38,7 +39,7 @@ class GreenBlood(PooledEffect, EffectController):
         f0.addForce(force0)
         self.f.addForceGroup(f0)
 
-    def createTrack(self, rate=1):
+    def createTrack(self, rate = 1):
         self.p0.setPoolSize(16)
         self.p0.setBirthRate(0.4)
         self.p0.setLitterSize(1)
@@ -76,7 +77,7 @@ class GreenBlood(PooledEffect, EffectController):
         self.p0.emitter.setRadius(2.0)
         sfx = random.choice(self.splashSfx)
         particleSpray = Sequence(Func(self.p0.setBirthRate, 0.4), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.3), Func(self.p0.setBirthRate, 100), Wait(3.0), Func(self.cleanUpEffect))
-        self.track = Parallel(particleSpray, Func(base.playSfx, sfx, volume=1, node=self))
+        self.track = Parallel(particleSpray, Func(base.playSfx, sfx, volume = 1, node = self))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -86,3 +87,5 @@ class GreenBlood(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

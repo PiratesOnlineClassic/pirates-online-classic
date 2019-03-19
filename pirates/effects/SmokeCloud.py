@@ -1,15 +1,15 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class SmokeCloud(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -23,6 +23,7 @@ class SmokeCloud(PooledEffect, EffectController):
             SmokeCloud.particleDummy.setDepthWrite(0)
             SmokeCloud.particleDummy.setLightOff()
             SmokeCloud.particleDummy.setColorScaleOff()
+        
         self.f = ParticleEffect.ParticleEffect('SmokeCloud')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -70,7 +71,7 @@ class SmokeCloud(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 1.0))
         self.p0.emitter.setRadius(self.radius)
-
+    
     def createTrack(self):
         self.track = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(1.0), Func(self.p0.setBirthRate, 100), Wait(3.0), Func(self.cleanUpEffect))
 
@@ -82,3 +83,5 @@ class SmokeCloud(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

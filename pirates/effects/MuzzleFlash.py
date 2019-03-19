@@ -1,16 +1,14 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
 from pirates.piratesbase import PiratesGlobals
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class MuzzleFlash(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -27,10 +25,10 @@ class MuzzleFlash(PooledEffect, EffectController):
         self.flash.setScale(25)
         self.flash.reparentTo(self)
         self.flash.hide()
-
+    
     def createTrack(self):
-        fadeBlast = self.flash.colorScaleInterval(self.fadeTime, Vec4(0, 0, 0, 0), startColorScale=self.startCol, blendType='easeOut')
-        scaleBlast = self.flash.scaleInterval(self.fadeTime, 10, blendType='easeIn')
+        fadeBlast = self.flash.colorScaleInterval(self.fadeTime, Vec4(0, 0, 0, 0), startColorScale = self.startCol, blendType = 'easeOut')
+        scaleBlast = self.flash.scaleInterval(self.fadeTime, 10, blendType = 'easeIn')
         self.track = Sequence(Func(self.flash.show), Parallel(fadeBlast, scaleBlast), Func(self.flash.hide), Func(self.flash.setColorScale, Vec4(1, 1, 1, 1)), Func(self.cleanUpEffect))
         self.reparentTo(render)
 
@@ -66,3 +64,7 @@ class MuzzleFlash(PooledEffect, EffectController):
                 self.startCol = Vec4(1, 1, 1, 1)
             elif stateId == PiratesGlobals.TOD_STARS:
                 self.startCol = Vec4(1, 1, 1, 1)
+            
+        
+
+

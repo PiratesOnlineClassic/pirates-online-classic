@@ -1,15 +1,15 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class CeilingDust(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -18,6 +18,7 @@ class CeilingDust(PooledEffect, EffectController):
         if not CeilingDust.particleDummy:
             CeilingDust.particleDummy = render.attachNewNode(ModelNode('CeilingDustParticleDummy'))
             CeilingDust.particleDummy.setDepthWrite(0)
+        
         self.f = ParticleEffect.ParticleEffect('CeilingDust')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -78,3 +79,5 @@ class CeilingDust(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

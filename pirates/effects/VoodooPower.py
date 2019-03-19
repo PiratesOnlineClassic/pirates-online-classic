@@ -1,16 +1,16 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class VoodooPower(PooledEffect, EffectController):
     cardScale = 64.0
     card2Scale = 128.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -167,7 +167,7 @@ class VoodooPower(PooledEffect, EffectController):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self), Func(expand.loop), Wait(2.0), Func(self.p1.setBirthRate, 0.1), Func(self.p1.clearToInitial), Func(self.p2.setBirthRate, 0.03), Func(self.p2.clearToInitial), Wait(3.5), Func(expand.finish))
         self.endEffect = Sequence(Func(expand.finish), Func(self.p0.setBirthRate, 100.0), Func(self.p1.setBirthRate, 100.0), Func(self.p2.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(0.5), self.endEffect)
-
+    
     def resize(self):
         self.p0.renderer.setFinalXScale(0.02 * self.scale * self.cardScale)
         self.p0.renderer.setFinalYScale(0.03 * self.scale * self.cardScale)
@@ -178,7 +178,7 @@ class VoodooPower(PooledEffect, EffectController):
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
         self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1, 1, 1, 0.5), self.effectColor, 1)
         self.p1.renderer.getColorInterpolationManager().clearToInitial()
-        self.p1.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.1, 0.2, 1.0, 0.0), self.effectColor + Vec4(-0.2, -0.1, 0, 0.5), 1)
+        self.p1.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.1, 0.2, 1.0, 0.0), self.effectColor + Vec4(-.2, -.1, 0, 0.5), 1)
         self.p2.renderer.getColorInterpolationManager().clearToInitial()
         self.p2.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, self.effectColor, Vec4(0.0, 0.0, 0.0, 0.75), 1)
 
@@ -190,3 +190,5 @@ class VoodooPower(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

@@ -1,15 +1,13 @@
+from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from pirates.piratesbase import PiratesGlobals
 import random
 
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
-from pandac.PandaModules import *
-from pirates.piratesbase import PiratesGlobals
-
-
 class DarkMaelstrom(DirectObject, NodePath):
-
-    def __init__(self, newParent=render):
+    
+    def __init__(self, newParent = render):
         NodePath.__init__(self, 'DarkMaelstromParent')
         self.newParent = newParent
         self.setColorScaleOff()
@@ -41,14 +39,18 @@ class DarkMaelstrom(DirectObject, NodePath):
         self.bolt4.setBillboardAxis()
         self.bolt4.setColorScaleOff()
         self.bolt4.setColor(Vec4(0))
-        stormTops = self.glow.findAllMatches('**/Swirl_*')
+        stormTops = self.glow.findAllMatches('**/Swirl_*').asList()
         for top in stormTops:
             top.setBin('fixed', 125)
 
         stormTopTs = [ top.findAllTextureStages()[0] for top in stormTops ]
         duration = 20 + random.randint(1, 20)
-        rotate = Parallel(stormTops[0].hprInterval(duration, Point3(360, 0, 0), startHpr=Point3(0, 0, 0)), stormTops[1].hprInterval(duration, Point3(0, 0, 0), startHpr=Point3(360, 0, 0)))
-        uvScrollTop = Parallel(LerpFunctionInterval(self.setNewUVs, duration, toData=0, fromData=1, extraArgs=[stormTops[0], stormTopTs[0]]), LerpFunctionInterval(self.setNewUVs, duration, fromData=1, toData=0, extraArgs=[stormTops[1], stormTopTs[1]]))
+        rotate = Parallel(stormTops[0].hprInterval(duration, Point3(360, 0, 0), startHpr = Point3(0, 0, 0)), stormTops[1].hprInterval(duration, Point3(0, 0, 0), startHpr = Point3(360, 0, 0)))
+        uvScrollTop = Parallel(LerpFunctionInterval(self.setNewUVs, duration, toData = 0, fromData = 1, extraArgs = [
+            stormTops[0],
+            stormTopTs[0]]), LerpFunctionInterval(self.setNewUVs, duration, fromData = 1, toData = 0, extraArgs = [
+            stormTops[1],
+            stormTopTs[1]]))
         self.track = Parallel(rotate, uvScrollTop)
         texture = top.findAllTextures()[0]
         texture.setWrapU(Texture.WMRepeat)
@@ -67,15 +69,14 @@ class DarkMaelstrom(DirectObject, NodePath):
         playBolt4 = Sequence(bolt4In, Wait(0.1), bolt4Out)
         self.lightningTrack = Sequence(Wait(1.0), playBolt1, Wait(0.5), playBolt2, Wait(2.0), playBolt3, Wait(1.5), playBolt4, Wait(0.0))
         self.fadeTrack = None
-        return
 
-    def play(self, rate=1):
+    def play(self, rate = 1):
         self.setColorScaleOff()
         self.track.start()
         self.lightningTrack.start()
         self.reparentTo(self.newParent)
-
-    def loop(self, rate=1):
+    
+    def loop(self, rate = 1):
         self.setColorScaleOff()
         self.track.loop()
         self.lightningTrack.loop()
@@ -84,6 +85,7 @@ class DarkMaelstrom(DirectObject, NodePath):
     def fadeOutAndStop(self):
         if hasattr(self, 'lightningTrack'):
             self.lightningTrack.finish()
+        
         self.fadeTrack = Sequence(LerpColorScaleInterval(self, 1.0, Vec4(1.0, 1.0, 1.0, 0.0)), Func(self.stop))
         self.fadeTrack.start()
 
@@ -91,9 +93,11 @@ class DarkMaelstrom(DirectObject, NodePath):
         if hasattr(self, 'track'):
             if self.track:
                 self.track.finish()
+
         if hasattr(self, 'lightningTrack'):
             if self.lightningTrack:
                 self.lightningTrack.finish()
+
         if hasattr(self, 'fadeTrack'):
             if self.fadeTrack:
                 self.fadeTrack.finish()
@@ -110,13 +114,19 @@ class DarkMaelstrom(DirectObject, NodePath):
         self.stop()
         if hasattr(self, 'track'):
             del self.track
+        
         if hasattr(self, 'lightningTrack'):
             del self.lightningTrack
+        
         if hasattr(self, 'fadeTrack'):
             del self.fadeTrack
+        
         if hasattr(self, 'glow'):
             del self.glow
+        
         self.removeNode()
 
     def setNewUVs(self, offset, part, ts):
         part.setTexOffset(ts, offset, offset)
+
+

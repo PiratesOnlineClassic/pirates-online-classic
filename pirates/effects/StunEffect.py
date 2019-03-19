@@ -1,13 +1,13 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from EffectController import EffectController
+from direct.particles import ParticleEffect
+from direct.particles import Particles
 from PooledEffect import PooledEffect
-
 
 class StunEffect(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -67,10 +67,10 @@ class StunEffect(PooledEffect, EffectController):
         self.p0.renderer.setFinalXScale(0.006 * self.cardScale * self.effectScale)
         self.p0.renderer.setInitialYScale(0.001 * self.cardScale * self.effectScale)
         self.p0.renderer.setFinalYScale(0.0075 * self.cardScale * self.effectScale)
-        rotateOne = LerpHprInterval(self.dummy, self.duration, Vec3(0, 10, -10), startHpr=Vec3(0, -10, 10))
-        rotateTwo = LerpHprInterval(self.dummy, self.duration, Vec3(0, -10, 10), startHpr=Vec3(0, 10, -10))
+        rotateOne = LerpHprInterval(self.dummy, self.duration, Vec3(0, 10, -10), startHpr = Vec3(0, -10, 10))
+        rotateTwo = LerpHprInterval(self.dummy, self.duration, Vec3(0, -10, 10), startHpr = Vec3(0, 10, -10))
         rotate = Sequence(rotateOne, rotateTwo)
-        rotateH = LerpHprInterval(self.dummy2, self.duration, Vec3(0, 0, 0), startHpr=Vec3(self.direction * 360, 0, 0))
+        rotateH = LerpHprInterval(self.dummy2, self.duration, Vec3(0, 0, 0), startHpr = Vec3(self.direction * 360, 0, 0))
         self.startEffect = Sequence(Func(self.p0.clearToInitial), Func(self.p0.setBirthRate, 0.2), Func(self.f.start, self, self.dummy2), Func(rotate.loop), Func(rotateH.loop))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(1.25), Func(rotate.finish), Func(rotateH.finish), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(2.0 * self.duration), self.endEffect)
@@ -83,3 +83,5 @@ class StunEffect(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

@@ -1,16 +1,16 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class DustRing(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -19,6 +19,7 @@ class DustRing(PooledEffect, EffectController):
         if not DustRing.particleDummy:
             DustRing.particleDummy = render.attachNewNode(ModelNode('DustRingParticleDummy'))
             DustRing.particleDummy.setDepthWrite(0)
+        
         self.f = ParticleEffect.ParticleEffect('DustRing')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -76,3 +77,5 @@ class DustRing(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
