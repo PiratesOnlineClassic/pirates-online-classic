@@ -402,10 +402,10 @@ def ExactRingMatch(maxSlot, xc, yc):
     while loopItr < maxSlot + 1:
         targetXc = Center[loopItr][0] * Xscale
         targetYc = Center[loopItr][1] * Yscale
-        if (xc - targetXc < XTol or xc - targetXc > XTol * -1) and yc - targetYc < YTol and yc - targetYc > YTol * -1:
+        if xc - targetXc < XTol and xc - targetXc > XTol * -1 and yc - targetYc < YTol and yc - targetYc > YTol * -1:
             return loopItr
-        
         loopItr += 1
+
     return -1
 
 
@@ -569,7 +569,7 @@ class RadialMenu:
 
     def destroy(self):
         if self.numberOfItems < 0:
-            return None
+            return
         
         taskMgr.remove('radialMenuHeartBeat')
         for i in range(self.numberOfItems + 1):
@@ -642,10 +642,10 @@ class SkillTray:
     def showSkillTray(self, task = None):
         if localAvatar.isWeaponDrawn == False:
             if localAvatar.gameFSM.state != 'ShipPilot' and not localAvatar.cannon:
-                return None
+                return
 
         if self.skillTrayState:
-            return None
+            return
         else:
             self.skillTrayState = True
         if self.showSkillTrayIval.isPlaying():
@@ -658,7 +658,7 @@ class SkillTray:
 
     def hideSkillTray(self):
         if not self.skillTrayState:
-            return None
+            return
         else:
             self.skillTrayState = False
         if self.showSkillTrayIval.isPlaying():
@@ -671,7 +671,7 @@ class SkillTray:
 
     def updateSkillTrayMeter(self):
         if not self.traySkillMap:
-            return None
+            return
         
         inv = base.localAvatar.getInventory()
         reputation = inv.getReputation(self.rep)
@@ -689,13 +689,13 @@ class SkillTray:
             callback = self.callback
         
         if rep is None:
-            return None
+            return
         
         self.updateSkillTray(rep, weaponMode, callback, hideFirst = False)
     
     def updateSkillTray(self, rep, weaponMode, callback = None, hideFirst = True):
         if rep == InventoryType.MeleeRep:
-            return None
+            return
         
         if not callback:
             callback = localAvatar.guiMgr.combatTray.triggerSkillTraySkill
@@ -709,7 +709,7 @@ class SkillTray:
                 rep,
                 weaponMode,
                 callback])
-            return None
+            return
         
         text = PLocalizer.InventoryTypeNames.get(rep, 'Unknown')
         for i in range(self.numberOfItems):
@@ -733,7 +733,7 @@ class SkillTray:
         self.repMeter.setCategory(self.rep)
         inv = base.localAvatar.getInventory()
         if inv is None:
-            return None
+            return
         
         self.repMeter.update(inv.getReputation(self.rep))
         x = 0.0
@@ -827,14 +827,14 @@ class SkillTray:
 
     def updateSkillTrayStates(self):
         if not self.traySkillMap:
-            return None
+            return
         
         if not hasattr(base, 'localAvatar'):
-            return None
+            return
         
         inv = localAvatar.getInventory()
         if not inv:
-            return None
+            return
         
         self.numberOfItems = len(self.traySkillMap)
         for i in range(self.numberOfItems):
@@ -857,8 +857,11 @@ class SkillTray:
                 greyOut = 1
             
             if localAvatar.ship:
-                if (skillId == InventoryType.SailBroadsideLeft or skillId == InventoryType.SailBroadsideRight) and not (localAvatar.ship.broadside):
-                    greyOut = 1
+                pass
+            else:
+                if skillId == InventoryType.SailBroadsideLeft or skillId == InventoryType.SailBroadsideRight:
+                    if not localAvatar.ship.broadside:
+                        greyOut = 1
 
             rep = WeaponGlobals.getSkillReputationCategoryId(skillId)
             if rep == InventoryType.DollRep:
@@ -896,13 +899,13 @@ class SkillTray:
 
     def decrementSkillTrayAmount(self, skillId, amt = 1):
         if not self.traySkillMap:
-            return None
+            return
         
         if self.weaponMode not in (WeaponGlobals.FIREARM, WeaponGlobals.THROWING, WeaponGlobals.CANNON, WeaponGlobals.GRENADE):
-            return None
+            return
         
         if not hasattr(base, 'localAvatar'):
-            return None
+            return
         
         self.numberOfItems = len(self.traySkillMap)
         for i in range(self.numberOfItems):
@@ -921,21 +924,21 @@ class SkillTray:
                                 self.tray[i + 1].skillRing.meterFaceHalf1.setColorScale(0.4, 0.4, 0.4, 1.0)
                                 self.tray[i + 1].skillRing.meterFaceHalf2.setColorScale(0.4, 0.4, 0.4, 1.0)
 
-                        return None
+                        return
 
     def updateSkillTrayAmounts(self):
         if not self.traySkillMap:
-            return None
+            return
         
         if self.weaponMode not in (WeaponGlobals.FIREARM, WeaponGlobals.THROWING, WeaponGlobals.CANNON, WeaponGlobals.GRENADE):
-            return None
+            return
         
         if not hasattr(base, 'localAvatar'):
-            return None
+            return
         
         inv = localAvatar.getInventory()
         if not inv:
-            return None
+            return
         
         self.numberOfItems = len(self.traySkillMap)
         for i in range(self.numberOfItems):
@@ -954,30 +957,28 @@ class SkillTray:
 
     def updateSkillIval(self, skillId):
         for button in self.tray:
-            if isinstance(self.tray[button], SkillButton) and not self.tray[button].isEmpty() and self.tray[button].skillId == skillId:
-                if not self.tray[button].skillRingIval.isPlaying():
-                    self.tray[button].skillRingIval.start()
-                
-            self.tray[button].skillRingIval.isPlaying()
+            if isinstance(self.tray[button], SkillButton):
+                if not self.tray[button].isEmpty() and self.tray[button].skillId == skillId:
+                    self.tray[button].skillRingIval.isPlaying() or self.tray[button].skillRingIval.start()
 
     def addPowerRechargeEffect(self):
         for button in self.tray:
-            if isinstance(self.tray[button], SkillButton) and not self.tray[button].isEmpty():
-                if (WeaponGlobals.getIsShipSkill(self.tray[button].skillId) or WeaponGlobals.getIsCannonSkill(self.tray[button].skillId)) and self.tray[button].skillId != InventoryType.SailPowerRecharge:
+            if isinstance(self.tray[button], SkillButton):
+                if not self.tray[button].isEmpty() and (WeaponGlobals.getIsShipSkill(self.tray[button].skillId) or WeaponGlobals.getIsCannonSkill(self.tray[button].skillId)) and self.tray[button].skillId != InventoryType.SailPowerRecharge:
                     self.tray[button].quickGlowImpulse()
                     self.tray[button].startPowerImpulse()
                     self.tray[button].updateSkillRingIval()
 
     def continuePowerRechargeEffect(self):
         for button in self.tray:
-            if isinstance(self.tray[button], SkillButton) and not self.tray[button].isEmpty():
-                if (WeaponGlobals.getIsShipSkill(self.tray[button].skillId) or WeaponGlobals.getIsCannonSkill(self.tray[button].skillId)) and self.tray[button].skillId != InventoryType.SailPowerRecharge:
+            if isinstance(self.tray[button], SkillButton):
+                if not self.tray[button].isEmpty() and (WeaponGlobals.getIsShipSkill(self.tray[button].skillId) or WeaponGlobals.getIsCannonSkill(self.tray[button].skillId)) and self.tray[button].skillId != InventoryType.SailPowerRecharge:
                     self.tray[button].startPowerImpulse()
-    
+
     def removePowerRechargeEffect(self):
         for button in self.tray:
-            if isinstance(self.tray[button], SkillButton) and not self.tray[button].isEmpty():
-                if (WeaponGlobals.getIsShipSkill(self.tray[button].skillId) or WeaponGlobals.getIsCannonSkill(self.tray[button].skillId)) and self.tray[button].skillId != InventoryType.SailPowerRecharge:
+            if isinstance(self.tray[button], SkillButton):
+                if not self.tray[button].isEmpty() and (WeaponGlobals.getIsShipSkill(self.tray[button].skillId) or WeaponGlobals.getIsCannonSkill(self.tray[button].skillId)) and self.tray[button].skillId != InventoryType.SailPowerRecharge:
                     self.tray[button].stopPowerImpulse()
                     self.tray[button].updateSkillRingIval()
     

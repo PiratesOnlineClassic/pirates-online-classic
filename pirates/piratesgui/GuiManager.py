@@ -648,7 +648,7 @@ class GuiManager(FSM.FSM):
     
     def deleteLevelUpText(self):
         if not self.levelUpIval:
-            return None
+            return
         
         if self.levelUpIval:
             self.levelUpIval.pause()
@@ -661,7 +661,7 @@ class GuiManager(FSM.FSM):
 
     def createLevelUpText(self):
         if self.levelUpIval:
-            return None
+            return
         
         self.levelUpSfx = loader.loadSfx('audio/treasure_whoosh.mp3')
         self.levelUpSfx.setVolume(0.5)
@@ -732,6 +732,7 @@ class GuiManager(FSM.FSM):
         (msg, color) = quest.getProgressMsg()
         if msg:
             self.createProgressMsg(msg, color)
+        return None
 
     def showQuestAddedText(self, quest):
         self.av.queueStoryQuest(quest)
@@ -749,10 +750,11 @@ class GuiManager(FSM.FSM):
         self.createNewQuestIndicator(quest)
         UserFunnel.logSubmit(0, 'quest_assigned_%s' % quest.questId)
         UserFunnel.logSubmit(1, 'quest_assigned_%s' % quest.questId)
+        return None
     
     def showQuestNotifyText(self, message, quest):
         if self.tutorialStatus < PiratesGlobals.TUT_GOT_SEACHEST:
-            return None
+            return
         
         (msg, color) = quest.getProgressMsg()
         if msg:
@@ -771,6 +773,7 @@ class GuiManager(FSM.FSM):
         (msg, color) = quest.getProgressMsg()
         if msg:
             self.createProgressMsg(msg, color)
+        return None
 
     def handleTopTen(self, stuff):
         self.topTen = DirectFrame(parent = aspect2d, relief = DGG.FLAT, frameSize = (-0.8, 0.8, -0.7, 0.6), frameColor = PiratesGuiGlobals.FrameColor, pos = (0, 0, 0), text = 'Reputation Top Ten', text_align = TextNode.ACenter, text_scale = 0.04, text_fg = (0.9, 1, 0.9, 1), text_pos = (0, 0.5, 0))
@@ -828,7 +831,7 @@ class GuiManager(FSM.FSM):
     def handleGotoAvatar(self, avId, avName = None):
         if not launcher.canLeaveFirstIsland():
             self.showDownloadBlocker(DownloadBlockerPanel.Reasons.TELEPORT)
-            return None
+            return
         
         base.cr.teleportMgr.queryAvatarForTeleport(avId)
 
@@ -879,13 +882,13 @@ class GuiManager(FSM.FSM):
 
     def handleGuildInviteAccept(self, avid):
         if not self.guildInviter:
-            return None
+            return
         
         self.guildInviter.guildAcceptInvite(avid)
     
     def handleGuildInviteReject(self, avid, reason):
         if not self.guildInviter:
-            return None
+            return
         
         self.guildInviter.guildRejectInvite(avid, reason)
 
@@ -983,7 +986,7 @@ class GuiManager(FSM.FSM):
 
     def handleWhisperIncoming(self, senderId, msgText):
         if base.cr.avatarFriendsManager.checkIgnored(senderId):
-            return None
+            return
         
         sender = base.cr.identifyAvatar(senderId)
         if sender:
@@ -1014,7 +1017,7 @@ class GuiManager(FSM.FSM):
         self.tmObjectiveList.setPos(base.a2dLeft, 0, 0.45)
 
     def showTMCompleteUI(self, tm, results):
-        return None
+        return
         if self.tmCompleteUI == None:
             self.createTMCompleteUI(tm, results)
         
@@ -1276,6 +1279,7 @@ class GuiManager(FSM.FSM):
         if categoryType == ReputationGlobals.WEAPON_CATEGORY:
             if gearRepId == InventoryType.CannonRep:
                 pass
+        return None
 
     def setTimer(self, time, showMinutes = 1, mode = None, titleText = '', titleFg = None, infoText = '', cancelText = '', cancelCallback = None, timerExpiredCallback = None, alarmTime = 5):
         self.timerExpired()
@@ -1388,13 +1392,13 @@ class GuiManager(FSM.FSM):
 
     def createNewQuestIndicator(self, quest):
         if self.tutorialStatus < PiratesGlobals.TUT_GOT_SEACHEST:
-            return None
+            return
         
         if self.journalButton:
             self.journalButton.addNewQuest()
             self.journalButton['extraArgs'] = [
                 quest]
-            return None
+            return
         
         self.journalButton = JournalButton.JournalButton(parent = base.a2dBottomRight, command = self.viewJournal, pos = (-0.12, 0, 0.27), scale = 0.9, extraArgs = [
             quest])
@@ -1417,7 +1421,7 @@ class GuiManager(FSM.FSM):
 
     def loadOffscreenHitEffects(self):
         if self.offscreenHitEffects:
-            return None
+            return
         
         onColor = Vec4(1, 0, 0, 0.7)
         offColor = Vec4(1, 0, 0, 0)
@@ -1516,7 +1520,7 @@ class GuiManager(FSM.FSM):
 
     def loadPirateCode(self):
         if self.pirateCode:
-            return None
+            return
         
         self.pirateCode = BorderFrame(parent = base.a2dLeftCenter, frameSize = (0, 1.0, 0, 0.3), pos = (0.25, 0, 0), scale = 0.75)
         self.pirateCode.setName(self.pirateCode.uniqueName('PirateCodeBorderFrame'))
@@ -1881,7 +1885,7 @@ class GuiManager(FSM.FSM):
 
     def hideDirtPanel(self):
         if self.dirtPanel is None:
-            return None
+            return
         
         fadeOut = LerpFunctionInterval(self.dirtPanel.setAlphaScale, fromData = self.dirtPanel.getColorScale()[3], toData = 0, duration = 0.3)
         self.dirtFader = Sequence(fadeOut, Func(self.dirtPanel.hide))
@@ -1916,7 +1920,7 @@ class GuiManager(FSM.FSM):
 
     def hideSmokePanel(self):
         if self.smokePanel is None:
-            return None
+            return
         
         fadeOut = LerpFunctionInterval(self.smokePanel.setAlphaScale, fromData = self.smokePanel.getColorScale()[3], toData = 0, duration = 0.3)
         self.smokeFader = Sequence(fadeOut, Func(self.smokePanel.hide))
@@ -2006,7 +2010,7 @@ class GuiManager(FSM.FSM):
 
     def showNonPayer(self, quest = None, focus = None):
         if not __dev__ and localAvatar.isPaid:
-            return None
+            return
         
         if not self.nonPayerPanel:
             self.nonPayerPanel = TrialNonPayerPanel.TrialNonPayerPanel(trial = False)
@@ -2025,10 +2029,10 @@ class GuiManager(FSM.FSM):
 
     def createPreviewTag(self):
         if Freebooter.AllAccessHoliday:
-            return None
+            return
         
         if os.getenv('GAME_SHOW_ADDS') != 'NO':
-            return None
+            return
         
         self.prevTag = DirectFrame(parent = base.a2dTopRight, relief = None, pos = (-0.25, 0, -0.63), scale = 0.8, sortOrder = 0)
         gui2 = loader.loadModelCopy('models/textureCards/basic_unlimited')

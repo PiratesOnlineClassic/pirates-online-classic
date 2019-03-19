@@ -184,7 +184,7 @@ class SkillButton(DirectFrame):
                 timeSpentRecharging = localAvatar.skillDiary.getTimeSpentRecharging(InventoryType.UseItem)
             else:
                 timeSpentRecharging = localAvatar.skillDiary.getTimeSpentRecharging(self.skillId)
-            if (self.totalRechargeTime or timeSpentRecharging) and not (timeSpentRecharging > self.totalRechargeTime):
+            if self.totalRechargeTime and timeSpentRecharging and not timeSpentRecharging > self.totalRechargeTime:
                 self.skillRingIval.start(startT = timeSpentRecharging)
             else:
                 self.skillRing.meterFaceHalf1.setR(0)
@@ -339,11 +339,11 @@ class SkillButton(DirectFrame):
 
     def createHelpFrame(self, args = None):
         if self.helpFrame:
-            return None
+            return
         
         inv = localAvatar.getInventory()
         if not inv:
-            return None
+            return
         
         baseRank = max(self.skillRank, 1)
         lvlDamageMod = WeaponGlobals.getLevelDamageModifier(localAvatar.getLevel())
@@ -423,7 +423,7 @@ class SkillButton(DirectFrame):
         if effectId:
             description += ' ' + SkillEffectDescriptions.get(effectId)[0]
         
-        if (self.skillId == InventoryType.SailBroadsideLeft or self.skillId == InventoryType.SailBroadsideRight) and damageMod > 0:
+        if self.skillId == InventoryType.SailBroadsideLeft or self.skillId == InventoryType.SailBroadsideRight and damageMod > 0:
             description += ' ' + PLocalizer.BroadsideDesc
         
         if self.skillId == InventoryType.CannonShoot and rechargeMod:
@@ -575,7 +575,7 @@ class SkillButton(DirectFrame):
     def updateQuantity(self, quantity):
         self.quantity = quantity
         if not self.showQuantity:
-            return None
+            return
         
         if quantity == WeaponGlobals.INF_QUANT:
             text = ''
