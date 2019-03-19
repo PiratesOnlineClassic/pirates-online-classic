@@ -847,7 +847,7 @@ class CombatTray(GuiTray):
                 return 0
 
         if skillId == InventoryType.SailBroadsideLeft or skillId == InventoryType.SailBroadsideRight:
-            if localAvatar.ship and not (localAvatar.ship.broadside):
+            if localAvatar.ship and not localAvatar.ship.broadside:
                 localAvatar.guiMgr.createWarning(PLocalizer.NoBroadsidesWarning, PiratesGuiGlobals.TextFG6)
                 return 0
 
