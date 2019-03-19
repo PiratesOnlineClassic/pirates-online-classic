@@ -1,12 +1,10 @@
 import math
 import random
-
-from panda3d.core import *
+from pandac.PandaModules import *
 from direct.gui.DirectGui import *
 from direct.task import Task
 from direct.showbase.DirectObject import DirectObject
 from otp.otpbase import OTPRender
-
 
 class DependencyArray:
 
@@ -75,7 +73,6 @@ class RenderToTexture(DirectObject):
         if self.__createBuffer():
             self.accept('close_main_window', self.__destroyBuffer)
             self.accept('open_main_window', self.__createBuffer)
-        return
 
     def addDependencyArray(self, array):
         if array:
@@ -113,7 +110,6 @@ class RenderToTexture(DirectObject):
             base.graphicsEngine.removeWindow(self.texture_buffer)
         self.texture_buffer = None
         self.created = False
-        return
 
     def __createBuffer(self):
         state = False
@@ -153,7 +149,6 @@ class RenderToTexture(DirectObject):
                         self.dependency_arrays[i] = None
 
             self.dependency_arrays = None
-        return
 
 
 class Glow(DirectObject):
@@ -210,7 +205,6 @@ class Glow(DirectObject):
         dependency_array.checkDependencies()
         self.updateCamera(self.camera)
         taskMgr.add(self.camTask, 'glowCamTask-' + str(id(self)), priority=49)
-        return
 
     def camTask(self, task):
         self.updateCamera(self.camera)
@@ -220,7 +214,6 @@ class Glow(DirectObject):
             self.first_tick = False
         else:
             elapsed_time = time - self.current_time
-
         self.current_time = time
         self.elapsed_time = elapsed_time
         self.speed = 180.0
@@ -228,15 +221,14 @@ class Glow(DirectObject):
         if self.hdr:
             if self.glitter:
                 maximum_range = 0.14
-                factor = 1, 1.0 + (random.random() * maximum_range - maximum_range / 2.0)
+                factor = 1.0 + (random.random() * maximum_range - maximum_range / 2.0)
             else:
                 angle = distance % 360.0
                 angle *= math.pi / 180.0
                 factor = 1.0 + math.sin(angle) * (maximum_range / 2.0)
         else:
             factor = 1.0
-
-        self.hdr.setGlowFactor(factor)
+            self.hdr.setGlowFactor(factor)
         return Task.cont
 
     def updateCamera(self, camera):
@@ -270,7 +262,6 @@ class Glow(DirectObject):
             self.glow_rtt.delete()
             self.glow_rtt = None
         taskMgr.remove('glowCamTask-' + str(id(self)))
-        return
 
 
 class Blur(DirectObject):
@@ -434,9 +425,7 @@ class Blur(DirectObject):
                 update_function(slider['value'])
 
             def create_slider(update_function, default_value, x, y, resolution, label):
-                slider = DirectSlider(parent=None, command=update_slider, thumb_relief=DGG.FLAT, pos=(x, 0.0, y), text_align=TextNode.ARight, text_scale=(0.1,
-                                                                                                                                                          0.1), text_pos=(0.5,
-                                                                                                                                                                          0.1), scale=0.5, pageSize=resolution, text='default', value=default_value)
+                slider = DirectSlider(parent=None, command=update_slider, thumb_relief=DGG.FLAT, pos=(x, 0.0, y), text_align=TextNode.ARight, text_scale=(0.1, 0.1), text_pos=(0.5, 0.1), scale=0.5, pageSize=resolution, text='default', value=default_value)
                 slider.label = label
                 slider['extraArgs'] = [slider, update_function]
                 slider.parameter_scale = 1.0
@@ -486,7 +475,6 @@ class Blur(DirectObject):
             card.reparentTo(render2d)
             card.setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
         self.displaySliders(self.display_sliders)
-        return
 
     def __init__(self, width, height, source_rtt, luminance=1, add=0, order=-1, format=0, hdr=1, hdr_output=1, add_glow=0, glow_rtt=0, average=0):
         DirectObject.__init__(self)
@@ -614,7 +602,6 @@ class Blur(DirectObject):
         self.enable(0)
         self.enable(1)
         self.success = self.checkArray(self.shader_array, self.checkShader) and self.checkArray(self.rtt_array, self.checkRtt)
-        return
 
     def setGlowFactor(self, factor):
         self.glow_factor = factor
@@ -654,8 +641,6 @@ class Blur(DirectObject):
                     if function:
                         function(array[i])
                     array[i] = None
-
-        return
 
     def processArray(self, array, function=None):
         if array:
@@ -805,7 +790,6 @@ class Blur(DirectObject):
                 slider = None
 
         self.slider_array = []
-        return
 
     def delete(self):
         if self.deleted == False:
@@ -855,4 +839,5 @@ class Blur(DirectObject):
             self.lcard = None
             self.tcard = None
             self.deleted = True
-        return
+
+
