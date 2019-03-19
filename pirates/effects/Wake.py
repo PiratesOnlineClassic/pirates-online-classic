@@ -59,8 +59,8 @@ class Wake(PooledEffect):
             self.spNP.setBin('ground', -5)
         if self.use_depth_offset:
             pass
-
-        self.spNP.setDepthTest(0)
+        else:
+            self.spNP.setDepthTest(0)
         self.wake.setAttrib(ColorWriteAttrib.make(ColorWriteAttrib.CRed | ColorWriteAttrib.CGreen | ColorWriteAttrib.CBlue))
         if hasattr(base, 'pe'):
             spn.setEffect(CompassEffect.make(base.pe.seaPatch.patchNP, CompassEffect.PZ))

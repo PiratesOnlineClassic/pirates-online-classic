@@ -138,6 +138,7 @@ class EnvironmentEffects(DirectObject):
                     for effectName in effects:
                         glow = effectName[0](effectParent)
                         return glow
+        return None
 
     def loadEffects(self):
         if not self.parent:
@@ -159,8 +160,8 @@ class EnvironmentEffects(DirectObject):
                         list = self.holidayLocators.get(effectEntry)
                         list.append(locator)
                         self.holidayLocators[effectEntry] = list
-                self.holidayLocators.has_key(effectEntry)
-                if not locator.isEmpty():
+
+                elif not locator.isEmpty():
                     effectParent = locator.getParent()
                     locatorPos = locator.getPos()
                     locatorHpr = locator.getHpr()
@@ -231,11 +232,10 @@ class EnvironmentEffects(DirectObject):
                                 list = self.holidayEffects.get(holidayName)
                                 list.append(effect)
                                 self.holidayEffects[holidayName] = list
-                        self.holidayEffects.has_key(holidayName)
 
     def stopHolidayEffects(self, holidayName):
         if not self.holidayEffects.has_key(holidayName):
-            return None
+            return
         
         for effect in self.holidayEffects.get(holidayName):
             effect.stop()

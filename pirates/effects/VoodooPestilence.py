@@ -70,13 +70,13 @@ class VoodooPestilence(PooledEffect, EffectController):
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(0.3)
         self.p0.emitter.setAmplitudeSpread(0.0)
-        self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, -0.45))
+        self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, -.45))
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.01)
         if self.effectScale > 1.0:
             self.p0.emitter.setAmplitude(0.15)
-            self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, -0.1))
+            self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, -.1))
         
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(2.5), Func(self.cleanUpEffect))

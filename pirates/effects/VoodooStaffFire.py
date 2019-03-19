@@ -60,7 +60,7 @@ class VoodooStaffFire(PooledEffect, EffectController):
         self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
         self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1.0, 0.5, 0.5, 1.0), Vec4(0.0, 0.0, 0.0, 0.5), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
-        self.p0.emitter.setAmplitude(-0.25)
+        self.p0.emitter.setAmplitude(-.25)
         self.p0.emitter.setAmplitudeSpread(0.0)
         self.p0.emitter.setOffsetForce(Vec3(0.0, -1.5, 2.0))
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))

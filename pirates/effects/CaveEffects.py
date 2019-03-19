@@ -25,9 +25,7 @@ class CaveEffects(EnvironmentEffects.EnvironmentEffects):
         self.reflection = None
         self.supports_sky_only = False
         self.startEffects()
-        if not 'cave_d_' and 'cave_c_':
-            pass
-        if 'cave_e_' not in self.modelPrefix:
+        if ('cave_d_' or 'cave_c_' or 'cave_e_') not in self.modelPrefix:
             self.waterfalls = self.parent.find('**/WaterfallMeshGroup')
             if not self.waterfalls.isEmpty():
                 self.waterfalls.setDepthWrite(0)
@@ -40,7 +38,7 @@ class CaveEffects(EnvironmentEffects.EnvironmentEffects):
     def startEffects(self):
         reflection = Reflection.getGlobalReflection()
         if hasattr(base, 'cr'):
-            if 'cave_c_' in self.modelPrefix and 'cave_d_' in self.modelPrefix or 'cave_e_' in self.modelPrefix:
+            if 'cave_c_' in self.modelPrefix or 'cave_d_' in self.modelPrefix or 'cave_e_' in self.modelPrefix:
                 base.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_LAVACAVE)
             else:
                 base.cr.timeOfDayManager.setEnvironment(TODGlobals.ENV_CAVE)

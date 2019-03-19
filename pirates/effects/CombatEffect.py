@@ -66,7 +66,7 @@ class CombatEffect(NodePath):
     def loadEffects(self):
         self.effects = []
         if not base.config.GetBool('want-special-effects', 1):
-            return None
+            return
         
         self.ival = Sequence()
         effectAnims = Parallel()

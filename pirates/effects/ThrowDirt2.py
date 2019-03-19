@@ -71,7 +71,7 @@ class ThrowDirt2(PooledEffect, EffectController):
         self.p0.emitter.setOffsetForce(Vec3(-3.0, 1.0, 4.0))
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
-        self.p0.emitter.setMinBound(Point2(-0.25, -0.25))
+        self.p0.emitter.setMinBound(Point2(-.25, -.25))
         self.p0.emitter.setMaxBound(Point2(0.25, 0.25))
     
     def createTrack(self):

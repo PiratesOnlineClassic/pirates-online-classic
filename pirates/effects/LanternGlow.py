@@ -89,19 +89,20 @@ class LanternGlow(DirectObject, EffectController, NodePath):
             'lantern': loader.loadShader('models/misc/ship_lantern.cg')}
 
     def enableShaders(self):
-        if self.glow and not self.glow.isEmpty():
-            self.glow.setShaderOff()
+        if 1:
+            if self.glow and not self.glow.isEmpty():
+                self.glow.setShaderOff()
 
-        if not self.isEmpty() and hasattr(self, 'glow'):
+        elif not self.isEmpty() and hasattr(self, 'glow'):
             LanternGlow.setupShaders(self)
             self.shaderNp = self.glow
             if not taskMgr.hasTaskNamed('LanternColorScale'):
-                
+
                 def lanternColorScaleTask(task):
                     if task.shaderCount > 0:
                         if hasattr(self, 'glow'):
                             render.setShaderInput('lanternColorScale', Vec4(self.glow.getColorScale()))
-                        
+
                         return Task.cont
                     else:
                         render.clearShaderInput('lanternColorScale')
@@ -110,16 +111,17 @@ class LanternGlow(DirectObject, EffectController, NodePath):
 
                 t = taskMgr.add(lanternColorScaleTask, 'LanternColorScale')
                 t.shaderCount = 0
-            
+
             tList = taskMgr.getTasksNamed('LanternColorScale')
             tList[0].shaderCount += 1
 
     def disableShaders(self):
-        if self.glow and not self.glow.isEmpty():
-            self.glow.clearShader()
-            self.glow.clearAttrib(ShaderAttrib.getClassType())
+        if 1:
+            if self.glow and not self.glow.isEmpty():
+                self.glow.clearShader()
+                self.glow.clearAttrib(ShaderAttrib.getClassType())
 
-        if hasattr(self, 'shaderNp'):
+        elif hasattr(self, 'shaderNp'):
             self.shaderNp.clearShader()
             self.shaderNp.clearAttrib(ShaderAttrib.getClassType())
             tList = taskMgr.getTasksNamed('LanternColorScale')

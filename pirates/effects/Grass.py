@@ -26,7 +26,7 @@ class Grass(DirectObject, NodePath):
     def __init__(self, parent):
         NodePath.__init__(self, 'grass')
         self.parent = parent
-        self._Grass__grassDataFile = GrassProfiles.get(self.parent.modelPath)
+        self.__grassDataFile = GrassProfiles.get(self.parent.modelPath)
         self.numClumps = 40
         self.clumps = []
         self.lastAvCell = None
@@ -86,6 +86,7 @@ class Grass(DirectObject, NodePath):
             clump = self.clumps.pop()
             clump.loop('idle')
             return clump
+        return None
 
     def getNumClumpsAvailable(self):
         return len(self.clumps)
@@ -107,7 +108,7 @@ class Grass(DirectObject, NodePath):
         self.avatarMoving = 1
     
     def readGrassSamples(self):
-        filename = self._Grass__grassDataFile
+        filename = self.__grassDataFile
         spfSearchPath = DSearchPath()
         spfSearchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$PIRATES/src/effects')))
         spfSearchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('pirates/src/effects')))
@@ -176,7 +177,7 @@ class Grass(DirectObject, NodePath):
         if avCell != self.lastAvCell:
             self.lastAvCell = avCell
             self.nearbySamples = self.getNearbySamples(row, col)
-        
+
         for sampleIndex in self.nearbySamples:
             samples = self.sampleDict.get(sampleIndex, [])
             for sample in samples:
@@ -195,13 +196,11 @@ class Grass(DirectObject, NodePath):
                                 clump.setColorScale(k * sample[7], k * sample[8], k * sample[9], 1)
                                 clump.show()
                                 sample[0] = clump
-                            
                         else:
                             numSaved += 1
                     elif sample[0] != 0:
                         self.returnClumpToPool(sample[0])
                         sample[0] = 0
-                    
                 elif sample[0] != 0:
                     self.returnClumpToPool(sample[0])
                     sample[0] = 0

@@ -46,7 +46,7 @@ class DynamicLight(NodePath):
 
     def setType(self, type, isInit = False):
         if self.type == type:
-            return None
+            return
         
         if type == DYN_LIGHT_AMBIENT:
             light = AmbientLight('AmbientLight')
@@ -100,7 +100,7 @@ class DynamicLight(NodePath):
 
     def setAttenuation(self, atten):
         if not hasattr(base, 'pe') or not base.pe.fRpmMode:
-            return None
+            return
         
         self.baseAtten = (1, 0, atten)
         if hasattr(self.light, 'setAttenuation'):
@@ -177,7 +177,7 @@ class DynamicLight(NodePath):
     def startFlickering(self):
         self.stopFlickering()
         if not self.canFlicker():
-            return None
+            return
         
         if self.flicker:
             

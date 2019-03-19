@@ -72,7 +72,7 @@ class WaterSplash(PooledEffect, EffectController):
         self.p0.emitter.setOffsetForce(Vec3(0.0, -2.0, 5.0))
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
-        self.p0.emitter.setMinBound(Point2(-5.0, -0.25))
+        self.p0.emitter.setMinBound(Point2(-5.0, -.25))
         self.p0.emitter.setMaxBound(Point2(5.0, 0.25))
         self.p1.setPoolSize(12)
         self.p1.setBirthRate(0.02)

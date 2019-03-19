@@ -1,5 +1,3 @@
-# File: W (Python 2.4)
-
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect
@@ -33,7 +31,7 @@ class WaspCloud(PooledEffect, EffectController):
         f0.addForce(force0)
         self.f.addForceGroup(f0)
         self.p0.setPoolSize(64)
-        self.p0.setBirthRate(0.050000000000000003)
+        self.p0.setBirthRate(0.05)
         self.p0.setLitterSize(10)
         self.p0.setLitterSpread(0)
         self.p0.setSystemLifespan(0.0)
@@ -66,8 +64,8 @@ class WaspCloud(PooledEffect, EffectController):
         self.p0.renderer.setNonanimatedTheta(0.0)
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.20000000298023224, 0.80000001192092896, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.78431373834609985, 0.58823531866073608, 0.58823531866073608, 1.0), 1)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.80000001192092896, 1.0, Vec4(0.78431373834609985, 0.58823531866073608, 0.58823531866073608, 1.0), Vec4(0.78431373834609985, 0.58823531866073608, 0.58823531866073608, 0.0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.20000000298023224, 0.800000011920929, Vec4(1.0, 1.0, 1.0, 1.0), Vec4(0.7843137383460999, 0.5882353186607361, 0.5882353186607361, 1.0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.800000011920929, 1.0, Vec4(0.7843137383460999, 0.5882353186607361, 0.5882353186607361, 1.0), Vec4(0.7843137383460999, 0.5882353186607361, 0.5882353186607361, 0.0), 1)
         self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.20000000298023224, Vec4(1.0, 1.0, 1.0, 0.0), Vec4(1.0, 1.0, 1.0, 1.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
@@ -77,23 +75,19 @@ class WaspCloud(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(3.0)
 
-    
     def createTrack(self):
         fadeIn = self.particleDummy.colorInterval(1.0, Vec4(1, 1, 1, 1), startColor = Vec4(0.0, 0.0, 0.0, 1))
         fadeOut = self.particleDummy.colorInterval(0.5, Vec4(0, 0, 0, 1), startColor = Vec4(1, 1, 1, 1))
         self.setScale(0.5, 1, 1)
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.050000000000000003), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), fadeIn)
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.05), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), fadeIn)
         self.endEffect = Sequence(Func(self.wrtReparentTo, render), Parallel(fadeOut, Func(self.p0.setBirthRate, 100)), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(2.0), self.endEffect)
-
     
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-        
 
-    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)

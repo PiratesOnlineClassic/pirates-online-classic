@@ -35,7 +35,7 @@ class ShipFog(NodePath.NodePath):
         found = vfs.resolveFilename(pfile, particleSearchPath)
         if not found:
             self.notify.warning('loadParticleFile() - no path: %s' % name)
-            return None
+            return
         
         self.notify.debug('Loading particle file: %s' % pfile)
         center = Point2(psbskp[0] + psbskp[1], psbskp[2] + psbskp[3]) / 2

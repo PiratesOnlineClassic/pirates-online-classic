@@ -178,7 +178,7 @@ class VoodooPower(PooledEffect, EffectController):
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
         self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(1, 1, 1, 0.5), self.effectColor, 1)
         self.p1.renderer.getColorInterpolationManager().clearToInitial()
-        self.p1.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.1, 0.2, 1.0, 0.0), self.effectColor + Vec4(-0.2, -0.1, 0, 0.5), 1)
+        self.p1.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, Vec4(0.1, 0.2, 1.0, 0.0), self.effectColor + Vec4(-.2, -.1, 0, 0.5), 1)
         self.p2.renderer.getColorInterpolationManager().clearToInitial()
         self.p2.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, self.effectColor, Vec4(0.0, 0.0, 0.0, 0.75), 1)
 

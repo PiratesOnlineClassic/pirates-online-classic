@@ -12,6 +12,7 @@ MOD_TYPE_SEQUENTIAL = 2
 MOD_TYPE_SEQUENTIAL_CONTINUOUS = 3
 MOD_TYPE_SEQUENTIAL_COMPACT = 4
 MOD_TYPE_TOTAL = 5
+
 MOD_BASICPENALTY = 0
 MOD_CREWBONUS = 1
 MOD_2XPBONUS = 2
@@ -342,7 +343,7 @@ class TextEffect:
                 finishCallback()
             
 
-def genTextEffect(targetObj, textGenerator, number, bonus, isNpc, cleanupCallback, startPos, destPos = None, scale = 1.0, modifiers = { }):
+def genTextEffect(targetObj, textGenerator, number, bonus, isNpc, cleanupCallback, startPos, destPos = None, scale = 1.0, modifiers = {}):
     textGenerator.setFont(PiratesGlobals.getPirateOutlineFont())
     (text, baseVal, mods) = genText(number, bonus, MOD_TYPE_MULTIPLE, modifiers)
     duration = 2.0 + len(mods)

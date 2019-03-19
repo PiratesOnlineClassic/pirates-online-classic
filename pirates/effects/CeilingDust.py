@@ -1,5 +1,3 @@
-# File: C (Python 2.4)
-
 from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.particles import ParticleEffect
@@ -35,7 +33,6 @@ class CeilingDust(PooledEffect, EffectController):
         f0.addForce(force0)
         self.f.addForceGroup(f0)
 
-    
     def createTrack(self):
         self.p0.setPoolSize(256)
         self.p0.setBirthRate(0.02)

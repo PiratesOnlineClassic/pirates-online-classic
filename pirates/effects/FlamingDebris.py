@@ -100,15 +100,15 @@ class FlamingDebris(PooledEffect):
 
     def weaponHitObject(self, entry):
         if not entry.hasSurfacePoint() or not entry.hasInto():
-            return None
+            return
         
         if not entry.getInto().isTangible():
-            return None
+            return
         
         hitObject = entry.getIntoNodePath()
         objType = hitObject.getNetTag('objType')
         if not objType:
-            return None
+            return
         
         objType = int(objType)
         if objType == PiratesGlobals.COLL_SEA and base.cr.wantSpecialEffects:

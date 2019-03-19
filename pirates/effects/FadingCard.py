@@ -26,7 +26,7 @@ class FadingCard(EffectController, NodePath):
     def createTrack(self):
         if not self.card:
             self.track = Sequence()
-            return None
+            return
         
         fadeIn = self.card.colorScaleInterval(self.fadeTime, self.fadeColor, startColorScale = Vec4(0, 0, 0, 0))
         fadeOut = self.card.colorScaleInterval(self.waitTime, Vec4(0, 0, 0, 0), startColorScale = self.fadeColor)

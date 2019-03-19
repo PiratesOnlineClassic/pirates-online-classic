@@ -72,7 +72,7 @@ class PoisonEffect(PooledEffect, EffectController):
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.5)
         self.p0.emitter.setAmplitudeSpread(0.0)
-        self.p0.emitter.setOffsetForce(Vec3(0, -0.5, 1.0))
+        self.p0.emitter.setOffsetForce(Vec3(0, -.5, 1.0))
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
 

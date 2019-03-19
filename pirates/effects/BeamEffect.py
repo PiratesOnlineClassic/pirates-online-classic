@@ -34,7 +34,7 @@ class BeamEffect(PooledEffect, EffectController):
 
     def __calculateBeam(self):
         if not self.target and not self.targetPos:
-            return None
+            return
         
         if not self.target:
             self.targetDummy.setPos(self.targetPos)

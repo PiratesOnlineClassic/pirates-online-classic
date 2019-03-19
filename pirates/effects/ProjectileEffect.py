@@ -82,7 +82,7 @@ class ProjectileEffect:
                 objType = PiratesGlobals.COLL_LAND
             else:
                 self.basicHitEffect(hitObject, pos, skillId, ammoSkillId)
-                return None
+                return
         
         if objType == PiratesGlobals.COLL_AV:
             self.avatarHitEffect(hitObject, pos, skillId, ammoSkillId)
@@ -126,7 +126,7 @@ class ProjectileEffect:
             s.setTransparency(1)
             s.setColorScale(1.0, 0.5, 0.5, 0.4)
         
-        if ammoSkillId == InventoryType.CannonRoundShot and ammoSkillId == InventoryType.CannonChainShot and ammoSkillId == InventoryType.CannonBullet and ammoSkillId == InventoryType.CannonSkull and ammoSkillId == InventoryType.CannonBarShot or ammoSkillId == InventoryType.CannonFury:
+        if ammoSkillId == InventoryType.CannonRoundShot or ammoSkillId == InventoryType.CannonChainShot or ammoSkillId == InventoryType.CannonBullet or ammoSkillId == InventoryType.CannonSkull or ammoSkillId == InventoryType.CannonBarShot or ammoSkillId == InventoryType.CannonFury:
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 explosionEffect = ExplosionFlip.getEffect()
                 if explosionEffect:
@@ -350,7 +350,6 @@ class ProjectileEffect:
                                 debrisEffect.play()
                             else:
                                 debrisEffect.cleanUpEffect()
-                        debrisEffect.testTrajectory()
 
                 flashEffect = MuzzleFlash.getEffect()
                 if flashEffect:
@@ -493,7 +492,6 @@ class ProjectileEffect:
                             debrisEffect.play()
                         else:
                             debrisEffect.cleanUpEffect()
-                    debrisEffect.testTrajectory()
                 
                 flashEffect = MuzzleFlash.getEffect()
                 if flashEffect:
@@ -543,7 +541,7 @@ class ProjectileEffect:
                 fireEffect = Fire.getEffect()
                 if fireEffect:
                     fireEffect.wrtReparentTo(base.effectsRoot)
-                    fireEffect.setPos(hitObject, pos + Vec3(0, 0, -0.5))
+                    fireEffect.setPos(hitObject, pos + Vec3(0, 0, -.5))
                     fireEffect.effectScale = 0.5
                     fireEffect.duration = 2.5
                     fireEffect.play()
@@ -626,10 +624,9 @@ class ProjectileEffect:
                     debrisEffect.play()
                 else:
                     debrisEffect.cleanUpEffect()
-            debrisEffect.testTrajectory()
     
     def groundHitEffect(self, hitObject, pos, skillId, ammoSkillId):
-        if ammoSkillId == InventoryType.CannonRoundShot and ammoSkillId == InventoryType.CannonChainShot and ammoSkillId == InventoryType.CannonBullet and ammoSkillId == InventoryType.CannonSkull or ammoSkillId == InventoryType.CannonBarShot:
+        if ammoSkillId == InventoryType.CannonRoundShot or ammoSkillId == InventoryType.CannonChainShot or ammoSkillId == InventoryType.CannonBullet or ammoSkillId == InventoryType.CannonSkull or ammoSkillId == InventoryType.CannonBarShot:
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 cannonExplosion = CannonExplosion.getEffect()
                 if cannonExplosion:
@@ -697,10 +694,10 @@ class ProjectileEffect:
                 splashEffect.play()
 
     def monsterHitEffect(self, hitObject, pos, skillId, ammoSkillId):
-        if ammoSkillId == InventoryType.CannonRoundShot and ammoSkillId == InventoryType.CannonChainShot and ammoSkillId == InventoryType.CannonBullet and ammoSkillId == InventoryType.CannonSkull or ammoSkillId == InventoryType.CannonBarShot:
+        if ammoSkillId == InventoryType.CannonRoundShot or ammoSkillId == InventoryType.CannonChainShot or ammoSkillId == InventoryType.CannonBullet or ammoSkillId == InventoryType.CannonSkull or ammoSkillId == InventoryType.CannonBarShot:
             pass
-
-        self.basicHitEffect(hitObject, pos, skillId, ammoSkillId)
+        else:
+            self.basicHitEffect(hitObject, pos, skillId, ammoSkillId)
 
     def grappleHitEffect(self, hitObject, pos, skillId, ammoSkillId):
         if ammoSkillId == InventoryType.CannonGrappleHook:

@@ -60,14 +60,14 @@ class FireworkShowManager:
             taskMgr.doMethodLater(delay, self.beginPortRoyalShow, 'beginPortRoyalShow', extraArgs = [
                 offset])
         
-        timeOffset = timeOffset - showDuration + wait
+        timeOffset = timeOffset - (showDuration + wait)
         if timeOffset <= showDuration + wait:
             delay = max(0.0, wait - timeOffset)
             offset = max(0.0, timeOffset - delay - wait)
             taskMgr.doMethodLater(delay, self.beginTortugaShow, 'beginTortugaShow', extraArgs = [
                 offset])
         
-        timeOffset = timeOffset - showDuration + wait
+        timeOffset = timeOffset - (showDuration + wait)
         if timeOffset <= showDuration + wait:
             delay = max(0.0, wait - timeOffset)
             offset = max(0.0, timeOffset - delay - wait)
