@@ -1,7 +1,6 @@
 from pandac.PandaModules import *
 
-
-class FireworkTrailType():
+class FireworkTrailType:
     Default = 0
     Glow = 1
     Sparkle = 2
@@ -10,7 +9,7 @@ class FireworkTrailType():
     LongGlowSparkle = 5
 
 
-class FireworkBurstType():
+class FireworkBurstType:
     Sparkles = 0
     BasicShell = 1
     LongShell = 2
@@ -20,7 +19,7 @@ class FireworkBurstType():
     NoiseBall = 6
 
 
-class FireworkType():
+class FireworkType:
     BasicBlast = 0
     LongBlast = 1
     TrailBurst = 2
@@ -33,6 +32,7 @@ class FireworkType():
     AmericanFlag = 9
 
 
-class FireworkShowType():
+class FireworkShowType:
     FourthOfJuly = 0
     NewYear = 1
+

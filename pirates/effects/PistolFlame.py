@@ -1,18 +1,18 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from direct.showbase.DirectObject import *
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from pirates.piratesbase import PiratesGlobals
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class PistolFlame(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -25,6 +25,7 @@ class PistolFlame(PooledEffect, EffectController):
             PistolFlame.particleDummy.setDepthWrite(0)
             PistolFlame.particleDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
             PistolFlame.particleDummy.setFogOff()
+        
         self.flash = loader.loadModel('models/effects/lanternGlow')
         self.flash.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
         self.flash.setDepthWrite(0)
@@ -89,8 +90,8 @@ class PistolFlame(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.1)
-        fadeBlast = self.flash.colorScaleInterval(0.15, Vec4(0, 0, 0, 0), startColorScale=self.startCol, blendType='easeOut')
-        scaleBlast = self.flash.scaleInterval(0.2, 10, blendType='easeIn')
+        fadeBlast = self.flash.colorScaleInterval(0.15, Vec4(0, 0, 0, 0), startColorScale = self.startCol, blendType = 'easeOut')
+        scaleBlast = self.flash.scaleInterval(0.2, 10, blendType = 'easeIn')
         self.playFlash = Sequence(Func(self.flash.show), Parallel(fadeBlast, scaleBlast), Func(self.flash.hide), Func(self.flash.setColorScale, Vec4(1, 1, 1, 1)))
         self.playParticles = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.15), Func(self.p0.setBirthRate, 100), Wait(1.5), Func(self.cleanUpEffect))
         self.track = Parallel(self.playParticles, self.playFlash)
@@ -104,7 +105,7 @@ class PistolFlame(PooledEffect, EffectController):
         self.ignore('timeOfDayChange')
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
+    
     def _timeChange(self, stateId, stateDuration, elapsedTime):
         if self.flash:
             if stateId == PiratesGlobals.TOD_DAWN2DAY:
@@ -127,3 +128,7 @@ class PistolFlame(PooledEffect, EffectController):
                 self.startCol = Vec4(1, 1, 1, 1)
             elif stateId == PiratesGlobals.TOD_STARS:
                 self.startCol = Vec4(1, 1, 1, 1)
+            
+        
+
+

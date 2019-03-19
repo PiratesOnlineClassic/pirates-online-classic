@@ -1,15 +1,12 @@
-import random
-
-from direct.interval.IntervalGlobal import (Func, Parallel, Sequence,
-                                            SoundInterval, Wait)
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import Sequence, Parallel, Func, Wait, SoundInterval
 from pirates.effects.VolcanoSmoke import VolcanoSmoke
 from pirates.effects.VolcanoSplats import VolcanoSplats
-
+import random
 
 class VolcanoEffect(NodePath):
     eruptionSfx = None
-
+    
     def __init__(self):
         NodePath.__init__(self, 'VolcanoEffect')
         self.renderParent = self.attachNewNode('VolcanoEffect-renderParent')
@@ -37,9 +34,7 @@ class VolcanoEffect(NodePath):
         self.seq = None
         self.eruptSeq = None
         if not self.eruptionSfx:
-            self.eruptionSfx = (
-             loader.loadSfx('audio/eruption.mp3'),)
-        return
+            self.eruptionSfx = (loader.loadSfx('audio/eruption.mp3'),)
 
     def enable(self):
         self.enableSmoke()
@@ -48,15 +43,15 @@ class VolcanoEffect(NodePath):
     def enableSmoke(self):
         self.smoke.enable()
         self.smoke2.enable()
-
+    
     def enableRest(self):
         self.splats1.enable()
         self.splats2.enable()
-
+    
     def disable(self):
         self.disableSmoke()
         self.disableRest()
-
+    
     def disableSmoke(self):
         self.smoke.disable()
         self.smoke2.disable()
@@ -64,13 +59,15 @@ class VolcanoEffect(NodePath):
     def disableRest(self):
         self.splats1.disable()
         self.splats2.disable()
-
+    
     def destroy(self):
         self.disable()
         if self.seq:
             self.seq.pause()
+        
         if self.eruptSeq:
             self.eruptSeq.finish()
+        
         del self.seq
         del self.eruptSeq
         self.smoke.destroy()
@@ -83,7 +80,7 @@ class VolcanoEffect(NodePath):
         del self.splats2
         self.renderParent.removeNode()
         del self.renderParent
-
+    
     def enableFogSmoke(self):
         self.smoke2.getRenderParent().setFogOff()
         self.splats1.getRenderParent().setFogOff()
@@ -98,18 +95,21 @@ class VolcanoEffect(NodePath):
     def getEruptSequence(self):
         if not self.eruptSeq:
             self.eruptSeq = Parallel(self.splats2.getEruptionSeq(), Sequence(Wait(0.75), self.splats1.getEruptionSeq()), SoundInterval(self.eruptionSfx[0]))
+        
         return self.eruptSeq
-
+    
     def start(self):
         self.stop()
         if not self.isRestEnabled():
             self.enableRest()
+        
         self.seq = Parallel(self.getEruptSequence(), Sequence(Wait(random.randint(60, 120)), Func(self.start)))
         self.seq.start()
 
     def stop(self):
         if self.seq:
             self.seq.pause()
+        
         if self.eruptSeq:
             self.eruptSeq.pause()
 
@@ -118,23 +118,26 @@ class VolcanoEffect(NodePath):
 
     def isSmokeEnabled(self):
         return self.smoke.isEnabled() | self.smoke2.isEnabled()
-
+    
     def isRestEnabled(self):
         return self.splats1.isEnabled() | self.splats2.isEnabled()
 
     def isPlaying(self):
         if hasattr(self, 'seq') and self.seq:
             return self.seq.isPlaying()
+        
         return False
-
+    
     def hideSmoke(self):
         self.smoke.getRenderParent().hide()
         self.smoke2.getRenderParent().hide()
-
+    
     def showSmoke(self):
         self.smoke.getRenderParent().show()
         self.smoke2.getRenderParent().show()
-
+    
     def accelerateSmoke(self, time):
         self.smoke.accelerate(time)
         self.smoke2.accelerate(time)
+
+

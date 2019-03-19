@@ -1,15 +1,15 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+import random
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class GraveShackles(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -23,10 +23,10 @@ class GraveShackles(PooledEffect, EffectController):
         self.splash.setDepthWrite(0)
         self.splash.setBin('fixed', 10)
 
-    def createTrack(self, rate=1):
-        fadeOut = self.splash.colorScaleInterval(1.0, Vec4(0, 0, 0, 0), startColorScale=Vec4(1, 1, 1, 1))
-        self.startEffect = Sequence(Func(self.splash.setColorScale, 1, 1, 1, 1), self.splash.actorInterval('grab', playRate=1.0), Func(self.splash.loop, 'idle'))
-        self.endEffect = Sequence(self.splash.actorInterval('grab', playRate=-1.0), fadeOut, Func(self.splash.stop), Func(self.cleanUpEffect))
+    def createTrack(self, rate = 1):
+        fadeOut = self.splash.colorScaleInterval(1.0, Vec4(0, 0, 0, 0), startColorScale = Vec4(1, 1, 1, 1))
+        self.startEffect = Sequence(Func(self.splash.setColorScale, 1, 1, 1, 1), self.splash.actorInterval('grab', playRate = 1.0), Func(self.splash.loop, 'idle'))
+        self.endEffect = Sequence(self.splash.actorInterval('grab', playRate = -1.0), fadeOut, Func(self.splash.stop), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
     def cleanUpEffect(self):
@@ -40,3 +40,5 @@ class GraveShackles(PooledEffect, EffectController):
         del self.splash
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

@@ -1,21 +1,22 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from pirates.piratesgui.GameOptions import Options
-
+import random
 
 class TorchFire(EffectController, NodePath):
     cardScale = 64.0
-
-    def __init__(self, newParent=None):
+    
+    def __init__(self, newParent = None):
         NodePath.__init__(self, 'TorchFire')
         EffectController.__init__(self)
         if newParent:
             self.reparentTo(newParent)
+        
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleFlame')
         if not TorchFire.particleDummy:
@@ -25,6 +26,7 @@ class TorchFire(EffectController, NodePath):
             TorchFire.particleDummy.setDepthWrite(0)
             TorchFire.particleDummy.setLightOff()
             TorchFire.particleDummy.setFogOff()
+        
         self.f = ParticleEffect.ParticleEffect('TorchFire')
         self.f.reparentTo(self)
         self.f.setPos(0, 0, 0.75)
@@ -68,7 +70,7 @@ class TorchFire(EffectController, NodePath):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.2)
 
-    def createTrack(self, lod=Options.SpecialEffectsHigh):
+    def createTrack(self, lod = Options.SpecialEffectsHigh):
         poolsize = 4 + 2 * lod
         lifespan = 0.25 + 0.05 * lod
         self.p0.setPoolSize(poolsize)
@@ -82,3 +84,5 @@ class TorchFire(EffectController, NodePath):
 
     def destroy(self):
         EffectController.destroy(self)
+
+

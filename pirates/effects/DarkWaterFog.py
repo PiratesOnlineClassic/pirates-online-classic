@@ -1,18 +1,18 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from direct.showbase.DirectObject import *
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from pirates.piratesbase import PiratesGlobals
-
+from EffectController import EffectController
+import random
 
 class DarkWaterFog(EffectController, NodePath):
     cardScale = 64.0
-
-    def __init__(self, radius=700, radiusSpread=300, lifespan=4.0):
+    
+    def __init__(self, radius = 700, radiusSpread = 300, lifespan = 4.0):
         NodePath.__init__(self, 'DarkWaterFog')
         EffectController.__init__(self)
         self.radius = 700
@@ -26,6 +26,7 @@ class DarkWaterFog(EffectController, NodePath):
             DarkWaterFog.particleDummy.setColorScaleOff()
             DarkWaterFog.particleDummy.setLightOff()
             DarkWaterFog.particleDummy.setBin('water', 100)
+        
         self.f = ParticleEffect.ParticleEffect('DarkWaterFog')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -71,9 +72,11 @@ class DarkWaterFog(EffectController, NodePath):
         self.p0.emitter.setRadiusSpread(self.radiusSpread)
 
     def createTrack(self):
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.setPoolSize, 512), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 4.0), Wait(3.8), Func(self.p0.setPoolSize, 0), Wait(1.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.setPoolSize, 512.0), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 4.0), Wait(3.8), Func(self.p0.setPoolSize, 0.0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
-
+    
     def tuneFog(self, alpha):
         self.p0.renderer.setUserAlpha(alpha)
+
+

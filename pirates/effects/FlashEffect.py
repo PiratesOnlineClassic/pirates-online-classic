@@ -1,12 +1,11 @@
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class FlashEffect(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -22,8 +21,8 @@ class FlashEffect(PooledEffect, EffectController):
         self.setFogOff()
 
     def createTrack(self):
-        fadeBlast = self.effectModel.colorScaleInterval(self.fadeTime, Vec4(0, 0, 0, 0), startColorScale=Vec4(self.effectColor), blendType='easeOut')
-        scaleBlast = self.effectModel.scaleInterval(self.fadeTime, 10, startScale=1.0, blendType='easeIn')
+        fadeBlast = self.effectModel.colorScaleInterval(self.fadeTime, Vec4(0, 0, 0, 0), startColorScale = Vec4(self.effectColor), blendType = 'easeOut')
+        scaleBlast = self.effectModel.scaleInterval(self.fadeTime, 10, startScale = 1.0, blendType = 'easeIn')
         self.track = Sequence(Parallel(fadeBlast, scaleBlast), Func(self.cleanUpEffect))
 
     def setEffectColor(self, color):
@@ -37,3 +36,5 @@ class FlashEffect(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

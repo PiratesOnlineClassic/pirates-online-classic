@@ -1,21 +1,22 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class JRTeleportEffect(PooledEffect, EffectController):
     card2Scale = 32.0
     cardScale = 32.0
-
-    def __init__(self, parent=None):
+    
+    def __init__(self, parent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if parent is not None:
             self.reparentTo(parent)
+        
         if not JRTeleportEffect.particleDummy:
             JRTeleportEffect.particleDummy = render.attachNewNode(ModelNode('JRTeleportEffectParticleDummy'))
             JRTeleportEffect.particleDummy.setColorScaleOff()
@@ -23,6 +24,7 @@ class JRTeleportEffect(PooledEffect, EffectController):
             JRTeleportEffect.particleDummy.setFogOff()
             JRTeleportEffect.particleDummy.setDepthWrite(0)
             JRTeleportEffect.particleDummy.setBin('fixed', 40)
+        
         self.effectScale = 1.0
         self.duration = 3.0
         self.radius = 1.0
@@ -76,8 +78,8 @@ class JRTeleportEffect(PooledEffect, EffectController):
         self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
         self.p0.renderer.setAlphaDisable(0)
         self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.6, Vec4(1.0, 1.0, 0.2, 1.0), Vec4(0.8, 0.6, 0.25, 0.75), 1)
-        self.p0.renderer.getColorInterpolationManager().addLinear(0.6, 1.0, Vec4(0.8, 0.6, 0.25, 0.75), Vec4(0.5, 0.25, 0.0, 0.0), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.59999999999999998, Vec4(1.0, 1.0, 0.20000000000000001, 1.0), Vec4(0.80000000000000004, 0.59999999999999998, 0.25, 0.75), 1)
+        self.p0.renderer.getColorInterpolationManager().addLinear(0.59999999999999998, 1.0, Vec4(0.80000000000000004, 0.59999999999999998, 0.25, 0.75), Vec4(0.5, 0.25, 0.0, 0.0), 1)
         self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
         self.p0.emitter.setAmplitude(1.0)
         self.p0.emitter.setAmplitudeSpread(0.0)
@@ -122,7 +124,6 @@ class JRTeleportEffect(PooledEffect, EffectController):
         self.p1.emitter.setOffsetForce(Vec3(0.0, 0.0, -3.5))
         self.p1.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p1.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
-        return
 
     def createTrack(self):
         self.p0.renderer.setInitialXScale(0.03 * self.effectScale * self.cardScale)
@@ -145,7 +146,9 @@ class JRTeleportEffect(PooledEffect, EffectController):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

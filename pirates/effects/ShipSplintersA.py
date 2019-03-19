@@ -1,18 +1,18 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class ShipSplintersA(PooledEffect, EffectController):
     cardScale = 128.0
     SfxNames = ('wood_impact_1.mp3', 'wood_impact_3.mp3', 'wood_impact_4.mp3')
     splashSfx = []
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -25,6 +25,7 @@ class ShipSplintersA(PooledEffect, EffectController):
         if not ShipSplintersA.particleDummy:
             ShipSplintersA.particleDummy = render.attachNewNode(ModelNode('ShipSplintersAParticleDummy'))
             ShipSplintersA.particleDummy.setDepthWrite(0)
+        
         self.f = ParticleEffect.ParticleEffect('ShipSplintersA')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -85,3 +86,5 @@ class ShipSplintersA(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

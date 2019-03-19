@@ -1,16 +1,16 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class FlamingSkull(PooledEffect, EffectController):
     cardScale = 128.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -24,6 +24,7 @@ class FlamingSkull(PooledEffect, EffectController):
             FlamingSkull.particleDummy.setColorScaleOff()
             FlamingSkull.particleDummy.setTwoSided(1)
             FlamingSkull.particleDummy.setBin('fixed', 60)
+        
         self.icon = loader.loadModel('models/effects/skull')
         self.icon.setBillboardAxis(0.0)
         self.icon.setDepthWrite(0)
@@ -88,15 +89,15 @@ class FlamingSkull(PooledEffect, EffectController):
         self.icon.show()
         self.icon.setColorScale(0, 0, 0, 0)
         self.icon.setScale(1.0)
-        skullFadeIn = self.icon.colorScaleInterval(3.0, Vec4(0.1, 0.1, 0, 0.25), startColorScale=Vec4(0, 0, 0, 0))
-        skullFadeOut = self.icon.colorScaleInterval(1.0, Vec4(0, 0, 0, 0), startColorScale=Vec4(0.1, 0.1, 0, 0.25))
-        skullPulseUp = self.icon.scaleInterval(0.05, 1.25, startScale=1.0)
-        skullPulseDown = self.icon.scaleInterval(0.05, 1.0, startScale=1.25)
+        skullFadeIn = self.icon.colorScaleInterval(3.0, Vec4(0.1, 0.1, 0, 0.25), startColorScale = Vec4(0, 0, 0, 0))
+        skullFadeOut = self.icon.colorScaleInterval(1.0, Vec4(0, 0, 0, 0), startColorScale = Vec4(0.1, 0.1, 0, 0.25))
+        skullPulseUp = self.icon.scaleInterval(0.05, 1.25, startScale = 1.0)
+        skullPulseDown = self.icon.scaleInterval(0.05, 1.0, startScale = 1.25)
         skullPulse = Sequence(skullPulseUp, skullPulseDown)
-        skullColorPulseUp = self.icon.colorScaleInterval(0.1, Vec4(0.1, 0.1, 0, 0.5), startColorScale=Vec4(0, 0, 0, 0.25))
-        skullColorPulseDown = self.icon.colorScaleInterval(0.1, Vec4(0, 0, 0, 0.25), startColorScale=Vec4(0.1, 0.1, 0, 0.5))
+        skullColorPulseUp = self.icon.colorScaleInterval(0.1, Vec4(0.1, 0.1, 0, 0.5), startColorScale = Vec4(0, 0, 0, 0.25))
+        skullColorPulseDown = self.icon.colorScaleInterval(0.1, Vec4(0, 0, 0, 0.25), startColorScale = Vec4(0.1, 0.1, 0, 0.5))
         skullColorPulse = Sequence(skullColorPulseUp, skullColorPulseDown)
-        growSize = LerpFunctionInterval(self.setNewSize, 3.0, toData=1.0, fromData=0.001)
+        growSize = LerpFunctionInterval(self.setNewSize, 3.0, toData = 1.0, fromData = 0.001)
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Func(skullFadeIn.start), Func(skullPulse.loop), growSize, Func(skullColorPulse.loop))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Sequence(skullFadeOut, Func(skullPulse.finish), Func(skullColorPulse.finish), Func(self.icon.hide)), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Parallel(self.startEffect, Wait(5.0), self.endEffect)
@@ -121,3 +122,5 @@ class FlamingSkull(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

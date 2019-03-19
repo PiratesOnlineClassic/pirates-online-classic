@@ -1,9 +1,8 @@
+from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
-from pandac.PandaModules import *
 from pirates.effects.FireworkGlobals import *
 from pirates.effects.FireworkShow import FireworkShow
-
 PortRoyalLocation = Point3(-1350, 180, 220)
 PortRoyalLocation2 = Point3(50, 1500, 0)
 PortRoyalH = 100.0
@@ -13,14 +12,13 @@ TortugaH = 0.0
 PadresLocation = Point3(6700, -22800, 100)
 PadresH = 0.0
 
-class FireworkShowManager():
-
+class FireworkShowManager:
+    
     def __init__(self):
         self.showType = None
         self.PortRoyalShow = None
         self.TortugaShow = None
         self.PadresShow = None
-        return
 
     def beginPortRoyalShow(self, offset):
         taskMgr.remove('beginPortRoyalShow')
@@ -54,21 +52,27 @@ class FireworkShowManager():
         showDuration = 0.0
         if self.showType == FireworkShowType.FourthOfJuly:
             showDuration = 105.0
+        
         wait = 10.0
         if timeOffset <= showDuration + wait:
             delay = max(0.0, wait - timeOffset)
             offset = max(0.0, timeOffset - delay - wait)
-            taskMgr.doMethodLater(delay, self.beginPortRoyalShow, 'beginPortRoyalShow', extraArgs=[offset])
-        timeOffset = timeOffset - (showDuration + wait)
+            taskMgr.doMethodLater(delay, self.beginPortRoyalShow, 'beginPortRoyalShow', extraArgs = [
+                offset])
+        
+        timeOffset = timeOffset - showDuration + wait
         if timeOffset <= showDuration + wait:
             delay = max(0.0, wait - timeOffset)
             offset = max(0.0, timeOffset - delay - wait)
-            taskMgr.doMethodLater(delay, self.beginTortugaShow, 'beginTortugaShow', extraArgs=[offset])
-        timeOffset = timeOffset - (showDuration + wait)
+            taskMgr.doMethodLater(delay, self.beginTortugaShow, 'beginTortugaShow', extraArgs = [
+                offset])
+        
+        timeOffset = timeOffset - showDuration + wait
         if timeOffset <= showDuration + wait:
             delay = max(0.0, wait - timeOffset)
             offset = max(0.0, timeOffset - delay - wait)
-            taskMgr.doMethodLater(delay, self.beginPadresShow, 'beginPadresShow', extraArgs=[offset])
+            taskMgr.doMethodLater(delay, self.beginPadresShow, 'beginPadresShow', extraArgs = [
+                offset])
 
     def disable(self):
         self.showType = None
@@ -78,10 +82,14 @@ class FireworkShowManager():
         if self.PortRoyalShow:
             self.PortRoyalShow.cleanupShow()
             self.PortRoyalShow = None
+        
         if self.TortugaShow:
             self.TortugaShow.cleanupShow()
             self.TortugaShow = None
+        
         if self.PadresShow:
             self.PadresShow.cleanupShow()
             self.PadresShow = None
-        return
+        
+
+

@@ -1,16 +1,16 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class FireTrail(PooledEffect, EffectController):
     cardScale = 128.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -27,6 +27,7 @@ class FireTrail(PooledEffect, EffectController):
             FireTrail.particleDummy.setColorScaleOff()
             FireTrail.particleDummy.setBin('fixed', 60)
             FireTrail.particleDummy.setTwoSided(1)
+        
         self.f = ParticleEffect.ParticleEffect('FireTrail')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -74,7 +75,6 @@ class FireTrail(PooledEffect, EffectController):
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 1.0))
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
-        return
 
     def loadGlow(self):
         if not self.glow and self.wantGlow:
@@ -101,16 +101,16 @@ class FireTrail(PooledEffect, EffectController):
         if self.wantGlow:
             self.loadGlow()
             randomness = random.random() / 20
-            scaleUp = self.glow.scaleInterval(0.05, 15, startScale=17, blendType='easeInOut')
-            scaleDown = self.glow.scaleInterval(0.05, 17, startScale=15, blendType='easeInOut')
+            scaleUp = self.glow.scaleInterval(0.05, 15, startScale = 17, blendType = 'easeInOut')
+            scaleDown = self.glow.scaleInterval(0.05, 17, startScale = 15, blendType = 'easeInOut')
             self.pulseTrack = Sequence(scaleUp, scaleDown)
         elif self.glow:
             self.glow.removeNode()
             self.glow = None
+        
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Func(self.startPulseTrack))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Wait(1.5), Func(self.stopPulseTrack), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(6.0), self.endEffect)
-        return
 
     def cleanUpEffect(self):
         self.stopPulseTrack()
@@ -122,6 +122,8 @@ class FireTrail(PooledEffect, EffectController):
         if self.glow:
             self.glow.removeNode()
             self.glow = None
+        
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-        return
+
+

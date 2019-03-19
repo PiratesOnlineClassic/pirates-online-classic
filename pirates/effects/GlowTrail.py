@@ -1,12 +1,13 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class GlowTrail(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -19,6 +20,7 @@ class GlowTrail(PooledEffect, EffectController):
         if not GlowTrail.particleDummy:
             GlowTrail.particleDummy = render.attachNewNode(ModelNode('GlowTrailParticleDummy'))
             GlowTrail.particleDummy.setDepthWrite(0)
+        
         self.f = ParticleEffect.ParticleEffect('GlowTrail')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -88,3 +90,5 @@ class GlowTrail(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

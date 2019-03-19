@@ -1,14 +1,12 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class ExplosionTip(PooledEffect, EffectController):
     NUM_PARTS = 10
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -33,20 +31,20 @@ class ExplosionTip(PooledEffect, EffectController):
             speed = self.speed + random.uniform(0.0, self.speedSpread)
             fadeBlast = self.parts[i].colorScaleInterval(speed * 0.5, Vec4(0, 0, 0, 0))
             waitFade = Sequence(Wait(speed), fadeBlast)
-            scaleBlast = self.parts[i].scaleInterval(speed, self.size, blendType='easeIn')
-            moveBlast = self.parts[i].posInterval(speed, Vec3(1, 0, 4), startPos=Vec3(0, 0, 0), blendType='easeOut', other=self.parts[i])
+            scaleBlast = self.parts[i].scaleInterval(speed, self.size, blendType = 'easeIn')
+            moveBlast = self.parts[i].posInterval(speed, Vec3(1, 0, 4), startPos = Vec3(0, 0, 0), blendType = 'easeOut', other = self.parts[i])
             subTracks.append(Parallel(scaleBlast, moveBlast, waitFade))
-
+        
         self.track = Sequence(Func(self.showAll), subTracks, Func(self.hideAll), Func(self.cleanUpEffect))
-
+    
     def hideAll(self):
         for part in self.parts:
             part.hide()
-
+    
     def showAll(self):
         for part in self.parts:
             part.show()
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
@@ -56,6 +54,8 @@ class ExplosionTip(PooledEffect, EffectController):
         if self.card:
             self.card.removeNode()
             self.card = None
+        
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-        return
+
+

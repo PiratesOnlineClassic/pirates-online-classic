@@ -1,15 +1,15 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class DirtClod(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -18,6 +18,7 @@ class DirtClod(PooledEffect, EffectController):
         if not DirtClod.particleDummy:
             DirtClod.particleDummy = render.attachNewNode(ModelNode('DirtClodParticleDummy'))
             DirtClod.particleDummy.setDepthWrite(0)
+        
         self.f = ParticleEffect.ParticleEffect('DirtClod')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -30,7 +31,7 @@ class DirtClod(PooledEffect, EffectController):
         force0.setActive(1)
         f0.addForce(force0)
         self.f.addForceGroup(f0)
-
+    
     def createTrack(self):
         self.p0.setPoolSize(32)
         self.p0.setBirthRate(0.5)
@@ -78,7 +79,9 @@ class DirtClod(PooledEffect, EffectController):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

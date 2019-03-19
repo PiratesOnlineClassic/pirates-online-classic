@@ -1,15 +1,15 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class SmokePillar(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -21,6 +21,7 @@ class SmokePillar(PooledEffect, EffectController):
         if not SmokePillar.particleDummy:
             SmokePillar.particleDummy = render.attachNewNode(ModelNode('SmokePillarParticleDummy'))
             SmokePillar.particleDummy.setDepthWrite(0)
+        
         self.f = ParticleEffect.ParticleEffect('SmokePillar')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -85,3 +86,5 @@ class SmokePillar(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

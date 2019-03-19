@@ -1,16 +1,16 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class Sparks(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -23,6 +23,7 @@ class Sparks(PooledEffect, EffectController):
             Sparks.particleDummy.setFogOff()
             Sparks.particleDummy.setLightOff()
             Sparks.particleDummy.setBin('fixed', 120)
+        
         self.f = ParticleEffect.ParticleEffect('Sparks')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -76,8 +77,8 @@ class Sparks(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.2)
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.005), Func(self.p0.setPoolSize, 32), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Wait(1.5), Func(self.p0.setPoolSize, 0), Wait(1.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.005), Func(self.p0.setPoolSize, 32.0), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Wait(1.5), Func(self.p0.setPoolSize, 0.0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
     def cleanUpEffect(self):
@@ -88,3 +89,5 @@ class Sparks(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

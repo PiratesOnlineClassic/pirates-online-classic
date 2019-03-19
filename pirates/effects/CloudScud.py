@@ -1,18 +1,18 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from direct.showbase.DirectObject import *
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from pirates.piratesbase import PiratesGlobals
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class CloudScud(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -25,6 +25,7 @@ class CloudScud(PooledEffect, EffectController):
             CloudScud.particleDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
             CloudScud.particleDummy.setFogOff()
             CloudScud.particleDummy.setBin('fixed', 120)
+        
         self.f = ParticleEffect.ParticleEffect('CloudScud')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -73,12 +74,12 @@ class CloudScud(PooledEffect, EffectController):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.setPoolSize, 32.0), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 4.0), Wait(3.8), Func(self.p0.setPoolSize, 0.0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         self.ignore('timeOfDayChange')
         EffectController.destroy(self)
@@ -107,3 +108,7 @@ class CloudScud(PooledEffect, EffectController):
                 self.p0.renderer.setUserAlpha(0.35)
             elif stateId == PiratesGlobals.TOD_STARS:
                 self.p0.renderer.setUserAlpha(0.35)
+            
+        
+
+

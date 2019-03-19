@@ -1,13 +1,11 @@
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.interval.IntervalGlobal import *
-from EffectController import EffectController
-from pandac.PandaModules import *
-from PooledEffect import PooledEffect
-
-
 class ShockwaveRing(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -25,12 +23,12 @@ class ShockwaveRing(PooledEffect, EffectController):
         self.explosion.setBin('shadow', 0)
         self.explosion.setTransparency(TransparencyAttrib.MAlpha)
         self.explosion.setDepthWrite(0)
-
-    def createTrack(self, rate=1):
+    
+    def createTrack(self, rate = 1):
         self.explosion.setScale(1)
         self.explosion.setColorScale(1, 1, 1, 1)
         fadeBlast = self.explosion.colorScaleInterval(self.speed, Vec4(0, 0, 0, 0))
-        scaleBlast = self.explosion.scaleInterval(self.speed, self.size, blendType='easeIn', other=render)
+        scaleBlast = self.explosion.scaleInterval(self.speed, self.size, blendType = 'easeIn', other = render)
         self.track = Sequence(Func(self.show), Parallel(scaleBlast, fadeBlast), Wait(self.speed), Func(self.hide), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
@@ -41,3 +39,5 @@ class ShockwaveRing(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

@@ -1,19 +1,21 @@
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class TentacleFire(PooledEffect, EffectController):
     cardScale = 64.0
-
-    def __init__(self, effectParent=None):
+    
+    def __init__(self, effectParent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if effectParent:
             self.reparentTo(effectParent)
+        
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleFire2')
         self.effectScale = 1.0
@@ -26,6 +28,7 @@ class TentacleFire(PooledEffect, EffectController):
             TentacleFire.particleDummy.setBin('fixed', 120)
             TentacleFire.particleDummy.setTwoSided(1)
             TentacleFire.particleDummy.setAttrib(ColorWriteAttrib.make(ColorWriteAttrib.CRed | ColorWriteAttrib.CGreen | ColorWriteAttrib.CBlue))
+        
         self.f = ParticleEffect.ParticleEffect('TentacleFire')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -87,12 +90,14 @@ class TentacleFire(PooledEffect, EffectController):
         self.p0.renderer.setInitialYScale(0.06 * self.cardScale * scale)
         self.p0.renderer.setFinalXScale(0.04 * self.cardScale * scale)
         self.p0.renderer.setFinalYScale(0.055 * self.cardScale * scale)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

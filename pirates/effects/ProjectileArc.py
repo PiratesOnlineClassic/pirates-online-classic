@@ -1,17 +1,15 @@
-import random
-
+from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
-from pandac.PandaModules import *
-from pirates.effects.CannonSplash import CannonSplash
+from pirates.piratesbase import PiratesGlobals
 from pirates.effects.DustRing import DustRing
 from pirates.effects.SmallSplash import SmallSplash
-from pirates.piratesbase import PiratesGlobals
-
+from pirates.effects.CannonSplash import CannonSplash
+import random
 
 class ProjectileArc(DirectObject, NodePath):
-
-    def __init__(self, wantRotate=1, wantColl=0):
+    
+    def __init__(self, wantRotate = 1, wantColl = 0):
         NodePath.__init__(self, 'projectileArcRenderParent')
         self.wantRotate = wantRotate
         self.wantColl = wantColl
@@ -37,30 +35,32 @@ class ProjectileArc(DirectObject, NodePath):
             self.cnode.setIntoCollideMask(BitMask32.allOff())
             self.collHandler = CollisionHandlerEvent()
             self.collHandler.addInPattern(self.arcHitEvent)
+        
         if self.wantRotate:
             randomNumX = random.uniform(self.rotateMin, self.rotateMax)
             randomNumY = random.uniform(self.rotateMin, self.rotateMax)
             randomNumZ = 0
             self.playRotate = self.rotateNode.hprInterval(6, Point3(randomNumX, randomNumY, randomNumZ))
-        return
-
-    def createTrack(self, rate=1):
+    
+    def createTrack(self, rate = 1):
         if self.wantColl:
             enableColl = Sequence(Wait(0.2), Func(self.cnode.setFromCollideMask, PiratesGlobals.TargetBitmask))
-        self.playProjectile = ProjectileInterval(self.transNode, startPos=self.startPos, startVel=self.startVel, endZ=self.endPlaneZ, gravityMult=self.gravityMult)
+        
+        self.playProjectile = ProjectileInterval(self.transNode, startPos = self.startPos, startVel = self.startVel, endZ = self.endPlaneZ, gravityMult = self.gravityMult)
         if self.wantColl:
             playDebris = Parallel(self.playProjectile, enableColl)
         else:
             playDebris = self.playProjectile
         self.track = Sequence(playDebris, Func(self.destroy))
-
-    def play(self, rate=1):
+    
+    def play(self, rate = 1):
         if self.startPos[2] > self.endPlaneZ:
             self.startCollisions()
             self.createTrack()
             self.track.start()
             if self.wantRotate:
                 self.playRotate.loop()
+            
         else:
             self.destroy()
 
@@ -72,12 +72,13 @@ class ProjectileArc(DirectObject, NodePath):
     def stop(self):
         if self.track != None:
             self.track.finish()
+        
         if self.wantRotate:
             self.playRotate.finish()
+        
         self.ignore(self.arcHitEvent)
         if self.wantColl and base.cTrav != 0:
             base.cTrav.removeCollider(self.collision)
-        return
 
     def finish(self):
         self.stop()
@@ -92,8 +93,10 @@ class ProjectileArc(DirectObject, NodePath):
         del self.track
         if self.wantColl and base.cTrav != 0:
             base.cTrav.removeCollider(self.collision)
+        
         if self.wantRotate:
             del self.playRotate
+        
         self.transNode.removeNode()
         del self.transNode
         self.removeNode()
@@ -101,13 +104,16 @@ class ProjectileArc(DirectObject, NodePath):
 
     def weaponHitObject(self, entry):
         if not entry.hasSurfacePoint() or not entry.hasInto():
-            return
+            return None
+        
         if not entry.getInto().isTangible():
-            return
+            return None
+        
         hitObject = entry.getIntoNodePath()
         objType = hitObject.getNetTag('objType')
         if not objType:
-            return
+            return None
+        
         objType = int(objType)
         if objType == PiratesGlobals.COLL_SEA and base.cr.wantSpecialEffects:
             pos = entry.getSurfacePoint(render)
@@ -121,12 +127,14 @@ class ProjectileArc(DirectObject, NodePath):
                     splashEffect.reparentTo(render)
                     splashEffect.setPos(pos[0], pos[1], entryWaterHeight)
                     splashEffect.play()
+                
             else:
                 splashEffect = SmallSplash.getEffect()
                 if splashEffect:
                     splashEffect.reparentTo(render)
                     splashEffect.setPos(pos[0], pos[1], entryWaterHeight)
                     splashEffect.play()
+                
             self.cnode.setFromCollideMask(PiratesGlobals.TargetBitmask.allOff())
         elif objType == PiratesGlobals.COLL_LAND and base.cr.wantSpecialEffects:
             pos = entry.getSurfacePoint(render)
@@ -135,4 +143,8 @@ class ProjectileArc(DirectObject, NodePath):
                 dustRingEffect.reparentTo(render)
                 dustRingEffect.setPos(pos)
                 dustRingEffect.play()
+            
             self.cnode.setFromCollideMask(PiratesGlobals.TargetBitmask.allOff())
+        
+
+

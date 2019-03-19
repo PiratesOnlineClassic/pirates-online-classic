@@ -1,17 +1,17 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class SparkBurst(PooledEffect, EffectController):
     darkCardScale = 128.0
     blueCardScale = 128.0
     cardScale = 128.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -34,8 +34,8 @@ class SparkBurst(PooledEffect, EffectController):
         self.f.addParticles(self.p0)
         f0 = ForceGroup.ForceGroup('Noise')
         self.f.addForceGroup(f0)
-
-    def createTrack(self, color='Yellow'):
+    
+    def createTrack(self, color = 'Yellow'):
         self.p0.setPoolSize(32)
         self.p0.setBirthRate(0.02)
         self.p0.setLitterSize(10)
@@ -53,56 +53,58 @@ class SparkBurst(PooledEffect, EffectController):
         self.p0.renderer.setUserAlpha(0.8)
         if color == 'Yellow':
             self.p0.renderer.setFromNode(self.card)
+        elif color == 'Blue':
+            self.p0.renderer.setFromNode(self.blueCard)
         else:
-            if color == 'Blue':
-                self.p0.renderer.setFromNode(self.blueCard)
-            else:
-                self.p0.renderer.setFromNode(self.darkCard)
-            self.p0.renderer.setColor(Vec4(1.0, 1.0, 1.0, 1.0))
-            self.p0.renderer.setXScaleFlag(1)
-            self.p0.renderer.setYScaleFlag(1)
-            self.p0.renderer.setAnimAngleFlag(0)
-            if color == 'Dark':
-                self.p0.renderer.setInitialXScale(0.005 * self.darkCardScale)
-                self.p0.renderer.setFinalXScale(0.0001 * self.darkCardScale)
-                self.p0.renderer.setInitialYScale(0.005 * self.darkCardScale)
-                self.p0.renderer.setFinalYScale(0.0001 * self.darkCardScale)
-            else:
-                self.p0.renderer.setInitialXScale(0.0015 * self.darkCardScale)
-                self.p0.renderer.setFinalXScale(1e-05 * self.darkCardScale)
-                self.p0.renderer.setInitialYScale(0.0015 * self.darkCardScale)
-                self.p0.renderer.setFinalYScale(1e-05 * self.darkCardScale)
-            self.p0.renderer.setNonanimatedTheta(0.0)
-            self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
-            self.p0.renderer.setAlphaDisable(1)
-            self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OOne, ColorBlendAttrib.OOneMinusIncomingAlpha)
-            self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
-            if color == 'Dark':
-                self.p0.emitter.setAmplitude(10.0)
+            self.p0.renderer.setFromNode(self.darkCard)
+        self.p0.renderer.setColor(Vec4(1.0, 1.0, 1.0, 1.0))
+        self.p0.renderer.setXScaleFlag(1)
+        self.p0.renderer.setYScaleFlag(1)
+        self.p0.renderer.setAnimAngleFlag(0)
+        if color == 'Dark':
+            self.p0.renderer.setInitialXScale(0.005 * self.darkCardScale)
+            self.p0.renderer.setFinalXScale(0.0001 * self.darkCardScale)
+            self.p0.renderer.setInitialYScale(0.005 * self.darkCardScale)
+            self.p0.renderer.setFinalYScale(0.0001 * self.darkCardScale)
+        else:
+            self.p0.renderer.setInitialXScale(0.0015 * self.darkCardScale)
+            self.p0.renderer.setFinalXScale(1e-05 * self.darkCardScale)
+            self.p0.renderer.setInitialYScale(0.0015 * self.darkCardScale)
+            self.p0.renderer.setFinalYScale(1e-05 * self.darkCardScale)
+        self.p0.renderer.setNonanimatedTheta(0.0)
+        self.p0.renderer.setAlphaBlendMethod(BaseParticleRenderer.PPBLENDLINEAR)
+        self.p0.renderer.setAlphaDisable(1)
+        self.p0.renderer.setColorBlendMode(ColorBlendAttrib.MAdd, ColorBlendAttrib.OOne, ColorBlendAttrib.OOneMinusIncomingAlpha)
+        self.p0.emitter.setEmissionType(BaseParticleEmitter.ETRADIATE)
+        if color == 'Dark':
+            self.p0.emitter.setAmplitude(10.0)
+        else:
             self.p0.emitter.setAmplitude(4.0)
         self.p0.emitter.setAmplitudeSpread(4.0)
         self.p0.emitter.setOffsetForce(Vec3(1.0, 1.0, -0.1))
         self.p0.emitter.setExplicitLaunchVector(Vec3(0.1, 0.0, 100.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.5)
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.setPoolSize, 32), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
-        self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Wait(1.5), Func(self.p0.setPoolSize, 0), Wait(1.0), Func(self.cleanUpEffect))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.setPoolSize, 32.0), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Wait(1.5), Func(self.p0.setPoolSize, 0.0), Wait(1.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(0.2), self.endEffect)
 
-    def play(self, color='Yellow'):
+    def play(self, color = 'Yellow'):
         self.createTrack(color)
         self.track.start()
-
+    
     def setEffectColor(self, color):
         self.effectColor = color - Vec4(0, 0, 1, 0)
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
         self.p0.renderer.getColorInterpolationManager().addLinear(0, 1, Vec4(1.0, 1.0, 1.0, 0.0), self.effectColor, 1)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

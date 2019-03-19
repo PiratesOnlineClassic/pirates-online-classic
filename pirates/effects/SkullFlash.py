@@ -1,12 +1,11 @@
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class SkullFlash(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -22,11 +21,11 @@ class SkullFlash(PooledEffect, EffectController):
         self.effectModel.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
         self.setDepthWrite(0)
         self.setFogOff()
-
+    
     def createTrack(self):
         self.effectModel.setColorScale(0, 0, 0, 0)
-        fadeBlast = self.effectModel.colorScaleInterval(self.fadeTime, Vec4(0, 0, 0, 0), startColorScale=Vec4(self.effectColor), blendType='easeOut')
-        scaleBlast = self.effectModel.scaleInterval(self.fadeTime, 2.0, startScale=1.0, blendType='easeOut')
+        fadeBlast = self.effectModel.colorScaleInterval(self.fadeTime, Vec4(0, 0, 0, 0), startColorScale = Vec4(self.effectColor), blendType = 'easeOut')
+        scaleBlast = self.effectModel.scaleInterval(self.fadeTime, 2.0, startScale = 1.0, blendType = 'easeOut')
         self.track = Sequence(Parallel(fadeBlast, scaleBlast), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
@@ -37,3 +36,5 @@ class SkullFlash(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

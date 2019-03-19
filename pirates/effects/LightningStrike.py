@@ -1,18 +1,16 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
 from pirates.piratesbase import PiratesGlobals
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class LightningStrike(PooledEffect, EffectController):
     soundFx = []
     soundFxNames = ('thunderclap.mp3', 'thunder-start.mp3')
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -47,8 +45,8 @@ class LightningStrike(PooledEffect, EffectController):
             self.flasha.setH(random.uniform(-60.0, 60.0))
         else:
             self.flasha.setH(random.uniform(120.0, 240.0))
-        fadeOut = self.flashDummy.colorScaleInterval(self.fadeTime, Vec4(0, 0, 0, 0), startColorScale=self.fadeColor)
-        scaleBlast = self.flashDummy.scaleInterval(self.fadeTime * 2 + self.waitTime, self.endScale, startScale=self.startScale, blendType='easeOut')
+        fadeOut = self.flashDummy.colorScaleInterval(self.fadeTime, Vec4(0, 0, 0, 0), startColorScale = self.fadeColor)
+        scaleBlast = self.flashDummy.scaleInterval(self.fadeTime * 2 + self.waitTime, self.endScale, startScale = self.startScale, blendType = 'easeOut')
         sfx = random.choice(self.soundFx)
         sfx.setVolume(1.0)
         self.track = Sequence(Func(self.flashDummy.show), Parallel(SoundInterval(sfx), Sequence(Wait(self.waitTime), fadeOut), scaleBlast), Func(self.flashDummy.hide), Func(self.flashDummy.setScale, 1.0), Func(self.flashDummy.setColorScale, Vec4(1, 1, 1, 1)), Func(self.cleanUpEffect))
@@ -61,3 +59,5 @@ class LightningStrike(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

@@ -1,15 +1,15 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+import random
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class SpectralTrail(PooledEffect, EffectController):
     cardScale = 128.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -21,6 +21,7 @@ class SpectralTrail(PooledEffect, EffectController):
             SpectralTrail.particleDummy.setLightOff()
             SpectralTrail.particleDummy.setColorScaleOff()
             SpectralTrail.particleDummy.setFogOff()
+        
         self.f = ParticleEffect.ParticleEffect('SpectralTrail')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -65,7 +66,7 @@ class SpectralTrail(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.5)
 
-    def createTrack(self, rate=1):
+    def createTrack(self, rate = 1):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(3.0), Func(self.cleanUpEffect))
         self.track = Parallel(self.startEffect, Wait(4.0), self.endEffect)
@@ -78,3 +79,5 @@ class SpectralTrail(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

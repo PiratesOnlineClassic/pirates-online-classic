@@ -1,13 +1,15 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from EffectController import EffectController
+# File: W (Python 2.4)
+
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import Particles
+from direct.particles import ParticleEffect
+from EffectController import EffectController
 from PooledEffect import PooledEffect
 
-
 class WaterMist(PooledEffect, EffectController):
-
-    def __init__(self, parent=None):
+    
+    def __init__(self, parent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         self.setDepthWrite(0)
@@ -25,7 +27,7 @@ class WaterMist(PooledEffect, EffectController):
         self.p0.setEmitter('DiscEmitter')
         self.f.addParticles(self.p0)
         self.p0.setPoolSize(16)
-        self.p0.setBirthRate(0.2)
+        self.p0.setBirthRate(0.20000000000000001)
         self.p0.setLitterSize(1)
         self.p0.setLitterSpread(0)
         self.p0.setSystemLifespan(0.0)
@@ -38,7 +40,7 @@ class WaterMist(PooledEffect, EffectController):
         self.p0.factory.setTerminalVelocityBase(400.0)
         self.p0.factory.setTerminalVelocitySpread(0.0)
         self.p0.renderer.setAlphaMode(BaseParticleRenderer.PRALPHAINOUT)
-        self.p0.renderer.setUserAlpha(0.4)
+        self.p0.renderer.setUserAlpha(0.40000000000000002)
         self.p0.renderer.setFromNode(self.card)
         self.p0.renderer.setColor(Vec4(1.0, 1.0, 1.0, 1.0))
         self.p0.renderer.setXScaleFlag(1)
@@ -53,26 +55,33 @@ class WaterMist(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
 
+    
     def createTrack(self):
         self.setEffectScale(self.effectScale)
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.2), Func(self.p0.clearToInitial), Func(self.f.start, self, self))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.20000000000000001), Func(self.p0.clearToInitial), Func(self.f.start, self, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(3.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(12.0), self.endEffect)
 
+    
     def setEffectScale(self, scale):
         self.effectScale = scale
-        self.p0.renderer.setInitialXScale(0.2 * self.cardScale * scale)
-        self.p0.renderer.setFinalXScale(0.3 * self.cardScale * scale)
-        self.p0.renderer.setInitialYScale(0.2 * self.cardScale * scale)
-        self.p0.renderer.setFinalYScale(0.3 * self.cardScale * scale)
+        self.p0.renderer.setInitialXScale(0.20000000000000001 * self.cardScale * scale)
+        self.p0.renderer.setFinalXScale(0.29999999999999999 * self.cardScale * scale)
+        self.p0.renderer.setInitialYScale(0.20000000000000001 * self.cardScale * scale)
+        self.p0.renderer.setFinalYScale(0.29999999999999999 * self.cardScale * scale)
         self.p0.emitter.setOffsetForce(Vec3(0.0, 0.0, 6.0 * scale))
         self.p0.emitter.setRadius(20.0 * scale)
 
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
+        
 
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

@@ -1,15 +1,14 @@
-import os
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import os
 
 class HealSparks(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -63,7 +62,7 @@ class HealSparks(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(1.0)
 
-    def createTrack(self, delay=0.0):
+    def createTrack(self, delay = 0.0):
         self.p0.renderer.setInitialXScale(0.001 * self.cardScale)
         self.p0.renderer.setFinalXScale(0.004 * self.cardScale)
         self.p0.renderer.setInitialYScale(0.001 * self.cardScale)
@@ -76,8 +75,8 @@ class HealSparks(PooledEffect, EffectController):
         self.effectColor = color
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
         self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 1.0, self.effectColor * 2.0, self.effectColor, 1)
-
-    def play(self, delay=0.0):
+    
+    def play(self, delay = 0.0):
         self.createTrack(delay)
         self.track.start()
 
@@ -85,9 +84,10 @@ class HealSparks(PooledEffect, EffectController):
         EffectController.cleanUpEffect(self)
         if self.pool and self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
         self.adjustIval = None
-        return
+
+

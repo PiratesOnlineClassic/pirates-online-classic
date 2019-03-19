@@ -1,18 +1,18 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class WakeMist(PooledEffect, EffectController):
     cardScale = 64.0
     splashSfxNames = ('wtrsplash_1.mp3', 'wtrsplash_2.mp3', 'wtrsplash_3.mp3', 'wtrsplash_4.mp3')
     splashSfx = []
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -25,6 +25,7 @@ class WakeMist(PooledEffect, EffectController):
         if not WakeMist.particleDummy:
             WakeMist.particleDummy = render.attachNewNode(ModelNode('WakeMistParticleDummy'))
             WakeMist.particleDummy.setDepthWrite(0)
+        
         self.f = ParticleEffect.ParticleEffect('WakeMist')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -81,10 +82,10 @@ class WakeMist(PooledEffect, EffectController):
         self.p0.emitter.setEndpoint1(Point3(-10.0, 0.0, 0.0))
         self.p0.emitter.setEndpoint2(Point3(10.0, 0.0, 0.0))
 
-    def createTrack(self, rate=1):
+    def createTrack(self, rate = 1):
         sfx = random.choice(self.splashSfx)
         particleSpray = Sequence(Func(self.p0.setBirthRate, 0.15), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.3), Func(self.p0.setBirthRate, 8), Wait(4.0), Func(self.cleanUpEffect))
-        self.track = Parallel(particleSpray, Func(base.playSfx, sfx, node=self))
+        self.track = Parallel(particleSpray, Func(base.playSfx, sfx, node = self))
 
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
@@ -94,3 +95,5 @@ class WakeMist(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

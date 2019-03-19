@@ -1,12 +1,13 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
 
-
 class StarBurst(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -81,7 +82,7 @@ class StarBurst(PooledEffect, EffectController):
         self.p0.emitter.setAmplitude(150.0 * scale)
         self.p0.emitter.setAmplitudeSpread(20.0 * scale)
         self.p0.emitter.setRadius(250.0 * scale)
-
+    
     def setEffectColor(self, color):
         self.effectColor = color
         self.p0.renderer.setColor(self.effectColor)
@@ -90,7 +91,9 @@ class StarBurst(PooledEffect, EffectController):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

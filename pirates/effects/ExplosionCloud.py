@@ -1,15 +1,15 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class ExplosionCloud(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -22,6 +22,7 @@ class ExplosionCloud(PooledEffect, EffectController):
             ExplosionCloud.particleDummy.setLightOff()
             ExplosionCloud.particleDummy.setColorScaleOff()
             ExplosionCloud.particleDummy.setFogOff()
+        
         self.f = ParticleEffect.ParticleEffect('ExplosionCloud')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -36,7 +37,7 @@ class ExplosionCloud(PooledEffect, EffectController):
         f0.addForce(force0)
         self.f.addForceGroup(f0)
 
-    def createTrack(self, rate=1):
+    def createTrack(self, rate = 1):
         self.p0.setPoolSize(512)
         self.p0.setBirthRate(0.02)
         self.p0.setLitterSize(5)
@@ -75,12 +76,14 @@ class ExplosionCloud(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(20.0)
         self.track = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Wait(1.0), Func(self.p0.setBirthRate, 100), Wait(7.0), Func(self.cleanUpEffect))
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

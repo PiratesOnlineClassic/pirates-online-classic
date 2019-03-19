@@ -1,20 +1,22 @@
+from pandac.PandaModules import *
+from direct.motiontrail.MotionTrail import *
 import random
 
-from direct.motiontrail.MotionTrail import *
-from pandac.PandaModules import *
-
-
 class PolyTrail(NodePath):
-
-    def __init__(self, root_node_path=None, vertex_list=None, color_list=None, time_window=0.25):
+    
+    def __init__(self, root_node_path = None, vertex_list = None, color_list = None, time_window = 0.25):
         NodePath.__init__(self, 'PolyTrail')
         self.time_window = time_window
         self.root_node_path = root_node_path
         if not self.root_node_path:
             self.root_node_path = render
+        
         self.vertex_list = vertex_list
         if not self.vertex_list:
-            self.vertex_list = [Vec4(0.0, 0.4, 0.0, 1.0), Vec4(0.0, 2.0, 0.0, 1.0)]
+            self.vertex_list = [
+                Vec4(0.0, 0.4, 0.0, 1.0),
+                Vec4(0.0, 2.0, 0.0, 1.0)]
+        
         self.color_list = color_list
         if not self.color_list:
             self.color_list = []
@@ -27,7 +29,6 @@ class PolyTrail(NodePath):
         self.setVertexColors(self.color_list)
         self.setTimeWindow(self.time_window)
         self.motion_trail.attach_motion_trail()
-        return
 
     def destroy(self):
         self.removeMotionTrail()
@@ -36,7 +37,6 @@ class PolyTrail(NodePath):
         self.motion_trail = None
         self.vertex_list = None
         self.motion_trail_vertex = None
-        return
 
     def beginTrail(self):
         if self.motion_trail:
@@ -53,9 +53,9 @@ class PolyTrail(NodePath):
             self.motion_trail.unregister_motion_trail()
             self.motion_trail.delete()
             self.motion_trail = None
+        
         if self.motion_trail_vertex:
             self.motion_trail_vertex = None
-        return
 
     def addMotionTrail(self):
         if not self.motion_trail:
@@ -76,20 +76,24 @@ class PolyTrail(NodePath):
                     if index == 0:
                         self.motion_trail_vertex.start_color = Vec4(0.0, 0.25, 0.0, 1.0)
                         self.motion_trail_vertex.end_color = Vec4(0.0, 0.0, 0.0, 1.0)
+                    
                     if index == 1:
                         self.motion_trail_vertex.start_color = Vec4(0.25, 0.0, 0.0, 1.0)
                         self.motion_trail_vertex.end_color = Vec4(0.0, 0.0, 0.0, 1.0)
+                    
                     if index == 2:
                         self.motion_trail_vertex.start_color = Vec4(0.0, 0.0, 1.0, 1.0)
                         self.motion_trail_vertex.end_color = Vec4(0.0, 0.0, 0.0, 1.0)
+                    
                     if index == 3:
                         self.motion_trail_vertex.start_color = Vec4(0.0, 1.0, 1.0, 1.0)
                         self.motion_trail_vertex.end_color = Vec4(0.0, 0.0, 0.0, 1.0)
+                    
                     if index == 4:
                         self.motion_trail_vertex.start_color = Vec4(1.0, 1.0, 0.0, 1.0)
                         self.motion_trail_vertex.end_color = Vec4(0.0, 0.0, 0.0, 1.0)
-                index += 1
 
+                index += 1
             self.motion_trail.update_vertices()
             self.motion_trail.calculate_relative_matrix = True
             self.motion_trail.time_window = self.time_window
@@ -122,12 +126,15 @@ class PolyTrail(NodePath):
                 angle = (1.0 - time) * 90.0
                 matrix = Mat4.rotateMat(angle, axis)
                 self.motion_trail.update_motion_trail(time, matrix)
-        return
 
     def setVertexColors(self, color_list):
         if self.motion_trail:
             black = Vec4(0.0, 0.0, 0.0, 1.0)
-            scale_array = [0.25, 0.4, 0.7, 1.0]
+            scale_array = [
+                0.25,
+                0.4,
+                0.7,
+                1.0]
             total_scales = len(scale_array)
             for index in range(len(color_list)):
                 color = color_list[index]
@@ -154,7 +161,7 @@ class PolyTrail(NodePath):
     def setTexture(self, texture):
         if self.motion_trail:
             self.motion_trail.set_texture(texture)
-
+    
     def setBlendModeOn(self):
         if self.motion_trail:
             self.motion_trail.geom_node_path.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
@@ -162,3 +169,6 @@ class PolyTrail(NodePath):
     def setBlendModeOff(self):
         if self.motion_trail:
             self.motion_trail.geom_node_path.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MNone))
+        
+
+

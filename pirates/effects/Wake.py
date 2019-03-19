@@ -1,16 +1,16 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from direct.task import Task
-from otp.otpbase import OTPRender
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from PooledEffect import PooledEffect
+from direct.task import Task
+import random
+from otp.otpbase import OTPRender
+from pirates.ship import ShipGlobals
 from pirates.effects.WaterShadow import WaterShadow
 from pirates.piratesbase import PiratesGlobals
-from pirates.ship import ShipGlobals
-from PooledEffect import PooledEffect
-
 
 class Wake(PooledEffect):
     MinWakeVelocity = 6.0
@@ -19,14 +19,15 @@ class Wake(PooledEffect):
     TurnFactor = -2.0
     AvgCount = 50
     TexStage = TextureStage.getDefault()
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         self.taskName = None
         self.u = 0.0
         self.pastForwardVelocity = []
         self.pastRotationalVelocity = []
-        self.wake = Actor.Actor('models/sea/wake_zero', {'still': 'models/sea/wake_still'})
+        self.wake = Actor.Actor('models/sea/wake_zero', {
+            'still': 'models/sea/wake_still'})
         self.bend = self.wake.controlJoint(None, 'modelRoot', 'def_wake_2')
         self.wake.controlJoint(self.bend, 'modelRoot', 'def_wake_3')
         self.wake.controlJoint(self.bend, 'modelRoot', 'def_wake_4')
@@ -51,25 +52,26 @@ class Wake(PooledEffect):
             if self.use_depth_offset:
                 depth_offset = DepthOffsetAttrib.make(5)
                 self.spNP.setAttrib(depth_offset)
+            
         else:
             self.wake.setBin('ground', -7)
             self.bowWave.setBin('fixed', 0)
             self.spNP.setBin('ground', -5)
         if self.use_depth_offset:
             pass
-        else:
-            self.spNP.setDepthTest(0)
+
+        self.spNP.setDepthTest(0)
         self.wake.setAttrib(ColorWriteAttrib.make(ColorWriteAttrib.CRed | ColorWriteAttrib.CGreen | ColorWriteAttrib.CBlue))
         if hasattr(base, 'pe'):
             spn.setEffect(CompassEffect.make(base.pe.seaPatch.patchNP, CompassEffect.PZ))
         else:
             spn.setEffect(CompassEffect.make(base.cr.activeWorld.getWater().patchNP, CompassEffect.PZ))
         if self.use_water_bin:
-            mask = 4294967295L
+            mask = 0xFFFFFFFFL
             stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
             self.spNP.setAttrib(stencil)
+        
         self.shadow = None
-        return
 
     def attachToShip(self, ship):
         self.taskName = ship.taskName('wake')
@@ -89,6 +91,7 @@ class Wake(PooledEffect):
         model = ShipGlobals.getModelClass(ship.shipClass)
         if model == ShipGlobals.DINGHY:
             string = 'DINGHY'
+        
         if model == ShipGlobals.INTERCEPTORL1:
             scale_x = 0.7
             scale_y = 0.55
@@ -213,8 +216,10 @@ class Wake(PooledEffect):
             string = 'BLACK_PEARL'
         if model == ShipGlobals.DAUNTLESS:
             string = 'DAUNTLESS'
+        
         if model == ShipGlobals.FLYING_DUTCHMAN:
             string = 'FLYING_DUTCHMAN'
+        
         if draw_shadow:
             if self.shadow_model:
                 water_shadow = WaterShadow('p_ship_shadow', self.shadow_model, ship)
@@ -222,26 +227,30 @@ class Wake(PooledEffect):
                 water_shadow.setScale(scale_x, scale_y, scale_z)
                 if not hasattr(base, 'pe'):
                     water_shadow.setHpr(180, 0, 0)
+                
                 self.shadow = water_shadow
             else:
                 print 'ERROR: -------------- shadow model not found for ship class', ship.shipClass
+        
         self.wake.setScale(wake_scale)
         if not hasattr(base, 'pe'):
             self.wake.setHpr(180, 0, 0)
+        
         self.wake.setPos(wake_offset_x, wake_offset_y, wake_offset_z)
         self.wake.reparentTo(ship)
         self.wake.hide()
-        return
 
     def startAnimate(self, ship):
         self.stopAnimate()
         self.wake.show()
-        taskMgr.add(self.__animate, self.taskName, extraArgs=[ship])
-
+        taskMgr.add(self.__animate, self.taskName, extraArgs = [
+            ship])
+    
     def stopAnimate(self):
         if self.wake:
             if not self.wake.isEmpty():
                 self.wake.hide()
+
         if self.taskName:
             taskMgr.remove(self.taskName)
 
@@ -249,11 +258,9 @@ class Wake(PooledEffect):
         self.pastForwardVelocity.append(ship.getForwardVelocity())
         while len(self.pastForwardVelocity) > self.AvgCount:
             del self.pastForwardVelocity[0]
-
         self.pastRotationalVelocity.append(ship.getRotationalVelocity())
         while len(self.pastRotationalVelocity) > self.AvgCount:
             del self.pastRotationalVelocity[0]
-
         velocity = sum(self.pastForwardVelocity) / len(self.pastForwardVelocity)
         rotationalVelocity = sum(self.pastRotationalVelocity) / len(self.pastRotationalVelocity)
         if velocity < self.MinWakeVelocity:
@@ -285,6 +292,7 @@ class Wake(PooledEffect):
         if self.wake:
             if not self.wake.isEmpty():
                 self.wake.hide()
+
         if self.taskName:
             taskMgr.remove(self.taskName)
 
@@ -316,9 +324,9 @@ class Wake(PooledEffect):
         self.bowWave.detachNode()
         if self.pool and self.pool.isUsed(self):
             self.pool.checkin(self)
+        
         if self.shadow != None:
             self.shadow.detachNode()
-        return
 
     def destroy(self):
         self.stopAnimate()
@@ -326,5 +334,7 @@ class Wake(PooledEffect):
         self.bowWave.removeNode()
         if self.shadow != None:
             self.shadow.removeNode()
+        
         PooledEffect.destroy(self)
-        return
+
+

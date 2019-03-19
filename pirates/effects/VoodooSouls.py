@@ -1,15 +1,15 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class VoodooSouls(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -20,6 +20,7 @@ class VoodooSouls(PooledEffect, EffectController):
             VoodooSouls.particleDummy.setDepthWrite(0)
             VoodooSouls.particleDummy.setColorScaleOff()
             VoodooSouls.particleDummy.setLightOff()
+        
         self.effectColor = Vec4(1, 1, 1, 1)
         self.f = ParticleEffect.ParticleEffect('VoodooSouls')
         self.f.reparentTo(self)
@@ -83,7 +84,7 @@ class VoodooSouls(PooledEffect, EffectController):
         self.p0.renderer.getColorInterpolationManager().clearToInitial()
         self.p0.renderer.getColorInterpolationManager().addLinear(0.0, 0.25, Vec4(1.0, 1.0, 1.0, 0.0), Vec4(1.0, 1.0, 1.0, 0.5), 1)
         self.p0.renderer.getColorInterpolationManager().addLinear(0.25, 1.0, Vec4(1.0, 1.0, 1.0, 0.5), self.effectColor, 1)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
@@ -92,3 +93,5 @@ class VoodooSouls(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

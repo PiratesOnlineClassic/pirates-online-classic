@@ -1,20 +1,19 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class CannonSplash(PooledEffect, EffectController):
     cardScale = 64.0
     splashSfx = []
     particleDummy = None
-    splashSfxNames = ('wtrsplash_1.mp3', 'wtrsplash_2.mp3', 'wtrsplash_3.mp3', 'wtrsplash_4.mp3',
-                      'wtrsplash_5.mp3', 'wtrsplash_6.mp3', 'wtrsplash_7.mp3', 'wtrsplash_8.mp3')
-
+    splashSfxNames = ('wtrsplash_1.mp3', 'wtrsplash_2.mp3', 'wtrsplash_3.mp3', 'wtrsplash_4.mp3', 'wtrsplash_5.mp3', 'wtrsplash_6.mp3', 'wtrsplash_7.mp3', 'wtrsplash_8.mp3')
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -23,6 +22,7 @@ class CannonSplash(PooledEffect, EffectController):
         if not CannonSplash.particleDummy:
             CannonSplash.particleDummy = render.attachNewNode(ModelNode('CannonSplashParticleDummy'))
             CannonSplash.particleDummy.setDepthWrite(0)
+        
         if not self.splashSfx:
             for filename in self.splashSfxNames:
                 self.splashSfx.append(loader.loadSfx('audio/' + filename))
@@ -83,13 +83,15 @@ class CannonSplash(PooledEffect, EffectController):
         particleSpray = Sequence(Func(self.p0.setBirthRate, 0.05), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Wait(0.3), Func(self.p0.setBirthRate, 100), Wait(4.0))
         sfx = random.choice(self.splashSfx)
         sfx.setVolume(1.0)
-        self.track = Sequence(Parallel(Func(base.playSfx, sfx, node=self, cutoff=1500), particleSpray), Func(self.cleanUpEffect))
-
+        self.track = Sequence(Parallel(Func(base.playSfx, sfx, node = self, cutoff = 1500), particleSpray), Func(self.cleanUpEffect))
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

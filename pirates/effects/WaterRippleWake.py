@@ -1,36 +1,38 @@
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
-from pandac.PandaModules import *
-from PooledEffect import PooledEffect
-
-
 class WaterRippleWake(PooledEffect, EffectController):
-
-    def __init__(self, parent=None):
+    
+    def __init__(self, parent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if parent is not None:
             self.reparentTo(parent)
+        
         if not WaterRippleWake.particleDummy:
             WaterRippleWake.particleDummy = render.attachNewNode(ModelNode('WaterRippleWakeParticleDummy'))
             WaterRippleWake.particleDummy.setDepthWrite(0)
             WaterRippleWake.particleDummy.setFogOff()
             WaterRippleWake.particleDummy.setBin('water', 50)
+        
         self.f = ParticleEffect.ParticleEffect('WaterRippleWake')
         self.f.reparentTo(self)
         self.effectGeom = loader.loadModel('models/effects/ripple')
         if not self.effectGeom:
             self.effectGeom = loader.loadModel('models/misc/smiley')
+        
         self.p1 = Particles.Particles('particles-2')
         self.p1.setFactory('PointParticleFactory')
         self.p1.setRenderer('GeomParticleRenderer')
         self.p1.setEmitter('DiscEmitter')
         self.f.addParticles(self.p1)
-        return
-
+    
     def createTrack(self):
         self.p1.setPoolSize(150)
         self.p1.setBirthRate(0.75)
@@ -76,3 +78,5 @@ class WaterRippleWake(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

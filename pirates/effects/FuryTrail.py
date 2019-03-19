@@ -1,17 +1,17 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class FuryTrail(PooledEffect, EffectController):
     faceCardScale = 64.0
     cardScale = 128.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -29,6 +29,7 @@ class FuryTrail(PooledEffect, EffectController):
             FuryTrail.particleDummy.setFogOff()
             FuryTrail.particleDummy.setLightOff()
             FuryTrail.particleDummy.setTwoSided(1)
+        
         self.f = ParticleEffect.ParticleEffect('FuryTrail')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -76,7 +77,6 @@ class FuryTrail(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(1.0)
-        return
 
     def loadFaceBlur(self):
         if not self.g and self.wantBlur:
@@ -148,35 +148,37 @@ class FuryTrail(PooledEffect, EffectController):
             self.p1.clearToInitial()
             self.g.start(self, self)
             self.g.reparentTo(self)
-
+    
     def stopBlur(self):
         if self.g:
             self.p1.setBirthRate(100.0)
-
+    
     def createTrack(self):
         if self.wantGlow:
             self.loadGlow()
             randomness = random.random() / 20
-            scaleUp = self.glow.scaleInterval(0.05, 7, startScale=9, blendType='easeInOut')
-            scaleDown = self.glow.scaleInterval(0.05, 9, startScale=7, blendType='easeInOut')
+            scaleUp = self.glow.scaleInterval(0.05, 7, startScale = 9, blendType = 'easeInOut')
+            scaleDown = self.glow.scaleInterval(0.05, 9, startScale = 7, blendType = 'easeInOut')
             self.pulseTrack = Sequence(scaleUp, scaleDown)
         elif self.glow:
             self.glow.removeNode()
             self.glow = None
+        
         if self.wantBlur:
             self.loadFaceBlur()
         elif self.g:
             self.g.disable()
             self.g.cleanup()
             self.g = None
+        
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Func(self.startBlur), Func(self.startGlow))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 2.0), Func(self.stopBlur), Func(self.stopGlow), Wait(1.5), Func(self.cleanUpEffect))
         self.track = Parallel(self.startEffect, Wait(6.0), self.endEffect)
-        return
-
+    
     def cleanUpEffect(self):
         if self.g:
             self.g.disable()
+        
         self.stopBlur()
         self.stopGlow()
         EffectController.cleanUpEffect(self)
@@ -186,11 +188,14 @@ class FuryTrail(PooledEffect, EffectController):
     def destroy(self):
         if self.g:
             self.g.cleanup()
+        
         if self.glow:
             self.glow.removeNode()
             self.glow = None
+        
         self.g = None
         self.p1 = None
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-        return
+
+

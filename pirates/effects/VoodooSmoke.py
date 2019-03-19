@@ -1,15 +1,15 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+import random
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class VoodooSmoke(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -21,6 +21,7 @@ class VoodooSmoke(PooledEffect, EffectController):
             VoodooSmoke.particleDummy.setLightOff()
             VoodooSmoke.particleDummy.setColorScaleOff()
             VoodooSmoke.particleDummy.setFogOff()
+        
         self.f = ParticleEffect.ParticleEffect('VoodooSmoke')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -30,7 +31,7 @@ class VoodooSmoke(PooledEffect, EffectController):
         self.f.addParticles(self.p0)
         f0 = ForceGroup.ForceGroup('Vortex')
         self.f.addForceGroup(f0)
-
+    
     def createTrack(self):
         self.p0.setPoolSize(128)
         self.p0.setBirthRate(0.02)
@@ -81,3 +82,5 @@ class VoodooSmoke(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

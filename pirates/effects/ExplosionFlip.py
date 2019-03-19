@@ -1,13 +1,11 @@
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from PooledEffect import PooledEffect
+from EffectController import EffectController
 import random
 
-from direct.interval.IntervalGlobal import *
-from EffectController import EffectController
-from pandac.PandaModules import *
-from PooledEffect import PooledEffect
-
-
 class ExplosionFlip(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -23,7 +21,7 @@ class ExplosionFlip(PooledEffect, EffectController):
         self.explosion.reparentTo(self)
         self.explosion.hide()
 
-    def createTrack(self, rate=1):
+    def createTrack(self, rate = 1):
         self.track = Sequence(Func(self.explosion.show), Wait(0.3), Func(self.explosion.hide), Func(self.cleanUpEffect))
 
     def cleanUpEffect(self):
@@ -34,3 +32,5 @@ class ExplosionFlip(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

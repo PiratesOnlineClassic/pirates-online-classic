@@ -1,18 +1,18 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from direct.showbase.DirectObject import *
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+import random
 from pirates.piratesbase import PiratesGlobals
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
 
 class MusketFlame(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -25,6 +25,7 @@ class MusketFlame(PooledEffect, EffectController):
             MusketFlame.particleDummy.setDepthWrite(0)
             MusketFlame.particleDummy.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
             MusketFlame.particleDummy.setFogOff()
+        
         self.flash = loader.loadModel('models/effects/lanternGlow')
         self.flash.node().setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd, ColorBlendAttrib.OIncomingAlpha, ColorBlendAttrib.OOne))
         self.flash.setDepthWrite(0)
@@ -89,8 +90,8 @@ class MusketFlame(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.2)
         self.accept('timeOfDayChange', self._timeChange)
-        fadeBlast = self.flash.colorScaleInterval(0.15, Vec4(0, 0, 0, 0), startColorScale=self.startCol, blendType='easeOut')
-        scaleBlast = self.flash.scaleInterval(0.2, 10, blendType='easeIn')
+        fadeBlast = self.flash.colorScaleInterval(0.15, Vec4(0, 0, 0, 0), startColorScale = self.startCol, blendType = 'easeOut')
+        scaleBlast = self.flash.scaleInterval(0.2, 10, blendType = 'easeIn')
         self.playFlash = Sequence(Func(self.flash.show), Parallel(fadeBlast, scaleBlast), Func(self.flash.hide), Func(self.flash.setColorScale, Vec4(1, 1, 1, 1)))
         self.playParticles = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.15), Func(self.p0.setBirthRate, 100), Wait(1.5), Func(self.cleanUpEffect))
         self.track = Parallel(self.playParticles, self.playFlash)
@@ -127,3 +128,7 @@ class MusketFlame(PooledEffect, EffectController):
                 self.startCol = Vec4(1, 1, 1, 1)
             elif stateId == PiratesGlobals.TOD_STARS:
                 self.startCol = Vec4(1, 1, 1, 1)
+            
+        
+
+

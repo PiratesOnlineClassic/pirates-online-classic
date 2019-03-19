@@ -1,16 +1,16 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
-from otp.otpbase import OTPRender
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from otp.otpbase import OTPRender
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
+import random
 
 class VoodooAura(PooledEffect, EffectController):
     cardScale = 128.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -20,6 +20,7 @@ class VoodooAura(PooledEffect, EffectController):
             self.particleDummy = self.attachNewNode(ModelNode('VoodooAuraParticleDummy'))
             self.particleDummy.setDepthWrite(0)
             self.particleDummy.hide(OTPRender.ShadowCameraBitmask)
+        
         self.effectColor = Vec4(1, 1, 1, 1)
         self.f = ParticleEffect.ParticleEffect('VoodooAura')
         self.f.reparentTo(self)
@@ -63,8 +64,8 @@ class VoodooAura(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(1.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.15)
-
-    def createTrack(self, rate=1):
+    
+    def createTrack(self, rate = 1):
         self.castEffect = Sequence(Func(self.p0.emitter.setRadius, 0.75), Func(self.p0.renderer.setFinalXScale, 0.02 * self.cardScale), Func(self.p0.renderer.setFinalYScale, 0.02 * self.cardScale), Wait(2.0), Func(self.p0.emitter.setRadius, 0.15), Func(self.p0.renderer.setFinalXScale, 0.012 * self.cardScale), Func(self.p0.renderer.setFinalYScale, 0.012 * self.cardScale))
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.03), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Wait(7.0), Func(self.cleanUpEffect))
@@ -96,3 +97,5 @@ class VoodooAura(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

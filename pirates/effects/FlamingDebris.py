@@ -1,20 +1,22 @@
-import random
-
-from direct.distributed import DistributedObject
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import *
 from pandac.PandaModules import *
-from pirates.effects.DustCloud import DustCloud
-from pirates.effects.FlameTrail import FlameTrail
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from pirates.piratesbase import PiratesGlobals
+from direct.distributed import DistributedObject
 from pirates.effects.SmallSplash import SmallSplash
 from pirates.effects.SmokeTrail import SmokeTrail
-from pirates.piratesbase import PiratesGlobals
+from pirates.effects.FlameTrail import FlameTrail
+from pirates.effects.DustCloud import DustCloud
+import random
 from PooledEffect import PooledEffect
-
-DebrisDict = {'0': 'models/props/rock_1_floor','1': 'models/props/rock_2_floor','2': 'models/props/rock_3_floor','3': 'models/props/rock_4_floor'}
+DebrisDict = {
+    '0': 'models/props/rock_1_floor',
+    '1': 'models/props/rock_2_floor',
+    '2': 'models/props/rock_3_floor',
+    '3': 'models/props/rock_4_floor'}
 
 class FlamingDebris(PooledEffect):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         self.collSphereRadius = 2.0
@@ -42,23 +44,22 @@ class FlamingDebris(PooledEffect):
         self.maxHeight = 140
         self.velocityX = 0
         self.velocityY = 0
-        return
-
-    def createTrack(self, rate=1):
+    
+    def createTrack(self, rate = 1):
         if self.velocityX or self.velocityY:
             self.startVel = Vec3(self.velocityX + random.uniform(-10.0, 10.0), self.velocityY + random.uniform(-10.0, 10.0), random.uniform(self.minHeight, self.maxHeight))
         else:
-            self.startVel = Vec3(random.uniform(-self.radiusDist, self.radiusDist), random.uniform(-self.radiusDist, self.radiusDist), random.uniform(self.minHeight, self.maxHeight))
+            self.startVel = Vec3(random.uniform(-(self.radiusDist), self.radiusDist), random.uniform(-(self.radiusDist), self.radiusDist), random.uniform(self.minHeight, self.maxHeight))
         self.velocityX = 0
         self.velocityY = 0
-        playProjectile = ProjectileInterval(self.transNode, startPos=self.startPos, startVel=self.startVel, duration=4, gravityMult=4.0)
+        playProjectile = ProjectileInterval(self.transNode, startPos = self.startPos, startVel = self.startVel, duration = 4, gravityMult = 4.0)
         randomNumX = random.uniform(360, 2880)
         randomNumY = random.uniform(360, 2880)
         randomNumZ = random.uniform(360, 2880)
         self.playRotate = self.debris.hprInterval(6, Point3(randomNumX, randomNumY, randomNumZ))
         enableColl = Sequence(Wait(0.2), Func(self.cnode.setFromCollideMask, PiratesGlobals.TargetBitmask))
         playDebris = Parallel(playProjectile, enableColl)
-
+        
         def startTrail():
             self.trailEffect = FlameTrail.getEffect()
             if self.trailEffect:
@@ -66,8 +67,8 @@ class FlamingDebris(PooledEffect):
                 self.trailEffect.play()
 
         self.track = Sequence(Func(startTrail), Func(self.transNode.reparentTo, self), playDebris, Func(self.cleanUpEffect))
-
-    def play(self, rate=1):
+    
+    def play(self, rate = 1):
         self.createTrack()
         base.cTrav.addCollider(self.collision, self.collHandler)
         self.track.start()
@@ -77,10 +78,10 @@ class FlamingDebris(PooledEffect):
         if self.track:
             self.track.pause()
             self.track = None
+        
         if self.playRotate:
             self.playRotate.pause()
             self.playRotate = None
-        return
 
     def finish(self):
         self.stop()
@@ -90,7 +91,7 @@ class FlamingDebris(PooledEffect):
         self.detachNode()
         if self.pool.isUsed(self):
             self.pool.checkin(self)
-
+    
     def destroy(self):
         self.stop()
         self.removeNode()
@@ -99,13 +100,16 @@ class FlamingDebris(PooledEffect):
 
     def weaponHitObject(self, entry):
         if not entry.hasSurfacePoint() or not entry.hasInto():
-            return
+            return None
+        
         if not entry.getInto().isTangible():
-            return
+            return None
+        
         hitObject = entry.getIntoNodePath()
         objType = hitObject.getNetTag('objType')
         if not objType:
-            return
+            return None
+        
         objType = int(objType)
         if objType == PiratesGlobals.COLL_SEA and base.cr.wantSpecialEffects:
             pos = entry.getSurfacePoint(render)
@@ -118,6 +122,7 @@ class FlamingDebris(PooledEffect):
                 splashEffect.reparentTo(render)
                 splashEffect.setPos(pos[0], pos[1], entryWaterHeight)
                 splashEffect.play()
+            
             self.cnode.setFromCollideMask(PiratesGlobals.TargetBitmask.allOff())
         elif objType == PiratesGlobals.COLL_LAND and base.cr.wantSpecialEffects:
             pos = entry.getSurfacePoint(render)
@@ -126,4 +131,8 @@ class FlamingDebris(PooledEffect):
                 dustCloudEffect.wrtReparentTo(render)
                 dustCloudEffect.setPos(pos)
                 dustCloudEffect.play()
+            
             self.cnode.setFromCollideMask(PiratesGlobals.TargetBitmask.allOff())
+        
+
+

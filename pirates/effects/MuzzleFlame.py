@@ -1,18 +1,18 @@
-import random
-
-from direct.actor import Actor
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from direct.showbase.DirectObject import *
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.showbase.DirectObject import *
+from direct.interval.IntervalGlobal import *
+from direct.actor import Actor
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+import random
 from pirates.piratesbase import PiratesGlobals
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class MuzzleFlame(PooledEffect, EffectController):
     cardScale = 64.0
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -48,7 +48,7 @@ class MuzzleFlame(PooledEffect, EffectController):
         force0.setActive(1)
         f0.addForce(force0)
         self.f.addForceGroup(f0)
-
+    
     def createTrack(self):
         self.p0.setPoolSize(32)
         self.p0.setBirthRate(0.02)
@@ -89,13 +89,13 @@ class MuzzleFlame(PooledEffect, EffectController):
         self.p0.emitter.setExplicitLaunchVector(Vec3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.p0.emitter.setRadius(0.5)
-        fadeBlast = self.flash.colorScaleInterval(0.2, Vec4(0, 0, 0, 0), startColorScale=self.startCol, blendType='easeOut')
-        scaleBlast = self.flash.scaleInterval(0.2, 10, blendType='easeIn')
+        fadeBlast = self.flash.colorScaleInterval(0.2, Vec4(0, 0, 0, 0), startColorScale = self.startCol, blendType = 'easeOut')
+        scaleBlast = self.flash.scaleInterval(0.2, 10, blendType = 'easeIn')
         self.playFlash = Sequence(Func(self.flash.show), Parallel(fadeBlast, scaleBlast), Func(self.flash.hide), Func(self.flash.setScale, 25), Func(self.flash.setColorScale, Vec4(1, 1, 1, 1)))
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Wait(1.5), Func(self.cleanUpEffect))
         self.track = Parallel(Sequence(self.startEffect, Wait(0.15), self.endEffect), self.playFlash)
-
+    
     def cleanUpEffect(self):
         self.ignore('timeOfDayChange')
         EffectController.cleanUpEffect(self)
@@ -106,7 +106,7 @@ class MuzzleFlame(PooledEffect, EffectController):
         self.ignore('timeOfDayChange')
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
+    
     def _timeChange(self, stateId, stateDuration, elapsedTime):
         if self.flash:
             if stateId == PiratesGlobals.TOD_DAWN2DAY:
@@ -129,3 +129,7 @@ class MuzzleFlame(PooledEffect, EffectController):
                 self.startCol = Vec4(1, 1, 1, 1)
             elif stateId == PiratesGlobals.TOD_STARS:
                 self.startCol = Vec4(1, 1, 1, 1)
+            
+        
+
+

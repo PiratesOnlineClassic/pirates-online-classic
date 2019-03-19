@@ -1,12 +1,13 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class SparksTrailLong(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -19,6 +20,7 @@ class SparksTrailLong(PooledEffect, EffectController):
         if not SparksTrailLong.particleDummy:
             SparksTrailLong.particleDummy = render.attachNewNode(ModelNode('SparksTrailLongParticleDummy'))
             SparksTrailLong.particleDummy.setDepthWrite(0)
+        
         self.f = ParticleEffect.ParticleEffect('SparksTrailLong')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -80,7 +82,7 @@ class SparksTrailLong(PooledEffect, EffectController):
     def setEffectColor(self, color):
         self.effectColor = color
         self.p0.renderer.setColor(self.effectColor)
-
+    
     def setEffectScale(self, scale):
         self.effectScale = scale
         self.p0.renderer.setInitialXScale(0.05 * self.cardScale * scale)
@@ -88,7 +90,7 @@ class SparksTrailLong(PooledEffect, EffectController):
         self.p0.renderer.setInitialYScale(0.05 * self.cardScale * scale)
         self.p0.renderer.setFinalYScale(0.5 * self.cardScale * scale)
         self.p0.emitter.setAmplitude(30.0 * scale)
-
+    
     def cleanUpEffect(self):
         self.f.disable()
         self.detachNode()
@@ -98,3 +100,5 @@ class SparksTrailLong(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

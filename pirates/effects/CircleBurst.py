@@ -1,14 +1,14 @@
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
+from PooledEffect import PooledEffect
 import random
 
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
-from pandac.PandaModules import *
-from PooledEffect import PooledEffect
-
-
 class CircleBurst(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -76,7 +76,7 @@ class CircleBurst(PooledEffect, EffectController):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.03), Func(self.p0.clearToInitial), Func(self.f.start, self, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(3.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(0.5), self.endEffect)
-
+    
     def setEffectScale(self, scale):
         self.effectScale = scale
         self.p0.renderer.setInitialXScale(0.5 * self.cardScale * scale)
@@ -85,14 +85,14 @@ class CircleBurst(PooledEffect, EffectController):
         self.p0.renderer.setFinalYScale(0.75 * self.cardScale * scale)
         self.p0.emitter.setAmplitude(200.0 * scale)
         self.p0.emitter.setRadius(100.0 * scale)
-
+    
     def setRadius(self, radius):
         self.p0.emitter.setRadius(radius)
 
     def setEffectColor(self, color):
         self.effectColor = color
         self.p0.renderer.setColor(self.effectColor)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
@@ -101,3 +101,5 @@ class CircleBurst(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

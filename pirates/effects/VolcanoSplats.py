@@ -1,10 +1,11 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
 from pandac.PandaModules import *
-
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 
 class VolcanoSplats(NodePath):
-
+    
     def __init__(self):
         NodePath.__init__(self, 'VolcanoSplats')
         self.renderParent = self.attachNewNode('VolcanoSplats-renderParent')
@@ -68,7 +69,6 @@ class VolcanoSplats(NodePath):
         self.f0.addForce(self.force1)
         self.f.addForceGroup(self.f0)
         self.seq = None
-        return
 
     def enable(self):
         self.f.start(self, self.renderParent)
@@ -101,7 +101,10 @@ class VolcanoSplats(NodePath):
     def getEruptionSeq(self):
         if not self.seq:
             self.seq = Sequence(Func(self.p0.setBirthRate, 0.2), Func(self.p0.clearToInitial), Wait(3), Func(self.p0.setBirthRate, 10000))
+        
         return self.seq
 
     def isEnabled(self):
         return self.f.isEnabled()
+
+

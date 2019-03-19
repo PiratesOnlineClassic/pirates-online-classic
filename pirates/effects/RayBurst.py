@@ -1,12 +1,13 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
 
-
 class RayBurst(PooledEffect, EffectController):
-
+    
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -62,7 +63,7 @@ class RayBurst(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
         self.setEffectScale(self.effectScale)
         self.setEffectColor(self.effectColor)
-
+    
     def createTrack(self):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.1), Func(self.p0.clearToInitial), Func(self.f.start, self, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(1.0), Func(self.cleanUpEffect))
@@ -74,7 +75,7 @@ class RayBurst(PooledEffect, EffectController):
         self.p0.renderer.setFinalXScale(3.0 * self.cardScale * scale)
         self.p0.renderer.setInitialYScale(1.0 * self.cardScale * scale)
         self.p0.renderer.setFinalYScale(3.0 * self.cardScale * scale)
-
+    
     def setEffectColor(self, color):
         self.effectColor = color
         self.p0.renderer.setColor(self.effectColor)
@@ -87,3 +88,5 @@ class RayBurst(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

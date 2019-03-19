@@ -1,27 +1,29 @@
-import random
-
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
+from EffectController import EffectController
 from PooledEffect import PooledEffect
-
+import random
 
 class JRDeathEffect(PooledEffect, EffectController):
     card2Scale = 64.0
     cardScale = 64.0
-
-    def __init__(self, parent=None):
+    
+    def __init__(self, parent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         if parent is not None:
             self.reparentTo(parent)
+        
         if not JRDeathEffect.particleDummy:
             JRDeathEffect.particleDummy = render.attachNewNode(ModelNode('JRDeathEffectParticleDummy'))
             JRDeathEffect.particleDummy.setColorScaleOff()
             JRDeathEffect.particleDummy.setLightOff()
             JRDeathEffect.particleDummy.setFogOff()
             JRDeathEffect.particleDummy.setDepthWrite(0)
+        
         self.effectScale = 1.0
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleEvilSmoke')
@@ -118,7 +120,6 @@ class JRDeathEffect(PooledEffect, EffectController):
         self.p1.emitter.setRadiateOrigin(Point3(0.0, 0.0, 10.0))
         self.p1.emitter.setRadius(1.0)
         self.p1.emitter.setRadiusSpread(0.0)
-        return
 
     def setupSize(self):
         self.p0.renderer.setInitialXScale(0.05 * self.effectScale * self.card2Scale)
@@ -135,7 +136,7 @@ class JRDeathEffect(PooledEffect, EffectController):
         self.startEffect = Sequence(Func(self.setupSize), Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.p1.setBirthRate, 0.01), Func(self.p1.clearToInitial), Func(self.f.start, self, self.particleDummy))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Func(self.p1.setBirthRate, 100), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(1.0), self.endEffect)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
@@ -144,3 +145,5 @@ class JRDeathEffect(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+

@@ -1,14 +1,15 @@
-from direct.interval.IntervalGlobal import *
-from direct.particles import ForceGroup, ParticleEffect, Particles
-from EffectController import EffectController
 from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from direct.particles import ParticleEffect
+from direct.particles import Particles
+from direct.particles import ForceGroup
 from PooledEffect import PooledEffect
-
+from EffectController import EffectController
 
 class FireSparks(PooledEffect, EffectController):
     cardScale = 64.0
-
-    def __init__(self, effectParent=None):
+    
+    def __init__(self, effectParent = None):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
         self.effectScale = 1.0
@@ -20,6 +21,7 @@ class FireSparks(PooledEffect, EffectController):
             FireSparks.particleDummy.setDepthWrite(0)
             FireSparks.particleDummy.setLightOff()
             FireSparks.particleDummy.setBin('fixed', 70)
+        
         self.f = ParticleEffect.ParticleEffect('FireSparks')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-sparks')
@@ -71,16 +73,16 @@ class FireSparks(PooledEffect, EffectController):
 
     def enable(self):
         self.f.start(self, self.particleDummy)
-
+    
     def disable(self):
         self.f.disable()
 
-    def createTrack(self, lod=None):
+    def createTrack(self, lod = None):
         self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.2), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100.0), Wait(2.0), Func(self.cleanUpEffect))
         self.track = Sequence(self.startEffect, Wait(10.0), self.endEffect)
 
-    def setScale(self, scale=VBase3(1, 1, 1)):
+    def setScale(self, scale = VBase3(1, 1, 1)):
         self.effectScale = scale[0]
         self.p0.renderer.setInitialXScale(0.008 * self.cardScale * self.effectScale)
         self.p0.renderer.setInitialYScale(0.008 * self.cardScale * self.effectScale)
@@ -88,7 +90,7 @@ class FireSparks(PooledEffect, EffectController):
         self.p0.renderer.setFinalYScale(0.016 * self.cardScale * self.effectScale)
         self.p0.emitter.setOffsetForce(Vec3(2.0, 2.0, 20.0 * self.effectScale))
         self.p0.emitter.setRadius(5.0 * self.effectScale)
-
+    
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool and self.pool.isUsed(self):
@@ -97,3 +99,5 @@ class FireSparks(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
+
+
