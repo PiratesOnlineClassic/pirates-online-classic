@@ -904,8 +904,14 @@ class LoadAvatarFSM(AvatarOperationFSM):
         datagram.addChannel(self.target << 32 | self.avId)
         self.csm.air.send(datagram)
 
-        self.csm.air.writeServerEvent('avatarChosen', avId=self.avId, target=self.target)
-        self.demand('Off')
+        def inventoryActivatedCallback(inventoryId):
+            self.csm.air.writeServerEvent('avatarChosen', avId=self.avId, target=self.target)
+            self.demand('Off')
+
+        # activate the avatar's inventory on the DBSS
+        self.csm.air.inventoryManager.activateInventory(self.avId, inventoryId,
+            inventoryActivatedCallback)
+
         return task.done
 
     def enterSetAvatar(self):
@@ -928,11 +934,11 @@ class LoadAvatarFSM(AvatarOperationFSM):
         datagram.addString(datagramCleanup.getMessage())
         self.csm.air.send(datagram)
 
-        # setup the avatar's inventory.
-        self.csm.air.inventoryManager.initiateInventory(self.avId,
-            self.inventorySetup)
+        # get the doId of the avatar's inventory object that it will
+        # be activated on by the DBSS...
+        self.csm.air.inventoryManager.queryInventory(self.avId, self.inventoryQueryCallback)
 
-    def inventorySetup(self, inventoryId):
+    def inventoryQueryCallback(self, inventoryId):
         channel = self.csm.GetAccountConnectionChannel(self.target)
 
         # Activate the avatar on the DBSS:
@@ -1086,10 +1092,12 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         self.account2fsm[sender] = fsmtype(self, sender)
         self.account2fsm[sender].request('Start', *args)
 
-    def login(self, cookie, authKey):
+    def login(self, cookie, address, authKey):
         self.notify.debug('Received login cookie %r from %d' % (cookie, self.air.getMsgSender()))
 
         sender = self.air.getMsgSender()
+
+        banned_addresses = []
 
         # Time to check this login to see if its authentic
         digest_maker = hmac.new(self.key)
@@ -1103,6 +1111,11 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
         if sender >> 32:
             self.killConnection(sender, 'Client is already logged in.', 100)
+            return
+
+        # This user is banned.
+        if address in banned_addresses:
+            self.killConnection(sender, ' ')
             return
 
         if sender in self.connection2fsm:

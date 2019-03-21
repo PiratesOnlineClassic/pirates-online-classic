@@ -105,6 +105,9 @@ class SpawnNodeBase:
         if not self.canRespawn():
             self.__died(self._npc)
 
+    def __died(self, npc):
+        npc.requestDelete()
+
     def __respawn(self, task):
         if not self._npc:
             self.notify.warning('Attempted to perform respawn on a %s without a npc!' % \
@@ -166,7 +169,7 @@ class SpawnNodeBase:
         # Set NPC Node data
         npc.setScale(self.objectData.get('Scale'))
         npc.setUniqueId('' if avatarType.getBoss() else self.objKey)
-        npc.setPos(self.objectData.get('Pos', (0, 0, 0)))
+        npc.setPos(self.objectData.get('GridPos', self.objectData.get('Pos', (0, 0, 0))))
         npc.setHpr(self.objectData.get('Hpr', (0, 0, 0)))
         npc.setSpawnPosHpr(npc.getPos(), npc.getHpr())
         npc.setInitZ(npc.getZ())

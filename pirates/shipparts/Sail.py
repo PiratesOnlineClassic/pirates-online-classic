@@ -321,7 +321,7 @@ class Sail(NodePath, ShipPart.ShipPart):
     def getPrefix(self, mastType):
         filePrefix = MastDNA.MastDict.get(mastType)
         return filePrefix
-    
+
     def cutGeomTextureStates(self, geomNode, excludedStages = []):
         numGeoms = geomNode.getNumGeoms()
         finalPacket = []
@@ -470,7 +470,7 @@ class Sail(NodePath, ShipPart.ShipPart):
             self.sailActor.setTexScale(t, 0.8, 0.8)
             if self.flash:
                 self.flash.pause()
-            
+
             cutStates = SplattableObject.cutGeomTextureStates(self.sailGeom.node(), ['holeLayer'])
             self.sailGeom.flattenMultitex(useGeom = 0, target = self.holeLayer)
             holeTex = self.sailGeom.findTexture(self.holeLayer)
@@ -516,7 +516,7 @@ class Sail(NodePath, ShipPart.ShipPart):
         self.notify.debug('SHOW TEX STAGE')
         if self.cr and self.cr.config.GetBool('want-hires-destruction', 1) is 0:
             self.sailActor.flattenMultitex(useGeom = 0, target = self.holeLayer)
-    
+
     def copyMultitexLayer(self, sourcePanel, targetPanel):
         if not sourcePanel or not targetPanel:
             return 0
@@ -641,7 +641,7 @@ class SailFSM(FSM.FSM):
             return 'Idle'
         
         return self.defaultFilter(request, args)
-    
+
     def enterIdle(self, args = []):
         self.notify.debug('enterIdle %s' % self.parentDoId)
         self.sail.sailActor.loop('Idle')
@@ -652,7 +652,7 @@ class SailFSM(FSM.FSM):
         self.notify.debug('exitIdle %s' % self.parentDoId)
         if self.sail and not self.sail.isEmpty():
             self.sail.sailActor.stop()
-    
+
     def enterBillow(self, args = []):
         self.notify.debug('enterIdle %s' % self.parentDoId)
         self.ival = ActorInterval(self.sail.sailActor, 'Idle')
@@ -684,7 +684,7 @@ class SailFSM(FSM.FSM):
         if self.sailIval:
             self.sailIval.pause()
             self.sailIval = None
-        
+
         self.sailIval = ActorInterval(self.sail.sailActor, 'Rolldown', playRate = 2.0, startFrame = 80, endFrame = 0)
         self.ival = Sequence(Func(base.playSfx, self.sailFoldSfx, node = self.sail.sailGeom, cutoff = 1000), self.sailIval, Func(self.demand, 'TiedUp'))
         self.ival.start()
@@ -708,7 +708,7 @@ class SailFSM(FSM.FSM):
         
         if not config.GetBool('enable-sail-colls-in-port', 0):
             self.sail.enableCollisions()
-    
+
     def enterRolldown(self, args = []):
         self.notify.debug('enterRolldown %s' % self.parentDoId)
         if self.ival:
@@ -717,12 +717,12 @@ class SailFSM(FSM.FSM):
         if self.sailIval:
             self.sailIval.pause()
             self.sailIval = None
-        
+
         self.sailIval = ActorInterval(self.sail.sailActor, 'Rolldown', playRate = 1.5, startFrame = 0, endFrame = 80)
         self.ival = Sequence(Func(base.playSfx, self.sailUnfoldSfx, node = self.sail.sailGeom, cutoff = 1000), self.sailIval, Func(self.demand, 'Idle'))
         self.ival.start()
         self.sail.sailActor.update()
-    
+
     def filterRolldown(self, request, args = []):
         if request == 'advance':
             return 'Idle'
@@ -736,7 +736,7 @@ class SailFSM(FSM.FSM):
         self.notify.debug('exitRolldown %s' % self.parentDoId)
         if self.ival:
             self.ival.pause()
-    
+
     def enterHit(self, args = []):
         self.notify.debug('enterHit %s' % self.parentDoId)
         if self.ival:
@@ -763,7 +763,7 @@ class SailFSM(FSM.FSM):
         self.sail.sailActor.node().setFinal(1)
         if self.ival:
             self.ival.pause()
-        
+
         self.ival = Sequence(Func(self.sail.sailActor.play, args, partName = 'mast'), Wait(10.0), Func(self.demand, 'Dead'))
         self.ival.start()
         self.sail.disableCollisions()
@@ -786,7 +786,7 @@ class SailFSM(FSM.FSM):
         if self.sail.sailActor:
             self.sail.sailActor.node().setBounds(self.oldBound)
             self.sail.sailActor.node().setFinal(0)
-    
+
     def enterDead(self, args = []):
         self.notify.debug('enterDead %s' % self.parentDoId)
         self.sail.death()

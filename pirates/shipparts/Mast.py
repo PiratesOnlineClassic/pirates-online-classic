@@ -323,7 +323,7 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
             self.mastIval = None
         
         self.restoreMast(index)
-    
+
     def setBreakAnim(self, index, animMultiplier = 1.0):
         for i in range(index, 5):
             anim = 'break' + str(index) + 'A'
@@ -335,7 +335,7 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
                     projDummy.startCollisions()
                     if self.mastIval:
                         self.mastIval.finish()
-                    
+
                     ival = Parallel(Func(base.playSfx, self.breakSfx1, node = self.ship, cutoff = 3000),
                                     Sequence(Func(self.prop.play, anim, partName = 'mast_%d_%d' % (i, self.dna.posIndex)),
                                              Wait(10.0),
@@ -347,7 +347,6 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
         
         if index == 0 or self.ship.modelClass < 4 and self.dna.posIndex == 0 and index < 2:
             self.breakRigging()
-        
 
     def restoreMast(self, index):
         self.mastsState[index] = 0

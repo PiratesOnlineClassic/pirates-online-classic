@@ -202,6 +202,13 @@ class QuestManagerAI(DirectObject):
         self.runQuestFSM(CreateQuestFSM, avatar, questId, callback=callback)
 
     def activateQuest(self, avatar, questDoId, callback):
+        inventory = avatar.getInventory()
+        if not inventory:
+            self.notify.debug('Failed to activate quest %d for avatar %d, '
+                'no inventory found!' % (questDoId, avatar.doId))
+
+            return
+        
         activeQuests = self.quests.setdefault(avatar.doId, {})
         if questDoId in activeQuests:
             self.notify.warning('Cannot add a new quest %d for avatar %d, '
@@ -218,10 +225,9 @@ class QuestManagerAI(DirectObject):
                 # to activate on the dbss...
                 callback(None)
                 return
-
-            # TODO FIXME!
-            # set the owner of the quest object, this will then send an
-            # OwnerView object generate to the client...
+            
+            # TODO: Seems as if Disney never generated the OwnerView object for quests,
+            # as doing so seems to cause irrational issues...
             #channel = avatar.getDISLid() << 32 | avatar.doId
             #self.air.setOwner(quest.doId, channel)
 
@@ -236,7 +242,7 @@ class QuestManagerAI(DirectObject):
             callback(quest)
 
         self.acceptOnce('generate-%d' % questDoId, questArrivedCallback)
-        self.air.sendActivate(questDoId, self.air.districtId, OTP_ZONE_ID_MANAGEMENT,
+        self.air.sendActivate(questDoId, inventory.doId, OTP_ZONE_ID_MANAGEMENT,
             self.air.dclassesByName['DistributedQuestAI'])
 
     def activateQuests(self, avatar, callback=None):
