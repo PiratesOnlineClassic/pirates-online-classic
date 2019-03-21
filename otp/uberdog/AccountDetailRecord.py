@@ -55,6 +55,8 @@ class AccountDetailRecord:
             return 0
     
     def canOpenChatAndNotGetBooted(self):
+        if __debug__:
+            return True
         return self.openChatEnabled or self.createFriendsWithChat
     
     def __str__(self):
