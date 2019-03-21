@@ -497,7 +497,7 @@ class GuiManager(FSM.FSM):
             self.playerPanel.destroy()
             del self.playerPanel
         
-        if self.gameOptions:
+        if self.gameOptions is not None:
             self.gameOptions.destroy()
             del self.gameOptions
         

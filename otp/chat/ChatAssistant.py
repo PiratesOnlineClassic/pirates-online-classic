@@ -10,6 +10,8 @@ from otp.chat.ChatGlobals import *
 from otp.chat.ChatMessage import ChatMessage
 import time
 
+from libotp import *
+
 def isThought(message):
     if len(message) == 0:
         return 0

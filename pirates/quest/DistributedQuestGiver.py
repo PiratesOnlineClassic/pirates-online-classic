@@ -18,6 +18,8 @@ from pirates.quest import QuestTaskDNA
 from pirates.piratesgui import RewardPanel
 from pirates.reputation.ReputationGlobals import getLevelFromTotalReputation
 
+from libotp import *
+
 class DistributedQuestGiver(Avatar.Avatar):
     notify = directNotify.newCategory('DistributedQuestGiver')
     NoOffer = 0
