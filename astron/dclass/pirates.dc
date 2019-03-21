@@ -1160,7 +1160,7 @@ dclass DistributedPlayerPirate : DistributedPlayer, HumanDNA, DistributedBattleA
   setLuck(int16) required broadcast;
   setMaxLuck(int16) required broadcast db;
   setMojo(int16) required broadcast db;
-  setMaxMojo(int16) required broadcast db;
+  setMaxMojo(int16=50) required broadcast db;
   setSwiftness(int16) required broadcast;
   setMaxSwiftness(int16) required broadcast db;
   setPower(int16) required broadcast;

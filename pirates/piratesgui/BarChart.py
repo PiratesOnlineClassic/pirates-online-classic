@@ -10,11 +10,11 @@ class BarChart(DirectFrame):
         self.width = width
         self.height = height
         self.barHeight = (self.height / len(data)) * 0.666
-        self.name = name
         self.titleColor = titleColor
         self.maxValue = maxValue
         self.data = data
         DirectFrame.__init__(self, relief = None, state = DGG.NORMAL)
+        self.name = name
         self.initialiseoptions(BarChart)
         self.statBars = []
         self.title = DirectFrame(parent = self, relief = None, text = self.name, text_align = TextNode.ALeft, text_scale = PiratesGuiGlobals.TextScaleLarge, text_pos = (0.03, 0.01), text_fg = self.titleColor, text_shadow = PiratesGuiGlobals.TextShadow, textMayChange = 1, pos = (0, 0, self.height + 0.02))
