@@ -1,15 +1,15 @@
-from pirates.pirate import BattleAvatarGameFSM
-from direct.fsm import FSM
 from direct.gui.DirectGui import *
+from pandac.PandaModules import *
 from direct.interval.IntervalGlobal import *
+from direct.fsm import FSM
 from direct.task import Task
-from panda3d.core import *
 from pirates.battle import WeaponGlobals
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+import BattleAvatarGameFSM
 
 class BattleNPCGameFSM(BattleAvatarGameFSM.BattleAvatarGameFSM):
-
+    
     def __init__(self, av):
         BattleAvatarGameFSM.BattleAvatarGameFSM.__init__(self, av, 'BattleNPCFSM')
 
@@ -64,8 +64,10 @@ class BattleNPCGameFSM(BattleAvatarGameFSM.BattleAvatarGameFSM):
     def filterBreakCombat(self, request, args=[]):
         if request == 'advance':
             return 'LandRoam'
-        elif request == 'Battle':
+
+        if request == 'Battle':
             return
+
         return self.defaultFilter(request, args)
 
     def exitBreakCombat(self):
@@ -75,23 +77,29 @@ class BattleNPCGameFSM(BattleAvatarGameFSM.BattleAvatarGameFSM):
         if hasattr(self, 'fadeOutIval'):
             self.fadeOutIval.pause()
             del self.fadeOutIval
-
-    def enterFadeOut(self, args=[]):
+    
+    def enterFadeOut(self, args = []):
         if self.av is None:
-            return
+            return None
+        
         if self.av.motionFSM:
             self.av.motionFSM.off()
+        
         self.av.stashBattleCollisions()
         parentGA = self.av.getParentObj()
         npcDoId = self.av.getDoId()
         if base.localAvatar.guiMgr.targetStatusTray.doId == npcDoId:
             base.localAvatar.guiMgr.targetStatusTray.hide()
+        
         if hasattr(self, 'fadeOutIval'):
             self.fadeOutIval.pause()
             del self.fadeOutIval
+        
         nameText = self.av.getNameText()
         if nameText is None:
-            return
-        self.fadeOutIval = Sequence(Func(self.av.setTransparency, TransparencyAttrib.MAlpha), Func(self.av.setAlphaScale, 1.0), Func(nameText.setAlphaScale, 1.0), Parallel(LerpFunctionInterval(self.av.setAlphaScale, 3.0, fromData=1.0, toData=0.0, blendType='easeInOut'), LerpFunctionInterval(nameText.setAlphaScale, 3.0, fromData=1.0, toData=0.0, blendType='easeInOut')), Func(self.av.hide), Func(nameText.hide), Func(parentGA.sendUpdate, 'requestNPCRemoval', [npcDoId]))
+            return None
+        
+        self.fadeOutIval = Sequence(Func(self.av.setTransparency, TransparencyAttrib.MAlpha), Func(self.av.setAlphaScale, 1.0), Func(nameText.setAlphaScale, 1.0), Parallel(LerpFunctionInterval(self.av.setAlphaScale, 3.0, fromData = 1.0, toData = 0.0, blendType = 'easeInOut'), LerpFunctionInterval(nameText.setAlphaScale, 3.0, fromData = 1.0, toData = 0.0, blendType = 'easeInOut')), Func(self.av.hide), Func(nameText.hide), Func(parentGA.sendUpdate, 'requestNPCRemoval', [npcDoId]))
         self.fadeOutIval.start()
-        return
+
+
