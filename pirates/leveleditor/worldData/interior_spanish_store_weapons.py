@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.interior_spanish_store_weapons
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1156268617.43dzlu0i': {
@@ -65,8 +66,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.4000000059604645, 0.5, 0.4000000059604645,
                                   1.0),
-                        'Model':
-                        'models/props/bookshelf_spanish'
+                        'Model': 'models/props/bookshelf_spanish'
                     }
                 },
                 '1167174514.03kmuller': {

@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.interior_tavern_b
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1153419689.81dzlu01': {
@@ -479,8 +480,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (1.0, 0.8399999737739563, 0.6800000071525574,
                                   1.0),
-                        'Model':
-                        'models/props/chair_shanty'
+                        'Model': 'models/props/chair_shanty'
                     }
                 },
                 '1167163315.53kmuller': {
@@ -593,8 +593,8 @@ objectStruct = {
                     'Pos': Point3(-1.55, -13.086, 1.0),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Color': (0.44999998807907104, 0.3799999952316284, 0.25,
-                                  1.0),
+                        'Color': (0.44999998807907104, 0.3799999952316284,
+                                  0.25, 1.0),
                         'Model':
                         'models/props/bench_shanty_2'
                     }
@@ -874,8 +874,8 @@ objectStruct = {
                     'Pos': Point3(-58.078, 18.891, 1.0),
                     'Scale': VBase3(0.686, 0.686, 0.686),
                     'Visual': {
-                        'Color': (0.3100000023841858, 0.25999999046325684, 0.25,
-                                  1.0),
+                        'Color': (0.3100000023841858, 0.25999999046325684,
+                                  0.25, 1.0),
                         'Model':
                         'models/props/barrel'
                     }
@@ -1124,8 +1124,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (1.0, 0.8700000047683716, 0.7200000286102295,
                                   1.0),
-                        'Model':
-                        'models/props/light_tool_bulb'
+                        'Model': 'models/props/light_tool_bulb'
                     }
                 },
                 '1176333676.32dzlu': {
@@ -1143,8 +1142,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (1.0, 0.8700000047683716, 0.7200000286102295,
                                   1.0),
-                        'Model':
-                        'models/props/light_tool_bulb'
+                        'Model': 'models/props/light_tool_bulb'
                     }
                 },
                 '1176334308.84dzlu': {

@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.ParlorWorld
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1161805520.84Shochet': {

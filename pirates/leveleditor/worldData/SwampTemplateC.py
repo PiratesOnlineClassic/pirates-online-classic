@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.SwampTemplateC
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1156281161.64sdnaik': {
@@ -1793,8 +1794,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5799999833106995, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/vegetation/swamp_bush_a'
+                        'Model': 'models/vegetation/swamp_bush_a'
                     }
                 },
                 '1174589412.02kmuller': {

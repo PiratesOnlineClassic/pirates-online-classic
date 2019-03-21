@@ -1,9 +1,10 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.WildIslandD2
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Locator Links':
-    [['1172209713.33sdnaik', '1172209670.05sdnaik', 'Bi-directional'], [
-        '1172209837.83sdnaik', '1172209667.91sdnaik', 'Bi-directional'
-    ], ['1172209713.34sdnaik', '1172209955.28sdnaik', 'Bi-directional'],
+    [['1172209713.33sdnaik', '1172209670.05sdnaik', 'Bi-directional'],
+     ['1172209837.83sdnaik', '1172209667.91sdnaik', 'Bi-directional'],
+     ['1172209713.34sdnaik', '1172209955.28sdnaik', 'Bi-directional'],
      ['1172209955.33sdnaik', '1172209837.84sdnaik', 'Bi-directional']],
     'Objects': {
         '1164157132.99dzlu': {

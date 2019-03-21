@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.piratesWorldScreenshots
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1141410776.53sdnaik': {
@@ -139,11 +140,11 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1142029312.31sdnaik', '1142029253.38sdnaik', 'Bi-directional'], [
-        '1142029312.31sdnaik', '1142029127.2sdnaik', 'Bi-directional'
-    ], ['1142029640.48sdnaik', '1142029643.17sdnaik', 'Bi-directional'], [
-        '1142029643.17sdnaik', '1142029649.52sdnaik', 'Bi-directional'
-    ], ['1142029649.52sdnaik', '1142029656.11sdnaik', 'Bi-directional'],
+    [['1142029312.31sdnaik', '1142029253.38sdnaik', 'Bi-directional'],
+     ['1142029312.31sdnaik', '1142029127.2sdnaik', 'Bi-directional'],
+     ['1142029640.48sdnaik', '1142029643.17sdnaik', 'Bi-directional'],
+     ['1142029643.17sdnaik', '1142029649.52sdnaik', 'Bi-directional'],
+     ['1142029649.52sdnaik', '1142029656.11sdnaik', 'Bi-directional'],
      ['1142029640.48sdnaik', '1142029656.11sdnaik', 'Bi-directional'],
      ['1142029253.38sdnaik', '1142029127.2sdnaik', 'Bi-directional']],
     'Layers': {},

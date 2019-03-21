@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.port_royal_building_int_barber
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {},
     'DirectionalColors': {},

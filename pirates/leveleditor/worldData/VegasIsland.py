@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.VegasIsland
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1149705583.09Shochet': {

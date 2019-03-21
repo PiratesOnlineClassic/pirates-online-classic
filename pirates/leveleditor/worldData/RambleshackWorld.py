@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.RambleshackWorld
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1115838788a.58jubutler': {
@@ -93,11 +94,11 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1124236671.37jubutler', '1125013326.85jubutler', 'Direction 2'], [
-        '1171449664.73MAsaduzz', '1125013326.85jubutler', 'Direction 1'
-    ], ['1171449664.73MAsaduzz', '1171449676.98MAsaduzz', 'Direction 2'], [
-        '1171449676.98MAsaduzz', '1171449691.62MAsaduzz', 'Direction 2'
-    ], ['1171449714.51MAsaduzz', '1171449691.62MAsaduzz', 'Direction 1'],
+    [['1124236671.37jubutler', '1125013326.85jubutler', 'Direction 2'],
+     ['1171449664.73MAsaduzz', '1125013326.85jubutler', 'Direction 1'],
+     ['1171449664.73MAsaduzz', '1171449676.98MAsaduzz', 'Direction 2'],
+     ['1171449676.98MAsaduzz', '1171449691.62MAsaduzz', 'Direction 2'],
+     ['1171449714.51MAsaduzz', '1171449691.62MAsaduzz', 'Direction 1'],
      ['1171449714.51MAsaduzz', '1125013326.85jubutler', 'Direction 2']],
     'Layers': {},
     'ObjectIds': {

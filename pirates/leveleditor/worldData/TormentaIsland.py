@@ -1,13 +1,14 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.TormentaIsland
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Interact Links':
     [['1182816000.0dxschafe', '1179859981.02Aholdun', 'Bi-directional'],
      ['1182816000.0dxschafe0', '1179860068.44Aholdun', 'Bi-directional'],
      ['1182816000.0dxschafe1', '1179859802.76Aholdun', 'Bi-directional']],
     'Locator Links':
-    [['1172171865.18kmuller', '1172208235.08sdnaik', 'Bi-directional'], [
-        '1172208344.95sdnaik', '1172208232.63sdnaik', 'Bi-directional'
-    ], ['1172171864.78kmuller', '1172208409.98sdnaik', 'Bi-directional'],
+    [['1172171865.18kmuller', '1172208235.08sdnaik', 'Bi-directional'],
+     ['1172208344.95sdnaik', '1172208232.63sdnaik', 'Bi-directional'],
+     ['1172171864.78kmuller', '1172208409.98sdnaik', 'Bi-directional'],
      ['1172208409.97sdnaik', '1172208344.94sdnaik', 'Bi-directional']],
     'Objects': {
         '1164150392.42dzlu': {

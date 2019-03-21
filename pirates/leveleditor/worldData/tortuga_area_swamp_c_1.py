@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.tortuga_area_swamp_c_1
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {
         0: Vec4(0.207843, 0.243137, 0.447059, 1),
@@ -29,9 +30,9 @@ objectStruct = {
         8: 0.0
     },
     'Interact Links':
-    [['1177021184.0dxschafe', '1172635262.83sdnaik', 'Bi-directional'], [
-        '1177021312.0dxschafe', '1174698240.0dxschafe', 'Bi-directional'
-    ], ['1174698368.0dxschafe', '1177022208.0dxschafe', 'Bi-directional'],
+    [['1177021184.0dxschafe', '1172635262.83sdnaik', 'Bi-directional'],
+     ['1177021312.0dxschafe', '1174698240.0dxschafe', 'Bi-directional'],
+     ['1174698368.0dxschafe', '1177022208.0dxschafe', 'Bi-directional'],
      ['1178932046.6Aholdun', '1177019776.0dxschafe', 'Bi-directional']],
     'Objects': {
         '1169179552.88sdnaik': {

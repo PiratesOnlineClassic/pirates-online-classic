@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.tortuga_jungle_b_int_1
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Interact Links':
     [['1186698624.0dxschafe', '1187056896.0dxschafe1', 'Bi-directional']],

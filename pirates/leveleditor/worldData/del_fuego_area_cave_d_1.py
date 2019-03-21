@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.del_fuego_area_cave_d_1
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {
         -1: Vec4(0.447059, 0.447059, 0.415686, 1),
@@ -32,13 +33,13 @@ objectStruct = {
         8: 0.0002
     },
     'Interact Links':
-    [['1176249984.0dxschafe', '1176249856.0dxschafe', 'Bi-directional'], [
-        '1176322304.0dxschafe3', '1176322048.0dxschafe0', 'Bi-directional'
-    ], ['1175816960.0dxschafe', '1175817216.0dxschafe0', 'Bi-directional'], [
-        '1176322048.0dxschafe', '1176322176.0dxschafe0', 'Bi-directional'
-    ], ['1176322176.0dxschafe', '1176249984.0dxschafe1', 'Bi-directional'], [
-        '1176322304.0dxschafe', '1176249984.0dxschafe2', 'Bi-directional'
-    ], ['1176322304.0dxschafe2', '1176322816.0dxschafe1', 'Bi-directional'],
+    [['1176249984.0dxschafe', '1176249856.0dxschafe', 'Bi-directional'],
+     ['1176322304.0dxschafe3', '1176322048.0dxschafe0', 'Bi-directional'],
+     ['1175816960.0dxschafe', '1175817216.0dxschafe0', 'Bi-directional'],
+     ['1176322048.0dxschafe', '1176322176.0dxschafe0', 'Bi-directional'],
+     ['1176322176.0dxschafe', '1176249984.0dxschafe1', 'Bi-directional'],
+     ['1176322304.0dxschafe', '1176249984.0dxschafe2', 'Bi-directional'],
+     ['1176322304.0dxschafe2', '1176322816.0dxschafe1', 'Bi-directional'],
      ['1176322816.0dxschafe', '1176322432.0dxschafe2', 'Bi-directional'],
      ['1187656704.0dxschafe0', '1176249984.0dxschafe0', 'Bi-directional']],
     'Objects': {
@@ -994,8 +995,8 @@ objectStruct = {
                     'Pos': Point3(333.674, 41.289, 7.722),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Color': (0.3100000023841858, 0.25999999046325684, 0.25,
-                                  1.0),
+                        'Color': (0.3100000023841858, 0.25999999046325684,
+                                  0.25, 1.0),
                         'Model':
                         'models/props/crate_04'
                     },
@@ -2274,11 +2275,11 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1176323200.0dxschafe', '1176322304.0dxschafe5', 'Bi-directional'], [
-        '1176323328.0dxschafe', '1176322432.0dxschafe', 'Bi-directional'
-    ], ['1176322432.0dxschafe2', '1176323328.0dxschafe0', 'Bi-directional'], [
-        '1176323456.0dxschafe', '1176322432.0dxschafe1', 'Bi-directional'
-    ], ['1175817216.0dxschafe1', '1192671104.0dxschafe', 'Bi-directional'],
+    [['1176323200.0dxschafe', '1176322304.0dxschafe5', 'Bi-directional'],
+     ['1176323328.0dxschafe', '1176322432.0dxschafe', 'Bi-directional'],
+     ['1176322432.0dxschafe2', '1176323328.0dxschafe0', 'Bi-directional'],
+     ['1176323456.0dxschafe', '1176322432.0dxschafe1', 'Bi-directional'],
+     ['1175817216.0dxschafe1', '1192671104.0dxschafe', 'Bi-directional'],
      ['1192671104.0dxschafe0', '1192671104.0dxschafe', 'Bi-directional'],
      ['1192671104.0dxschafe0', '1192671104.0dxschafe1', 'Bi-directional']],
     'Layers': {

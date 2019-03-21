@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.FinePewter
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1153419177.97dzlu0': {

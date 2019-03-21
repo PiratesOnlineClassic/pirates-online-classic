@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.del_fuego_area_cave_e_1
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {
         -1: Vec4(0.447059, 0.447059, 0.415686, 1),
@@ -32,9 +33,9 @@ objectStruct = {
         8: 0.0002
     },
     'Interact Links':
-    [['1176248704.0dxschafe', '1176247936.0dxschafe', 'Bi-directional'], [
-        '1176247936.0dxschafe5', '1176248704.0dxschafe3', 'Bi-directional'
-    ], ['1176247808.0dxschafe0', '1176248704.0dxschafe1', 'Bi-directional'],
+    [['1176248704.0dxschafe', '1176247936.0dxschafe', 'Bi-directional'],
+     ['1176247936.0dxschafe5', '1176248704.0dxschafe3', 'Bi-directional'],
+     ['1176247808.0dxschafe0', '1176248704.0dxschafe1', 'Bi-directional'],
      ['1176247936.0dxschafe3', '1176248704.0dxschafe0', 'Bi-directional'],
      ['1189788928.0dxschafe8', '1176248704.0dxschafe', 'Bi-directional']],
     'Objects': {

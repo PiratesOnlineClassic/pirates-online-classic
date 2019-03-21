@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.rumrunner_interior_cellar
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1185994805.82kmuller0': {
@@ -379,8 +380,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.71, 0.7764705882352941, 0.796078431372549,
                                   1.0),
-                        'Model':
-                        'models/props/light_tool_bulb'
+                        'Model': 'models/props/light_tool_bulb'
                     }
                 },
                 '1192816888.16kmuller': {

@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.shipNavyMerchant3
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1189040144.92gjeon': {
@@ -197,23 +198,23 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1189040766.88gjeon', '1189040561.39gjeon', 'Bi-directional'], [
-        '1189040766.88gjeon', '1189040581.14gjeon', 'Bi-directional'
-    ], ['1189040561.39gjeon', '1189040632.77gjeon', 'Bi-directional'], [
-        '1189040642.09gjeon', '1189040632.77gjeon', 'Bi-directional'
-    ], ['1189040642.09gjeon', '1189040647.58gjeon', 'Bi-directional'], [
-        '1189040650.8gjeon', '1189040647.58gjeon', 'Bi-directional'
-    ], ['1189040581.14gjeon', '1189040650.8gjeon', 'Bi-directional'], [
-        '1189040581.14gjeon', '1189040647.58gjeon', 'Bi-directional'
-    ], ['1189040838.08gjeon', '1189040632.77gjeon', 'Bi-directional'], [
-        '1189040650.8gjeon', '1189040838.08gjeon', 'Bi-directional'
-    ], ['1189040561.39gjeon', '1189040455.83gjeon', 'Bi-directional'], [
-        '1189040581.14gjeon', '1189040455.83gjeon', 'Bi-directional'
-    ], ['1189040561.39gjeon', '1189040572.72gjeon', 'Bi-directional'], [
-        '1189040581.14gjeon', '1189040584.44gjeon', 'Bi-directional'
-    ], ['1189040572.72gjeon', '1189040698.55gjeon', 'Bi-directional'], [
-        '1189040703.08gjeon', '1189040584.44gjeon', 'Bi-directional'
-    ], ['1189040584.44gjeon', '1189041023.56gjeon', 'Bi-directional'],
+    [['1189040766.88gjeon', '1189040561.39gjeon', 'Bi-directional'],
+     ['1189040766.88gjeon', '1189040581.14gjeon', 'Bi-directional'],
+     ['1189040561.39gjeon', '1189040632.77gjeon', 'Bi-directional'],
+     ['1189040642.09gjeon', '1189040632.77gjeon', 'Bi-directional'],
+     ['1189040642.09gjeon', '1189040647.58gjeon', 'Bi-directional'],
+     ['1189040650.8gjeon', '1189040647.58gjeon', 'Bi-directional'],
+     ['1189040581.14gjeon', '1189040650.8gjeon', 'Bi-directional'],
+     ['1189040581.14gjeon', '1189040647.58gjeon', 'Bi-directional'],
+     ['1189040838.08gjeon', '1189040632.77gjeon', 'Bi-directional'],
+     ['1189040650.8gjeon', '1189040838.08gjeon', 'Bi-directional'],
+     ['1189040561.39gjeon', '1189040455.83gjeon', 'Bi-directional'],
+     ['1189040581.14gjeon', '1189040455.83gjeon', 'Bi-directional'],
+     ['1189040561.39gjeon', '1189040572.72gjeon', 'Bi-directional'],
+     ['1189040581.14gjeon', '1189040584.44gjeon', 'Bi-directional'],
+     ['1189040572.72gjeon', '1189040698.55gjeon', 'Bi-directional'],
+     ['1189040703.08gjeon', '1189040584.44gjeon', 'Bi-directional'],
+     ['1189040584.44gjeon', '1189041023.56gjeon', 'Bi-directional'],
      ['1189040572.72gjeon', '1189041023.56gjeon', 'Bi-directional']],
     'Layers': {},
     'ObjectIds': {

@@ -1,9 +1,10 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.ArtPrototypeLite
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Locator Links':
-    [['1142290985.8sdnaik', '1142291141.66sdnaik', 'Bi-directional'], [
-        '1142291141.64sdnaik', '1142037113.09dxschafe', 'Bi-directional'
-    ], ['1142290985.73sdnaik', '1142291275.17sdnaik', 'Bi-directional'],
+    [['1142290985.8sdnaik', '1142291141.66sdnaik', 'Bi-directional'],
+     ['1142291141.64sdnaik', '1142037113.09dxschafe', 'Bi-directional'],
+     ['1142290985.73sdnaik', '1142291275.17sdnaik', 'Bi-directional'],
      ['1142291275.16sdnaik', '1142037113.06dxschafe', 'Bi-directional']],
     'Objects': {
         '1135280776.06dzlu': {
@@ -744,7 +745,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (0.817, 0.932, 0.7942, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
@@ -774,7 +776,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (1.0, 1.0, 0.972, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
@@ -799,7 +802,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (0.817, 0.724, 0.724, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
@@ -823,7 +827,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (0.817, 0.932, 0.932, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
@@ -848,7 +853,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
                                 'PartName': 'leaf',
@@ -907,7 +913,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -928,7 +935,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -3204,7 +3212,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -3226,7 +3235,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -3584,7 +3594,8 @@ objectStruct = {
                                             'Type': 'Locator Node',
                                             'Name': 'portal_exterior_1',
                                             'Hpr': Point3(0.0, 0.0, 0.0),
-                                            'Pos': Point3(54.084, -22.35, 10.9),
+                                            'Pos': Point3(
+                                                54.084, -22.35, 10.9),
                                             'Scale': VBase3(1.0, 1.0, 1.0)
                                         }
                                     },
@@ -3612,7 +3623,8 @@ objectStruct = {
                                             'Type': 'Locator Node',
                                             'Name': 'portal_exterior_1',
                                             'Hpr': Point3(0.0, 0.0, 0.0),
-                                            'Pos': Point3(54.084, -22.35, 10.9),
+                                            'Pos': Point3(
+                                                54.084, -22.35, 10.9),
                                             'Scale': VBase3(1.0, 1.0, 1.0)
                                         }
                                     },
@@ -3635,7 +3647,8 @@ objectStruct = {
                                             'Type': 'Locator Node',
                                             'Name': 'portal_exterior_1',
                                             'Hpr': Point3(0.0, 0.0, 0.0),
-                                            'Pos': Point3(54.084, -22.35, 10.9),
+                                            'Pos': Point3(
+                                                54.084, -22.35, 10.9),
                                             'Scale': VBase3(1.0, 1.0, 1.0)
                                         }
                                     },
@@ -3656,7 +3669,8 @@ objectStruct = {
                                             'Type': 'Locator Node',
                                             'Name': 'portal_exterior_1',
                                             'Hpr': Point3(0.0, 0.0, 0.0),
-                                            'Pos': Point3(54.084, -22.35, 10.9),
+                                            'Pos': Point3(
+                                                54.084, -22.35, 10.9),
                                             'Scale': VBase3(1.0, 1.0, 1.0)
                                         }
                                     },
@@ -3677,7 +3691,8 @@ objectStruct = {
                                             'Type': 'Locator Node',
                                             'Name': 'portal_exterior_1',
                                             'Hpr': Point3(0.0, 0.0, 0.0),
-                                            'Pos': Point3(54.084, -22.35, 10.9),
+                                            'Pos': Point3(
+                                                54.084, -22.35, 10.9),
                                             'Scale': VBase3(1.0, 1.0, 1.0)
                                         }
                                     },
@@ -3705,7 +3720,8 @@ objectStruct = {
                                             'Type': 'Locator Node',
                                             'Name': 'portal_exterior_1',
                                             'Hpr': Point3(0.0, 0.0, 0.0),
-                                            'Pos': Point3(54.084, -22.35, 10.9),
+                                            'Pos': Point3(
+                                                54.084, -22.35, 10.9),
                                             'Scale': VBase3(1.0, 1.0, 1.0)
                                         }
                                     },
@@ -3728,7 +3744,8 @@ objectStruct = {
                                             'Type': 'Locator Node',
                                             'Name': 'portal_exterior_1',
                                             'Hpr': Point3(0.0, 0.0, 0.0),
-                                            'Pos': Point3(54.084, -22.35, 10.9),
+                                            'Pos': Point3(
+                                                54.084, -22.35, 10.9),
                                             'Scale': VBase3(1.0, 1.0, 1.0)
                                         }
                                     },
@@ -3749,7 +3766,8 @@ objectStruct = {
                                             'Type': 'Locator Node',
                                             'Name': 'portal_exterior_1',
                                             'Hpr': Point3(0.0, 0.0, 0.0),
-                                            'Pos': Point3(54.084, -22.35, 10.9),
+                                            'Pos': Point3(
+                                                54.084, -22.35, 10.9),
                                             'Scale': VBase3(1.0, 1.0, 1.0)
                                         }
                                     },
@@ -3770,7 +3788,8 @@ objectStruct = {
                                             'Type': 'Locator Node',
                                             'Name': 'portal_exterior_1',
                                             'Hpr': Point3(0.0, 0.0, 0.0),
-                                            'Pos': Point3(54.084, -22.35, 10.9),
+                                            'Pos': Point3(
+                                                54.084, -22.35, 10.9),
                                             'Scale': VBase3(1.0, 1.0, 1.0)
                                         }
                                     },
@@ -3791,7 +3810,8 @@ objectStruct = {
                                             'Type': 'Locator Node',
                                             'Name': 'portal_exterior_1',
                                             'Hpr': Point3(0.0, 0.0, 0.0),
-                                            'Pos': Point3(54.084, -22.35, 10.9),
+                                            'Pos': Point3(
+                                                54.084, -22.35, 10.9),
                                             'Scale': VBase3(1.0, 1.0, 1.0)
                                         }
                                     },
@@ -3812,7 +3832,8 @@ objectStruct = {
                                             'Type': 'Locator Node',
                                             'Name': 'portal_exterior_1',
                                             'Hpr': Point3(0.0, 0.0, 0.0),
-                                            'Pos': Point3(54.084, -22.35, 10.9),
+                                            'Pos': Point3(
+                                                54.084, -22.35, 10.9),
                                             'Scale': VBase3(1.0, 1.0, 1.0)
                                         }
                                     },
@@ -3844,7 +3865,8 @@ objectStruct = {
                                             'Type': 'Locator Node',
                                             'Name': 'portal_exterior_1',
                                             'Hpr': Point3(0.0, 0.0, 0.0),
-                                            'Pos': Point3(54.084, -22.35, 10.9),
+                                            'Pos': Point3(
+                                                54.084, -22.35, 10.9),
                                             'Scale': VBase3(1.0, 1.0, 1.0)
                                         }
                                     },
@@ -3874,7 +3896,8 @@ objectStruct = {
                                             'Type': 'Locator Node',
                                             'Name': 'portal_exterior_1',
                                             'Hpr': Point3(0.0, 0.0, 0.0),
-                                            'Pos': Point3(54.084, -22.35, 10.9),
+                                            'Pos': Point3(
+                                                54.084, -22.35, 10.9),
                                             'Scale': VBase3(1.0, 1.0, 1.0)
                                         }
                                     },
@@ -4012,8 +4035,7 @@ objectStruct = {
                                         'models/vegetation/palm_trunk_a_idle',
                                         'Model':
                                         'models/vegetation/palm_trunk_a_hi',
-                                        'PartName':
-                                        'trunk'
+                                        'PartName': 'trunk'
                                     }
                                 },
                                 '1136339875.1dzlu': {
@@ -4040,8 +4062,7 @@ objectStruct = {
                                         'models/vegetation/palm_trunk_a_idle',
                                         'Model':
                                         'models/vegetation/palm_trunk_a_hi',
-                                        'PartName':
-                                        'trunk'
+                                        'PartName': 'trunk'
                                     }
                                 },
                                 '1136340207.4dzlu': {
@@ -4150,8 +4171,7 @@ objectStruct = {
                                         'Color': (0.97, 0.88, 0.97, 1.0),
                                         'Model':
                                         'models/vegetation/palm_trunk_a_hi',
-                                        'PartName':
-                                        'trunk'
+                                        'PartName': 'trunk'
                                     }
                                 },
                                 '1136419382.98dzlu': {
@@ -4254,11 +4274,11 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/palm_leaf_b_hi',
-                                        'PartName':
-                                        'leaf'
+                                        'PartName': 'leaf'
                                     }
                                 }
                             },
@@ -4476,11 +4496,11 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/tree_b_leaf_hi',
-                                        'PartName':
-                                        'leaf'
+                                        'PartName': 'leaf'
                                     }
                                 }
                             },
@@ -4502,11 +4522,11 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/tree_b_leaf_hi',
-                                        'PartName':
-                                        'leaf'
+                                        'PartName': 'leaf'
                                     }
                                 }
                             },
@@ -4836,13 +4856,12 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/palm_leaf_c_hi',
-                                        'PartName':
-                                        'leaf',
-                                        'Scale':
-                                        VBase3(3.084, 3.084, 3.084)
+                                        'PartName': 'leaf',
+                                        'Scale': VBase3(3.084, 3.084, 3.084)
                                     }
                                 }
                             },
@@ -4864,13 +4883,12 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/palm_leaf_c_hi',
-                                        'PartName':
-                                        'leaf',
-                                        'Scale':
-                                        VBase3(3.084, 3.084, 3.084)
+                                        'PartName': 'leaf',
+                                        'Scale': VBase3(3.084, 3.084, 3.084)
                                     }
                                 }
                             },
@@ -5138,11 +5156,11 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/palm_leaf_a_hi',
-                                        'PartName':
-                                        'leaf'
+                                        'PartName': 'leaf'
                                     }
                                 }
                             },
@@ -5349,18 +5367,12 @@ objectStruct = {
                             }
                         },
                         '1136405358.8dzlu': {
-                            'Type':
-                            'Building Exterior',
-                            'Name':
-                            '',
-                            'File':
-                            '',
-                            'Door':
-                            'models/buildings/shanty_guildhall_door',
-                            'ExtUid':
-                            '1136405358.8dzlu0',
-                            'Hpr':
-                            VBase3(141.858, 2.124, 0.788),
+                            'Type': 'Building Exterior',
+                            'Name': '',
+                            'File': '',
+                            'Door': 'models/buildings/shanty_guildhall_door',
+                            'ExtUid': '1136405358.8dzlu0',
+                            'Hpr': VBase3(141.858, 2.124, 0.788),
                             'Interior':
                             'models/buildings/interior_shanty_guildhall',
                             'Objects': {
@@ -5399,10 +5411,8 @@ objectStruct = {
                                     }
                                 }
                             },
-                            'Pos':
-                            Point3(113.877, 168.16, 74.618),
-                            'Scale':
-                            VBase3(1.0, 1.0, 1.0),
+                            'Pos': Point3(113.877, 168.16, 74.618),
+                            'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Name':
                                 '',
@@ -5482,14 +5492,13 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Color': (0.724, 0.972, 0.724, 1.0),
                                         'Model':
                                         'models/vegetation/palm_leaf_b_hi',
-                                        'PartName':
-                                        'leaf',
-                                        'Scale':
-                                        VBase3(1.252, 1.252, 1.252)
+                                        'PartName': 'leaf',
+                                        'Scale': VBase3(1.252, 1.252, 1.252)
                                     }
                                 }
                             },

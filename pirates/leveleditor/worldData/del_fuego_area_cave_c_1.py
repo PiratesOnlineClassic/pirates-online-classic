@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.del_fuego_area_cave_c_1
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1164929110.98sdnaik': {
@@ -341,15 +342,15 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1189637504.0dxschafe', '1176239104.0dxschafe', 'Bi-directional'], [
-        '1189637504.0dxschafe0', '1189637504.0dxschafe', 'Bi-directional'
-    ], ['1189637504.0dxschafe0', '1189637504.0dxschafe1', 'Bi-directional'], [
-        '1176238976.0dxschafe', '1190061312.0dchiappe', 'Bi-directional'
-    ], ['1190061312.0dchiappe0', '1190061312.0dchiappe', 'Bi-directional'], [
-        '1190061312.0dchiappe0', '1190061312.0dchiappe1', 'Bi-directional'
-    ], ['1176238976.0dxschafe', '1190061312.0dchiappe1', 'Bi-directional'], [
-        '1190061440.0dchiappe', '1176238080.0dxschafe', 'Bi-directional'
-    ], ['1190061440.0dchiappe', '1190061440.0dchiappe0', 'Bi-directional'],
+    [['1189637504.0dxschafe', '1176239104.0dxschafe', 'Bi-directional'],
+     ['1189637504.0dxschafe0', '1189637504.0dxschafe', 'Bi-directional'],
+     ['1189637504.0dxschafe0', '1189637504.0dxschafe1', 'Bi-directional'],
+     ['1176238976.0dxschafe', '1190061312.0dchiappe', 'Bi-directional'],
+     ['1190061312.0dchiappe0', '1190061312.0dchiappe', 'Bi-directional'],
+     ['1190061312.0dchiappe0', '1190061312.0dchiappe1', 'Bi-directional'],
+     ['1176238976.0dxschafe', '1190061312.0dchiappe1', 'Bi-directional'],
+     ['1190061440.0dchiappe', '1176238080.0dxschafe', 'Bi-directional'],
+     ['1190061440.0dchiappe', '1190061440.0dchiappe0', 'Bi-directional'],
      ['1190061440.0dchiappe1', '1190061440.0dchiappe0', 'Bi-directional'],
      ['1190061440.0dchiappe1', '1176238080.0dxschafe', 'Bi-directional']],
     'Layers': {},

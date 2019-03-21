@@ -1,3 +1,4 @@
+# Embedded file name: pirates.leveleditor.worldData.spawningTestIsle
 {
     'Objects': {
         '1161665872.73jubutler': {

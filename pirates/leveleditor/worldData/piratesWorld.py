@@ -1,32 +1,33 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.piratesWorld
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {
         0: Vec4(0.207843, 0.243137, 0.447059, 1),
         2: Vec4(0.666667, 0.721569, 0.792157, 1),
         4: Vec4(0.721569, 0.611765, 0.619608, 1),
         6: Vec4(0.207843, 0.243137, 0.447059, 1),
-        8: Vec4(0.384314, 0.419608, 0.564706, 1),
+        8: Vec4(0.384314, 0.419608, 0.564706, 1)
     },
     'DirectionalColors': {
         0: Vec4(0.956863, 0.909804, 0.894118, 1),
         2: Vec4(1, 1, 1, 1),
         4: Vec4(0.439216, 0.176471, 0, 1),
         6: Vec4(0.513726, 0.482353, 0.639216, 1),
-        8: Vec4(0.447059, 0.439216, 0.537255, 1),
+        8: Vec4(0.447059, 0.439216, 0.537255, 1)
     },
     'FogColors': {
         0: Vec4(0.172549, 0.180392, 0.290196, 1),
         2: Vec4(0.894118, 0.894118, 1, 1),
         4: Vec4(0.231373, 0.203922, 0.184314, 1),
         6: Vec4(0.172549, 0.180392, 0.290196, 1),
-        8: Vec4(0.129412, 0.137255, 0.203922, 1),
+        8: Vec4(0.129412, 0.137255, 0.203922, 1)
     },
     'FogRanges': {
         0: 0.000699999975040555,
         2: 0.00019999999494757503,
         4: 0.00039999998989515007,
         6: 0.000699999975040555,
-        8: 0.0,
+        8: 0.0
     },
     'Objects': {
         '1141410776.53sdnaik': {
@@ -44,7 +45,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(-457.485, 153.585, 454.457),
                             'Radi': [2600.0, 3100.0, 4797],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Phase': 1,
@@ -52,7 +53,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/islands/madre_del_fuego_zero'
-                    },
+                    }
                 },
                 '1150922126.8dzlu': {
                     'Type': 'Island',
@@ -66,7 +67,7 @@ objectStruct = {
                             'Pos': Point3(402.2, 358.0, 580.947),
                             'Radi':
                             [4377.600582220298, 5000.0, 7573.948791938436],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Phase': 1,
@@ -74,7 +75,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/islands/port_royal_zero'
-                    },
+                    }
                 },
                 '1156207188.95dzlu': {
                     'Type': 'Island',
@@ -87,7 +88,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(-175.97, -995.945, 210.853),
                             'Radi': [2700.0, 3200.0, 5318],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Phase': 1,
@@ -95,7 +96,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/islands/tortuga_zero'
-                    },
+                    }
                 },
                 '1156359855.24bbathen': {
                     'Type': 'Island',
@@ -108,7 +109,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(-40.882, 79.287, 47.831),
                             'Radi': [700.0, 1100.0, 2724],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Phase': 1,
@@ -117,7 +118,7 @@ objectStruct = {
                     'Undockable': False,
                     'Visual': {
                         'Model': 'models/islands/wild_island_a_zero'
-                    },
+                    }
                 },
                 '1159933206.48sdnaik': {
                     'Type': 'Island',
@@ -130,7 +131,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(-96.153, -25.37, 136.443),
                             'Radi': [1550.0, 2100.0, 3408],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Phase': 1,
@@ -139,7 +140,7 @@ objectStruct = {
                     'Undockable': False,
                     'Visual': {
                         'Model': 'models/islands/kingshead_zero'
-                    },
+                    }
                 },
                 '1160614528.73sdnaik': {
                     'Type': 'Island',
@@ -152,7 +153,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(154.735, 0.0, 121.512),
                             'Radi': [2200.0, 2700.0, 5216],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Phase': 1,
@@ -161,7 +162,7 @@ objectStruct = {
                     'Undockable': False,
                     'Visual': {
                         'Model': 'models/islands/cuba_zero'
-                    },
+                    }
                 },
                 '1161282725.84kmuller': {
                     'Type': 'Island',
@@ -174,7 +175,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(0.0, 125.0, -0.33),
                             'Radi': [800.0, 1200.0, 3048],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Phase': 1,
@@ -182,7 +183,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/islands/rum_runner_zero'
-                    },
+                    }
                 },
                 '1164135492.81dzlu': {
                     'Type': 'Island',
@@ -195,7 +196,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(-51.333, -49.722, 287.083),
                             'Radi': [800.0, 1300.0, 3003],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Phase': 1,
@@ -203,7 +204,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/islands/wild_island_c_zero'
-                    },
+                    }
                 },
                 '1164150392.42dzlu': {
                     'Type': 'Island',
@@ -216,7 +217,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(616.474, 321.018, -18.171),
                             'Radi': [1800.0, 2300.0, 3664.0],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Phase': 1,
@@ -225,7 +226,7 @@ objectStruct = {
                     'Undockable': False,
                     'Visual': {
                         'Model': 'models/islands/wild_island_b_zero'
-                    },
+                    }
                 },
                 '1164157132.99dzlu': {
                     'Type': 'Island',
@@ -238,7 +239,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(-79.3, 337.492, 439.628),
                             'Radi': [1300.0, 1800.0, 3515],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Phase': 1,
@@ -246,7 +247,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/islands/wild_island_d_zero'
-                    },
+                    }
                 },
                 '1164763706.66sdnaik': {
                     'Type': 'Island',
@@ -259,7 +260,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(-40.882, 79.287, 47.831),
                             'Radi': [650.0, 1100.0, 2724],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Phase': 1,
@@ -267,7 +268,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/islands/wild_island_a_zero'
-                    },
+                    }
                 },
                 '1173381952.2sdnaik': {
                     'Type': 'Island',
@@ -280,7 +281,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(19.047, 304.658, 475.384),
                             'Radi': [700.0, 1100.0, 2780.0],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Phase': 1,
@@ -288,7 +289,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/islands/wild_island_e_zero'
-                    },
+                    }
                 },
                 '1173382404.64sdnaik': {
                     'Type': 'Island',
@@ -301,7 +302,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(82.898, 17.675, 160.281),
                             'Radi': [1200.0, 1600.0, 3474],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Phase': 1,
@@ -309,7 +310,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/islands/wild_island_f_zero'
-                    },
+                    }
                 },
                 '1185235968.0dxschafe0': {
                     'Type': 'Ship Spawn Node',
@@ -323,7 +324,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0, 0, 0.65, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1185235968.0dxschafe1': {
                     'Type': 'Ship Movement Node',
@@ -333,7 +334,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.65, 0, 0, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1185236224.0dxschafe': {
                     'Type': 'Ship Movement Node',
@@ -343,7 +344,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.65, 0, 0, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1185236224.0dxschafe3': {
                     'Type': 'Ship Spawn Node',
@@ -357,7 +358,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0, 0, 0.65, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1185236480.0dxschafe': {
                     'Type': 'Ship Movement Node',
@@ -367,7 +368,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.65, 0, 0, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1185236480.0dxschafe1': {
                     'Type': 'Ship Spawn Node',
@@ -381,7 +382,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0, 0, 0.65, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1185236736.0dxschafe': {
                     'Type': 'Ship Spawn Node',
@@ -395,7 +396,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0, 0, 0.65, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1185236864.0dxschafe': {
                     'Type': 'Ship Movement Node',
@@ -405,7 +406,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.65, 0, 0, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1185237120.0dxschafe': {
                     'Type': 'Ship Movement Node',
@@ -415,7 +416,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.65, 0, 0, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1185237120.0dxschafe1': {
                     'Type': 'Ship Movement Node',
@@ -425,7 +426,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.65, 0, 0, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1185237120.0dxschafe2': {
                     'Type': 'Ship Spawn Node',
@@ -439,7 +440,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0, 0, 0.65, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1185237248.0dxschafe': {
                     'Type': 'Ship Spawn Node',
@@ -453,7 +454,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0, 0, 0.65, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1196970035.53sdnaik': {
                     'Type': 'Island',
@@ -466,7 +467,7 @@ objectStruct = {
                             'Hpr': VBase3(-24.178, 0.0, 0.0),
                             'Pos': Point3(-1.631, -36.854, 0.254),
                             'Radi': [600.0, 1100.0, 2300.0],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'PVPTeam': 2,
@@ -475,7 +476,7 @@ objectStruct = {
                     'Undockable': False,
                     'Visual': {
                         'Model': 'models/islands/pvp_b_zero'
-                    },
+                    }
                 },
                 '1196970080.56sdnaik': {
                     'Type': 'Island',
@@ -488,7 +489,7 @@ objectStruct = {
                             'Hpr': VBase3(155.709, 0.0, 0.0),
                             'Pos': Point3(70.641, -22.088, 0.0),
                             'Radi': [500.0, 1000.0, 2000.0],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'PVPTeam': 1,
@@ -497,7 +498,7 @@ objectStruct = {
                     'Undockable': False,
                     'Visual': {
                         'Model': 'models/islands/pvp_a_zero'
-                    },
+                    }
                 },
                 '1201636857.8kmuller': {
                     'Type': 'Island',
@@ -509,7 +510,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(68.294, 79.498, 0.0),
                             'Radi': [800.0, 1300.0, 2200.0],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Pos': Point3(19014.123, 5490.859, 0.0),
@@ -517,7 +518,7 @@ objectStruct = {
                     'Undockable': True,
                     'Visual': {
                         'Model': 'models/islands/pvp_rock_big_zero'
-                    },
+                    }
                 },
                 '1201641372.09kmuller': {
                     'Type': 'Island',
@@ -529,7 +530,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(47.431, 46.449, 0.0),
                             'Radi': [500.0, 1000.0, 2000.0],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Pos': Point3(19635.768, 5459.958, 0.0),
@@ -537,7 +538,7 @@ objectStruct = {
                     'Undockable': True,
                     'Visual': {
                         'Model': 'models/islands/pvp_rock_med_zero'
-                    },
+                    }
                 },
                 '1201641393.2kmuller': {
                     'Type': 'Island',
@@ -549,7 +550,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(50.724, -12.372, 0.0),
                             'Radi': [700.0, 1200.0, 2200.0],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Pos': Point3(25498.391, 5572.811, 0.0),
@@ -557,7 +558,7 @@ objectStruct = {
                     'Undockable': True,
                     'Visual': {
                         'Model': 'models/islands/pvp_rock_big_zero'
-                    },
+                    }
                 },
                 '1201641405.3kmuller': {
                     'Type': 'Island',
@@ -569,7 +570,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(20.789, 44.607, 0.0),
                             'Radi': [800.0, 1300.0, 2200.0],
-                            'Scale': VBase3(0.511, 0.511, 0.511),
+                            'Scale': VBase3(0.511, 0.511, 0.511)
                         }
                     },
                     'Pos': Point3(28189.699, 7544.893, 0.0),
@@ -577,7 +578,7 @@ objectStruct = {
                     'Undockable': True,
                     'Visual': {
                         'Model': 'models/islands/pvp_rock_med_zero'
-                    },
+                    }
                 },
                 '1201641438.69kmuller': {
                     'Type': 'Island',
@@ -589,7 +590,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(50.724, -12.372, 0.0),
                             'Radi': [750.0, 1250.0, 2000.0],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Pos': Point3(27261.391, 1133.732, 0.001),
@@ -597,7 +598,7 @@ objectStruct = {
                     'Undockable': True,
                     'Visual': {
                         'Model': 'models/islands/pvp_rock_big_zero'
-                    },
+                    }
                 },
                 '1201641487.41kmuller': {
                     'Type': 'Island',
@@ -609,7 +610,7 @@ objectStruct = {
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(11.657, 10.594, 0.0),
                             'Radi': [300.0, 800.0, 1600.0],
-                            'Scale': VBase3(1.0, 1.0, 1.0),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
                         }
                     },
                     'Pos': Point3(25090.369, 6050.115, 0.0),
@@ -617,7 +618,7 @@ objectStruct = {
                     'Undockable': True,
                     'Visual': {
                         'Model': 'models/islands/pvp_rock_sml_zero'
-                    },
+                    }
                 },
                 '1210197632.0WDIG': {
                     'Type': 'Ship Spawn Node',
@@ -631,7 +632,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0, 0, 0.65, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1210197760.0WDIG': {
                     'Type': 'Ship Spawn Node',
@@ -645,7 +646,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0, 0, 0.65, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1210197760.0WDIG0': {
                     'Type': 'Ship Spawn Node',
@@ -659,7 +660,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0, 0, 0.65, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1210197760.0WDIG1': {
                     'Type': 'Ship Spawn Node',
@@ -673,7 +674,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0, 0, 0.65, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1210197760.0WDIG2': {
                     'Type': 'Ship Spawn Node',
@@ -687,7 +688,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0, 0, 0.65, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1210197760.0WDIG3': {
                     'Type': 'Ship Spawn Node',
@@ -701,7 +702,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0, 0, 0.65, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1210197760.0WDIG4': {
                     'Type': 'Ship Movement Node',
@@ -711,7 +712,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.65, 0, 0, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1210197760.0WDIG5': {
                     'Type': 'Ship Movement Node',
@@ -721,7 +722,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.65, 0, 0, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1210197888.0WDIG': {
                     'Type': 'Ship Movement Node',
@@ -731,7 +732,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.65, 0, 0, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1210197888.0WDIG0': {
                     'Type': 'Ship Movement Node',
@@ -741,7 +742,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.65, 0, 0, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1210197888.0WDIG1': {
                     'Type': 'Ship Movement Node',
@@ -751,7 +752,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.65, 0, 0, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1210197888.0WDIG2': {
                     'Type': 'Ship Movement Node',
@@ -761,15 +762,16 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.65, 0, 0, 1),
                         'Model': 'models/misc/smiley'
-                    },
-                },
+                    }
+                }
             }
         }
     },
     'Ocean Areas': [
         [
             Point3(11000, -1000, 0),
-            Point3(-3000, 15000, 0), 'Windward_Passage', '1180566400.0dxschafe0'
+            Point3(-3000, 15000, 0), 'Windward_Passage',
+            '1180566400.0dxschafe0'
         ],
         [
             Point3(-29000, 21000, 0),
@@ -777,7 +779,8 @@ objectStruct = {
         ],
         [
             Point3(11000, 27000, 0),
-            Point3(-3000, 21000, 0), 'Blackheart_Strait', '1180568320.0dxschafe'
+            Point3(-3000, 21000, 0), 'Blackheart_Strait',
+            '1180568320.0dxschafe'
         ],
         [
             Point3(13000, 27000, 0),
@@ -852,90 +855,56 @@ objectStruct = {
         [
             Point3(-3000, -3000, 0),
             Point3(1000, -5000, 0), 'Bloody_Bayou', '1191539328.0dxschafe2'
-        ],
+        ]
     ],
-    'Node Links': [
-        ['1185235968.0dxschafe1', '1185235968.0dxschafe0', 'Bi-directional'],
-        ['1185236224.0dxschafe', '1185236224.0dxschafe3', 'Bi-directional'],
-        ['1185236480.0dxschafe', '1185236736.0dxschafe', 'Bi-directional'],
-        ['1185236864.0dxschafe', '1185236480.0dxschafe1', 'Bi-directional'],
-        ['1185237120.0dxschafe2', '1185237120.0dxschafe', 'Bi-directional'],
-        ['1185237248.0dxschafe', '1185237120.0dxschafe1', 'Bi-directional'],
-        ['1210197760.0WDIG4', '1210197632.0WDIG', 'Bi-directional'],
-        ['1210197760.0WDIG5', '1210197760.0WDIG', 'Bi-directional'],
-        ['1210197888.0WDIG', '1210197760.0WDIG0', 'Bi-directional'],
-        ['1210197888.0WDIG0', '1210197760.0WDIG1', 'Bi-directional'],
-        ['1210197760.0WDIG2', '1210197888.0WDIG1', 'Bi-directional'],
-        ['1210197888.0WDIG2', '1210197760.0WDIG3', 'Bi-directional'],
-    ],
+    'Node Links':
+    [['1185235968.0dxschafe1', '1185235968.0dxschafe0', 'Bi-directional'],
+     ['1185236224.0dxschafe', '1185236224.0dxschafe3', 'Bi-directional'],
+     ['1185236480.0dxschafe', '1185236736.0dxschafe', 'Bi-directional'],
+     ['1185236864.0dxschafe', '1185236480.0dxschafe1', 'Bi-directional'],
+     ['1185237120.0dxschafe2', '1185237120.0dxschafe', 'Bi-directional'],
+     ['1185237248.0dxschafe', '1185237120.0dxschafe1', 'Bi-directional'],
+     ['1210197760.0WDIG4', '1210197632.0WDIG', 'Bi-directional'],
+     ['1210197760.0WDIG5', '1210197760.0WDIG', 'Bi-directional'],
+     ['1210197888.0WDIG', '1210197760.0WDIG0', 'Bi-directional'],
+     ['1210197888.0WDIG0', '1210197760.0WDIG1', 'Bi-directional'],
+     ['1210197760.0WDIG2', '1210197888.0WDIG1', 'Bi-directional'],
+     ['1210197888.0WDIG2', '1210197760.0WDIG3', 'Bi-directional']],
     'Layers': {
         'Collisions': [
-            '1184008208.59kmuller',
-            '1184016064.62kmuller',
-            '1184013852.84kmuller',
-            '1185822696.06kmuller',
-            '1184006140.32kmuller',
-            '1184002350.98kmuller',
-            '1184007573.29kmuller',
-            '1184021176.59kmuller',
-            '1184005963.59kmuller',
-            '1188324241.31akelts',
-            '1184006537.34kmuller',
-            '1184006605.81kmuller',
-            '1187139568.33kmuller',
-            '1188324186.98akelts',
-            '1184006730.66kmuller',
-            '1184007538.51kmuller',
-            '1184006188.41kmuller',
-            '1184021084.27kmuller',
-            '1185824396.94kmuller',
-            '1185824250.16kmuller',
-            '1185823630.52kmuller',
-            '1185823760.23kmuller',
-            '1185824497.83kmuller',
-            '1185824751.45kmuller',
-            '1187739103.34akelts',
-            '1188323993.34akelts',
-            '1184016538.29kmuller',
-            '1185822200.97kmuller',
-            '1184016225.99kmuller',
-            '1195241421.34akelts',
-            '1195242796.08akelts',
-            '1184020642.13kmuller',
-            '1195237994.63akelts',
-            '1184020756.88kmuller',
-            '1184020833.4kmuller',
-            '1185820992.97kmuller',
-            '1185821053.83kmuller',
-            '1184015068.54kmuller',
-            '1184014935.82kmuller',
-            '1185821432.88kmuller',
-            '1185821701.86kmuller',
-            '1195240137.55akelts',
-            '1195241539.38akelts',
-            '1195238422.3akelts',
-            '1195238473.22akelts',
-            '1185821453.17kmuller',
-            '1184021269.96kmuller',
-            '1185821310.89kmuller',
-            '1185821165.59kmuller',
-            '1185821199.36kmuller',
-            '1185822035.98kmuller',
-            '1184015806.59kmuller',
-            '1185822059.48kmuller',
-            '1185920461.76kmuller',
-            '1194984449.66akelts',
-            '1185824206.22kmuller',
-            '1184003446.23kmuller',
-            '1184003254.85kmuller',
-            '1184003218.74kmuller',
-            '1184002700.44kmuller',
-            '1186705073.11kmuller',
-            '1187658531.86akelts',
-            '1186705214.3kmuller',
-            '1185824927.28kmuller',
-            '1184014204.54kmuller',
-            '1184014152.84kmuller',
+            '1184008208.59kmuller', '1184016064.62kmuller',
+            '1184013852.84kmuller', '1185822696.06kmuller',
+            '1184006140.32kmuller', '1184002350.98kmuller',
+            '1184007573.29kmuller', '1184021176.59kmuller',
+            '1184005963.59kmuller', '1188324241.31akelts',
+            '1184006537.34kmuller', '1184006605.81kmuller',
+            '1187139568.33kmuller', '1188324186.98akelts',
+            '1184006730.66kmuller', '1184007538.51kmuller',
+            '1184006188.41kmuller', '1184021084.27kmuller',
+            '1185824396.94kmuller', '1185824250.16kmuller',
+            '1185823630.52kmuller', '1185823760.23kmuller',
+            '1185824497.83kmuller', '1185824751.45kmuller',
+            '1187739103.34akelts', '1188323993.34akelts',
+            '1184016538.29kmuller', '1185822200.97kmuller',
+            '1184016225.99kmuller', '1195241421.34akelts',
+            '1195242796.08akelts', '1184020642.13kmuller',
+            '1195237994.63akelts', '1184020756.88kmuller',
+            '1184020833.4kmuller', '1185820992.97kmuller',
+            '1185821053.83kmuller', '1184015068.54kmuller',
+            '1184014935.82kmuller', '1185821432.88kmuller',
+            '1185821701.86kmuller', '1195240137.55akelts',
+            '1195241539.38akelts', '1195238422.3akelts', '1195238473.22akelts',
+            '1185821453.17kmuller', '1184021269.96kmuller',
+            '1185821310.89kmuller', '1185821165.59kmuller',
+            '1185821199.36kmuller', '1185822035.98kmuller',
+            '1184015806.59kmuller', '1185822059.48kmuller',
+            '1185920461.76kmuller', '1194984449.66akelts',
+            '1185824206.22kmuller', '1184003446.23kmuller',
+            '1184003254.85kmuller', '1184003218.74kmuller',
+            '1184002700.44kmuller', '1186705073.11kmuller',
+            '1187658531.86akelts', '1186705214.3kmuller',
+            '1185824927.28kmuller', '1184014204.54kmuller',
+            '1184014152.84kmuller'
         ]
     },
     'ObjectIds': {
@@ -1072,13 +1041,13 @@ objectStruct = {
         '1210981205.23kmuller':
         '["Objects"]["1141410776.53sdnaik"]["Objects"]["1201641405.3kmuller"]["Objects"]["1210981205.23kmuller"]',
         '1210981266.57kmuller':
-        '["Objects"]["1141410776.53sdnaik"]["Objects"]["1201641438.69kmuller"]["Objects"]["1210981266.57kmuller"]',
-    },
+        '["Objects"]["1141410776.53sdnaik"]["Objects"]["1201641438.69kmuller"]["Objects"]["1210981266.57kmuller"]'
+    }
 }
 extraInfo = {
     'camPos': Point3(-13687.5, 3916.55, 98764.9),
     'camHpr': VBase3(0.855903, -88.1561, 0),
     'focalLength': 1.39999997616,
     'skyState': 2,
-    'fog': 0,
+    'fog': 0
 }

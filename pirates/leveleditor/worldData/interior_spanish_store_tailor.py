@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.interior_spanish_store_tailor
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1156268617.43dzlu0y': {
@@ -499,8 +500,8 @@ objectStruct = {
                     'Pos': Point3(16.396, -22.378, 2.446),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Color': (0.61, 0.5019607843137255, 0.39215686274509803,
-                                  1.0),
+                        'Color': (0.61, 0.5019607843137255,
+                                  0.39215686274509803, 1.0),
                         'Model':
                         'models/props/shop_tailor_fabricBolt01'
                     }
@@ -555,7 +556,8 @@ objectStruct = {
                     'Pos': Point3(-2.067, 20.328, 0.0),
                     'Scale': VBase3(1.2, 1.2, 1.1),
                     'Visual': {
-                        'Model': 'models/props/shop_tailor_mannequinMaleShirt01'
+                        'Model':
+                        'models/props/shop_tailor_mannequinMaleShirt01'
                     }
                 },
                 '1198179026.61akelts': {
@@ -929,7 +931,8 @@ objectStruct = {
                     'Pos': Point3(15.495, -4.39, 0.0),
                     'Scale': VBase3(1.2, 1.2, 1.1),
                     'Visual': {
-                        'Model': 'models/props/shop_tailor_mannequinFemaleNaked'
+                        'Model':
+                        'models/props/shop_tailor_mannequinFemaleNaked'
                     }
                 },
                 '1198185452.75akelts': {

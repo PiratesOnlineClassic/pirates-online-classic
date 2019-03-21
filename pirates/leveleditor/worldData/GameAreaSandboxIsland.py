@@ -1,21 +1,22 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.GameAreaSandboxIsland
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Locator Links':
-    [['1163553368.55sdnaik', '1163553327.97sdnaik', 'Bi-directional'], [
-        '1163553460.48sdnaik0', '1163553327.98sdnaik', 'Bi-directional'
-    ], ['1163553486.55sdnaik', '1163553328.0sdnaik', 'Bi-directional'], [
-        '1163553592.08sdnaik', '1163553327.86sdnaik', 'Bi-directional'
-    ], ['1163553327.89sdnaik', '1163553616.95sdnaik0', 'Bi-directional'], [
-        '1163553327.91sdnaik', '1163553629.31sdnaik', 'Bi-directional'
-    ], ['1163553691.22sdnaik', '1163553327.95sdnaik', 'Bi-directional'], [
-        '1163553327.94sdnaik', '1163553702.53sdnaik', 'Bi-directional'
-    ], ['1163553327.92sdnaik', '1163553709.7sdnaik', 'Bi-directional'], [
-        '1163553773.88sdnaik', '1163553592.09sdnaik', 'Bi-directional'
-    ], ['1163554355.14sdnaik', '1163553616.97sdnaik', 'Bi-directional'], [
-        '1163553629.33sdnaik', '1163554456.23sdnaik', 'Bi-directional'
-    ], ['1163554532.66sdnaik', '1163553709.72sdnaik', 'Bi-directional'], [
-        '1163553368.52sdnaik', '1163554577.84sdnaik', 'Bi-directional'
-    ], ['1163718788.78sdnaik', '1163553702.55sdnaik', 'Bi-directional'],
+    [['1163553368.55sdnaik', '1163553327.97sdnaik', 'Bi-directional'],
+     ['1163553460.48sdnaik0', '1163553327.98sdnaik', 'Bi-directional'],
+     ['1163553486.55sdnaik', '1163553328.0sdnaik', 'Bi-directional'],
+     ['1163553592.08sdnaik', '1163553327.86sdnaik', 'Bi-directional'],
+     ['1163553327.89sdnaik', '1163553616.95sdnaik0', 'Bi-directional'],
+     ['1163553327.91sdnaik', '1163553629.31sdnaik', 'Bi-directional'],
+     ['1163553691.22sdnaik', '1163553327.95sdnaik', 'Bi-directional'],
+     ['1163553327.94sdnaik', '1163553702.53sdnaik', 'Bi-directional'],
+     ['1163553327.92sdnaik', '1163553709.7sdnaik', 'Bi-directional'],
+     ['1163553773.88sdnaik', '1163553592.09sdnaik', 'Bi-directional'],
+     ['1163554355.14sdnaik', '1163553616.97sdnaik', 'Bi-directional'],
+     ['1163553629.33sdnaik', '1163554456.23sdnaik', 'Bi-directional'],
+     ['1163554532.66sdnaik', '1163553709.72sdnaik', 'Bi-directional'],
+     ['1163553368.52sdnaik', '1163554577.84sdnaik', 'Bi-directional'],
+     ['1163718788.78sdnaik', '1163553702.55sdnaik', 'Bi-directional'],
      ['1163553691.23sdnaik', '1164914136.47sdnaik0', 'Bi-directional']],
     'Objects': {
         '1163553227.34sdnaik': {

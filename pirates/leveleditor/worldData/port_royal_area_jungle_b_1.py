@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.port_royal_area_jungle_b_1
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {
         -1: Vec4(0.447059, 0.447059, 0.415686, 1),
@@ -32,13 +33,13 @@ objectStruct = {
         8: 0.0002
     },
     'Interact Links':
-    [['1176161024.0dxschafe0', '1176161024.0dxschafe', 'Bi-directional'], [
-        '1176160896.0dxschafe0', '1176160896.0dxschafe', 'Bi-directional'
-    ], ['1179346924.27Aholdun', '1176160768.0dxschafe', 'Bi-directional'], [
-        '1176160640.0dxschafe1', '1176160640.0dxschafe0', 'Bi-directional'
-    ], ['1164936513.38Shochet', '1165197181.14Shochet', 'Bi-directional'], [
-        '1165197002.81Shochet', '1165197032.86Shochet', 'Bi-directional'
-    ], ['1176160640.0dxschafe', '1165197123.73Shochet', 'Bi-directional'],
+    [['1176161024.0dxschafe0', '1176161024.0dxschafe', 'Bi-directional'],
+     ['1176160896.0dxschafe0', '1176160896.0dxschafe', 'Bi-directional'],
+     ['1179346924.27Aholdun', '1176160768.0dxschafe', 'Bi-directional'],
+     ['1176160640.0dxschafe1', '1176160640.0dxschafe0', 'Bi-directional'],
+     ['1164936513.38Shochet', '1165197181.14Shochet', 'Bi-directional'],
+     ['1165197002.81Shochet', '1165197032.86Shochet', 'Bi-directional'],
+     ['1176160640.0dxschafe', '1165197123.73Shochet', 'Bi-directional'],
      ['1176160512.0dxschafe', '1165197146.75Shochet', 'Bi-directional']],
     'Objects': {
         '1161798288.34sdnaik': {
@@ -1136,8 +1137,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.8500000238418579, 0.9300000071525574, 1.0,
                                   1.0),
-                        'Model':
-                        'models/vegetation/fern_tree_d'
+                        'Model': 'models/vegetation/fern_tree_d'
                     }
                 },
                 '1192837583.94kmuller': {
@@ -1627,8 +1627,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.8500000238418579, 0.9300000071525574, 1.0,
                                   1.0),
-                        'Model':
-                        'models/vegetation/fern_tree_d'
+                        'Model': 'models/vegetation/fern_tree_d'
                     }
                 },
                 '1193075072.0dxschafe0': {
@@ -1640,8 +1639,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.8500000238418579, 0.9300000071525574, 1.0,
                                   1.0),
-                        'Model':
-                        'models/vegetation/fern_tree_d'
+                        'Model': 'models/vegetation/fern_tree_d'
                     }
                 },
                 '1193075072.0dxschafe1': {
@@ -1653,8 +1651,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.8500000238418579, 0.9300000071525574, 1.0,
                                   1.0),
-                        'Model':
-                        'models/vegetation/fern_tree_d'
+                        'Model': 'models/vegetation/fern_tree_d'
                     }
                 },
                 '1193075072.0dxschafe2': {
@@ -1666,8 +1663,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.8500000238418579, 0.9300000071525574, 1.0,
                                   1.0),
-                        'Model':
-                        'models/vegetation/fern_tree_d'
+                        'Model': 'models/vegetation/fern_tree_d'
                     }
                 },
                 '1193075200.0dxschafe': {
@@ -1679,8 +1675,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.8500000238418579, 0.9300000071525574, 1.0,
                                   1.0),
-                        'Model':
-                        'models/vegetation/fern_tree_d'
+                        'Model': 'models/vegetation/fern_tree_d'
                     }
                 },
                 '1193075200.0dxschafe0': {
@@ -1692,8 +1687,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.8500000238418579, 0.9300000071525574, 1.0,
                                   1.0),
-                        'Model':
-                        'models/vegetation/fern_tree_d'
+                        'Model': 'models/vegetation/fern_tree_d'
                     }
                 },
                 '1193075200.0dxschafe1': {
@@ -1705,8 +1699,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.8500000238418579, 0.9300000071525574, 1.0,
                                   1.0),
-                        'Model':
-                        'models/vegetation/fern_tree_d'
+                        'Model': 'models/vegetation/fern_tree_d'
                     }
                 },
                 '1193075200.0dxschafe2': {
@@ -1718,8 +1711,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.8500000238418579, 0.9300000071525574, 1.0,
                                   1.0),
-                        'Model':
-                        'models/vegetation/fern_tree_d'
+                        'Model': 'models/vegetation/fern_tree_d'
                     }
                 },
                 '1193075328.0dxschafe': {
@@ -1731,8 +1723,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.8500000238418579, 0.9300000071525574, 1.0,
                                   1.0),
-                        'Model':
-                        'models/vegetation/fern_tree_d'
+                        'Model': 'models/vegetation/fern_tree_d'
                     }
                 },
                 '1193075328.0dxschafe0': {
@@ -1744,8 +1735,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.8500000238418579, 0.9300000071525574, 1.0,
                                   1.0),
-                        'Model':
-                        'models/vegetation/fern_tree_d'
+                        'Model': 'models/vegetation/fern_tree_d'
                     }
                 },
                 '1193076608.0dxschafe': {
@@ -2227,39 +2217,39 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1164936686.23Shochet', '1164936682.44Shochet', 'Bi-directional'], [
-        '1164936727.27Shochet', '1164936682.44Shochet', 'Bi-directional'
-    ], ['1164936298.17Shochet', '1164936682.44Shochet', 'Bi-directional'], [
-        '1179346924.27Aholdun', '1164936727.27Shochet', 'Bi-directional'
-    ], ['1164936686.23Shochet', '1179346979.48Aholdun', 'Bi-directional'], [
-        '1164936419.63Shochet', '1193077248.0dxschafe', 'Bi-directional'
-    ], ['1193077376.0dxschafe', '1164936439.78Shochet', 'Bi-directional'], [
-        '1193077504.0dxschafe', '1164936402.78Shochet', 'Bi-directional'
-    ], ['1164936338.17Shochet', '1193077632.0dxschafe', 'Bi-directional'], [
-        '1193077888.0dxschafe', '1193077888.0dxschafe0', 'Bi-directional'
-    ], ['1176160896.0dxschafe0', '1193077888.0dxschafe', 'Bi-directional'], [
-        '1193078144.0dxschafe', '1193078016.0dxschafe', 'Bi-directional'
-    ], ['1164936513.38Shochet', '1193078016.0dxschafe', 'Bi-directional'], [
-        '1193078400.0dxschafe', '1190665088.0dxschafe', 'Bi-directional'
-    ], ['1190664960.0dxschafe', '1193078656.0dxschafe0', 'Bi-directional'], [
-        '1176160384.0dxschafe', '1193078656.0dxschafe', 'Bi-directional'
-    ], ['1176160640.0dxschafe1', '1193078784.0dxschafe1', 'Bi-directional'], [
-        '1193078784.0dxschafe1', '1193078784.0dxschafe0', 'Bi-directional'
-    ], ['1193078784.0dxschafe0', '1193078784.0dxschafe', 'Bi-directional'], [
-        '1176160640.0dxschafe1', '1193078784.0dxschafe', 'Bi-directional'
-    ], ['1193078912.0dxschafe', '1190665088.0dxschafe0', 'Bi-directional'], [
-        '1176160512.0dxschafe', '1193078912.0dxschafe0', 'Bi-directional'
-    ], ['1193079040.0dxschafe', '1165197123.73Shochet', 'Bi-directional'], [
-        '1193079168.0dxschafe', '1193079040.0dxschafe1', 'Bi-directional'
-    ], ['1193079168.0dxschafe', '1193079040.0dxschafe0', 'Bi-directional'], [
-        '1193079296.0dxschafe', '1165197032.86Shochet', 'Bi-directional'
-    ], ['1193696256.0dxschafe', '1193079040.0dxschafe0', 'Bi-directional'], [
-        '1164936245.39Shochet', '1193696256.0dxschafe', 'Bi-directional'
-    ], ['1164936310.64Shochet', '1193696512.0dxschafe0', 'Bi-directional'], [
-        '1193696512.0dxschafe', '1164936310.64Shochet', 'Bi-directional'
-    ], ['1193696512.0dxschafe', '1193696512.0dxschafe0', 'Bi-directional'], [
-        '1193696640.0dxschafe', '1193696640.0dxschafe0', 'Bi-directional'
-    ], ['1187042944.0dxschafe0', '1193696640.0dxschafe', 'Bi-directional'],
+    [['1164936686.23Shochet', '1164936682.44Shochet', 'Bi-directional'],
+     ['1164936727.27Shochet', '1164936682.44Shochet', 'Bi-directional'],
+     ['1164936298.17Shochet', '1164936682.44Shochet', 'Bi-directional'],
+     ['1179346924.27Aholdun', '1164936727.27Shochet', 'Bi-directional'],
+     ['1164936686.23Shochet', '1179346979.48Aholdun', 'Bi-directional'],
+     ['1164936419.63Shochet', '1193077248.0dxschafe', 'Bi-directional'],
+     ['1193077376.0dxschafe', '1164936439.78Shochet', 'Bi-directional'],
+     ['1193077504.0dxschafe', '1164936402.78Shochet', 'Bi-directional'],
+     ['1164936338.17Shochet', '1193077632.0dxschafe', 'Bi-directional'],
+     ['1193077888.0dxschafe', '1193077888.0dxschafe0', 'Bi-directional'],
+     ['1176160896.0dxschafe0', '1193077888.0dxschafe', 'Bi-directional'],
+     ['1193078144.0dxschafe', '1193078016.0dxschafe', 'Bi-directional'],
+     ['1164936513.38Shochet', '1193078016.0dxschafe', 'Bi-directional'],
+     ['1193078400.0dxschafe', '1190665088.0dxschafe', 'Bi-directional'],
+     ['1190664960.0dxschafe', '1193078656.0dxschafe0', 'Bi-directional'],
+     ['1176160384.0dxschafe', '1193078656.0dxschafe', 'Bi-directional'],
+     ['1176160640.0dxschafe1', '1193078784.0dxschafe1', 'Bi-directional'],
+     ['1193078784.0dxschafe1', '1193078784.0dxschafe0', 'Bi-directional'],
+     ['1193078784.0dxschafe0', '1193078784.0dxschafe', 'Bi-directional'],
+     ['1176160640.0dxschafe1', '1193078784.0dxschafe', 'Bi-directional'],
+     ['1193078912.0dxschafe', '1190665088.0dxschafe0', 'Bi-directional'],
+     ['1176160512.0dxschafe', '1193078912.0dxschafe0', 'Bi-directional'],
+     ['1193079040.0dxschafe', '1165197123.73Shochet', 'Bi-directional'],
+     ['1193079168.0dxschafe', '1193079040.0dxschafe1', 'Bi-directional'],
+     ['1193079168.0dxschafe', '1193079040.0dxschafe0', 'Bi-directional'],
+     ['1193079296.0dxschafe', '1165197032.86Shochet', 'Bi-directional'],
+     ['1193696256.0dxschafe', '1193079040.0dxschafe0', 'Bi-directional'],
+     ['1164936245.39Shochet', '1193696256.0dxschafe', 'Bi-directional'],
+     ['1164936310.64Shochet', '1193696512.0dxschafe0', 'Bi-directional'],
+     ['1193696512.0dxschafe', '1164936310.64Shochet', 'Bi-directional'],
+     ['1193696512.0dxschafe', '1193696512.0dxschafe0', 'Bi-directional'],
+     ['1193696640.0dxschafe', '1193696640.0dxschafe0', 'Bi-directional'],
+     ['1187042944.0dxschafe0', '1193696640.0dxschafe', 'Bi-directional'],
      ['1187042944.0dxschafe0', '1193696640.0dxschafe0', 'Bi-directional']],
     'Layers': {
         'Collisions': [

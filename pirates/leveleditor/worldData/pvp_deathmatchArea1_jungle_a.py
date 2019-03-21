@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.pvp_deathmatchArea1_jungle_a
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1170793088.0jubutler': {

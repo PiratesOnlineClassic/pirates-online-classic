@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.pvp_mayhemIsland1
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Locator Links':
     [['1175562831.53zpavlov', '1175563588.92zpavlov', 'Bi-directional'],

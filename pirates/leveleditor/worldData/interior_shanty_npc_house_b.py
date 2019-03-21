@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.interior_shanty_npc_house_b
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1156371286.47dzzz0': {
@@ -26,8 +27,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (1.0, 0.8500000238418579, 0.8899999856948853,
                                   1.0),
-                        'Model':
-                        'models/props/chair_shanty'
+                        'Model': 'models/props/chair_shanty'
                     }
                 },
                 '1165344556.34kmuller': {
@@ -384,8 +384,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (1.0, 0.8700000047683716, 0.7200000286102295,
                                   1.0),
-                        'Model':
-                        'models/props/light_tool_bulb'
+                        'Model': 'models/props/light_tool_bulb'
                     }
                 },
                 '1174674352.51dzlu': {
@@ -403,8 +402,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (1.0, 0.8700000047683716, 0.7200000286102295,
                                   1.0),
-                        'Model':
-                        'models/props/light_tool_bulb'
+                        'Model': 'models/props/light_tool_bulb'
                     }
                 },
                 '1174674462.48dzlu': {

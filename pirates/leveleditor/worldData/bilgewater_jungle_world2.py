@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.bilgewater_jungle_world2
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Layers': {},
     'Objects': {

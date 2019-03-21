@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.tortuga_area_jungle_b_1
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {
         0: Vec4(0.207843, 0.243137, 0.447059, 1),
@@ -29,13 +30,13 @@ objectStruct = {
         8: 0.0
     },
     'Interact Links':
-    [['1173409763.27sdnaik', '1176169728.0dxschafe', 'Bi-directional'], [
-        '1176169088.0dxschafe0', '1176169600.0dxschafe0', 'Bi-directional'
-    ], ['1165200225.19Shochet', '1165200204.91Shochet', 'Bi-directional'], [
-        '1176169344.0dxschafe', '1176169344.0dxschafe0', 'Bi-directional'
-    ], ['1176169344.0dxschafe1', '1165200514.06Shochet', 'Bi-directional'], [
-        '1165200790.84Shochet', '1165200809.17Shochet', 'Bi-directional'
-    ], ['1176169472.0dxschafe', '1165200531.55Shochet', 'Bi-directional'],
+    [['1173409763.27sdnaik', '1176169728.0dxschafe', 'Bi-directional'],
+     ['1176169088.0dxschafe0', '1176169600.0dxschafe0', 'Bi-directional'],
+     ['1165200225.19Shochet', '1165200204.91Shochet', 'Bi-directional'],
+     ['1176169344.0dxschafe', '1176169344.0dxschafe0', 'Bi-directional'],
+     ['1176169344.0dxschafe1', '1165200514.06Shochet', 'Bi-directional'],
+     ['1165200790.84Shochet', '1165200809.17Shochet', 'Bi-directional'],
+     ['1176169472.0dxschafe', '1165200531.55Shochet', 'Bi-directional'],
      ['1177016704.0dxschafe', '1178916678.43Aholdun', 'Bi-directional'],
      ['1186698880.0dxschafe', '1178915376.46Aholdun', 'Bi-directional']],
     'Objects': {
@@ -2293,49 +2294,49 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1187139712.0dxschafe0', '1187139712.0dxschafe', 'Bi-directional'], [
-        '1187139968.0dxschafe', '1165200567.16Shochet', 'Bi-directional'
-    ], ['1187739776.0dxschafe', '1187139456.0dxschafe', 'Bi-directional'], [
-        '1187739776.0dxschafe', '1187739648.0dxschafe0', 'Bi-directional'
-    ], ['1187739776.0dxschafe0', '1187739648.0dxschafe0', 'Bi-directional'], [
-        '1187739776.0dxschafe0', '1187739648.0dxschafe', 'Bi-directional'
-    ], ['1187739648.0dxschafe', '1187139584.0dxschafe', 'Bi-directional'], [
-        '1187739904.0dxschafe', '1187139968.0dxschafe', 'Bi-directional'
-    ], ['1187739904.0dxschafe', '1187739904.0dxschafe2', 'Bi-directional'], [
-        '1192836744.89dxschafe', '1176169344.0dxschafe', 'Bi-directional'
-    ], ['1176169344.0dxschafe', '1192836741.05dxschafe', 'Bi-directional'], [
-        '1192836742.89dxschafe', '1192836741.05dxschafe', 'Bi-directional'
-    ], ['1192836744.89dxschafe', '1192836742.89dxschafe', 'Bi-directional'], [
-        '1176169984.0dxschafe', '1192836812.52dxschafe', 'Bi-directional'
-    ], ['1192836857.23dxschafe', '1176169984.0dxschafe0', 'Bi-directional'], [
-        '1192836897.05dxschafe', '1192836905.77dxschafe', 'Bi-directional'
-    ], ['1192836891.03dxschafe', '1165200531.55Shochet', 'Bi-directional'], [
-        '1165200531.55Shochet', '1192836905.77dxschafe', 'Bi-directional'
-    ], ['1192837026.19dxschafe', '1192837021.86dxschafe', 'Bi-directional'], [
-        '1176169600.0dxschafe', '1192837021.86dxschafe', 'Bi-directional'
-    ], ['1192837138.92dxschafe', '1192837151.92dxschafe', 'Bi-directional'], [
-        '1192837233.55dxschafe', '1173409763.27sdnaik', 'Bi-directional'
-    ], ['1192837233.55dxschafe', '1192837213.89dxschafe', 'Bi-directional'], [
-        '1192837280.38dxschafe', '1165200700.2Shochet', 'Bi-directional'
-    ], ['1192837335.11dxschafe', '1192837354.08dxschafe', 'Bi-directional'], [
-        '1192837400.44dxschafe', '1173409685.38sdnaik', 'Bi-directional'
-    ], ['1192837400.44dxschafe', '1192837412.7dxschafe', 'Bi-directional'], [
-        '1192837594.48dxschafe', '1192837601.11dxschafe', 'Bi-directional'
-    ], ['1192837787.25dxschafe', '1192837795.75dxschafe', 'Bi-directional'], [
-        '1165200790.84Shochet', '1193687936.0dxschafe', 'Bi-directional'
-    ], ['1193687936.0dxschafe', '1187739904.0dxschafe0', 'Bi-directional'], [
-        '1192836682.05dxschafe', '1193687936.0dxschafe', 'Bi-directional'
-    ], ['1193688192.0dxschafe', '1176169088.0dxschafe0', 'Bi-directional'], [
-        '1193688320.0dxschafe', '1193688192.0dxschafe', 'Bi-directional'
-    ], ['1165200700.2Shochet', '1192837205.91dxschafe', 'Bi-directional'], [
-        '1165200596.5Shochet', '1193688576.0dxschafe', 'Bi-directional'
-    ], ['1192837594.48dxschafe', '1193688576.0dxschafe0', 'Bi-directional'], [
-        '1165200852.94Shochet', '1193688576.0dxschafe0', 'Bi-directional'
-    ], ['1192837138.92dxschafe', '1193688576.0dxschafe1', 'Bi-directional'], [
-        '1165200494.64Shochet', '1193688576.0dxschafe1', 'Bi-directional'
-    ], ['1193688704.0dxschafe', '1176169984.0dxschafe0', 'Bi-directional'], [
-        '1193688960.0dxschafe', '1193688832.0dxschafe0', 'Bi-directional'
-    ], ['1193688960.0dxschafe0', '1165200225.19Shochet', 'Bi-directional'],
+    [['1187139712.0dxschafe0', '1187139712.0dxschafe', 'Bi-directional'],
+     ['1187139968.0dxschafe', '1165200567.16Shochet', 'Bi-directional'],
+     ['1187739776.0dxschafe', '1187139456.0dxschafe', 'Bi-directional'],
+     ['1187739776.0dxschafe', '1187739648.0dxschafe0', 'Bi-directional'],
+     ['1187739776.0dxschafe0', '1187739648.0dxschafe0', 'Bi-directional'],
+     ['1187739776.0dxschafe0', '1187739648.0dxschafe', 'Bi-directional'],
+     ['1187739648.0dxschafe', '1187139584.0dxschafe', 'Bi-directional'],
+     ['1187739904.0dxschafe', '1187139968.0dxschafe', 'Bi-directional'],
+     ['1187739904.0dxschafe', '1187739904.0dxschafe2', 'Bi-directional'],
+     ['1192836744.89dxschafe', '1176169344.0dxschafe', 'Bi-directional'],
+     ['1176169344.0dxschafe', '1192836741.05dxschafe', 'Bi-directional'],
+     ['1192836742.89dxschafe', '1192836741.05dxschafe', 'Bi-directional'],
+     ['1192836744.89dxschafe', '1192836742.89dxschafe', 'Bi-directional'],
+     ['1176169984.0dxschafe', '1192836812.52dxschafe', 'Bi-directional'],
+     ['1192836857.23dxschafe', '1176169984.0dxschafe0', 'Bi-directional'],
+     ['1192836897.05dxschafe', '1192836905.77dxschafe', 'Bi-directional'],
+     ['1192836891.03dxschafe', '1165200531.55Shochet', 'Bi-directional'],
+     ['1165200531.55Shochet', '1192836905.77dxschafe', 'Bi-directional'],
+     ['1192837026.19dxschafe', '1192837021.86dxschafe', 'Bi-directional'],
+     ['1176169600.0dxschafe', '1192837021.86dxschafe', 'Bi-directional'],
+     ['1192837138.92dxschafe', '1192837151.92dxschafe', 'Bi-directional'],
+     ['1192837233.55dxschafe', '1173409763.27sdnaik', 'Bi-directional'],
+     ['1192837233.55dxschafe', '1192837213.89dxschafe', 'Bi-directional'],
+     ['1192837280.38dxschafe', '1165200700.2Shochet', 'Bi-directional'],
+     ['1192837335.11dxschafe', '1192837354.08dxschafe', 'Bi-directional'],
+     ['1192837400.44dxschafe', '1173409685.38sdnaik', 'Bi-directional'],
+     ['1192837400.44dxschafe', '1192837412.7dxschafe', 'Bi-directional'],
+     ['1192837594.48dxschafe', '1192837601.11dxschafe', 'Bi-directional'],
+     ['1192837787.25dxschafe', '1192837795.75dxschafe', 'Bi-directional'],
+     ['1165200790.84Shochet', '1193687936.0dxschafe', 'Bi-directional'],
+     ['1193687936.0dxschafe', '1187739904.0dxschafe0', 'Bi-directional'],
+     ['1192836682.05dxschafe', '1193687936.0dxschafe', 'Bi-directional'],
+     ['1193688192.0dxschafe', '1176169088.0dxschafe0', 'Bi-directional'],
+     ['1193688320.0dxschafe', '1193688192.0dxschafe', 'Bi-directional'],
+     ['1165200700.2Shochet', '1192837205.91dxschafe', 'Bi-directional'],
+     ['1165200596.5Shochet', '1193688576.0dxschafe', 'Bi-directional'],
+     ['1192837594.48dxschafe', '1193688576.0dxschafe0', 'Bi-directional'],
+     ['1165200852.94Shochet', '1193688576.0dxschafe0', 'Bi-directional'],
+     ['1192837138.92dxschafe', '1193688576.0dxschafe1', 'Bi-directional'],
+     ['1165200494.64Shochet', '1193688576.0dxschafe1', 'Bi-directional'],
+     ['1193688704.0dxschafe', '1176169984.0dxschafe0', 'Bi-directional'],
+     ['1193688960.0dxschafe', '1193688832.0dxschafe0', 'Bi-directional'],
+     ['1193688960.0dxschafe0', '1165200225.19Shochet', 'Bi-directional'],
      ['1193689088.0dxschafe0', '1192837335.11dxschafe', 'Bi-directional']],
     'Layers': {},
     'ObjectIds': {

@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.piratesWorldE3Mov
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1145665870.4jubutler': {
@@ -23,7 +24,6 @@ objectStruct = {
     'ObjectIds': {
         '1135280776.06dzlu':
         '["Objects"]["1145665870.4jubutler"]["Objects"]["1135280776.06dzlu"]',
-        '1145665870.4jubutler':
-        '["Objects"]["1145665870.4jubutler"]'
+        '1145665870.4jubutler': '["Objects"]["1145665870.4jubutler"]'
     }
 }

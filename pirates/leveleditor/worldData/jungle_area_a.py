@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.jungle_area_a
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1157485817.84sdnaik': {

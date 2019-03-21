@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.interior_tavern
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1153419689.81dzlu00': {
@@ -1071,8 +1072,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (1.0, 0.8700000047683716, 0.7200000286102295,
                                   1.0),
-                        'Model':
-                        'models/props/waterpitcher'
+                        'Model': 'models/props/waterpitcher'
                     }
                 },
                 '1165275305.1kmuller': {
@@ -1670,8 +1670,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (1.0, 0.8700000047683716, 0.7200000286102295,
                                   1.0),
-                        'Model':
-                        'models/props/light_tool_bulb'
+                        'Model': 'models/props/light_tool_bulb'
                     }
                 },
                 '1176326555.92dzlu': {
@@ -1706,8 +1705,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (1.0, 0.8700000047683716, 0.7200000286102295,
                                   1.0),
-                        'Model':
-                        'models/props/light_tool_bulb'
+                        'Model': 'models/props/light_tool_bulb'
                     }
                 },
                 '1185580568.74kmuller': {

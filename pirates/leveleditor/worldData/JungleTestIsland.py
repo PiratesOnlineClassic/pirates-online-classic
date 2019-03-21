@@ -1,9 +1,10 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.JungleTestIsland
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Locator Links':
-    [['1157574848.27sdnaik', '1157574884.56sdnaik', 'Bi-directional'], [
-        '1157574928.53sdnaik', '1157574884.58sdnaik', 'Bi-directional'
-    ], ['1157574928.66sdnaik', '1157574992.98sdnaik', 'Bi-directional'],
+    [['1157574848.27sdnaik', '1157574884.56sdnaik', 'Bi-directional'],
+     ['1157574928.53sdnaik', '1157574884.58sdnaik', 'Bi-directional'],
+     ['1157574928.66sdnaik', '1157574992.98sdnaik', 'Bi-directional'],
      ['1157574992.97sdnaik', '1157574848.3sdnaik', 'Bi-directional']],
     'Objects': {
         '1157574780.95sdnaik': {

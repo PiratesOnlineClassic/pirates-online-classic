@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.JungleAreaC
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1164141722.61sdnaik': {
@@ -819,8 +820,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (1.0, 0.8399999737739563, 0.6800000071525574,
                                   1.0),
-                        'Model':
-                        'models/vegetation/bush_b'
+                        'Model': 'models/vegetation/bush_b'
                     }
                 },
                 '1167420268.96kmuller': {
@@ -1212,8 +1212,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.4000000059604645, 0.5, 0.4000000059604645,
                                   1.0),
-                        'Model':
-                        'models/vegetation/bush_f'
+                        'Model': 'models/vegetation/bush_f'
                     }
                 },
                 '1168284230.67kmuller': {
@@ -1573,8 +1572,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.4000000059604645, 0.5, 0.4000000059604645,
                                   1.0),
-                        'Model':
-                        'models/vegetation/bush_f'
+                        'Model': 'models/vegetation/bush_f'
                     }
                 },
                 '1168299880.67kmuller': {
@@ -2169,8 +2167,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.4000000059604645, 0.5, 0.4000000059604645,
                                   1.0),
-                        'Model':
-                        'models/vegetation/bush_i'
+                        'Model': 'models/vegetation/bush_i'
                     }
                 },
                 '1173483351.87kmuller': {
@@ -2212,8 +2209,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.4000000059604645, 0.5, 0.4000000059604645,
                                   1.0),
-                        'Model':
-                        'models/vegetation/bush_i'
+                        'Model': 'models/vegetation/bush_i'
                     }
                 },
                 '1173483941.33kmuller': {

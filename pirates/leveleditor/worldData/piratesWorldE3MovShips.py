@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.piratesWorldE3MovShips
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1145665870.4jubutler': {
@@ -541,9 +542,9 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1146040058.67jubutler', '1146022841.42jubutler', 'Bi-directional'], [
-        '1146040058.67jubutler', '1146028606.93jubutler', 'Bi-directional'
-    ], ['1146040050.42jubutler', '1146022493.95jubutler', 'Bi-directional'],
+    [['1146040058.67jubutler', '1146022841.42jubutler', 'Bi-directional'],
+     ['1146040058.67jubutler', '1146028606.93jubutler', 'Bi-directional'],
+     ['1146040050.42jubutler', '1146022493.95jubutler', 'Bi-directional'],
      ['1146028673.17jubutler', '1146040050.42jubutler', 'Bi-directional']],
     'Layers': {},
     'ObjectIds': {

@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.SwampTestWorld
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1152909944.59sdnaik': {

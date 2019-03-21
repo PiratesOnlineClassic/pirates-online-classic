@@ -1,3 +1,4 @@
+# Embedded file name: pirates.leveleditor.worldData.dataToText
 import direct
 import sys
 dataFileName = sys.argv[1]

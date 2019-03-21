@@ -1,9 +1,10 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.ArtPrototype
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Locator Links':
-    [['1144695643.19sdnaik', '1144695785.47sdnaik', 'Bi-directional'], [
-        '1144696042.95sdnaik', '1144695785.52sdnaik', 'Bi-directional'
-    ], ['1144695645.11sdnaik', '1144696208.66sdnaik', 'Bi-directional'],
+    [['1144695643.19sdnaik', '1144695785.47sdnaik', 'Bi-directional'],
+     ['1144696042.95sdnaik', '1144695785.52sdnaik', 'Bi-directional'],
+     ['1144695645.11sdnaik', '1144696208.66sdnaik', 'Bi-directional'],
      ['1144696205.36sdnaik', '1144696039.86sdnaik', 'Bi-directional']],
     'Objects': {
         '1135280776.06dzlu': {
@@ -518,11 +519,11 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/palm_leaf_a_hi',
-                                        'PartName':
-                                        'leaf'
+                                        'PartName': 'leaf'
                                     }
                                 }
                             },
@@ -543,11 +544,11 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/palm_leaf_a_hi',
-                                        'PartName':
-                                        'leaf'
+                                        'PartName': 'leaf'
                                     }
                                 }
                             },
@@ -649,14 +650,13 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Color': (0.932, 0.724, 0.7942, 1.0),
                                         'Model':
                                         'models/vegetation/palm_leaf_a_hi',
-                                        'PartName':
-                                        'leaf',
-                                        'Scale':
-                                        VBase3(1.385, 1.385, 1.385)
+                                        'PartName': 'leaf',
+                                        'Scale': VBase3(1.385, 1.385, 1.385)
                                     }
                                 }
                             },
@@ -678,14 +678,13 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Color': (0.7942, 0.882, 0.724, 1.0),
                                         'Model':
                                         'models/vegetation/palm_leaf_c_hi',
-                                        'PartName':
-                                        'leaf',
-                                        'Scale':
-                                        VBase3(0.682, 0.682, 0.682)
+                                        'PartName': 'leaf',
+                                        'Scale': VBase3(0.682, 0.682, 0.682)
                                     }
                                 }
                             },
@@ -766,7 +765,8 @@ objectStruct = {
                     'Pos': Point3(459.46, 334.557, 53.979),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Model': 'models/buildings/spanish_npc_house_i_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_i_exterior'
                     }
                 },
                 '1135286034.37dzlu': {
@@ -786,7 +786,8 @@ objectStruct = {
                     'Pos': Point3(426.603, 315.829, 54.025),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Model': 'models/buildings/spanish_npc_house_k_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_k_exterior'
                     }
                 },
                 '1136336848.57dzlu': {
@@ -806,7 +807,8 @@ objectStruct = {
                     'Pos': Point3(428.219, 263.119, 50.163),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Model': 'models/buildings/spanish_npc_house_a_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_a_exterior'
                     }
                 },
                 '1136338602.99dzlu': {
@@ -826,7 +828,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_b_hi',
                                 'PartName': 'leaf'
@@ -1055,8 +1058,8 @@ objectStruct = {
                         '1138404226.92dxschafe': {
                             'Type':
                             'Rope',
-                            'Color': (0.800000011920929, 0.800000011920929, 1.0,
-                                      1.0),
+                            'Color': (0.800000011920929, 0.800000011920929,
+                                      1.0, 1.0),
                             'Hpr':
                             VBase3(-101.341, 0.0, 0.0),
                             'Pos':
@@ -1216,7 +1219,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (0.724, 0.972, 0.724, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_b_hi',
@@ -1298,7 +1302,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_b_hi',
                                 'PartName': 'leaf',
@@ -1727,7 +1732,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -1748,7 +1754,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -1769,7 +1776,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -2817,7 +2825,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (1.0, 0.7942, 0.7942, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
@@ -2841,7 +2850,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (0.817, 0.932, 0.7942, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
@@ -2871,7 +2881,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (1.0, 1.0, 0.972, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
@@ -2896,7 +2907,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (0.817, 0.724, 0.724, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
@@ -2920,7 +2932,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (0.817, 0.932, 0.932, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
@@ -2944,7 +2957,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
                                 'PartName': 'leaf'
@@ -2965,7 +2979,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
                                 'PartName': 'leaf'
@@ -2987,7 +3002,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
                                 'PartName': 'leaf',
@@ -3046,7 +3062,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -3067,7 +3084,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -3876,7 +3894,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (0.932, 0.817, 0.724, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_b_hi',
@@ -5732,7 +5751,8 @@ objectStruct = {
                     'Pos': Point3(538.137, 72.645, 41.113),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Model': 'models/buildings/spanish_npc_house_n_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_n_exterior'
                     }
                 },
                 '1138237076.48dxschafe': {
@@ -7948,7 +7968,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/tree_b_leaf_hi',
                                 'PartName': 'leaf'
@@ -7970,7 +7991,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/tree_b_leaf_hi',
                                 'PartName': 'leaf'
@@ -8753,7 +8775,8 @@ objectStruct = {
                     'Pos': Point3(617.634, 79.446, 42.585),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Model': 'models/buildings/spanish_npc_house_o_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_o_exterior'
                     }
                 },
                 '1138392261.67dxschafe': {
@@ -8921,7 +8944,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
                                 'PartName': 'leaf',
@@ -8944,7 +8968,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
                                 'PartName': 'leaf',
@@ -8967,7 +8992,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
                                 'PartName': 'leaf',
@@ -8990,7 +9016,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
                                 'PartName': 'leaf',
@@ -9234,7 +9261,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/tree_b_leaf_hi',
                                 'PartName': 'leaf'
@@ -9750,7 +9778,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -9772,7 +9801,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -9794,7 +9824,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -11439,7 +11470,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'

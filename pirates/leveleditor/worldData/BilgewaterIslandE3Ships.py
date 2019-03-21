@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.BilgewaterIslandE3Ships
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Locator Links':
     [['1144695643.19sdnaik', '1144695785.47sdnaik', 'Bi-directional']],
@@ -73,7 +74,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/fern_leaf_a_hi',
                                 'PartName': 'leaf',
@@ -122,7 +124,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/tree_b_leaf_idle',
+                                'Animate':
+                                'models/vegetation/tree_b_leaf_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/tree_b_leaf_hi',
                                 'PartName': 'leaf'
@@ -152,7 +155,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_b_hi',
                                 'PartName': 'leaf',
@@ -339,7 +343,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/tree_b_leaf_idle',
+                                'Animate':
+                                'models/vegetation/tree_b_leaf_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/tree_b_leaf_hi',
                                 'PartName': 'leaf'
@@ -441,7 +446,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/fern_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -489,7 +495,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -510,7 +517,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -940,7 +948,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (1.0, 0.7942, 0.7942, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
@@ -968,7 +977,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (0.817, 0.932, 0.7942, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
@@ -998,7 +1008,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (1.0, 1.0, 0.972, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
@@ -1023,7 +1034,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (0.817, 0.724, 0.724, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
@@ -1047,7 +1059,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Color': (0.817, 0.932, 0.932, 1.0),
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
@@ -1071,7 +1084,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
                                 'PartName': 'leaf'
@@ -1092,7 +1106,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
                                 'PartName': 'leaf'
@@ -1115,7 +1130,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_c_hi',
                                 'PartName': 'leaf',
@@ -1175,7 +1191,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -1196,7 +1213,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -1217,7 +1235,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach_small'],
                                 'Model': 'models/vegetation/fern_leaf_b_hi',
                                 'PartName': 'leaf'
@@ -1298,7 +1317,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/fern_leaf_b_hi',
                                 'PartName': 'leaf'
@@ -1319,7 +1339,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach_small'],
                                 'Model': 'models/vegetation/fern_leaf_b_hi',
                                 'PartName': 'leaf',
@@ -1743,7 +1764,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach_small'],
                                 'Model': 'models/vegetation/fern_leaf_b_hi',
                                 'PartName': 'leaf',
@@ -1844,7 +1866,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/fern_leaf_a_hi',
                                 'PartName': 'leaf',
@@ -1890,7 +1913,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/fern_leaf_a_hi',
                                 'PartName': 'leaf',
@@ -1912,7 +1936,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/fern_leaf_a_hi',
                                 'PartName': 'leaf',
@@ -1943,7 +1968,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/fern_leaf_b_hi',
                                 'PartName': 'leaf'
@@ -2053,7 +2079,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/fern_leaf_b_hi',
                                 'PartName': 'leaf'
@@ -2083,7 +2110,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/fern_leaf_a_hi',
                                 'PartName': 'leaf',
@@ -2105,7 +2133,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/fern_leaf_a_hi',
                                 'PartName': 'leaf',
@@ -2160,7 +2189,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/fern_leaf_a_hi',
                                 'PartName': 'leaf',
@@ -2230,7 +2260,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/fern_leaf_a_hi',
                                 'PartName': 'leaf',
@@ -3237,7 +3268,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/fern_leaf_a_hi',
                                 'PartName': 'leaf',
@@ -3259,7 +3291,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/fern_leaf_a_hi',
                                 'PartName': 'leaf',
@@ -3281,7 +3314,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach_small'],
                                 'Model': 'models/vegetation/fern_leaf_b_hi',
                                 'PartName': 'leaf'
@@ -5617,7 +5651,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/tree_b_leaf_hi',
                                 'PartName': 'leaf'
@@ -6006,7 +6041,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -6028,7 +6064,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -6050,7 +6087,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -6407,7 +6445,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/tree_b_leaf_idle',
+                                'Animate':
+                                'models/vegetation/tree_b_leaf_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/tree_b_leaf_hi',
                                 'PartName': 'leaf'
@@ -6443,7 +6482,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/tree_b_leaf_idle',
+                                'Animate':
+                                'models/vegetation/tree_b_leaf_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/tree_b_leaf_hi',
                                 'PartName': 'leaf'
@@ -6464,7 +6504,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/tree_b_leaf_idle',
+                                'Animate':
+                                'models/vegetation/tree_b_leaf_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/tree_b_leaf_hi',
                                 'PartName': 'leaf'
@@ -6683,7 +6724,8 @@ objectStruct = {
                                     'Type': 'Building Exterior',
                                     'Name': '',
                                     'File': '',
-                                    'GridPos': Point3(641.557, 197.268, 48.655),
+                                    'GridPos': Point3(641.557, 197.268,
+                                                      48.655),
                                     'Hpr': VBase3(-86.804, 0.257, -0.477),
                                     'Objects': {
                                         '1135285791.23dzlu0': {
@@ -6780,7 +6822,8 @@ objectStruct = {
                                     'Type': 'Building Exterior',
                                     'Name': '',
                                     'File': '',
-                                    'GridPos': Point3(619.451, 239.603, 50.495),
+                                    'GridPos': Point3(619.451, 239.603,
+                                                      50.495),
                                     'Hpr': VBase3(-5.258, 0.446, 0.01),
                                     'Objects': {
                                         '1135287679.84dzlu0': {
@@ -6867,7 +6910,8 @@ objectStruct = {
                                     'Type': 'Building Exterior',
                                     'Name': '',
                                     'File': '',
-                                    'GridPos': Point3(516.357, 182.851, 45.291),
+                                    'GridPos': Point3(516.357, 182.851,
+                                                      45.291),
                                     'Hpr': VBase3(111.244, -1.415, 0.064),
                                     'Objects': {
                                         '1135289191.98dzlu0': {
@@ -6900,7 +6944,8 @@ objectStruct = {
                                     'Type': 'Building Exterior',
                                     'Name': '',
                                     'File': '',
-                                    'GridPos': Point3(552.065, 106.788, 41.813),
+                                    'GridPos': Point3(552.065, 106.788,
+                                                      41.813),
                                     'Hpr': VBase3(172.41, -1.842, 0.527),
                                     'Objects': {
                                         '1135290323.54dzlu0': {
@@ -7016,7 +7061,8 @@ objectStruct = {
                                     'Type': 'Building Exterior',
                                     'Name': '',
                                     'File': '',
-                                    'GridPos': Point3(419.851, 230.327, 46.057),
+                                    'GridPos': Point3(419.851, 230.327,
+                                                      46.057),
                                     'Hpr': VBase3(-2.617, -0.553, 1.759),
                                     'Objects': {
                                         '1136336439.97dzlu0': {
@@ -7045,7 +7091,8 @@ objectStruct = {
                                     'Type': 'Building Exterior',
                                     'Name': '',
                                     'File': '',
-                                    'GridPos': Point3(561.343, 296.843, 52.798),
+                                    'GridPos': Point3(561.343, 296.843,
+                                                      52.798),
                                     'Hpr': VBase3(-32.272, 0.396, -0.398),
                                     'Objects': {
                                         '1136337021.82dzlu0': {
@@ -7072,7 +7119,8 @@ objectStruct = {
                                 },
                                 '1136338230.04dzlu': {
                                     'Type': 'Barrel',
-                                    'GridPos': Point3(498.132, 119.056, 41.663),
+                                    'GridPos': Point3(498.132, 119.056,
+                                                      41.663),
                                     'Hpr': VBase3(28.818, -0.934, -88.39),
                                     'Pos': Point3(-15.3, -90.787, 42.276),
                                     'Scale': VBase3(0.794, 0.794, 0.794),
@@ -7118,7 +7166,8 @@ objectStruct = {
                                 },
                                 '1136338473.55dzlu': {
                                     'Type': 'Barrel',
-                                    'GridPos': Point3(475.142, 139.879, 45.291),
+                                    'GridPos': Point3(475.142, 139.879,
+                                                      45.291),
                                     'Hpr': VBase3(0.0, 0.122, -0.548),
                                     'Pos': Point3(-38.323, -69.972, 45.729),
                                     'Scale': VBase3(0.58, 0.58, 0.58),
@@ -7146,7 +7195,8 @@ objectStruct = {
                                 },
                                 '1136338558.54dzlu': {
                                     'Type': 'Barrel',
-                                    'GridPos': Point3(499.824, 117.179, 40.061),
+                                    'GridPos': Point3(499.824, 117.179,
+                                                      40.061),
                                     'Hpr': VBase3(0.0, 0.122, -0.548),
                                     'Pos': Point3(-13.592, -92.661, 40.687),
                                     'Scale': VBase3(0.773, 0.773, 0.773),
@@ -7156,7 +7206,8 @@ objectStruct = {
                                 },
                                 '1136338586.88dzlu': {
                                     'Type': 'Barrel',
-                                    'GridPos': Point3(503.107, 114.501, 40.063),
+                                    'GridPos': Point3(503.107, 114.501,
+                                                      40.063),
                                     'Hpr': VBase3(-0.007, -0.627, -0.548),
                                     'Pos': Point3(-10.31, -95.339, 40.714),
                                     'Scale': VBase3(0.588, 0.588, 0.588),
@@ -7166,7 +7217,8 @@ objectStruct = {
                                 },
                                 '1136338641.41dzlu': {
                                     'Type': 'Barrel',
-                                    'GridPos': Point3(527.455, 172.964, 45.243),
+                                    'GridPos': Point3(527.455, 172.964,
+                                                      45.243),
                                     'Hpr': VBase3(0.0, 0.122, -0.527),
                                     'Pos': Point3(13.988, -36.888, 46.251),
                                     'Scale': VBase3(0.528, 0.528, 0.528),
@@ -7178,7 +7230,8 @@ objectStruct = {
                                     'Type': 'Barrel',
                                     'Color': (1.0, 0.9599999785423279, 0.75,
                                               1.0),
-                                    'GridPos': Point3(502.859, 121.101, 45.333),
+                                    'GridPos': Point3(502.859, 121.101,
+                                                      45.333),
                                     'Hpr': VBase3(-0.059, -5.981, -0.551),
                                     'Pos': Point3(-10.608, -88.75, 45.996),
                                     'Scale': VBase3(0.591, 0.591, 0.591),
@@ -7231,7 +7284,8 @@ objectStruct = {
                                 },
                                 '1136339759.96dzlu': {
                                     'Type': 'Tree',
-                                    'GridPos': Point3(615.757, 264.977, 49.551),
+                                    'GridPos': Point3(615.757, 264.977,
+                                                      49.551),
                                     'Hpr': VBase3(0.0, 0.122, -0.548),
                                     'Pos': Point3(102.244, 55.115, 51.6),
                                     'Scale': VBase3(1.0, 1.0, 1.0),
@@ -7241,7 +7295,8 @@ objectStruct = {
                                 },
                                 '1136339824.68dzlu': {
                                     'Type': 'Tree - Animated',
-                                    'GridPos': Point3(546.332, 117.937, 40.041),
+                                    'GridPos': Point3(546.332, 117.937,
+                                                      40.041),
                                     'Hpr': VBase3(108.822, -0.558, 0.061),
                                     'Pos': Point3(32.914, -91.904, 41.113),
                                     'Scale': VBase3(1.0, 1.0, 1.0),
@@ -7264,8 +7319,7 @@ objectStruct = {
                                         'models/vegetation/palm_trunk_a_idle',
                                         'Model':
                                         'models/vegetation/palm_trunk_a_hi',
-                                        'PartName':
-                                        'trunk'
+                                        'PartName': 'trunk'
                                     }
                                 },
                                 '1136339875.1dzlu': {
@@ -7293,14 +7347,14 @@ objectStruct = {
                                         'models/vegetation/palm_trunk_a_idle',
                                         'Model':
                                         'models/vegetation/palm_trunk_a_hi',
-                                        'PartName':
-                                        'trunk'
+                                        'PartName': 'trunk'
                                     }
                                 },
                                 '1136340207.4dzlu': {
                                     'Type': 'Building Exterior',
                                     'File': '',
-                                    'GridPos': Point3(576.109, 109.362, 41.797),
+                                    'GridPos': Point3(576.109, 109.362,
+                                                      41.797),
                                     'Hpr': VBase3(-117.778, -0.627, 1.792),
                                     'Pos': Point3(62.673, -100.483, 43.136),
                                     'Scale': VBase3(1.0, 1.0, 1.0),
@@ -7332,21 +7386,23 @@ objectStruct = {
                                     'Type': 'Crate',
                                     'Color': (0.75, 0.9300000071525574, 1.0,
                                               1.0),
-                                    'GridPos': Point3(426.339, 132.851, 44.587),
+                                    'GridPos': Point3(426.339, 132.851,
+                                                      44.587),
                                     'Hpr': VBase3(9.204, 0.795, -0.684),
                                     'Pos': Point3(-87.117, -76.997, 44.543),
                                     'Scale': VBase3(0.555, 0.555, 0.555),
                                     'Visual': {
-                                        'Color':
-                                        (0.6000000238418579, 0.6000000238418579,
-                                         0.6000000238418579, 1.0),
+                                        'Color': (0.6000000238418579,
+                                                  0.6000000238418579,
+                                                  0.6000000238418579, 1.0),
                                         'Model':
                                         'models/props/crate'
                                     }
                                 },
                                 '1136340700.6dzlu': {
                                     'Type': 'Fountain',
-                                    'GridPos': Point3(470.517, 247.691, 49.825),
+                                    'GridPos': Point3(470.517, 247.691,
+                                                      49.825),
                                     'Hpr': Point3(0.0, 0.0, 0.0),
                                     'Pos': Point3(-42.992, 37.831, 50.448),
                                     'Scale': VBase3(0.646, 0.646, 0.646),
@@ -7357,7 +7413,8 @@ objectStruct = {
                                 },
                                 '1136340768.34dzlu': {
                                     'Type': 'Well',
-                                    'GridPos': Point3(598.105, 204.825, 47.959),
+                                    'GridPos': Point3(598.105, 204.825,
+                                                      47.959),
                                     'Hpr': VBase3(-33.998, 0.0, 0.0),
                                     'Pos': Point3(84.608, -5.034, 49.711),
                                     'Scale': VBase3(1.0, 1.0, 1.0),
@@ -7425,8 +7482,7 @@ objectStruct = {
                                         'Color': (0.972, 0.882, 0.7942, 1.0),
                                         'Model':
                                         'models/vegetation/palm_trunk_a_hi',
-                                        'PartName':
-                                        'trunk'
+                                        'PartName': 'trunk'
                                     }
                                 },
                                 '1136419185.55dzlu': {
@@ -7467,7 +7523,8 @@ objectStruct = {
                                 },
                                 '1136419382.98dzlu': {
                                     'Type': 'Tree',
-                                    'GridPos': Point3(654.349, 163.765, 44.361),
+                                    'GridPos': Point3(654.349, 163.765,
+                                                      44.361),
                                     'Hpr': VBase3(-8.086, 0.14, -0.178),
                                     'Pos': Point3(140.884, -46.087, 46.564),
                                     'Scale': VBase3(0.828, 0.828, 0.828),
@@ -7477,7 +7534,8 @@ objectStruct = {
                                 },
                                 '1136419448.56dzlu': {
                                     'Type': 'Bush',
-                                    'GridPos': Point3(451.824, 278.755, 49.872),
+                                    'GridPos': Point3(451.824, 278.755,
+                                                      49.872),
                                     'Hpr': VBase3(-29.914, 0.379, -0.414),
                                     'Pos': Point3(-61.685, 68.895, 50.382),
                                     'Scale': VBase3(0.467, 0.467, 0.467),
@@ -7487,7 +7545,8 @@ objectStruct = {
                                 },
                                 '1136419544.14dzlu': {
                                     'Type': 'Bush',
-                                    'GridPos': Point3(457.552, 278.378, 49.563),
+                                    'GridPos': Point3(457.552, 278.378,
+                                                      49.563),
                                     'Hpr': VBase3(-84.184, 1.115, 0.132),
                                     'Pos': Point3(-55.954, 68.518, 50.127),
                                     'Scale': VBase3(0.512, 0.512, 0.512),
@@ -7497,7 +7556,8 @@ objectStruct = {
                                 },
                                 '1136419722.31dzlu': {
                                     'Type': 'Bush',
-                                    'GridPos': Point3(496.456, 207.551, 45.224),
+                                    'GridPos': Point3(496.456, 207.551,
+                                                      45.224),
                                     'Hpr': VBase3(-166.72, -1.031, 3.29),
                                     'Pos': Point3(-17.01, -2.3, 46.01),
                                     'Scale': VBase3(0.668, 0.668, 0.668),
@@ -7521,7 +7581,8 @@ objectStruct = {
                                 '1135285783.04dzlu0': {
                                     'Type': 'Locator Node',
                                     'Name': 'portal_exterior_1',
-                                    'GridPos': Point3(512.619, 310.089, 64.879),
+                                    'GridPos': Point3(512.619, 310.089,
+                                                      64.879),
                                     'Hpr': Point3(0.0, 0.0, 0.0),
                                     'Pos': Point3(54.084, -22.35, 10.9),
                                     'Scale': VBase3(1.0, 1.0, 1.0)
@@ -7543,7 +7604,8 @@ objectStruct = {
                                 '1135286034.37dzlu0': {
                                     'Type': 'Locator Node',
                                     'Name': 'portal_exterior_1',
-                                    'GridPos': Point3(459.748, 364.058, 64.925),
+                                    'GridPos': Point3(459.748, 364.058,
+                                                      64.925),
                                     'Hpr': Point3(0.0, 0.0, 0.0),
                                     'Pos': Point3(54.084, -22.35, 10.9),
                                     'Scale': VBase3(1.0, 1.0, 1.0)
@@ -7601,11 +7663,11 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/palm_leaf_b_hi',
-                                        'PartName':
-                                        'leaf'
+                                        'PartName': 'leaf'
                                     }
                                 }
                             },
@@ -7632,8 +7694,9 @@ objectStruct = {
                             'Pos': Point3(427.801, 129.03, 43.794),
                             'Scale': VBase3(0.84, 0.84, 0.84),
                             'Visual': {
-                                'Color': (0.800000011920929, 0.8999999761581421,
-                                          0.699999988079071, 1.0),
+                                'Color':
+                                (0.800000011920929, 0.8999999761581421,
+                                 0.699999988079071, 1.0),
                                 'Model':
                                 'models/props/crate'
                             }
@@ -8249,11 +8312,11 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/tree_b_leaf_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/tree_b_leaf_hi',
-                                        'PartName':
-                                        'leaf'
+                                        'PartName': 'leaf'
                                     }
                                 }
                             },
@@ -8275,11 +8338,11 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/tree_b_leaf_hi',
-                                        'PartName':
-                                        'leaf'
+                                        'PartName': 'leaf'
                                     }
                                 }
                             },
@@ -8557,7 +8620,8 @@ objectStruct = {
                             'Objects': {
                                 '1138660462.68dxschafe': {
                                     'Type': 'Sack',
-                                    'GridPos': Point3(518.425, 166.558, 48.874),
+                                    'GridPos': Point3(518.425, 166.558,
+                                                      48.874),
                                     'Hpr': VBase3(-62.421, 0.0, 0.0),
                                     'Pos': Point3(-0.121, 0.539, 2.747),
                                     'Scale': VBase3(0.785, 0.785, 0.785),
@@ -8977,7 +9041,8 @@ objectStruct = {
                             'Scale':
                             VBase3(1.213, 1.213, 1.213),
                             'Visual': {
-                                'Model': 'models/buildings/LowWallStucco_column'
+                                'Model':
+                                'models/buildings/LowWallStucco_column'
                             }
                         },
                         '1138394586.5dxschafe': {
@@ -9015,13 +9080,12 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/palm_leaf_c_hi',
-                                        'PartName':
-                                        'leaf',
-                                        'Scale':
-                                        VBase3(3.084, 3.084, 3.084)
+                                        'PartName': 'leaf',
+                                        'Scale': VBase3(3.084, 3.084, 3.084)
                                     }
                                 }
                             },
@@ -9043,13 +9107,12 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/palm_leaf_c_hi',
-                                        'PartName':
-                                        'leaf',
-                                        'Scale':
-                                        VBase3(3.084, 3.084, 3.084)
+                                        'PartName': 'leaf',
+                                        'Scale': VBase3(3.084, 3.084, 3.084)
                                     }
                                 }
                             },
@@ -9071,13 +9134,12 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/palm_leaf_c_hi',
-                                        'PartName':
-                                        'leaf',
-                                        'Scale':
-                                        VBase3(3.084, 3.084, 3.084)
+                                        'PartName': 'leaf',
+                                        'Scale': VBase3(3.084, 3.084, 3.084)
                                     }
                                 }
                             },
@@ -9099,13 +9161,12 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/palm_leaf_c_hi',
-                                        'PartName':
-                                        'leaf',
-                                        'Scale':
-                                        VBase3(3.084, 3.084, 3.084)
+                                        'PartName': 'leaf',
+                                        'Scale': VBase3(3.084, 3.084, 3.084)
                                     }
                                 }
                             },
@@ -10254,7 +10315,8 @@ objectStruct = {
                             'Pos': Point3(530.845, 324.36, 54.005),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Model': 'models/buildings/LowWallStucco_column'
+                                'Model':
+                                'models/buildings/LowWallStucco_column'
                             }
                         },
                         '1138663053.09dxschafe': {
@@ -10263,7 +10325,8 @@ objectStruct = {
                             'Pos': Point3(570.092, 317.538, 54.004),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Model': 'models/buildings/LowWallStucco_column'
+                                'Model':
+                                'models/buildings/LowWallStucco_column'
                             }
                         },
                         '1138663093.3dxschafe': {
@@ -10272,7 +10335,8 @@ objectStruct = {
                             'Pos': Point3(487.884, 337.199, 54.012),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Model': 'models/buildings/LowWallStucco_column'
+                                'Model':
+                                'models/buildings/LowWallStucco_column'
                             }
                         },
                         '1138663154.02dxschafe': {
@@ -10281,7 +10345,8 @@ objectStruct = {
                             'Pos': Point3(469.716, 341.366, 53.998),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Model': 'models/buildings/LowWallStucco_column'
+                                'Model':
+                                'models/buildings/LowWallStucco_column'
                             }
                         },
                         '1138663183.22dxschafe': {
@@ -10290,7 +10355,8 @@ objectStruct = {
                             'Pos': Point3(440.277, 343.773, 53.984),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Model': 'models/buildings/LowWallStucco_column'
+                                'Model':
+                                'models/buildings/LowWallStucco_column'
                             }
                         },
                         '1138663205.14dxschafe': {
@@ -10299,7 +10365,8 @@ objectStruct = {
                             'Pos': Point3(441.946, 353.093, 53.999),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Model': 'models/buildings/LowWallStucco_column'
+                                'Model':
+                                'models/buildings/LowWallStucco_column'
                             }
                         },
                         '1138663279.71dxschafe': {
@@ -10447,11 +10514,11 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/palm_leaf_a_hi',
-                                        'PartName':
-                                        'leaf'
+                                        'PartName': 'leaf'
                                     }
                                 }
                             },
@@ -10572,11 +10639,11 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/fern_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/fern_leaf_b_hi',
-                                        'PartName':
-                                        'leaf'
+                                        'PartName': 'leaf'
                                     }
                                 }
                             },
@@ -10860,7 +10927,8 @@ objectStruct = {
                                 },
                                 '1137811384.33dxschafe': {
                                     'Type': 'Bush',
-                                    'GridPos': Point3(228.747, 237.555, 65.916),
+                                    'GridPos': Point3(228.747, 237.555,
+                                                      65.916),
                                     'Hpr': VBase3(107.596, 3.611, -3.72),
                                     'Pos': Point3(9.386, -10.777, 0.092),
                                     'Scale': VBase3(0.552, 0.552, 0.552),
@@ -10870,7 +10938,8 @@ objectStruct = {
                                 },
                                 '1137811457.28dxschafe': {
                                     'Type': 'Tree',
-                                    'GridPos': Point3(213.823, 246.641, 65.332),
+                                    'GridPos': Point3(213.823, 246.641,
+                                                      65.332),
                                     'Hpr': VBase3(34.613, 5.7, 0.0),
                                     'Pos': Point3(-8.47, -12.127, -3.271),
                                     'Scale': VBase3(1.043, 1.043, 1.043),
@@ -10932,7 +11001,8 @@ objectStruct = {
                                 },
                                 '1138402377.67dxschafe': {
                                     'Type': 'Barrel',
-                                    'GridPos': Point3(199.962, 189.867, 78.516),
+                                    'GridPos': Point3(199.962, 189.867,
+                                                      78.516),
                                     'Hpr': VBase3(-159.067, -1.187, -3.099),
                                     'Pos': Point3(-10.254, -10.193, 12.792),
                                     'Scale': VBase3(0.71, 0.71, 0.71),
@@ -10987,7 +11057,8 @@ objectStruct = {
                             'Objects': {
                                 '1137614361.77dxschafe': {
                                     'Type': 'Bush',
-                                    'GridPos': Point3(226.388, 160.383, 57.084),
+                                    'GridPos': Point3(226.388, 160.383,
+                                                      57.084),
                                     'Hpr': VBase3(153.326, 9.923, 10.767),
                                     'Pos': Point3(-12.631, 18.497, -5.778),
                                     'Scale': VBase3(1.0, 1.0, 1.0),
@@ -11004,15 +11075,15 @@ objectStruct = {
                                     'Visual': {
                                         'Door':
                                         'models/buildings/shanty_guildhall_door',
-                                        'Model':
-                                        'models/vegetation/bush_b'
+                                        'Model': 'models/vegetation/bush_b'
                                     }
                                 }
                             },
                             'Pos': Point3(215.034, 179.69, 61.171),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Name': '',
+                                'Name':
+                                '',
                                 'Model':
                                 'models/buildings/shanty_npc_house_combo_D'
                             }
@@ -11032,7 +11103,8 @@ objectStruct = {
                                 },
                                 '1137614451.89dxschafe': {
                                     'Type': 'Bush',
-                                    'GridPos': Point3(256.285, 192.398, 58.085),
+                                    'GridPos': Point3(256.285, 192.398,
+                                                      58.085),
                                     'Hpr': VBase3(175.377, 0.0, 3.924),
                                     'Pos': Point3(-10.28, -7.707, 8.23),
                                     'Scale': VBase3(1.174, 1.174, 1.174),
@@ -11092,11 +11164,11 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Model':
                                         'models/vegetation/palm_leaf_a_hi',
-                                        'PartName':
-                                        'leaf'
+                                        'PartName': 'leaf'
                                     }
                                 }
                             },
@@ -11293,14 +11365,13 @@ objectStruct = {
                                     'Visual': {
                                         'Animate':
                                         'models/vegetation/palm_leaf_a_idle',
-                                        'Attach': ['trunk', 'def_trunk_attach'],
+                                        'Attach':
+                                        ['trunk', 'def_trunk_attach'],
                                         'Color': (0.932, 0.817, 0.724, 1.0),
                                         'Model':
                                         'models/vegetation/palm_leaf_b_hi',
-                                        'PartName':
-                                        'leaf',
-                                        'Scale':
-                                        VBase3(1.917, 1.917, 1.917)
+                                        'PartName': 'leaf',
+                                        'Scale': VBase3(1.917, 1.917, 1.917)
                                     }
                                 }
                             },

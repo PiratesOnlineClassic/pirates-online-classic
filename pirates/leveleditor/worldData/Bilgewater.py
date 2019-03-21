@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.Bilgewater
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Locator Links': [],
     'Objects': {
@@ -4927,10 +4928,8 @@ objectStruct = {
                                     'Color': (0.932, 1.0, 0.7942, 1.0),
                                     'Model':
                                     'models/vegetation/palm_leaf_c_hi',
-                                    'PartName':
-                                    'leaf',
-                                    'Scale':
-                                    VBase3(1.46, 1.46, 1.46)
+                                    'PartName': 'leaf',
+                                    'Scale': VBase3(1.46, 1.46, 1.46)
                                 }
                             }],
                             'Visual': {
@@ -5071,10 +5070,8 @@ objectStruct = {
                                     'Color': (0.972, 0.817, 0.724, 1.0),
                                     'Model':
                                     'models/vegetation/palm_leaf_b_hi',
-                                    'PartName':
-                                    'leaf',
-                                    'Scale':
-                                    VBase3(0.842, 0.842, 0.842)
+                                    'PartName': 'leaf',
+                                    'Scale': VBase3(0.842, 0.842, 0.842)
                                 }
                             }],
                             'Visual': {
@@ -5113,10 +5110,8 @@ objectStruct = {
                                     'Color': (0.882, 0.724, 1.0, 1.0),
                                     'Model':
                                     'models/vegetation/palm_leaf_a_hi',
-                                    'PartName':
-                                    'leaf',
-                                    'Scale':
-                                    VBase3(1.58, 1.58, 1.58)
+                                    'PartName': 'leaf',
+                                    'Scale': VBase3(1.58, 1.58, 1.58)
                                 }
                             }],
                             'Visual': {

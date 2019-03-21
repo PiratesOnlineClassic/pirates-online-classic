@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.CaveDIsland
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Locator Links':
     [['1172185231.81sdnaik', '1172184979.25sdnaik', 'Bi-directional'],

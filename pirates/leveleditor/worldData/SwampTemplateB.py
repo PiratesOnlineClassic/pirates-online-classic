@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.SwampTemplateB
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1152910301.05sdnaik': {
@@ -632,8 +633,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5799999833106995, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/vegetation/swamp_bush_a'
+                        'Model': 'models/vegetation/swamp_bush_a'
                     }
                 },
                 '1174519750.98kmuller': {
@@ -645,8 +645,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5799999833106995, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/vegetation/swamp_bush_a'
+                        'Model': 'models/vegetation/swamp_bush_a'
                     }
                 },
                 '1174519790.98kmuller': {
@@ -658,8 +657,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5799999833106995, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/vegetation/swamp_bush_a'
+                        'Model': 'models/vegetation/swamp_bush_a'
                     }
                 },
                 '1174519935.38kmuller': {
@@ -671,8 +669,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5799999833106995, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/vegetation/swamp_bush_a'
+                        'Model': 'models/vegetation/swamp_bush_a'
                     }
                 },
                 '1174519991.11kmuller': {
@@ -749,8 +746,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5799999833106995, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/vegetation/swamp_bush_a'
+                        'Model': 'models/vegetation/swamp_bush_a'
                     }
                 },
                 '1174520342.66kmuller': {
@@ -847,8 +843,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5799999833106995, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/vegetation/swamp_bush_a'
+                        'Model': 'models/vegetation/swamp_bush_a'
                     }
                 },
                 '1174521656.3kmuller': {
@@ -1539,8 +1534,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5799999833106995, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/vegetation/swamp_bush_a'
+                        'Model': 'models/vegetation/swamp_bush_a'
                     }
                 },
                 '1174523447.66kmuller': {
@@ -1642,8 +1636,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5799999833106995, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/vegetation/swamp_bush_a'
+                        'Model': 'models/vegetation/swamp_bush_a'
                     }
                 },
                 '1174523748.11kmuller': {
@@ -1937,8 +1930,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5799999833106995, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/vegetation/swamp_bush_a'
+                        'Model': 'models/vegetation/swamp_bush_a'
                     }
                 },
                 '1174525819.13kmuller': {
@@ -2473,8 +2465,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5799999833106995, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/vegetation/swamp_bush_a'
+                        'Model': 'models/vegetation/swamp_bush_a'
                     }
                 }
             },

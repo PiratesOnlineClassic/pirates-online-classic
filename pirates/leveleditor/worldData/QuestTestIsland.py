@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.QuestTestIsland
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Locator Links':
     [['1152837231.19sdnaik0', '1152148301.05sdnaik', 'Bi-directional'],
@@ -51,7 +52,8 @@ objectStruct = {
                                 '1152148325.61sdnaik2': {
                                     'Type': 'Locator Node',
                                     'Name': 'portal_exterior_1',
-                                    'GridPos': Point3(490.532, 120.954, 46.247),
+                                    'GridPos': Point3(490.532, 120.954,
+                                                      46.247),
                                     'Hpr': VBase3(0.0, 0.0, 0.0),
                                     'Pos': Point3(-0.365, -5.213, 0.955),
                                     'Scale': VBase3(1.0, 1.0, 1.0)

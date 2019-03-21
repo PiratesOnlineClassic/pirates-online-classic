@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.port_royal_building_int_tavern_2
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1153419634.08dzlu0': {
@@ -537,8 +538,8 @@ objectStruct = {
                     'Pos': Point3(-1.408, -12.35, 1.0),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Color': (0.44999998807907104, 0.3799999952316284, 0.25,
-                                  1.0),
+                        'Color': (0.44999998807907104, 0.3799999952316284,
+                                  0.25, 1.0),
                         'Model':
                         'models/props/bench_shanty_2'
                     }
@@ -615,8 +616,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (1.0, 0.8399999737739563, 0.6800000071525574,
                                   1.0),
-                        'Model':
-                        'models/props/barrel_worn'
+                        'Model': 'models/props/barrel_worn'
                     }
                 },
                 '1167166263.84kmuller': {
@@ -782,8 +782,8 @@ objectStruct = {
                     'Pos': Point3(-58.078, 18.891, 1.0),
                     'Scale': VBase3(0.686, 0.686, 0.686),
                     'Visual': {
-                        'Color': (0.3100000023841858, 0.25999999046325684, 0.25,
-                                  1.0),
+                        'Color': (0.3100000023841858, 0.25999999046325684,
+                                  0.25, 1.0),
                         'Model':
                         'models/props/barrel'
                     }

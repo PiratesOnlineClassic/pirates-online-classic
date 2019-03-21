@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.tortuga_building_int_4
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1156277797.07dzlu0': {

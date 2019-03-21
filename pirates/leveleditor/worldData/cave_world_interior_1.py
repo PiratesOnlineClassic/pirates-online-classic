@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.cave_world_interior_1
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1161902590.72sdnaik0': {

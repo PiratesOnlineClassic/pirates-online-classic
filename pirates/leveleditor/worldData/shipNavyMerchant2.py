@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.shipNavyMerchant2
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1145061091.3jubutler': {
@@ -151,21 +152,21 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1145061205.26jubutler', '1145061208.84jubutler', 'Bi-directional'], [
-        '1145061202.24jubutler', '1145061212.13jubutler', 'Bi-directional'
-    ], ['1145061205.26jubutler', '1145061195.05jubutler', 'Bi-directional'], [
-        '1145061202.24jubutler', '1145061198.55jubutler', 'Bi-directional'
-    ], ['1145061168.74jubutler', '1145061175.01jubutler', 'Bi-directional'], [
-        '1145061179.12jubutler', '1145061182.79jubutler', 'Bi-directional'
-    ], ['1145061179.12jubutler', '1145061175.01jubutler', 'Bi-directional'], [
-        '1145061168.74jubutler', '1145061195.05jubutler', 'Bi-directional'
-    ], ['1145061182.79jubutler', '1145061198.55jubutler', 'Bi-directional'], [
-        '1145061198.55jubutler', '1145070547.87jubutler', 'Bi-directional'
-    ], ['1145070547.87jubutler', '1145061195.05jubutler', 'Bi-directional'], [
-        '1146174509.64jubutler', '1145061202.24jubutler', 'Bi-directional'
-    ], ['1145061205.26jubutler', '1146174509.64jubutler', 'Bi-directional'], [
-        '1146174543.42jubutler', '1145061198.55jubutler', 'Bi-directional'
-    ], ['1145061195.05jubutler', '1146174543.42jubutler', 'Bi-directional'],
+    [['1145061205.26jubutler', '1145061208.84jubutler', 'Bi-directional'],
+     ['1145061202.24jubutler', '1145061212.13jubutler', 'Bi-directional'],
+     ['1145061205.26jubutler', '1145061195.05jubutler', 'Bi-directional'],
+     ['1145061202.24jubutler', '1145061198.55jubutler', 'Bi-directional'],
+     ['1145061168.74jubutler', '1145061175.01jubutler', 'Bi-directional'],
+     ['1145061179.12jubutler', '1145061182.79jubutler', 'Bi-directional'],
+     ['1145061179.12jubutler', '1145061175.01jubutler', 'Bi-directional'],
+     ['1145061168.74jubutler', '1145061195.05jubutler', 'Bi-directional'],
+     ['1145061182.79jubutler', '1145061198.55jubutler', 'Bi-directional'],
+     ['1145061198.55jubutler', '1145070547.87jubutler', 'Bi-directional'],
+     ['1145070547.87jubutler', '1145061195.05jubutler', 'Bi-directional'],
+     ['1146174509.64jubutler', '1145061202.24jubutler', 'Bi-directional'],
+     ['1145061205.26jubutler', '1146174509.64jubutler', 'Bi-directional'],
+     ['1146174543.42jubutler', '1145061198.55jubutler', 'Bi-directional'],
+     ['1145061195.05jubutler', '1146174543.42jubutler', 'Bi-directional'],
      ['1145061168.74jubutler', '1146174588.2jubutler', 'Bi-directional'],
      ['1146174588.2jubutler', '1145061182.79jubutler', 'Bi-directional']],
     'Layers': {},

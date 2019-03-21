@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.WildIslandF
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1164135492.88dzzz': {
@@ -996,8 +997,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.4000000059604645, 0.5, 0.4000000059604645,
                                   1.0),
-                        'Model':
-                        'models/vegetation/gen_tree_a'
+                        'Model': 'models/vegetation/gen_tree_a'
                     }
                 },
                 '1172785697.34kmuller': {
@@ -1786,8 +1786,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.4000000059604645, 0.5, 0.4000000059604645,
                                   1.0),
-                        'Model':
-                        'models/vegetation/fern_tree_d'
+                        'Model': 'models/vegetation/fern_tree_d'
                     }
                 },
                 '1173903058.3kmuller': {
@@ -1819,8 +1818,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.4000000059604645, 0.5, 0.4000000059604645,
                                   1.0),
-                        'Model':
-                        'models/vegetation/gen_tree_f'
+                        'Model': 'models/vegetation/gen_tree_f'
                     }
                 },
                 '1173903141.49kmuller': {

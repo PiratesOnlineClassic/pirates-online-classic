@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.KingsheadIsland
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Interact Links': [],
     'Objects': {
@@ -18,7 +19,7 @@ objectStruct = {
                                   0.8299999833106995, 1.0),
                         'Model':
                         'models/props/barrel'
-                    },
+                    }
                 },
                 '1162578585.26dxschafe': {
                     'Type': 'Barrel',
@@ -31,7 +32,7 @@ objectStruct = {
                                   0.7900000214576721, 1.0),
                         'Model':
                         'models/props/barrel_group_2'
-                    },
+                    }
                 },
                 '1162578588.03dxschafe': {
                     'Type': 'Barrel',
@@ -41,7 +42,7 @@ objectStruct = {
                     'Scale': VBase3(0.724, 0.724, 0.724),
                     'Visual': {
                         'Model': 'models/props/barrel'
-                    },
+                    }
                 },
                 '1162578588.82dxschafe': {
                     'Type': 'Barrel',
@@ -51,7 +52,7 @@ objectStruct = {
                     'Scale': VBase3(0.767, 0.767, 0.767),
                     'Visual': {
                         'Model': 'models/props/barrel_group_3'
-                    },
+                    }
                 },
                 '1162578594.59dxschafe': {
                     'Type': 'Barrel',
@@ -61,7 +62,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/barrel_group_1'
-                    },
+                    }
                 },
                 '1162578595.35dxschafe': {
                     'Type': 'Barrel',
@@ -71,7 +72,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/barrel'
-                    },
+                    }
                 },
                 '1162578596.56dxschafe': {
                     'Type': 'Barrel',
@@ -81,7 +82,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/barrel'
-                    },
+                    }
                 },
                 '1162578803.26dxschafe': {
                     'Type': 'Bucket',
@@ -91,7 +92,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/bucket'
-                    },
+                    }
                 },
                 '1162578812.96dxschafe': {
                     'Type': 'Bucket',
@@ -101,7 +102,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/bucket'
-                    },
+                    }
                 },
                 '1162578913.07dxschafe': {
                     'Type': 'Bush',
@@ -111,7 +112,7 @@ objectStruct = {
                     'Scale': VBase3(2.202, 2.202, 2.202),
                     'Visual': {
                         'Model': 'models/vegetation/bush_c'
-                    },
+                    }
                 },
                 '1162578945.31dxschafe': {
                     'Type': 'Bush',
@@ -121,7 +122,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/bush_a'
-                    },
+                    }
                 },
                 '1162578949.48dxschafe': {
                     'Type': 'Bush',
@@ -131,7 +132,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/bush_a'
-                    },
+                    }
                 },
                 '1162578951.89dxschafe': {
                     'Type': 'Bush',
@@ -141,7 +142,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/bush_a'
-                    },
+                    }
                 },
                 '1162578956.65dxschafe': {
                     'Type': 'Bush',
@@ -151,7 +152,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/bush_a'
-                    },
+                    }
                 },
                 '1162578961.73dxschafe': {
                     'Type': 'Bush',
@@ -161,7 +162,7 @@ objectStruct = {
                     'Scale': VBase3(1.764, 1.764, 1.764),
                     'Visual': {
                         'Model': 'models/vegetation/bush_c'
-                    },
+                    }
                 },
                 '1162578973.67dxschafe': {
                     'Type': 'Bush',
@@ -171,7 +172,7 @@ objectStruct = {
                     'Scale': VBase3(1.751, 1.751, 1.751),
                     'Visual': {
                         'Model': 'models/vegetation/bush_c'
-                    },
+                    }
                 },
                 '1162579035.12dxschafe': {
                     'Type': 'Bush',
@@ -181,7 +182,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/bush_a'
-                    },
+                    }
                 },
                 '1162579035.71dxschafe': {
                     'Type': 'Bush',
@@ -191,7 +192,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/bush_a'
-                    },
+                    }
                 },
                 '1162579093.32dxschafe': {
                     'Type': 'Bush',
@@ -201,7 +202,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/bush_a'
-                    },
+                    }
                 },
                 '1162579097.62dxschafe': {
                     'Type': 'Bush',
@@ -211,7 +212,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/bush_a'
-                    },
+                    }
                 },
                 '1162579102.74dxschafe': {
                     'Type': 'Bush',
@@ -221,7 +222,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/bush_a'
-                    },
+                    }
                 },
                 '1162579160.48dxschafe': {
                     'Type': 'Cart',
@@ -231,7 +232,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/cart_reg'
-                    },
+                    }
                 },
                 '1162579466.56dxschafe': {
                     'Type': 'ChickenCage',
@@ -241,7 +242,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/ChickenCage'
-                    },
+                    }
                 },
                 '1162579498.53dxschafe': {
                     'Type': 'ChickenCage',
@@ -251,7 +252,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/ChickenCage'
-                    },
+                    }
                 },
                 '1162579499.56dxschafe': {
                     'Type': 'ChickenCage',
@@ -261,7 +262,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/ChickenCage'
-                    },
+                    }
                 },
                 '1162579735.42dxschafe': {
                     'Type': 'Crate',
@@ -271,7 +272,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crate_group_net'
-                    },
+                    }
                 },
                 '1162579747.2dxschafe': {
                     'Type': 'Crate',
@@ -284,7 +285,7 @@ objectStruct = {
                                   0.699999988079071, 1.0),
                         'Model':
                         'models/props/crate'
-                    },
+                    }
                 },
                 '1162579747.63dxschafe': {
                     'Type': 'Crate',
@@ -294,7 +295,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crate'
-                    },
+                    }
                 },
                 '1162579748.03dxschafe': {
                     'Type': 'Crate',
@@ -304,7 +305,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crates_group_1'
-                    },
+                    }
                 },
                 '1162579752.83dxschafe': {
                     'Type': 'Crate',
@@ -314,7 +315,7 @@ objectStruct = {
                     'Scale': VBase3(1.316, 1.316, 1.316),
                     'Visual': {
                         'Model': 'models/props/crates_group_1'
-                    },
+                    }
                 },
                 '1162579753.2dxschafe': {
                     'Type': 'Crate',
@@ -327,7 +328,7 @@ objectStruct = {
                                   0.699999988079071, 1.0),
                         'Model':
                         'models/props/crate_net'
-                    },
+                    }
                 },
                 '1162579753.55dxschafe': {
                     'Type': 'Crate',
@@ -337,7 +338,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crate'
-                    },
+                    }
                 },
                 '1162579753.89dxschafe': {
                     'Type': 'Crate',
@@ -347,7 +348,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crate_04'
-                    },
+                    }
                 },
                 '1162579758.5dxschafe': {
                     'Type': 'Crate',
@@ -360,7 +361,7 @@ objectStruct = {
                                   0.800000011920929, 1.0),
                         'Model':
                         'models/props/crates_group_1'
-                    },
+                    }
                 },
                 '1162579759.27dxschafe': {
                     'Type': 'Crate',
@@ -370,7 +371,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crates_group_1'
-                    },
+                    }
                 },
                 '1162579759.73dxschafe': {
                     'Type': 'Crate',
@@ -380,7 +381,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crate'
-                    },
+                    }
                 },
                 '1162579760.77dxschafe': {
                     'Type': 'Crate',
@@ -390,7 +391,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crates_group_2'
-                    },
+                    }
                 },
                 '1162579761.23dxschafe': {
                     'Type': 'Crate',
@@ -400,7 +401,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crate'
-                    },
+                    }
                 },
                 '1162579761.78dxschafe': {
                     'Type': 'Crate',
@@ -410,7 +411,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crate'
-                    },
+                    }
                 },
                 '1162579770.7dxschafe': {
                     'Type': 'Crate',
@@ -423,7 +424,7 @@ objectStruct = {
                                   0.8299999833106995, 1.0),
                         'Model':
                         'models/props/crate_04'
-                    },
+                    }
                 },
                 '1162579771.16dxschafe': {
                     'Type': 'Crate',
@@ -433,7 +434,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crate_04'
-                    },
+                    }
                 },
                 '1162579798.03dxschafe': {
                     'Type': 'Crate',
@@ -443,7 +444,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crates_group_1'
-                    },
+                    }
                 },
                 '1162579801.08dxschafe': {
                     'Type': 'Crate',
@@ -453,7 +454,7 @@ objectStruct = {
                     'Scale': VBase3(1.288, 1.288, 1.288),
                     'Visual': {
                         'Model': 'models/props/crates_group_2'
-                    },
+                    }
                 },
                 '1162579802.02dxschafe': {
                     'Type': 'Crate',
@@ -463,7 +464,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crate'
-                    },
+                    }
                 },
                 '1162579890.22dxschafe': {
                     'Type': 'Crate',
@@ -473,7 +474,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crate'
-                    },
+                    }
                 },
                 '1162579909.41dxschafe': {
                     'Type': 'Crate',
@@ -483,7 +484,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crates_group_1'
-                    },
+                    }
                 },
                 '1162579909.92dxschafe': {
                     'Type': 'Crate',
@@ -493,7 +494,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crate'
-                    },
+                    }
                 },
                 '1162579920.13dxschafe': {
                     'Type': 'Crate',
@@ -503,7 +504,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crate'
-                    },
+                    }
                 },
                 '1162579920.59dxschafe': {
                     'Type': 'Crate',
@@ -513,7 +514,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crates_group_2'
-                    },
+                    }
                 },
                 '1162580983.6dxschafe': {
                     'Type': 'Sack',
@@ -523,7 +524,7 @@ objectStruct = {
                     'Scale': VBase3(0.651, 0.651, 0.651),
                     'Visual': {
                         'Model': 'models/props/sack_6stack'
-                    },
+                    }
                 },
                 '1162580990.91dxschafe': {
                     'Type': 'Sack',
@@ -533,7 +534,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/Sack'
-                    },
+                    }
                 },
                 '1162580992.99dxschafe': {
                     'Type': 'Sack',
@@ -543,7 +544,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/Sack'
-                    },
+                    }
                 },
                 '1162580993.46dxschafe': {
                     'Type': 'Sack',
@@ -553,7 +554,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/Sack'
-                    },
+                    }
                 },
                 '1162581173.01dxschafe': {
                     'Type': 'Trellis',
@@ -563,7 +564,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/trellis_d'
-                    },
+                    }
                 },
                 '1162581389.76dxschafe': {
                     'Type': 'Tree',
@@ -573,7 +574,7 @@ objectStruct = {
                     'Scale': VBase3(1.176, 1.176, 1.176),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1162581396.45dxschafe': {
                     'Type': 'Tree',
@@ -583,7 +584,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_b'
-                    },
+                    }
                 },
                 '1162581397.65dxschafe': {
                     'Type': 'Tree',
@@ -593,7 +594,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1162581399.7dxschafe': {
                     'Type': 'Tree',
@@ -603,7 +604,7 @@ objectStruct = {
                     'Scale': VBase3(1.123, 1.123, 1.123),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_c'
-                    },
+                    }
                 },
                 '1162581407.95dxschafe': {
                     'Type': 'Tree',
@@ -613,7 +614,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_d'
-                    },
+                    }
                 },
                 '1162581408.93dxschafe': {
                     'Type': 'Tree',
@@ -623,7 +624,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_d'
-                    },
+                    }
                 },
                 '1162581409.87dxschafe': {
                     'Type': 'Tree',
@@ -633,7 +634,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_d'
-                    },
+                    }
                 },
                 '1162581410.49dxschafe': {
                     'Type': 'Tree',
@@ -643,7 +644,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_b'
-                    },
+                    }
                 },
                 '1162581412.76dxschafe': {
                     'Type': 'Tree',
@@ -653,7 +654,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_c'
-                    },
+                    }
                 },
                 '1162581413.31dxschafe': {
                     'Type': 'Tree',
@@ -663,7 +664,7 @@ objectStruct = {
                     'Scale': VBase3(1.19, 1.19, 1.19),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1162581413.87dxschafe': {
                     'Type': 'Tree',
@@ -673,7 +674,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1162581415.2dxschafe': {
                     'Type': 'Tree',
@@ -683,7 +684,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1162581430.57dxschafe': {
                     'Type': 'Tree',
@@ -693,7 +694,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_h'
-                    },
+                    }
                 },
                 '1162581441.68dxschafe': {
                     'Type': 'Tree',
@@ -703,7 +704,7 @@ objectStruct = {
                     'Scale': VBase3(1.092, 1.092, 1.092),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1162581446.79dxschafe': {
                     'Type': 'Tree',
@@ -713,7 +714,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_h'
-                    },
+                    }
                 },
                 '1162581462.1dxschafe': {
                     'Type': 'Tree',
@@ -723,7 +724,7 @@ objectStruct = {
                     'Scale': VBase3(0.846, 0.846, 0.846),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1162581462.87dxschafe': {
                     'Type': 'Tree',
@@ -733,7 +734,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_c'
-                    },
+                    }
                 },
                 '1162581463.7dxschafe': {
                     'Type': 'Tree',
@@ -743,7 +744,7 @@ objectStruct = {
                     'Scale': VBase3(1.124, 1.124, 1.124),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1162581474.23dxschafe': {
                     'Type': 'Tree',
@@ -753,7 +754,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1162581474.96dxschafe': {
                     'Type': 'Tree',
@@ -763,7 +764,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1162581492.23dxschafe': {
                     'Type': 'Tree',
@@ -773,7 +774,7 @@ objectStruct = {
                     'Scale': VBase3(1.11, 1.11, 1.11),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_c'
-                    },
+                    }
                 },
                 '1162581492.68dxschafe': {
                     'Type': 'Tree',
@@ -783,7 +784,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1162581493.14dxschafe': {
                     'Type': 'Tree',
@@ -793,7 +794,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_c'
-                    },
+                    }
                 },
                 '1162581493.82dxschafe': {
                     'Type': 'Tree',
@@ -803,7 +804,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1162581502.81dxschafe': {
                     'Type': 'Tree',
@@ -813,7 +814,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_b'
-                    },
+                    }
                 },
                 '1162581562.17dxschafe': {
                     'Type': 'Tree',
@@ -823,7 +824,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_c'
-                    },
+                    }
                 },
                 '1162581574.82dxschafe': {
                     'Type': 'Tree',
@@ -833,7 +834,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1162581575.75dxschafe': {
                     'Type': 'Tree',
@@ -843,7 +844,7 @@ objectStruct = {
                     'Scale': VBase3(0.793, 0.793, 0.793),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1162581615.15dxschafe': {
                     'Type': 'Tree',
@@ -853,7 +854,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_c'
-                    },
+                    }
                 },
                 '1162581618.45dxschafe': {
                     'Type': 'Tree',
@@ -863,7 +864,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1162582739.19dxschafe': {
                     'Type': 'Tree',
@@ -873,7 +874,7 @@ objectStruct = {
                     'Scale': VBase3(1.304, 1.304, 1.304),
                     'Visual': {
                         'Model': 'models/vegetation/palm_tree_f'
-                    },
+                    }
                 },
                 '1162582765.75dxschafe': {
                     'Type': 'Tree',
@@ -883,7 +884,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/palm_tree_f'
-                    },
+                    }
                 },
                 '1162582804.08dxschafe': {
                     'Type': 'Bush',
@@ -893,7 +894,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/bush_a'
-                    },
+                    }
                 },
                 '1162582965.97dxschafe': {
                     'Type': 'Bush',
@@ -903,7 +904,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/bush_a'
-                    },
+                    }
                 },
                 '1162583039.33dxschafe': {
                     'Type': 'Bush',
@@ -913,7 +914,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/bush_c'
-                    },
+                    }
                 },
                 '1162583074.37dxschafe': {
                     'Type': 'Tree',
@@ -923,7 +924,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/palm_tree_f'
-                    },
+                    }
                 },
                 '1162583158.9dxschafe': {
                     'Type': 'Bush',
@@ -933,7 +934,7 @@ objectStruct = {
                     'Scale': VBase3(2.066, 2.066, 2.066),
                     'Visual': {
                         'Model': 'models/vegetation/bush_c'
-                    },
+                    }
                 },
                 '1162583244.88dxschafe': {
                     'Type': 'Bush',
@@ -943,7 +944,7 @@ objectStruct = {
                     'Scale': VBase3(2.202, 2.202, 2.202),
                     'Visual': {
                         'Model': 'models/vegetation/bush_c'
-                    },
+                    }
                 },
                 '1162583300.9dxschafe': {
                     'Type': 'Bush',
@@ -953,7 +954,7 @@ objectStruct = {
                     'Scale': VBase3(2.066, 2.066, 2.066),
                     'Visual': {
                         'Model': 'models/vegetation/bush_c'
-                    },
+                    }
                 },
                 '1162583398.68dxschafe': {
                     'Type': 'Bush',
@@ -963,7 +964,7 @@ objectStruct = {
                     'Scale': VBase3(1.764, 1.764, 1.764),
                     'Visual': {
                         'Model': 'models/vegetation/bush_c'
-                    },
+                    }
                 },
                 '1162584186.42dxschafe': {
                     'Type': 'Bucket',
@@ -973,7 +974,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/bucket'
-                    },
+                    }
                 },
                 '1162584488.39dxschafe': {
                     'Type': 'Cart',
@@ -983,7 +984,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/cart_flat'
-                    },
+                    }
                 },
                 '1162585725.4dxschafe': {
                     'Type': 'ChickenCage',
@@ -993,7 +994,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/ChickenCage'
-                    },
+                    }
                 },
                 '1162585742.76dxschafe': {
                     'Type': 'ChickenCage',
@@ -1003,7 +1004,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/ChickenCage'
-                    },
+                    }
                 },
                 '1162590867.4dxschafe': {
                     'Type': 'Crate',
@@ -1013,7 +1014,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crate'
-                    },
+                    }
                 },
                 '1162592503.81dxschafe': {
                     'Type': 'Bush',
@@ -1023,7 +1024,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/bush_d'
-                    },
+                    }
                 },
                 '1162592893.31dxschafe': {
                     'Type': 'Wall',
@@ -1032,7 +1033,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/buildings/woodfence_20'
-                    },
+                    }
                 },
                 '1162593542.8dxschafe': {
                     'Type': 'Bush',
@@ -1042,7 +1043,7 @@ objectStruct = {
                     'Scale': VBase3(1.189, 1.189, 1.189),
                     'Visual': {
                         'Model': 'models/vegetation/bush_a'
-                    },
+                    }
                 },
                 '1162593557.08dxschafe': {
                     'Type': 'Bush',
@@ -1052,7 +1053,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/bush_c'
-                    },
+                    }
                 },
                 '1162593559.08dxschafe': {
                     'Type': 'Bush',
@@ -1062,7 +1063,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/bush_a'
-                    },
+                    }
                 },
                 '1162602305.82dxschafe': {
                     'Type': 'Bucket',
@@ -1072,7 +1073,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/bucket'
-                    },
+                    }
                 },
                 '1168284130.94dxschafe': {
                     'Type': 'Simple Fort',
@@ -1082,7 +1083,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/buildings/fort_medium'
-                    },
+                    }
                 },
                 '1168743023.63sdnaik': {
                     'Type': 'Port Collision Sphere',
@@ -1093,7 +1094,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5, 1.0, 0.2),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1168743125.73sdnaik': {
                     'Type': 'Port Collision Sphere',
@@ -1105,7 +1106,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5, 1.0, 0.2),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1170972800.0joswilso': {
                     'Type': 'Building Exterior',
@@ -1119,8 +1120,8 @@ objectStruct = {
                         'Door': 'models/buildings/shanty_guildhall_door',
                         'Interior': 'models/buildings/navy_jail_interior',
                         'Model': 'models/buildings/fort_door',
-                        'SignImage': 'models/buildings/sign1_eng_a_icon_doctor',
-                    },
+                        'SignImage': 'models/buildings/sign1_eng_a_icon_doctor'
+                    }
                 },
                 '1172000128.0dxschafe': {
                     'Type': 'Building Exterior',
@@ -1141,8 +1142,8 @@ objectStruct = {
                         'Model':
                         'models/buildings/english_d',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172000512.0dxschafe': {
                     'Type': 'Building Exterior',
@@ -1159,8 +1160,8 @@ objectStruct = {
                         'models/buildings/interior_shanty_guildhall',
                         'Model': 'models/buildings/english_a',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172000512.0dxschafe1': {
                     'Type': 'Building Exterior',
@@ -1177,8 +1178,8 @@ objectStruct = {
                         'models/buildings/interior_shanty_guildhall',
                         'Model': 'models/buildings/english_b',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172000512.0dxschafe3': {
                     'Type': 'Building Exterior',
@@ -1199,8 +1200,8 @@ objectStruct = {
                         'Model':
                         'models/buildings/english_c',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172000640.0dxschafe': {
                     'Type': 'Building Exterior',
@@ -1217,8 +1218,8 @@ objectStruct = {
                         'models/buildings/interior_shanty_guildhall',
                         'Model': 'models/buildings/english_corner_b',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172000768.0dxschafe': {
                     'Type': 'Building Exterior',
@@ -1239,8 +1240,8 @@ objectStruct = {
                         'Model':
                         'models/buildings/english_h',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172001024.0dxschafe1': {
                     'Type': 'Building Exterior',
@@ -1261,8 +1262,8 @@ objectStruct = {
                         'Model':
                         'models/buildings/english_corner_e',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172001280.0dxschafe1': {
                     'Type': 'Building Exterior',
@@ -1279,8 +1280,8 @@ objectStruct = {
                         'models/buildings/interior_shanty_guildhall',
                         'Model': 'models/buildings/english_corner_e',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172001536.0dxschafe': {
                     'Type': 'Building Exterior',
@@ -1297,8 +1298,8 @@ objectStruct = {
                         'models/buildings/interior_shanty_guildhall',
                         'Model': 'models/buildings/english_f',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172001792.0dxschafe': {
                     'Type': 'Building Exterior',
@@ -1319,8 +1320,8 @@ objectStruct = {
                         'Model':
                         'models/buildings/english_i',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172009600.0dxschafe': {
                     'Type': 'Building Exterior',
@@ -1341,8 +1342,8 @@ objectStruct = {
                         'Model':
                         'models/buildings/english_k',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172009856.0dxschafe': {
                     'Type': 'Building Exterior',
@@ -1359,8 +1360,8 @@ objectStruct = {
                         'models/buildings/interior_shanty_guildhall',
                         'Model': 'models/buildings/english_n',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172009984.0dxschafe': {
                     'Type': 'Building Exterior',
@@ -1377,8 +1378,8 @@ objectStruct = {
                         'models/buildings/interior_shanty_guildhall',
                         'Model': 'models/buildings/english_m',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172009984.0dxschafe2': {
                     'Type': 'Building Exterior',
@@ -1395,8 +1396,8 @@ objectStruct = {
                         'models/buildings/interior_shanty_guildhall',
                         'Model': 'models/buildings/english_corner_a',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172010368.0dxschafe': {
                     'Type': 'Building Exterior',
@@ -1417,8 +1418,8 @@ objectStruct = {
                         'Model':
                         'models/buildings/english_corner_e',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172010752.0dxschafe': {
                     'Type': 'Building Exterior',
@@ -1435,8 +1436,8 @@ objectStruct = {
                         'models/buildings/interior_shanty_guildhall',
                         'Model': 'models/buildings/english_corner_c2',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172011520.0dxschafe': {
                     'Type': 'Stairs',
@@ -1447,7 +1448,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5, 0.5, 1.0),
                         'Model': 'models/buildings/brick_stairs_double'
-                    },
+                    }
                 },
                 '1172014720.0dxschafe': {
                     'Type': 'Rock',
@@ -1457,7 +1458,7 @@ objectStruct = {
                     'Scale': VBase3(2.98, 2.98, 2.98),
                     'Visual': {
                         'Model': 'models/props/rock_group_1_sphere'
-                    },
+                    }
                 },
                 '1172016384.0dxschafe': {
                     'Type': 'Bush',
@@ -1467,7 +1468,7 @@ objectStruct = {
                     'Scale': VBase3(1.189, 1.189, 1.189),
                     'Visual': {
                         'Model': 'models/vegetation/bush_c'
-                    },
+                    }
                 },
                 '1172016384.0dxschafe0': {
                     'Type': 'Bush',
@@ -1477,7 +1478,7 @@ objectStruct = {
                     'Scale': VBase3(1.642, 1.642, 1.642),
                     'Visual': {
                         'Model': 'models/vegetation/bush_c'
-                    },
+                    }
                 },
                 '1172016512.0dxschafe0': {
                     'Type': 'Tree',
@@ -1487,7 +1488,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_h'
-                    },
+                    }
                 },
                 '1172018048.0dxschafe': {
                     'Type': 'Tree',
@@ -1497,7 +1498,7 @@ objectStruct = {
                     'Scale': VBase3(0.902, 0.902, 0.902),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1172018048.0dxschafe0': {
                     'Type': 'Tree',
@@ -1507,7 +1508,7 @@ objectStruct = {
                     'Scale': VBase3(0.902, 0.902, 0.902),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1172018048.0dxschafe1': {
                     'Type': 'Tree',
@@ -1517,7 +1518,7 @@ objectStruct = {
                     'Scale': VBase3(0.902, 0.902, 0.902),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1172018048.0dxschafe3': {
                     'Type': 'Tree',
@@ -1527,7 +1528,7 @@ objectStruct = {
                     'Scale': VBase3(0.902, 0.902, 0.902),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1172021888.0dxschafe': {
                     'Type': 'Stairs',
@@ -1537,7 +1538,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5, 0.5, 1.0),
                         'Model': 'models/buildings/brick_stairs_double'
-                    },
+                    }
                 },
                 '1172022784.0dxschafe0': {
                     'Type': 'Spanish Walls',
@@ -1547,7 +1548,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.47999998927116394, 0.43, 0.39, 1.0),
                         'Model': 'models/buildings/LowWallStone_10'
-                    },
+                    }
                 },
                 '1172022912.0dxschafe': {
                     'Type': 'Spanish Walls',
@@ -1557,7 +1558,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.47999998927116394, 0.43, 0.39, 1.0),
                         'Model': 'models/buildings/LowWallStone_10'
-                    },
+                    }
                 },
                 '1172022912.0dxschafe0': {
                     'Type': 'Spanish Walls',
@@ -1567,7 +1568,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.47999998927116394, 0.43, 0.39, 1.0),
                         'Model': 'models/buildings/LowWallStone_20'
-                    },
+                    }
                 },
                 '1172023040.0dxschafe': {
                     'Type': 'Spanish Walls',
@@ -1577,7 +1578,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.47999998927116394, 0.43, 0.39, 1.0),
                         'Model': 'models/buildings/LowWallStone_20'
-                    },
+                    }
                 },
                 '1172023168.0dxschafe': {
                     'Type': 'Spanish Walls',
@@ -1587,7 +1588,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.47999998927116394, 0.43, 0.39, 1.0),
                         'Model': 'models/buildings/LowWallStone_20'
-                    },
+                    }
                 },
                 '1172023424.0dxschafe': {
                     'Type': 'Spanish Walls',
@@ -1597,7 +1598,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.47999998927116394, 0.43, 0.39, 1.0),
                         'Model': 'models/buildings/LowWallStone_Column'
-                    },
+                    }
                 },
                 '1172023424.0dxschafe0': {
                     'Type': 'Spanish Walls',
@@ -1607,7 +1608,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.47999998927116394, 0.43, 0.39, 1.0),
                         'Model': 'models/buildings/LowWallStone_Column'
-                    },
+                    }
                 },
                 '1172023552.0dxschafe': {
                     'Type': 'Spanish Walls',
@@ -1617,7 +1618,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.47999998927116394, 0.43, 0.39, 1.0),
                         'Model': 'models/buildings/LowWallStone_Column'
-                    },
+                    }
                 },
                 '1172023552.0dxschafe0': {
                     'Type': 'Spanish Walls',
@@ -1627,7 +1628,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.47999998927116394, 0.43, 0.39, 1.0),
                         'Model': 'models/buildings/LowWallStone_Column'
-                    },
+                    }
                 },
                 '1172023680.0dxschafe': {
                     'Type': 'Spanish Walls',
@@ -1637,7 +1638,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.47999998927116394, 0.43, 0.39, 1.0),
                         'Model': 'models/buildings/LowWallStone_20'
-                    },
+                    }
                 },
                 '1172023680.0dxschafe0': {
                     'Type': 'Spanish Walls',
@@ -1647,7 +1648,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.47999998927116394, 0.43, 0.39, 1.0),
                         'Model': 'models/buildings/LowWallStone_20'
-                    },
+                    }
                 },
                 '1172023808.0dxschafe': {
                     'Type': 'Spanish Walls',
@@ -1657,7 +1658,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.47999998927116394, 0.43, 0.39, 1.0),
                         'Model': 'models/buildings/LowWallStone_Column'
-                    },
+                    }
                 },
                 '1172023808.0dxschafe0': {
                     'Type': 'Spanish Walls',
@@ -1667,7 +1668,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.47999998927116394, 0.43, 0.39, 1.0),
                         'Model': 'models/buildings/LowWallStone_Column'
-                    },
+                    }
                 },
                 '1172023808.0dxschafe1': {
                     'Type': 'Spanish Walls',
@@ -1677,7 +1678,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.47999998927116394, 0.43, 0.39, 1.0),
                         'Model': 'models/buildings/LowWallStone_Column'
-                    },
+                    }
                 },
                 '1172025856.0dxschafe': {
                     'Type': 'Building Exterior',
@@ -1694,8 +1695,8 @@ objectStruct = {
                         'models/buildings/interior_shanty_guildhall',
                         'Model': 'models/buildings/english_corner_b',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172025856.0dxschafe1': {
                     'Type': 'Building Exterior',
@@ -1712,8 +1713,8 @@ objectStruct = {
                         'models/buildings/interior_shanty_guildhall',
                         'Model': 'models/buildings/english_corner_b',
                         'SignImage':
-                        'models/buildings/sign1_eng_a_icon_blacksmith',
-                    },
+                        'models/buildings/sign1_eng_a_icon_blacksmith'
+                    }
                 },
                 '1172026112.0dxschafe': {
                     'Type': 'Spanish Walls',
@@ -1723,7 +1724,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.45, 0.44, 0.4, 1.0),
                         'Model': 'models/buildings/LowWallStucco_10'
-                    },
+                    }
                 },
                 '1172026112.0dxschafe0': {
                     'Type': 'Spanish Walls',
@@ -1733,7 +1734,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.44999998807907104, 0.44, 0.4, 1.0),
                         'Model': 'models/buildings/LowWallStucco_20'
-                    },
+                    }
                 },
                 '1172026752.0dxschafe': {
                     'Type': 'Spanish Walls',
@@ -1743,7 +1744,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.45, 0.44, 0.4, 1.0),
                         'Model': 'models/buildings/LowWallStucco_10'
-                    },
+                    }
                 },
                 '1172027776.0dxschafe': {
                     'Type': 'Spanish Walls',
@@ -1753,7 +1754,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.44999998807907104, 0.44, 0.4, 1.0),
                         'Model': 'models/buildings/LowWallStucco_Column'
-                    },
+                    }
                 },
                 '1172027904.0dxschafe': {
                     'Type': 'Spanish Walls',
@@ -1763,7 +1764,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.44999998807907104, 0.44, 0.4, 1.0),
                         'Model': 'models/buildings/LowWallStucco_Column'
-                    },
+                    }
                 },
                 '1172027904.0dxschafe0': {
                     'Type': 'Spanish Walls',
@@ -1773,7 +1774,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.44999998807907104, 0.44, 0.4, 1.0),
                         'Model': 'models/buildings/LowWallStucco_Column'
-                    },
+                    }
                 },
                 '1172027904.0dxschafe1': {
                     'Type': 'Spanish Walls',
@@ -1783,7 +1784,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.44999998807907104, 0.44, 0.4, 1.0),
                         'Model': 'models/buildings/LowWallStucco_Column'
-                    },
+                    }
                 },
                 '1172027904.0dxschafe2': {
                     'Type': 'Spanish Walls',
@@ -1793,7 +1794,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.44999998807907104, 0.44, 0.4, 1.0),
                         'Model': 'models/buildings/LowWallStucco_Column'
-                    },
+                    }
                 },
                 '1174593969.64kmuller': {
                     'Type': 'Simple Fort',
@@ -1809,7 +1810,7 @@ objectStruct = {
                             'Visual': {
                                 'Color': (0.5, 0.5, 0.5, 1.0),
                                 'Model': 'models/props/interior_wall_spanish'
-                            },
+                            }
                         },
                         '1177976192.0dxschafe': {
                             'Type': 'Interior_furnishings',
@@ -1824,7 +1825,7 @@ objectStruct = {
                                  0.4000000059604645, 1.0),
                                 'Model':
                                 'models/props/interior_wall_spanish'
-                            },
+                            }
                         },
                         '1177976320.0dxschafe': {
                             'Type': 'Interior_furnishings',
@@ -1835,7 +1836,7 @@ objectStruct = {
                             'Scale': VBase3(1.061, 1.061, 1.061),
                             'Visual': {
                                 'Model': 'models/props/interior_wall_spanish'
-                            },
+                            }
                         },
                         '1177976320.0dxschafe0': {
                             'Type': 'Interior_furnishings',
@@ -1847,7 +1848,7 @@ objectStruct = {
                             'Visual': {
                                 'Color': (0.5, 0.5, 0.5, 1.0),
                                 'Model': 'models/props/interior_wall_spanish'
-                            },
+                            }
                         },
                         '1177976448.0dxschafe0': {
                             'Type': 'Interior_furnishings',
@@ -1859,7 +1860,7 @@ objectStruct = {
                             'Visual': {
                                 'Color': (0.5, 0.5, 0.5, 1.0),
                                 'Model': 'models/props/interior_wall_spanish'
-                            },
+                            }
                         },
                         '1177976704.0dxschafe': {
                             'Type': 'Interior_furnishings',
@@ -1871,7 +1872,7 @@ objectStruct = {
                             'Visual': {
                                 'Color': (0.5, 0.5, 0.5, 1.0),
                                 'Model': 'models/props/interior_wall_spanish'
-                            },
+                            }
                         },
                         '1177977600.0dxschafe': {
                             'Type': 'Interior_furnishings',
@@ -1882,7 +1883,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/interior_wall_spanish'
-                            },
+                            }
                         },
                         '1177977728.0dxschafe': {
                             'Type': 'Interior_furnishings',
@@ -1893,7 +1894,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/interior_wall_spanish'
-                            },
+                            }
                         },
                         '1177977728.0dxschafe0': {
                             'Type': 'Interior_furnishings',
@@ -1904,7 +1905,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/interior_wall_spanish'
-                            },
+                            }
                         },
                         '1177977856.0dxschafe': {
                             'Type': 'Interior_furnishings',
@@ -1915,7 +1916,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/interior_wall_spanish'
-                            },
+                            }
                         },
                         '1177977856.0dxschafe0': {
                             'Type': 'Interior_furnishings',
@@ -1926,14 +1927,14 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/interior_wall_spanish'
-                            },
-                        },
+                            }
+                        }
                     },
                     'Pos': Point3(344.329, 130.286, 386.65),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/buildings/fort_top_kings'
-                    },
+                    }
                 },
                 '1174594142.98kmuller': {
                     'Type': 'Simple Fort',
@@ -1943,7 +1944,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/buildings/fort_mid_kings'
-                    },
+                    }
                 },
                 '1174594381.19kmuller': {
                     'Type': 'Pier',
@@ -1958,7 +1959,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/barrel'
-                            },
+                            }
                         },
                         '1162578581.51dxschafe': {
                             'Type': 'Barrel',
@@ -1969,7 +1970,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/barrel'
-                            },
+                            }
                         },
                         '1162578582.39dxschafe': {
                             'Type': 'Barrel',
@@ -1984,7 +1985,7 @@ objectStruct = {
                                  0.7900000214576721, 1.0),
                                 'Model':
                                 'models/props/barrel'
-                            },
+                            }
                         },
                         '1162578818.06dxschafe': {
                             'Type': 'Bucket',
@@ -1995,7 +1996,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/bucket'
-                            },
+                            }
                         },
                         '1162579742.55dxschafe': {
                             'Type': 'Crate',
@@ -2010,7 +2011,7 @@ objectStruct = {
                                  0.7799999713897705, 1.0),
                                 'Model':
                                 'models/props/crate'
-                            },
+                            }
                         },
                         '1162579743.05dxschafe': {
                             'Type': 'Crate',
@@ -2021,7 +2022,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/crate'
-                            },
+                            }
                         },
                         '1162579743.48dxschafe': {
                             'Type': 'Crate',
@@ -2036,7 +2037,7 @@ objectStruct = {
                                  0.8299999833106995, 1.0),
                                 'Model':
                                 'models/props/crate'
-                            },
+                            }
                         },
                         '1162579749.17dxschafe': {
                             'Type': 'Crate',
@@ -2047,7 +2048,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/crate_group_net'
-                            },
+                            }
                         },
                         '1162579749.59dxschafe': {
                             'Type': 'Crate',
@@ -2062,7 +2063,7 @@ objectStruct = {
                                  0.7900000214576721, 1.0),
                                 'Model':
                                 'models/props/crate'
-                            },
+                            }
                         },
                         '1162579750.02dxschafe': {
                             'Type': 'Crate',
@@ -2073,7 +2074,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/crates_group_2'
-                            },
+                            }
                         },
                         '1162579770.14dxschafe': {
                             'Type': 'Crate',
@@ -2084,7 +2085,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/crates_group_2'
-                            },
+                            }
                         },
                         '1162579776.66dxschafe': {
                             'Type': 'Crate',
@@ -2099,7 +2100,7 @@ objectStruct = {
                                  0.8299999833106995, 1.0),
                                 'Model':
                                 'models/props/crate'
-                            },
+                            }
                         },
                         '1162579777.11dxschafe': {
                             'Type': 'Crate',
@@ -2110,7 +2111,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/crate'
-                            },
+                            }
                         },
                         '1162579777.53dxschafe': {
                             'Type': 'Crate',
@@ -2120,11 +2121,12 @@ objectStruct = {
                             'Pos': Point3(-22.488, -2.336, 16.762),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Color': (0.7200000286102295, 0.699999988079071,
-                                          0.5899999737739563, 1.0),
+                                'Color':
+                                (0.7200000286102295, 0.699999988079071,
+                                 0.5899999737739563, 1.0),
                                 'Model':
                                 'models/props/crate'
-                            },
+                            }
                         },
                         '1162579779.91dxschafe': {
                             'Type': 'Crate',
@@ -2135,7 +2137,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/crate'
-                            },
+                            }
                         },
                         '1162579783.03dxschafe': {
                             'Type': 'Crate',
@@ -2150,7 +2152,7 @@ objectStruct = {
                                  0.699999988079071, 1.0),
                                 'Model':
                                 'models/props/crate'
-                            },
+                            }
                         },
                         '1162579790.45dxschafe': {
                             'Type': 'Crate',
@@ -2160,18 +2162,19 @@ objectStruct = {
                             'Pos': Point3(-156.091, 160.844, 16.093),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Color': (0.800000011920929, 0.7900000214576721,
-                                          0.8299999833106995, 1.0),
+                                'Color':
+                                (0.800000011920929, 0.7900000214576721,
+                                 0.8299999833106995, 1.0),
                                 'Model':
                                 'models/props/crate'
-                            },
-                        },
+                            }
+                        }
                     },
                     'Pos': Point3(-1095.192, 519.279, -8.1),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/islands/pier_1_kings'
-                    },
+                    }
                 },
                 '1174594581.09kmuller': {
                     'Type': 'Pier',
@@ -2181,7 +2184,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/islands/pier_2_kings'
-                    },
+                    }
                 },
                 '1177716992.0dxschafe': {
                     'Type': 'Searchable Container',
@@ -2193,7 +2196,7 @@ objectStruct = {
                         'Model': 'models/props/crate_04'
                     },
                     'searchTime': '10.0',
-                    'type': 'Crate',
+                    'type': 'Crate'
                 },
                 '1177977088.0dxschafe': {
                     'Type': 'Interior_furnishings',
@@ -2206,7 +2209,7 @@ objectStruct = {
                                   0.4000000059604645, 1.0),
                         'Model':
                         'models/props/interior_wall_spanish'
-                    },
+                    }
                 },
                 '1179120461.14sdnaik': {
                     'Type': 'Player Spawn Node',
@@ -2218,7 +2221,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5, 0.5, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1184605825.14kmuller': {
                     'Type': 'Collision Barrier',
@@ -2228,7 +2231,7 @@ objectStruct = {
                     'Scale': VBase3(4.197, 1.175, 2.003),
                     'Visual': {
                         'Model': 'models/misc/coll_cube_barrier'
-                    },
+                    }
                 },
                 '1184605972.27kmuller': {
                     'Type': 'Collision Barrier',
@@ -2238,7 +2241,7 @@ objectStruct = {
                     'Scale': VBase3(4.619, 1.45, 1.929),
                     'Visual': {
                         'Model': 'models/misc/coll_cube_barrier'
-                    },
+                    }
                 },
                 '1184606024.95kmuller': {
                     'Type': 'Collision Barrier',
@@ -2248,7 +2251,7 @@ objectStruct = {
                     'Scale': VBase3(2.398, 2.628, 2.136),
                     'Visual': {
                         'Model': 'models/misc/coll_cube_barrier'
-                    },
+                    }
                 },
                 '1184893952.0dxschafe0': {
                     'Type': 'Dinghy',
@@ -2259,7 +2262,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/shipparts/dingy-geometry_High'
-                    },
+                    }
                 },
                 '1184894080.0dxschafe0': {
                     'Type': 'Dinghy',
@@ -2270,7 +2273,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/shipparts/dingy-geometry_High'
-                    },
+                    }
                 },
                 '1184894080.0dxschafe1': {
                     'Type': 'Dinghy',
@@ -2281,7 +2284,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/shipparts/dingy-geometry_High'
-                    },
+                    }
                 },
                 '1184894208.0dxschafe': {
                     'Type': 'Player Spawn Node',
@@ -2293,7 +2296,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5, 0.5, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1184894208.0dxschafe0': {
                     'Type': 'Player Spawn Node',
@@ -2305,7 +2308,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5, 0.5, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1184894208.0dxschafe1': {
                     'Type': 'Player Spawn Node',
@@ -2317,7 +2320,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.5, 0.5, 0.5, 1),
                         'Model': 'models/misc/smiley'
-                    },
+                    }
                 },
                 '1189479168.0sdnaik': {
                     'Type': 'Building Exterior',
@@ -2331,7 +2334,7 @@ objectStruct = {
                         'Model': 'models/buildings/fort_door_kings',
                         'SignImage':
                         'models/buildings/sign1_eng_a_icon_blacksmith'
-                    },
+                    }
                 },
                 '1192668275.63akelts': {
                     'Type': 'Tree',
@@ -2341,7 +2344,7 @@ objectStruct = {
                     'Scale': VBase3(1.121, 1.121, 1.121),
                     'Visual': {
                         'Model': 'models/vegetation/gen_tree_a'
-                    },
+                    }
                 },
                 '1192724656.92akelts': {
                     'Type': 'Simple Fort',
@@ -2350,7 +2353,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/buildings/fort_pier_kings'
-                    },
+                    }
                 },
                 '1192725001.78akelts': {
                     'Type': 'Simple Fort',
@@ -2359,12 +2362,12 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/buildings/fort_colonnade_kings'
-                    },
-                },
+                    }
+                }
             },
             'Visual': {
                 'Model': 'models/islands/kingshead_zero'
-            },
+            }
         }
     },
     'Node Links': [],
@@ -2825,8 +2828,8 @@ objectStruct = {
         '1192724656.92akelts':
         '["Objects"]["1159933206.48sdnaik"]["Objects"]["1192724656.92akelts"]',
         '1192725001.78akelts':
-        '["Objects"]["1159933206.48sdnaik"]["Objects"]["1192725001.78akelts"]',
-    },
+        '["Objects"]["1159933206.48sdnaik"]["Objects"]["1192725001.78akelts"]'
+    }
 }
 extraInfo = {
     'camPos': Point3(-681.188, 459.967, 56.2427),

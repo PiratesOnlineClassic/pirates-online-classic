@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.interior_spanish_blacksmith
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1156270917.73dzlu0': {
@@ -121,8 +122,8 @@ objectStruct = {
                     'Pos': Point3(18.328, -16.013, 0.0),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Color': (0.3100000023841858, 0.25999999046325684, 0.25,
-                                  1.0),
+                        'Color': (0.3100000023841858, 0.25999999046325684,
+                                  0.25, 1.0),
                         'Model':
                         'models/props/bench_shanty_1'
                     }

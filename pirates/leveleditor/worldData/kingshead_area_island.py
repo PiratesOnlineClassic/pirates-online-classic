@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.kingshead_area_island
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {
         0: Vec4(0.496039, 0.568627, 0.67451, 1),
@@ -29,71 +30,71 @@ objectStruct = {
         8: 0.0002
     },
     'Interact Links':
-    [['1177713664.0dxschafe2', '1176850560.0dxschafe', 'Bi-directional'], [
-        '1177713664.0dxschafe1', '1176853504.0dxschafe6', 'Bi-directional'
-    ], ['1177716992.0dxschafe0', '1176850560.0dxschafe3', 'Bi-directional'], [
-        '1177716992.0dxschafe', '1176850560.0dxschafe1', 'Bi-directional'
-    ], ['1177717248.0dxschafe12', '1176850560.0dxschafe4', 'Bi-directional'], [
-        '1177713664.0dxschafe0', '1178580480.0dxschafe', 'Bi-directional'
-    ], ['1177713664.0dxschafe', '1176857216.0dxschafe', 'Bi-directional'], [
-        '1177717248.0dxschafe4', '1176854400.0dxschafe0', 'Bi-directional'
-    ], ['1176856704.0dxschafe0', '1177716480.0dxschafe1', 'Bi-directional'], [
-        '1176856704.0dxschafe2', '1176856832.0dxschafe', 'Bi-directional'
-    ], ['1177715712.0dxschafe0', '1178580608.0dxschafe', 'Bi-directional'], [
-        '1177715328.0dxschafe2', '1176855680.0dxschafe', 'Bi-directional'
-    ], ['1177715712.0dxschafe1', '1178580736.0dxschafe', 'Bi-directional'], [
-        '1177716864.0dxschafe2', '1176856320.0dxschafe', 'Bi-directional'
-    ], ['1176855040.0dxschafe', '1177713792.0dxschafe', 'Bi-directional'], [
-        '1177713792.0dxschafe0', '1178582400.0dxschafe0', 'Bi-directional'
-    ], ['1176857344.0dxschafe', '1177716480.0dxschafe2', 'Bi-directional'], [
-        '1177716480.0dxschafe5', '1178582400.0dxschafe', 'Bi-directional'
-    ], ['1176856704.0dxschafe', '1177716480.0dxschafe3', 'Bi-directional'], [
-        '1177716480.0dxschafe4', '1178835840.0dxschafe', 'Bi-directional'
-    ], ['1177715328.0dxschafe3', '1176857344.0dxschafe0', 'Bi-directional'], [
-        '1177715584.0dxschafe4', '1176857472.0dxschafe', 'Bi-directional'
-    ], ['1178835968.0dxschafe', '1177715584.0dxschafe2', 'Bi-directional'], [
-        '1177715712.0dxschafe', '1178582784.0dxschafe', 'Bi-directional'
-    ], ['1177715328.0dxschafe1', '1176855936.0dxschafe', 'Bi-directional'], [
-        '1178835968.0dxschafe0', '1177715328.0dxschafe0', 'Bi-directional'
-    ], ['1177715584.0dxschafe5', '1176857472.0dxschafe0', 'Bi-directional'], [
-        '1177715584.0dxschafe10', '1176857472.0dxschafe1', 'Bi-directional'
-    ], ['1178836224.0dxschafe', '1177715584.0dxschafe', 'Bi-directional'], [
-        '1178836352.0dxschafe', '1177716864.0dxschafe1', 'Bi-directional'
-    ], ['1177716864.0dxschafe', '1178836480.0dxschafe0', 'Bi-directional'], [
-        '1178836608.0dxschafe', '1177716480.0dxschafe9', 'Bi-directional'
-    ], ['1176849152.0dxschafe', '1178836608.0dxschafe0', 'Bi-directional'], [
-        '1177716480.0dxschafe10', '1178837120.0dxschafe', 'Bi-directional'
-    ], ['1178911488.0dxschafe0', '1177717248.0dxschafe14', 'Bi-directional'], [
-        '1178911616.0dxschafe', '1177717248.0dxschafe6', 'Bi-directional'
-    ], ['1178911744.0dxschafe', '1177717248.0dxschafe1', 'Bi-directional'], [
-        '1178911872.0dxschafe', '1177717248.0dxschafe7', 'Bi-directional'
-    ], ['1178912512.0dxschafe0', '1177717248.0dxschafe0', 'Bi-directional'], [
-        '1178912768.0dxschafe', '1177717248.0dxschafe10', 'Bi-directional'
-    ], ['1177717248.0dxschafe11', '1178912768.0dxschafe0', 'Bi-directional'], [
-        '1178912896.0dxschafe', '1177717248.0dxschafe9', 'Bi-directional'
-    ], ['1177717504.0dxschafe', '1178913024.0dxschafe', 'Bi-directional'], [
-        '1177717504.0dxschafe1', '1178913280.0dxschafe', 'Bi-directional'
-    ], ['1177717248.0dxschafe3', '1178913408.0dxschafe', 'Bi-directional'], [
-        '1177717120.0dxschafe', '1178914816.0dxschafe0', 'Bi-directional'
-    ], ['1178914816.0dxschafe1', '1177717248.0dxschafe5', 'Bi-directional'], [
-        '1178914816.0dxschafe2', '1177717120.0dxschafe0', 'Bi-directional'
-    ], ['1177716864.0dxschafe0', '1178915200.0dxschafe', 'Bi-directional'], [
-        '1178915200.0dxschafe0', '1177715328.0dxschafe4', 'Bi-directional'
-    ], ['1177716480.0dxschafe6', '1178915200.0dxschafe3', 'Bi-directional'], [
-        '1178915200.0dxschafe4', '1177716480.0dxschafe8', 'Bi-directional'
-    ], ['1178915200.0dxschafe2', '1177715328.0dxschafe8', 'Bi-directional'], [
-        '1178915200.0dxschafe1', '1177716480.0dxschafe7', 'Bi-directional'
-    ], ['1177715328.0dxschafe6', '1178915584.0dxschafe', 'Bi-directional'], [
-        '1178915712.0dxschafe', '1177715328.0dxschafe7', 'Bi-directional'
-    ], ['1177715328.0dxschafe9', '1178915968.0dxschafe', 'Bi-directional'], [
-        '1178915968.0dxschafe0', '1177715712.0dxschafe3', 'Bi-directional'
-    ], ['1178915840.0dxschafe', '1177716480.0dxschafe', 'Bi-directional'], [
-        '1178915968.0dxschafe1', '1177715328.0dxschafe5', 'Bi-directional'
-    ], ['1177715584.0dxschafe0', '1178916352.0dxschafe', 'Bi-directional'], [
-        '1178916480.0dxschafe0', '1177970176.0dxschafe', 'Bi-directional'
-    ], ['1177715584.0dxschafe1', '1178916480.0dxschafe1', 'Bi-directional'], [
-        '1177715584.0dxschafe3', '1178916736.0dxschafe', 'Bi-directional'
-    ], ['1178916864.0dxschafe0', '1177715584.0dxschafe8', 'Bi-directional'],
+    [['1177713664.0dxschafe2', '1176850560.0dxschafe', 'Bi-directional'],
+     ['1177713664.0dxschafe1', '1176853504.0dxschafe6', 'Bi-directional'],
+     ['1177716992.0dxschafe0', '1176850560.0dxschafe3', 'Bi-directional'],
+     ['1177716992.0dxschafe', '1176850560.0dxschafe1', 'Bi-directional'],
+     ['1177717248.0dxschafe12', '1176850560.0dxschafe4', 'Bi-directional'],
+     ['1177713664.0dxschafe0', '1178580480.0dxschafe', 'Bi-directional'],
+     ['1177713664.0dxschafe', '1176857216.0dxschafe', 'Bi-directional'],
+     ['1177717248.0dxschafe4', '1176854400.0dxschafe0', 'Bi-directional'],
+     ['1176856704.0dxschafe0', '1177716480.0dxschafe1', 'Bi-directional'],
+     ['1176856704.0dxschafe2', '1176856832.0dxschafe', 'Bi-directional'],
+     ['1177715712.0dxschafe0', '1178580608.0dxschafe', 'Bi-directional'],
+     ['1177715328.0dxschafe2', '1176855680.0dxschafe', 'Bi-directional'],
+     ['1177715712.0dxschafe1', '1178580736.0dxschafe', 'Bi-directional'],
+     ['1177716864.0dxschafe2', '1176856320.0dxschafe', 'Bi-directional'],
+     ['1176855040.0dxschafe', '1177713792.0dxschafe', 'Bi-directional'],
+     ['1177713792.0dxschafe0', '1178582400.0dxschafe0', 'Bi-directional'],
+     ['1176857344.0dxschafe', '1177716480.0dxschafe2', 'Bi-directional'],
+     ['1177716480.0dxschafe5', '1178582400.0dxschafe', 'Bi-directional'],
+     ['1176856704.0dxschafe', '1177716480.0dxschafe3', 'Bi-directional'],
+     ['1177716480.0dxschafe4', '1178835840.0dxschafe', 'Bi-directional'],
+     ['1177715328.0dxschafe3', '1176857344.0dxschafe0', 'Bi-directional'],
+     ['1177715584.0dxschafe4', '1176857472.0dxschafe', 'Bi-directional'],
+     ['1178835968.0dxschafe', '1177715584.0dxschafe2', 'Bi-directional'],
+     ['1177715712.0dxschafe', '1178582784.0dxschafe', 'Bi-directional'],
+     ['1177715328.0dxschafe1', '1176855936.0dxschafe', 'Bi-directional'],
+     ['1178835968.0dxschafe0', '1177715328.0dxschafe0', 'Bi-directional'],
+     ['1177715584.0dxschafe5', '1176857472.0dxschafe0', 'Bi-directional'],
+     ['1177715584.0dxschafe10', '1176857472.0dxschafe1', 'Bi-directional'],
+     ['1178836224.0dxschafe', '1177715584.0dxschafe', 'Bi-directional'],
+     ['1178836352.0dxschafe', '1177716864.0dxschafe1', 'Bi-directional'],
+     ['1177716864.0dxschafe', '1178836480.0dxschafe0', 'Bi-directional'],
+     ['1178836608.0dxschafe', '1177716480.0dxschafe9', 'Bi-directional'],
+     ['1176849152.0dxschafe', '1178836608.0dxschafe0', 'Bi-directional'],
+     ['1177716480.0dxschafe10', '1178837120.0dxschafe', 'Bi-directional'],
+     ['1178911488.0dxschafe0', '1177717248.0dxschafe14', 'Bi-directional'],
+     ['1178911616.0dxschafe', '1177717248.0dxschafe6', 'Bi-directional'],
+     ['1178911744.0dxschafe', '1177717248.0dxschafe1', 'Bi-directional'],
+     ['1178911872.0dxschafe', '1177717248.0dxschafe7', 'Bi-directional'],
+     ['1178912512.0dxschafe0', '1177717248.0dxschafe0', 'Bi-directional'],
+     ['1178912768.0dxschafe', '1177717248.0dxschafe10', 'Bi-directional'],
+     ['1177717248.0dxschafe11', '1178912768.0dxschafe0', 'Bi-directional'],
+     ['1178912896.0dxschafe', '1177717248.0dxschafe9', 'Bi-directional'],
+     ['1177717504.0dxschafe', '1178913024.0dxschafe', 'Bi-directional'],
+     ['1177717504.0dxschafe1', '1178913280.0dxschafe', 'Bi-directional'],
+     ['1177717248.0dxschafe3', '1178913408.0dxschafe', 'Bi-directional'],
+     ['1177717120.0dxschafe', '1178914816.0dxschafe0', 'Bi-directional'],
+     ['1178914816.0dxschafe1', '1177717248.0dxschafe5', 'Bi-directional'],
+     ['1178914816.0dxschafe2', '1177717120.0dxschafe0', 'Bi-directional'],
+     ['1177716864.0dxschafe0', '1178915200.0dxschafe', 'Bi-directional'],
+     ['1178915200.0dxschafe0', '1177715328.0dxschafe4', 'Bi-directional'],
+     ['1177716480.0dxschafe6', '1178915200.0dxschafe3', 'Bi-directional'],
+     ['1178915200.0dxschafe4', '1177716480.0dxschafe8', 'Bi-directional'],
+     ['1178915200.0dxschafe2', '1177715328.0dxschafe8', 'Bi-directional'],
+     ['1178915200.0dxschafe1', '1177716480.0dxschafe7', 'Bi-directional'],
+     ['1177715328.0dxschafe6', '1178915584.0dxschafe', 'Bi-directional'],
+     ['1178915712.0dxschafe', '1177715328.0dxschafe7', 'Bi-directional'],
+     ['1177715328.0dxschafe9', '1178915968.0dxschafe', 'Bi-directional'],
+     ['1178915968.0dxschafe0', '1177715712.0dxschafe3', 'Bi-directional'],
+     ['1178915840.0dxschafe', '1177716480.0dxschafe', 'Bi-directional'],
+     ['1178915968.0dxschafe1', '1177715328.0dxschafe5', 'Bi-directional'],
+     ['1177715584.0dxschafe0', '1178916352.0dxschafe', 'Bi-directional'],
+     ['1178916480.0dxschafe0', '1177970176.0dxschafe', 'Bi-directional'],
+     ['1177715584.0dxschafe1', '1178916480.0dxschafe1', 'Bi-directional'],
+     ['1177715584.0dxschafe3', '1178916736.0dxschafe', 'Bi-directional'],
+     ['1178916864.0dxschafe0', '1177715584.0dxschafe8', 'Bi-directional'],
      ['1178916864.0dxschafe2', '1177715584.0dxschafe6', 'Bi-directional']],
     'Objects': {
         '1189479168.0sdnaik0': {
@@ -159,8 +160,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/barrel'
+                        'Model': 'models/props/barrel'
                     }
                 },
                 '1162578585.26dxschafe': {
@@ -208,8 +208,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/barrel_group_1'
+                        'Model': 'models/props/barrel_group_1'
                     }
                 },
                 '1162578595.35dxschafe': {
@@ -247,8 +246,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/barrel'
+                        'Model': 'models/props/barrel'
                     }
                 },
                 '1162578611.87dxschafe': {
@@ -794,8 +792,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.800000011920929, 0.7300000190734863,
                                   1.0),
-                        'Model':
-                        'models/props/crate'
+                        'Model': 'models/props/crate'
                     }
                 },
                 '1162579753.89dxschafe': {
@@ -833,8 +830,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/crates_group_1'
+                        'Model': 'models/props/crates_group_1'
                     }
                 },
                 '1162579759.73dxschafe': {
@@ -866,8 +862,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.800000011920929, 0.7300000190734863,
                                   1.0),
-                        'Model':
-                        'models/props/crate'
+                        'Model': 'models/props/crate'
                     }
                 },
                 '1162579761.78dxschafe': {
@@ -879,8 +874,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.800000011920929, 0.7300000190734863,
                                   1.0),
-                        'Model':
-                        'models/props/crate'
+                        'Model': 'models/props/crate'
                     }
                 },
                 '1162579770.14dxschafe': {
@@ -938,8 +932,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/crate'
+                        'Model': 'models/props/crate'
                     }
                 },
                 '1162579777.53dxschafe': {
@@ -1189,8 +1182,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/crates_group_1'
+                        'Model': 'models/props/crates_group_1'
                     }
                 },
                 '1162579823.2dxschafe': {
@@ -1422,8 +1414,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/crates_group_1'
+                        'Model': 'models/props/crates_group_1'
                     }
                 },
                 '1162579909.92dxschafe': {
@@ -1910,8 +1901,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/crates_group_1'
+                        'Model': 'models/props/crates_group_1'
                     }
                 },
                 '1162581213.56dxschafe': {
@@ -1923,8 +1913,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/crate'
+                        'Model': 'models/props/crate'
                     }
                 },
                 '1162581226.56dxschafe': {
@@ -2678,8 +2667,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/barrel_group_2'
+                        'Model': 'models/props/barrel_group_2'
                     }
                 },
                 '1163119851.86sdnaik': {
@@ -3633,16 +3621,13 @@ objectStruct = {
                     'Pos': Point3(209.786, -392.145, 194.217),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Name':
-                        '',
+                        'Name': '',
                         'Color': (0.75, 0.800000011920929, 0.7300000190734863,
                                   1.0),
-                        'Door':
-                        'models/buildings/shanty_guildhall_door',
+                        'Door': 'models/buildings/shanty_guildhall_door',
                         'Interior':
                         'models/buildings/interior_shanty_guildhall',
-                        'Model':
-                        'models/buildings/english_h',
+                        'Model': 'models/buildings/english_h',
                         'SignImage':
                         'models/buildings/sign1_eng_a_icon_blacksmith'
                     }
@@ -3682,16 +3667,13 @@ objectStruct = {
                     'Pos': Point3(225.397, -530.53, 189.956),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Name':
-                        '',
+                        'Name': '',
                         'Color': (0.75, 0.800000011920929, 0.7300000190734863,
                                   1.0),
-                        'Door':
-                        'models/buildings/shanty_guildhall_door',
+                        'Door': 'models/buildings/shanty_guildhall_door',
                         'Interior':
                         'models/buildings/interior_shanty_guildhall',
-                        'Model':
-                        'models/buildings/english_corner_e',
+                        'Model': 'models/buildings/english_corner_e',
                         'SignImage':
                         'models/buildings/sign1_eng_a_icon_blacksmith'
                     }
@@ -3767,16 +3749,13 @@ objectStruct = {
                     'Pos': Point3(268.32, -542.279, 189.48),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Name':
-                        '',
+                        'Name': '',
                         'Color': (0.75, 0.800000011920929, 0.7300000190734863,
                                   1.0),
-                        'Door':
-                        'models/buildings/shanty_guildhall_door',
+                        'Door': 'models/buildings/shanty_guildhall_door',
                         'Interior':
                         'models/buildings/interior_shanty_guildhall',
-                        'Model':
-                        'models/buildings/english_i',
+                        'Model': 'models/buildings/english_i',
                         'SignImage':
                         'models/buildings/sign1_eng_a_icon_blacksmith'
                     }
@@ -3942,8 +3921,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.800000011920929, 0.7300000190734863,
                                   1.0),
-                        'Model':
-                        'models/islands/pier_scaffold_2long'
+                        'Model': 'models/islands/pier_scaffold_2long'
                     }
                 },
                 '1172008960.0dxschafe': {
@@ -4088,16 +4066,13 @@ objectStruct = {
                     'Pos': Point3(243.928, -557.969, 192.317),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Name':
-                        '',
+                        'Name': '',
                         'Color': (0.75, 0.800000011920929, 0.7300000190734863,
                                   1.0),
-                        'Door':
-                        'models/buildings/shanty_guildhall_door',
+                        'Door': 'models/buildings/shanty_guildhall_door',
                         'Interior':
                         'models/buildings/interior_shanty_guildhall',
-                        'Model':
-                        'models/buildings/english_corner_e',
+                        'Model': 'models/buildings/english_corner_e',
                         'SignImage':
                         'models/buildings/sign1_eng_a_icon_blacksmith'
                     }
@@ -5304,7 +5279,8 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Color': (0.5, 0.5, 0.5, 1.0),
-                                'Model': 'models/props/interior_wall_fort_brick'
+                                'Model':
+                                'models/props/interior_wall_fort_brick'
                             }
                         },
                         '1177976192.0dxschafe': {
@@ -5388,7 +5364,8 @@ objectStruct = {
                             'Pos': Point3(-150.789, 62.472, -39.772),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Model': 'models/props/interior_wall_fort_brick'
+                                'Model':
+                                'models/props/interior_wall_fort_brick'
                             }
                         },
                         '1177977728.0dxschafe0': {
@@ -5810,8 +5787,9 @@ objectStruct = {
                             'Pos': Point3(21.179, 42.763, -46.437),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Color': (0.7200000286102295, 0.699999988079071,
-                                          0.5899999737739563, 1.0),
+                                'Color':
+                                (0.7200000286102295, 0.699999988079071,
+                                 0.5899999737739563, 1.0),
                                 'Model':
                                 'models/islands/pier_scaffold_1long'
                             }
@@ -5824,8 +5802,9 @@ objectStruct = {
                             'Pos': Point3(9.606, 34.203, -46.515),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Color': (0.7200000286102295, 0.699999988079071,
-                                          0.5899999737739563, 1.0),
+                                'Color':
+                                (0.7200000286102295, 0.699999988079071,
+                                 0.5899999737739563, 1.0),
                                 'Model':
                                 'models/islands/pier_scaffold_landing'
                             }
@@ -5837,8 +5816,9 @@ objectStruct = {
                             'Pos': Point3(9.787, 34.369, -46.435),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Color': (0.7200000286102295, 0.699999988079071,
-                                          0.5899999737739563, 1.0),
+                                'Color':
+                                (0.7200000286102295, 0.699999988079071,
+                                 0.5899999737739563, 1.0),
                                 'Model':
                                 'models/islands/pier_scaffold_stairs'
                             }
@@ -5851,8 +5831,9 @@ objectStruct = {
                             'Pos': Point3(42.303, -22.342, -46.437),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Color': (0.7200000286102295, 0.699999988079071,
-                                          0.5899999737739563, 1.0),
+                                'Color':
+                                (0.7200000286102295, 0.699999988079071,
+                                 0.5899999737739563, 1.0),
                                 'Model':
                                 'models/islands/pier_scaffold_2long'
                             }
@@ -5926,8 +5907,9 @@ objectStruct = {
                             'Pos': Point3(88.766, 118.042, -46.437),
                             'Scale': VBase3(0.663, 0.663, 0.663),
                             'Visual': {
-                                'Color': (0.7200000286102295, 0.699999988079071,
-                                          0.5899999737739563, 1.0),
+                                'Color':
+                                (0.7200000286102295, 0.699999988079071,
+                                 0.5899999737739563, 1.0),
                                 'Model':
                                 'models/props/barrel'
                             },
@@ -10151,85 +10133,85 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1176853376.0dxschafe3', '1176853376.0dxschafe2', 'Bi-directional'], [
-        '1176853376.0dxschafe1', '1176853376.0dxschafe2', 'Bi-directional'
-    ], ['1176853376.0dxschafe0', '1176853376.0dxschafe1', 'Bi-directional'], [
-        '1176853376.0dxschafe0', '1176853376.0dxschafe', 'Bi-directional'
-    ], ['1176853632.0dxschafe', '1176853504.0dxschafe6', 'Bi-directional'], [
-        '1176853632.0dxschafe', '1176853504.0dxschafe', 'Bi-directional'
-    ], ['1176853504.0dxschafe', '1176853504.0dxschafe0', 'Bi-directional'], [
-        '1176853504.0dxschafe1', '1176853504.0dxschafe0', 'Bi-directional'
-    ], ['1176853504.0dxschafe1', '1176853504.0dxschafe2', 'Bi-directional'], [
-        '1176853504.0dxschafe2', '1176853504.0dxschafe3', 'Bi-directional'
-    ], ['1176853504.0dxschafe3', '1176853504.0dxschafe4', 'Bi-directional'], [
-        '1176853504.0dxschafe5', '1176853504.0dxschafe4', 'Bi-directional'
-    ], ['1176853504.0dxschafe5', '1176853504.0dxschafe6', 'Bi-directional'], [
-        '1176854144.0dxschafe1', '1176854144.0dxschafe2', 'Bi-directional'
-    ], ['1176854144.0dxschafe1', '1176854144.0dxschafe0', 'Bi-directional'], [
-        '1176854144.0dxschafe0', '1176854144.0dxschafe', 'Bi-directional'
-    ], ['1176853888.0dxschafe', '1176854144.0dxschafe', 'Bi-directional'], [
-        '1176853888.0dxschafe', '1176853760.0dxschafe0', 'Bi-directional'
-    ], ['1176853760.0dxschafe0', '1176853760.0dxschafe', 'Bi-directional'], [
-        '1176854272.0dxschafe', '1176854400.0dxschafe0', 'Bi-directional'
-    ], ['1176854272.0dxschafe', '1176854272.0dxschafe1', 'Bi-directional'], [
-        '1176854400.0dxschafe', '1176854272.0dxschafe1', 'Bi-directional'
-    ], ['1176854528.0dxschafe', '1176854656.0dxschafe', 'Bi-directional'], [
-        '1176854528.0dxschafe', '1176854528.0dxschafe0', 'Bi-directional'
-    ], ['1176854528.0dxschafe', '1176854528.0dxschafe2', 'Bi-directional'], [
-        '1176854656.0dxschafe', '1176854528.0dxschafe0', 'Bi-directional'
-    ], ['1176854656.0dxschafe', '1176854528.0dxschafe2', 'Bi-directional'], [
-        '1176854528.0dxschafe0', '1176854528.0dxschafe2', 'Bi-directional'
-    ], ['1176854528.0dxschafe', '1176854656.0dxschafe0', 'Bi-directional'], [
-        '1176854528.0dxschafe0', '1176854656.0dxschafe0', 'Bi-directional'
-    ], ['1176854528.0dxschafe2', '1176854656.0dxschafe0', 'Bi-directional'], [
-        '1176854656.0dxschafe', '1176854656.0dxschafe0', 'Bi-directional'
-    ], ['1176855040.0dxschafe', '1176854912.0dxschafe0', 'Bi-directional'], [
-        '1176854912.0dxschafe', '1176854912.0dxschafe0', 'Bi-directional'
-    ], ['1176855808.0dxschafe0', '1176855936.0dxschafe', 'Bi-directional'], [
-        '1176855808.0dxschafe', '1176855808.0dxschafe0', 'Bi-directional'
-    ], ['1176855808.0dxschafe', '1176855680.0dxschafe2', 'Bi-directional'], [
-        '1176856064.0dxschafe3', '1176856320.0dxschafe', 'Bi-directional'
-    ], ['1176856064.0dxschafe2', '1176856064.0dxschafe3', 'Bi-directional'], [
-        '1176856064.0dxschafe2', '1176856064.0dxschafe1', 'Bi-directional'
-    ], ['1176855680.0dxschafe', '1176856064.0dxschafe', 'Bi-directional'], [
-        '1176855680.0dxschafe', '1176855680.0dxschafe0', 'Bi-directional'
-    ], ['1176856064.0dxschafe0', '1176855680.0dxschafe', 'Bi-directional'], [
-        '1176855680.0dxschafe1', '1176855680.0dxschafe0', 'Bi-directional'
-    ], ['1178836352.0dxschafe0', '1178836480.0dxschafe', 'Bi-directional'], [
-        '1178836352.0dxschafe', '1178836352.0dxschafe0', 'Bi-directional'
-    ], ['1178836480.0dxschafe2', '1178836480.0dxschafe1', 'Bi-directional'], [
-        '1178836480.0dxschafe1', '1178836480.0dxschafe0', 'Bi-directional'
-    ], ['1178582400.0dxschafe0', '1192728192.0dxschafe', 'Bi-directional'], [
-        '1192728192.0dxschafe', '1192728192.0dxschafe1', 'Bi-directional'
-    ], ['1178582400.0dxschafe0', '1192728192.0dxschafe1', 'Bi-directional'], [
-        '1178582400.0dxschafe', '1192728192.0dxschafe0', 'Bi-directional'
-    ], ['1192728192.0dxschafe0', '1192728192.0dxschafe1', 'Bi-directional'], [
-        '1178582400.0dxschafe', '1192728192.0dxschafe1', 'Bi-directional'
-    ], ['1192728320.0dxschafe1', '1192728320.0dxschafe0', 'Bi-directional'], [
-        '1192728320.0dxschafe1', '1178837120.0dxschafe', 'Bi-directional'
-    ], ['1192728320.0dxschafe', '1192728320.0dxschafe0', 'Bi-directional'], [
-        '1178837120.0dxschafe', '1192728320.0dxschafe', 'Bi-directional'
-    ], ['1192728448.0dxschafe', '1178836608.0dxschafe', 'Bi-directional'], [
-        '1192728448.0dxschafe', '1192728448.0dxschafe0', 'Bi-directional'
-    ], ['1192728448.0dxschafe1', '1192728448.0dxschafe0', 'Bi-directional'], [
-        '1192728448.0dxschafe1', '1178836608.0dxschafe', 'Bi-directional'
-    ], ['1192728576.0dxschafe0', '1178580736.0dxschafe', 'Bi-directional'], [
-        '1192728576.0dxschafe', '1178580736.0dxschafe', 'Bi-directional'
-    ], ['1192728576.0dxschafe2', '1192728576.0dxschafe1', 'Bi-directional'], [
-        '1176857344.0dxschafe0', '1192728576.0dxschafe1', 'Bi-directional'
-    ], ['1192728704.0dxschafe0', '1178836480.0dxschafe2', 'Bi-directional'], [
-        '1192728704.0dxschafe1', '1178915200.0dxschafe', 'Bi-directional'
-    ], ['1192728704.0dxschafe1', '1192728704.0dxschafe3', 'Bi-directional'], [
-        '1192728704.0dxschafe3', '1192728704.0dxschafe2', 'Bi-directional'
-    ], ['1192728832.0dxschafe', '1192728832.0dxschafe0', 'Bi-directional'], [
-        '1178835968.0dxschafe0', '1192728832.0dxschafe', 'Bi-directional'
-    ], ['1176853504.0dxschafe0', '1192728960.0dxschafe', 'Bi-directional'], [
-        '1176853632.0dxschafe', '1192728960.0dxschafe1', 'Bi-directional'
-    ], ['1192729216.0dxschafe1', '1192729216.0dxschafe2', 'Bi-directional'], [
-        '1192729216.0dxschafe0', '1192729216.0dxschafe1', 'Bi-directional'
-    ], ['1192729216.0dxschafe0', '1192729216.0dxschafe', 'Bi-directional'], [
-        '1178914816.0dxschafe1', '1192729216.0dxschafe', 'Bi-directional'
-    ], ['1192729344.0dxschafe0', '1192729344.0dxschafe', 'Bi-directional'],
+    [['1176853376.0dxschafe3', '1176853376.0dxschafe2', 'Bi-directional'],
+     ['1176853376.0dxschafe1', '1176853376.0dxschafe2', 'Bi-directional'],
+     ['1176853376.0dxschafe0', '1176853376.0dxschafe1', 'Bi-directional'],
+     ['1176853376.0dxschafe0', '1176853376.0dxschafe', 'Bi-directional'],
+     ['1176853632.0dxschafe', '1176853504.0dxschafe6', 'Bi-directional'],
+     ['1176853632.0dxschafe', '1176853504.0dxschafe', 'Bi-directional'],
+     ['1176853504.0dxschafe', '1176853504.0dxschafe0', 'Bi-directional'],
+     ['1176853504.0dxschafe1', '1176853504.0dxschafe0', 'Bi-directional'],
+     ['1176853504.0dxschafe1', '1176853504.0dxschafe2', 'Bi-directional'],
+     ['1176853504.0dxschafe2', '1176853504.0dxschafe3', 'Bi-directional'],
+     ['1176853504.0dxschafe3', '1176853504.0dxschafe4', 'Bi-directional'],
+     ['1176853504.0dxschafe5', '1176853504.0dxschafe4', 'Bi-directional'],
+     ['1176853504.0dxschafe5', '1176853504.0dxschafe6', 'Bi-directional'],
+     ['1176854144.0dxschafe1', '1176854144.0dxschafe2', 'Bi-directional'],
+     ['1176854144.0dxschafe1', '1176854144.0dxschafe0', 'Bi-directional'],
+     ['1176854144.0dxschafe0', '1176854144.0dxschafe', 'Bi-directional'],
+     ['1176853888.0dxschafe', '1176854144.0dxschafe', 'Bi-directional'],
+     ['1176853888.0dxschafe', '1176853760.0dxschafe0', 'Bi-directional'],
+     ['1176853760.0dxschafe0', '1176853760.0dxschafe', 'Bi-directional'],
+     ['1176854272.0dxschafe', '1176854400.0dxschafe0', 'Bi-directional'],
+     ['1176854272.0dxschafe', '1176854272.0dxschafe1', 'Bi-directional'],
+     ['1176854400.0dxschafe', '1176854272.0dxschafe1', 'Bi-directional'],
+     ['1176854528.0dxschafe', '1176854656.0dxschafe', 'Bi-directional'],
+     ['1176854528.0dxschafe', '1176854528.0dxschafe0', 'Bi-directional'],
+     ['1176854528.0dxschafe', '1176854528.0dxschafe2', 'Bi-directional'],
+     ['1176854656.0dxschafe', '1176854528.0dxschafe0', 'Bi-directional'],
+     ['1176854656.0dxschafe', '1176854528.0dxschafe2', 'Bi-directional'],
+     ['1176854528.0dxschafe0', '1176854528.0dxschafe2', 'Bi-directional'],
+     ['1176854528.0dxschafe', '1176854656.0dxschafe0', 'Bi-directional'],
+     ['1176854528.0dxschafe0', '1176854656.0dxschafe0', 'Bi-directional'],
+     ['1176854528.0dxschafe2', '1176854656.0dxschafe0', 'Bi-directional'],
+     ['1176854656.0dxschafe', '1176854656.0dxschafe0', 'Bi-directional'],
+     ['1176855040.0dxschafe', '1176854912.0dxschafe0', 'Bi-directional'],
+     ['1176854912.0dxschafe', '1176854912.0dxschafe0', 'Bi-directional'],
+     ['1176855808.0dxschafe0', '1176855936.0dxschafe', 'Bi-directional'],
+     ['1176855808.0dxschafe', '1176855808.0dxschafe0', 'Bi-directional'],
+     ['1176855808.0dxschafe', '1176855680.0dxschafe2', 'Bi-directional'],
+     ['1176856064.0dxschafe3', '1176856320.0dxschafe', 'Bi-directional'],
+     ['1176856064.0dxschafe2', '1176856064.0dxschafe3', 'Bi-directional'],
+     ['1176856064.0dxschafe2', '1176856064.0dxschafe1', 'Bi-directional'],
+     ['1176855680.0dxschafe', '1176856064.0dxschafe', 'Bi-directional'],
+     ['1176855680.0dxschafe', '1176855680.0dxschafe0', 'Bi-directional'],
+     ['1176856064.0dxschafe0', '1176855680.0dxschafe', 'Bi-directional'],
+     ['1176855680.0dxschafe1', '1176855680.0dxschafe0', 'Bi-directional'],
+     ['1178836352.0dxschafe0', '1178836480.0dxschafe', 'Bi-directional'],
+     ['1178836352.0dxschafe', '1178836352.0dxschafe0', 'Bi-directional'],
+     ['1178836480.0dxschafe2', '1178836480.0dxschafe1', 'Bi-directional'],
+     ['1178836480.0dxschafe1', '1178836480.0dxschafe0', 'Bi-directional'],
+     ['1178582400.0dxschafe0', '1192728192.0dxschafe', 'Bi-directional'],
+     ['1192728192.0dxschafe', '1192728192.0dxschafe1', 'Bi-directional'],
+     ['1178582400.0dxschafe0', '1192728192.0dxschafe1', 'Bi-directional'],
+     ['1178582400.0dxschafe', '1192728192.0dxschafe0', 'Bi-directional'],
+     ['1192728192.0dxschafe0', '1192728192.0dxschafe1', 'Bi-directional'],
+     ['1178582400.0dxschafe', '1192728192.0dxschafe1', 'Bi-directional'],
+     ['1192728320.0dxschafe1', '1192728320.0dxschafe0', 'Bi-directional'],
+     ['1192728320.0dxschafe1', '1178837120.0dxschafe', 'Bi-directional'],
+     ['1192728320.0dxschafe', '1192728320.0dxschafe0', 'Bi-directional'],
+     ['1178837120.0dxschafe', '1192728320.0dxschafe', 'Bi-directional'],
+     ['1192728448.0dxschafe', '1178836608.0dxschafe', 'Bi-directional'],
+     ['1192728448.0dxschafe', '1192728448.0dxschafe0', 'Bi-directional'],
+     ['1192728448.0dxschafe1', '1192728448.0dxschafe0', 'Bi-directional'],
+     ['1192728448.0dxschafe1', '1178836608.0dxschafe', 'Bi-directional'],
+     ['1192728576.0dxschafe0', '1178580736.0dxschafe', 'Bi-directional'],
+     ['1192728576.0dxschafe', '1178580736.0dxschafe', 'Bi-directional'],
+     ['1192728576.0dxschafe2', '1192728576.0dxschafe1', 'Bi-directional'],
+     ['1176857344.0dxschafe0', '1192728576.0dxschafe1', 'Bi-directional'],
+     ['1192728704.0dxschafe0', '1178836480.0dxschafe2', 'Bi-directional'],
+     ['1192728704.0dxschafe1', '1178915200.0dxschafe', 'Bi-directional'],
+     ['1192728704.0dxschafe1', '1192728704.0dxschafe3', 'Bi-directional'],
+     ['1192728704.0dxschafe3', '1192728704.0dxschafe2', 'Bi-directional'],
+     ['1192728832.0dxschafe', '1192728832.0dxschafe0', 'Bi-directional'],
+     ['1178835968.0dxschafe0', '1192728832.0dxschafe', 'Bi-directional'],
+     ['1176853504.0dxschafe0', '1192728960.0dxschafe', 'Bi-directional'],
+     ['1176853632.0dxschafe', '1192728960.0dxschafe1', 'Bi-directional'],
+     ['1192729216.0dxschafe1', '1192729216.0dxschafe2', 'Bi-directional'],
+     ['1192729216.0dxschafe0', '1192729216.0dxschafe1', 'Bi-directional'],
+     ['1192729216.0dxschafe0', '1192729216.0dxschafe', 'Bi-directional'],
+     ['1178914816.0dxschafe1', '1192729216.0dxschafe', 'Bi-directional'],
+     ['1192729344.0dxschafe0', '1192729344.0dxschafe', 'Bi-directional'],
      ['1178914816.0dxschafe2', '1192729344.0dxschafe0', 'Bi-directional'],
      ['1178914816.0dxschafe2', '1192729344.0dxschafe', 'Bi-directional']],
     'Layers': {

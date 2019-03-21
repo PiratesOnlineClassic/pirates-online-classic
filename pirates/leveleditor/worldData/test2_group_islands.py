@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.test2_group_islands
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1150228961.43dzlu': {
@@ -160,7 +161,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -181,7 +183,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -202,7 +205,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -223,7 +227,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -271,7 +276,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -310,7 +316,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -418,7 +425,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_l_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_l_exterior'
                     }
                 },
                 '1150233998.86dzlu': {
@@ -496,7 +504,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_k_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_k_exterior'
                     }
                 },
                 '1150234455.33dzlu': {
@@ -509,7 +518,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_k_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_k_exterior'
                     }
                 },
                 '1150234467.73dzlu': {
@@ -522,7 +532,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_k_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_k_exterior'
                     }
                 },
                 '1150234473.92dzlu': {
@@ -535,7 +546,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_k_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_k_exterior'
                     }
                 },
                 '1150234542.65dzlu': {
@@ -548,7 +560,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_g_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_g_exterior'
                     }
                 },
                 '1150234574.67dzlu': {
@@ -561,7 +574,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_l_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_l_exterior'
                     }
                 },
                 '1150234582.7dzlu': {
@@ -574,7 +588,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_g_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_g_exterior'
                     }
                 },
                 '1150234607.95dzlu': {
@@ -587,7 +602,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_g_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_g_exterior'
                     }
                 },
                 '1150234659.15dzlu': {
@@ -600,7 +616,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_a_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_a_exterior'
                     }
                 },
                 '1150234695.65dzlu': {
@@ -613,7 +630,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_f_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_f_exterior'
                     }
                 },
                 '1150234718.4dzlu': {
@@ -626,7 +644,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_f_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_f_exterior'
                     }
                 },
                 '1150234746.73dzlu': {
@@ -639,7 +658,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_g_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_g_exterior'
                     }
                 },
                 '1150234766.03dzlu': {
@@ -652,7 +672,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_k_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_k_exterior'
                     }
                 },
                 '1150234785.9dzlu': {
@@ -665,7 +686,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_k_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_k_exterior'
                     }
                 },
                 '1150234812.47dzlu': {
@@ -678,7 +700,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_g_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_g_exterior'
                     }
                 },
                 '1150234825.22dzlu': {
@@ -691,7 +714,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_k_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_k_exterior'
                     }
                 },
                 '1150234839.3dzlu': {
@@ -704,7 +728,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_k_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_k_exterior'
                     }
                 },
                 '1150234849.4dzlu': {
@@ -717,7 +742,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_g_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_g_exterior'
                     }
                 },
                 '1150234860.39dzlu': {
@@ -730,7 +756,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_g_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_g_exterior'
                     }
                 },
                 '1150234867.05dzlu': {
@@ -743,7 +770,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_g_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_g_exterior'
                     }
                 },
                 '1150234933.48dzlu': {
@@ -756,7 +784,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_f_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_f_exterior'
                     }
                 },
                 '1150234982.43dzlu': {
@@ -769,7 +798,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_g_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_g_exterior'
                     }
                 },
                 '1150240036.31dzlu': {
@@ -782,7 +812,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_a_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_a_exterior'
                     }
                 },
                 '1150240092.75dzlu': {
@@ -1050,7 +1081,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_a_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_a_exterior'
                     }
                 },
                 '1150241301.56dzlu': {
@@ -1061,7 +1093,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -1082,7 +1115,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -1105,7 +1139,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_g_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_g_exterior'
                     }
                 },
                 '1150242071.64dzlu': {
@@ -1535,7 +1570,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_g_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_g_exterior'
                     }
                 }
             },

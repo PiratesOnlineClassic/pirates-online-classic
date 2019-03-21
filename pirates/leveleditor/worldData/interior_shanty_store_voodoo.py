@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.interior_shanty_store_voodoo
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1156268617.43dzlu0s': {
@@ -317,8 +318,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (1.0, 0.8399999737739563, 0.6800000071525574,
                                   1.0),
-                        'Model':
-                        'models/props/crate_04'
+                        'Model': 'models/props/crate_04'
                     }
                 },
                 '1167954660.96kmuller': {

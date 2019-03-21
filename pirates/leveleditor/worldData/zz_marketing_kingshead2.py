@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.zz_marketing_kingshead2
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {},
     'DirectionalColors': {},
@@ -46,8 +47,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/barrel'
+                        'Model': 'models/props/barrel'
                     }
                 },
                 '1162578611.87dxschafe': {
@@ -350,8 +350,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/crates_group_1'
+                        'Model': 'models/props/crates_group_1'
                     }
                 },
                 '1162579759.73dxschafe': {
@@ -383,8 +382,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.800000011920929, 0.7300000190734863,
                                   1.0),
-                        'Model':
-                        'models/props/crate'
+                        'Model': 'models/props/crate'
                     }
                 },
                 '1162579761.78dxschafe': {
@@ -396,8 +394,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.800000011920929, 0.7300000190734863,
                                   1.0),
-                        'Model':
-                        'models/props/crate'
+                        'Model': 'models/props/crate'
                     }
                 },
                 '1162579790.45dxschafe': {
@@ -588,8 +585,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/crates_group_1'
+                        'Model': 'models/props/crates_group_1'
                     }
                 },
                 '1162579823.2dxschafe': {
@@ -821,8 +817,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/crates_group_1'
+                        'Model': 'models/props/crates_group_1'
                     }
                 },
                 '1162579909.92dxschafe': {
@@ -1183,8 +1178,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/crates_group_1'
+                        'Model': 'models/props/crates_group_1'
                     }
                 },
                 '1162581213.56dxschafe': {
@@ -1196,8 +1190,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/crate'
+                        'Model': 'models/props/crate'
                     }
                 },
                 '1162581226.56dxschafe': {
@@ -1838,8 +1831,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.75, 0.699999988079071, 0.5899999737739563,
                                   1.0),
-                        'Model':
-                        'models/props/barrel_group_2'
+                        'Model': 'models/props/barrel_group_2'
                     }
                 },
                 '1163119851.86sdnaik': {
@@ -2845,7 +2837,8 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Color': (0.5, 0.5, 0.5, 1.0),
-                                'Model': 'models/props/interior_wall_fort_brick'
+                                'Model':
+                                'models/props/interior_wall_fort_brick'
                             }
                         },
                         '1177976192.0dxschafe': {
@@ -2929,7 +2922,8 @@ objectStruct = {
                             'Pos': Point3(-150.789, 62.472, -39.772),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Model': 'models/props/interior_wall_fort_brick'
+                                'Model':
+                                'models/props/interior_wall_fort_brick'
                             }
                         },
                         '1177977728.0dxschafe0': {
@@ -3025,8 +3019,9 @@ objectStruct = {
                             'Pos': Point3(342.497, -450.652, 218.902),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Color': (0.7200000286102295, 0.699999988079071,
-                                          0.5899999737739563, 1.0),
+                                'Color':
+                                (0.7200000286102295, 0.699999988079071,
+                                 0.5899999737739563, 1.0),
                                 'Model':
                                 'models/islands/pier_scaffold_2long'
                             }
@@ -3039,8 +3034,9 @@ objectStruct = {
                             'Pos': Point3(-47.015, 56.282, -23.116),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Color': (0.7200000286102295, 0.699999988079071,
-                                          0.5899999737739563, 1.0),
+                                'Color':
+                                (0.7200000286102295, 0.699999988079071,
+                                 0.5899999737739563, 1.0),
                                 'Model':
                                 'models/islands/pier_scaffold_landing'
                             }
@@ -3077,8 +3073,9 @@ objectStruct = {
                             'Pos': Point3(88.766, 118.042, -46.437),
                             'Scale': VBase3(0.663, 0.663, 0.663),
                             'Visual': {
-                                'Color': (0.7200000286102295, 0.699999988079071,
-                                          0.5899999737739563, 1.0),
+                                'Color':
+                                (0.7200000286102295, 0.699999988079071,
+                                 0.5899999737739563, 1.0),
                                 'Model':
                                 'models/props/barrel'
                             },
@@ -5562,27 +5559,27 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1176853376.0dxschafe3', '1176853376.0dxschafe2', 'Bi-directional'], [
-        '1176853376.0dxschafe1', '1176853376.0dxschafe2', 'Bi-directional'
-    ], ['1176853376.0dxschafe0', '1176853376.0dxschafe1', 'Bi-directional'], [
-        '1176853632.0dxschafe', '1176853504.0dxschafe', 'Bi-directional'
-    ], ['1176853504.0dxschafe', '1176853504.0dxschafe0', 'Bi-directional'], [
-        '1176853504.0dxschafe1', '1176853504.0dxschafe0', 'Bi-directional'
-    ], ['1176853504.0dxschafe1', '1176853504.0dxschafe2', 'Bi-directional'], [
-        '1176853504.0dxschafe2', '1176853504.0dxschafe3', 'Bi-directional'
-    ], ['1176853504.0dxschafe3', '1176853504.0dxschafe4', 'Bi-directional'], [
-        '1176853504.0dxschafe5', '1176853504.0dxschafe4', 'Bi-directional'
-    ], ['1176854144.0dxschafe1', '1176854144.0dxschafe2', 'Bi-directional'], [
-        '1176854144.0dxschafe1', '1176854144.0dxschafe0', 'Bi-directional'
-    ], ['1176854144.0dxschafe0', '1176854144.0dxschafe', 'Bi-directional'], [
-        '1176853888.0dxschafe', '1176854144.0dxschafe', 'Bi-directional'
-    ], ['1176853888.0dxschafe', '1176853760.0dxschafe0', 'Bi-directional'], [
-        '1176854912.0dxschafe', '1176854912.0dxschafe0', 'Bi-directional'
-    ], ['1176855808.0dxschafe', '1176855808.0dxschafe0', 'Bi-directional'], [
-        '1176855808.0dxschafe', '1176855680.0dxschafe2', 'Bi-directional'
-    ], ['1176856064.0dxschafe2', '1176856064.0dxschafe3', 'Bi-directional'], [
-        '1176856064.0dxschafe2', '1176856064.0dxschafe1', 'Bi-directional'
-    ], ['1176855680.0dxschafe1', '1176855680.0dxschafe0', 'Bi-directional'],
+    [['1176853376.0dxschafe3', '1176853376.0dxschafe2', 'Bi-directional'],
+     ['1176853376.0dxschafe1', '1176853376.0dxschafe2', 'Bi-directional'],
+     ['1176853376.0dxschafe0', '1176853376.0dxschafe1', 'Bi-directional'],
+     ['1176853632.0dxschafe', '1176853504.0dxschafe', 'Bi-directional'],
+     ['1176853504.0dxschafe', '1176853504.0dxschafe0', 'Bi-directional'],
+     ['1176853504.0dxschafe1', '1176853504.0dxschafe0', 'Bi-directional'],
+     ['1176853504.0dxschafe1', '1176853504.0dxschafe2', 'Bi-directional'],
+     ['1176853504.0dxschafe2', '1176853504.0dxschafe3', 'Bi-directional'],
+     ['1176853504.0dxschafe3', '1176853504.0dxschafe4', 'Bi-directional'],
+     ['1176853504.0dxschafe5', '1176853504.0dxschafe4', 'Bi-directional'],
+     ['1176854144.0dxschafe1', '1176854144.0dxschafe2', 'Bi-directional'],
+     ['1176854144.0dxschafe1', '1176854144.0dxschafe0', 'Bi-directional'],
+     ['1176854144.0dxschafe0', '1176854144.0dxschafe', 'Bi-directional'],
+     ['1176853888.0dxschafe', '1176854144.0dxschafe', 'Bi-directional'],
+     ['1176853888.0dxschafe', '1176853760.0dxschafe0', 'Bi-directional'],
+     ['1176854912.0dxschafe', '1176854912.0dxschafe0', 'Bi-directional'],
+     ['1176855808.0dxschafe', '1176855808.0dxschafe0', 'Bi-directional'],
+     ['1176855808.0dxschafe', '1176855680.0dxschafe2', 'Bi-directional'],
+     ['1176856064.0dxschafe2', '1176856064.0dxschafe3', 'Bi-directional'],
+     ['1176856064.0dxschafe2', '1176856064.0dxschafe1', 'Bi-directional'],
+     ['1176855680.0dxschafe1', '1176855680.0dxschafe0', 'Bi-directional'],
      ['1178836352.0dxschafe0', '1178836480.0dxschafe', 'Bi-directional'],
      ['1178836480.0dxschafe2', '1178836480.0dxschafe1', 'Bi-directional']],
     'Layers': {},

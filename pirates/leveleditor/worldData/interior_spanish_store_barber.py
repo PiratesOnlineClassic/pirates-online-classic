@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.interior_spanish_store_barber
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1153420207.67dzlu01': {
@@ -544,8 +545,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.7764705882352941, 0.7176470588235294, 0.6,
                                   1.0),
-                        'Model':
-                        'models/props/shop_barber_handMirrorSilver'
+                        'Model': 'models/props/shop_barber_handMirrorSilver'
                     }
                 },
                 '1199728129.67akelts': {

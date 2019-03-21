@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.DelFuegoIsland
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {
         0: Vec4(0.496039, 0.568627, 0.67451, 1),
@@ -29,23 +30,23 @@ objectStruct = {
         8: 0.0002
     },
     'Interact Links':
-    [['1176229120.0dxschafe0', '1176229120.0dxschafe1', 'Bi-directional'], [
-        '1189471232.0dxschafe', '1189470592.0dxschafe3', 'Bi-directional'
-    ], ['1189471232.0dxschafe2', '1189470592.0dxschafe1', 'Bi-directional'],
+    [['1176229120.0dxschafe0', '1176229120.0dxschafe1', 'Bi-directional'],
+     ['1189471232.0dxschafe', '1189470592.0dxschafe3', 'Bi-directional'],
+     ['1189471232.0dxschafe2', '1189470592.0dxschafe1', 'Bi-directional'],
      ['1189470592.0dxschafe2', '1189471232.0dxschafe0', 'Bi-directional'],
      ['1189471232.0dxschafe1', '1189470592.0dxschafe', 'Bi-directional']],
     'Locator Links':
-    [['1158120851.05sdnaik', '1158120448.17sdnaik', 'Bi-directional'], [
-        '1158123738.78sdnaik', '1158123603.92sdnaik', 'Bi-directional'
-    ], ['1158123997.81sdnaik', '1153509328.84sdnaik', 'Bi-directional'], [
-        '1158123997.89sdnaik', '1167857698.22sdnaik', 'Bi-directional'
-    ], ['1164929430.19sdnaik', '1167857698.19sdnaik', 'Bi-directional'], [
-        '1158123738.83sdnaik', '1167879276.14sdnaik', 'Bi-directional'
-    ], ['1167862588.59sdnaik', '1164929430.2sdnaik', 'Bi-directional'], [
-        '1164929111.03sdnaik', '1158120851.09sdnaik', 'Bi-directional'
-    ], ['1167862588.55sdnaik', '1158121685.56sdnaik', 'Bi-directional'], [
-        '1158121685.63sdnaik', '1168057131.75sdnaik', 'Bi-directional'
-    ], ['1168057131.78sdnaik', '1168057258.83sdnaik', 'Bi-directional'],
+    [['1158120851.05sdnaik', '1158120448.17sdnaik', 'Bi-directional'],
+     ['1158123738.78sdnaik', '1158123603.92sdnaik', 'Bi-directional'],
+     ['1158123997.81sdnaik', '1153509328.84sdnaik', 'Bi-directional'],
+     ['1158123997.89sdnaik', '1167857698.22sdnaik', 'Bi-directional'],
+     ['1164929430.19sdnaik', '1167857698.19sdnaik', 'Bi-directional'],
+     ['1158123738.83sdnaik', '1167879276.14sdnaik', 'Bi-directional'],
+     ['1167862588.59sdnaik', '1164929430.2sdnaik', 'Bi-directional'],
+     ['1164929111.03sdnaik', '1158120851.09sdnaik', 'Bi-directional'],
+     ['1167862588.55sdnaik', '1158121685.56sdnaik', 'Bi-directional'],
+     ['1158121685.63sdnaik', '1168057131.75sdnaik', 'Bi-directional'],
+     ['1168057131.78sdnaik', '1168057258.83sdnaik', 'Bi-directional'],
      ['1164929111.0sdnaik', '1168057258.8sdnaik', 'Bi-directional']],
     'Objects': {
         '1142018473.22dxschafe': {
@@ -79,7 +80,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_a_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_a_exterior'
                     }
                 },
                 '1153427043.1dzlu': {
@@ -108,7 +110,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_g_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_g_exterior'
                     }
                 },
                 '1153430563.72dzlu': {
@@ -130,7 +133,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_d_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_d_exterior'
                     }
                 },
                 '1153430674.19dzlu': {
@@ -531,7 +535,8 @@ objectStruct = {
                         'Model':
                         'models/buildings/spanish_npc_house_d_exterior',
                         'SignFrame': 'models/buildings/sign1_spanish_b_frame',
-                        'SignImage': 'models/buildings/sign1_eng_a_icon_jeweler'
+                        'SignImage':
+                        'models/buildings/sign1_eng_a_icon_jeweler'
                     }
                 },
                 '1153435428.14dzlu': {
@@ -644,7 +649,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_p_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_p_exterior'
                     }
                 },
                 '1153435903.89dzlu': {
@@ -666,7 +672,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_p_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_p_exterior'
                     }
                 },
                 '1153436006.19dzlu': {
@@ -688,7 +695,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_o_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_o_exterior'
                     }
                 },
                 '1153436023.94dzlu': {
@@ -710,7 +718,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_d_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_d_exterior'
                     }
                 },
                 '1153436035.52dzlu': {
@@ -732,7 +741,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_k_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_k_exterior'
                     }
                 },
                 '1153436052.28dzlu': {
@@ -754,7 +764,8 @@ objectStruct = {
                     'Visual': {
                         'Name': '',
                         'Door': 'models/buildings/shanty_guildhall_door',
-                        'Model': 'models/buildings/spanish_npc_house_p_exterior'
+                        'Model':
+                        'models/buildings/spanish_npc_house_p_exterior'
                     }
                 },
                 '1153436073.35dzlu': {
@@ -780,7 +791,8 @@ objectStruct = {
                         'Model':
                         'models/buildings/spanish_npc_house_p_exterior',
                         'SignFrame': 'models/buildings/sign1_spanish_a_frame',
-                        'SignImage': 'models/buildings/sign1_eng_a_icon_weapons'
+                        'SignImage':
+                        'models/buildings/sign1_eng_a_icon_weapons'
                     }
                 },
                 '1153436123.61dzlu': {
@@ -1093,7 +1105,8 @@ objectStruct = {
                         'Model':
                         'models/buildings/spanish_npc_house_e_exterior',
                         'SignFrame': 'models/buildings/sign1_spanish_a_frame',
-                        'SignImage': 'models/buildings/sign1_eng_a_icon_weapons'
+                        'SignImage':
+                        'models/buildings/sign1_eng_a_icon_weapons'
                     }
                 },
                 '1153437585.28dzlu': {
@@ -1819,7 +1832,8 @@ objectStruct = {
                         'Door': 'models/buildings/shanty_guildhall_door',
                         'Model': 'models/buildings/shanty_npc_house_combo_H',
                         'SignFrame': 'models/buildings/sign1_shanty_a_frame',
-                        'SignImage': 'models/buildings/sign1_eng_a_icon_jeweler'
+                        'SignImage':
+                        'models/buildings/sign1_eng_a_icon_jeweler'
                     }
                 },
                 '1153778118.18dzlu': {
@@ -1860,7 +1874,8 @@ objectStruct = {
                         'Interior': 'models/buildings/interior_mansion_gov',
                         'Model': 'models/buildings/shanty_npc_house_combo_B',
                         'SignFrame': 'models/buildings/sign1_shanty_a_frame',
-                        'SignImage': 'models/buildings/sign1_eng_a_icon_weapons'
+                        'SignImage':
+                        'models/buildings/sign1_eng_a_icon_weapons'
                     }
                 },
                 '1153778153.99dzlu': {
@@ -2716,7 +2731,8 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Color': (0.5, 0.5, 0.5, 1.0),
-                                'Model': 'models/props/interior_wall_fort_brick'
+                                'Model':
+                                'models/props/interior_wall_fort_brick'
                             }
                         },
                         '1175824256.0dxschafe': {
@@ -2727,7 +2743,8 @@ objectStruct = {
                             'Pos': Point3(117.92, -68.463, 0.0),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Color': (0.49, 0.45, 0.30980392156862746, 1.0),
+                                'Color': (0.49, 0.45, 0.30980392156862746,
+                                          1.0),
                                 'Model': 'models/props/crates_group_1'
                             }
                         },
@@ -4400,8 +4417,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.62, 0.596078431372549, 0.5764705882352941,
                                   1.0),
-                        'Model':
-                        'models/buildings/TallWallStone_Column'
+                        'Model': 'models/buildings/TallWallStone_Column'
                     }
                 },
                 '1155688040.88dxschafe': {
@@ -4413,8 +4429,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.62, 0.596078431372549, 0.5764705882352941,
                                   1.0),
-                        'Model':
-                        'models/buildings/TallWallStone_20'
+                        'Model': 'models/buildings/TallWallStone_20'
                     }
                 },
                 '1155688072.41dxschafe': {
@@ -4448,8 +4463,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.62, 0.596078431372549, 0.5764705882352941,
                                   1.0),
-                        'Model':
-                        'models/buildings/TallWallStone_20'
+                        'Model': 'models/buildings/TallWallStone_20'
                     }
                 },
                 '1155688602.99dxschafe': {
@@ -4687,8 +4701,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.62, 0.596078431372549, 0.5764705882352941,
                                   1.0),
-                        'Model':
-                        'models/buildings/TallWallStone_Column'
+                        'Model': 'models/buildings/TallWallStone_Column'
                     }
                 },
                 '1155769179.08dxschafe': {
@@ -12218,63 +12231,63 @@ objectStruct = {
             }
         }
     },
-    'Node Links': [[
-        '1176420352.0dxschafe0', '1176420352.0dxschafe', 'Bi-directional'
-    ], ['1176420608.0dxschafe', '1176420608.0dxschafe0', 'Bi-directional'], [
-        '1176420608.0dxschafe', '1176420480.0dxschafe0', 'Bi-directional'
-    ], ['1176420480.0dxschafe0', '1176420480.0dxschafe1', 'Bi-directional'], [
-        '1176420480.0dxschafe1', '1176420480.0dxschafe', 'Bi-directional'
-    ], ['1176420480.0dxschafe', '1176420608.0dxschafe1', 'Bi-directional'], [
-        '1176420736.0dxschafe2', '1176420736.0dxschafe0', 'Bi-directional'
-    ], ['1176420736.0dxschafe2', '1176420736.0dxschafe1', 'Bi-directional'], [
-        '1176420736.0dxschafe2', '1176420992.0dxschafe', 'Bi-directional'
-    ], ['1176420736.0dxschafe0', '1176420736.0dxschafe1', 'Bi-directional'], [
-        '1176420736.0dxschafe0', '1176420992.0dxschafe', 'Bi-directional'
-    ], ['1176420736.0dxschafe1', '1176420992.0dxschafe', 'Bi-directional'], [
-        '1176421120.0dxschafe1', '1176421120.0dxschafe', 'Bi-directional'
-    ], ['1176421120.0dxschafe1', '1176421248.0dxschafe0', 'Bi-directional'], [
-        '1176421120.0dxschafe1', '1176421248.0dxschafe', 'Bi-directional'
-    ], ['1176421120.0dxschafe', '1176421248.0dxschafe0', 'Bi-directional'], [
-        '1176421120.0dxschafe', '1176421248.0dxschafe', 'Bi-directional'
-    ], ['1176421248.0dxschafe0', '1176421248.0dxschafe', 'Bi-directional'], [
-        '1176421504.0dxschafe0', '1176421504.0dxschafe', 'Bi-directional'
-    ], ['1176421632.0dxschafe0', '1176421632.0dxschafe', 'Bi-directional'], [
-        '1176421760.0dxschafe1', '1176421760.0dxschafe0', 'Bi-directional'
-    ], ['1176421760.0dxschafe', '1176421760.0dxschafe0', 'Bi-directional'], [
-        '1176422016.0dxschafe0', '1176422016.0dxschafe1', 'Bi-directional'
-    ], ['1176422016.0dxschafe0', '1176422016.0dxschafe', 'Bi-directional'], [
-        '1176421888.0dxschafe', '1176422016.0dxschafe', 'Bi-directional'
-    ], ['1190672768.0dxschafe', '1192672128.0dxschafe2', 'Bi-directional'], [
-        '1192672128.0dxschafe3', '1192672128.0dxschafe2', 'Bi-directional'
-    ], ['1192672128.0dxschafe3', '1192672128.0dxschafe4', 'Bi-directional'], [
-        '1192672128.0dxschafe5', '1192672128.0dxschafe4', 'Bi-directional'
-    ], ['1192672128.0dxschafe5', '1192672128.0dxschafe6', 'Bi-directional'], [
-        '1192672128.0dxschafe6', '1190672768.0dxschafe', 'Bi-directional'
-    ], ['1190672896.0dxschafe0', '1192672256.0dxschafe0', 'Bi-directional'], [
-        '1192672256.0dxschafe', '1192672256.0dxschafe0', 'Bi-directional'
-    ], ['1192672256.0dxschafe', '1192672256.0dxschafe3', 'Bi-directional'], [
-        '1192672256.0dxschafe3', '1192672256.0dxschafe2', 'Bi-directional'
-    ], ['1192672256.0dxschafe1', '1192672256.0dxschafe2', 'Bi-directional'], [
-        '1192672256.0dxschafe1', '1190672896.0dxschafe0', 'Bi-directional'
-    ], ['1192672256.0dxschafe2', '1192672128.0dxschafe0', 'Bi-directional'], [
-        '1192672256.0dxschafe', '1192672128.0dxschafe1', 'Bi-directional'
-    ], ['1192672128.0dxschafe3', '1190672896.0dxschafe', 'Bi-directional'], [
-        '1192672128.0dxschafe5', '1189470592.0dxschafe0', 'Bi-directional'
-    ], ['1192672384.0dxschafe', '1177377280.0dxschafe1', 'Bi-directional'], [
-        '1177377280.0dxschafe0', '1192672384.0dxschafe0', 'Bi-directional'
-    ], ['1192672512.0dxschafe', '1192672512.0dxschafe0', 'Bi-directional'], [
-        '1189470592.0dxschafe2', '1192672512.0dxschafe', 'Bi-directional'
-    ], ['1189470592.0dxschafe2', '1192672512.0dxschafe1', 'Bi-directional'], [
-        '1192672512.0dxschafe1', '1192672512.0dxschafe0', 'Bi-directional'
-    ], ['1176421248.0dxschafe0', '1192672768.0dxschafe0', 'Bi-directional'], [
-        '1192672768.0dxschafe', '1176420736.0dxschafe0', 'Bi-directional'
-    ], ['1192672896.0dxschafe', '1176420736.0dxschafe1', 'Bi-directional'], [
-        '1192672896.0dxschafe0', '1176420480.0dxschafe0', 'Bi-directional'
-    ], ['1192673024.0dxschafe', '1176421632.0dxschafe0', 'Bi-directional'], [
-        '1192673024.0dxschafe0', '1176420608.0dxschafe1', 'Bi-directional'
-    ], ['1192673152.0dxschafe2', '1192673152.0dxschafe1', 'Bi-directional'], [
-        '1192673152.0dxschafe1', '1192673152.0dxschafe0', 'Bi-directional'
-    ], ['1192673152.0dxschafe', '1192673152.0dxschafe0', 'Bi-directional']],
+    'Node Links':
+    [['1176420352.0dxschafe0', '1176420352.0dxschafe', 'Bi-directional'],
+     ['1176420608.0dxschafe', '1176420608.0dxschafe0', 'Bi-directional'],
+     ['1176420608.0dxschafe', '1176420480.0dxschafe0', 'Bi-directional'],
+     ['1176420480.0dxschafe0', '1176420480.0dxschafe1', 'Bi-directional'],
+     ['1176420480.0dxschafe1', '1176420480.0dxschafe', 'Bi-directional'],
+     ['1176420480.0dxschafe', '1176420608.0dxschafe1', 'Bi-directional'],
+     ['1176420736.0dxschafe2', '1176420736.0dxschafe0', 'Bi-directional'],
+     ['1176420736.0dxschafe2', '1176420736.0dxschafe1', 'Bi-directional'],
+     ['1176420736.0dxschafe2', '1176420992.0dxschafe', 'Bi-directional'],
+     ['1176420736.0dxschafe0', '1176420736.0dxschafe1', 'Bi-directional'],
+     ['1176420736.0dxschafe0', '1176420992.0dxschafe', 'Bi-directional'],
+     ['1176420736.0dxschafe1', '1176420992.0dxschafe', 'Bi-directional'],
+     ['1176421120.0dxschafe1', '1176421120.0dxschafe', 'Bi-directional'],
+     ['1176421120.0dxschafe1', '1176421248.0dxschafe0', 'Bi-directional'],
+     ['1176421120.0dxschafe1', '1176421248.0dxschafe', 'Bi-directional'],
+     ['1176421120.0dxschafe', '1176421248.0dxschafe0', 'Bi-directional'],
+     ['1176421120.0dxschafe', '1176421248.0dxschafe', 'Bi-directional'],
+     ['1176421248.0dxschafe0', '1176421248.0dxschafe', 'Bi-directional'],
+     ['1176421504.0dxschafe0', '1176421504.0dxschafe', 'Bi-directional'],
+     ['1176421632.0dxschafe0', '1176421632.0dxschafe', 'Bi-directional'],
+     ['1176421760.0dxschafe1', '1176421760.0dxschafe0', 'Bi-directional'],
+     ['1176421760.0dxschafe', '1176421760.0dxschafe0', 'Bi-directional'],
+     ['1176422016.0dxschafe0', '1176422016.0dxschafe1', 'Bi-directional'],
+     ['1176422016.0dxschafe0', '1176422016.0dxschafe', 'Bi-directional'],
+     ['1176421888.0dxschafe', '1176422016.0dxschafe', 'Bi-directional'],
+     ['1190672768.0dxschafe', '1192672128.0dxschafe2', 'Bi-directional'],
+     ['1192672128.0dxschafe3', '1192672128.0dxschafe2', 'Bi-directional'],
+     ['1192672128.0dxschafe3', '1192672128.0dxschafe4', 'Bi-directional'],
+     ['1192672128.0dxschafe5', '1192672128.0dxschafe4', 'Bi-directional'],
+     ['1192672128.0dxschafe5', '1192672128.0dxschafe6', 'Bi-directional'],
+     ['1192672128.0dxschafe6', '1190672768.0dxschafe', 'Bi-directional'],
+     ['1190672896.0dxschafe0', '1192672256.0dxschafe0', 'Bi-directional'],
+     ['1192672256.0dxschafe', '1192672256.0dxschafe0', 'Bi-directional'],
+     ['1192672256.0dxschafe', '1192672256.0dxschafe3', 'Bi-directional'],
+     ['1192672256.0dxschafe3', '1192672256.0dxschafe2', 'Bi-directional'],
+     ['1192672256.0dxschafe1', '1192672256.0dxschafe2', 'Bi-directional'],
+     ['1192672256.0dxschafe1', '1190672896.0dxschafe0', 'Bi-directional'],
+     ['1192672256.0dxschafe2', '1192672128.0dxschafe0', 'Bi-directional'],
+     ['1192672256.0dxschafe', '1192672128.0dxschafe1', 'Bi-directional'],
+     ['1192672128.0dxschafe3', '1190672896.0dxschafe', 'Bi-directional'],
+     ['1192672128.0dxschafe5', '1189470592.0dxschafe0', 'Bi-directional'],
+     ['1192672384.0dxschafe', '1177377280.0dxschafe1', 'Bi-directional'],
+     ['1177377280.0dxschafe0', '1192672384.0dxschafe0', 'Bi-directional'],
+     ['1192672512.0dxschafe', '1192672512.0dxschafe0', 'Bi-directional'],
+     ['1189470592.0dxschafe2', '1192672512.0dxschafe', 'Bi-directional'],
+     ['1189470592.0dxschafe2', '1192672512.0dxschafe1', 'Bi-directional'],
+     ['1192672512.0dxschafe1', '1192672512.0dxschafe0', 'Bi-directional'],
+     ['1176421248.0dxschafe0', '1192672768.0dxschafe0', 'Bi-directional'],
+     ['1192672768.0dxschafe', '1176420736.0dxschafe0', 'Bi-directional'],
+     ['1192672896.0dxschafe', '1176420736.0dxschafe1', 'Bi-directional'],
+     ['1192672896.0dxschafe0', '1176420480.0dxschafe0', 'Bi-directional'],
+     ['1192673024.0dxschafe', '1176421632.0dxschafe0', 'Bi-directional'],
+     ['1192673024.0dxschafe0', '1176420608.0dxschafe1', 'Bi-directional'],
+     ['1192673152.0dxschafe2', '1192673152.0dxschafe1', 'Bi-directional'],
+     ['1192673152.0dxschafe1', '1192673152.0dxschafe0', 'Bi-directional'],
+     ['1192673152.0dxschafe', '1192673152.0dxschafe0', 'Bi-directional']],
     'Layers': {
         'Collisions': [
             '1184008208.59kmuller', '1184016064.62kmuller',

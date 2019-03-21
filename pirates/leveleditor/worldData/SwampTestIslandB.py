@@ -1,11 +1,12 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.SwampTestIslandB
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Locator Links':
-    [['1153868315.8sdnaik0', '1152910060.11sdnaik', 'Bi-directional'], [
-        '1153868315.8sdnaik1', '1152910301.05sdnaik0', 'Bi-directional'
-    ], ['1153868634.75sdnaik0', '1152910060.11sdnaik0', 'Bi-directional'], [
-        '1152910307.13sdnaik', '1156281363.2sdnaik1', 'Bi-directional'
-    ], ['1156281161.64sdnaik0', '1156281363.2sdnaik0', 'Bi-directional'],
+    [['1153868315.8sdnaik0', '1152910060.11sdnaik', 'Bi-directional'],
+     ['1153868315.8sdnaik1', '1152910301.05sdnaik0', 'Bi-directional'],
+     ['1153868634.75sdnaik0', '1152910060.11sdnaik0', 'Bi-directional'],
+     ['1152910307.13sdnaik', '1156281363.2sdnaik1', 'Bi-directional'],
+     ['1156281161.64sdnaik0', '1156281363.2sdnaik0', 'Bi-directional'],
      ['1153868634.75sdnaik1', '1156302222.63sdnaik', 'Bi-directional']],
     'Objects': {
         '1152909972.77sdnaik': {
@@ -136,14 +137,12 @@ objectStruct = {
                             'Pos': Point3(506.389, 141.755, 45.292),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Name':
-                                'English A',
+                                'Name': 'English A',
                                 'Door':
                                 'models/buildings/shanty_guildhall_door',
                                 'Interior':
                                 'models/buildings/interior_shanty_guildhall',
-                                'Model':
-                                'models/buildings/english_corner_a'
+                                'Model': 'models/buildings/english_corner_a'
                             }
                         },
                         '1158184464.98sdnaik': {
@@ -170,14 +169,12 @@ objectStruct = {
                             'Pos': Point3(409.067, 155.856, 44.575),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Name':
-                                '',
+                                'Name': '',
                                 'Door':
                                 'models/buildings/shanty_guildhall_door',
                                 'Interior':
                                 'models/buildings/interior_shanty_guildhall',
-                                'Model':
-                                'models/buildings/english_a'
+                                'Model': 'models/buildings/english_a'
                             }
                         }
                     },

@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.piratesWorldNoShipPvp
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1141410776.53sdnaik': {
@@ -426,76 +427,102 @@ objectStruct = {
             }
         }
     },
-    'Ocean Areas': [[
-        Point3(11000, -1000, 0),
-        Point3(-3000, 15000, 0), 'Windward_Passage', '1180566400.0dxschafe0'
-    ], [
-        Point3(-29000, 21000, 0),
-        Point3(-15000, 9000, 0), 'Brigand_Bay', '1180567552.0dxschafe'
-    ], [
-        Point3(11000, 27000, 0),
-        Point3(-3000, 21000, 0), 'Blackheart_Strait', '1180568320.0dxschafe'
-    ], [
-        Point3(13000, 27000, 0),
-        Point3(25000, 15000, 0), 'Salty_Flats', '1180569600.0dxschafe'
-    ], [
-        Point3(25000, 13000, 0),
-        Point3(13000, -1000, 0), 'Mar_de_Plata', '1180569728.0dxschafe0'
-    ], [
-        Point3(17000, -3000, 0),
-        Point3(3000, -15000, 0), 'Smugglers_Run', '1180570240.0dxschafe'
-    ], [
-        Point3(19000, -9000, 0),
-        Point3(21000, -15000, 0), 'Smugglers_Run', '1180570240.0dxschafe0'
-    ], [
-        Point3(25000, -13000, 0),
-        Point3(23000, -15000, 0), 'The_Hinterseas', '1180570368.0dxschafe'
-    ], [
-        Point3(15000, -17000, 0),
-        Point3(25000, -29000, 0), 'The_Hinterseas', '1180570368.0dxschafe0'
-    ], [
-        Point3(25000, -11000, 0),
-        Point3(23000, -9000, 0), 'Mar_de_Plata', '1180570496.0dxschafe'
-    ], [
-        Point3(19000, -7000, 0),
-        Point3(25000, -3000, 0), 'Mar_de_Plata', '1180570496.0dxschafe0'
-    ], [
-        Point3(13000, -23000, 0),
-        Point3(3000, -17000, 0), 'Boiling_Bay', '1180571008.0dxschafe'
-    ], [
-        Point3(13000, -25000, 0),
-        Point3(-15000, -29000, 0), 'Mariners_Reef', '1180571008.0dxschafe0'
-    ], [
-        Point3(-3000, 19000, 0),
-        Point3(3000, 17000, 0), 'Blackheart_Strait', '1180571264.0dxschafe'
-    ], [
-        Point3(5000, 19000, 0),
-        Point3(11000, 17000, 0), 'Windward_Passage', '1180571776.0dxschafe'
-    ], [
-        Point3(-13000, 9000, 0),
-        Point3(-5000, 27000, 0), 'Scurvy_Shallows', '1191538304.0dxschafe'
-    ], [
-        Point3(-29000, -7000, 0),
-        Point3(-13000, -15000, 0), 'Dead_Mans_Trough', '1191539072.0dxschafe0'
-    ], [
-        Point3(-11000, -23000, 0),
-        Point3(1000, -7000, 0), 'Leeward_Passage', '1191539328.0dxschafe'
-    ], [
-        Point3(-15000, -17000, 0),
-        Point3(-13000, -23000, 0), 'Leeward_Passage', '1191539328.0dxschafe0'
-    ], [
-        Point3(-29000, 7000, 0),
-        Point3(-5000, -5000, 0), 'Bloody_Bayou', '1191539328.0dxschafe1'
-    ], [
-        Point3(-3000, -3000, 0),
-        Point3(1000, -5000, 0), 'Bloody_Bayou', '1191539328.0dxschafe2'
-    ]],
+    'Ocean Areas': [
+        [
+            Point3(11000, -1000, 0),
+            Point3(-3000, 15000, 0), 'Windward_Passage',
+            '1180566400.0dxschafe0'
+        ],
+        [
+            Point3(-29000, 21000, 0),
+            Point3(-15000, 9000, 0), 'Brigand_Bay', '1180567552.0dxschafe'
+        ],
+        [
+            Point3(11000, 27000, 0),
+            Point3(-3000, 21000, 0), 'Blackheart_Strait',
+            '1180568320.0dxschafe'
+        ],
+        [
+            Point3(13000, 27000, 0),
+            Point3(25000, 15000, 0), 'Salty_Flats', '1180569600.0dxschafe'
+        ],
+        [
+            Point3(25000, 13000, 0),
+            Point3(13000, -1000, 0), 'Mar_de_Plata', '1180569728.0dxschafe0'
+        ],
+        [
+            Point3(17000, -3000, 0),
+            Point3(3000, -15000, 0), 'Smugglers_Run', '1180570240.0dxschafe'
+        ],
+        [
+            Point3(19000, -9000, 0),
+            Point3(21000, -15000, 0), 'Smugglers_Run', '1180570240.0dxschafe0'
+        ],
+        [
+            Point3(25000, -13000, 0),
+            Point3(23000, -15000, 0), 'The_Hinterseas', '1180570368.0dxschafe'
+        ],
+        [
+            Point3(15000, -17000, 0),
+            Point3(25000, -29000, 0), 'The_Hinterseas', '1180570368.0dxschafe0'
+        ],
+        [
+            Point3(25000, -11000, 0),
+            Point3(23000, -9000, 0), 'Mar_de_Plata', '1180570496.0dxschafe'
+        ],
+        [
+            Point3(19000, -7000, 0),
+            Point3(25000, -3000, 0), 'Mar_de_Plata', '1180570496.0dxschafe0'
+        ],
+        [
+            Point3(13000, -23000, 0),
+            Point3(3000, -17000, 0), 'Boiling_Bay', '1180571008.0dxschafe'
+        ],
+        [
+            Point3(13000, -25000, 0),
+            Point3(-15000, -29000, 0), 'Mariners_Reef', '1180571008.0dxschafe0'
+        ],
+        [
+            Point3(-3000, 19000, 0),
+            Point3(3000, 17000, 0), 'Blackheart_Strait', '1180571264.0dxschafe'
+        ],
+        [
+            Point3(5000, 19000, 0),
+            Point3(11000, 17000, 0), 'Windward_Passage', '1180571776.0dxschafe'
+        ],
+        [
+            Point3(-13000, 9000, 0),
+            Point3(-5000, 27000, 0), 'Scurvy_Shallows', '1191538304.0dxschafe'
+        ],
+        [
+            Point3(-29000, -7000, 0),
+            Point3(-13000, -15000, 0), 'Dead_Mans_Trough',
+            '1191539072.0dxschafe0'
+        ],
+        [
+            Point3(-11000, -23000, 0),
+            Point3(1000, -7000, 0), 'Leeward_Passage', '1191539328.0dxschafe'
+        ],
+        [
+            Point3(-15000, -17000, 0),
+            Point3(-13000, -23000, 0), 'Leeward_Passage',
+            '1191539328.0dxschafe0'
+        ],
+        [
+            Point3(-29000, 7000, 0),
+            Point3(-5000, -5000, 0), 'Bloody_Bayou', '1191539328.0dxschafe1'
+        ],
+        [
+            Point3(-3000, -3000, 0),
+            Point3(1000, -5000, 0), 'Bloody_Bayou', '1191539328.0dxschafe2'
+        ]
+    ],
     'Node Links':
-    [['1185235968.0dxschafe1', '1185235968.0dxschafe0', 'Bi-directional'], [
-        '1185236224.0dxschafe', '1185236224.0dxschafe3', 'Bi-directional'
-    ], ['1185236480.0dxschafe', '1185236736.0dxschafe', 'Bi-directional'], [
-        '1185236864.0dxschafe', '1185236480.0dxschafe1', 'Bi-directional'
-    ], ['1185237120.0dxschafe2', '1185237120.0dxschafe', 'Bi-directional'],
+    [['1185235968.0dxschafe1', '1185235968.0dxschafe0', 'Bi-directional'],
+     ['1185236224.0dxschafe', '1185236224.0dxschafe3', 'Bi-directional'],
+     ['1185236480.0dxschafe', '1185236736.0dxschafe', 'Bi-directional'],
+     ['1185236864.0dxschafe', '1185236480.0dxschafe1', 'Bi-directional'],
+     ['1185237120.0dxschafe2', '1185237120.0dxschafe', 'Bi-directional'],
      ['1185237248.0dxschafe', '1185237120.0dxschafe1', 'Bi-directional']],
     'Layers': {},
     'ObjectIds': {

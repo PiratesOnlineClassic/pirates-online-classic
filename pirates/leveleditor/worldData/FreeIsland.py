@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.FreeIsland
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1149126646.29MAsaduzz': {
@@ -414,8 +415,7 @@ objectStruct = {
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model':
                                 'models/vegetation/fern_short_leaf_c_hi',
-                                'PartName':
-                                'leaf'
+                                'PartName': 'leaf'
                             }
                         }
                     },

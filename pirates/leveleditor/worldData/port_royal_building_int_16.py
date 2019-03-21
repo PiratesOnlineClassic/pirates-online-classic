@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.port_royal_building_int_16
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1155920174.59dzlu0': {

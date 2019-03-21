@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.pvpShipIsland2
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {
         0: Vec4(0.207843, 0.243137, 0.447059, 1),
@@ -381,8 +382,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.592156862745098, 0.56, 0.4823529411764706,
                                   1.0),
-                        'Model':
-                        'models/props/rock_group_4_sphere'
+                        'Model': 'models/props/rock_group_4_sphere'
                     }
                 },
                 '1203115947.03akelts': {
@@ -2195,8 +2195,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.396078431372549, 0.42, 0.3803921568627451,
                                   1.0),
-                        'Model':
-                        'models/props/rock_group_4_sphere'
+                        'Model': 'models/props/rock_group_4_sphere'
                     }
                 },
                 '1208811773.16akelts': {
@@ -2223,8 +2222,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.396078431372549, 0.42, 0.3411764705882353,
                                   1.0),
-                        'Model':
-                        'models/props/rock_group_5_floor'
+                        'Model': 'models/props/rock_group_5_floor'
                     }
                 },
                 '1208811776.03akelts': {
@@ -3337,8 +3335,7 @@ objectStruct = {
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model':
                                 'models/vegetation/fern_short_leaf_d_hi',
-                                'PartName':
-                                'leaf'
+                                'PartName': 'leaf'
                             }
                         }
                     },
@@ -3357,7 +3354,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/fern_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/fern_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/fern_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -3384,8 +3382,7 @@ objectStruct = {
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model':
                                 'models/vegetation/fern_short_leaf_c_hi',
-                                'PartName':
-                                'leaf'
+                                'PartName': 'leaf'
                             }
                         }
                     },
@@ -3409,8 +3406,7 @@ objectStruct = {
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model':
                                 'models/vegetation/fern_short_leaf_c_hi',
-                                'PartName':
-                                'leaf'
+                                'PartName': 'leaf'
                             }
                         }
                     },
@@ -3434,8 +3430,7 @@ objectStruct = {
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model':
                                 'models/vegetation/fern_short_leaf_c_hi',
-                                'PartName':
-                                'leaf'
+                                'PartName': 'leaf'
                             }
                         }
                     },
@@ -4039,8 +4034,7 @@ objectStruct = {
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model':
                                 'models/vegetation/fern_short_leaf_d_hi',
-                                'PartName':
-                                'leaf'
+                                'PartName': 'leaf'
                             }
                         }
                     },

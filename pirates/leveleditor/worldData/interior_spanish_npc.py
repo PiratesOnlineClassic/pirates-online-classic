@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.interior_spanish_npc
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1153420207.67dzlu02': {
@@ -476,8 +477,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (1.0, 0.7799999713897705, 0.5299999713897705,
                                   1.0),
-                        'Model':
-                        'models/props/light_tool_bulb'
+                        'Model': 'models/props/light_tool_bulb'
                     }
                 },
                 '1176421134.0dzlu': {

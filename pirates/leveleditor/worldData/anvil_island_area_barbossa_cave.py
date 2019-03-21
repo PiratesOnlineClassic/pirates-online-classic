@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.anvil_island_area_barbossa_cave
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1172209006.11sdnaik': {
@@ -12,7 +13,7 @@ objectStruct = {
                     'Name': 'portal_interior_1',
                     'Hpr': VBase3(95.675, 0.0, 0.0),
                     'Pos': Point3(85.919, -190.083, 24.757),
-                    'Scale': VBase3(1.0, 1.0, 1.0),
+                    'Scale': VBase3(1.0, 1.0, 1.0)
                 },
                 '1172618710.78sdnaik': {
                     'Type': 'Townsperson',
@@ -32,7 +33,7 @@ objectStruct = {
                     'Start State': 'Idle',
                     'StartFrame': '0',
                     'Team': 'Villager',
-                    'TrailFX': 'None',
+                    'TrailFX': 'None'
                 },
                 '1173468367.09kmuller': {
                     'Type': 'Treasure Chest',
@@ -41,7 +42,7 @@ objectStruct = {
                     'Scale': VBase3(0.863, 0.863, 0.863),
                     'Visual': {
                         'Model': 'models/props/treasureChest_open'
-                    },
+                    }
                 },
                 '1173468423.53kmuller': {
                     'Type': 'Treasure Chest',
@@ -54,14 +55,14 @@ objectStruct = {
                             'Scale': VBase3(1.362, 1.362, 1.362),
                             'Visual': {
                                 'Model': 'models/props/treasure_sconce'
-                            },
+                            }
                         }
                     },
                     'Pos': Point3(-21.29, 7.239, 3.606),
                     'Scale': VBase3(0.734, 0.734, 0.734),
                     'Visual': {
                         'Model': 'models/props/treasureTrough'
-                    },
+                    }
                 },
                 '1173468471.78kmuller': {
                     'Type': 'Treasure Chest',
@@ -75,7 +76,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/chair_fancy'
-                            },
+                            }
                         },
                         '1173471860.03kmuller': {
                             'Type': 'Jugs_and_Jars',
@@ -85,14 +86,14 @@ objectStruct = {
                             'Visual': {
                                 'Color': (1.0, 0.71, 0.82, 1.0),
                                 'Model': 'models/props/bottle_red'
-                            },
+                            }
                         }
                     },
                     'Pos': Point3(-33.657, -18.259, 3.981),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/treasureTrough'
-                    },
+                    }
                 },
                 '1173468497.0kmuller': {
                     'Type': 'Treasure Chest',
@@ -105,7 +106,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/treasureChest_open'
-                            },
+                            }
                         },
                         '1173471969.92kmuller': {
                             'Type': 'Treasure Chest',
@@ -114,7 +115,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/treasure_chandelier'
-                            },
+                            }
                         },
                         '1173472001.3kmuller': {
                             'Type': 'Jugs_and_Jars',
@@ -123,7 +124,7 @@ objectStruct = {
                             'Scale': VBase3(1.072, 1.072, 1.072),
                             'Visual': {
                                 'Model': 'models/props/bottle_green'
-                            },
+                            }
                         },
                         '1173473947.56kmuller': {
                             'Type': 'Trunks',
@@ -132,18 +133,19 @@ objectStruct = {
                             'Pos': Point3(1.736, -1.62, 0.559),
                             'Scale': VBase3(0.761, 0.761, 0.761),
                             'Visual': {
-                                'Color': (0.7200000286102295, 0.699999988079071,
-                                          0.5899999737739563, 1.0),
+                                'Color':
+                                (0.7200000286102295, 0.699999988079071,
+                                 0.5899999737739563, 1.0),
                                 'Model':
                                 'models/props/Trunk_rounded_2'
-                            },
-                        },
+                            }
+                        }
                     },
                     'Pos': Point3(-24.383, -15.746, 3.792),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/treasureTrough'
-                    },
+                    }
                 },
                 '1173471575.44kmuller': {
                     'Type': 'Treasure Chest',
@@ -161,7 +163,7 @@ objectStruct = {
                                  0.6000000238418579, 1.0),
                                 'Model':
                                 'models/props/barrel_worn'
-                            },
+                            }
                         },
                         '1173471671.51kmuller': {
                             'Type': 'Wall_Hangings',
@@ -170,7 +172,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/seascape_battle'
-                            },
+                            }
                         },
                         '1173472099.22kmuller': {
                             'Type': 'Jugs_and_Jars',
@@ -183,14 +185,14 @@ objectStruct = {
                                  0.6000000238418579, 1.0),
                                 'Model':
                                 'models/props/bottle_tan'
-                            },
+                            }
                         }
                     },
                     'Pos': Point3(-33.146, -6.186, 3.947),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/treasureTrough'
-                    },
+                    }
                 },
                 '1173471597.2kmuller': {
                     'Type': 'Treasure Chest',
@@ -200,7 +202,7 @@ objectStruct = {
                     'Scale': VBase3(1.221, 1.221, 1.221),
                     'Visual': {
                         'Model': 'models/props/treasureTrough_single'
-                    },
+                    }
                 },
                 '1173471783.73kmuller': {
                     'Type': 'Crate',
@@ -210,7 +212,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/crates_group_2'
-                    },
+                    }
                 },
                 '1173472048.89kmuller': {
                     'Type': 'Treasure Chest',
@@ -219,7 +221,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/treasureChest_closed'
-                    },
+                    }
                 },
                 '1173472175.67kmuller': {
                     'Type': 'Treasure Chest',
@@ -232,7 +234,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/treasureTrough_single'
-                            },
+                            }
                         },
                         '1173472843.22kmuller': {
                             'Type': 'Barrel',
@@ -241,11 +243,12 @@ objectStruct = {
                             'Pos': Point3(2.816, 3.404, 0.009),
                             'Scale': VBase3(0.784, 0.784, 0.784),
                             'Visual': {
-                                'Color': (0.7200000286102295, 0.699999988079071,
-                                          0.5899999737739563, 1.0),
+                                'Color':
+                                (0.7200000286102295, 0.699999988079071,
+                                 0.5899999737739563, 1.0),
                                 'Model':
                                 'models/props/barrel_grey'
-                            },
+                            }
                         },
                         '1173473890.48kmuller': {
                             'Type': 'Treasure Chest',
@@ -254,7 +257,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/treasureChest_open'
-                            },
+                            }
                         },
                         '1173474959.44kmuller': {
                             'Type': 'Jugs_and_Jars',
@@ -263,14 +266,14 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/bottle_red'
-                            },
-                        },
+                            }
+                        }
                     },
                     'Pos': Point3(26.083, -7.65, 2.748),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/treasureTrough'
-                    },
+                    }
                 },
                 '1173472197.86kmuller': {
                     'Type': 'Treasure Chest',
@@ -288,14 +291,14 @@ objectStruct = {
                                  0.4000000059604645, 1.0),
                                 'Model':
                                 'models/props/Trunk_rounded'
-                            },
+                            }
                         }
                     },
                     'Pos': Point3(25.568, 3.214, 2.794),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/treasureTrough'
-                    },
+                    }
                 },
                 '1173472392.78kmuller': {
                     'Type': 'Treasure Chest',
@@ -304,7 +307,7 @@ objectStruct = {
                     'Scale': VBase3(1.19, 1.19, 1.19),
                     'Visual': {
                         'Model': 'models/props/treasureTrough_single'
-                    },
+                    }
                 },
                 '1173472402.28kmuller': {
                     'Type': 'Treasure Chest',
@@ -313,7 +316,7 @@ objectStruct = {
                     'Scale': VBase3(0.931, 0.931, 0.931),
                     'Visual': {
                         'Model': 'models/props/treasureTrough_single'
-                    },
+                    }
                 },
                 '1173472651.34kmuller': {
                     'Type': 'Treasure Chest',
@@ -322,7 +325,7 @@ objectStruct = {
                     'Scale': VBase3(0.775, 0.775, 0.775),
                     'Visual': {
                         'Model': 'models/props/treasureTrough_single'
-                    },
+                    }
                 },
                 '1173472721.78kmuller': {
                     'Type': 'Barrel',
@@ -335,7 +338,7 @@ objectStruct = {
                                   0.5899999737739563, 1.0),
                         'Model':
                         'models/props/barrel_grey'
-                    },
+                    }
                 },
                 '1173473917.97kmuller': {
                     'Type': 'Wall_Hangings',
@@ -344,7 +347,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/portrait_gov'
-                    },
+                    }
                 },
                 '1173474152.67kmuller': {
                     'Type': 'Crate',
@@ -357,7 +360,7 @@ objectStruct = {
                                   0.6000000238418579, 1.0),
                         'Model':
                         'models/props/crate_04'
-                    },
+                    }
                 },
                 '1173474457.5kmuller': {
                     'Type': 'Crate',
@@ -370,7 +373,7 @@ objectStruct = {
                                   0.4000000059604645, 1.0),
                         'Model':
                         'models/props/crate'
-                    },
+                    }
                 },
                 '1173474718.7kmuller': {
                     'Type': 'Treasure Chest',
@@ -379,7 +382,7 @@ objectStruct = {
                     'Scale': VBase3(0.738, 0.738, 0.738),
                     'Visual': {
                         'Model': 'models/props/treasureChest_closed'
-                    },
+                    }
                 },
                 '1173475002.56kmuller': {
                     'Type': 'Crate',
@@ -392,7 +395,7 @@ objectStruct = {
                                   0.699999988079071, 1.0),
                         'Model':
                         'models/props/crates_group_1'
-                    },
+                    }
                 },
                 '1173475022.66kmuller': {
                     'Type': 'Barrel',
@@ -403,7 +406,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.91, 0.86, 0.65, 1.0),
                         'Model': 'models/props/barrel_worn'
-                    },
+                    }
                 },
                 '1173475076.05kmuller': {
                     'Type': 'Treasure Chest',
@@ -416,7 +419,7 @@ objectStruct = {
                             'Scale': VBase3(1.792, 1.792, 1.792),
                             'Visual': {
                                 'Model': 'models/props/largejug_A'
-                            },
+                            }
                         },
                         '1173475343.87kmuller': {
                             'Type': 'Wall_Hangings',
@@ -425,14 +428,14 @@ objectStruct = {
                             'Scale': VBase3(0.636, 0.636, 0.636),
                             'Visual': {
                                 'Model': 'models/props/seascape_port'
-                            },
+                            }
                         }
                     },
                     'Pos': Point3(-102.684, -32.061, 40.039),
                     'Scale': VBase3(1.572, 1.572, 1.572),
                     'Visual': {
                         'Model': 'models/props/treasureTrough_single'
-                    },
+                    }
                 },
                 '1173475106.3kmuller': {
                     'Type': 'Treasure Chest',
@@ -441,7 +444,7 @@ objectStruct = {
                     'Scale': VBase3(1.53, 1.53, 1.53),
                     'Visual': {
                         'Model': 'models/props/treasureTrough_single'
-                    },
+                    }
                 },
                 '1173475150.47kmuller': {
                     'Type': 'Treasure Chest',
@@ -450,7 +453,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/treasureChest_open'
-                    },
+                    }
                 },
                 '1173475212.69kmuller': {
                     'Type': 'Treasure Chest',
@@ -459,7 +462,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/treasureTrough_single'
-                    },
+                    }
                 },
                 '1173475484.11kmuller': {
                     'Type': 'Treasure Chest',
@@ -477,7 +480,7 @@ objectStruct = {
                                  0.49000000953674316, 1.0),
                                 'Model':
                                 'models/props/barrel_group_3'
-                            },
+                            }
                         },
                         '1173475599.84kmuller': {
                             'Type': 'Treasure Chest',
@@ -486,7 +489,7 @@ objectStruct = {
                             'Scale': VBase3(0.724, 0.724, 0.724),
                             'Visual': {
                                 'Model': 'models/props/treasureChest_open'
-                            },
+                            }
                         },
                         '1173475645.34kmuller': {
                             'Type': 'Furniture - Fancy',
@@ -496,7 +499,7 @@ objectStruct = {
                             'Scale': VBase3(0.724, 0.724, 0.724),
                             'Visual': {
                                 'Model': 'models/props/stool_fancy'
-                            },
+                            }
                         },
                         '1173475705.97kmuller': {
                             'Type': 'Trunks',
@@ -506,7 +509,7 @@ objectStruct = {
                             'Scale': VBase3(0.724, 0.724, 0.724),
                             'Visual': {
                                 'Model': 'models/props/Trunk_rounded_2'
-                            },
+                            }
                         },
                         '1173494051.56kmuller': {
                             'Type': 'Trunks',
@@ -516,14 +519,14 @@ objectStruct = {
                             'Scale': VBase3(0.747, 0.747, 0.747),
                             'Visual': {
                                 'Model': 'models/props/Trunk_rounded_2'
-                            },
-                        },
+                            }
+                        }
                     },
                     'Pos': Point3(-71.338, -79.459, 29.129),
                     'Scale': VBase3(1.38, 1.38, 1.38),
                     'Visual': {
                         'Model': 'models/props/treasureTrough'
-                    },
+                    }
                 },
                 '1173475529.08kmuller': {
                     'Type': 'Treasure Chest',
@@ -532,7 +535,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/treasureTrough_single'
-                    },
+                    }
                 },
                 '1173476346.23kmuller': {
                     'Type': 'Treasure Chest',
@@ -541,7 +544,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/treasureTrough_single'
-                    },
+                    }
                 },
                 '1173476370.78kmuller': {
                     'Type': 'Jugs_and_Jars',
@@ -550,7 +553,7 @@ objectStruct = {
                     'Scale': VBase3(1.115, 1.115, 1.115),
                     'Visual': {
                         'Model': 'models/props/bottle_green'
-                    },
+                    }
                 },
                 '1173476412.98kmuller': {
                     'Type': 'Jugs_and_Jars',
@@ -559,7 +562,7 @@ objectStruct = {
                     'Scale': VBase3(2.558, 2.558, 2.558),
                     'Visual': {
                         'Model': 'models/props/waterpitcher'
-                    },
+                    }
                 },
                 '1173476478.11kmuller': {
                     'Type': 'Treasure Chest',
@@ -577,7 +580,7 @@ objectStruct = {
                                  0.49000000953674316, 1.0),
                                 'Model':
                                 'models/props/crates_group_1'
-                            },
+                            }
                         },
                         '1173476711.03kmuller': {
                             'Type': 'Barrel',
@@ -587,7 +590,7 @@ objectStruct = {
                             'Scale': VBase3(0.943, 0.943, 0.943),
                             'Visual': {
                                 'Model': 'models/props/barrel_grey'
-                            },
+                            }
                         },
                         '1173476839.64kmuller': {
                             'Type': 'Jugs_and_Jars',
@@ -596,14 +599,14 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/bottle_green'
-                            },
+                            }
                         }
                     },
                     'Pos': Point3(79.984, -90.141, 5.219),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/treasureTrough'
-                    },
+                    }
                 },
                 '1173476568.78kmuller': {
                     'Type': 'Treasure Chest',
@@ -616,14 +619,14 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/treasureChest_open'
-                            },
+                            }
                         }
                     },
                     'Pos': Point3(78.207, -95.333, 6.207),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/treasureTrough'
-                    },
+                    }
                 },
                 '1173476595.0kmuller': {
                     'Type': 'Treasure Chest',
@@ -636,14 +639,14 @@ objectStruct = {
                             'Scale': VBase3(1.172, 1.172, 1.172),
                             'Visual': {
                                 'Model': 'models/props/bottle_red'
-                            },
+                            }
                         }
                     },
                     'Pos': Point3(87.998, -95.619, 6.261),
                     'Scale': VBase3(1.28, 1.28, 1.28),
                     'Visual': {
                         'Model': 'models/props/treasureTrough_single'
-                    },
+                    }
                 },
                 '1173476807.97kmuller': {
                     'Type': 'Furniture - Fancy',
@@ -653,7 +656,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/chair_fancy'
-                    },
+                    }
                 },
                 '1173476913.16kmuller': {
                     'Type': 'Treasure Chest',
@@ -666,7 +669,7 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Model': 'models/props/treasureChest_closed'
-                            },
+                            }
                         },
                         '1173494163.92kmuller': {
                             'Type': 'Jugs_and_Jars',
@@ -676,14 +679,14 @@ objectStruct = {
                             'Visual': {
                                 'Color': (1.0, 0.89, 0.77, 1.0),
                                 'Model': 'models/props/bottle_red'
-                            },
+                            }
                         }
                     },
                     'Pos': Point3(-59.872, -74.468, 8.903),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/treasureTrough_single'
-                    },
+                    }
                 },
                 '1173476951.55kmuller': {
                     'Type': 'Treasure Chest',
@@ -692,7 +695,7 @@ objectStruct = {
                     'Scale': VBase3(0.807, 0.807, 0.807),
                     'Visual': {
                         'Model': 'models/props/treasureTrough_single'
-                    },
+                    }
                 },
                 '1173477100.75kmuller': {
                     'Type': 'Treasure Chest',
@@ -709,14 +712,14 @@ objectStruct = {
                                  0.46000000834465027, 1.0),
                                 'Model':
                                 'models/props/bottle_tan'
-                            },
+                            }
                         }
                     },
                     'Pos': Point3(-2.817, 26.98, 3.312),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/treasureTrough_single'
-                    },
+                    }
                 },
                 '1173477117.31kmuller': {
                     'Type': 'Treasure Chest',
@@ -725,7 +728,7 @@ objectStruct = {
                     'Scale': VBase3(0.649, 0.649, 0.649),
                     'Visual': {
                         'Model': 'models/props/treasureTrough_single'
-                    },
+                    }
                 },
                 '1173477133.91kmuller': {
                     'Type': 'Treasure Chest',
@@ -734,7 +737,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/treasureChest_closed'
-                    },
+                    }
                 },
                 '1173494260.01kmuller': {
                     'Type': 'Cups',
@@ -743,7 +746,7 @@ objectStruct = {
                     'Scale': VBase3(1.402, 1.402, 1.402),
                     'Visual': {
                         'Model': 'models/props/beerstein'
-                    },
+                    }
                 },
                 '1175216546.7kmuller': {
                     'Type': 'Tunnel Cap',
@@ -752,7 +755,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/tunnels/tunnelcap_cave_interior'
-                    },
+                    }
                 },
                 '1175912064.0JB2': {
                     'Type': 'Animal',
@@ -767,7 +770,7 @@ objectStruct = {
                     'Species': 'Monkey',
                     'Start State': 'Idle',
                     'StartFrame': '0',
-                    'Team': 1,
+                    'Team': 1
                 },
                 '1176164583.28dzlu': {
                     'Type': 'Light - Dynamic',
@@ -784,7 +787,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (1, 1, 1, 1),
                         'Model': 'models/props/light_tool_bulb'
-                    },
+                    }
                 },
                 '1176165564.08dzlu': {
                     'Type': 'Light - Dynamic',
@@ -801,7 +804,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (1, 1, 1, 1),
                         'Model': 'models/props/light_tool_bulb'
-                    },
+                    }
                 },
                 '1176167113.18dzlu': {
                     'Type': 'Light - Dynamic',
@@ -818,9 +821,8 @@ objectStruct = {
                     'Visual': {
                         'Color': (1.0, 0.7799999713897705, 0.5299999713897705,
                                   1.0),
-                        'Model':
-                        'models/props/light_tool_bulb'
-                    },
+                        'Model': 'models/props/light_tool_bulb'
+                    }
                 },
                 '1176225288.77dzlu': {
                     'Type': 'Light - Dynamic',
@@ -839,7 +841,7 @@ objectStruct = {
                                   0.5600000023841858, 1.0),
                         'Model':
                         'models/props/light_tool_bulb'
-                    },
+                    }
                 },
                 '1176342559.48dzlu': {
                     'Type': 'Light - Dynamic',
@@ -855,7 +857,7 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/props/light_tool_bulb'
-                    },
+                    }
                 },
                 '1177608371.49dzlu': {
                     'Type': 'Treasure Chest',
@@ -864,7 +866,7 @@ objectStruct = {
                     'Scale': VBase3(0.59, 0.59, 0.59),
                     'Visual': {
                         'Model': 'models/props/treasureTrough_single'
-                    },
+                    }
                 },
                 '1178323712.0dchiappe': {
                     'Type': 'Treasure Chest',
@@ -873,7 +875,7 @@ objectStruct = {
                     'Scale': VBase3(0.863, 0.863, 0.863),
                     'Visual': {
                         'Model': 'models/props/treasureChest_open'
-                    },
+                    }
                 },
                 '1178323712.0dchiappe0': {
                     'Type': 'Treasure Chest',
@@ -882,7 +884,7 @@ objectStruct = {
                     'Scale': VBase3(0.863, 0.863, 0.863),
                     'Visual': {
                         'Model': 'models/props/treasureChest_open'
-                    },
+                    }
                 },
                 '1213983053.36aapatel': {
                     'Type': 'Townsperson',
@@ -902,12 +904,12 @@ objectStruct = {
                     'Start State': 'Idle',
                     'StartFrame': '0',
                     'Team': 'Villager',
-                    'TrailFX': 'None',
-                },
+                    'TrailFX': 'None'
+                }
             },
             'Visual': {
                 'Model': 'models/caves/cave_barbossa_zero'
-            },
+            }
         }
     },
     'Node Links': [],
@@ -1078,13 +1080,13 @@ objectStruct = {
         '1178323712.0dchiappe0':
         '["Objects"]["1172209006.11sdnaik"]["Objects"]["1178323712.0dchiappe0"]',
         '1213983053.36aapatel':
-        '["Objects"]["1172209006.11sdnaik"]["Objects"]["1213983053.36aapatel"]',
-    },
+        '["Objects"]["1172209006.11sdnaik"]["Objects"]["1213983053.36aapatel"]'
+    }
 }
 extraInfo = {
     'camPos': Point3(86.0355, -120.809, 132.538),
     'camHpr': VBase3(34.6376, -36.2872, 4.23677e-06),
     'focalLength': 1.39999997616,
     'skyState': 2,
-    'fog': 0,
+    'fog': 0
 }

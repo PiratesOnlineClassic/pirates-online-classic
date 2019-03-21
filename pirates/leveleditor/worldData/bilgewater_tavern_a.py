@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.bilgewater_tavern_a
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1155866758.05sdnaik0': {

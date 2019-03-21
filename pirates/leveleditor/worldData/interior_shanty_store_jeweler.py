@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.interior_shanty_store_jeweler
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1156268617.43dzlu0x': {
@@ -91,7 +92,8 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Color': (0.74, 0.69, 0.6274509803921569, 1.0),
-                        'Model': 'models/props/cabinet_jeweler_shanty_caseShort'
+                        'Model':
+                        'models/props/cabinet_jeweler_shanty_caseShort'
                     }
                 },
                 '1172100806.77kmuller': {
@@ -439,7 +441,8 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Color': (1.0, 1.0, 1.0, 1.0),
-                        'Model': 'models/props/shop_jeweler_braceletStandShanty'
+                        'Model':
+                        'models/props/shop_jeweler_braceletStandShanty'
                     }
                 },
                 '1199469029.83akelts': {
@@ -450,7 +453,8 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Color': (1.0, 1.0, 1.0, 1.0),
-                        'Model': 'models/props/shop_jeweler_braceletStandShanty'
+                        'Model':
+                        'models/props/shop_jeweler_braceletStandShanty'
                     }
                 },
                 '1199469039.08akelts': {
@@ -536,7 +540,8 @@ objectStruct = {
                     'Pos': Point3(1.279, 2.295, 2.804),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Model': 'models/props/shop_jeweler_braceletStandShanty'
+                        'Model':
+                        'models/props/shop_jeweler_braceletStandShanty'
                     }
                 },
                 '1199469446.91akelts': {
@@ -652,7 +657,8 @@ objectStruct = {
                     'Pos': Point3(1.472, -17.836, 2.634),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Model': 'models/props/shop_jeweler_braceletStandShanty'
+                        'Model':
+                        'models/props/shop_jeweler_braceletStandShanty'
                     }
                 },
                 '1199469576.2akelts': {

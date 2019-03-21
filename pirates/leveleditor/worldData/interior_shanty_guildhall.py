@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.interior_shanty_guildhall
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1156270917.73dzlu0': {

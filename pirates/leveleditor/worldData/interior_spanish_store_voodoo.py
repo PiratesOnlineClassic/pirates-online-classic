@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.interior_spanish_store_voodoo
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1155774520.99fxlara0': {
@@ -123,8 +124,8 @@ objectStruct = {
                     'Pos': Point3(8.693, 27.554, 5.265),
                     'Scale': VBase3(0.625, 0.625, 0.625),
                     'Visual': {
-                        'Color': (0.44999998807907104, 0.3799999952316284, 0.25,
-                                  1.0),
+                        'Color': (0.44999998807907104, 0.3799999952316284,
+                                  0.25, 1.0),
                         'Model':
                         'models/props/barrel'
                     }

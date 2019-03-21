@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.pvp_mayhemWorld1
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1175562624.81zpavlov': {

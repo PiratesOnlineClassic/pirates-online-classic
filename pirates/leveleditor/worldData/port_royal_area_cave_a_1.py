@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.port_royal_area_cave_a_1
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {
         -1: Vec4(0.447059, 0.447059, 0.415686, 1),
@@ -32,9 +33,9 @@ objectStruct = {
         8: 0.0002
     },
     'Interact Links':
-    [['1165019105.05Shochet', '1164999287.17Shochet', 'Bi-directional'], [
-        '1165197639.41Shochet', '1165019166.08Shochet', 'Bi-directional'
-    ], ['1164999249.69Shochet', '1175898752.0dxschafe0', 'Bi-directional'],
+    [['1165019105.05Shochet', '1164999287.17Shochet', 'Bi-directional'],
+     ['1165197639.41Shochet', '1165019166.08Shochet', 'Bi-directional'],
+     ['1164999249.69Shochet', '1175898752.0dxschafe0', 'Bi-directional'],
      ['1165197708.75Shochet', '1165019132.53Shochet', 'Bi-directional'],
      ['1190851456.0dxschafe', '1190851200.0dxschafe', 'Bi-directional']],
     'Objects': {
@@ -1833,25 +1834,25 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1192578304.0dxschafe0', '1165197708.75Shochet', 'Bi-directional'], [
-        '1192578304.0dxschafe0', '1192578304.0dxschafe', 'Bi-directional'
-    ], ['1192578304.0dxschafe', '1165197708.75Shochet', 'Bi-directional'], [
-        '1192578304.0dxschafe2', '1192578304.0dxschafe1', 'Bi-directional'
-    ], ['1175898496.0dxschafe', '1192578304.0dxschafe1', 'Bi-directional'], [
-        '1175898496.0dxschafe', '1192578304.0dxschafe2', 'Bi-directional'
-    ], ['1192578432.0dxschafe', '1192578432.0dxschafe0', 'Bi-directional'], [
-        '1192578432.0dxschafe', '1165197665.86Shochet', 'Bi-directional'
-    ], ['1192578432.0dxschafe0', '1165197665.86Shochet', 'Bi-directional'], [
-        '1192578432.0dxschafe1', '1192578432.0dxschafe2', 'Bi-directional'
-    ], ['1192578432.0dxschafe1', '1165197613.83Shochet', 'Bi-directional'], [
-        '1192578432.0dxschafe2', '1165197613.83Shochet', 'Bi-directional'
-    ], ['1192578688.0dxschafe0', '1165197639.41Shochet', 'Bi-directional'], [
-        '1192578688.0dxschafe', '1192578688.0dxschafe0', 'Bi-directional'
-    ], ['1192578688.0dxschafe', '1165197639.41Shochet', 'Bi-directional'], [
-        '1192578816.0dxschafe', '1164999523.0Shochet', 'Bi-directional'
-    ], ['1192578816.0dxschafe', '1192578816.0dxschafe0', 'Bi-directional'], [
-        '1192578944.0dxschafe', '1192579072.0dxschafe', 'Bi-directional'
-    ], ['1192578944.0dxschafe0', '1192579072.0dxschafe', 'Bi-directional'],
+    [['1192578304.0dxschafe0', '1165197708.75Shochet', 'Bi-directional'],
+     ['1192578304.0dxschafe0', '1192578304.0dxschafe', 'Bi-directional'],
+     ['1192578304.0dxschafe', '1165197708.75Shochet', 'Bi-directional'],
+     ['1192578304.0dxschafe2', '1192578304.0dxschafe1', 'Bi-directional'],
+     ['1175898496.0dxschafe', '1192578304.0dxschafe1', 'Bi-directional'],
+     ['1175898496.0dxschafe', '1192578304.0dxschafe2', 'Bi-directional'],
+     ['1192578432.0dxschafe', '1192578432.0dxschafe0', 'Bi-directional'],
+     ['1192578432.0dxschafe', '1165197665.86Shochet', 'Bi-directional'],
+     ['1192578432.0dxschafe0', '1165197665.86Shochet', 'Bi-directional'],
+     ['1192578432.0dxschafe1', '1192578432.0dxschafe2', 'Bi-directional'],
+     ['1192578432.0dxschafe1', '1165197613.83Shochet', 'Bi-directional'],
+     ['1192578432.0dxschafe2', '1165197613.83Shochet', 'Bi-directional'],
+     ['1192578688.0dxschafe0', '1165197639.41Shochet', 'Bi-directional'],
+     ['1192578688.0dxschafe', '1192578688.0dxschafe0', 'Bi-directional'],
+     ['1192578688.0dxschafe', '1165197639.41Shochet', 'Bi-directional'],
+     ['1192578816.0dxschafe', '1164999523.0Shochet', 'Bi-directional'],
+     ['1192578816.0dxschafe', '1192578816.0dxschafe0', 'Bi-directional'],
+     ['1192578944.0dxschafe', '1192579072.0dxschafe', 'Bi-directional'],
+     ['1192578944.0dxschafe0', '1192579072.0dxschafe', 'Bi-directional'],
      ['1193083904.0dxschafe', '1191624960.0dxschafe0', 'Bi-directional']],
     'Layers': {},
     'ObjectIds': {

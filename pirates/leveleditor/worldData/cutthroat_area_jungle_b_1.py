@@ -1,13 +1,14 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.cutthroat_area_jungle_b_1
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Interact Links':
-    [['1176324864.0dxschafe3', '1176324992.0dxschafe9', 'Bi-directional'], [
-        '1176324992.0dxschafe6', '1176324864.0dxschafe2', 'Bi-directional'
-    ], ['1176324864.0dxschafe0', '1176324992.0dxschafe12', 'Bi-directional'], [
-        '1176324992.0dxschafe1', '1176324864.0dxschafe1', 'Bi-directional'
-    ], ['1176324864.0dxschafe5', '1176324992.0dxschafe0', 'Bi-directional'], [
-        '1176324992.0dxschafe4', '1176324864.0dxschafe4', 'Bi-directional'
-    ], ['1176324992.0dxschafe3', '1176324864.0dxschafe', 'Bi-directional'],
+    [['1176324864.0dxschafe3', '1176324992.0dxschafe9', 'Bi-directional'],
+     ['1176324992.0dxschafe6', '1176324864.0dxschafe2', 'Bi-directional'],
+     ['1176324864.0dxschafe0', '1176324992.0dxschafe12', 'Bi-directional'],
+     ['1176324992.0dxschafe1', '1176324864.0dxschafe1', 'Bi-directional'],
+     ['1176324864.0dxschafe5', '1176324992.0dxschafe0', 'Bi-directional'],
+     ['1176324992.0dxschafe4', '1176324864.0dxschafe4', 'Bi-directional'],
+     ['1176324992.0dxschafe3', '1176324864.0dxschafe', 'Bi-directional'],
      ['1210109440.0WDIG0', '1210109440.0WDIG', 'Bi-directional']],
     'Objects': {
         '1167857698.16naiksd': {

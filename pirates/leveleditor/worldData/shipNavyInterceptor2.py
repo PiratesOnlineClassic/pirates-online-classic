@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.shipNavyInterceptor2
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1189043565.22gjeon': {
@@ -99,11 +100,11 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1189043669.81gjeon', '1189043711.91gjeon', 'Bi-directional'], [
-        '1189043711.91gjeon', '1189043715.06gjeon', 'Bi-directional'
-    ], ['1189043707.47gjeon', '1189043715.06gjeon', 'Bi-directional'], [
-        '1189043669.81gjeon', '1189043707.47gjeon', 'Bi-directional'
-    ], ['1189043711.91gjeon', '1189043723.09gjeon', 'Bi-directional'],
+    [['1189043669.81gjeon', '1189043711.91gjeon', 'Bi-directional'],
+     ['1189043711.91gjeon', '1189043715.06gjeon', 'Bi-directional'],
+     ['1189043707.47gjeon', '1189043715.06gjeon', 'Bi-directional'],
+     ['1189043669.81gjeon', '1189043707.47gjeon', 'Bi-directional'],
+     ['1189043711.91gjeon', '1189043723.09gjeon', 'Bi-directional'],
      ['1189043719.16gjeon', '1189043707.47gjeon', 'Bi-directional']],
     'Layers': {},
     'ObjectIds': {

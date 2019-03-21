@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.tortuga_tunnel_jungle_1
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1157132484.23sdnaik': {

@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.del_fuego_npc_house_interior_7
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1175729664.0dxschafe0': {
@@ -33,7 +34,6 @@ objectStruct = {
     'ObjectIds': {
         '1169078705.84mike':
         '["Objects"]["1175729664.0dxschafe0"]["Objects"]["1169078705.84mike"]',
-        '1175729664.0dxschafe0':
-        '["Objects"]["1175729664.0dxschafe0"]'
+        '1175729664.0dxschafe0': '["Objects"]["1175729664.0dxschafe0"]'
     }
 }

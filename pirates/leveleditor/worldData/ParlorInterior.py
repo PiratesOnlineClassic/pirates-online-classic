@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.ParlorInterior
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1161805620.28Shochet0': {
@@ -563,8 +564,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.9921568627450981, 0.9, 0.6901960784313725,
                                   1.0),
-                        'Model':
-                        'models/props/light_tool_bulb'
+                        'Model': 'models/props/light_tool_bulb'
                     }
                 },
                 '1224291043.53kmuller': {

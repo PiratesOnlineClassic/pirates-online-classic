@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.JungleAreaA
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1165004570.58sdnaik': {
@@ -2099,8 +2100,7 @@ objectStruct = {
                     'Visual': {
                         'Color': (0.4000000059604645, 0.5, 0.4000000059604645,
                                   1.0),
-                        'Model':
-                        'models/vegetation/jungle_fern_a'
+                        'Model': 'models/vegetation/jungle_fern_a'
                     }
                 },
                 '1169750050.79kmuller': {
@@ -3421,8 +3421,8 @@ objectStruct = {
                     'Pos': Point3(484.329, 262.43, 66.99),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Color': (0.25, 0.25999999046325684, 0.3199999928474426,
-                                  1.0),
+                        'Color': (0.25, 0.25999999046325684,
+                                  0.3199999928474426, 1.0),
                         'Model':
                         'models/vegetation/grass_18feet'
                     }
@@ -3433,8 +3433,8 @@ objectStruct = {
                     'Pos': Point3(485.606, 251.934, 66.136),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Color': (0.25, 0.25999999046325684, 0.3199999928474426,
-                                  1.0),
+                        'Color': (0.25, 0.25999999046325684,
+                                  0.3199999928474426, 1.0),
                         'Model':
                         'models/vegetation/grass_18feet'
                     }
@@ -3457,8 +3457,8 @@ objectStruct = {
                     'Pos': Point3(502.258, 228.549, 66.6),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Color': (0.25, 0.25999999046325684, 0.3199999928474426,
-                                  1.0),
+                        'Color': (0.25, 0.25999999046325684,
+                                  0.3199999928474426, 1.0),
                         'Model':
                         'models/vegetation/grass_18feet'
                     }

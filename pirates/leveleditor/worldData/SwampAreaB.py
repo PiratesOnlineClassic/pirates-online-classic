@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.SwampAreaB
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1152910301.05sdnaik': {
@@ -249,11 +250,11 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1153424709.64sdnaik', '1153424726.66sdnaik', 'Bi-directional'], [
-        '1153424709.64sdnaik', '1153424723.64sdnaik', 'Bi-directional'
-    ], ['1153424709.64sdnaik', '1153424744.5sdnaik', 'Bi-directional'], [
-        '1153424726.66sdnaik', '1153424723.64sdnaik', 'Bi-directional'
-    ], ['1153424723.64sdnaik', '1153424752.06sdnaik', 'Bi-directional'],
+    [['1153424709.64sdnaik', '1153424726.66sdnaik', 'Bi-directional'],
+     ['1153424709.64sdnaik', '1153424723.64sdnaik', 'Bi-directional'],
+     ['1153424709.64sdnaik', '1153424744.5sdnaik', 'Bi-directional'],
+     ['1153424726.66sdnaik', '1153424723.64sdnaik', 'Bi-directional'],
+     ['1153424723.64sdnaik', '1153424752.06sdnaik', 'Bi-directional'],
      ['1153424744.5sdnaik', '1153424752.06sdnaik', 'Bi-directional']],
     'Layers': {},
     'ObjectIds': {

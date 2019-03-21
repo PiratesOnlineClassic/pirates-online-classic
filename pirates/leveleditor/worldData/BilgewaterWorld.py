@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.BilgewaterWorld
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1158967192.95sdnaik': {
@@ -22,7 +23,6 @@ objectStruct = {
     'ObjectIds': {
         '1135280776.06dzlu':
         '["Objects"]["1158967192.95sdnaik"]["Objects"]["1135280776.06dzlu"]',
-        '1158967192.95sdnaik':
-        '["Objects"]["1158967192.95sdnaik"]'
+        '1158967192.95sdnaik': '["Objects"]["1158967192.95sdnaik"]'
     }
 }

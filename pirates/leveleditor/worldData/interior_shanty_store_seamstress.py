@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.interior_shanty_store_seamstress
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1156268617.43dzlu0v': {
@@ -732,7 +733,8 @@ objectStruct = {
                     'Pos': Point3(37.574, 8.049, 0.0),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Model': 'models/props/shop_tailor_mannequinMaleShirt01'
+                        'Model':
+                        'models/props/shop_tailor_mannequinMaleShirt01'
                     }
                 },
                 '1196468342.78akelts': {
@@ -906,7 +908,8 @@ objectStruct = {
                             'Pos': Point3(-1.863, 0.319, 0.03),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
-                                'Color': (0.48, 0.48, 0.37254901960784315, 1.0),
+                                'Color': (0.48, 0.48, 0.37254901960784315,
+                                          1.0),
                                 'Model': 'models/props/shop_tailor_hat_india'
                             }
                         }
@@ -957,7 +960,8 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Color': (0.5, 0.5, 0.5019607843137255, 1.0),
-                        'Model': 'models/props/shop_tailor_mannequinFemaleNaked'
+                        'Model':
+                        'models/props/shop_tailor_mannequinFemaleNaked'
                     }
                 },
                 '1196469889.08akelts': {

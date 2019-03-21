@@ -1,15 +1,16 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.DriftwoodIsland
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Interact Links':
-    [['1175533440.0dxschafe', '1174930816.0dxschafe', 'Bi-directional'], [
-        '1184873344.0dxschafe', '1175533440.0dxschafe0', 'Bi-directional'
-    ], ['1175533568.0dxschafe', '1174930688.0dxschafe', 'Bi-directional'], [
-        '1213740118.8WDIG', '1190668288.0dxschafe8', 'Bi-directional'
-    ], ['1213740183.83WDIG', '1192234752.0dxschafe4', 'Bi-directional'], [
-        '1192234752.0dxschafe3', '1213740183.83WDIG', 'Bi-directional'
-    ], ['1192234368.0dxschafe14', '1213740249.55WDIG', 'Bi-directional'], [
-        '1213740249.55WDIG', '1192234368.0dxschafe2', 'Bi-directional'
-    ], ['1213740104.3WDIG', '1190668288.0dxschafe9', 'Bi-directional'],
+    [['1175533440.0dxschafe', '1174930816.0dxschafe', 'Bi-directional'],
+     ['1184873344.0dxschafe', '1175533440.0dxschafe0', 'Bi-directional'],
+     ['1175533568.0dxschafe', '1174930688.0dxschafe', 'Bi-directional'],
+     ['1213740118.8WDIG', '1190668288.0dxschafe8', 'Bi-directional'],
+     ['1213740183.83WDIG', '1192234752.0dxschafe4', 'Bi-directional'],
+     ['1192234752.0dxschafe3', '1213740183.83WDIG', 'Bi-directional'],
+     ['1192234368.0dxschafe14', '1213740249.55WDIG', 'Bi-directional'],
+     ['1213740249.55WDIG', '1192234368.0dxschafe2', 'Bi-directional'],
+     ['1213740104.3WDIG', '1190668288.0dxschafe9', 'Bi-directional'],
      ['1213740104.3WDIG', '1192234368.0dxschafe5', 'Bi-directional'],
      ['1192234368.0dxschafe3', '1213740249.55WDIG', 'Bi-directional']],
     'Objects': {
@@ -486,7 +487,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'
@@ -508,7 +510,8 @@ objectStruct = {
                     'SubObjs': {
                         'Top Model': {
                             'Visual': {
-                                'Animate': 'models/vegetation/palm_leaf_a_idle',
+                                'Animate':
+                                'models/vegetation/palm_leaf_a_idle',
                                 'Attach': ['trunk', 'def_trunk_attach'],
                                 'Model': 'models/vegetation/palm_leaf_a_hi',
                                 'PartName': 'leaf'

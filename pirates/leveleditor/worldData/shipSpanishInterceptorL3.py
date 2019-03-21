@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.shipSpanishInterceptorL3
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1209584640.0WDIG': {
@@ -128,19 +129,19 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1209584768.0WDIG0', '1209584768.0WDIG2', 'Bi-directional'], [
-        '1209584768.0WDIG0', '1209584768.0WDIG1', 'Bi-directional'
-    ], ['1211501824.0WDIG0', '1209584768.0WDIG1', 'Bi-directional'], [
-        '1211501824.0WDIG4', '1209584768.0WDIG2', 'Bi-directional'
-    ], ['1211501824.0WDIG2', '1211501824.0WDIG4', 'Bi-directional'], [
-        '1211501824.0WDIG0', '1211501824.0WDIG2', 'Bi-directional'
-    ], ['1211501824.0WDIG3', '1209584768.0WDIG2', 'Bi-directional'], [
-        '1211501824.0WDIG3', '1211501824.0WDIG1', 'Bi-directional'
-    ], ['1211501824.0WDIG1', '1211501824.0WDIG0', 'Bi-directional'], [
-        '1211501824.0WDIG1', '1211501824.0WDIG2', 'Bi-directional'
-    ], ['1211501824.0WDIG3', '1211501824.0WDIG4', 'Bi-directional'], [
-        '1211501824.0WDIG3', '1209584768.0WDIG1', 'Bi-directional'
-    ], ['1211501824.0WDIG1', '1209584768.0WDIG1', 'Bi-directional'],
+    [['1209584768.0WDIG0', '1209584768.0WDIG2', 'Bi-directional'],
+     ['1209584768.0WDIG0', '1209584768.0WDIG1', 'Bi-directional'],
+     ['1211501824.0WDIG0', '1209584768.0WDIG1', 'Bi-directional'],
+     ['1211501824.0WDIG4', '1209584768.0WDIG2', 'Bi-directional'],
+     ['1211501824.0WDIG2', '1211501824.0WDIG4', 'Bi-directional'],
+     ['1211501824.0WDIG0', '1211501824.0WDIG2', 'Bi-directional'],
+     ['1211501824.0WDIG3', '1209584768.0WDIG2', 'Bi-directional'],
+     ['1211501824.0WDIG3', '1211501824.0WDIG1', 'Bi-directional'],
+     ['1211501824.0WDIG1', '1211501824.0WDIG0', 'Bi-directional'],
+     ['1211501824.0WDIG1', '1211501824.0WDIG2', 'Bi-directional'],
+     ['1211501824.0WDIG3', '1211501824.0WDIG4', 'Bi-directional'],
+     ['1211501824.0WDIG3', '1209584768.0WDIG1', 'Bi-directional'],
+     ['1211501824.0WDIG1', '1209584768.0WDIG1', 'Bi-directional'],
      ['1209584768.0WDIG1', '1211501824.0WDIG4', 'Bi-directional'],
      ['1209584768.0WDIG1', '1211501824.0WDIG2', 'Bi-directional']],
     'Layers': {},

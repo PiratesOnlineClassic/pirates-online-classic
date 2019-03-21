@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.shipNavyMerchant1
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1189038450.53gjeon': {
@@ -173,19 +174,19 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1189039087.17gjeon', '1189038939.53gjeon', 'Bi-directional'], [
-        '1189039087.17gjeon', '1189039147.55gjeon', 'Bi-directional'
-    ], ['1189039158.58gjeon', '1189039147.55gjeon', 'Bi-directional'], [
-        '1189039162.2gjeon', '1189039158.58gjeon', 'Bi-directional'
-    ], ['1189039165.75gjeon', '1189039162.2gjeon', 'Bi-directional'], [
-        '1189039165.75gjeon', '1189039094.02gjeon', 'Bi-directional'
-    ], ['1189039114.83gjeon', '1189039094.02gjeon', 'Bi-directional'], [
-        '1189039114.83gjeon', '1189039178.27gjeon', 'Bi-directional'
-    ], ['1189039114.83gjeon', '1189039108.98gjeon', 'Bi-directional'], [
-        '1189038939.53gjeon', '1189039094.02gjeon', 'Bi-directional'
-    ], ['1189039173.88gjeon', '1189039108.98gjeon', 'Bi-directional'], [
-        '1189039087.17gjeon', '1189039108.98gjeon', 'Bi-directional'
-    ], ['1189039433.22gjeon', '1189039147.55gjeon', 'Bi-directional'],
+    [['1189039087.17gjeon', '1189038939.53gjeon', 'Bi-directional'],
+     ['1189039087.17gjeon', '1189039147.55gjeon', 'Bi-directional'],
+     ['1189039158.58gjeon', '1189039147.55gjeon', 'Bi-directional'],
+     ['1189039162.2gjeon', '1189039158.58gjeon', 'Bi-directional'],
+     ['1189039165.75gjeon', '1189039162.2gjeon', 'Bi-directional'],
+     ['1189039165.75gjeon', '1189039094.02gjeon', 'Bi-directional'],
+     ['1189039114.83gjeon', '1189039094.02gjeon', 'Bi-directional'],
+     ['1189039114.83gjeon', '1189039178.27gjeon', 'Bi-directional'],
+     ['1189039114.83gjeon', '1189039108.98gjeon', 'Bi-directional'],
+     ['1189038939.53gjeon', '1189039094.02gjeon', 'Bi-directional'],
+     ['1189039173.88gjeon', '1189039108.98gjeon', 'Bi-directional'],
+     ['1189039087.17gjeon', '1189039108.98gjeon', 'Bi-directional'],
+     ['1189039433.22gjeon', '1189039147.55gjeon', 'Bi-directional'],
      ['1189039433.22gjeon', '1189039165.75gjeon', 'Bi-directional']],
     'Layers': {},
     'ObjectIds': {

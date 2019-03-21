@@ -1,9 +1,10 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.SwampTestIslandC
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Locator Links':
-    [['1153868315.8sdnaik0', '1152910060.11sdnaik', 'Bi-directional'], [
-        '1153868315.8sdnaik1', '1152910301.05sdnaik0', 'Bi-directional'
-    ], ['1153868634.75sdnaik0', '1152910060.11sdnaik0', 'Bi-directional'],
+    [['1153868315.8sdnaik0', '1152910060.11sdnaik', 'Bi-directional'],
+     ['1153868315.8sdnaik1', '1152910301.05sdnaik0', 'Bi-directional'],
+     ['1153868634.75sdnaik0', '1152910060.11sdnaik0', 'Bi-directional'],
      ['1152910307.13sdnaik', '1153868634.75sdnaik1', 'Bi-directional']],
     'Objects': {
         '1152909972.77sdnaik': {

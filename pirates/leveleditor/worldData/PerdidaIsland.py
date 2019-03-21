@@ -1,9 +1,10 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.PerdidaIsland
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'Locator Links':
-    [['1172209713.33sdnaik', '1172209670.05sdnaik', 'Bi-directional'], [
-        '1172209837.83sdnaik', '1172209667.91sdnaik', 'Bi-directional'
-    ], ['1172209713.34sdnaik', '1172209955.28sdnaik', 'Bi-directional'],
+    [['1172209713.33sdnaik', '1172209670.05sdnaik', 'Bi-directional'],
+     ['1172209837.83sdnaik', '1172209667.91sdnaik', 'Bi-directional'],
+     ['1172209713.34sdnaik', '1172209955.28sdnaik', 'Bi-directional'],
      ['1172209955.33sdnaik', '1172209837.84sdnaik', 'Bi-directional']],
     'Objects': {
         '1164157132.99dzlu': {
@@ -50,7 +51,7 @@ objectStruct = {
                 },
                 '1172209713.31sdnaik': {
                     'Type': 'Connector Tunnel',
-                    'File': '',
+                    'File': 'peridida_island_tunnel_jungle_2',
                     'Hpr': VBase3(-89.136, 0.0, 0.0),
                     'Objects': {
                         '1172209713.33sdnaik': {
@@ -77,7 +78,7 @@ objectStruct = {
                 },
                 '1172209837.81sdnaik': {
                     'Type': 'Connector Tunnel',
-                    'File': '',
+                    'File': 'perdida_island_tunnel_jungle_1',
                     'Hpr': Point3(0.0, 0.0, 0.0),
                     'Objects': {
                         '1172209837.83sdnaik': {

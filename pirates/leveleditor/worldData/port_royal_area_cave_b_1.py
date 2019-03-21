@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3, Vec4
+# Embedded file name: pirates.leveleditor.worldData.port_royal_area_cave_b_1
+from pandac.PandaModules import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {
         0: Vec4(0.572549, 0.219608, 0.364706, 1),
@@ -3452,37 +3453,37 @@ objectStruct = {
         }
     },
     'Node Links':
-    [['1186774656.0dchiappe', '1186774528.0dchiappe', 'Bi-directional'], [
-        '1186774656.0dchiappe', '1186774656.0dchiappe0', 'Bi-directional'
-    ], ['1186774656.0dchiappe1', '1186774656.0dchiappe0', 'Bi-directional'], [
-        '1186774656.0dchiappe1', '1186775552.0dchiappe', 'Bi-directional'
-    ], ['1186774528.0dchiappe', '1186775552.0dchiappe', 'Bi-directional'], [
-        '1186775680.0dchiappe0', '1186775680.0dchiappe', 'Bi-directional'
-    ], ['1186775680.0dchiappe0', '1186775680.0dchiappe1', 'Bi-directional'], [
-        '1186775680.0dchiappe1', '1186775680.0dchiappe2', 'Bi-directional'
-    ], ['1186775680.0dchiappe3', '1186775680.0dchiappe2', 'Bi-directional'], [
-        '1186775680.0dchiappe3', '1186775680.0dchiappe', 'Bi-directional'
-    ], ['1186776192.0dchiappe', '1186776192.0dchiappe0', 'Bi-directional'], [
-        '1186776192.0dchiappe1', '1186776192.0dchiappe0', 'Bi-directional'
-    ], ['1186776192.0dchiappe1', '1186776192.0dchiappe2', 'Bi-directional'], [
-        '1186776192.0dchiappe2', '1186776192.0dchiappe3', 'Bi-directional'
-    ], ['1186776192.0dchiappe', '1186776192.0dchiappe3', 'Bi-directional'], [
-        '1186776448.0dchiappe', '1186776448.0dchiappe2', 'Bi-directional'
-    ], ['1186776448.0dchiappe2', '1186776448.0dchiappe1', 'Bi-directional'], [
-        '1186776448.0dchiappe0', '1186776448.0dchiappe1', 'Bi-directional'
-    ], ['1186776448.0dchiappe', '1186776448.0dchiappe0', 'Bi-directional'], [
-        '1186776704.0dchiappe0', '1176158976.0dxschafe', 'Bi-directional'
-    ], ['1186776704.0dchiappe', '1186776704.0dchiappe0', 'Bi-directional'], [
-        '1186776704.0dchiappe', '1176158976.0dxschafe', 'Bi-directional'
-    ], ['1186777600.0dchiappe1', '1186777600.0dchiappe2', 'Bi-directional'], [
-        '1186777600.0dchiappe3', '1186777600.0dchiappe2', 'Bi-directional'
-    ], ['1186777600.0dchiappe3', '1186777600.0dchiappe1', 'Bi-directional'], [
-        '1186777728.0dchiappe0', '1186777600.0dchiappe0', 'Bi-directional'
-    ], ['1186777728.0dchiappe0', '1186777728.0dchiappe1', 'Bi-directional'], [
-        '1186777728.0dchiappe1', '1186777600.0dchiappe0', 'Bi-directional'
-    ], ['1186777472.0dchiappe0', '1186777728.0dchiappe2', 'Bi-directional'], [
-        '1186777728.0dchiappe2', '1186777728.0dchiappe3', 'Bi-directional'
-    ], ['1186777472.0dchiappe0', '1186777728.0dchiappe3', 'Bi-directional'],
+    [['1186774656.0dchiappe', '1186774528.0dchiappe', 'Bi-directional'],
+     ['1186774656.0dchiappe', '1186774656.0dchiappe0', 'Bi-directional'],
+     ['1186774656.0dchiappe1', '1186774656.0dchiappe0', 'Bi-directional'],
+     ['1186774656.0dchiappe1', '1186775552.0dchiappe', 'Bi-directional'],
+     ['1186774528.0dchiappe', '1186775552.0dchiappe', 'Bi-directional'],
+     ['1186775680.0dchiappe0', '1186775680.0dchiappe', 'Bi-directional'],
+     ['1186775680.0dchiappe0', '1186775680.0dchiappe1', 'Bi-directional'],
+     ['1186775680.0dchiappe1', '1186775680.0dchiappe2', 'Bi-directional'],
+     ['1186775680.0dchiappe3', '1186775680.0dchiappe2', 'Bi-directional'],
+     ['1186775680.0dchiappe3', '1186775680.0dchiappe', 'Bi-directional'],
+     ['1186776192.0dchiappe', '1186776192.0dchiappe0', 'Bi-directional'],
+     ['1186776192.0dchiappe1', '1186776192.0dchiappe0', 'Bi-directional'],
+     ['1186776192.0dchiappe1', '1186776192.0dchiappe2', 'Bi-directional'],
+     ['1186776192.0dchiappe2', '1186776192.0dchiappe3', 'Bi-directional'],
+     ['1186776192.0dchiappe', '1186776192.0dchiappe3', 'Bi-directional'],
+     ['1186776448.0dchiappe', '1186776448.0dchiappe2', 'Bi-directional'],
+     ['1186776448.0dchiappe2', '1186776448.0dchiappe1', 'Bi-directional'],
+     ['1186776448.0dchiappe0', '1186776448.0dchiappe1', 'Bi-directional'],
+     ['1186776448.0dchiappe', '1186776448.0dchiappe0', 'Bi-directional'],
+     ['1186776704.0dchiappe0', '1176158976.0dxschafe', 'Bi-directional'],
+     ['1186776704.0dchiappe', '1186776704.0dchiappe0', 'Bi-directional'],
+     ['1186776704.0dchiappe', '1176158976.0dxschafe', 'Bi-directional'],
+     ['1186777600.0dchiappe1', '1186777600.0dchiappe2', 'Bi-directional'],
+     ['1186777600.0dchiappe3', '1186777600.0dchiappe2', 'Bi-directional'],
+     ['1186777600.0dchiappe3', '1186777600.0dchiappe1', 'Bi-directional'],
+     ['1186777728.0dchiappe0', '1186777600.0dchiappe0', 'Bi-directional'],
+     ['1186777728.0dchiappe0', '1186777728.0dchiappe1', 'Bi-directional'],
+     ['1186777728.0dchiappe1', '1186777600.0dchiappe0', 'Bi-directional'],
+     ['1186777472.0dchiappe0', '1186777728.0dchiappe2', 'Bi-directional'],
+     ['1186777728.0dchiappe2', '1186777728.0dchiappe3', 'Bi-directional'],
+     ['1186777472.0dchiappe0', '1186777728.0dchiappe3', 'Bi-directional'],
      ['1186777856.0dchiappe0', '1186777600.0dchiappe', 'Bi-directional'],
      ['1165197827.77Shochet', '1186777984.0dchiappe', 'Bi-directional']],
     'Layers': {

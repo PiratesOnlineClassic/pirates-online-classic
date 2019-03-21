@@ -1,4 +1,5 @@
-from panda3d.core import Point3, VBase3
+# Embedded file name: pirates.leveleditor.worldData.wild_island_building_interior_a
+from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1157578602.64sdnaik0': {
