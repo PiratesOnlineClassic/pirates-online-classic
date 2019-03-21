@@ -1,20 +1,23 @@
 from direct.gui.DirectGui import *
-from direct.interval.IntervalGlobal import *
-from panda3d.core import *
-from pirates.piratesbase import PiratesGlobals, PLocalizer
-from pirates.piratesgui import (GuiTray, PiratesGuiGlobals,
-                                ReputationMeterDial, StatusTray, VitaeMeter)
+from pandac.PandaModules import *
+from pirates.piratesgui import GuiTray
+from pirates.piratesbase import PLocalizer
+from pirates.piratesgui import PiratesGuiGlobals
 from pirates.reputation import ReputationGlobals
+from pirates.piratesbase import PiratesGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
-
+from pirates.piratesgui import ReputationMeterDial
+from pirates.piratesgui import StatusTray
+from direct.interval.IntervalGlobal import *
+from pirates.piratesgui import VitaeMeter
 
 class GameGui(DirectFrame):
-
+    
     def __init__(self, parent, **kw):
         gui = loader.loadModel('models/gui/toplevel_gui')
         DirectFrame.__init__(self, parent, **kw)
         self.initialiseoptions(GameGui)
-        self.repMeter = ReputationMeterDial.ReputationMeterDial(InventoryType.OverallRep, width=0.56)
+        self.repMeter = ReputationMeterDial.ReputationMeterDial(InventoryType.OverallRep, width = 0.56)
         self.repMeter.reparentTo(self)
         self.repMeter.setPos(0.425, 0, 0.19)
         self.keyFrame = gui.find('**/main_gui_game_gui_base').copyTo(self)
@@ -23,7 +26,7 @@ class GameGui(DirectFrame):
         self.repMeter.categoryLabel.wrtReparentTo(self)
         self.repMeter.levelCapScroll.wrtReparentTo(self)
         self.repMeter.levelCapIcon.wrtReparentTo(self)
-        self.statusTray = StatusTray.StatusTray(parent=self, state=DGG.DISABLED)
+        self.statusTray = StatusTray.StatusTray(parent = self, state = DGG.DISABLED)
         self.statusTray.flattenStrong()
         self.statusTray.statusEffectsPanel.setPos(0.34, 0, 0.14)
         self.statusTray.statusEffectsPanel.setScale(0.8)
@@ -36,78 +39,84 @@ class GameGui(DirectFrame):
         self.hpModMeter = None
         self.repMeter.levelLabel.wrtReparentTo(self)
         self.repMeter.valueLabel.wrtReparentTo(self)
-        self.vitaeMeter = VitaeMeter.VitaeMeter(parent=self.statusTray, state=DGG.DISABLED, relief=None, pos=(0.85,
-                                                                                                              0,
-                                                                                                              0.1), scale=0.82)
+        self.vitaeMeter = VitaeMeter.VitaeMeter(parent = self.statusTray, state = DGG.DISABLED, relief = None, pos = (0.85, 0, 0.1), scale = 0.82)
         self.clamps = self.attachNewNode('clamps')
         clamp = gui.find('**/groggy_clamp').copyTo(NodePath(''))
-        clamp.reparentTo(self.clamps, sort=2)
+        clamp.reparentTo(self.clamps, sort = 2)
         clamp.setPos(0.96, 0, 0.135)
         clamp.setScale(0.8)
         clamp = gui.find('**/*clamp').copyTo(NodePath(''))
-        clamp.reparentTo(self.clamps, sort=2)
+        clamp.reparentTo(self.clamps, sort = 2)
         clamp.setPos(0.96, 0, 0.235)
         clamp.setScale(0.8)
         self.clamps.hide()
         self.createHealthAlert()
         self.haTask = None
-        return
 
     def createHealthAlert(self):
         if hasattr(self, 'healthAlertIval'):
             self.healthAlertIval.finish()
             del self.healthAlertIval
-        self.healthAlertIval = Sequence(LerpColorScaleInterval(self.keyFrame, 0.25, Vec4(1.0, 0.3, 0.3, 1.0), blendType='easeIn'), LerpColorScaleInterval(self.keyFrame, 0.25, Vec4(1.0, 1.0, 1.0, 1.0), blendType='easeOut'), Func(self.keyFrame.clearColorScale))
+        
+        self.healthAlertIval = Sequence(LerpColorScaleInterval(self.keyFrame, 0.25, Vec4(1.0, 0.3, 0.3, 1.0), blendType = 'easeIn'), LerpColorScaleInterval(self.keyFrame, 0.25, Vec4(1.0, 1.0, 1.0, 1.0), blendType = 'easeOut'), Func(self.keyFrame.clearColorScale))
         self.healthAlertRate = 1.0
 
     def updateHealthAlert(self, task):
         if not hasattr(base, 'localAvatar') or not base.localAvatar or not localAvatar.isGenerated():
             return task.done
+        
         hpFraction = float(base.localAvatar.hp) / float(base.localAvatar.maxHp)
         if hpFraction > 0.4:
             self.stopHealthAlert()
             return task.done
+        
         self.healthAlertRate = 1.0 - hpFraction * 2.0
         if not self.healthAlertIval.isPlaying():
-            self.healthAlertIval.start(playRate=self.healthAlertRate)
+            self.healthAlertIval.start(playRate = self.healthAlertRate)
+        
         return task.cont
-
+    
     def startHealthAlert(self):
         if not self.haTask:
             self.haTask = taskMgr.add(self.updateHealthAlert, 'updateHealthAlert')
-
+    
     def stopHealthAlert(self):
         if self.haTask:
             taskMgr.remove(self.haTask)
             self.haTask = None
-        return
 
     def destroy(self):
         self.stopHealthAlert()
         if hasattr(self, 'moveUpIval'):
             self.moveUpIval.pause()
             del self.moveUpIval
+        
         if hasattr(self, 'scaleDown'):
             self.scaleDown.pause()
             del self.scaleDown
+        
         if hasattr(self, 'fadeOut'):
             self.fadeOut.pause()
             del self.fadeOut
+        
         if hasattr(self, 'track'):
             self.track.pause()
             del self.track
+        
         if hasattr(self, 'healthAlertIval'):
             self.healthAlertIval.pause()
             del self.healthAlertIval
+        
         if self.hpModMeter:
             self.hpModMeter.destroy()
             self.hpModMeter = None
+        
         if self.voodooModMeter:
             self.voodooModMeter.destroy()
             self.voodooModMeter = None
+        
         self.clamps = None
         DirectFrame.destroy(self)
-        return
 
     def hide(self):
         DirectFrame.hide(self)
@@ -124,7 +133,7 @@ class GameGui(DirectFrame):
             vtCost = inv.getStackQuantity(InventoryType.Vitae_Cost)
             vtLeft = inv.getStackQuantity(InventoryType.Vitae_Left)
             self.updateVitae(vtLevel, vtCost, vtLeft)
-
+    
     def updateVitae(self, level, cost, left):
         self.vitaeMeter.update(level, cost, left)
         if level > 0:
@@ -154,17 +163,21 @@ class GameGui(DirectFrame):
         if hasattr(self, 'moveUpIval'):
             self.moveUpIval.finish()
             del self.moveUpIval
+        
         if hasattr(self, 'scaleDown'):
             self.scaleDown.finish()
             del self.scaleDown
+        
         if hasattr(self, 'fadeOut'):
             self.fadeOut.finish()
             del self.fadeOut
+        
         if hasattr(self, 'track'):
             self.track.finish()
             del self.track
+        
         self.moveUpIval = newTextDummy.posInterval(duration, position + posChange)
-        self.scaleDown = newTextDummy.scaleInterval(duration * 0.75, textScale * 0.7, blendType='easeInOut')
+        self.scaleDown = newTextDummy.scaleInterval(duration * 0.75, textScale * 0.7, blendType = 'easeInOut')
         self.fadeOut = newTextDummy.colorScaleInterval(duration * 0.25, Vec4(0, 0, 0, 0))
         self.track = Sequence(Parallel(self.moveUpIval, Sequence(Wait(0.25), self.scaleDown), Sequence(Wait(0.75), self.fadeOut)), Func(self.removeExpAlert, newTextDummy))
         self.track.start()
@@ -173,10 +186,11 @@ class GameGui(DirectFrame):
         if alert:
             alert.removeNode()
             alert = None
-        return
 
     def showClamps(self):
         self.clamps.show()
 
     def hideClamps(self):
         self.clamps.hide()
+
+

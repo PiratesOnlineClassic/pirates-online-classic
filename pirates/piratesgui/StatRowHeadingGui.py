@@ -1,12 +1,11 @@
 from direct.gui.DirectGui import *
-from panda3d.core import *
-from pirates.piratesgui import PiratesGuiGlobals, StatRowGui
-
+from pandac.PandaModules import *
+from pirates.piratesgui import StatRowGui
+from pirates.piratesgui import PiratesGuiGlobals
 
 class StatRowHeadingGui(StatRowGui.StatRowGui):
     
-
-    def __init__(self, item, columnHeadings, parent=None, textScale=None, itemHeight=None, itemWidths=[], **kw):
+    def __init__(self, item, columnHeadings, parent = None, textScale = None, itemHeight = None, itemWidths = [], **kw):
         StatRowGui.StatRowGui.__init__(self, item, columnHeadings, parent, textScale, itemHeight, **kw)
         self.initialiseoptions(StatRowHeadingGui)
         self.columnWidths = itemWidths
@@ -23,19 +22,21 @@ class StatRowHeadingGui(StatRowGui.StatRowGui):
         currColWidth = 0.4
         if len(self.columnWidths) > 0:
             currColWidth = self.columnWidths.pop(0)
+        
         currValueX = currColWidth / 2.0
         for currValueItem in self.item:
-            self.headings.append(DirectLabel(parent=self, relief=None, text=str(currValueItem), text_align=TextNode.ACenter, text_scale=self.textScale, text_fg=textFg, text_shadow=PiratesGuiGlobals.TextShadow, textMayChange=1, pos=(currValueX, 0, self.getHeight() / 2)))
+            self.headings.append(DirectLabel(parent = self, relief = None, text = str(currValueItem), text_align = TextNode.ACenter, text_scale = self.textScale, text_fg = textFg, text_shadow = PiratesGuiGlobals.TextShadow, textMayChange = 1, pos = (currValueX, 0, self.getHeight() / 2)))
             currValueX += currColWidth / 2.0
             if len(self.columnWidths) > 0:
                 currColWidth = self.columnWidths.pop(0)
+            
             currValueX += currColWidth / 2.0
-
-        return
 
     def _destroyIface(self):
         StatRowGui.StatRowGui._destroyIface(self)
         for currHeadingText in self.headings:
             currHeadingText.destroy()
-
+        
         self.headings = []
+
+

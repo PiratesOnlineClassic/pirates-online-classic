@@ -1,16 +1,14 @@
 from direct.gui.DirectGui import *
-from panda3d.core import *
-
+from pandac.PandaModules import *
 
 class SkillRing(DirectFrame):
-    
     card = None
     rechargeRing = None
     base = None
-
-    def __init__(self, color, baseColor=Vec4(1.0, 1.0, 1.0, 1.0)):
-        DirectFrame.__init__(self, relief=None)
-        self.__progress = None
+    
+    def __init__(self, color, baseColor = Vec4(1.0, 1.0, 1.0, 1.0)):
+        DirectFrame.__init__(self, relief = None)
+        self._SkillRing__progress = None
         self.initialiseoptions(SkillRing)
         self.meterColor = baseColor
         self.meterActiveColor = color
@@ -19,6 +17,7 @@ class SkillRing(DirectFrame):
             SkillRing.rechargeRing = SkillRing.card.find('**/recharge_ring')
             SkillRing.base = SkillRing.card.find('**/base')
             SkillRing.baseOver = SkillRing.card.find('**/base_over')
+        
         self.meterFace = SkillRing.base.copyTo(self)
         self.meterFace.setTransparency(1)
         self.meterFace.setScale(0.15)
@@ -38,7 +37,6 @@ class SkillRing(DirectFrame):
         self.meterFaceHalf2.setTransparency(1)
         self.meterFaceHalf2.setScale(0.13)
         self.meterFaceHalf2.flattenStrong()
-        return
 
     def rollover(self, over):
         if over:
@@ -52,23 +50,25 @@ class SkillRing(DirectFrame):
         progress = 0
         if max > 0:
             progress = float(val) / max
+        
         if progress <= 0:
             self.meterFaceHalf1.hide()
             self.meterFaceHalf2.hide()
+        elif progress >= 1:
+            self.meterFaceHalf1.setColor(self.meterActiveColor)
+            self.meterFaceHalf1.show()
+            self.meterFaceHalf2.setR(-180)
+            self.meterFaceHalf2.setColor(self.meterActiveColor)
+            self.meterFaceHalf2.show()
         else:
-            if progress >= 1:
-                self.meterFaceHalf1.setColor(self.meterActiveColor)
-                self.meterFaceHalf1.show()
-                self.meterFaceHalf2.setR(-180)
-                self.meterFaceHalf2.setColor(self.meterActiveColor)
-                self.meterFaceHalf2.show()
+            self.meterFaceHalf1.show()
+            self.meterFaceHalf2.show()
+            self.meterFaceHalf1.setColor(self.meterActiveColor)
+            if progress < 0.5:
+                self.meterFaceHalf2.setColor(self.meterColor)
             else:
-                self.meterFaceHalf1.show()
-                self.meterFaceHalf2.show()
-                self.meterFaceHalf1.setColor(self.meterActiveColor)
-                if progress < 0.5:
-                    self.meterFaceHalf2.setColor(self.meterColor)
-                else:
-                    self.meterFaceHalf2.setColor(self.meterActiveColor)
-                    progress = progress - 0.5
-                self.meterFaceHalf2.setR(-180 * (progress / 0.5))
+                self.meterFaceHalf2.setColor(self.meterActiveColor)
+                progress = progress - 0.5
+            self.meterFaceHalf2.setR(-180 * (progress / 0.5))
+
+

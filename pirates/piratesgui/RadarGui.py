@@ -1,14 +1,15 @@
-from direct.fsm.FSM import FSM
+from pandac.PandaModules import *
 from direct.gui.DirectGui import *
-from direct.interval.IntervalGlobal import *
 from direct.task import Task
-from pirates.piratesgui.GuiTray import GuiTray
-from panda3d.core import *
+from direct.fsm.FSM import FSM
+from direct.interval.IntervalGlobal import *
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import TeamUtils
+from pirates.piratesbase import PLocalizer
 from pirates.band.DistributedBandMember import DistributedBandMember
-from pirates.piratesbase import PiratesGlobals, PLocalizer, TeamUtils
-from pirates.world import OceanZone
 from RadarMap import RadarMap
-
+from GuiTray import GuiTray
+from pirates.world import OceanZone
 RADAR_OBJ_TYPE_DEFAULT = 0
 RADAR_OBJ_TYPE_LANDMARK = 1
 RADAR_OBJ_TYPE_QUEST = 2
@@ -17,21 +18,20 @@ RADAR_OBJ_TYPE_EXIT = 4
 RADAR_OBJ_TYPE_TUTORIAL = 5
 
 class RadarZoomFSM(FSM):
-
     notify = directNotify.newCategory('RadarZoomFSM')
-
+    
     def __init__(self, radarGui):
         FSM.__init__(self, 'RadarZoom')
         self.radarGui = radarGui
 
     def destroy(self):
         self.cleanup()
-
-    def enterOff(self, args=[]):
+    
+    def enterOff(self, args = []):
         collisionNode = self.radarGui.collSphereNodePath.getNode(0)
         collisionNode.setFromCollideMask(BitMask32.allOff())
-
-    def enterZoom1(self, args=[]):
+    
+    def enterZoom1(self, args = []):
         self.radarGui.resetRadius(200.0)
         collisionNode = self.radarGui.collSphereNodePath.getNode(0)
         collisionNode.setFromCollideMask(PiratesGlobals.RadarAvatarBitmask)
@@ -40,16 +40,16 @@ class RadarZoomFSM(FSM):
     def exitZoom1(self):
         pass
 
-    def enterZoom2(self, args=[]):
+    def enterZoom2(self, args = []):
         self.radarGui.resetRadius(1000.0)
         collisionNode = self.radarGui.collSphereNodePath.getNode(0)
         collisionNode.setFromCollideMask(PiratesGlobals.RadarAvatarBitmask | PiratesGlobals.RadarShipBitmask)
         self.radarGui.lastZoom = 'Zoom2'
-
+    
     def exitZoom2(self):
         pass
 
-    def enterZoom3(self, args=[]):
+    def enterZoom3(self, args = []):
         self.radarGui.resetRadius(2500.0)
         collisionNode = self.radarGui.collSphereNodePath.getNode(0)
         collisionNode.setFromCollideMask(PiratesGlobals.RadarShipBitmask)
@@ -59,11 +59,11 @@ class RadarZoomFSM(FSM):
         pass
 
 
+
 class RadarGui(GuiTray, FSM):
-
     notify = directNotify.newCategory('RadarGui')
-
-    def __init__(self, parent, av, radius=200.0, **kw):
+    
+    def __init__(self, parent, av, radius = 200.0, **kw):
         GuiTray.__init__(self, parent, 0.4, 0.4, **kw)
         FSM.__init__(self, 'RadarGui')
         self.initialiseoptions(RadarGui)
@@ -87,8 +87,9 @@ class RadarGui(GuiTray, FSM):
         self.background = self.model.find('**/background')
         self.background.setColorScale(1, 1, 1, 0.6)
         if base.config.GetBool('want-radar-maps', 0):
-            self.map = RadarMap(av=av, parent=self, relief=None, scale=(self.rWidth, 1, self.rHeight))
+            self.map = RadarMap(av = av, parent = self, relief = None, scale = (self.rWidth, 1, self.rHeight))
             self.map.setZoomScale(self.radius)
+        
         self.frame = self.model.find('**/frame')
         self.dial = self.model.find('**/dial')
         self.north = loader.loadModel('models/gui/compass_north')
@@ -109,18 +110,30 @@ class RadarGui(GuiTray, FSM):
         self.background.reparentTo(self.guiTop)
         if self.map:
             self.map.reparentTo(self.guiTop)
+        
         self.frame.reparentTo(self.guiTop)
         self.dial.reparentTo(self.guiTop)
         self.objTop = self.guiTop.attachNewNode('compassObjTop')
-        self.zoomInButton = DirectButton(parent=self, relief=None, scale=0.2, pos=(0.25,
-                                                                                   0,
-                                                                                   0.25), image=(self.model.find('**/zoomin_button'), self.model.find('**/zoomin_button'), self.model.find('**/zoomin_button_over')), command=self.zoomIn)
-        self.zoomOutButton = DirectButton(parent=self, relief=None, scale=0.2, pos=(0.25,
-                                                                                    0,
-                                                                                    0.25), image=(self.model.find('**/zoomout_button'), self.model.find('**/zoomout_button'), self.model.find('**/zoomout_button_over')), command=self.zoomOut)
+        self.zoomInButton = DirectButton(parent = self, relief = None, scale = 0.2, pos = (0.25, 0, 0.25), image = (self.model.find('**/zoomin_button'), self.model.find('**/zoomin_button'), self.model.find('**/zoomin_button_over')), command = self.zoomIn)
+        self.zoomOutButton = DirectButton(parent = self, relief = None, scale = 0.2, pos = (0.25, 0, 0.25), image = (self.model.find('**/zoomout_button'), self.model.find('**/zoomout_button'), self.model.find('**/zoomout_button_over')), command = self.zoomOut)
         self.zoomInButton.flattenStrong()
         self.zoomOutButton.flattenStrong()
-        self.modelDict = {RADAR_OBJ_TYPE_DEFAULT: [self.model.find('**/icon_sphere'), None], RADAR_OBJ_TYPE_LANDMARK: [self.model.find('**/icon_square'), self.model.find('**/icon_square_hollow')], RADAR_OBJ_TYPE_QUEST: [self.model.find('**/icon_objective_grey'), self.arrow], RADAR_OBJ_TYPE_SHIP: [self.model.find('**/icon_ship'), None], RADAR_OBJ_TYPE_EXIT: [self.rectangle, self.rectangle]}
+        self.modelDict = {
+            RADAR_OBJ_TYPE_DEFAULT: [
+                self.model.find('**/icon_sphere'),
+                None],
+            RADAR_OBJ_TYPE_LANDMARK: [
+                self.model.find('**/icon_square'),
+                self.model.find('**/icon_square_hollow')],
+            RADAR_OBJ_TYPE_QUEST: [
+                self.model.find('**/icon_objective_grey'),
+                self.arrow],
+            RADAR_OBJ_TYPE_SHIP: [
+                self.model.find('**/icon_ship'),
+                None],
+            RADAR_OBJ_TYPE_EXIT: [
+                self.rectangle,
+                self.rectangle]}
         self.la = self.modelDict[RADAR_OBJ_TYPE_DEFAULT][0].copyTo(self.objTop)
         self.la.setColorScale(1, 1, 1, 1)
         self.la.setPos(0, 0, 0)
@@ -133,50 +146,43 @@ class RadarGui(GuiTray, FSM):
         self.exitSphereEvent = 'exitradarSphere'
         self.zoomFSM = RadarZoomFSM(self)
         self.effectIvals = []
-        self.locationLabel = DirectLabel(parent=self, relief=None, text='', text_font=PiratesGlobals.getPirateOutlineFont(), text_fg=(1.0,
-                                                                                                                                      1.0,
-                                                                                                                                      1.0,
-                                                                                                                                      1.0), text_shadow=(0,
-                                                                                                                                                         0,
-                                                                                                                                                         0,
-                                                                                                                                                         1), text_scale=0.04, text_pos=(0.2, -0.025), text_wordwrap=7)
+        self.locationLabel = DirectLabel(parent = self, relief = None, text = '', text_font = PiratesGlobals.getPirateOutlineFont(), text_fg = (1.0, 1.0, 1.0, 1.0), text_shadow = (0, 0, 0, 1), text_scale = 0.04, text_pos = (0.2, -0.025), text_wordwrap = 7)
         self.locationLabel.hide()
         self.toggle()
         self.flashCleanupTasks = {}
-        return
 
     def showLocation(self, locationUID):
         locText = PLocalizer.LocationNames.get(locationUID)
         if locText is not None:
             self.locationLabel['text'] = locText
             self.locationLabel.show()
+        elif base.localAvatar.ship:
+            pos = base.localAvatar.ship.getPos(render)
+            ocean = OceanZone.getOceanZone(pos[0], pos[1])
+            oceanText = PLocalizer.LocationNames.get(ocean)
+            if oceanText is None:
+                oceanText = PLocalizer.LoadingScreen_Ocean
+                self.locationLabel['text'] = oceanText
+                self.locationLabel.show()
+            
         else:
-            if base.localAvatar.ship:
-                pos = base.localAvatar.ship.getPos(render)
-                ocean = OceanZone.getOceanZone(pos[0], pos[1])
-                oceanText = PLocalizer.LocationNames.get(ocean)
-                if oceanText is None:
-                    oceanText = PLocalizer.LoadingScreen_Ocean
-                    self.locationLabel['text'] = oceanText
-                    self.locationLabel.show()
-            else:
-                self.locationLabel.hide()
-        return
+            self.locationLabel.hide()
 
     def hideLocationText(self):
         self.locationLabel.hide()
 
     def destroy(self):
-        for currDoLater, ival in self.flashCleanupTasks.values():
+        for (currDoLater, ival) in self.flashCleanupTasks.values():
             taskMgr.remove(currDoLater)
             ival.finish()
-
+        
         self.flashCleanupTasks = {}
         self.cleanupEffects()
         self.removeCollisions()
         taskMgr.remove('drawRadarTask')
         if self.map:
             self.map.clearAreaModel()
+        
         GuiTray.destroy(self)
         self.zoomFSM.destroy()
         del self.zoomFSM
@@ -188,6 +194,7 @@ class RadarGui(GuiTray, FSM):
         del self.background
         if self.map:
             del self.map
+        
         del self.frame
         del self.dial
         self.relNode.removeNode()
@@ -222,10 +229,11 @@ class RadarGui(GuiTray, FSM):
         self.collHandler.addInPattern('enterradarSphere')
         self.collHandler.addOutPattern('exitradarSphere')
         base.cTrav.addCollider(self.collSphereNodePath, self.collHandler)
-
+    
     def resetRadius(self, radius):
         if self.radius == radius:
             return
+        
         self.radius = radius
         self.__normalizeWithRadius()
         collSphereNode = self.collSphereNodePath.getNode(0)
@@ -244,17 +252,19 @@ class RadarGui(GuiTray, FSM):
         radarObjId = self.getObjIdFromCollNode(radarObj)
         objType = RADAR_OBJ_TYPE_DEFAULT
         self.addRadarObject(radarObjId, radarObj, objType)
-
+    
     def getObjIdFromCollNode(self, radarObj):
         doIdStr = radarObj.getNetTag('avId')
         if doIdStr == '':
             doIdStr = radarObj.getNetTag('avIdStr')
             if doIdStr == '':
-                return
+                return None
+            
             return doIdStr
+        
         radarObjDoId = int(doIdStr)
         return radarObjDoId
-
+    
     def radarObjectCollExit(self, collEntry):
         radarObj = collEntry.getIntoNodePath()
         radarObjId = self.getObjIdFromCollNode(radarObj)
@@ -263,12 +273,12 @@ class RadarGui(GuiTray, FSM):
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def restoreCachedObject(self, objId, srcObjNode):
         self.__radarObjects[objId] = self.__cachedRadarObjects[objId]
-        radarNode, outOfRangeNode = self.makeRadarNode(srcObjNode, self.__radarObjects[objId]['type'])
+        (radarNode, outOfRangeNode) = self.makeRadarNode(srcObjNode, self.__radarObjects[objId]['type'])
         self.__radarObjects[objId]['radarObjNode'] = radarNode
         self.__radarObjects[objId]['outOfRangeNode'] = outOfRangeNode
         self.__radarObjects[objId]['srcObjNode'] = srcObjNode
         del self.__cachedRadarObjects[objId]
-
+    
     def restoreStickyCachedObjects(self):
         cachedKeys = self.__cachedRadarObjects.keys()
         for currObjKey in cachedKeys:
@@ -277,109 +287,123 @@ class RadarGui(GuiTray, FSM):
                 self.restoreCachedObject(currObjKey, dummyObjNode)
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
-    def addRadarObject(self, objId, radarObj, objType=RADAR_OBJ_TYPE_DEFAULT, dummySrcObjNode=None, teamId=None, enableUnconvert=False):
+    def addRadarObject(self, objId, radarObj, objType = RADAR_OBJ_TYPE_DEFAULT, dummySrcObjNode = None, teamId = None, enableUnconvert = False):
         if objId in self.__radarObjects:
             if objType != RADAR_OBJ_TYPE_DEFAULT:
                 if objType == RADAR_OBJ_TYPE_TUTORIAL:
                     objType = RADAR_OBJ_TYPE_DEFAULT
                     self.convertRadarObject(objType, objId, teamId)
                 else:
-                    self.convertRadarObject(objType, objId, enableUnconvert=enableUnconvert)
+                    self.convertRadarObject(objType, objId, enableUnconvert = enableUnconvert)
+            
             if radarObj == None:
                 radarObj = self.__radarObjects[objId]['srcObjNode']
-            self.updateObjRef(radarObj, objId, dummySrcObjNode=dummySrcObjNode)
-        else:
-            if objId in self.__cachedRadarObjects:
-                if not radarObj:
-                    radarObj = self.__cachedRadarObjects[objId]['dummySrcObjNode']
-                self.restoreCachedObject(objId, radarObj)
-                if objType != RADAR_OBJ_TYPE_DEFAULT:
-                    if objType == RADAR_OBJ_TYPE_TUTORIAL:
-                        objType = RADAR_OBJ_TYPE_DEFAULT
-                    self.convertRadarObject(objType, objId, teamId)
-            else:
-                srcNode = radarObj
-                if radarObj == None:
-                    srcNode = dummySrcObjNode
+            
+            self.updateObjRef(radarObj, objId, dummySrcObjNode = dummySrcObjNode)
+        elif objId in self.__cachedRadarObjects:
+            if not radarObj:
+                radarObj = self.__cachedRadarObjects[objId]['dummySrcObjNode']
+            
+            self.restoreCachedObject(objId, radarObj)
+            if objType != RADAR_OBJ_TYPE_DEFAULT:
                 if objType == RADAR_OBJ_TYPE_TUTORIAL:
                     objType = RADAR_OBJ_TYPE_DEFAULT
-                    radarNode, outOfRangeNode = self.makeRadarNode(srcNode, objType, objId, teamId=teamId)
-                else:
-                    radarNode, outOfRangeNode = self.makeRadarNode(srcNode, objType)
-                newRadarObjInfo = {'type': objType, 'radarObjNode': radarNode, 'outOfRangeNode': outOfRangeNode, 'srcObjNode': srcNode, 'dummySrcObjNode': dummySrcObjNode}
-                self.__radarObjects[objId] = newRadarObjInfo
-        return
+                
+                self.convertRadarObject(objType, objId, teamId)
+            
+        else:
+            srcNode = radarObj
+            if radarObj == None:
+                srcNode = dummySrcObjNode
+            
+            if objType == RADAR_OBJ_TYPE_TUTORIAL:
+                objType = RADAR_OBJ_TYPE_DEFAULT
+                (radarNode, outOfRangeNode) = self.makeRadarNode(srcNode, objType, objId, teamId = teamId)
+            else:
+                (radarNode, outOfRangeNode) = self.makeRadarNode(srcNode, objType)
+            newRadarObjInfo = {
+                'type': objType,
+                'radarObjNode': radarNode,
+                'outOfRangeNode': outOfRangeNode,
+                'srcObjNode': srcNode,
+                'dummySrcObjNode': dummySrcObjNode}
+            self.__radarObjects[objId] = newRadarObjInfo
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
-    def removeRadarObject(self, objId, force=False):
+    def removeRadarObject(self, objId, force = False):
         objInfo = self.__radarObjects.get(objId)
         if objInfo:
             if objInfo['type'] == RADAR_OBJ_TYPE_DEFAULT or objInfo['type'] == RADAR_OBJ_TYPE_EXIT or force:
-                self.moveRadarObjToCache(objId, skipCache=force)
+                self.moveRadarObjToCache(objId, skipCache = force)
             else:
                 self.updateObjRef(objInfo['dummySrcObjNode'], objId)
-
+    
     def restoreRadarObject(self, objId):
         restoreResult = self.restoreOldInfo(objId)
         if restoreResult == False:
-            self.moveRadarObjToCache(objId, skipCache=True)
+            self.moveRadarObjToCache(objId, skipCache = True)
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
-    def convertRadarObject(self, toType, objId, teamId=None, enableUnconvert=False):
+    def convertRadarObject(self, toType, objId, teamId = None, enableUnconvert = False):
         objectInfo = self.__radarObjects.get(objId)
         if objectInfo == None:
-            return
+            return None
+        
         if objectInfo['type'] != toType:
             if enableUnconvert:
-                objectInfo['oldInfo'] = {'type': objectInfo['type'], 'radarObjNode': objectInfo['radarObjNode'], 'outOfRangeNode': objectInfo['outOfRangeNode'], 'dummySrcObjNode': objectInfo['dummySrcObjNode']}
+                objectInfo['oldInfo'] = {
+                    'type': objectInfo['type'],
+                    'radarObjNode': objectInfo['radarObjNode'],
+                    'outOfRangeNode': objectInfo['outOfRangeNode'],
+                    'dummySrcObjNode': objectInfo['dummySrcObjNode']}
+            
             objectInfo['type'] = toType
             objectInfo['radarObjNode'].hide()
             outOfRangeNode = objectInfo['outOfRangeNode']
             if outOfRangeNode:
                 outOfRangeNode.hide()
-            objectInfo['radarObjNode'], objectInfo['outOfRangeNode'] = self.makeRadarNode(objectInfo['srcObjNode'], toType, objId, teamId)
+            
+            (objectInfo['radarObjNode'], objectInfo['outOfRangeNode']) = self.makeRadarNode(objectInfo['srcObjNode'], toType, objId, teamId)
             if objectInfo['type'] == RADAR_OBJ_TYPE_DEFAULT:
                 objectInfo['dummySrcObjNode'].hide()
                 objectInfo['dummySrcObjNode'] = None
-        return
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
-    def updateObjRef(self, object, objId, dummySrcObjNode=None):
+    def updateObjRef(self, object, objId, dummySrcObjNode = None):
         objectInfo = self.__radarObjects[objId]
         if dummySrcObjNode:
             objectInfo['dummySrcObjNode'] = dummySrcObjNode
+        
         objectInfo['srcObjNode'] = object
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
-    def addRadarObjectAtLoc(self, pos, objType=RADAR_OBJ_TYPE_DEFAULT, targetObjId=None, teamId=None, enableUnconvert=False):
+    def addRadarObjectAtLoc(self, pos, objType = RADAR_OBJ_TYPE_DEFAULT, targetObjId = None, teamId = None, enableUnconvert = False):
         desiredRadarNode = render.attachNewNode('desiredRadarNode')
         desiredRadarNode.setPos(pos)
-        self.addRadarObject(targetObjId, None, objType, dummySrcObjNode=desiredRadarNode, teamId=teamId, enableUnconvert=enableUnconvert)
-        return
-
+        self.addRadarObject(targetObjId, None, objType, dummySrcObjNode = desiredRadarNode, teamId = teamId, enableUnconvert = enableUnconvert)
+    
     def removeAllObjects(self):
         objects = self.__radarObjects.keys()
         for key in objects:
             self.moveRadarObjToCache(key)
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
-    def moveRadarObjToCache(self, objKey, skipCache=False):
+    def moveRadarObjToCache(self, objKey, skipCache = False):
         self.endFlashRadarObject(objKey)
         objInfo = self.__radarObjects.pop(objKey, None)
         objInfo['radarObjNode'].removeNode()
         outOfRangeNode = objInfo['outOfRangeNode']
         if outOfRangeNode:
             outOfRangeNode.removeNode()
-        if objInfo['type'] != RADAR_OBJ_TYPE_DEFAULT and objInfo['type'] != RADAR_OBJ_TYPE_EXIT and skipCache == False:
+        
+        if (objInfo['type'] != RADAR_OBJ_TYPE_DEFAULT and objInfo['type'] != RADAR_OBJ_TYPE_EXIT) and skipCache == False:
             objInfo['radarObjNode'] = None
             objInfo['outOfRangeNode'] = None
             objInfo['srcObjNode'] = None
             self.__cachedRadarObjects[objKey] = objInfo
-        else:
-            if (objInfo['type'] == RADAR_OBJ_TYPE_DEFAULT or objInfo['type'] == RADAR_OBJ_TYPE_EXIT) and objInfo['dummySrcObjNode'] and not objInfo['dummySrcObjNode'].isEmpty():
-                objInfo['dummySrcObjNode'].removeNode()
-        return
-
+        elif (objInfo['type'] == RADAR_OBJ_TYPE_DEFAULT or objInfo['type'] == RADAR_OBJ_TYPE_EXIT) and objInfo['dummySrcObjNode'] and not objInfo['dummySrcObjNode'].isEmpty():
+            objInfo['dummySrcObjNode'].removeNode()
+    
     def clearCache(self):
         objects = self.__cachedRadarObjects.keys()
         for key in objects:
@@ -388,8 +412,9 @@ class RadarGui(GuiTray, FSM):
             outOfRangeNode = objInfo['outOfRangeNode']
             if outOfRangeNode:
                 outOfRangeNode.removeNode()
+            
             del self.__cachedRadarObjects[key]
-
+    
     def printRadarObjects(self):
         print self.__radarObjects
 
@@ -397,7 +422,7 @@ class RadarGui(GuiTray, FSM):
         return self.__radarObjects
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
-    def makeRadarNode(self, obj, objType, objDoId=None, teamId=None):
+    def makeRadarNode(self, obj, objType, objDoId = None, teamId = None):
         model = None
         outOfRangeNode = None
         camH = camera.getH(render)
@@ -408,6 +433,7 @@ class RadarGui(GuiTray, FSM):
         model = modelDict[0].copyTo(self.objTop)
         if modelDict[1]:
             outOfRangeNode = modelDict[1].copyTo(self.objTop)
+        
         if objType == RADAR_OBJ_TYPE_DEFAULT:
             status = PiratesGlobals.NEUTRAL
             if teamId:
@@ -423,8 +449,8 @@ class RadarGui(GuiTray, FSM):
                         else:
                             status = TeamUtils.friendOrFoe(localAvatar, av)
                     else:
-                        return (
-                         model, outOfRangeNode)
+                        return (model, outOfRangeNode)
+            
             if status == PiratesGlobals.ENEMY or status == PiratesGlobals.PVP_ENEMY:
                 model.setColorScale(1.0, 0.1, 0.1, 0.6)
             elif status == PiratesGlobals.FRIEND or status == PiratesGlobals.PVP_FRIEND:
@@ -433,13 +459,13 @@ class RadarGui(GuiTray, FSM):
                 model.setColorScale(0.9, 0.5, 0.95, 1)
             else:
                 model.setColorScale(0.1, 1.0, 0.1, 0.6)
-        else:
-            if objType == RADAR_OBJ_TYPE_QUEST:
-                model.setColorScale(1, 1, 0, 1)
-                if outOfRangeNode:
-                    outOfRangeNode.setColorScale(1, 1, 0, 1)
-                    outOfRangeNode.setScale(0.75)
-        x, z, relH, inRange = self.getXZHRelative(obj)
+        elif objType == RADAR_OBJ_TYPE_QUEST:
+            model.setColorScale(1, 1, 0, 1)
+            if outOfRangeNode:
+                outOfRangeNode.setColorScale(1, 1, 0, 1)
+                outOfRangeNode.setScale(0.75)
+
+        (x, z, relH, inRange) = self.getXZHRelative(obj)
         model.setPos(x, 0, z)
         model.setR(relH)
         if outOfRangeNode:
@@ -447,9 +473,9 @@ class RadarGui(GuiTray, FSM):
             if outOfRangeNode.getName() == self.arrow.getName():
                 arrow = outOfRangeNode.getChild(0)
                 arrow.lookAt(x, 0, z)
-        return (
-         model, outOfRangeNode)
 
+        return (model, outOfRangeNode)
+    
     def enterOn(self):
         self.collSphereNodePath.unstash()
         taskMgr.doMethodLater(0.1, self.draw, 'drawRadarTask')
@@ -463,13 +489,15 @@ class RadarGui(GuiTray, FSM):
         self.restoreStickyCachedObjects()
         if self.map:
             self.map.startUpdateTask()
-
+    
     def exitOn(self):
         if not self.collSphereNodePath.isSingleton():
             self.collSphereNodePath.stash()
+        
         collisionNode = self.collSphereNodePath.getNode(0)
         if hasattr(self, 'zoomFSM'):
             self.zoomFSM.request('Off')
+        
         self.ignore(self.enterSphereEvent)
         self.ignore(self.exitSphereEvent)
         self.ignore('-')
@@ -493,10 +521,10 @@ class RadarGui(GuiTray, FSM):
             dNorm = Vec3(d)
             dNorm.normalize()
             d = dNorm * self.radius
+        
         dx = d[0] * self.__kX
         dz = d[1] * self.__kZ
-        return (
-         dx, dz, h, inRange)
+        return (dx, dz, h, inRange)
 
     def draw(self, task):
         camH = camera.getH(render)
@@ -506,65 +534,69 @@ class RadarGui(GuiTray, FSM):
             radarNode = objInfo['radarObjNode']
             outOfRangeNode = objInfo['outOfRangeNode']
             srcObjNode = objInfo['srcObjNode']
-            if srcObjNode:
-                if srcObjNode.isEmpty():
-                    self.moveRadarObjToCache(objId)
-                    return Task.again
-                if radarNode and not srcObjNode.getParent().isEmpty() and not srcObjNode.isEmpty():
-                    dx, dz, relH, inRange = self.getXZHRelative(objInfo['srcObjNode'])
-                    if inRange:
-                        radarNode.setPos(dx, 0, dz)
-                        if objType == RADAR_OBJ_TYPE_EXIT:
-                            radarNode.getChild(0).lookAt(dx, 0, dz)
-                            radarNode.getChild(0).getChild(0).setH(90)
-                            outOfRangeNode.hide()
-                        else:
-                            radarNode.setR(-relH - 90)
-                        radarNode.show()
+            if srcObjNode and srcObjNode.isEmpty():
+                self.moveRadarObjToCache(objId)
+                return Task.again
+            
+            if radarNode and not srcObjNode.getParent().isEmpty() and not srcObjNode.isEmpty():
+                (dx, dz, relH, inRange) = self.getXZHRelative(objInfo['srcObjNode'])
+                if inRange:
+                    radarNode.setPos(dx, 0, dz)
+                    if objType == RADAR_OBJ_TYPE_EXIT:
+                        radarNode.getChild(0).lookAt(dx, 0, dz)
+                        radarNode.getChild(0).getChild(0).setH(90)
+                        outOfRangeNode.hide()
                     else:
-                        radarNode.hide()
-                        if objType == RADAR_OBJ_TYPE_EXIT:
-                            outOfRangeNode.show()
-                            outOfRangeNode.getChild(0).getChild(0).setHpr(90, 0, 90)
-                    if outOfRangeNode:
-                        if objType == RADAR_OBJ_TYPE_QUEST:
-                            basePiece = outOfRangeNode.find('**/icon_objective*')
-                            if not basePiece.isEmpty():
-                                inRange or basePiece.show()
+                        radarNode.setR(-relH - 90)
+                    radarNode.show()
+                else:
+                    radarNode.hide()
+                    if objType == RADAR_OBJ_TYPE_EXIT:
+                        outOfRangeNode.show()
+                        outOfRangeNode.getChild(0).getChild(0).setHpr(90, 0, 90)
+                    
+                if outOfRangeNode:
+                    if objType == RADAR_OBJ_TYPE_QUEST:
+                        basePiece = outOfRangeNode.find('**/icon_objective*')
+                        if not basePiece.isEmpty():
+                            if not inRange:
+                                basePiece.show()
                             else:
                                 basePiece.hide()
-                        child = outOfRangeNode.getChild(0)
-                        child.lookAt(dx, 0, dz)
-                        vec = VBase3(dx, 0, dz)
-                        vec.normalize()
-                        outOfRangeNode.setPos(vec[0], 0, vec[2])
+
+                    child = outOfRangeNode.getChild(0)
+                    child.lookAt(dx, 0, dz)
+                    vec = VBase3(dx, 0, dz)
+                    vec.normalize()
+                    outOfRangeNode.setPos(vec[0], 0, vec[2])
+                
                 dummyNode = objInfo.get('dummySrcObjNode')
                 if dummyNode and objInfo['srcObjNode'].compareTo(dummyNode) != 0:
                     dummyNode.setPos(objInfo['srcObjNode'].getPos(render))
-
+        
         self.dial.setR(camH)
         self.north.setR(-camH)
         self.objTop.setR(camH)
         return Task.again
-
-    def toggle(self, args=None):
+    
+    def toggle(self, args = None):
         if self.state == 'Off':
             self.request('On')
-        else:
-            if self.state == 'On':
-                self.request('Off')
+        elif self.state == 'On':
+            self.request('Off')
 
-    def toggleDisplay(self, useReceiveEffect=False, destPos=None):
+    def toggleDisplay(self, useReceiveEffect = False, destPos = None):
         if self.isHidden() or useReceiveEffect:
             self.show()
             if useReceiveEffect:
                 self.zoomFSM.request('Zoom1')
                 if destPos:
                     self.resetRadius(50)
-                    localAvatar.guiMgr.createReceiveEffect(self, explain=True)
+                    localAvatar.guiMgr.createReceiveEffect(self, explain = True)
                 else:
                     localAvatar.guiMgr.radarGui.la.setColorScale(1, 1, 1, 1)
-                    localAvatar.guiMgr.createReceiveEffect(self, explain=False)
+                    localAvatar.guiMgr.createReceiveEffect(self, explain = False)
+            
         else:
             self.hide()
 
@@ -575,29 +607,23 @@ class RadarGui(GuiTray, FSM):
         self.zoomInSfx.play()
         if self.zoomFSM.state == 'Off':
             self.zoomFSM.request('Zoom1')
-        else:
-            if self.zoomFSM.state == 'Zoom1':
-                return
-            else:
-                if self.zoomFSM.state == 'Zoom2':
-                    self.zoomFSM.request('Zoom1')
-                else:
-                    if self.zoomFSM.state == 'Zoom3':
-                        self.zoomFSM.request('Zoom2')
+        elif self.zoomFSM.state == 'Zoom1':
+            return
+        elif self.zoomFSM.state == 'Zoom2':
+            self.zoomFSM.request('Zoom1')
+        elif self.zoomFSM.state == 'Zoom3':
+            self.zoomFSM.request('Zoom2')
 
     def zoomOut(self):
         self.zoomOutSfx.play()
         if self.zoomFSM.state == 'Off':
             self.zoomFSM.request('Zoom1')
-        else:
-            if self.zoomFSM.state == 'Zoom1':
-                self.zoomFSM.request('Zoom2')
-            else:
-                if self.zoomFSM.state == 'Zoom2':
-                    self.zoomFSM.request('Zoom3')
-                else:
-                    if self.zoomFSM.state == 'Zoom3':
-                        return
+        elif self.zoomFSM.state == 'Zoom1':
+            self.zoomFSM.request('Zoom2')
+        elif self.zoomFSM.state == 'Zoom2':
+            self.zoomFSM.request('Zoom3')
+        elif self.zoomFSM.state == 'Zoom3':
+            return
 
     def loadMap(self, modelPath):
         if self.map:
@@ -612,6 +638,7 @@ class RadarGui(GuiTray, FSM):
         if radarObjInfo == None:
             if self.map:
                 uItem = self.map.getIconAV()
+            
             uItem = None
         else:
             inNode = radarObjInfo['radarObjNode']
@@ -625,29 +652,35 @@ class RadarGui(GuiTray, FSM):
             else:
                 uItem = outNode
         return uItem
-
-    def flashRadarObject(self, objId, duration=None, scaleMin=Point3(0.5, 0.5, 0.5), scaleMax=Point3(1.0, 1.0, 1.0)):
+    
+    def flashRadarObject(self, objId, duration = None, scaleMin = Point3(0.5, 0.5, 0.5), scaleMax = Point3(1.0, 1.0, 1.0)):
         if duration != None and self.flashCleanupTasks.has_key(objId):
             task = self.flashCleanupTasks[objId][0]
             currentTime = taskMgr._TaskManager__getTime()
             task.delayTime = duration
             task.wakeTime = currentTime + duration
             return True
+        
         uItem = self.getRadarObjNode(objId)
         if uItem == None or uItem.isEmpty():
             return False
-        displayIval = Sequence(LerpScaleInterval(uItem, duration=0.5, scale=scaleMax, startScale=scaleMin, blendType='noBlend'), LerpScaleInterval(uItem, duration=0.5, scale=scaleMin, startScale=scaleMax, blendType='noBlend'))
+        
+        displayIval = Sequence(LerpScaleInterval(uItem, duration = 0.5, scale = scaleMax, startScale = scaleMin, blendType = 'noBlend'), LerpScaleInterval(uItem, duration = 0.5, scale = scaleMin, startScale = scaleMax, blendType = 'noBlend'))
         displayIval.loop()
         if duration == None:
-            self.addEffectIval([displayIval, objId])
+            self.addEffectIval([
+                displayIval,
+                objId])
         else:
             self.flashCleanupTasks[objId] = [
-             taskMgr.doMethodLater(duration, self.endFlashRadarObject, 'endRadarObjFlash-' + str(objId), extraArgs=[objId]), displayIval]
+                taskMgr.doMethodLater(duration, self.endFlashRadarObject, 'endRadarObjFlash-' + str(objId), extraArgs = [
+                    objId]),
+                displayIval]
         self.addEffectIval(displayIval)
         return True
 
-    def flashRadarObjectTimed(self, objId, duration=5.0, scaleMin=Point3(0.75, 0.75, 0.75), scaleMax=Point3(1.25, 1.25, 1.25)):
-        self.flashRadarObject(objId, duration, scaleMin=scaleMin, scaleMax=scaleMax)
+    def flashRadarObjectTimed(self, objId, duration = 5.0, scaleMin = Point3(0.75, 0.75, 0.75), scaleMax = Point3(1.25, 1.25, 1.25)):
+        self.flashRadarObject(objId, duration, scaleMin = scaleMin, scaleMax = scaleMax)
 
     def endFlashRadarObject(self, objId):
         flashInfo = self.flashCleanupTasks.pop(objId, None)
@@ -657,17 +690,18 @@ class RadarGui(GuiTray, FSM):
             uItem = self.getRadarObjNode(objId)
             if uItem and not uItem.isEmpty():
                 uItem.setScale(1.0, 1.0, 1.0)
-        return Task.done
 
+        return Task.done
+    
     def cleanupEffects(self):
-        for currIval, currObjId in self.effectIvals:
+        for (currIval, currObjId) in self.effectIvals:
             currIval.finish()
             uItem = self.getRadarObjNode(currObjId)
             if uItem and not uItem.isEmpty():
                 uItem.setScale(1.0, 1.0, 1.0)
-
+        
         self.effectIvals = []
-
+    
     def refreshRadarObject(self, objId):
         if objId in self.__radarObjects:
             outOfRangeNode = self.__radarObjects[objId]['outOfRangeNode']
@@ -682,6 +716,7 @@ class RadarGui(GuiTray, FSM):
         objectInfo = self.__radarObjects.get(objId)
         if not objectInfo:
             return True
+        
         offRadar = objectInfo['srcObjNode'] is objectInfo['dummySrcObjNode'] and objectInfo['dummySrcObjNode'] != None
         if objectInfo and not offRadar:
             if objectInfo.has_key('oldInfo'):
@@ -689,29 +724,36 @@ class RadarGui(GuiTray, FSM):
                 radarObjNode = objectInfo.get('radarObjNode')
                 if radarObjNode and not radarObjNode.isEmpty():
                     radarObjNode.removeNode()
+                
                 objectInfo['radarObjNode'] = objectInfo['oldInfo']['radarObjNode']
                 radarObjNode = objectInfo.get('radarObjNode')
                 radarObjNodeShown = False
                 if radarObjNode and not radarObjNode.isEmpty():
                     radarObjNodeShown = True
                     radarObjNode.show()
+                
                 outOfRangeNode = objectInfo.get('outOfRangeNode')
                 if outOfRangeNode and not outOfRangeNode.isEmpty():
                     outOfRangeNode.removeNode()
+                
                 objectInfo['outOfRangeNode'] = objectInfo['oldInfo']['outOfRangeNode']
                 outOfRangeNode = objectInfo.get('outOfRangeNode')
                 if outOfRangeNode and not outOfRangeNode.isEmpty():
                     outOfRangeNode.show()
+                
                 dummySrcObjNode = objectInfo.get('dummySrcObjNode')
                 if dummySrcObjNode and not dummySrcObjNode.isEmpty():
                     dummySrcObjNode.removeNode()
+                
                 objectInfo['dummySrcObjNode'] = objectInfo['oldInfo']['dummySrcObjNode']
                 if radarObjNodeShown == False and objectInfo.has_key('dummySrcObjNode') and objectInfo['dummySrcObjNode']:
                     objectInfo['dummySrcObjNode'].show()
+                
                 del objectInfo['oldInfo']
             else:
                 self.convertRadarObject(RADAR_OBJ_TYPE_DEFAULT, objId)
             return True
         else:
             return False
-        return
+
+
