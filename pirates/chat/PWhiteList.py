@@ -8,11 +8,10 @@ class PWhiteList(WhiteList):
         vfs = VirtualFileSystem.getGlobalPtr()
         filename = Filename('pwhitelist.txt')
         searchPath = DSearchPath()
-        searchPath.appendDirectory(Filename('.'))
-        searchPath.appendDirectory(Filename('etc'))
-        searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$PIRATES/src/chat')))
-        searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('pirates/src/chat')))
-        searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('pirates/chat')))
+        if __debug__:
+            searchPath.appendDirectory(Filename.expandFrom('../resources/phase_3/etc'))
+        else:
+            searchPath.appendDirectory(Filename.expandFrom('phase_3/etc'))
         found = vfs.resolveFilename(filename, searchPath)
         if not found:
             print "Couldn't find whitelist data file!"

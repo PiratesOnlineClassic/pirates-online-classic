@@ -64,7 +64,7 @@ class GameOptionsGui(DirectFrame):
         self.setupVideoFrame()
         self.setupGraphicsFrame()
         self.setupDisplayFrame()
-        if self.gameOptions:
+        if self.gameOptions is not None:
             self.gameOptions.display_identifier = -1
         
         self.set_options(False)
@@ -102,19 +102,19 @@ class GameOptionsGui(DirectFrame):
         self.restoreButton = GuiButton(parent = parent, text = text, pos = (x, 0, y), command = self.restoreButtonCB)
         x += ox
         text = PLocalizer.GameOptionsSave
-        if self.gameOptions:
+        if self.gameOptions is not None:
             command = self.gameOptions.save_button_function
         else:
             command = None
         button = GuiButton(parent = parent, text = text, pos = (x, 0, y), command = command)
         x += ox
         text = PLocalizer.GameOptionsLogout
-        if self.gameOptions:
+        if self.gameOptions is not None:
             command = self.gameOptions.logout_button_function
         else:
             command = None
         button = GuiButton(parent = parent, text = text, pos = (x, 0, y), command = command)
-        if self.gameOptions and self.gameOptions.play == False:
+        if self.gameOptions is not None and self.gameOptions.play == False:
             self.disableButton(button)
         
         toplevel_gui = loader.loadModel('models/gui/toplevel_gui')
@@ -160,7 +160,7 @@ class GameOptionsGui(DirectFrame):
         x += 0.43
         
         def sound_volume_update_function(value):
-            if self.gameOptions:
+            if self.gameOptions is not None:
                 self.gameOptions.options.sound_volume = value
             
             if base.sfxManagerList:
@@ -174,7 +174,7 @@ class GameOptionsGui(DirectFrame):
         text = PLocalizer.GameOptionsSoundEffectsVolume
         default_value = 0.5
         resolution = 0.01
-        if self.gameOptions:
+        if self.gameOptions is not None:
             self.sound_volume_slider = self.create_slider(sound_volume_update_function, self.gameOptions.options.sound_volume, x, y, resolution, text, parent)
         else:
             self.sound_volume_slider = self.create_slider(sound_volume_update_function, default_value, x, y, resolution, text, parent)
@@ -191,7 +191,7 @@ class GameOptionsGui(DirectFrame):
         x += 0.43
         
         def music_volume_update_function(value):
-            if self.gameOptions:
+            if self.gameOptions is not None:
                 self.gameOptions.options.music_volume = value
             
             if base.musicManager:
@@ -200,7 +200,7 @@ class GameOptionsGui(DirectFrame):
         text = PLocalizer.GameOptionsSoundEffectsVolume
         default_value = 0.5
         resolution = 0.01
-        if self.gameOptions:
+        if self.gameOptions is not None:
             self.music_volume_slider = self.create_slider(music_volume_update_function, self.gameOptions.options.music_volume, x, y, resolution, text, parent)
         else:
             self.music_volume_slider = self.create_slider(music_volume_update_function, default_value, x, y, resolution, text, parent)
@@ -273,7 +273,7 @@ class GameOptionsGui(DirectFrame):
         self.create_label(x, y, text, parent, sl)
         self.textureDetailVar = [
             0]
-        if self.gameOptions and self.gameOptions.options.texture_scale_mode == False:
+        if self.gameOptions is not None and self.gameOptions.options.texture_scale_mode == False:
             sx = 0.13
             self.textureDetailRadios = self.createRadioButtonGroup(parent, rx, y, sx, 0.03, self.textureDetailVar, 0.15, [
                 PLocalizer.GameOptionsLow,
@@ -290,7 +290,7 @@ class GameOptionsGui(DirectFrame):
         self.create_label(x, y, text, parent, sl)
         self.compressedTextureCheck = CheckButton(parent = parent, relief = None, scale = sc, pos = (x + 0.42, 0, y + 0.015), command = self.compressedTextureCheckCB)
         y += oy
-        if self.gameOptions and self.gameOptions.shader_support:
+        if self.gameOptions is not None and self.gameOptions.shader_support:
             text = PLocalizer.GameOptionsShaderLevel + ' ' + self.gameOptions.shader_model.__repr__() + ' *'
             self.create_label(x, y, text, parent, sl)
             self.shaderLevelCheck = CheckButton(parent = parent, relief = None, scale = sc, pos = (x + 0.315, 0, y + 0.015), command = self.shaderLevelCheckCB)
@@ -322,7 +322,7 @@ class GameOptionsGui(DirectFrame):
         text = PLocalizer.GameOptionsFullscreen
         self.create_label(x, y, text, parent, sl)
         self.fullScreenCheck = CheckButton(parent = parent, relief = None, scale = sc, pos = (x + 0.23, 0, y + 0.015), command = self.fullScreenCheckCB)
-        if self.gameOptions and self.gameOptions.freeLock:
+        if self.gameOptions is not None and self.gameOptions.freeLock:
             self.fullScreenCheck['command'] = self.callShowUpsell
             subCard = loader.loadModel('models/gui/toplevel_gui')
             appendMe = DirectFrame(parent = self.fullScreenCheck, relief = None, state = DGG.DISABLED, geom = subCard.find('**/subscribers_lock'), geom_scale = 0.3, geom_pos = (0.06, 0, 0.06))
@@ -362,7 +362,7 @@ class GameOptionsGui(DirectFrame):
         self.create_label(x, y, text, parent, sl)
         
         def gui_scale_update_function(value):
-            if self.gameOptions:
+            if self.gameOptions is not None:
                 self.gameOptions.options.gui_scale = value
             
             
@@ -375,7 +375,7 @@ class GameOptionsGui(DirectFrame):
                 gui_manager.setUIScale(value * 0.6 + 0.7)
 
         resolution = 0.01
-        if self.gameOptions:
+        if self.gameOptions is not None:
             self.gui_scale_slider = self.create_slider(gui_scale_update_function, self.gameOptions.options.gui_scale, x + ox, y, resolution, text, parent)
         else:
             self.gui_scale_slider = self.create_slider(gui_scale_update_function, 1.0, x + ox, y, resolution, text, parent)
@@ -388,15 +388,15 @@ class GameOptionsGui(DirectFrame):
         self.create_label(x + 0.2, y, text, parent, sl * 0.8)
         
         def gamma_update_function(value):
-            if self.gameOptions:
+            if self.gameOptions is not None:
                 self.gameOptions.options.gamma = value
             
             if base.win and base.win.getGsg():
-                if self.gameOptions and self.gameOptions.options.gamma_enable:
+                if self.gameOptions is not None and self.gameOptions.options.gamma_enable:
                     base.win.getGsg().setGamma(self.gameOptions.options.optionsGammaToGamma(self.gameOptions.options.gamma))
 
         resolution = 0.02
-        if self.gameOptions:
+        if self.gameOptions is not None:
             self.gamma_slider = self.create_slider(gamma_update_function, self.gameOptions.options.gamma, x + ox, y, resolution, text, parent)
         else:
             self.gamma_slider = self.create_slider(gamma_update_function, 1.0, x + ox, y, resolution, text, parent)
@@ -410,15 +410,15 @@ class GameOptionsGui(DirectFrame):
             self.create_label(x + 0.2, y, text, parent, sl * 0.8)
             
             def hdr_update_function(value):
-                if self.gameOptions:
+                if self.gameOptions is not None:
                     self.gameOptions.options.hdr_factor = value
                 
                 if hasattr(base, 'hdr') and base.hdr:
-                    if self.gameOptions and self.gameOptions.options.hdr:
+                    if self.gameOptions is not None and self.gameOptions.options.hdr:
                         base.hdr.updateHdrFactor(value)
 
             resolution = 0.02
-            if self.gameOptions:
+            if self.gameOptions is not None:
                 self.hdr_factor_slider = self.create_slider(hdr_update_function, self.gameOptions.options.hdr_factor, x + ox, y, resolution, text, parent)
             else:
                 self.hdr_factor_slider = self.create_slider(hdr_update_function, 1.0, x + ox, y, resolution, text, parent)
@@ -522,7 +522,7 @@ class GameOptionsGui(DirectFrame):
             button['selected'] = True
     
     def close(self):
-        if self.gameOptions:
+        if self.gameOptions is not None:
             self.gameOptions.hide()
         else:
             self.hide()
@@ -530,7 +530,7 @@ class GameOptionsGui(DirectFrame):
     def __loadFeedbackPanel(self):
         from pirates.piratesgui import FeedbackPanel
         self.close()
-        if self.gameOptions:
+        if self.gameOptions is not None:
             FeedbackPanel.FeedbackPanel()
 
     def initResolutionSettings(self):

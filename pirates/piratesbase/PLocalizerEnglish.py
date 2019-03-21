@@ -3474,7 +3474,7 @@ NameGUI_EmptyNameText = ' \n '
 NameGUI_NoNameWarnings = [
     "Don't you want to have any name at all?",
     'You gotta have a first or a last name, mate!']
-NameGUI_Guidelines = 'Your name will need to be approved.  Make sure it has: \n\n  - No foul language\n  - No personal information\n  - No brand names\n'
+NameGUI_Guidelines = 'Your name will need to be approved.  \nMake sure it has: \n\n  - No foul language\n  - No personal information\n  - No brand names\n'
 NameGUI_URLText = '\x01uline\x01Click here to see all naming guidelines\x02'
 PirateNames_NickNamesGeneric = [
     'Crazy',

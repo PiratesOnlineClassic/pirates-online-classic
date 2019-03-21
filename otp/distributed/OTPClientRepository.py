@@ -923,7 +923,7 @@ class OTPClientRepository(ClientRepositoryBase):
         self.newDNA = avDNA
         self.newPosition = avPosition
         self.send(datagram)
-    
+
     def sendCreateAvatar2Msg(self, avClass, avDNA, avName, avPosition):
         className = avClass.__name__
         dclass = self.dclassesByName[className]
@@ -938,8 +938,7 @@ class OTPClientRepository(ClientRepositoryBase):
         self.send(datagram)
 
     def enterWaitForDeleteAvatarResponse(self, potAv):
-        self.handler = self.handleWaitForDeleteAvatarResponse
-        self.sendDeleteAvatarMsg(potAv.id)
+        self.csm.sendDeleteAvatar(potAv.id)
         self.waitForDatabaseTimeout(requestName = 'WaitForDeleteAvatarResponse')
 
     def sendDeleteAvatarMsg(self, avId):
@@ -951,7 +950,7 @@ class OTPClientRepository(ClientRepositoryBase):
     def exitWaitForDeleteAvatarResponse(self):
         self.cleanupWaitingForDatabase()
         self.handler = None
-    
+
     def handleWaitForDeleteAvatarResponse(self, msgType, di):
         if msgType == CLIENT_DELETE_AVATAR_RESP:
             self.handleGetAvatarsRespMsg(di)
@@ -976,7 +975,6 @@ class OTPClientRepository(ClientRepositoryBase):
         del self.rejectRemoveAvatarBox
 
     def enterWaitForSetAvatarResponse(self, potAv):
-        self.handler = self.handleWaitForSetAvatarResponse
         self.sendSetAvatarMsg(potAv)
         self.waitForDatabaseTimeout(requestName = 'WaitForSetAvatarResponse')
 
@@ -991,10 +989,7 @@ class OTPClientRepository(ClientRepositoryBase):
     def sendSetAvatarIdMsg(self, avId):
         if avId != self.__currentAvId:
             self.__currentAvId = avId
-            datagram = PyDatagram()
-            datagram.addUint16(CLIENT_SET_AVATAR)
-            datagram.addUint32(avId)
-            self.send(datagram)
+            self.csm.sendChooseAvatar(avId)
             if avId == 0:
                 self.stopPeriodTimer()
             else:
@@ -1237,7 +1232,7 @@ class OTPClientRepository(ClientRepositoryBase):
 
     def enterWaitOnEnterResponses(self, shardId, hoodId, zoneId, avId):
         self.cleanGameExit = False
-        self.handler = self.handleWaitOnEnterResponses
+        # self.handler = self.handleWaitOnEnterResponses  # See comment below
         self.handlerArgs = {
             'hoodId': hoodId,
             'zoneId': zoneId,
@@ -1260,8 +1255,9 @@ class OTPClientRepository(ClientRepositoryBase):
         base.localAvatar.defaultShard = shardId
         self.waitForDatabaseTimeout(requestName = 'WaitOnEnterResponses')
         self.handleSetShardComplete()
-    
-    def handleWaitOnEnterResponses(self, msgType, di):
+
+    # TODO? not sure if this needs to be used for something like friending down the line.
+    '''def handleWaitOnEnterResponses(self, msgType, di):
         if msgType == CLIENT_GET_FRIEND_LIST_RESP:
             self.handleGetFriendsList(di)
         elif msgType == CLIENT_GET_FRIEND_LIST_EXTENDED_RESP:
@@ -1273,7 +1269,7 @@ class OTPClientRepository(ClientRepositoryBase):
         elif msgType == CLIENT_GET_PET_DETAILS_RESP:
             self.handleGetAvatarDetailsResp(di)
         else:
-            self.handleMessageType(msgType, di)
+            self.handleMessageType(msgType, di)'''
 
     def handleSetShardComplete(self):
         self.cleanupWaitingForDatabase()

@@ -204,9 +204,9 @@ class AvatarChooser(DirectObject, StateData):
 
         self.avatarListFrame = DirectFrame(parent = base.a2dTopLeft, relief = None)
         self.ropeFrame = DirectFrame(parent = self.avatarListFrame, relief = None, image = self.model.find('**/avatar_c_A_rope'), image_scale = 0.36, pos = (0, 0, -0.015))
-        self.subFrame = BorderFrame(parent = self.avatarListFrame, frameSize = (-0.25, 0.25, -0.04, 0.09), borderScale = 0.2, pos = (0, 0, -0.16), suffix = '_f')
+        self.subFrame = BorderFrame(parent = self.avatarListFrame, frameSize = (-0.25, 0.25, -0.04, 0.05), borderScale = 0.2, pos = (0, 0, -0.16), suffix = '_f')
         triangleGui = loader.loadModel('models/gui/triangle')
-        self.subLabel = DirectLabel(parent = self.subFrame, relief = None, text = '', text_scale = 0.045, text_fg = (1, 0.9, 0.7, 0.9), text_pos = (0, 0.035), textMayChange = 1)
+        self.subLabel = DirectLabel(parent = self.subFrame, relief = None, text = '', text_scale = 0.045, text_fg = (1, 0.9, 0.7, 0.9), text_pos = (0, -0.01), textMayChange = 1)
         self.nextSubButton = DirectButton(parent = self.subFrame, relief = None, image = (triangleGui.find('**/triangle'), triangleGui.find('**/triangle_down'), triangleGui.find('**/triangle_over')), pos = (0.31, 0, 0.025), scale = 0.08, command = self.changeSub, extraArgs = [1])
         self.prevSubButton = DirectButton(parent = self.subFrame, relief = None, image = (triangleGui.find('**/triangle'), triangleGui.find('**/triangle_down'), triangleGui.find('**/triangle_over')), hpr = (0, 0, 180), pos = (-0.31, 0, 0.025), scale = 0.08, command = self.changeSub, extraArgs = [-1])
         self.__createAvatarButtons()
@@ -218,6 +218,8 @@ class AvatarChooser(DirectObject, StateData):
         self.avName = DirectLabel(parent = base.a2dBottomCenter, relief = None, text = '', text_scale = 0.05, text_fg = (1, 0.9, 0.7, 0.9), text_shadow = PiratesGuiGlobals.TextShadow, text_pos = (0, -0.015), pos = (0, 0, 0.225))
         self.avName.hide()
         self.shareButton = DirectButton(parent = self.highlightFrame, relief = None, text_scale = 0.045, text_fg = (1, 0.9, 0.7, 0.9), text_shadow = PiratesGuiGlobals.TextShadow, text = ('', '', PLocalizer.AvatarChooserShared, ''), image = (self.model.find('**/avatar_c_B_unlock'), self.model.find('**/avatar_c_B_unlock'), self.model.find('**/avatar_c_B_unlock_over')), image_scale = 0.37, text_pos = (0, -0.1), pos = (-0.51, 0, -0.08), scale = 1.3, command = self.__handleShare)
+        if not config.GetBool('want-share-button', 0):
+            self.shareButton.hide()
         self.rotateSlider = DirectSlider(parent = base.a2dBottomCenter, relief = None, frameSize = (-0.6, 0.6, 0.1, -0.1), image = charGui.find('**/chargui_slider_small'), image_scale = 1.33, thumb_image = (charGui.find('**/chargui_slider_node'), charGui.find('**/chargui_slider_node_down'), charGui.find('**/chargui_slider_node_over')), thumb_image_scale = 0.6, thumb_relief = None, scale = 0.45, value = 0, range = (-180, 180), pos = (0, 0, 0.15), command = self.__rotateHighlightedAvatar)
         self.rotateSlider.hide()
         self.playButton = DirectButton(parent = self.highlightFrame, relief = None, text_scale = 0.05, text_fg = (1, 0.9, 0.7, 0.9), text_shadow = PiratesGuiGlobals.TextShadow, text = '\x01smallCaps\x01%s\x02' % PLocalizer.AvatarChooserPlay, image = (self.model.find('**/avatar_c_B_bottom'), self.model.find('**/avatar_c_B_bottom'), self.model.find('**/avatar_c_B_bottom_over')), image_scale = 0.37, text_pos = (0, -0.015), pos = (0, 0, -0.08), scale = 1.7, command = self.__handlePlay)
@@ -320,7 +322,7 @@ class AvatarChooser(DirectObject, StateData):
                     imageColor = Vec4(0.7, 0.7, 0.7, 1)
                     textPos = (textPos[0] + 0.034, textPos[1])
                 else:
-                    avName = av.dna.getDNAName()
+                    avName = av.name
                     text = avName
                     command = self.__handleHighlight
                     state = DGG.NORMAL
@@ -388,7 +390,7 @@ class AvatarChooser(DirectObject, StateData):
             self.trialNonPayerPanel.destroy()
         
         del self.trialNonPayerPanel
-        if self.gameOptions:
+        if self.gameOptions is not None:
             base.options = self.gameOptions.options
             self.gameOptions.destroy()
             del self.gameOptions
@@ -567,10 +569,7 @@ class AvatarChooser(DirectObject, StateData):
 
     def __handleCreate(self, subId, slot):
         self.choice = (subId, slot)
-        self.accept('rejectAvatarSlot', self.__rejectAvatarSlot)
-        self.accept('avatarSlotResponse', self.__avatarSlotResponse)
-        base.cr.avatarManager.sendRequestAvatarSlot(subId, slot)
-        base.cr.waitForDatabaseTimeout(requestName = 'WaitForCreateAvatarResponse')
+        self.__avatarSlotResponse(*self.choice)
         self.blockInput()
     
     def __rejectAvatarSlot(self, reasonId, subId, slot):
@@ -650,11 +649,11 @@ class AvatarChooser(DirectObject, StateData):
         x = winInfo.getXSize()
         y = winInfo.getYSize()
         ratio = float(x) / y
-        self.fadeFrame = DirectFrame(parent = aspect2dp, frameSize = (-1.0 * ratio, 1.0 * ratio, -1.0, 1.0))
-        self.fadeFrame.setTransparency(1)
-        self.fadeInterval = Sequence(Func(self.blockInput), Func(self.fadeFrame.show), LerpColorScaleInterval(self.fadeFrame, 0.3, Vec4(0.0, 0.0, 0.0, 1.0), Vec4(0.0, 0.0, 0.0, 0.0), blendType = 'easeInOut'), Func(base.transitions.fadeOut, t = 0), Func(base.cr.avatarManager.sendRequestPlayAvatar, potAv.id, subId), Func(base.cr.waitForDatabaseTimeout, requestName = 'WaitForPlayAvatarResponse'))
-        self.fadeInterval.start()
         base.emoteGender = base.cr.avList[subId][slot].dna.gender
+        base.cr.cleanupWaitingForDatabase()
+        self.doneStatus = {'mode': 'chose'}
+        messenger.send(self.doneEvent, [self.doneStatus])
+        base.transitions.fadeOut()
     
     def __rejectPlayAvatar(self, reasonId, avatarId):
         self.notify.warning('rejectPlayAvatar: %s' % reasonId)
@@ -685,7 +684,7 @@ class AvatarChooser(DirectObject, StateData):
         
         (subId, slot) = self.choice
         potAv = base.cr.avList[subId][slot]
-        name = potAv.dna.getDNAName()
+        name = potAv.name
         self.blockInput()
         self.deleteConfirmDialog = PDialog.PDialog(text = PLocalizer.AvatarChooserConfirmDelete % name, style = OTPDialog.YesNo, command = self.__handleDeleteConfirmation)
 
@@ -698,7 +697,7 @@ class AvatarChooser(DirectObject, StateData):
             self.notify.info('AvatarChooser: request delete slot: %s avId: %s subId: %s' % (slot, potAv.id, subId))
             self.accept('rejectRemoveAvatar', self.__rejectRemoveAvatar)
             self.accept('removeAvatarResponse', self.__removeAvatarResponse)
-            base.cr.avatarManager.sendRequestRemoveAvatar(potAv.id, subId, 'delete')
+            base.cr.csm.sendDeleteAvatar(potAv.id)
             base.cr.waitForDatabaseTimeout(requestName = 'WaitForDeleteAvatarResponse')
             self.blockInput()
         else:
@@ -727,7 +726,7 @@ class AvatarChooser(DirectObject, StateData):
         self.ignore('rejectRemoveAvatar')
         self.ignore('removeAvatarResponse')
         base.cr.cleanupWaitingForDatabase()
-        base.cr.sendGetAvatarsMsg()
+        base.cr.loginFSM.request('waitForAvatarList')
     
     def __rejectRemoveAvatar(self, reasonId):
         self.notify.warning('rejectRemoveAvatar: %s' % reasonId)
@@ -754,7 +753,7 @@ class AvatarChooser(DirectObject, StateData):
             self.allowInput()
 
     def __handleOptions(self):
-        if self.gameOptions:
+        if self.gameOptions is not None:
             if self.gameOptions.isHidden():
                 self.gameOptions.show()
             else:
@@ -768,8 +767,7 @@ class AvatarChooser(DirectObject, StateData):
             x = -width / 2
             y = -height / 2
             self.currentSubId = self.subIds[self.currentSubIndex]
-            subAccess = base.cr.accountDetailRecord.subDetails[self.currentSubId].subAccess
-            self.gameOptions = GameOptions('Game Options', x, y, width, height, base.options, access=subAccess, chooser=self)
+            self.gameOptions = GameOptions('Game Options', x, y, width, height, base.options, chooser=self)
             self.gameOptions.show()
 
     def __handleQuit(self):

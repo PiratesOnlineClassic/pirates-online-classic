@@ -98,7 +98,7 @@ class CameraMode(DirectObject.DirectObject, FSM):
             if 'localAvatar' in __builtins__:
                 localAvatar.guiMgr._showCursor()
             
-            base.win.movePointer(0, self.origMousePos[0], self.origMousePos[1])
+            base.win.movePointer(0, int(self.origMousePos[0]), int(self.origMousePos[1]))
 
     def _startMouseControlTasks(self):
         if self.mouseControl:

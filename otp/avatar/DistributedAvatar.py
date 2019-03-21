@@ -13,6 +13,8 @@ from otp.chat import ChatManager
 from Avatar import Avatar
 import AvatarDNA
 
+from libotp import *
+
 class DistributedAvatar(DistributedActor, Avatar):
     HpTextGenerator = TextNode('HpTextGenerator')
     HpTextEnabled = 1

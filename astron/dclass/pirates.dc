@@ -110,7 +110,7 @@ from pirates.instance import DistributedWelcomeWorld/AI
 from pirates.instance import DistributedInstanceWorld/AI
 from pirates.instance import DistributedTeleportZone/AI/UD
 from pirates.instance import DistributedTeleportMgr/AI
-from pirates.instance import DistributedTravelAgent/UD
+from pirates.instance import DistributedTravelAgent/AI/UD
 from pirates.instance import DistributedMatchMaker/AI/UD
 from pirates.instance import DistributedTeleportHandler/AI
 from pirates.uberdog import ClientServicesManager/UD
@@ -1228,7 +1228,15 @@ dclass DistributedTeleportMgr : DistributedObject {
   setWelcomeShardMin(uint16);
 };
 
-dclass DistributedTravelAgent : DistributedObject {
+dclass DistributedTravelAgent : DistributedObjectGlobal {
+  requestInitLocUD(string, uint32) clsend;
+  requestInitLocUDtoAI(DoId) airecv;
+  requestTeleportToShardAItoUD(DoId, uint32, uint8, string, string);
+  requestTeleportToShardUDtoAI(DoId, uint32, uint8, string, string) airecv;
+};
+
+// Original DistributedTravelAgent fields
+/*dclass DistributedTravelAgent : DistributedObject {
   registerAsManager(uint32, uint32, uint32, uint8, uint32, uint8);
   managerOffline(uint32, uint32, uint32);
   requestPopLimits(uint32);
@@ -1237,7 +1245,7 @@ dclass DistributedTravelAgent : DistributedObject {
   setFullShardTeleportAllowed(uint8);
   requestInstanceUpdates();
   requestShipDeployUD(uint32, uint32, string, uint32);
-};
+};*/
 
 dclass DistributedMatchMaker : DistributedObject {
   requestActivity(uint32, uint32, int32, resultPair [], uint32 [], uint32, uint16);

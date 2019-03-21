@@ -1,6 +1,7 @@
 import string
 from pandac.PandaModules import TextProperties
 from pandac.PandaModules import TextPropertiesManager
+from pandac.PandaModules import *
 from direct.showbase.PythonUtil import Functor
 from direct.showbase.PythonUtil import report
 from direct.directnotify import DirectNotifyGlobal
@@ -52,6 +53,8 @@ from pirates.piratesgui import CrewIconSelector
 from pirates.coderedemption import CodeRedemption
 from pirates.pvp import PVPGlobals
 from pirates.pirate import TitleGlobals
+
+from libotp import *
 
 class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, DistributedBattleAvatar, DistributedQuestAvatar, PAvatarHandle):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPirate')
@@ -155,13 +158,13 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
                 gmWhiteColor = TextProperties()
                 gmWhiteColor.setTextColor(1, 1, 1, 1)
                 tpMgr.setProperties('whiteGM', gmWhiteColor)
-            
-            self.name = ''
-            self.title = ''
+
             DistributedPirateBase.__init__(self, cr)
             DistributedBattleAvatar.__init__(self, cr)
             DistributedPlayer.__init__(self, cr)
             DistributedQuestAvatar.__init__(self)
+            self.name = ''
+            self.title = ''
             self.inPvp = False
             self.setPickable(1)
             self.interactioneer = None

@@ -193,7 +193,8 @@ class TimeManager(DistributedObject.DistributedObject):
     def d_setFrameRate(self, fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode, vendorId, deviceId, processMemory, pageFileUsage, physicalMemory, pageFaultCount, osInfo, cpuSpeed):
         info = '%0.1f fps|%0.3fd|%s avs|%s|%d|%d|%s|0x%04x|0x%04x|%0.1fMB|%0.1fMB|%0.1fMB|%d|%s|%s' % (fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode, vendorId, deviceId, processMemory, pageFileUsage, physicalMemory, pageFaultCount, '%s.%d.%d.%d' % osInfo, '%0.03f,%0.03f' % cpuSpeed)
         print 'frame rate: %s' % info
-        self.sendUpdate('setFrameRate', [
+        # TODO
+        '''self.sendUpdate('setFrameRate', [
             fps,
             deviation,
             numAvs,
@@ -208,6 +209,6 @@ class TimeManager(DistributedObject.DistributedObject):
             physicalMemory,
             pageFaultCount,
             osInfo,
-            cpuSpeed])
+            cpuSpeed])'''
 
 

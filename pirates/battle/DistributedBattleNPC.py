@@ -1,4 +1,5 @@
 from direct.interval.IntervalGlobal import *
+from pandac.PandaModules import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
 from direct.task import Task

@@ -91,6 +91,7 @@ from pirates.piratesgui import FeedbackPanel
 from pirates.piratesgui.SiegeBoard import SiegeBoard
 from pirates.speedchat.PSCDecoders import *
 from pirates.piratesbase import UserFunnel
+from libotp import *
 import math
 
 class GuiManager(FSM.FSM):

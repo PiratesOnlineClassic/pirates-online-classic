@@ -1,3 +1,4 @@
+from pandac.PandaModules import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
@@ -7,6 +8,7 @@ from direct.distributed.ClockDelta import *
 from direct.task import Task
 from direct.gui.DirectGui import *
 from pirates.uberdog.UberDogGlobals import InventoryType
+from direct.gui.DirectGuiGlobals import NO_FADE_SORT_INDEX
 from pirates.piratesbase import Freebooter
 import random
 screenShots = [

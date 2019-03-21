@@ -396,18 +396,18 @@ class ClientArea(DirectObject):
                             return None
                     
                     if objData.has_key('DisableCollision') and objData['DisableCollision'] == True:
-                        collisionNodes = objModel.findAllMatches('**/+CollisionNode').asList()
+                        collisionNodes = objModel.findAllMatches('**/+CollisionNode')
                         for collisionNode in collisionNodes:
                             collisionNode.removeNode()
                     
                     if objData['Type'] == 'Collision Barrier':
-                        geomNodes = objModel.findAllMatches('**/+GeomNode').asList()
+                        geomNodes = objModel.findAllMatches('**/+GeomNode')
                         for geomNode in geomNodes:
                             geomNode.removeNode()
 
                     if objData['Type'] == 'Special':
                         if objData.has_key('Visual') and objData['Visual'].has_key('Model') and objData['Visual']['Model'] == 'models/misc/smiley':
-                            geomNodes = objModel.findAllMatches('**/+GeomNode').asList()
+                            geomNodes = objModel.findAllMatches('**/+GeomNode')
                             for geomNode in geomNodes:
                                 geomNode.removeNode()
 
@@ -483,7 +483,7 @@ class ClientArea(DirectObject):
                             if not cNodes.isEmpty():
                                 tform = xform.copyTo(NodePath())
                                 if holiday:
-                                    for cNode in cNodes.asList():
+                                    for cNode in cNodes:
                                         cNode.setTag('Holiday', holiday)
 
                                 cNodes.reparentTo(tform)
@@ -834,7 +834,7 @@ class ClientArea(DirectObject):
             self.loadAnimatedTree(obj, modelName, animName, name)
         else:
             self.loadSubModelLODs(obj, modelName, animName, name)
-        subObjs = obj.findAllMatches('**/*' + name + '*').asList()
+        subObjs = obj.findAllMatches('**/*' + name + '*')
         if propData['Visual'].has_key('Scale'):
             for i in range(len(subObjs)):
                 currSubObj = subObjs[i]
@@ -860,7 +860,7 @@ class ClientArea(DirectObject):
                     leafName = modelName
                 else:
                     self.loadSubModelLODs(obj, modelName, animName, name)
-                subObjs = obj.findAllMatches('**/*' + name + '*').asList()
+                subObjs = obj.findAllMatches('**/*' + name + '*')
                 if currSubObj['Visual'].has_key('Scale'):
                     if bAnimatedTree:
                         transform = TransformState.makeMat(Mat4(obj.getJointTransform('modelRoot', attachInfo[1], '1')))
@@ -941,7 +941,7 @@ class ClientArea(DirectObject):
         targetNode.flattenLight()
 
     def loadLights(self):
-        self.polyLights = self.findAllMatches('**/+PolylightNode').asList()
+        self.polyLights = self.findAllMatches('**/+PolylightNode')
         self.fires = []
         self.discs = []
         self.lights = []
@@ -1172,7 +1172,7 @@ class ClientArea(DirectObject):
         if objType in self.LARGE_OBJECTS_LOW and self.minLowLodSD:
             forceLowLodSD = self.minLowLodSD
         
-        for lod in objNP.findAllMatches('**/+LODNode').asList():
+        for lod in objNP.findAllMatches('**/+LODNode'):
             bounds = lod.getBounds()
             if not bounds.isEmpty():
                 center = bounds.getApproxCenter()

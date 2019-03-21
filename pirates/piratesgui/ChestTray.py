@@ -56,14 +56,14 @@ class ChestTray(GuiTray.GuiTray):
         self.socialButton = GuiButton(parent = self.buttonsParent, hotkeys = [
             'f',
             'shift-f'], hotkeyLabel = 'F', helpText = PLocalizer.SocialButtonHelp, helpPos = helpPos, helpDelay = helpDelay, extraArgs = [
-            'guiMgrToggleSocial'], pos = (0.01, 0, 1.16 + extraHeight), **kw)
+            'guiMgrToggleSocial'], pos = (0.01, 0, 1.16 + extraHeight), **buttonOptions)
         self.buttons.append(self.socialButton)
         buttonOptions['geom'] = gui.find('**/compass_small_button_open_over')
         buttonOptions['geom_scale'] = 0.09
         self.radarButton = GuiButton(parent = self.buttonsParent, hotkeys = [
             'c',
             'shift-c'], hotkeyLabel = 'C', helpText = PLocalizer.RadarButtonHelp, helpPos = helpPos, helpDelay = helpDelay, extraArgs = [
-            'guiMgrToggleRadar'], pos = (0.01, 0, 1.04 + extraHeight), **kw)
+            'guiMgrToggleRadar'], pos = (0.01, 0, 1.04 + extraHeight), **buttonOptions)
         self.buttons.append(self.radarButton)
         buttonPosZ = 0.88
         buttonHeight = 0.12
@@ -75,7 +75,7 @@ class ChestTray(GuiTray.GuiTray):
         self.mapButton = GuiButton(parent = self.buttonsParent, hotkeys = [
             'm',
             'shift-m'], hotkeyLabel = 'M', helpText = PLocalizer.MapButtonHelp, helpPos = helpPos, helpDelay = helpDelay, extraArgs = [
-            'guiMgrToggleMap'], pos = (0.01, 0, buttonPosZ), **kw)
+            'guiMgrToggleMap'], pos = (0.01, 0, buttonPosZ), **buttonOptions)
         self.buttons.append(self.mapButton)
         buttonPosZ -= buttonHeight
         buttonOptions['geom'] = gui.find('**/topgui_icon_weapons')
@@ -83,7 +83,7 @@ class ChestTray(GuiTray.GuiTray):
         self.inventoryButton = GuiButton(parent = self.buttonsParent, hotkeys = [
             'i',
             'shift-i'], hotkeyLabel = 'I', helpText = PLocalizer.WeaponButtonHelp, helpPos = helpPos, helpDelay = helpDelay, extraArgs = [
-            'guiMgrToggleWeapons'], pos = (0.01, 0, buttonPosZ), **kw)
+            'guiMgrToggleWeapons'], pos = (0.01, 0, buttonPosZ), **buttonOptions)
         self.buttons.append(self.inventoryButton)
         buttonPosZ -= buttonHeight
         buttonOptions['geom'] = gui.find('**/topgui_icon_skills')
@@ -91,14 +91,14 @@ class ChestTray(GuiTray.GuiTray):
         self.levelButton = GuiButton(parent = self.buttonsParent, hotkeys = [
             'k',
             'shift-k'], hotkeyLabel = 'K', helpText = PLocalizer.SkillButtonHelp, helpPos = helpPos, helpDelay = helpDelay, extraArgs = [
-            'guiMgrToggleLevels'], pos = (0.01, 0, buttonPosZ), **kw)
+            'guiMgrToggleLevels'], pos = (0.01, 0, buttonPosZ), **buttonOptions)
         self.buttons.append(self.levelButton)
         buttonPosZ -= buttonHeight
         if self.WantClothingPage:
             buttonOptions['geom'] = gui.find('**/topgui_icon_clothing')
             buttonOptions['geom_scale'] = 0.17
             self.clothingButton = GuiButton(parent = self.buttonsParent, helpText = PLocalizer.ClothingButtonHelp, helpPos = helpPos, helpDelay = helpDelay, extraArgs = [
-                'guiMgrToggleClothing'], pos = (0.01, 0, buttonPosZ), **kw)
+                'guiMgrToggleClothing'], pos = (0.01, 0, buttonPosZ), **buttonOptions)
             self.buttons.append(self.clothingButton)
             buttonPosZ -= buttonHeight
         
@@ -108,7 +108,7 @@ class ChestTray(GuiTray.GuiTray):
             self.titlesButton = GuiButton(parent = self.buttonsParent, hotkeys = [
                 'b',
                 'shift-b'], hotkeyLabel = 'B', helpText = PLocalizer.TitlesButtonHelp, helpPos = helpPos, helpDelay = helpDelay, extraArgs = [
-                'guiMgrToggleTitles'], pos = (0.01, 0, buttonPosZ), **kw)
+                'guiMgrToggleTitles'], pos = (0.01, 0, buttonPosZ), **buttonOptions)
             self.buttons.append(self.titlesButton)
             buttonPosZ -= buttonHeight
         
@@ -117,7 +117,7 @@ class ChestTray(GuiTray.GuiTray):
         self.shipsButton = GuiButton(parent = self.buttonsParent, hotkeys = [
             'h',
             'shift-h'], hotkeyLabel = 'H', helpText = PLocalizer.ShipsButtonHelp, helpPos = helpPos, helpDelay = helpDelay, extraArgs = [
-            'guiMgrToggleShips'], pos = (0.01, 0, buttonPosZ), **kw)
+            'guiMgrToggleShips'], pos = (0.01, 0, buttonPosZ), **buttonOptions)
         self.buttons.append(self.shipsButton)
         buttonPosZ -= buttonHeight
         buttonOptions['geom'] = gui.find('**/topgui_icon_treasure')
@@ -125,7 +125,7 @@ class ChestTray(GuiTray.GuiTray):
         self.treasuresButton = GuiButton(parent = self.buttonsParent, hotkeys = [
             'u',
             'shift-u'], hotkeyLabel = 'U', helpText = PLocalizer.TreasuresButtonHelp, helpPos = helpPos, helpDelay = helpDelay, extraArgs = [
-            'guiMgrToggleTreasures'], pos = (0.01, 0, buttonPosZ), **kw)
+            'guiMgrToggleTreasures'], pos = (0.01, 0, buttonPosZ), **buttonOptions)
         self.buttons.append(self.treasuresButton)
         buttonPosZ -= buttonHeight
         buttonOptions['geom'] = gui.find('**/topgui_icon_journal')
@@ -133,7 +133,7 @@ class ChestTray(GuiTray.GuiTray):
         self.questButton = GuiButton(parent = self.buttonsParent, hotkeys = [
             'j',
             'shift-j'], hotkeyLabel = 'J', helpText = PLocalizer.QuestButtonHelp, helpPos = helpPos, helpDelay = helpDelay, extraArgs = [
-            'guiMgrToggleQuest'], pos = (0.01, 0, buttonPosZ), **kw)
+            'guiMgrToggleQuest'], pos = (0.01, 0, buttonPosZ), **buttonOptions)
         self.buttons.append(self.questButton)
         buttonPosZ -= buttonHeight
         self.lookoutButtonNormal = gui.find('**/telescope_button')
@@ -143,7 +143,7 @@ class ChestTray(GuiTray.GuiTray):
         self.lookoutButton = GuiButton(parent = self.buttonsParent, hotkeys = [
             'l',
             'shift-l'], hotkeyLabel = 'L', helpText = PLocalizer.LookoutButtonHelp, helpPos = helpPos, helpDelay = helpDelay, extraArgs = [
-            'guiMgrToggleLookout'], pos = (0.01, 0, buttonPosZ), **kw)
+            'guiMgrToggleLookout'], pos = (0.01, 0, buttonPosZ), **buttonOptions)
         self.buttons.append(self.lookoutButton)
         buttonPosZ -= buttonHeight
         self.lookoutButtonImage = OnscreenImage(parent = self.stickyButtonsParent, image = self.lookoutButtonLight, scale = 0.09, pos = (0.065, 0.0, 0.215))

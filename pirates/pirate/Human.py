@@ -58,7 +58,7 @@ NewModelDict = {
     'ms': 'ms',
     'mi': 'mi',
     'tp': 'tp',
-    'tm': 'tm' }
+    'tm': 'tm'}
 TempDict = [
     'sf',
     'ms',
@@ -397,7 +397,7 @@ class Human(HumanBase.HumanBase, Biped.Biped):
             other = others[0]
         if self.loaded:
             self.cleanupHuman()
-        
+
         self.loadHuman(other)
         if self.isLocal():
             self.renderReflection = True

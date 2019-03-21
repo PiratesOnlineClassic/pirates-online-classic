@@ -71,7 +71,9 @@ class PlayGame(StateData.StateData):
         
         def initDefQuest(inventory):
             base.localAvatar.sendUpdate('giveDefaultQuest')
-            del self.pendingInitQuest
+            if hasattr(self, 'pendingInitQuest'):
+                # Temp patch; i'm pretty sure we can undo this once we implement the tutorial.
+                del self.pendingInitQuest
 
         if base.localAvatar.style.getTutorial() == 0 and base.cr.forceTutorial == 0 and base.cr.skipTutorial == 1:
             self.pendingInitQuest = base.cr.relatedObjectMgr.requestObjects([

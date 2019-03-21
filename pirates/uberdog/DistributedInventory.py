@@ -12,7 +12,9 @@ class DistributedInventory(DistributedInventoryBase, DistributedObject):
     
     def announceGenerate(self):
         self.invInterest = self.addInterest(2, self.uniqueName('inventory'))
-        self.cr.getInventoryMgr(self.ownerId).sendRequestInventory()
+        self.cr.inventoryManager.sendRequestInventory()
+        # TODO: FIXME, need to implement properly.
+        #self.cr.getInventoryMgr(self.ownerId).sendRequestInventory()
         DistributedObject.announceGenerate(self)
     
     def disable(self):

@@ -38,7 +38,7 @@ class JewelryGUI(DirectFrame, StateData.StateData):
     
     def __init__(self, main = None):
         self.main = main
-        self.parent = main.bookModel
+        self._parent = main.bookModel
         self.avatar = main.avatar
         self.mode = None
         self.shownMale = None
@@ -71,7 +71,7 @@ class JewelryGUI(DirectFrame, StateData.StateData):
         self.avatar = avatar
 
     def loadTabs(self):
-        self.zone1Tab = DirectButton(parent = self.parent,
+        self.zone1Tab = DirectButton(parent = self._parent,
                                      relief = DGG.RAISED,
                                      frameSize = (-0.13, 0.13, -0.04, 0.04),
                                      borderWidth = (0.008, 0.008),
@@ -84,7 +84,7 @@ class JewelryGUI(DirectFrame, StateData.StateData):
                                      )
         self.zone1Tab.hide()
         self.zoneTabs.append(self.zone1Tab)
-        self.zone2Tab = DirectButton(parent = self.parent,
+        self.zone2Tab = DirectButton(parent = self._parent,
                                      relief = DGG.RAISED,
                                      frameSize = (-0.13, 0.13, -0.04, 0.04),
                                      borderWidth = (0.008, 0.008),
@@ -96,7 +96,7 @@ class JewelryGUI(DirectFrame, StateData.StateData):
                                      )
         self.zone2Tab.hide()
         self.zoneTabs.append(self.zone2Tab)
-        self.zone3Tab = DirectButton(parent = self.parent,
+        self.zone3Tab = DirectButton(parent = self._parent,
                                      relief = DGG.RAISED,
                                      frameSize = (-0.13, 0.13, -0.04, 0.04),
                                      borderWidth = (0.008, 0.008),
@@ -108,7 +108,7 @@ class JewelryGUI(DirectFrame, StateData.StateData):
                                      )
         self.zone3Tab.hide()
         self.zoneTabs.append(self.zone3Tab)
-        self.zone4Tab = DirectButton(parent = self.parent,
+        self.zone4Tab = DirectButton(parent = self._parent,
                                      relief = DGG.RAISED,
                                      frameSize = (-0.13, 0.13, -0.04, 0.04),
                                      borderWidth = (0.008, 0.008),
@@ -121,7 +121,7 @@ class JewelryGUI(DirectFrame, StateData.StateData):
                                      )
         self.zone4Tab.hide()
         self.zoneTabs.append(self.zone4Tab)
-        self.zone5Tab = DirectButton(parent = self.parent,
+        self.zone5Tab = DirectButton(parent = self._parent,
                                      relief = DGG.RAISED,
                                      frameSize = (-0.13, 0.13, -0.04, 0.04),
                                      borderWidth = (0.008, 0.008),
@@ -133,7 +133,7 @@ class JewelryGUI(DirectFrame, StateData.StateData):
                                      )
         self.zone5Tab.hide()
         self.zoneTabs.append(self.zone5Tab)
-        self.zone6Tab = DirectButton(parent = self.parent,
+        self.zone6Tab = DirectButton(parent = self._parent,
                                      relief = DGG.RAISED,
                                      frameSize = (-0.13, 0.13, -0.04, 0.04),
                                      borderWidth = (0.008, 0.008),
@@ -146,7 +146,7 @@ class JewelryGUI(DirectFrame, StateData.StateData):
                                      )
         self.zone6Tab.hide()
         self.zoneTabs.append(self.zone6Tab)
-        self.zone7Tab = DirectButton(parent = self.parent,
+        self.zone7Tab = DirectButton(parent = self._parent,
                                      relief = DGG.RAISED,
                                      frameSize = (-0.13, 0.13, -0.04, 0.04),
                                      borderWidth = (0.008, 0.008),
@@ -159,7 +159,7 @@ class JewelryGUI(DirectFrame, StateData.StateData):
                                      )
         self.zone7Tab.hide()
         self.zoneTabs.append(self.zone7Tab)
-        self.zone8Tab = DirectButton(parent = self.parent,
+        self.zone8Tab = DirectButton(parent = self._parent,
                                      relief = DGG.RAISED,
                                      frameSize = (-0.13, 0.13, -0.04, 0.04),
                                      borderWidth = (0.008, 0.008),
@@ -175,7 +175,7 @@ class JewelryGUI(DirectFrame, StateData.StateData):
 
     def unload(self):
         del self.main
-        del self.parent
+        del self._parent
         del self.avatar
 
     def setMode(self, mode, updateAnyways = 0):
@@ -227,42 +227,42 @@ class JewelryGUI(DirectFrame, StateData.StateData):
         self.saveDNA()
     
     def setupButtons(self):
-        self.zone1Frame = DirectFrame(parent = self.parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
+        self.zone1Frame = DirectFrame(parent = self._parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
         self.zone1Frame.hide()
         self.zoneFrames.append(self.zone1Frame)
         self.jewelry1Picker = CharGuiPicker(self.main, parent = self.zone1Frame, text = PLocalizer.ShapeJewelryLEarFrameTitle, nextCommand = Functor(self.handleNextJewelry, jewelry_keys[Zone1_Tab]), backCommand = Functor(self.handleLastJewelry, jewelry_keys[Zone1_Tab]))
         self.jewelry1Picker.setPos(0, 0, -0.5)
-        self.zone2Frame = DirectFrame(parent = self.parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
+        self.zone2Frame = DirectFrame(parent = self._parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
         self.zone2Frame.hide()
         self.zoneFrames.append(self.zone2Frame)
         self.jewelry2Picker = CharGuiPicker(self.main, parent = self.zone2Frame, text = PLocalizer.ShapeJewelryREarFrameTitle, nextCommand = Functor(self.handleNextJewelry, jewelry_keys[Zone2_Tab]), backCommand = Functor(self.handleLastJewelry, jewelry_keys[Zone2_Tab]))
         self.jewelry2Picker.setPos(0, 0, -0.5)
-        self.zone3Frame = DirectFrame(parent = self.parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
+        self.zone3Frame = DirectFrame(parent = self._parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
         self.zone3Frame.hide()
         self.zoneFrames.append(self.zone3Frame)
         self.jewelry3Picker = CharGuiPicker(self.main, parent = self.zone3Frame, text = PLocalizer.ShapeJewelryLBrowFrameTitle, nextCommand = Functor(self.handleNextJewelry, jewelry_keys[Zone3_Tab]), backCommand = Functor(self.handleLastJewelry, jewelry_keys[Zone3_Tab]))
         self.jewelry3Picker.setPos(0, 0, -0.5)
-        self.zone4Frame = DirectFrame(parent = self.parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
+        self.zone4Frame = DirectFrame(parent = self._parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
         self.zone4Frame.hide()
         self.zoneFrames.append(self.zone4Frame)
         self.jewelry4Picker = CharGuiPicker(self.main, parent = self.zone4Frame, text = PLocalizer.ShapeJewelryRBrowFrameTitle, nextCommand = Functor(self.handleNextJewelry, jewelry_keys[Zone4_Tab]), backCommand = Functor(self.handleLastJewelry, jewelry_keys[Zone4_Tab]))
         self.jewelry4Picker.setPos(0, 0, -0.5)
-        self.zone5Frame = DirectFrame(parent = self.parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
+        self.zone5Frame = DirectFrame(parent = self._parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
         self.zone5Frame.hide()
         self.zoneFrames.append(self.zone5Frame)
         self.jewelry5Picker = CharGuiPicker(self.main, parent = self.zone5Frame, text = PLocalizer.ShapeJewelryNoseFrameTitle, nextCommand = Functor(self.handleNextJewelry, jewelry_keys[Zone5_Tab]), backCommand = Functor(self.handleLastJewelry, jewelry_keys[Zone5_Tab]))
         self.jewelry5Picker.setPos(0, 0, -0.5)
-        self.zone6Frame = DirectFrame(parent = self.parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
+        self.zone6Frame = DirectFrame(parent = self._parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
         self.zone6Frame.hide()
         self.zoneFrames.append(self.zone6Frame)
         self.jewelry6Picker = CharGuiPicker(self.main, parent = self.zone6Frame, text = PLocalizer.ShapeJewelryMouthFrameTitle, nextCommand = Functor(self.handleNextJewelry, jewelry_keys[Zone6_Tab]), backCommand = Functor(self.handleLastJewelry, jewelry_keys[Zone6_Tab]))
         self.jewelry6Picker.setPos(0, 0, -0.5)
-        self.zone7Frame = DirectFrame(parent = self.parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
+        self.zone7Frame = DirectFrame(parent = self._parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
         self.zone7Frame.hide()
         self.zoneFrames.append(self.zone7Frame)
         self.jewelry7Picker = CharGuiPicker(self.main, parent = self.zone7Frame, text = PLocalizer.ShapeJewelryLHandFrameTitle, nextCommand = Functor(self.handleNextJewelry, jewelry_keys[Zone7_Tab]), backCommand = Functor(self.handleLastJewelry, jewelry_keys[Zone7_Tab]))
         self.jewelry7Picker.setPos(0, 0, -0.5)
-        self.zone8Frame = DirectFrame(parent = self.parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
+        self.zone8Frame = DirectFrame(parent = self._parent, relief = DGG.FLAT, pos = (0.0, 0, 0.7))
         self.zone8Frame.hide()
         self.zoneFrames.append(self.zone8Frame)
         self.jewelry8Picker = CharGuiPicker(self.main, parent = self.zone8Frame, text = PLocalizer.ShapeJewelryRHandFrameTitle, nextCommand = Functor(self.handleNextJewelry, jewelry_keys[Zone8_Tab]), backCommand = Functor(self.handleLastJewelry, jewelry_keys[Zone8_Tab]))

@@ -130,7 +130,7 @@ class EnvironmentEffects(DirectObject):
 
     def loadSingleEffect(self, nodePath):
         for effect in self.effectDict:
-            locators = nodePath.findAllMatches('**/' + effect + '*;+s').asList()
+            locators = nodePath.findAllMatches('**/' + effect + '*;+s')
             for locator in locators:
                 if not locator.isEmpty():
                     effectParent = locator.getParent()
@@ -150,7 +150,7 @@ class EnvironmentEffects(DirectObject):
         else:
             effectSetting = 2
         for effectEntry in self.effectDict:
-            locators = self.parent.findAllMatches('**/' + effectEntry + '*;+s').asList()
+            locators = self.parent.findAllMatches('**/' + effectEntry + '*;+s')
             for locator in locators:
                 if not locator.isEmpty() and locator.getTag('Holiday') != '':
                     if not self.holidayLocators.has_key(effectEntry):
@@ -246,7 +246,7 @@ class EnvironmentEffects(DirectObject):
     def loadSounds(self):
         if self.parent:
             for effect in self.soundDict:
-                locators = self.parent.findAllMatches('**/' + effect + '*;+s').asList()
+                locators = self.parent.findAllMatches('**/' + effect + '*;+s')
                 sfx = loader.loadSfx(self.soundDict.get(effect))
                 for locator in locators:
                     if not locator.isEmpty():
@@ -266,7 +266,7 @@ class EnvironmentEffects(DirectObject):
     def loadAnimParts(self):
         if self.parent:
             for part in self.animPartsDict:
-                foundParts = self.parent.findAllMatches('**/' + part + '*;+s').asList()
+                foundParts = self.parent.findAllMatches('**/' + part + '*;+s')
                 for myPart in foundParts:
                     if not myPart.isEmpty():
                         effects = self.animPartsDict.get(part)
@@ -402,7 +402,7 @@ class EnvironmentEffects(DirectObject):
 
     def loadPolylights(self):
         if self.parent:
-            polyLights = self.parent.findAllMatches('**/polylight*').asList()
+            polyLights = self.parent.findAllMatches('**/polylight*')
             for i in range(len(polyLights)):
                 light = polyLights[i]
                 plNode = light.node()

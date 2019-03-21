@@ -953,19 +953,16 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             messenger.send(self.doneEvent)
             base.transitions.fadeIn(1.0)
 
-        def populateAv(avId, subId):
+        def chooseAv(avId):
+            if not avId:
+                self.notify.error('An error occured when trying to create avatar!')
+
             self.avId = avId
-            self.acceptOnce('avatarPopulated', sendDone)
-            if self.nameGui.customName:
-                base.cr.sendWishName(avId, self.pirate.style.name)
-                base.cr.avatarManager.sendRequestPopulateAvatar(avId, self.pirate.style, 0, 0, 0, 0, 0)
-            else:
-                name = self.nameGui.getNumericName()
-                base.cr.avatarManager.sendRequestPopulateAvatar(avId, self.pirate.style, 1, name[0], name[1], name[2], name[3])
+            sendDone()
 
         def createAv():
-            self.acceptOnce('createdNewAvatar', populateAv)
-            base.cr.avatarManager.sendRequestCreateAvatar(self.subId)
+            self.acceptOnce('createdNewAvatar', chooseAv)
+            base.cr.csm.sendCreateAvatar(self.pirate.style, '', self.index, self.pirate.style.name)
 
         def acknowledgeTempName(value):
             self.confirmTempName.destroy()

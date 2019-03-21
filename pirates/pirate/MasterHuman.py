@@ -1348,7 +1348,7 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
             joint.applyFreeze(transform)
 
     def quickGetJointTransform(self, jointName):
-        return self.joints[jointName][0].getInitialValue()
+        return self.joints[jointName][0].getDefaultValue()
 
     def storeJoints(self):
         if self.style.gender == 'm':
@@ -1357,14 +1357,10 @@ class MasterHuman(HumanBase.HumanBase, Biped.Biped):
         else:
             bJoints = FemaleBodyShapeControlJoints
             hJoints = FemaleHeadShapeControlJoints
-        for joint in bJoints + hJoints:
-            self.joints[joint] = self.getJoints(joint)
-        
-        for joint in [
-            'def_head01',
-            'def_extra_jt',
-            'def_scale_jt']:
-            self.joints[joint] = self.getJoints(joint)
+
+        for name in bJoints + hJoints + ('def_head01', 'def_extra_jt', 'def_scale_jt'):
+            joint = self.getJoints(jointName=name)
+            self.joints[name] = joint
 
     @classmethod
     def setupAnimDicts(cls):

@@ -75,8 +75,9 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
         base.camLens.setMinFov(PiratesGlobals.BattleCameraFov)
         self.setHpr(0, 0, 0)
         camera.wrtReparentTo(self)
-        self.camIval = Sequence(Func(self._initMaxDistance, Func(self._startCollisionCheck, Func(self.setForceMaxDistance, False), camera.posHprInterval(1.5, pos = Vec3(self.camOffset[0], 0, self.camOffset[1]), hpr = Vec3(0, 0, 0), blendType = 'easeOut'), True)))
-        self.camIval.start()
+        # TODO: Finish verify of this
+        #self.camIval = Sequence(Func(self._initMaxDistance, Func(self._startCollisionCheck, Func(self.setForceMaxDistance, False), camera.posHprInterval(1.5, pos = Vec3(self.camOffset[0], 0, self.camOffset[1]), hpr = Vec3(0, 0, 0), blendType = 'easeOut'), True)))
+        #self.camIval.start()
 
     def _initMaxDistance(self):
         self._maxDistance = abs(self.camOffset[1])

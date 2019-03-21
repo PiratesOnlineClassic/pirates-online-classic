@@ -31,6 +31,7 @@ from pirates.quest.QuestConstants import LocationIds
 from pirates.pvp import PVPGlobals
 from direct.gui import DirectGuiGlobals
 from pirates.battle.Teamable import Teamable
+from libotp import *
 
 class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCartesianGrid.DistributedCartesianGrid, ZoneLOD.ZoneLOD, ClientArea.ClientArea, Teamable):
 
@@ -528,7 +529,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             del self.islandShoreWave
 
     def foo(self):
-        collNodes = self.geom.findAllMatches('**/+CollisionNode').asList()
+        collNodes = self.geom.findAllMatches('**/+CollisionNode')
         for collNode in collNodes:
             curMask = collNode.node().getIntoCollideMask()
             if curMask.hasBitsInCommon(OTPGlobals.FloorBitmask):
@@ -623,7 +624,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         
         self.ground = {}
         self.ground[0] = self.geom.find('**/island')
-        collNodes = self.geom.findAllMatches('**/+CollisionNode').asList()
+        collNodes = self.geom.findAllMatches('**/+CollisionNode')
         for collNode in collNodes:
             curMask = collNode.node().getIntoCollideMask()
             if curMask.hasBitsInCommon(OTPGlobals.FloorBitmask):
@@ -636,7 +637,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         self.initializeIslandWaterParameters()
     
     def loadIslandStuff(self):
-        self.largeObjects = self.geom.findAllMatches('**/*bldg*').asList()
+        self.largeObjects = self.geom.findAllMatches('**/*bldg*')
         for b in self.largeObjects:
             b.wrtReparentTo(self.largeObjectsHigh)
             wallGeom = b.find('**/wall*_n_window*')
@@ -1003,7 +1004,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
                 self.largeObjectsHigh.node().copyTags(newData)
                 self.largeObjectsLow.node().stealChildren(newData.getChild(1))
                 self.largeObjectsLow.node().copyTags(newData)
-                for np in self.largeObjectsHigh.findAllMatches('**/+LODNode').asList():
+                for np in self.largeObjectsHigh.findAllMatches('**/+LODNode'):
                     np.setClipPlane(base.farCull)
                 
                 data = animCache.getData()
