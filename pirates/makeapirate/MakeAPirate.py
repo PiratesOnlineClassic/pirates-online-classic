@@ -1,101 +1,162 @@
-import random
-
-from pirates.makeapirate import BodyGUI
-from pirates.makeapirate import ClothesGUI
-from pirates.makeapirate import GenderGUI
-from pirates.makeapirate import HairGUI
-from pirates.makeapirate import HeadGUI
-from pirates.makeapirate import JewelryGUI
-from pirates.makeapirate import NameGUI
-from pirates.makeapirate import NPCGUI
-from pirates.makeapirate import PirateFemale
-from pirates.makeapirate import PirateMale
-from pirates.makeapirate import TattooGUI
-from pirates.makeapirate.CharGuiBase import CharGuiSlider
+from direct.showbase.DirectObject import DirectObject
 from direct.directnotify import DirectNotifyGlobal
-from direct.distributed import PyDatagram
-from direct.fsm import FSM, StateData
-from direct.fsm.ClassicFSM import ClassicFSM
-from direct.fsm.State import State
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
-from direct.interval.IntervalGlobal import *
-from direct.showbase.DirectObject import DirectObject
+from pandac.PandaModules import *
+from direct.fsm import FSM
+from direct.fsm import StateData
+from direct.fsm.ClassicFSM import ClassicFSM
+from direct.fsm.State import State
 from direct.task import Task
-from MakeAPirateGlobals import *
+from direct.interval.IntervalGlobal import *
+from direct.distributed import PyDatagram
 from otp.distributed import PotentialAvatar
-from otp.otpbase import OTPGlobals
 from otp.otpgui import OTPDialog
-from panda3d.core import *
-from pirates.effects import DynamicLight
-from pirates.npc import Skeleton
-from pirates.pirate import DynamicHuman, Human, HumanDNA, LocalPirate, Pirate
-from pirates.piratesbase import PiratesGlobals, PLocalizer, UserFunnel
+from otp.otpbase import OTPGlobals
 from pirates.piratesgui import PDialog
-
-MakeAPiratePageIcons = {'Body': 'chargui_body', 'Head': 'chargui_head', 'Mouth': 'chargui_mouth', 'Eyes': 'chargui_eyes', 'Nose': 'chargui_nose', 'Ear': 'chargui_ears', 'Hair': 'chargui_hair', 'Clothes': 'chargui_cloth', 'Name': 'chargui_name', 'Tattoos': 'chargui_name', 'Jewelry': 'chargui_head'}
-heightBiasArray = {'m': [0.2, 0, 0, 0, -1.0], 'f': [0, 0.7, 0.2, -0.5, 0.2], 'n': [0.2, 0, 0, 0, -1.0], 's': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
+from pirates.pirate import Pirate
+from pirates.pirate import LocalPirate
+from pirates.pirate import Human
+from pirates.pirate import HumanDNA
+from pirates.npc import Skeleton
+from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
+from pirates.piratesbase import UserFunnel
+from pirates.pirate import DynamicHuman
+from pirates.effects import DynamicLight
+from MakeAPirateGlobals import *
+import random
+import PirateMale
+import PirateFemale
+import GenderGUI
+import BodyGUI
+import HeadGUI
+import ClothesGUI
+import HairGUI
+import TattooGUI
+import JewelryGUI
+import NameGUI
+import NPCGUI
+from CharGuiBase import CharGuiSlider
+MakeAPiratePageIcons = {
+    'Body': 'chargui_body',
+    'Head': 'chargui_head',
+    'Mouth': 'chargui_mouth',
+    'Eyes': 'chargui_eyes',
+    'Nose': 'chargui_nose',
+    'Ear': 'chargui_ears',
+    'Hair': 'chargui_hair',
+    'Clothes': 'chargui_cloth',
+    'Name': 'chargui_name',
+    'Tattoos': 'chargui_name',
+    'Jewelry': 'chargui_head'}
+heightBiasArray = {
+  'm': [0.2, 0, 0, 0, -1.0],
+  'f': [0, 0.7, 0.2, -.5, 0.2],
+  'n': [0.2, 0, 0, 0, -1.0],
+  's': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+}
 CamInitPosHprs = [
- [
   [
-   Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)], [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)], [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)], [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)], [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)]], [[Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)], [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)], [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)], [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)], [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)]]]
+    [
+      Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)
+    ],
+    [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)],
+    [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)],
+    [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)],
+    [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)]
+  ],
+  [
+    [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)],
+    [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)],
+    [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)],
+    [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)],
+    [Vec3(-2.2, 17.4, 8.5), Vec3(-2.0 + 180.0, -15.8, -1.2)]
+  ]
+]
 CamZoomInPosHprs = [
- [
   [
-   Vec3(0.0, 3.5, 5.4), Vec3(-6.2 + 180.0, -13.1, -2.4)], [Vec3(0.03, 3, 6.3), Vec3(-5.0 + 180.0, -16.5, -2.1)], [Vec3(0, 4, 7), Vec3(-5.0 + 180.0, -16.5, -2.1)], [Vec3(-0.15, 3.9, 6.3), Vec3(-3.3 + 180.0, -11.1, -1.9)], [Vec3(0.15, 4.7, 7.5), Vec3(-7.2 + 180.0, -14.9, -2.8)]], [[Vec3(-0.5, 4, 5.3), Vec3(-6.2 + 180.0, -13.1, -2.4)], [Vec3(-0.4, 3.2, 6), Vec3(-6.2 + 180.0, -13.1, -2.4)], [Vec3(-0.5, 3.4, 6.1), Vec3(-3.8 + 180.0, -9.1, -2.6)], [Vec3(-0.6, 3.6, 6.5), Vec3(-3.3 + 180.0, -11.1, -1.9)], [Vec3(-0.5, 3.4, 6), Vec3(-3.8 + 180.0, -9.1, -2.6)]]]
+    [
+      Vec3(0.0, 3.5, 5.4), Vec3(-6.2 + 180.0, -13.1, -2.4)
+    ],
+    [Vec3(0.03, 3, 6.3), Vec3(-5.0 + 180.0, -16.5, -2.1)],
+    [Vec3(0, 4, 7), Vec3(-5.0 + 180.0, -16.5, -2.1)],
+    [Vec3(-.15, 3.9, 6.3), Vec3(-3.3 + 180.0, -11.1, -1.9)],
+    [Vec3(0.15, 4.7, 7.5), Vec3(-7.2 + 180.0, -14.9, -2.8)]
+  ],
+  [
+    [Vec3(-0.5, 4, 5.3), Vec3(-6.2 + 180.0, -13.1, -2.4)],
+    [Vec3(-0.4, 3.2, 6), Vec3(-6.2 + 180.0, -13.1, -2.4)],
+    [Vec3(-0.5, 3.4, 6.1), Vec3(-3.8 + 180.0, -9.1, -2.6)],
+    [Vec3(-0.6, 3.6, 6.5), Vec3(-3.3 + 180.0, -11.1, -1.9)],
+    [Vec3(-0.5, 3.4, 6), Vec3(-3.8 + 180.0, -9.1, -2.6)]
+  ]
+]
 CamZoomOutPosHprs = [
- [
   [
-   Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)]], [[Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)], [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)]]]
+    [
+      Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)
+    ],
+    [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)],
+    [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)],
+    [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)],
+    [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)]
+  ],
+  [
+    [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)],
+    [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)],
+    [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)],
+    [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)],
+    [Vec3(-3, 20.5, 9.2), Vec3(-0.3 + 180.0, -15.7, -0.8)]
+  ]
+]
+
 
 class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
-
     notify = DirectNotifyGlobal.directNotify.newCategory('MakeAPirate')
 
-    def __init__(self, avList, doneEvent, subId=0, index=0, isPaid=0, isNPCEditor=False, piratesEditor=None):
+    def __init__(self,
+                 avList,
+                 doneEvent,
+                 subId=0,
+                 index=0,
+                 isPaid=0,
+                 isNPCEditor=False,
+                 piratesEditor=None
+                 ):
+
         AnimList.extend(AnimListA_B)
         AnimList.extend(AnimListC_G)
         AnimList.extend(AnimListI_Si)
         AnimList.extend(AnimListSl_Sz)
         AnimList.extend(AnimListT_Z)
-        self.undoList = {
-            'm': [HumanDNA.HumanDNA()],
-            'f': [HumanDNA.HumanDNA('f')],
-            'n': [HumanDNA.HumanDNA('n')]}
-
+        self.undoList = {'m': [HumanDNA.HumanDNA()], 'f': [HumanDNA.HumanDNA('f')], 'n': [HumanDNA.HumanDNA('n')]}
         self.guiIdStates = {}
         self.compositeAction = 0
-        self.undoLevel = {
-            'm': 0,
-            'f': 0,
-            'n': 0}
-
+        self.undoLevel = {'m': 0, 'f': 0, 'n': 0}
         FSM.FSM.__init__(self, 'MakeAPirate')
         self.avList = avList
         self.index = index
         self.subId = subId
-        self.wantNPCViewer = base.config.GetBool('want-npc-viewer', False)
-        self.wantPicButtons = base.config.GetBool('want-gen-pics-buttons', False)
-        if self.wantPicButtons:
-            if not self.wantNPCViewer:
-                self.wantNPCViewer = True
-                self.notify.warning('Warning! want-gen-pics-buttons needs want-npc-viewer. wantNPCViewer overridden and set to TRUE')
+        self.wantNPCViewer = base.config.GetBool('want-npc-viewer', 0)
+        self.wantPicButtons = base.config.GetBool('want-gen-pics-buttons', 0)
+        if self.wantPicButtons and not self.wantNPCViewer:
+            self.wantNPCViewer = True
+            self.notify.warning('Warning! want-gen-pics-buttons needs want-npc-viewer. wantNPCViewer overridden and set to TRUE')
 
-        self.wantMarketingViewer = base.config.GetBool('want-marketing-viewer', False)
+        self.wantMarketingViewer = base.config.GetBool('want-marketing-viewer', 0)
         if isNPCEditor:
             self.wantNPCViewer = 1
-
         self.loadJackDialogs()
-        self.skipTutorial = base.config.GetBool('skip-tutorial', False)
-        self.chooseFemale = base.config.GetBool('choose-female', False)
-        self.noJailLight = base.config.GetBool('no-jail-light', False)
+        self.skipTutorial = base.config.GetBool('skip-tutorial', 0)
+        self.chooseFemale = base.config.GetBool('choose-female', 0)
+        self.noJailLight = base.config.GetBool('no-jail-light', 0)
         if hasattr(base, 'pe') and base.pe:
             self.noJailLight = True
         if self.skipTutorial or isNPCEditor or self.avList[self.index] == None or self.avList[self.index] == OTPGlobals.AvatarSlotAvailable:
             self.isTutorial = 0
         else:
             self.isTutorial = 1
-
         self.isPaid = isPaid
         self.lowestPage = 0
         StateData.StateData.__init__(self, doneEvent)
@@ -115,18 +176,13 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.currPageTabIndex = None
         self.currPageIndex = None
         self.names = [
-            '',
-            '',
-            '',
-            '']
-
+         '', '', '', '']
         self.dnastring = None
         self.entered = 0
         if not self.isTutorial and not self.isNPCEditor:
             self.initH = 180
         else:
             self.initH = 0
-
         self.lastRot = self.initH
         self.pirateHpr = Point3(self.initH, 0, 0)
         self.piratePos = Point3(0, 0, 0)
@@ -138,15 +194,6 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.lastAnim = 0
         self.aPos = None
         self.avatarType = 0
-        self.editorAvatar = self.avList[self.index]
-        self.piratesEditor = piratesEditor
-        self.loadNPC = True
-        self.camAdjusted = False
-        self.nameList = []
-        self.shop = BODYSHOP
-        self.shopsVisited = []
-        self.music = None
-        self.soundBack = None
         if self.isNPCEditor:
             self.editorAvatar = self.avList[self.index]
             self.piratesEditor = piratesEditor
@@ -158,54 +205,53 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             self.avatarDummyNode.setScale(self.avList[self.index].getScale())
             self.avatarDummyNode.setHpr(rot[0], rot[1], rot[2])
             camera.wrtReparentTo(self.avatarDummyNode)
-            self.wantJewelry = hasattr(base, 'wantJewelry') or base.config.GetBool('want-jewelry', False)
+        self.nameList = []
+        self.shop = BODYSHOP
+        self.shopsVisited = []
+        self.music = None
+        self.soundBack = None
+        if not hasattr(base, 'wantJewelry'):
+            self.wantJewelry = base.config.GetBool('want-jewelry', 0)
         else:
             self.wantJewelry = base.wantJewelry
-
         if self.wantNPCViewer:
             self.numShops = len(ShopNames)
         else:
             self.numShops = ShopNames.index('NameShop') + 1
-
         self.inRandomAll = False
         self.idleFSM = ClassicFSM('idleFSM', [
-         State('default', self.enterIdleFSMDefault, self.exitIdleFSMDefault, [
-            'alt1', 'alt2']),
-
-         State('alt1', self.enterIdleFSMAlt1, self.exitIdleFSMAlt1, [
-            'alt2', 'default']),
-
-         State('alt2', self.enterIdleFSMAlt2, self.exitIdleFSMAlt2, [
-            'alt1', 'default'])], 'default', 'default')
-
+            State('default', self.enterIdleFSMDefault, self.exitIdleFSMDefault,
+                  ['alt1', 'alt2']),
+            State('alt1', self.enterIdleFSMAlt1, self.exitIdleFSMAlt1,
+                  ['alt2', 'default']),
+            State('alt2', self.enterIdleFSMAlt2, self.exitIdleFSMAlt2,
+                  ['alt1', 'default'])
+        ], 'default', 'default')
         self.idleFSM.enterInitialState()
-
+    
     def getPirate(self):
         return self.pirate
-
+    
     def enter(self):
         self.entered = 1
-        if base.config.GetBool('want-alt-idles', False):
+        if base.config.GetBool('want-alt-idles', 0):
             taskMgr.add(self.altIdleTask, 'avCreate-AltIdleTask')
-
+        
         taskMgr.add(self.zoomTask, 'avCreate-ZoomTask')
         self._waitForServerDlg = None
-        base.richPresence.update(details='Creating a Pirate')
         self.bookModel.show()
         self.lowBookModel.show()
         self.guiBottomBar.show()
-        if self.skipTutorial:
-            if not self.isNPCEditor:
-                self.jail = loader.loadModel('models/buildings/navy_jail_interior')
-                self.jail.flattenMedium()
-                self.jail.reparentTo(render)
-                self.jail.setLightOff()
-
-            self.noJailLight or self.pirate.setH(self.initH)
+        if self.skipTutorial and not self.isNPCEditor:
+            self.jail = loader.loadModel('models/buildings/navy_jail_interior')
+            self.jail.flattenMedium()
+            self.jail.reparentTo(render)
+            self.jail.setLightOff()
+        
+        if not self.noJailLight:
+            self.pirate.setH(self.initH)
             self.pirate.setZ(-1.5)
-            light = DynamicLight.DynamicLight(type=DynamicLight.DYN_LIGHT_AMBIENT, parent=render,
-                pos=VBase3(37.912, 12.061, 0.944), hpr=VBase3(176.273, 5.678, -0.212))
-
+            light = DynamicLight.DynamicLight(type=DynamicLight.DYN_LIGHT_AMBIENT, parent=render, pos=VBase3(37.912, 12.061, 0.944), hpr=VBase3(176.273, 5.678, -0.212))
             self.ambientLight = light
             newPos = light.getPos(self.pirate)
             newHpr = light.getHpr(self.pirate)
@@ -216,9 +262,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             light.setConeAngle(60.0)
             light.setDropOff(9.5455)
             light.turnOn()
-            light = DynamicLight.DynamicLight(type=DynamicLight.DYN_LIGHT_SPOT, parent=render,
-                pos=VBase3(12.358, 7.072, 12.536), hpr=VBase3(117.392, -35.256, -7.489))
-
+            light = DynamicLight.DynamicLight(type=DynamicLight.DYN_LIGHT_SPOT, parent=render, pos=VBase3(12.358, 7.072, 12.536), hpr=VBase3(117.392, -35.256, -7.489))
             self.spotLight1 = light
             newPos = light.getPos(self.pirate)
             newHpr = light.getHpr(self.pirate)
@@ -229,9 +273,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             light.setConeAngle(77.0455)
             light.setDropOff(84.5455)
             light.turnOn()
-            light = DynamicLight.DynamicLight(type=DynamicLight.DYN_LIGHT_SPOT, parent=render,
-                pos=VBase3(-9.914, 10.93, 14.172), hpr=VBase3(-137.877, -34.676, -4.026))
-
+            light = DynamicLight.DynamicLight(type=DynamicLight.DYN_LIGHT_SPOT, parent=render, pos=VBase3(-9.914, 10.93, 14.172), hpr=VBase3(-137.877, -34.676, -4.026))
             self.spotLight2 = light
             newPos = light.getPos(self.pirate)
             newHpr = light.getHpr(self.pirate)
@@ -242,9 +284,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             light.setConeAngle(78.6364)
             light.setDropOff(87.2727)
             light.turnOn()
-            light = DynamicLight.DynamicLight(type=DynamicLight.DYN_LIGHT_SPOT, parent=render,
-                pos=VBase3(7.156, -15.566, 9.971), hpr=VBase3(27.413, -20.551, -68.33))
-
+            light = DynamicLight.DynamicLight(type=DynamicLight.DYN_LIGHT_SPOT, parent=render, pos=VBase3(7.156, -15.566, 9.971), hpr=VBase3(27.413, -20.551, -68.33))
             self.spotLight3 = light
             newPos = light.getPos(self.pirate)
             newHpr = light.getHpr(self.pirate)
@@ -257,7 +297,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             light.turnOn()
             self.pirate.setP(0)
             self.pirate.setZ(0)
-
+        
         self.setupJackDialogs()
         base.camLens.setMinFov(PiratesGlobals.MakeAPirateCameraFov)
         self.placePirate()
@@ -266,12 +306,12 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         if self.isNPCEditor or self.wantNPCViewer:
             self.guiTopBar.show()
             self.guiCancelButton.hide()
-
+        
         self.guiBottomBar.show()
         self.request('BodyShop')
         if hasattr(base, 'musicMgr'):
-            base.musicMgr.request('make-a-pirate', volume=0.4)
-
+            base.musicMgr.request('make-a-pirate', volume = 0.4)
+        
         self.accept('mouse1', self._startMouseReadTask)
         self.accept('mouse1-up', self._stopMouseReadTask)
         self.accept('mouse3', self._startMouseReadTask)
@@ -280,19 +320,16 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.accept('wheel_down', self._handleWheelDown)
         if self.isTutorial:
             self.offsetZoomPos = Vec3(-0.6, 4, 1.2)
+        elif self.isNPCEditor:
+            self.offsetZoomPos = Vec3(-0.6, 4, 1.2)
         else:
-            if self.isNPCEditor:
-                self.offsetZoomPos = Vec3(-0.6, 4, 1.2)
-            else:
-                self.offsetZoomPos = Vec3(0.6, -4, 1.2)
-
+            self.offsetZoomPos = Vec3(0.6, -4, 1.2)
         if self.isNPCEditor:
             self.offsetZoomHpr = camera.getHpr(self.avatarDummyNode)
         else:
             self.offsetZoomHpr = camera.getHpr(render)
-
         base.transitions.fadeIn()
-
+    
     def exit(self):
         taskMgr.remove('avCreate-ZoomTask')
         taskMgr.remove('avCreate-AltIdleTask')
@@ -302,34 +339,34 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         if self._waitForServerDlg:
             self._waitForServerDlg.destroy()
             self._waitForServerDlg = None
-
+        
         if self.confirmTempName:
             self.confirmTempName.destroy()
             self.confirmTempName = None
-
+        
         self.bookModel.hide()
         self.lowBookModel.hide()
         if self.isNPCEditor or self.wantNPCViewer:
             self.guiTopBar.hide()
-
+        
         self.guiBottomBar.hide()
         if self.skipTutorial:
             self.pirate.detachNode()
-
+        
         self.pirate.setNameVisible(1)
         if self.skipTutorial and not self.isNPCEditor:
             if hasattr(self, 'jail'):
                 self.jail.hide()
-
+        
         if self.entered and not self.noJailLight:
             self.ambientLight.turnOff()
             self.spotLight1.turnOff()
             self.spotLight2.turnOff()
             self.spotLight3.turnOff()
-
+        
         if hasattr(base, 'musicMgr'):
             base.musicMgr.requestFadeOut('make-a-pirate')
-
+        
         self.ignore('mouse1')
         self.ignore('mouse1-up')
         self.ignore('mouse3')
@@ -342,59 +379,131 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         UserFunnel.logSubmit(0, 'CREATE_PIRATE_EXITS')
         if not self.isNPCEditor:
             base.cr.centralLogger.writeClientEvent('CREATE_PIRATE_EXITS')
-
+        
         UserFunnel.logSubmit(1, 'CUTSCENE_ONE_START')
         UserFunnel.logSubmit(0, 'CUTSCENE_ONE_START')
         if not self.isNPCEditor:
             base.cr.centralLogger.writeClientEvent('CUTSCENE_ONE_START')
 
     def loadJackDialogs(self):
-        self.jsd_anytime_1 = base.loader.loadSfx('audio/jsd_anytime_1.mp3')
-        self.jsd_anytime_2 = base.loader.loadSfx('audio/jsd_anytime_2.mp3')
-        self.jsd_anytime_3 = base.loader.loadSfx('audio/jsd_anytime_3.mp3')
-        self.jsd_anytime_4 = base.loader.loadSfx('audio/jsd_anytime_4.mp3')
-        self.jsd_body_ms_1 = base.loader.loadSfx('audio/jsd_body_ms_1.mp3')
-        self.jsd_body_ms_2 = base.loader.loadSfx('audio/jsd_body_ms_2.mp3')
-        self.jsd_body_sf_1 = base.loader.loadSfx('audio/jsd_body_sf_1.mp3')
-        self.jsd_body_sf_2 = base.loader.loadSfx('audio/jsd_body_sf_2.mp3')
-        self.jsd_body_tm_1 = base.loader.loadSfx('audio/jsd_body_tm_1.mp3')
-        self.jsd_body_tm_2 = base.loader.loadSfx('audio/jsd_body_tm_2.mp3')
-        self.jsd_clothes_1 = base.loader.loadSfx('audio/jsd_clothes_1.mp3')
-        self.jsd_clothes_5 = base.loader.loadSfx('audio/jsd_clothes_5.mp3')
-        self.jsd_clothes_finish_1 = base.loader.loadSfx('audio/jsd_clothes_finish_1.mp3')
-        self.jsd_clothes_finish_2 = base.loader.loadSfx('audio/jsd_clothes_finish_2.mp3')
-        self.jsd_coat_good = base.loader.loadSfx('audio/jsd_coat_good.mp3')
-        self.jsd_face_long = base.loader.loadSfx('audio/jsd_face_long.mp3')
-        self.jsd_face_pretty = base.loader.loadSfx('audio/jsd_face_pretty.mp3')
-        self.jsd_face_rogue = base.loader.loadSfx('audio/jsd_face_rogue.mp3')
-        self.jsd_face_ugly = base.loader.loadSfx('audio/jsd_face_ugly.mp3')
-        self.jsd_hair_lot = base.loader.loadSfx('audio/jsd_hair_lot.mp3')
-        self.jsd_hair_mop = base.loader.loadSfx('audio/jsd_hair_mop.mp3')
-        self.jsd_hat_good = base.loader.loadSfx('audio/jsd_hat_good.mp3')
-        self.jsd_pant_good = base.loader.loadSfx('audio/jsd_pant_good.mp3')
-        self.jsd_shoe_barbossa = base.loader.loadSfx('audio/jsd_shoe_barbossa.mp3')
-        self.jsd_shoe_good = base.loader.loadSfx('audio/jsd_shoe_good.mp3')
+        self.jsd_anytime_1 = base.loadSfx('audio/jsd_anytime_1.mp3')
+        self.jsd_anytime_2 = base.loadSfx('audio/jsd_anytime_2.mp3')
+        self.jsd_anytime_3 = base.loadSfx('audio/jsd_anytime_3.mp3')
+        self.jsd_anytime_4 = base.loadSfx('audio/jsd_anytime_4.mp3')
+        self.jsd_body_ms_1 = base.loadSfx('audio/jsd_body_ms_1.mp3')
+        self.jsd_body_ms_2 = base.loadSfx('audio/jsd_body_ms_2.mp3')
+        self.jsd_body_sf_1 = base.loadSfx('audio/jsd_body_sf_1.mp3')
+        self.jsd_body_sf_2 = base.loadSfx('audio/jsd_body_sf_2.mp3')
+        self.jsd_body_tm_1 = base.loadSfx('audio/jsd_body_tm_1.mp3')
+        self.jsd_body_tm_2 = base.loadSfx('audio/jsd_body_tm_2.mp3')
+        self.jsd_clothes_1 = base.loadSfx('audio/jsd_clothes_1.mp3')
+        self.jsd_clothes_5 = base.loadSfx('audio/jsd_clothes_5.mp3')
+        self.jsd_clothes_finish_1 = base.loadSfx('audio/jsd_clothes_finish_1.mp3')
+        self.jsd_clothes_finish_2 = base.loadSfx('audio/jsd_clothes_finish_2.mp3')
+        self.jsd_coat_good = base.loadSfx('audio/jsd_coat_good.mp3')
+        self.jsd_face_long = base.loadSfx('audio/jsd_face_long.mp3')
+        self.jsd_face_pretty = base.loadSfx('audio/jsd_face_pretty.mp3')
+        self.jsd_face_rogue = base.loadSfx('audio/jsd_face_rogue.mp3')
+        self.jsd_face_ugly = base.loadSfx('audio/jsd_face_ugly.mp3')
+        self.jsd_hair_lot = base.loadSfx('audio/jsd_hair_lot.mp3')
+        self.jsd_hair_mop = base.loadSfx('audio/jsd_hair_mop.mp3')
+        self.jsd_hat_good = base.loadSfx('audio/jsd_hat_good.mp3')
+        self.jsd_pant_good = base.loadSfx('audio/jsd_pant_good.mp3')
+        self.jsd_shoe_barbossa = base.loadSfx('audio/jsd_shoe_barbossa.mp3')
+        self.jsd_shoe_good = base.loadSfx('audio/jsd_shoe_good.mp3')
         self.lastDialog = None
-
+    
     def setupJackDialogs(self):
         self.JSD_ANYTIME = [
-         [
-          self.jsd_anytime_1, self.jsd_anytime_2, self.jsd_anytime_3, self.jsd_anytime_4, self.jsd_clothes_finish_2], [self.jsd_anytime_1, self.jsd_anytime_2, self.jsd_anytime_3, self.jsd_anytime_4, self.jsd_clothes_finish_2]]
+            [
+                self.jsd_anytime_1,
+                self.jsd_anytime_2,
+                self.jsd_anytime_3,
+                self.jsd_anytime_4,
+                self.jsd_clothes_finish_2],
+            [
+                self.jsd_anytime_1,
+                self.jsd_anytime_2,
+                self.jsd_anytime_3,
+                self.jsd_anytime_4,
+                self.jsd_clothes_finish_2]]
         self.JSD_BODY = [
-         [
-          self.jsd_body_sf_1, self.jsd_body_sf_2], [self.jsd_body_ms_1, self.jsd_body_ms_2], [self.jsd_body_tm_1, self.jsd_body_tm_2], [self.jsd_body_tm_1, self.jsd_body_tm_2], [self.jsd_body_tm_1, self.jsd_body_tm_2]]
+            [
+                self.jsd_body_sf_1,
+                self.jsd_body_sf_2],
+            [
+                self.jsd_body_ms_1,
+                self.jsd_body_ms_2],
+            [
+                self.jsd_body_tm_1,
+                self.jsd_body_tm_2],
+            [
+                self.jsd_body_tm_1,
+                self.jsd_body_tm_2],
+            [
+                self.jsd_body_tm_1,
+                self.jsd_body_tm_2]]
         self.JSD_FACE = [
-         [
-          self.jsd_face_long, self.jsd_face_ugly], [self.jsd_face_pretty, self.jsd_face_rogue]]
+            [
+                self.jsd_face_long,
+                self.jsd_face_ugly],
+            [
+                self.jsd_face_pretty,
+                self.jsd_face_rogue]]
         self.JSD_HAIR = [
-         [
-          self.jsd_hair_lot, self.jsd_hair_mop], [self.jsd_hair_lot, self.jsd_hair_mop]]
+            [
+                self.jsd_hair_lot,
+                self.jsd_hair_mop],
+            [
+                self.jsd_hair_lot,
+                self.jsd_hair_mop]]
         self.JSD_CLOTHING_INTRO = [
-         [
-          self.jsd_clothes_1, self.jsd_clothes_5, self.jsd_clothes_finish_1, self.jsd_clothes_finish_2], [self.jsd_clothes_1, self.jsd_clothes_5, self.jsd_clothes_finish_1, self.jsd_clothes_finish_2]]
-        self.JSD_CLOTHING = {'m': {'HAT': [self.jsd_hat_good], 'SHIRT': [None], 'VEST': [None], 'COAT': [self.jsd_coat_good], 'PANT': [self.jsd_pant_good], 'BELT': [None], 'SHOE': [self.jsd_shoe_barbossa, self.jsd_shoe_good]}, 'f': {'HAT': [self.jsd_hat_good], 'SHIRT': [None], 'VEST': [None], 'COAT': [self.jsd_coat_good], 'PANT': [self.jsd_pant_good], 'BELT': [None], 'SHOE': [self.jsd_shoe_barbossa, self.jsd_shoe_good]}}
+            [
+                self.jsd_clothes_1,
+                self.jsd_clothes_5,
+                self.jsd_clothes_finish_1,
+                self.jsd_clothes_finish_2],
+            [
+                self.jsd_clothes_1,
+                self.jsd_clothes_5,
+                self.jsd_clothes_finish_1,
+                self.jsd_clothes_finish_2]]
+        self.JSD_CLOTHING = {
+            'm': {
+                'HAT': [
+                    self.jsd_hat_good],
+                'SHIRT': [
+                    None],
+                'VEST': [
+                    None],
+                'COAT': [
+                    self.jsd_coat_good],
+                'PANT': [
+                    self.jsd_pant_good],
+                'BELT': [
+                    None],
+                'SHOE': [
+                    self.jsd_shoe_barbossa,
+                    self.jsd_shoe_good]},
+            'f': {
+                'HAT': [
+                    self.jsd_hat_good],
+                'SHIRT': [
+                    None],
+                'VEST': [
+                    None],
+                'COAT': [
+                    self.jsd_coat_good],
+                'PANT': [
+                    self.jsd_pant_good],
+                'BELT': [
+                    None],
+                'SHOE': [
+                    self.jsd_shoe_barbossa,
+                    self.jsd_shoe_good]}}
 
     def setupCamera(self, character):
+        
         try:
             id = character.style.getBodyShape()
         except:
@@ -433,6 +542,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.pirate.setHpr(self.initH, 0, 0)
         if hasattr(self, 'lastAnim') == False:
             self.lastAnim = 0
+        
         if self.isNPCEditor:
             self.pirate.reparentTo(self.avatarDummyNode)
         else:
@@ -442,6 +552,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         if not self.isNPCEditor:
             self.setupCamera(self.pirate)
         else:
+            
             try:
                 id = self.pirate.style.getBodyShape()
             except:
@@ -460,6 +571,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             self.pirate.enableBlend()
             self.pirate.loop('idle')
             self.pirate.loop('idle_centered')
+        
         self.assignPirateToGui()
 
     def assignPirateToGui(self):
@@ -472,12 +584,12 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         if self.wantNPCViewer:
             self.tattooGui.assignAvatar(self.pirate.model)
             self.jewelryGui.assignAvatar(self.pirate.model)
-
+    
     def takeScreenShot(self):
         self.notify.info('Beginning screenshot capture')
         base.screenshot()
         self.notify.info('Screenshot captured')
-
+    
     def assignSkeletonToGui(self):
         self.NPCGui.assignAvatar(self.skeleton.model)
 
@@ -486,6 +598,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.skeleton.setHpr(self.initH, 0, 0)
         if hasattr(self, 'lastAnim') == False:
             self.lastAnim = 0
+        
         self.skeleton.loop(AnimList[self.lastAnim])
         self.pgsZoom['value'] = 0.0
         self.pgsRotate['value'] = 0.0
@@ -494,6 +607,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         if not self.isNPCEditor:
             self.setupCamera(self.skeleton)
         else:
+            
             try:
                 id = self.pirate.style.getBodyShape()
             except:
@@ -511,273 +625,91 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.assignSkeletonToGui()
 
     def loadNPCButton(self):
-        self.PirateButton = DirectButton(parent=self.guiTopBar, relief=DGG.SUNKEN, pos=(-0.7, 0.0, 0.0), scale=0.6, command=self.handlePirate, frameSize=(-0.25, 0.25, -0.1, 0.1), borderWidth=(0.02,
-                                                                                                                                                                                                0.02), text=PLocalizer.PirateButton, text_pos=(0, -0.05), text_scale=0.2, text_align=TextNode.ACenter)
-        self.NPCButton = DirectButton(parent=self.guiTopBar, relief=DGG.RAISED, pos=(-0.3, 0.0, 0.0), scale=0.6, command=self.handleNPC, frameSize=(-0.25, 0.25, -0.1, 0.1), borderWidth=(0.02,
-                                                                                                                                                                                          0.02), text=PLocalizer.NPCButton, text_pos=(0, -0.05), text_scale=0.2, text_align=TextNode.ACenter)
-        self.NavyButton = DirectButton(parent=self.guiTopBar, relief=DGG.RAISED, pos=(0.1,
-                                                                                      0.0,
-                                                                                      0.0), scale=0.6, command=self.handleNavy, frameSize=(-0.25, 0.25, -0.1, 0.1), borderWidth=(0.02,
-                                                                                                                                                                                 0.02), text=PLocalizer.NavyButton, text_pos=(0, -0.05), text_scale=0.2, text_align=TextNode.ACenter)
-
+        self.PirateButton = DirectButton(parent = self.guiTopBar, relief = DGG.SUNKEN, pos = (-0.7, 0.0, 0.0), scale = 0.6, command = self.handlePirate, frameSize = (-0.25, 0.25, -0.1, 0.1), borderWidth = (0.02, 0.02), text = PLocalizer.PirateButton, text_pos = (0, -0.05), text_scale = 0.2, text_align = TextNode.ACenter)
+        self.NPCButton = DirectButton(parent = self.guiTopBar, relief = DGG.RAISED, pos = (-0.3, 0.0, 0.0), scale = 0.6, command = self.handleNPC, frameSize = (-0.25, 0.25, -0.1, 0.1), borderWidth = (0.02, 0.02), text = PLocalizer.NPCButton, text_pos = (0, -0.05), text_scale = 0.2, text_align = TextNode.ACenter)
+        self.NavyButton = DirectButton(parent = self.guiTopBar, relief = DGG.RAISED, pos = (0.1, 0.0, 0.0), scale = 0.6, command = self.handleNavy, frameSize = (-0.25, 0.25, -0.1, 0.1), borderWidth = (0.02, 0.02), text = PLocalizer.NavyButton, text_pos = (0, -0.05), text_scale = 0.2, text_align = TextNode.ACenter)
+    
     def load(self):
         self.charGui = loader.loadModelOnce('models/gui/char_gui')
         self.triangleGui = loader.loadModelOnce('models/gui/triangle')
-        self.bookModel = DirectFrame(parent=base.a2dTopRight, image=self.charGui.find('**/chargui_base'), image_pos=(-0.13, 0, 0), relief=None, pos=(-0.65, 0, -0.8), scale=0.42)
+        self.bookModel = DirectFrame(parent = base.a2dTopRight, image = self.charGui.find('**/chargui_base'), image_pos = (-0.13, 0, 0), relief = None, pos = (-0.65, 0, -0.8), scale = 0.42)
         self.bookModel.hide()
-        self.lowBookModel = DirectFrame(parent=base.a2dBottomLeft, relief=None, frameSize=(-1, 1, -0.12, 0.12), frameColor=(0.5,
-                                                                                                                            0.5,
-                                                                                                                            0.5,
-                                                                                                                            0.3), borderWidth=(0.025,
-                                                                                                                                               0.025), pos=(0.45,
-                                                                                                                                                            0,
-                                                                                                                                                            0.12), scale=(0.6,
-                                                                                                                                                                          1,
-                                                                                                                                                                          0.75))
+        self.lowBookModel = DirectFrame(parent = base.a2dBottomLeft, relief = None, frameSize = (-1, 1, -0.12, 0.12), frameColor = (0.5, 0.5, 0.5, 0.3), borderWidth = (0.025, 0.025), pos = (0.45, 0, 0.12), scale = (0.6, 1, 0.75))
         self.lowBookModel.hide()
-        self.guiRandomAllButton = DirectButton(parent=self.bookModel, relief=None, image=(self.charGui.find('**/chargui_text_block_large'), self.charGui.find('**/chargui_text_block_large_down'), self.charGui.find('**/chargui_text_block_large_over')), image_scale=1.5, scale=0.7, pos=(-0.7, 0, -2.5), command=self.handleRandomAll, text=PLocalizer.ShuffleButton, text_font=PiratesGlobals.getInterfaceFont(), text_scale=0.18, text_pos=(0, -0.025), text_fg=(1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                      1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                      1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                      1), text_shadow=(0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       1))
-        self.prevShuffleButton = DirectButton(parent=self.bookModel, relief=None, image=(self.triangleGui.find('**/triangle'), self.triangleGui.find('**/triangle_down'), self.triangleGui.find('**/triangle_over')), scale=-0.2, pos=(-1.15,
-                                                                                                                                                                                                                                       0,
-                                                                                                                                                                                                                                       -2.5), command=self.undo)
+        self.guiRandomAllButton = DirectButton(parent = self.bookModel, relief = None, image = (self.charGui.find('**/chargui_text_block_large'), self.charGui.find('**/chargui_text_block_large_down'), self.charGui.find('**/chargui_text_block_large_over')), image_scale = 1.5, scale = 0.7, pos = (-0.7, 0, -2.5), command = self.handleRandomAll, text = PLocalizer.ShuffleButton, text_font = PiratesGlobals.getInterfaceFont(), text_scale = 0.18, text_pos = (0, -0.025), text_fg = (1, 1, 1, 1), text_shadow = (0, 0, 0, 1))
+        self.prevShuffleButton = DirectButton(parent = self.bookModel, relief = None, image = (self.triangleGui.find('**/triangle'), self.triangleGui.find('**/triangle_down'), self.triangleGui.find('**/triangle_over')), scale = -0.2, pos = (-1.15, 0, -2.5), command = self.undo)
         self.prevShuffleButton['state'] = DGG.DISABLED
-        self.nextShuffleButton = DirectButton(parent=self.bookModel, relief=None, image=(self.triangleGui.find('**/triangle'), self.triangleGui.find('**/triangle_down'), self.triangleGui.find('**/triangle_over')), scale=0.2, pos=(-0.25,
-                                                                                                                                                                                                                                      0,
-                                                                                                                                                                                                                                      -2.5), command=self.redo)
+        self.nextShuffleButton = DirectButton(parent = self.bookModel, relief = None, image = (self.triangleGui.find('**/triangle'), self.triangleGui.find('**/triangle_down'), self.triangleGui.find('**/triangle_over')), scale = 0.2, pos = (-0.25, 0, -2.5), command = self.redo)
         self.nextShuffleButton['state'] = DGG.DISABLED
-        self.guiRandomButton = DirectButton(parent=self.bookModel, relief=None, image=(self.charGui.find('**/chargui_text_block_large'), self.charGui.find('**/chargui_text_block_large_down'), self.charGui.find('**/chargui_text_block_large_over')), image_scale=1.5, scale=0.6, pos=(0,
-                                                                                                                                                                                                                                                                                         0,
-                                                                                                                                                                                                                                                                                         -2.05), command=self.handleRandom, text=PLocalizer.RandomButton, text_font=PiratesGlobals.getInterfaceFont(), text_scale=0.18, text_pos=(0, -0.025), text_fg=(1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                       1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                       1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                       1), text_shadow=(0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        1))
-        self.guiNextButton = DirectButton(parent=self.bookModel, relief=None, image=(self.charGui.find('**/chargui_text_block_large'), self.charGui.find('**/chargui_text_block_large_down'), self.charGui.find('**/chargui_text_block_large_over')), image_scale=1.5, scale=0.7, pos=(0.7,
-                                                                                                                                                                                                                                                                                       0,
-                                                                                                                                                                                                                                                                                       -2.5), command=self.handleNext, text=PLocalizer.MakeAPirateNext, text_scale=0.18, text_pos=(0, -0.025), text_fg=(1,
-                                                                                                                                                                                                                                                                                                                                                                                                        1,
-                                                                                                                                                                                                                                                                                                                                                                                                        1,
-                                                                                                                                                                                                                                                                                                                                                                                                        1), text_shadow=(0,
-                                                                                                                                                                                                                                                                                                                                                                                                                         0,
-                                                                                                                                                                                                                                                                                                                                                                                                                         0,
-                                                                                                                                                                                                                                                                                                                                                                                                                         1))
-        self.guiBottomBar = DirectFrame(parent=base.a2dBottomLeft, relief=None, frameSize=(-0.6, 0.6, -0.05, 0.05), frameColor=(0.5,
-                                                                                                                                0.5,
-                                                                                                                                0.5,
-                                                                                                                                0.3), pos=(0.5,
-                                                                                                                                           0,
-                                                                                                                                           0.9))
+        self.guiRandomButton = DirectButton(parent = self.bookModel, relief = None, image = (self.charGui.find('**/chargui_text_block_large'), self.charGui.find('**/chargui_text_block_large_down'), self.charGui.find('**/chargui_text_block_large_over')), image_scale = 1.5, scale = 0.6, pos = (0, 0, -2.05), command = self.handleRandom, text = PLocalizer.RandomButton, text_font = PiratesGlobals.getInterfaceFont(), text_scale = 0.18, text_pos = (0, -0.025), text_fg = (1, 1, 1, 1), text_shadow = (0, 0, 0, 1))
+        self.guiNextButton = DirectButton(parent = self.bookModel, relief = None, image = (self.charGui.find('**/chargui_text_block_large'), self.charGui.find('**/chargui_text_block_large_down'), self.charGui.find('**/chargui_text_block_large_over')), image_scale = 1.5, scale = 0.7, pos = (0.7, 0, -2.5), command = self.handleNext, text = PLocalizer.MakeAPirateNext, text_scale = 0.18, text_pos = (0, -0.025), text_fg = (1, 1, 1, 1), text_shadow = (0, 0, 0, 1))
+        self.guiBottomBar = DirectFrame(parent = base.a2dBottomLeft, relief = None, frameSize = (-0.6, 0.6, -0.05, 0.05), frameColor = (0.5, 0.5, 0.5, 0.3), pos = (0.5, 0, 0.9))
         self.guiBottomBar.hide()
-        self.guiCancelButton = DirectButton(parent=self.guiBottomBar, relief=None, image=(self.charGui.find('**/chargui_frame02'), self.charGui.find('**/chargui_frame02_down'), self.charGui.find('**/chargui_frame02_over')), scale=0.3, pos=(-0.39, 0, 1.04), command=self.handleCancel, text=PLocalizer.MakeAPirateCancel, text_font=PiratesGlobals.getInterfaceFont(), text_scale=0.18, text_pos=(0, -0.025), text_fg=(1,
-                                                                                                                                                                                                                                                                                                                                                                                                                            1,
-                                                                                                                                                                                                                                                                                                                                                                                                                            1,
-                                                                                                                                                                                                                                                                                                                                                                                                                            1), text_shadow=(0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                             0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                             0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                             1))
+        self.guiCancelButton = DirectButton(parent = self.guiBottomBar, relief = None, image = (self.charGui.find('**/chargui_frame02'), self.charGui.find('**/chargui_frame02_down'), self.charGui.find('**/chargui_frame02_over')), scale = 0.3, pos = (-0.39, 0, 1.04), command = self.handleCancel, text = PLocalizer.MakeAPirateCancel, text_font = PiratesGlobals.getInterfaceFont(), text_scale = 0.18, text_pos = (0, -0.025), text_fg = (1, 1, 1, 1), text_shadow = (0, 0, 0, 1))
         self.guiCancelButton.hide()
-        self.guiSaveUndoButton = DirectButton(parent=self.guiBottomBar, relief=None, image=(self.charGui.find('**/chargui_frame02'), self.charGui.find('**/chargui_frame02_down'), self.charGui.find('**/chargui_frame02_over')), scale=0.3, pos=(-0.1, 0, 1.04), command=self.storeUndo, text='save state', text_font=PiratesGlobals.getInterfaceFont(), text_scale=0.18, text_pos=(0, -0.025), text_fg=(1,
-                                                                                                                                                                                                                                                                                                                                                                                                          1,
-                                                                                                                                                                                                                                                                                                                                                                                                          1,
-                                                                                                                                                                                                                                                                                                                                                                                                          1), text_shadow=(0,
-                                                                                                                                                                                                                                                                                                                                                                                                                           0,
-                                                                                                                                                                                                                                                                                                                                                                                                                           0,
-                                                                                                                                                                                                                                                                                                                                                                                                                           1))
+        self.guiSaveUndoButton = DirectButton(parent = self.guiBottomBar, relief = None, image = (self.charGui.find('**/chargui_frame02'), self.charGui.find('**/chargui_frame02_down'), self.charGui.find('**/chargui_frame02_over')), scale = 0.3, pos = (-0.1, 0, 1.04), command = self.storeUndo, text = 'save state', text_font = PiratesGlobals.getInterfaceFont(), text_scale = 0.18, text_pos = (0, -0.025), text_fg = (1, 1, 1, 1), text_shadow = (0, 0, 0, 1))
         self.guiSaveUndoButton.hide()
-        self.guiUndoButton = DirectButton(parent=self.bookModel, relief=None, image=(self.charGui.find('**/chargui_frame02'), self.charGui.find('**/chargui_frame02_down'), self.charGui.find('**/chargui_frame02_over')), scale=0.7, pos=(-1.5,
-                                                                                                                                                                                                                                           0,
-                                                                                                                                                                                                                                           -2.5), command=self.undo, text=PLocalizer.ShufflePrevButton, text_font=PiratesGlobals.getInterfaceFont(), text_scale=0.18, text_pos=(0, -0.025), text_fg=(1,
-                                                                                                                                                                                                                                                                                                                                                                                                     1,
-                                                                                                                                                                                                                                                                                                                                                                                                     1,
-                                                                                                                                                                                                                                                                                                                                                                                                     1), text_shadow=(0,
-                                                                                                                                                                                                                                                                                                                                                                                                                      0,
-                                                                                                                                                                                                                                                                                                                                                                                                                      0,
-                                                                                                                                                                                                                                                                                                                                                                                                                      1))
+        self.guiUndoButton = DirectButton(parent = self.bookModel, relief = None, image = (self.charGui.find('**/chargui_frame02'), self.charGui.find('**/chargui_frame02_down'), self.charGui.find('**/chargui_frame02_over')), scale = 0.7, pos = (-1.5, 0, -2.5), command = self.undo, text = PLocalizer.ShufflePrevButton, text_font = PiratesGlobals.getInterfaceFont(), text_scale = 0.18, text_pos = (0, -0.025), text_fg = (1, 1, 1, 1), text_shadow = (0, 0, 0, 1))
         self.guiUndoButton.hide()
-        self.guiDoneButton = DirectButton(parent=self.bookModel, relief=None, image=(self.charGui.find('**/chargui_frame02'), self.charGui.find('**/chargui_frame02_down'), self.charGui.find('**/chargui_frame02_over')), scale=0.7, pos=(0.7,
-                                                                                                                                                                                                                                           0,
-                                                                                                                                                                                                                                           -2.5), image_scale=(1.5,
-                                                                                                                                                                                                                                                               1.0,
-                                                                                                                                                                                                                                                               1.0), command=self.handleDone, text=PLocalizer.DoneButton, text_scale=0.18, text_pos=(0, -0.025), text_fg=(0.6,
-                                                                                                                                                                                                                                                                                                                                                                          1,
-                                                                                                                                                                                                                                                                                                                                                                          0.6,
-                                                                                                                                                                                                                                                                                                                                                                          1), text_shadow=(0,
-                                                                                                                                                                                                                                                                                                                                                                                           0,
-                                                                                                                                                                                                                                                                                                                                                                                           0,
-                                                                                                                                                                                                                                                                                                                                                                                           1))
+        self.guiDoneButton = DirectButton(parent = self.bookModel, relief = None, image = (self.charGui.find('**/chargui_frame02'), self.charGui.find('**/chargui_frame02_down'), self.charGui.find('**/chargui_frame02_over')), scale = 0.7, pos = (0.7, 0, -2.5), image_scale = (1.5, 1.0, 1.0), command = self.handleDone, text = PLocalizer.DoneButton, text_scale = 0.18, text_pos = (0, -0.025), text_fg = (0.6, 1, 0.6, 1), text_shadow = (0, 0, 0, 1))
         self.guiDoneButton.hide()
-        self.pgsZoom = CharGuiSlider(self, parent=self.lowBookModel, text=PLocalizer.ZoomSlider, command=self.handleZoomSlider, range=(-1,
-                                                                                                                                       1))
+        self.pgsZoom = CharGuiSlider(self, parent = self.lowBookModel, text = PLocalizer.ZoomSlider, command = self.handleZoomSlider, range = (-1, 1))
         self.pgsZoom.setPos(-0.1, 0, 0.07)
         self.pgsZoom.setScale(0.5)
         self.pgsZoom['extraArgs'] = [self.pgsZoom]
-        self.pgsRotate = CharGuiSlider(self, parent=self.lowBookModel, text=PLocalizer.RotateSlider, command=self.handleRotateSlider, range=(-1,
-                                                                                                                                             1))
+        self.pgsRotate = CharGuiSlider(self, parent = self.lowBookModel, text = PLocalizer.RotateSlider, command = self.handleRotateSlider, range = (-1, 1))
         self.pgsRotate.setPos(-0.1, 0, -0.07)
         self.pgsRotate.setScale(0.5)
         self.pgsRotate['extraArgs'] = [self.pgsRotate]
         if self.isNPCEditor or self.wantNPCViewer or self.wantMarketingViewer:
-            self.guiTopBar = DirectFrame(parent=base.a2dTopLeft, relief=DGG.FLAT, frameSize=(-1.0, 1.0, -0.1, 0.1), frameColor=(0.5,
-                                                                                                                                0.5,
-                                                                                                                                0.5,
-                                                                                                                                0.3), pos=(0.6,
-                                                                                                                                           0,
-                                                                                                                                           -0.1), scale=0.5)
+            self.guiTopBar = DirectFrame(parent = base.a2dTopLeft, relief = DGG.FLAT, frameSize = (-1.0, 1.0, -0.1, 0.1), frameColor = (0.5, 0.5, 0.5, 0.3), pos = (0.6, 0, -0.1), scale = 0.5)
             self.guiTopBar.hide()
-            self.toggleLODFrame = DirectFrame(parent=self.guiTopBar, relief=DGG.FLAT, frameSize=(-0.45, 0.45, -0.18, 0.1), frameColor=(0.9,
-                                                                                                                                       0.9,
-                                                                                                                                       0.9,
-                                                                                                                                       0.3), text=PLocalizer.LODFrame, text_scale=0.1, text_pos=(0, -0.15), text_align=TextNode.ACenter, text_fg=(1,
-                                                                                                                                                                                                                                                  1,
-                                                                                                                                                                                                                                                  1,
-                                                                                                                                                                                                                                                  1), text_shadow=(0,
-                                                                                                                                                                                                                                                                   0,
-                                                                                                                                                                                                                                                                   0,
-                                                                                                                                                                                                                                                                   1), scale=1, pos=(1.5,
-                                                                                                                                                                                                                                                                                     0,
-                                                                                                                                                                                                                                                                                     0.05))
-            self.guiHiToggleLOD = DirectButton(parent=self.toggleLODFrame, relief=DGG.RAISED, pos=(0.3,
-                                                                                                   0.0,
-                                                                                                   0.0), command=self.handleHiLOD, frameSize=(-0.09, 0.09, -0.05, 0.05), borderWidth=(0.008,
-                                                                                                                                                                                      0.008), text=PLocalizer.LODHi, text_pos=(0, -0.015), text_scale=0.08)
-            self.guiMedToggleLOD = DirectButton(parent=self.toggleLODFrame, relief=DGG.RAISED, pos=(0.0,
-                                                                                                    0.0,
-                                                                                                    0.0), command=self.handleMedLOD, frameSize=(-0.09, 0.09, -0.05, 0.05), borderWidth=(0.008,
-                                                                                                                                                                                        0.008), text=PLocalizer.LODMed, text_pos=(0, -0.015), text_scale=0.08)
-            self.guiLowToggleLOD = DirectButton(parent=self.toggleLODFrame, relief=DGG.RAISED, pos=(-0.3, 0.0, 0.0), command=self.handleLowLOD, frameSize=(-0.09, 0.09, -0.05, 0.05), borderWidth=(0.008,
-                                                                                                                                                                                                   0.008), text=PLocalizer.LODLow, text_pos=(0, -0.015), text_scale=0.08)
-            self.guiTextureInfoBox = DirectFrame(parent=self.guiTopBar, text_fg=(1,
-                                                                                 1,
-                                                                                 1,
-                                                                                 1), scale=0.08, pos=(2.5, 0, -0.5))
+            self.toggleLODFrame = DirectFrame(parent = self.guiTopBar, relief = DGG.FLAT, frameSize = (-0.45, 0.45, -0.18, 0.1), frameColor = (0.9, 0.9, 0.9, 0.3), text = PLocalizer.LODFrame, text_scale = 0.1, text_pos = (0, -0.15), text_align = TextNode.ACenter, text_fg = (1, 1, 1, 1), text_shadow = (0, 0, 0, 1), scale = 1, pos = (1.5, 0, 0.05))
+            self.guiHiToggleLOD = DirectButton(parent = self.toggleLODFrame, relief = DGG.RAISED, pos = (0.3, 0.0, 0.0), command = self.handleHiLOD, frameSize = (-0.09, 0.09, -0.05, 0.05), borderWidth = (0.008, 0.008), text = PLocalizer.LODHi, text_pos = (0, -0.015), text_scale = 0.08)
+            self.guiMedToggleLOD = DirectButton(parent = self.toggleLODFrame, relief = DGG.RAISED, pos = (0.0, 0.0, 0.0), command = self.handleMedLOD, frameSize = (-0.09, 0.09, -0.05, 0.05), borderWidth = (0.008, 0.008), text = PLocalizer.LODMed, text_pos = (0, -0.015), text_scale = 0.08)
+            self.guiLowToggleLOD = DirectButton(parent = self.toggleLODFrame, relief = DGG.RAISED, pos = (-0.3, 0.0, 0.0), command = self.handleLowLOD, frameSize = (-0.09, 0.09, -0.05, 0.05), borderWidth = (0.008, 0.008), text = PLocalizer.LODLow, text_pos = (0, -0.015), text_scale = 0.08)
+            self.guiTextureInfoBox = DirectFrame(parent = self.guiTopBar, text_fg = (1, 1, 1, 1), scale = 0.08, pos = (2.5, 0, -0.5))
             self.guiTextureInfoBox.setBin('gui-popup', 0)
             self.guiTextureInfo = {}
-            self.guiTextureInfo['HAT'] = DirectLabel(parent=self.guiTextureInfoBox, text_fg=(1,
-                                                                                             1,
-                                                                                             1,
-                                                                                             1), pos=(0,
-                                                                                                      0,
-                                                                                                      7.5))
-            self.guiTextureInfo['SHIRT'] = DirectLabel(parent=self.guiTextureInfoBox, text_fg=(1,
-                                                                                               1,
-                                                                                               1,
-                                                                                               1), pos=(0,
-                                                                                                        0,
-                                                                                                        6.5))
-            self.guiTextureInfo['VEST'] = DirectLabel(parent=self.guiTextureInfoBox, pos=(0,
-                                                                                          0,
-                                                                                          5.5))
-            self.guiTextureInfo['COAT'] = DirectLabel(parent=self.guiTextureInfoBox, pos=(0,
-                                                                                          0,
-                                                                                          4.5))
-            self.guiTextureInfo['PANT'] = DirectLabel(parent=self.guiTextureInfoBox, pos=(0,
-                                                                                          0,
-                                                                                          3.5))
-            self.guiTextureInfo['BELT'] = DirectLabel(parent=self.guiTextureInfoBox, pos=(0,
-                                                                                          0,
-                                                                                          2.5))
-            self.guiTextureInfo['SOCK'] = DirectLabel(parent=self.guiTextureInfoBox, pos=(0,
-                                                                                          0,
-                                                                                          1.5))
-            self.guiTextureInfo['SHOE'] = DirectLabel(parent=self.guiTextureInfoBox, pos=(0,
-                                                                                          0,
-                                                                                          1.5))
-            self.guiResetButton = DirectButton(parent=self.guiTopBar, relief=DGG.RAISED, pos=(0.7,
-                                                                                              0.0,
-                                                                                              0.0), scale=0.6, command=self.handleReset, frameColor=(1,
-                                                                                                                                                     0,
-                                                                                                                                                     0,
-                                                                                                                                                     0.5), frameSize=(-0.25, 0.25, -0.1, 0.1), borderWidth=(0.02,
-                                                                                                                                                                                                            0.02), text=PLocalizer.ResetButton, text_pos=(0, -0.05), text_scale=0.2, text_align=TextNode.ACenter)
-            self.toggleAnimFrame = DirectFrame(parent=self.guiTopBar, relief=DGG.FLAT, frameSize=(-0.25, 0.25, -0.05, 0.05), frameColor=(0.8,
-                                                                                                                                         0.8,
-                                                                                                                                         0.8,
-                                                                                                                                         0), text=PLocalizer.AnimateFrame, text_scale=0.1, text_pos=(-0.15, -0.025), text_align=TextNode.ACenter, text_fg=(1,
-                                                                                                                                                                                                                                                           1,
-                                                                                                                                                                                                                                                           1,
-                                                                                                                                                                                                                                                           1), text_shadow=(0,
-                                                                                                                                                                                                                                                                            0,
-                                                                                                                                                                                                                                                                            0,
-                                                                                                                                                                                                                                                                            1), scale=1.2, pos=(-0.6, 0, -0.2))
-            self.guiNextToggleAnim = DirectButton(parent=self.toggleAnimFrame, relief=DGG.RAISED, pos=(0.3,
-                                                                                                       0.0,
-                                                                                                       0.0), command=self.handleNextAnim, frameSize=(-0.09, 0.09, -0.05, 0.05), borderWidth=(0.008,
-                                                                                                                                                                                             0.008), text=PLocalizer.MakeAPirateNextAnim, text_pos=(0, -0.015), text_scale=0.1)
+            self.guiTextureInfo['HAT'] = DirectLabel(parent = self.guiTextureInfoBox, text_fg = (1, 1, 1, 1), pos = (0, 0, 7.5))
+            self.guiTextureInfo['SHIRT'] = DirectLabel(parent = self.guiTextureInfoBox, text_fg = (1, 1, 1, 1), pos = (0, 0, 6.5))
+            self.guiTextureInfo['VEST'] = DirectLabel(parent = self.guiTextureInfoBox, pos = (0, 0, 5.5))
+            self.guiTextureInfo['COAT'] = DirectLabel(parent = self.guiTextureInfoBox, pos = (0, 0, 4.5))
+            self.guiTextureInfo['PANT'] = DirectLabel(parent = self.guiTextureInfoBox, pos = (0, 0, 3.5))
+            self.guiTextureInfo['BELT'] = DirectLabel(parent = self.guiTextureInfoBox, pos = (0, 0, 2.5))
+            self.guiTextureInfo['SOCK'] = DirectLabel(parent = self.guiTextureInfoBox, pos = (0, 0, 1.5))
+            self.guiTextureInfo['SHOE'] = DirectLabel(parent = self.guiTextureInfoBox, pos = (0, 0, 1.5))
+            self.guiResetButton = DirectButton(parent = self.guiTopBar, relief = DGG.RAISED, pos = (0.7, 0.0, 0.0), scale = 0.6, command = self.handleReset, frameColor = (1, 0, 0, 0.5), frameSize = (-0.25, 0.25, -0.1, 0.1), borderWidth = (0.02, 0.02), text = PLocalizer.ResetButton, text_pos = (0, -0.05), text_scale = 0.2, text_align = TextNode.ACenter)
+            self.toggleAnimFrame = DirectFrame(parent = self.guiTopBar, relief = DGG.FLAT, frameSize = (-0.25, 0.25, -0.05, 0.05), frameColor = (0.8, 0.8, 0.8, 0), text = PLocalizer.AnimateFrame, text_scale = 0.1, text_pos = (-0.15, -0.025), text_align = TextNode.ACenter, text_fg = (1, 1, 1, 1), text_shadow = (0, 0, 0, 1), scale = 1.2, pos = (-0.6, 0, -0.2))
+            self.guiNextToggleAnim = DirectButton(parent = self.toggleAnimFrame, relief = DGG.RAISED, pos = (0.3, 0.0, 0.0), command = self.handleNextAnim, frameSize = (-0.09, 0.09, -0.05, 0.05), borderWidth = (0.008, 0.008), text = PLocalizer.MakeAPirateNextAnim, text_pos = (0, -0.015), text_scale = 0.1)
             self.guiNextToggleAnim.hide()
-            self.guiLastToggleAnim = DirectButton(parent=self.toggleAnimFrame, relief=DGG.RAISED, pos=(-0.3, 0.0, 0.0), command=self.handleLastAnim, frameSize=(-0.09, 0.09, -0.05, 0.05), borderWidth=(0.008,
-                                                                                                                                                                                                        0.008), text=PLocalizer.MakeAPirateLastAnim, text_pos=(0, -0.015), text_scale=0.1)
+            self.guiLastToggleAnim = DirectButton(parent = self.toggleAnimFrame, relief = DGG.RAISED, pos = (-0.3, 0.0, 0.0), command = self.handleLastAnim, frameSize = (-0.09, 0.09, -0.05, 0.05), borderWidth = (0.008, 0.008), text = PLocalizer.MakeAPirateLastAnim, text_pos = (0, -0.015), text_scale = 0.1)
             self.guiLastToggleAnim.hide()
-            self.pgsAnimSpeed = DirectSlider(parent=self.toggleAnimFrame, text=PLocalizer.AnimSpeedSlider, text_scale=0.6, text_pos=(-4.8, -0.14), text_align=TextNode.ALeft, text_fg=(1,
-                                                                                                                                                                                       1,
-                                                                                                                                                                                       1,
-                                                                                                                                                                                       1), pos=(0.23, 0, -0.1), value=1, borderWidth=(0.04,
-                                                                                                                                                                                                                                      0.04), frameSize=(-3.0, 3.0, -0.3, 0.3), frameColor=(0.5,
-                                                                                                                                                                                                                                                                                           0.5,
-                                                                                                                                                                                                                                                                                           0.5,
-                                                                                                                                                                                                                                                                                           0.3), scale=0.11, range=(0,
-                                                                                                                                                                                                                                                                                                                    1), command=self.handleAnimSpeedSlider)
-            self.pgsAnimSpeed['extraArgs'] = [
-             self.pgsAnimSpeed]
-            self.pgsAnimPos = DirectSlider(parent=self.toggleAnimFrame, pos=(0.23, 0, -0.4), thumb_relief=DGG.FLAT, value=1, thumb_text='1', thumb_text_scale=0.15, scale=0.5, range=(1,
-                                                                                                                                                                                      96), command=self.handleAnimPosSlider)
-            self.pgsAnimPos['extraArgs'] = [
-             self.pgsAnimPos]
+            self.pgsAnimSpeed = DirectSlider(parent = self.toggleAnimFrame, text = PLocalizer.AnimSpeedSlider, text_scale = 0.6, text_pos = (-4.8, -0.14), text_align = TextNode.ALeft, text_fg = (1, 1, 1, 1), pos = (0.23, 0, -0.1), value = 1, borderWidth = (0.04, 0.04), frameSize = (-3.0, 3.0, -0.3, 0.3), frameColor = (0.5, 0.5, 0.5, 0.3), scale = 0.11, range = (0, 1), command = self.handleAnimSpeedSlider)
+            self.pgsAnimSpeed['extraArgs'] = [self.pgsAnimSpeed]
+            self.pgsAnimPos = DirectSlider(parent = self.toggleAnimFrame, pos = (0.23, 0, -0.4), thumb_relief = DGG.FLAT, value = 1, thumb_text = '1', thumb_text_scale = 0.15, scale = 0.5, range = (1, 96), command = self.handleAnimPosSlider)
+            self.pgsAnimPos['extraArgs'] = [self.pgsAnimPos]
             self.pgsAnimPos.hide()
-            self.pgsAvHPos = DirectSlider(parent=self.toggleAnimFrame, text=PLocalizer.AvHPosSlider, text_scale=0.6, text_pos=(-4.8, -0.14), text_align=TextNode.ALeft, text_fg=(1,
-                                                                                                                                                                                 1,
-                                                                                                                                                                                 1,
-                                                                                                                                                                                 1), pos=(0.23, 0, -0.2), value=0, borderWidth=(0.04,
-                                                                                                                                                                                                                                0.04), frameSize=(-3.0, 3.0, -0.3, 0.3), frameColor=(0.5,
-                                                                                                                                                                                                                                                                                     0.5,
-                                                                                                                                                                                                                                                                                     0.5,
-                                                                                                                                                                                                                                                                                     0.3), scale=0.11, range=(-1,
-                                                                                                                                                                                                                                                                                                              6), command=self.handleAvHPosSlider)
-            self.pgsAvHPos['extraArgs'] = [
-             self.pgsAvHPos]
-            self.pgsAvVPos = DirectSlider(parent=self.toggleAnimFrame, text=PLocalizer.AvVPosSlider, text_scale=0.6, text_pos=(-4.8, -0.14), text_align=TextNode.ALeft, text_fg=(1,
-                                                                                                                                                                                 1,
-                                                                                                                                                                                 1,
-                                                                                                                                                                                 1), pos=(0.23, 0, -0.3), value=0, borderWidth=(0.04,
-                                                                                                                                                                                                                                0.04), frameSize=(-3.0, 3.0, -0.3, 0.3), frameColor=(0.5,
-                                                                                                                                                                                                                                                                                     0.5,
-                                                                                                                                                                                                                                                                                     0.5,
-                                                                                                                                                                                                                                                                                     0.3), scale=0.11, range=(-1,
-                                                                                                                                                                                                                                                                                                              6), command=self.handleAvVPosSlider)
-            self.pgsAvVPos['extraArgs'] = [
-             self.pgsAvVPos]
-            self.guiAnimListA_B = DirectOptionMenu(parent=self.toggleAnimFrame, frameSize=(-1, 13, -0.5, 1), scale=0.04, pos=(0.1,
-                                                                                                                              0,
-                                                                                                                              0), textMayChange=1, initialitem=0, items=AnimListA_B, command=self.handleSetAnim)
-            self.guiAnimListC_G = DirectOptionMenu(parent=self.toggleAnimFrame, frameSize=(-1, 13, -0.5, 1), scale=0.04, pos=(0.7,
-                                                                                                                              0,
-                                                                                                                              0), textMayChange=1, initialitem=0, items=AnimListC_G, command=self.handleSetAnim)
-            self.guiAnimListI_Si = DirectOptionMenu(parent=self.toggleAnimFrame, frameSize=(-1, 13, -0.5, 1), scale=0.04, pos=(1.3,
-                                                                                                                               0,
-                                                                                                                               0), textMayChange=1, initialitem=0, items=AnimListI_Si, command=self.handleSetAnim)
-            self.guiAnimListSl_Sz = DirectOptionMenu(parent=self.toggleAnimFrame, frameSize=(-1, 13, -0.5, 1), scale=0.04, pos=(1.9,
-                                                                                                                                0,
-                                                                                                                                0), textMayChange=1, initialitem=0, items=AnimListSl_Sz, command=self.handleSetAnim)
-            self.guiAnimListT_Z = DirectOptionMenu(parent=self.toggleAnimFrame, frameSize=(-1, 13, -0.5, 1), scale=0.04, pos=(2.51,
-                                                                                                                              0,
-                                                                                                                              0), textMayChange=1, initialitem=0, items=AnimListT_Z, command=self.handleSetAnim)
+            self.pgsAvHPos = DirectSlider(parent = self.toggleAnimFrame, text = PLocalizer.AvHPosSlider, text_scale = 0.6, text_pos = (-4.8, -0.14), text_align = TextNode.ALeft, text_fg = (1, 1, 1, 1), pos = (0.23, 0, -0.2), value = 0, borderWidth = (0.04, 0.04), frameSize = (-3.0, 3.0, -0.3, 0.3), frameColor = (0.5, 0.5, 0.5, 0.3), scale = 0.11, range = (-1, 6), command = self.handleAvHPosSlider)
+            self.pgsAvHPos['extraArgs'] = [self.pgsAvHPos]
+            self.pgsAvVPos = DirectSlider(parent = self.toggleAnimFrame, text = PLocalizer.AvVPosSlider, text_scale = 0.6, text_pos = (-4.8, -0.14), text_align = TextNode.ALeft, text_fg = (1, 1, 1, 1), pos = (0.23, 0, -0.3), value = 0, borderWidth = (0.04, 0.04), frameSize = (-3.0, 3.0, -0.3, 0.3), frameColor = (0.5, 0.5, 0.5, 0.3), scale = 0.11, range = (-1, 6), command = self.handleAvVPosSlider)
+            self.pgsAvVPos['extraArgs'] = [self.pgsAvVPos]
+            self.guiAnimListA_B = DirectOptionMenu(parent = self.toggleAnimFrame, frameSize = (-1, 13, -0.5, 1), scale = 0.04, pos = (0.1, 0, 0), textMayChange = 1, initialitem = 0, items = AnimListA_B, command = self.handleSetAnim)
+            self.guiAnimListC_G = DirectOptionMenu(parent = self.toggleAnimFrame, frameSize = (-1, 13, -0.5, 1), scale = 0.04, pos = (0.7, 0, 0), textMayChange = 1, initialitem = 0, items = AnimListC_G, command = self.handleSetAnim)
+            self.guiAnimListI_Si = DirectOptionMenu(parent = self.toggleAnimFrame, frameSize = (-1, 13, -0.5, 1), scale = 0.04, pos = (1.3, 0, 0), textMayChange = 1, initialitem = 0, items = AnimListI_Si, command = self.handleSetAnim)
+            self.guiAnimListSl_Sz = DirectOptionMenu(parent = self.toggleAnimFrame, frameSize = (-1, 13, -0.5, 1), scale = 0.04, pos = (1.9, 0, 0), textMayChange = 1, initialitem = 0, items = AnimListSl_Sz, command = self.handleSetAnim)
+            self.guiAnimListT_Z = DirectOptionMenu(parent = self.toggleAnimFrame, frameSize = (-1, 13, -0.5, 1), scale = 0.04, pos = (2.51, 0, 0), textMayChange = 1, initialitem = 0, items = AnimListT_Z, command = self.handleSetAnim)
             self.loadNPCButton()
             self.NPCGui = NPCGUI.NPCGUI(self)
+        
         self.pirate = DynamicHuman.DynamicHuman()
         if self.avList[self.index] and self.avList[self.index] != OTPGlobals.AvatarSlotAvailable:
             self.pirate.style = self.avList[self.index].style
+        elif self.chooseFemale:
+            self.pirate.style = HumanDNA.HumanDNA('f')
         else:
-            if self.chooseFemale:
-                self.pirate.style = HumanDNA.HumanDNA('f')
-            else:
-                self.pirate.style = HumanDNA.HumanDNA()
-            self.navyDNA = HumanDNA
+            self.pirate.style = HumanDNA.HumanDNA()
+        self.navyDNA = HumanDNA
         self.loadPirate()
         self.genderGui = GenderGUI.GenderGUI(self)
         self.bodyGui = BodyGUI.BodyGUI(self)
@@ -788,6 +720,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         if self.wantNPCViewer:
             self.tattooGui = TattooGUI.TattooGUI(self)
             self.jewelryGui = JewelryGUI.JewelryGUI(self)
+        
         self.headGui.restore()
         self.addPage(PLocalizer.MakeAPiratePageNames[0])
         self.addPage(PLocalizer.MakeAPiratePageNames[1])
@@ -801,6 +734,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         if self.wantNPCViewer:
             self.addPage(PLocalizer.MakeAPiratePageNames[9])
             self.addPage(PLocalizer.MakeAPiratePageNames[10])
+        
         self.setPage(PLocalizer.MakeAPiratePageNames[0])
         self.setPage(PLocalizer.MakeAPiratePageNames[1])
         self.setPage(PLocalizer.MakeAPiratePageNames[2])
@@ -822,11 +756,10 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         if self.wantNPCViewer:
             self.pageTabs[9].hide()
             self.pageTabs[10].hide()
-        return
 
     def randomMe(self):
         self.genderGui.randomPick()
-
+    
     def loadPirate(self):
         self.unloadPirate()
         self.pirate.setDNAString(self.pirate.style)
@@ -849,6 +782,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
                 self.pirate.useLOD(1000)
             elif self.npcViewerLOD == 2:
                 self.pirate.useLOD(500)
+
         self.pirate.show()
 
     def unloadPirate(self):
@@ -863,6 +797,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.skeleton.generateSkeleton()
         if self.isNPCEditor or self.wantNPCViewer:
             self.skeleton.disableBlend()
+        
         self.avatar = self.skeleton.model
 
     def unloadSkeleton(self):
@@ -870,7 +805,6 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             self.skeleton.hide()
             self.skeleton.delete()
             self.skeleton = None
-        return
 
     def unload(self):
         self.charGui.removeNode()
@@ -882,7 +816,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             camera.reparentTo(render)
             self.avatarDummyNode.removeNode()
             del self.avatarDummyNode
-
+        
         self.genderGui.unload()
         self.bodyGui.unload()
         self.headGui.unload()
@@ -893,12 +827,12 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         if self.wantNPCViewer:
             self.tattooGui.unload()
             self.jewelryGui.unload()
-
+        
         self.pirate.stopBlink()
         if hasattr(self, 'jail'):
             self.jail.removeNode()
             del self.jail
-
+        
         if self.entered and not self.noJailLight:
             self.ambientLight.unload()
             self.spotLight1.unload()
@@ -908,7 +842,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             del self.spotLight1
             del self.spotLight2
             del self.spotLight3
-
+        
         if self.isNPCEditor or self.wantNPCViewer or self.wantMarketingViewer:
             self.guiTopBar.destroy()
             del self.guiTopBar
@@ -916,7 +850,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             del self.guiLastToggleAnim
             del self.toggleAnimFrame
             del self.guiResetButton
-
+        
         self.guiBottomBar.destroy()
         del self.guiBottomBar
         del self.guiCancelButton
@@ -934,15 +868,15 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         del self.soundBack
         if hasattr(self, 'fsm'):
             del self.fsm
-
+        
         del self.avatar
         del self.newPotAv
         if self.isNPCEditor:
             self.pirate.delete()
-
+        
         del self.pirate
         self.ignoreAll()
-
+    
     def getDNA(self):
         return self.dnastring
 
@@ -951,45 +885,43 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.shopsVisited = []
         if self.isNPCEditor:
             self.piratesEditor.updateNPC('Cancel')
-        base.transitions.fadeOut(finishIval=EventInterval(self.doneEvent))
+        
+        base.transitions.fadeOut(finishIval = EventInterval(self.doneEvent))
 
     def handleDone(self):
         self.doneStatus = 'created'
         if hasattr(self, 'confirmInvalidName'):
             self.confirmInvalidName.destroy()
             del self.confirmInvalidName
-
+        
         self.nameGui._checkTypeANameAsPickAName()
-
-        if hasattr(base, 'cr') and base.cr or self.nameGui.cr is None:
+        if hasattr(base, 'pe') and base.pe or self.nameGui.cr is None:
             self._handleNameOK()
-
         elif self.nameGui.hasCustomName():
             if self._waitForServerDlg:
                 self._waitForServerDlg.destroy()
                 self._waitForServerDlg = None
-
-            self._waitForServerDlg = PDialog.PDialog(text=PLocalizer.MakeAPirateWait, style=OTPDialog.NoButtons)
+            
+            self._waitForServerDlg = PDialog.PDialog(text = PLocalizer.MakeAPirateWait, style = OTPDialog.NoButtons)
             self.nameGui.getTypeANameProblem(self._handleNameProblem)
-
         else:
             self._handleNameOK()
-
+    
     def _handleNameProblem(self, problemStr):
         if self._waitForServerDlg:
             self._waitForServerDlg.destroy()
             self._waitForServerDlg = None
-
+        
         if problemStr:
-
+            
             def confirmInvalidName(value):
                 self.confirmInvalidName.destroy()
                 del self.confirmInvalidName
 
-            self.confirmInvalidName = PDialog.PDialog(text=problemStr, style=OTPDialog.Acknowledge, command=confirmInvalidName)
+            self.confirmInvalidName = PDialog.PDialog(text = problemStr, style = OTPDialog.Acknowledge, command = confirmInvalidName)
         else:
             self._handleNameOK()
-
+    
     def _handleNameOK(self):
         self.bookModel.stash()
         self.guiDoneButton.hide()
@@ -1002,56 +934,57 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         if self.wantNPCViewer:
             self.tattooGui.save()
             self.jewelryGui.save()
-
+        
         if self.skipTutorial:
             newPotAv = PotentialAvatar.PotentialAvatar(0, [
                 'dbp',
                 '',
                 '',
                 ''], self.pirate.style, self.index, 0)
-
             self.newPotAv = newPotAv
-
+        
         if self.isNPCEditor:
             self.editorAvatar.setDNAString(self.pirate.style)
             self.piratesEditor.updateNPC('Save')
             self.exit()
             self.unload()
-
-        def sendDone(value=1):
+        
+        def sendDone(value = 1):
             messenger.send(self.doneEvent)
             base.transitions.fadeIn(1.0)
 
-        def chooseAv(avId):
-            if not avId:
-                self.notify.error('An error occured when trying to create avatar!')
-
+        def populateAv(avId, subId):
             self.avId = avId
-            sendDone()
+            self.acceptOnce('avatarPopulated', sendDone)
+            if self.nameGui.customName:
+                base.cr.sendWishName(avId, self.pirate.style.name)
+                base.cr.avatarManager.sendRequestPopulateAvatar(avId, self.pirate.style, 0, 0, 0, 0, 0)
+            else:
+                name = self.nameGui.getNumericName()
+                base.cr.avatarManager.sendRequestPopulateAvatar(avId, self.pirate.style, 1, name[0], name[1], name[2], name[3])
 
         def createAv():
-            self.acceptOnce('createdNewAvatar', chooseAv)
-            base.cr.csm.sendCreateAvatar(self.pirate.style, '', self.index, self.pirate.style.name)
+            self.acceptOnce('createdNewAvatar', populateAv)
+            base.cr.avatarManager.sendRequestCreateAvatar(self.subId)
 
         def acknowledgeTempName(value):
             self.confirmTempName.destroy()
             self.confirmTempName = None
             if self.isTutorial or self.isNPCEditor or self.wantNPCViewer:
-                base.transitions.fadeOut(finishIval=Func(sendDone))
+                base.transitions.fadeOut(finishIval = Func(sendDone))
             else:
-                base.transitions.fadeOut(finishIval=Func(createAv))
+                base.transitions.fadeOut(finishIval = Func(createAv))
 
         if self.nameGui.customName and not self.isNPCEditor and not self.confirmTempName:
-            self.confirmTempName = PDialog.PDialog(text=PLocalizer.TempNameIssued, style=OTPDialog.Acknowledge, command=acknowledgeTempName)
+            self.confirmTempName = PDialog.PDialog(text = PLocalizer.TempNameIssued, style = OTPDialog.Acknowledge, command = acknowledgeTempName)
+        elif self.isTutorial or self.isNPCEditor or self.wantNPCViewer:
+            base.transitions.fadeOut(finishIval = Func(sendDone))
         else:
-            if self.isTutorial or self.isNPCEditor or self.wantNPCViewer:
-                base.transitions.fadeOut(finishIval=Func(sendDone))
-            else:
-                base.transitions.fadeOut(finishIval=Func(createAv))
-
+            base.transitions.fadeOut(finishIval = Func(createAv))
+    
     def toggleSlide(self):
         self.slide = 1 - self.slide
-
+    
     def enterNameShop(self):
         self.pgsZoom['value'] = 0.0
         self.nameGui.enter()
@@ -1064,7 +997,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
 
     def resetName(self):
         self.nameGui.reset()
-
+    
     def makeRandomName(self):
         self.nameGui.makeRandomName()
 
@@ -1073,7 +1006,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
 
     def makeRandomGender(self):
         self.genderGui.randomPick()
-
+    
     def enterBodyShop(self):
         self.shop = BODYSHOP
         self.pgsZoom['value'] = 0.0
@@ -1083,21 +1016,21 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         base.disableMouse()
         if BODYSHOP not in self.shopsVisited:
             self.shopsVisited.append(BODYSHOP)
-
+    
     def exitBodyShop(self):
         self.ignore('BodyShop-done')
         self.genderGui.exit()
         self.bodyGui.exit()
-
+    
     def handleBodyShopDone(self):
         pass
 
     def resetBody(self):
         self.bodyGui.reset()
-
+    
     def makeRandomBody(self):
         self.bodyGui.randomPick()
-
+    
     def enterHeadShop(self):
         self.shop = HEADSHOP
         self.pgsZoom.node().setValue(1)
@@ -1106,20 +1039,20 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         base.disableMouse()
         if HEADSHOP not in self.shopsVisited:
             self.shopsVisited.append(HEADSHOP)
-
+    
     def exitHeadShop(self):
         self.ignore('HeadShop-done')
         self.headGui.shape.exit()
-
+    
     def handleHeadShopDone(self):
         pass
-
+    
     def resetHead(self):
         self.headGui.shape.reset()
-
+    
     def makeRandomHead(self):
         self.headGui.shape.randomPick()
-
+    
     def enterMouthShop(self):
         self.shop = MOUTHSHOP
         self.pgsZoom.node().setValue(1)
@@ -1141,7 +1074,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
 
     def makeRandomMouth(self):
         self.headGui.mouth.randomPick()
-
+    
     def enterEyesShop(self):
         self.shop = EYESSHOP
         self.pgsZoom.node().setValue(1)
@@ -1157,13 +1090,13 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
 
     def handleEyesShopDone(self):
         pass
-
+    
     def resetEyes(self):
         self.headGui.eyes.reset()
-
+    
     def makeRandomEyes(self):
         self.headGui.eyes.randomPick()
-
+    
     def enterNoseShop(self):
         self.shop = NOSESHOP
         self.pgsZoom.node().setValue(1)
@@ -1176,13 +1109,13 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
     def exitNoseShop(self):
         self.ignore('NoseShop-done')
         self.headGui.nose.exit()
-
+    
     def handleNoseShopDone(self):
         pass
-
+    
     def resetNose(self):
         self.headGui.nose.reset()
-
+    
     def makeRandomNose(self):
         self.headGui.nose.randomPick()
 
@@ -1194,14 +1127,14 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         base.disableMouse()
         if EARSHOP not in self.shopsVisited:
             self.shopsVisited.append(EARSHOP)
-
+    
     def exitEarShop(self):
         self.ignore('EarShop-done')
         self.headGui.ear.exit()
 
     def handleEarShopDone(self):
         pass
-
+    
     def resetEar(self):
         self.headGui.ear.reset()
 
@@ -1220,16 +1153,16 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
     def exitHairShop(self):
         self.ignore('HairShop-done')
         self.hairGui.exit()
-
+    
     def handleHairShopDone(self):
         pass
-
+    
     def resetHair(self):
         self.hairGui.reset()
-
+    
     def makeRandomHair(self):
         self.hairGui.randomPick()
-
+    
     def enterClothesShop(self):
         self.shop = CLOTHESSHOP
         self.pgsZoom.node().setValue(0.0)
@@ -1245,13 +1178,13 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
 
     def handleClothesShopDone(self):
         pass
-
+    
     def resetClothing(self):
         self.clothesGui.reset()
-
+    
     def makeRandomClothing(self):
         self.clothesGui.randomPick()
-
+    
     def enterTattooShop(self):
         self.shop = TATTOOSHOP
         self.pgsZoom.node().setValue(0.0)
@@ -1264,7 +1197,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
     def exitTattooShop(self):
         self.ignore('TattooShop-done')
         self.tattooGui.exit()
-
+    
     def handleTattooShopDone(self):
         pass
 
@@ -1310,7 +1243,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.showPageTabs()
         self.setPage(PLocalizer.MakeAPiratePageNames[0])
         self.NPCGui.exit()
-
+    
     def handleNPC(self):
         self.avatarType = AVATAR_SKELETON
         self.unloadPirate()
@@ -1321,7 +1254,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.NavyButton['relief'] = DGG.RAISED
         self.hidePageTabs()
         self.NPCGui.enter()
-
+    
     def handleNavy(self):
         self.avatarType = AVATAR_NAVY
         self.unloadSkeleton()
@@ -1365,12 +1298,15 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         idx = self.currPageIndex + 1
         if idx > self.numShops - 1:
             return
+
         if idx == self.numShops - 1:
             self.guiNextButton.hide()
             self.guiDoneButton.show()
+
         if idx >= self.lowestPage:
             self.lowestPage = idx
             self.pageTabs[idx].show()
+
         self.setPage(PLocalizer.MakeAPiratePageNames[idx])
 
     def handleZoomSlider(self, pgs):
@@ -1380,8 +1316,9 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         if self.pirate:
             self.pirate.loop('idle')
             self.idleFSM.request('default')
+        
         return Task.done
-
+    
     def handleAltIdle(self, task):
         if self.pirate:
             r = self.pirate.randGen.random() * 10
@@ -1398,22 +1335,24 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
                 anim = 'primp_idle'
             else:
                 anim = 'idle_flex'
+        
         self.pirate.play(anim)
         dur = self.pirate.getDuration(anim)
+        
         try:
             taskMgr.doMethodLater(dur, self.restoreIdle, 'avCreate-restoreIdle')
         except:
             self.notify.warning("task to restore idle didn't work")
-            self.restoreIdle
 
         return Task.done
-
+    
     def altIdleTask(self, task):
         if self.pirate:
             if self.idleFSM.getCurrentState().getName() == 'default':
                 r = self.pirate.randGen.random()
                 taskMgr.doMethodLater(r * 10 + 20, self.handleAltIdle, 'avCreate-altIdle')
                 self.idleFSM.request('alt1')
+
         return Task.cont
 
     def enterIdleFSMDefault(self):
@@ -1458,9 +1397,10 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
                 else:
                     self.pirate.setControlEffect('idle_centered', 0)
                     self.pirate.setControlEffect('idle', 1)
-        elif not self.isNPCEditor and not self.wantNPCViewer:
-            self.pirate.setControlEffect('idle_centered', 0)
-            self.pirate.setControlEffect('idle', 1)
+        else:
+            if not self.isNPCEditor and not self.wantNPCViewer:
+                self.pirate.setControlEffect('idle_centered', 0)
+                self.pirate.setControlEffect('idle', 1)
             value = -value
             deltaPos = (self.camZoomOutPos - self.camInitPos) * value
             deltaHpr = (self.camZoomOutHpr - self.camInitHpr) * value
@@ -1483,7 +1423,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         else:
             self.lastRot = value * 180 + self.initH
         self.rotatePirate()
-
+    
     def rotatePirate(self):
         hpr = self.pirate.getHpr()
         self.pirate.setHpr(self.lastRot, hpr[1], hpr[2])
@@ -1503,8 +1443,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         if not base.mouseWatcherNode.hasMouse():
             pass
         else:
-            winSize = (
-             base.win.getXSize(), base.win.getYSize())
+            winSize = (base.win.getXSize(), base.win.getYSize())
             mouseData = base.win.getPointer(0)
             if mouseData.getX() > winSize[0] or mouseData.getY() > winSize[1]:
                 pass
@@ -1516,12 +1455,12 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
                 value = max(-1, min(1, value + dx * 0.004))
                 self.pgsRotate['value'] = value
         return Task.cont
-
+    
     def _handleWheelUp(self):
         value = self.pgsZoom['value']
         value = min(1, max(-1, value + 0.1))
         self.pgsZoom['value'] = value
-
+    
     def _handleWheelDown(self):
         value = self.pgsZoom['value']
         value = min(1, max(-1, value - 0.1))
@@ -1530,46 +1469,48 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
     def handleSpin(self, value):
         if not hasattr(self, 'oldSpinValue'):
             self.oldSpinValue = 0
+        
         if value > self.oldSpinValue:
             if self.pirate.getCurrentAnim() != 'spin_right':
                 self.pirate.loop('spin_right')
-        else:
-            if value < self.oldSpinValue:
-                if self.pirate.getCurrentAnim() != 'spin_left':
-                    self.pirate.loop('spin_left')
-            else:
-                if self.pirate.getCurrentAnim() != 'idle':
-                    self.pirate.loop('idle')
+            
+        elif value < self.oldSpinValue:
+            if self.pirate.getCurrentAnim() != 'spin_left':
+                self.pirate.loop('spin_left')
+            
+        elif self.pirate.getCurrentAnim() != 'idle':
+            self.pirate.loop('idle')
+        
         self.oldSpinValue = value
-
+    
     def handleAnimSpeedSlider(self, pgs):
         value = pgs['value']
         if self.skeleton:
             avatar = self.skeleton
         else:
             avatar = self.pirate
-        avatar.setPlayRate(rate=value, animName=AnimList[self.lastAnim])
-
+        avatar.setPlayRate(rate = value, animName = AnimList[self.lastAnim])
+    
     def handleAnimPosSlider(self, pgs):
         pass
-
+    
     def handleAvHPosSlider(self, pgs):
         if self.aPos == None:
             return
+        
         value = pgs['value'] + self.aPos.getX()
         self.pirate.setX(value)
         if self.skeleton:
             self.skeleton.setX(value)
-        return
-
+    
     def handleAvVPosSlider(self, pgs):
         if self.aPos == None:
             return
+        
         value = pgs['value'] + self.aPos.getZ()
         self.pirate.setZ(value)
         if self.skeleton:
             self.skeleton.setZ(value)
-        return
 
     def handleSetAnim(self, pgs):
         self.lastAnim = AnimList.index(pgs)
@@ -1602,6 +1543,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
                 self.makeRandomClothing()
             elif self.shop == NAMESHOP:
                 self.makeRandomName()
+            
         elif self.avatarType == AVATAR_SKELETON:
             self.NPCGui.randomPick()
         elif self.avatarType == AVATAR_NAVY:
@@ -1642,6 +1584,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
                 self.resetTattoo()
             elif self.shop == JEWELRYSHOP:
                 self.resetJewelry()
+            
         elif self.avatarType == AVATAR_SKELETON:
             self.NPCGui.reset()
         elif self.avatarType == AVATAR_NAVY:
@@ -1654,12 +1597,12 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             elif self.shop == HAIRSHOP:
                 self.resetHair()
 
-    def addPage(self, pageName='Page'):
+    def addPage(self, pageName = 'Page'):
         self.addPageTab(pageName)
 
-    def addPageTab(self, pageName='Page'):
+    def addPageTab(self, pageName = 'Page'):
         tabIndex = len(self.pageTabs)
-
+        
         def goToPage():
             self.setPage(pageName)
 
@@ -1668,60 +1611,70 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         icon = '**/' + MakeAPiratePageIcons[pageName]
         icon_down = '**/' + MakeAPiratePageIcons[pageName] + '_over'
         icon_over = '**/' + MakeAPiratePageIcons[pageName] + '_over'
-        pageTab = DirectButton(parent=self.bookModel, relief=None, image=(self.charGui.find('**/chargui_frame02'), self.charGui.find('**/chargui_frame02_down'), self.charGui.find('**/chargui_frame02_over')), geom=(self.charGui.find(icon), self.charGui.find(icon_down), self.charGui.find(icon_over)), pos=(-1.475, 0, yOffset), scale=0.87, command=goToPage)
+        pageTab = DirectButton(parent = self.bookModel,
+                               relief = None,
+                               image = (self.charGui.find('**/chargui_frame02'),
+                                        self.charGui.find('**/chargui_frame02_down'),
+                                        self.charGui.find('**/chargui_frame02_over')),
+                               geom = (self.charGui.find(icon),
+                                       self.charGui.find(icon_down),
+                                       self.charGui.find(icon_over)),
+                               pos = (-1.475, 0, yOffset),
+                               scale = 0.87,
+                               command = goToPage)
         self.pageNames.append(pageName)
         self.pageTabs.append(pageTab)
-        return
 
     def setPage(self, pageName):
         nextPageIndex = self.pageNames.index(pageName)
         if self.currPageIndex is not None:
             if self.currPageIndex == nextPageIndex:
                 return
+            
             messenger.send(ShopNames[self.currPageIndex] + '-done')
+        
         self.pgsRotate.setValue(0)
         self.currPageIndex = self.pageNames.index(pageName)
         self.setPageTabIndex(self.currPageIndex)
         self.request(ShopNames[self.currPageIndex])
-        return
 
     def setPageTabIndex(self, pageTabIndex):
         if self.currPageTabIndex is not None and pageTabIndex != self.currPageTabIndex:
             self.pageTabs[self.currPageTabIndex].clearColorScale()
+        
         self.currPageTabIndex = pageTabIndex
         self.pageTabs[self.currPageTabIndex].setColorScale(1, 1, 0.5, 1)
-        return
 
     def showPageTabs(self):
         for i in range(0, len(self.pageTabs)):
             self.pageTabs[i].show()
-
+    
     def hidePageTabs(self):
         if self.currPageTabIndex == BODYSHOP:
             self.exitBodyShop()
-        else:
-            if self.currPageTabIndex == HEADSHOP:
-                self.exitHeadShop()
-            elif self.currPageTabIndex == MOUTHSHOP:
-                self.exitMouthShop()
-            elif self.currPageTabIndex == EYESSHOP:
-                self.exitEyesShop()
-            elif self.currPageTabIndex == NOSESHOP:
-                self.exitNoseShop()
-            elif self.currPageTabIndex == EARSHOP:
-                self.exitEarShop()
-            elif self.currPageTabIndex == HAIRSHOP:
-                self.exitHairShop()
-            elif self.currPageTabIndex == CLOTHESSHOP:
-                self.exitClothesShop()
-            elif self.currPageTabIndex == NAMESHOP:
-                self.exitNameShop()
-            elif self.currPageTabIndex == TATTOOSHOP:
-                self.exitTattoosShop()
-            elif self.currPageTabIndex == JEWELRYSHOP:
-                self.exitJewelryShop()
-            for i in range(0, len(self.pageTabs)):
-                self.pageTabs[i].hide()
+        elif self.currPageTabIndex == HEADSHOP:
+            self.exitHeadShop()
+        elif self.currPageTabIndex == MOUTHSHOP:
+            self.exitMouthShop()
+        elif self.currPageTabIndex == EYESSHOP:
+            self.exitEyesShop()
+        elif self.currPageTabIndex == NOSESHOP:
+            self.exitNoseShop()
+        elif self.currPageTabIndex == EARSHOP:
+            self.exitEarShop()
+        elif self.currPageTabIndex == HAIRSHOP:
+            self.exitHairShop()
+        elif self.currPageTabIndex == CLOTHESSHOP:
+            self.exitClothesShop()
+        elif self.currPageTabIndex == NAMESHOP:
+            self.exitNameShop()
+        elif self.currPageTabIndex == TATTOOSHOP:
+            self.exitTattoosShop()
+        elif self.currPageTabIndex == JEWELRYSHOP:
+            self.exitJewelryShop()
+        
+        for i in range(0, len(self.pageTabs)):
+            self.pageTabs[i].hide()
 
     def handleRandomAll(self):
         self.overwriteCurrentUndo()
@@ -1751,32 +1704,34 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             idx = 0
             if self.pirate.gender == 'f':
                 idx = 1
+            
             optionsLeft = len(self.JSD_ANYTIME[idx])
             if optionsLeft and random.choice([0, 1, 2, 3]) == 1:
                 if self.lastDialog:
                     self.lastDialog.stop()
+                
                 choice = random.choice(range(0, optionsLeft))
                 dialog = self.JSD_ANYTIME[idx][choice]
                 base.playSfx(dialog)
                 self.lastDialog = dialog
                 self.JSD_ANYTIME[idx].remove(dialog)
-        else:
-            if self.avatarType == AVATAR_SKELETON:
-                self.NPCGui.randomPick()
-            else:
-                if self.avatarType == AVATAR_NAVY:
-                    if self.shop == BODYSHOP:
-                        self.makeRandomBody()
-                        self.makeRandomHead()
-                        self.makeRandomHair()
-                    elif self.shop == HEADSHOP:
-                        self.makeRandomHead()
-                    elif self.shop == HAIRSHOP:
-                        self.makeRandomHair()
+            
+        elif self.avatarType == AVATAR_SKELETON:
+            self.NPCGui.randomPick()
+        elif self.avatarType == AVATAR_NAVY:
+            if self.shop == BODYSHOP:
+                self.makeRandomBody()
+                self.makeRandomHead()
+                self.makeRandomHair()
+            elif self.shop == HEADSHOP:
+                self.makeRandomHead()
+            elif self.shop == HAIRSHOP:
+                self.makeRandomHair()
+
         self.inRandomAll = False
         self.appendUndo()
         self.undoLevel[self.pirate.style.gender] = len(self.undoList[self.pirate.style.gender]) - 1
-
+    
     def handleQuarterView(self, extraArgs):
         hpr = self.pirate.getHpr()
         if extraArgs != None:
@@ -1785,25 +1740,26 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             fudge = self.initH
             if self.isNPCEditor:
                 fudge = 0
+            
             if hCam < 0:
                 if hCam >= -180:
                     rotX = fudge + 45
-            else:
-                if hCam <= 180:
-                    rotX = fudge - 45
+                
+            elif hCam <= 180:
+                rotX = fudge - 45
+            
             self.pirate.setHpr(rotX, hpr[1], hpr[2])
         else:
             self.pirate.setHpr(self.lastRot, hpr[1], hpr[2])
-        return
 
     def enableRandom(self):
         self.guiRandomButton['state'] = 'normal'
         self.guiRandomButton.setColorScale(Vec4(1, 1, 1, 1))
-
+    
     def disableRandom(self):
         self.guiRandomButton['state'] = 'disabled'
         self.guiRandomButton.setColorScale(Vec4(0.3, 0.3, 0.3, 1))
-
+    
     def storeUndo(self):
         gender = self.pirate.style.gender
         self.bodyGui.save()
@@ -1818,7 +1774,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
 
     def undo(self):
         self.boundUndo()
-
+    
     def redo(self):
         self.boundRedo()
 
@@ -1854,6 +1810,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.refresh()
         if self.undoLevel[gender] == 0:
             self.prevShuffleButton['state'] = DGG.DISABLED
+        
         if self.undoLevel[gender] < len(self.undoList[gender]) - 1:
             self.nextShuffleButton['state'] = DGG.NORMAL
 
@@ -1867,8 +1824,10 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             self.pirate.style = self.pirate.style
             self.undoLevel[gender] += 1
             self.refresh()
+        
         if self.undoLevel[gender] == len(self.undoList[gender]) - 1:
             self.nextShuffleButton['state'] = DGG.DISABLED
+        
         if self.undoLevel[gender] > 0:
             self.prevShuffleButton['state'] = DGG.NORMAL
 
@@ -1879,6 +1838,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.nextShuffleButton['state'] = DGG.DISABLED
         if self.undoLevel[gender] < listLen - 1:
             self.nextShuffleButton['state'] = DGG.NORMAL
+        
         if self.undoLevel[gender] > 0:
             self.prevShuffleButton['state'] = DGG.NORMAL
 
@@ -1897,14 +1857,14 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.guiIdStates[guiId] = element['value']
         self.accept('release-mouse1-%s' % guiId, self.receivedRelease, extraArgs=[element])
         self.accept('release-mouse1-%s' % thumbId, self.receivedRelease, extraArgs=[element])
-
+    
     def startCompositeAction(self):
         self.compositeAction = 1
-
+    
     def endCompositeAction(self):
         self.compositeAction = 0
         self.storeUndo()
-
+    
     def refresh(self):
         self.pirate.setDNA(self.pirate.style)
         self.pirate.generateHuman(self.pirate.style.gender)
@@ -1917,24 +1877,27 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
         self.bodyGui.restore()
         self.headGui.restore()
         self.clothesGui.restore()
-
+    
     def playJackDialogOnClothes(self, clothesType):
         if self.inRandomAll:
             return
+        
         choice = random.choice(range(12))
         if choice != 0:
             return
+        
         optionsLeft = len(self.JSD_CLOTHING[self.pirate.gender][clothesType])
         if optionsLeft:
             if self.lastDialog:
                 if self.lastDialog.status() == AudioSound.PLAYING:
                     return
+
             choice = random.choice(range(0, optionsLeft))
             dialog = self.JSD_CLOTHING[self.pirate.gender][clothesType][choice]
             base.playSfx(dialog)
             self.lastDialog = dialog
             self.JSD_CLOTHING[self.pirate.gender][clothesType].remove(dialog)
-
+    
     def refreshAnim(self):
         self.pirate.loop(AnimList[self.lastAnim])
 
@@ -1944,7 +1907,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             self.PirateButton.hide()
             self.NPCButton.hide()
             self.NavyButton.hide()
-
+    
     def marketingOff(self):
         if self.entered and self.wantMarketingViewer:
             self.guiTopBar.hide()
@@ -1952,3 +1915,4 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
     def toggleGUI(self):
         render2d.toggleVis()
         self.pirate.findAllMatches('**/drop*').getPath(1).toggleVis()
+

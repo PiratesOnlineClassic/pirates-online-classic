@@ -7,7 +7,8 @@ from direct.fsm import State
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
 from direct.task import Task
-from panda3d.core import TextEncoder, TextNode
+from pandac.PandaModules import *
+from pandac.PandaModules import TextEncoder
 from otp.namepanel import NameCheck
 from otp.otpbase import OTPLocalizer as OL
 from pirates.piratesbase import PLocalizer as PL
@@ -19,7 +20,6 @@ from pirates.leveleditor import NPCList
 from pirates.makeapirate.PCPickANamePattern import PCPickANamePattern
 from direct.distributed.MsgTypes import *
 from direct.distributed import PyDatagram
-
 MAX_NAME_WIDTH = 9
 
 class NameGUI(DirectFrame, StateData.StateData):
@@ -30,11 +30,15 @@ class NameGUI(DirectFrame, StateData.StateData):
     __MODE_INIT = 0
     __MODE_TYPEANAME = 1
     __MODE_PICKANAME = 2
-    POSSIBLE_NAME_COMBOS = {'first-last': [0, 1, 1]}
+    POSSIBLE_NAME_COMBOS = {
+        'first-last': [
+            0,
+            1,
+            1]}
     text = TextNode('text')
     text.setFont(PiratesGlobals.getInterfaceFont())
-
-    def __init__(self, main=None, independent=False):
+    
+    def __init__(self, main = None, independent = False):
         DirectFrame.__init__(self)
         DirectFrame.initialiseoptions(self, NameGUI)
         self.charGui = loader.loadModel('models/gui/char_gui')
@@ -47,23 +51,26 @@ class NameGUI(DirectFrame, StateData.StateData):
         self.independent = independent
         if self.independent:
             np = NodePath(PlaneNode('p', Plane(Vec4(1, 0, 0, 0))))
-            self.mainFrame = DirectFrame(parent=base.a2dBottomRight, relief=None)
-            self.bookModel = DirectFrame(parent=self.mainFrame, image=self.charGui.find('**/chargui_base'), image_pos=(-0.13, 0, 0), relief=None)
+            self.mainFrame = DirectFrame(parent = base.a2dBottomRight, relief = None)
+            self.bookModel = DirectFrame(parent = self.mainFrame, image = self.charGui.find('**/chargui_base'), image_pos = (-0.13, 0, 0), relief = None)
             self.bookModel.setClipPlane(np)
             np.setX(-1.13)
             np.reparentTo(self.bookModel)
             self.mainFrame.setScale(0.42)
-            self.mainFrame.setX(-0.76)
+            self.mainFrame.setX(-.76)
             self.mainFrame.setZ(1.2)
-            self._parent = self.bookModel
+            self.parent = self.bookModel
             self.avatar = main
         else:
-            self._parent = main.bookModel
+            self.parent = main.bookModel
             self.avatar = main.avatar
         self.mode = self.__MODE_INIT
         self.wantTypeAName = True
         self.names = [
-         '', '', '', '']
+            '',
+            '',
+            '',
+            '']
         self.savedGender = None
         self.savedMaleName = None
         self.savedMaleActiveStates = None
@@ -82,31 +89,32 @@ class NameGUI(DirectFrame, StateData.StateData):
         self.pickANameGui = []
         self.typeANameGui = []
         self.fsm = ClassicFSM.ClassicFSM('NameShop', [
-         State.State('Init', self.enterInit, self.exitInit, [
-          'Pay']),
-         State.State('Pay', self.enterPay, self.exitPay, [
-          'PickAName', 'TypeAName']),
-         State.State('PickAName', self.enterPickAName, self.exitPickAName, [
-          'TypeAName', 'Done']),
-         State.State('TypeAName', self.enterTypeAName, self.exitTypeAName, [
-          'PickAName', 'Approved', 'Accepted', 'Rejected', 'Done']),
-         State.State('Approved', self.enterApproved, self.exitApproved, [
-          'PickAName', 'Done']),
-         State.State('Accepted', self.enterAccepted, self.exitAccepted, [
-          'Done']),
-         State.State('Rejected', self.enterRejected, self.exitRejected, [
-          'TypeAName']),
-         State.State('Done', self.enterDone, self.exitDone, [
-          'Init', 'Pay'])], 'Init', 'Done')
+            State.State('Init', self.enterInit, self.exitInit, ['Pay']),
+            State.State('Pay', self.enterPay, self.exitPay,
+                        ['PickAName', 'TypeAName']),
+            State.State('PickAName', self.enterPickAName, self.exitPickAName,
+                        ['TypeAName', 'Done']),
+            State.State(
+                'TypeAName', self.enterTypeAName, self.exitTypeAName,
+                ['PickAName', 'Approved', 'Accepted', 'Rejected', 'Done']),
+            State.State('Approved', self.enterApproved, self.exitApproved,
+                        ['PickAName', 'Done']),
+            State.State('Accepted', self.enterAccepted, self.exitAccepted,
+                        ['Done']),
+            State.State('Rejected', self.enterRejected, self.exitRejected,
+                        ['TypeAName']),
+            State.State('Done', self.enterDone, self.exitDone, ['Init', 'Pay'])
+        ], 'Init', 'Done')
         self.fsm.enterInitialState()
         self.initNameLists()
+
         if self.independent or not self.main.wantNPCViewer:
             self.makeRandomName()
-        return
-
+    
     def initNameLists(self):
         buf = [
-         '        ', '        ']
+            '        ',
+            '        ']
         self.nicknamesMale = PL.PirateNames_NickNamesGeneric + PL.PirateNames_NickNamesMale
         self.nicknamesFemale = PL.PirateNames_NickNamesGeneric + PL.PirateNames_NickNamesFemale
         self.firstNamesMale = PL.PirateNames_FirstNamesGeneric + PL.PirateNames_FirstNamesMale
@@ -143,49 +151,54 @@ class NameGUI(DirectFrame, StateData.StateData):
                 if not self.independent and self.main.isNPCEditor:
                     self.__assignNameToTyped(name)
                     return
+                
                 self.decipherName(name)
                 if self.mode == self.__MODE_TYPEANAME:
                     return
+                
             else:
                 self.makeRandomName()
-        else:
-            if self.mode == self.__MODE_PICKANAME:
-                self.enterPickAName()
-            elif self.mode == self.__MODE_TYPEANAME:
-                self.enterTypeAName()
-            if self.savedGender:
-                if self.savedGender != self.getDNA().gender:
-                    self.listsCreated = 0
-                    self.reset()
-                    if self.getDNA().getGender() == 'f':
-                        self.nicknameList['items'] = self.nicknamesFemale[:]
-                        self.firstList['items'] = self.firstNamesFemale[:]
-                        self.prefixList['items'] = self.lastPrefixesFemale[:]
-                        self.suffixList['items'] = self.lastSuffixesFemale[:]
-                    else:
-                        self.nicknameList['items'] = self.nicknamesMale[:]
-                        self.firstList['items'] = self.firstNamesMale[:]
-                        self.prefixList['items'] = self.lastPrefixesMale[:]
-                        self.suffixList['items'] = self.lastSuffixesMale[:]
-                    self.listsCreated = 1
-                    if self.getDNA().gender == 'm' and self.savedMaleName:
-                        self.nicknameIndex, self.firstIndex, self.prefixIndex, self.suffixIndex = self.savedMaleName
-                        self.nicknameActive, self.firstActive, self.lastActive = self.savedMaleActiveStates
-                    elif self.getDNA().gender == 'f' and self.savedFemaleName:
-                        self.nicknameIndex, self.firstIndex, self.prefixIndex, self.suffixIndex = self.savedFemaleName
-                        self.nicknameActive, self.firstActive, self.lastActive = self.savedFemaleActiveStates
-                    else:
-                        self.makeRandomName()
-                    self._updateLists()
-                    self._updateCheckBoxes()
+        elif self.mode == self.__MODE_PICKANAME:
+            self.enterPickAName()
+        elif self.mode == self.__MODE_TYPEANAME:
+            self.enterTypeAName()
+        
+        if self.savedGender:
+            if self.savedGender != self.getDNA().gender:
+                self.listsCreated = 0
+                self.reset()
+                if self.getDNA().getGender() == 'f':
+                    self.nicknameList['items'] = self.nicknamesFemale[:]
+                    self.firstList['items'] = self.firstNamesFemale[:]
+                    self.prefixList['items'] = self.lastPrefixesFemale[:]
+                    self.suffixList['items'] = self.lastSuffixesFemale[:]
+                else:
+                    self.nicknameList['items'] = self.nicknamesMale[:]
+                    self.firstList['items'] = self.firstNamesMale[:]
+                    self.prefixList['items'] = self.lastPrefixesMale[:]
+                    self.suffixList['items'] = self.lastSuffixesMale[:]
+                self.listsCreated = 1
+                if self.getDNA().gender == 'm' and self.savedMaleName:
+                    (self.nicknameIndex, self.firstIndex, self.prefixIndex, self.suffixIndex) = self.savedMaleName
+                    (self.nicknameActive, self.firstActive, self.lastActive) = self.savedMaleActiveStates
+                elif self.getDNA().gender == 'f' and self.savedFemaleName:
+                    (self.nicknameIndex, self.firstIndex, self.prefixIndex, self.suffixIndex) = self.savedFemaleName
+                    (self.nicknameActive, self.firstActive, self.lastActive) = self.savedFemaleActiveStates
+                else:
+                    self.makeRandomName()
+                self._updateLists()
+                self._updateCheckBoxes()
+
         self.fsm.request('Pay')
 
     def exit(self):
         self.hide()
         if self.cr:
             self.ignore(self.cr.getWishNameResultMsg())
+        
         if hasattr(self, 'self._nameCheckCallback'):
             del self._nameCheckCallback
+        
         if self.independent:
             pass
         else:
@@ -196,8 +209,8 @@ class NameGUI(DirectFrame, StateData.StateData):
         self.avatar = avatar
 
     def _checkNpcNames(self, name):
-
-        def match(npcName, name=name):
+        
+        def match(npcName, name = name):
             return TextEncoder.upper(npcName) == TextEncoder.upper(string.strip(name))
 
         for npcId in NPCList.NPC_LIST.keys():
@@ -207,7 +220,7 @@ class NameGUI(DirectFrame, StateData.StateData):
                 if (self.independent or not self.main.isNPCEditor) and match(npcName):
                     self.notify.info('name matches NPC name "%s"' % npcName)
                     return OL.NCGeneric
-
+    
     def getTypeANameProblem(self, callback):
         if not self.customName:
             callback(None)
@@ -216,16 +229,16 @@ class NameGUI(DirectFrame, StateData.StateData):
             name = self.nameEntry.get()
             name = name.strip()
             self.nameEntry.enterText(name)
-            problem = NameCheck.checkName(self.nameEntry.get(), [self._checkNpcNames])
+            problem = NameCheck.checkName(self.nameEntry.get(), [
+                self._checkNpcNames])
             if problem:
                 callback(problem)
             elif self.cr:
                 self.ignore(self.cr.getWishNameResultMsg())
                 self.acceptOnce(self.cr.getWishNameResultMsg(), self._handleSetWishnameResult)
                 self._nameCheckCallback = callback
-                self._sendSetWishname(justCheck=True)
-                return
-        return
+                self._sendSetWishname(justCheck = True)
+                return None
 
     def _checkTypeANameAsPickAName(self):
         if self.customName:
@@ -233,11 +246,14 @@ class NameGUI(DirectFrame, StateData.StateData):
             if pnp.hasNamePattern():
                 self.fsm.request('PickAName')
                 pattern = pnp.getNamePattern()
-                actives = [0, choice(pattern[1] != -1, 1, 0), choice(pattern[2] != -1, 1, 0)]
+                actives = [
+                    0,
+                    choice(pattern[1] != -1, 1, 0),
+                    choice(pattern[2] != -1, 1, 0)]
                 indices = pattern
                 self._updateGuiToPickAName(actives, indices)
 
-    def _sendSetWishname(self, justCheck=False):
+    def _sendSetWishname(self, justCheck = False):
         name = self.nameEntry.get()
         if justCheck:
             self.cr.sendWishNameAnonymous(name)
@@ -250,8 +266,8 @@ class NameGUI(DirectFrame, StateData.StateData):
         problem = OL.NCGeneric
         if result in (self.cr.WishNameResult.PendingApproval, self.cr.WishNameResult.Approved):
             problem = None
+        
         callback(problem)
-        return
 
     def save(self):
         if self.independent:
@@ -264,53 +280,46 @@ class NameGUI(DirectFrame, StateData.StateData):
             self.avatar.dna.setName(self._getName())
 
     def loadPickAName(self):
-        self.nameFrameTitle = DirectFrame(parent=self._parent, relief=None, frameColor=(0.5,
-                                                                                       0.5,
-                                                                                       0.5,
-                                                                                       0.3), text=PL.NameFrameTitle, text_fg=(1,
-                                                                                                                              1,
-                                                                                                                              1,
-                                                                                                                              1), text_scale=0.18, text_pos=(0,
-                                                                                                                                                             0), pos=(0,
-                                                                                                                                                                      0,
-                                                                                                                                                                      0.3), scale=0.7)
-        self.pirateName = DirectLabel(parent=self._parent, relief=None, image=self.charGui.find('**/chargui_frame02'), image_scale=(15,
-                                                                                                                                   10,
-                                                                                                                                   10), text=PL.NameGUI_EmptyNameText, text_align=TextNode.ACenter, text_fg=(1,
-                                                                                                                                                                                                             1,
-                                                                                                                                                                                                             0.5,
-                                                                                                                                                                                                             1), text_pos=(0,
-                                                                                                                                                                                                                           0.25), text_wordwrap=MAX_NAME_WIDTH, scale=0.15, pos=(0,
-                                                                                                                                                                                                                                                                                 0,
-                                                                                                                                                                                                                                                                                 -1.1))
+        self.nameFrameTitle = DirectFrame(parent = self.parent, relief = None, frameColor = (0.5, 0.5, 0.5, 0.3), text = PL.NameFrameTitle, text_fg = (1, 1, 1, 1), text_scale = 0.18, text_pos = (0, 0), pos = (0, 0, 0.3), scale = 0.7)
+        self.pirateName = DirectLabel(parent = self.parent, relief = None, image = self.charGui.find('**/chargui_frame02'), image_scale = (15, 10, 10), text = PL.NameGUI_EmptyNameText, text_align = TextNode.ACenter, text_fg = (1, 1, 0.5, 1), text_pos = (0, 0.25), text_wordwrap = MAX_NAME_WIDTH, scale = 0.15, pos = (0, 0, -1.1))
         if self.getDNA().getGender() == 'f':
-            lists = (
-             self.nicknamesFemale, self.firstNamesFemale, self.lastPrefixesFemale, self.lastSuffixesFemale)
+            lists = (self.nicknamesFemale, self.firstNamesFemale, self.lastPrefixesFemale, self.lastSuffixesFemale)
         else:
-            lists = (
-             self.nicknamesMale, self.firstNamesMale, self.lastPrefixesMale, self.lastSuffixesMale)
-        self.nicknameList = self._makeScrolledList(items=lists[0], pos=(-0.81, 0, -0.2), makeExtraArgs=[self.NICKNAME], extraArgs=[0])
+            lists = (self.nicknamesMale, self.firstNamesMale, self.lastPrefixesMale, self.lastSuffixesMale)
+        self.nicknameList = self._makeScrolledList(items = lists[0],
+                                                   pos = (-0.81, 0, -0.2),
+                                                   makeExtraArgs = [self.NICKNAME],
+                                                   extraArgs = [0])
         self.nicknameList.stash()
-        self.firstList = self._makeScrolledList(items=lists[1], pos=(-0.65, 0, -0.2), makeExtraArgs=[self.FIRST], extraArgs=[1])
-        self.prefixList = self._makeScrolledList(items=lists[2], pos=(-0.1, 0, -0.2), makeExtraArgs=[self.PREFIX], extraArgs=[2])
-        self.suffixList = self._makeScrolledList(items=lists[3], pos=(0.45, 0, -0.2), makeExtraArgs=[self.SUFFIX], extraArgs=[3])
-        self.nicknameCheck = self._makeCheckbox(text=PL.NameGUI_CheckboxText[0], command=self.nicknameToggle, pos=(-0.81, 0, 0.1))
+        self.firstList = self._makeScrolledList(items = lists[1],
+                                                pos = (-0.65, 0, -0.2),
+                                                makeExtraArgs = [self.FIRST],
+                                                extraArgs = [1])
+        self.prefixList = self._makeScrolledList(items = lists[2],
+                                                 pos = (-0.1, 0, -0.2),
+                                                 makeExtraArgs = [self.PREFIX],
+                                                 extraArgs = [2])
+        self.suffixList = self._makeScrolledList(items = lists[3],
+                                                 pos = (0.45, 0, -0.2),
+                                                 makeExtraArgs = [self.SUFFIX],
+                                                 extraArgs = [3])
+        self.nicknameCheck = self._makeCheckbox(text = PL.NameGUI_CheckboxText[0],
+                                                command = self.nicknameToggle,
+                                                pos = (-0.81, 0, 0.1)
+                                                )
         self.nicknameCheck.stash()
-        self.firstCheck = self._makeCheckbox(text=PL.NameGUI_CheckboxText[0], command=self.firstToggle, pos=(-0.65, 0, 0.1))
-        self.lastCheck = self._makeCheckbox(text=PL.NameGUI_CheckboxText[0], command=self.lastToggle, pos=(-0.1, 0, 0.1))
+        self.firstCheck = self._makeCheckbox(text = PL.NameGUI_CheckboxText[0], command = self.firstToggle, pos = (-0.65, 0, 0.1))
+        self.lastCheck = self._makeCheckbox(text = PL.NameGUI_CheckboxText[0], command = self.lastToggle, pos = (-0.1, 0, 0.1))
         self.nicknameHigh = self._makeHighlight((-0.81, 0, -0.2))
         self.nicknameHigh.hide()
         self.firstHigh = self._makeHighlight((-0.65, 0, -0.2))
         self.prefixHigh = self._makeHighlight((-0.1, 0, -0.2))
         self.suffixHigh = self._makeHighlight((0.45, 0, -0.2))
-        self.randomNameButton = self._makeButton(text=PL.NameGUI_RandomButtonText, command=self.makeRandomName, pos=(-0.5,
-                                                                                                                     0,
-                                                                                                                     -1.4))
+        self.randomNameButton = self._makeButton(text = PL.NameGUI_RandomButtonText, command = self.makeRandomName, pos = (-.5, 0, -1.4))
         self.randomNameButton.hide()
-        func = lambda param=self: param.fsm.request('TypeAName')
-        self.typeANameButton = self._makeButton(text=PL.NameGUI_TypeANameButtonText, command=func, pos=(0,
-                                                                                                        0,
-                                                                                                        -1.7))
+        
+        func = lambda param = self: param.fsm.request('TypeAName')
+        self.typeANameButton = self._makeButton(text = PL.NameGUI_TypeANameButtonText, command = func, pos = (0, 0, -1.7))
         self.typeANameButton.hide()
         self.pickANameGui.append(self.nicknameHigh)
         self.pickANameGui.append(self.firstHigh)
@@ -326,125 +335,105 @@ class NameGUI(DirectFrame, StateData.StateData):
         self.pickANameGui.append(self.firstCheck)
         self.pickANameGui.append(self.lastCheck)
         self.hide()
-        return
 
     def loadTypeAName(self):
-        self.nameEntry = DirectEntry(parent=self._parent, relief=DGG.FLAT, scale=0.16, width=MAX_NAME_WIDTH, numLines=2, focus=0, cursorKeys=1, autoCapitalize=1, frameColor=(0.0,
-                                                                                                                                                                             0.0,
-                                                                                                                                                                             0.0,
-                                                                                                                                                                             0.0), text=PL.NameGUI_EmptyNameText, text_fg=(1.0,
-                                                                                                                                                                                                                           1.0,
-                                                                                                                                                                                                                           0.5,
-                                                                                                                                                                                                                           1.0), pos=(-0.65, 0.0, -0.05), suppressKeys=1, suppressMouse=1, image=self.charGui.find('**/chargui_frame02'), image_scale=(15,
-                                                                                                                                                                                                                                                                                                                                                       0.0,
-                                                                                                                                                                                                                                                                                                                                                       8.5), image_pos=(4.39, 0.0, -0.2))
-        self.nameEntryGuidelines = DirectLabel(parent=self._parent, relief=None, text=PL.NameGUI_Guidelines, text_align=TextNode.ALeft, text_fg=PiratesGuiGlobals.TextFG3, text_pos=(0,
-                                                                                                                                                                                    0.25), text_wordwrap=18, scale=0.1, pos=(-0.7,
-                                                                                                                                                                                                                             0,
-                                                                                                                                                                                                                             -0.5))
+        self.nameEntry = DirectEntry(parent = self.parent, relief = DGG.FLAT, scale = 0.16, width = MAX_NAME_WIDTH, numLines = 2, focus = 0, cursorKeys = 1, autoCapitalize = 1, frameColor = (0.0, 0.0, 0.0, 0.0), text = PL.NameGUI_EmptyNameText, text_fg = (1.0, 1.0, 0.5, 1.0), pos = (-0.65, 0.0, -0.05), suppressKeys = 1, suppressMouse = 1, image = self.charGui.find('**/chargui_frame02'), image_scale = (15, 0.0, 8.5), image_pos = (4.39, 0.0, -0.2))
+        self.nameEntryGuidelines = DirectLabel(parent = self.parent, relief = None, text = PL.NameGUI_Guidelines, text_align = TextNode.ALeft, text_fg = PiratesGuiGlobals.TextFG3, text_pos = (0, 0.25), text_wordwrap = 18, scale = 0.1, pos = (-.7, 0, -.5))
         if self.cr:
-            self.nameEntryGuidelinesURL = DirectButton(parent=self._parent, relief=None, pos=(0,
-                                                                                             0,
-                                                                                             -0.55), command=base.popupBrowser, extraArgs=[PL.URL_NamingGuidelines], text=PL.NameGUI_URLText, text0_fg=PiratesGuiGlobals.TextFG2, text1_fg=PiratesGuiGlobals.TextFG2, text2_fg=PiratesGuiGlobals.TextFG1, text_font=PiratesGlobals.getInterfaceFont(), text_shadow=PiratesGuiGlobals.TextShadow, text_scale=0.09, text_pos=(0, -0.635))
-        func = lambda param=self: param.fsm.request('PickAName')
-        self.pickANameButton = self._makeButton(text=PL.NameGUI_PickANameButtonText, command=func, pos=(0,
-                                                                                                        0,
-                                                                                                        -1.7))
+            self.nameEntryGuidelinesURL = DirectButton(parent = self.parent,
+                                                       relief = None,
+                                                       pos = (0, 0, -.55),
+                                                       command = base.popupBrowser,
+                                                       extraArgs = [PL.URL_NamingGuidelines],
+                                                       text = PL.NameGUI_URLText,
+                                                       text0_fg = PiratesGuiGlobals.TextFG2,
+                                                       text1_fg = PiratesGuiGlobals.TextFG2,
+                                                       text2_fg = PiratesGuiGlobals.TextFG1,
+                                                       text_font = PiratesGlobals.getInterfaceFont(),
+                                                       text_shadow = PiratesGuiGlobals.TextShadow,
+                                                       text_scale = 0.09,
+                                                       text_pos = (0, -0.635)
+                                                       )
+
+        func = lambda param = self: param.fsm.request('PickAName')
+        self.pickANameButton = self._makeButton(text = PL.NameGUI_PickANameButtonText, command = func, pos = (0, 0, -1.7))
         if not self.independent:
             if not self.main.isNPCEditor:
-                self.submitButton = self._makeButton(text=PL.NameGUI_SubmitButtonText, command=self._typedAName, pos=(0,
-                                                                                                                      0,
-                                                                                                                      1.7))
+                self.submitButton = self._makeButton(text = PL.NameGUI_SubmitButtonText, command = self._typedAName, pos = (0, 0, 1.7))
                 self.submitButton.hide()
+            
         else:
-            self.cancelButton = GuiButton.GuiButton(parent=self.bookModel, text=PL.MakeAPirateCancel, text_fg=(1,
-                                                                                                               1,
-                                                                                                               1,
-                                                                                                               1), text_scale=0.08, text_pos=(0, -0.25 * 0.1, 0), scale=1.8, image_scale=0.4, command=self.cancel, pos=(-0.68,
-                                                                                                                                                                                                                        0,
-                                                                                                                                                                                                                        -2.43))
-            self.randomButton = GuiButton.GuiButton(parent=self.bookModel, text=PL.RandomButton, text_fg=(1,
-                                                                                                          1,
-                                                                                                          1,
-                                                                                                          1), text_scale=0.08, text_pos=(0, -0.25 * 0.1, 0), scale=1.8, image_scale=0.4, command=self.makeRandomName, pos=(0.05,
-                                                                                                                                                                                                                           0,
-                                                                                                                                                                                                                           -2.43))
+            self.cancelButton = GuiButton.GuiButton(parent = self.bookModel, text = PL.MakeAPirateCancel, text_fg = (1, 1, 1, 1), text_scale = 0.08, text_pos = (0, -.25 * 0.1, 0), scale = 1.8, image_scale = 0.4, command = self.cancel, pos = (-.68, 0, -2.43))
+            self.randomButton = GuiButton.GuiButton(parent = self.bookModel, text = PL.RandomButton, text_fg = (1, 1, 1, 1), text_scale = 0.08, text_pos = (0, -.25 * 0.1, 0), scale = 1.8, image_scale = 0.4, command = self.makeRandomName, pos = (0.05, 0, -2.43))
             self.randomButton.hide()
             self.randomButton
-            self.submitButton = GuiButton.GuiButton(parent=self.bookModel, text=PL.NameGUI_SubmitButtonText, text_fg=(1,
-                                                                                                                      1,
-                                                                                                                      1,
-                                                                                                                      1), text_scale=0.08, text_pos=(0, -0.25 * 0.1, 0), scale=1.8, image_scale=0.4, command=self.complete, pos=(0.78,
-                                                                                                                                                                                                                                 0,
-                                                                                                                                                                                                                                 -2.43))
+            self.submitButton = GuiButton.GuiButton(parent = self.bookModel, text = PL.NameGUI_SubmitButtonText, text_fg = (1, 1, 1, 1), text_scale = 0.08, text_pos = (0, -.25 * 0.1, 0), scale = 1.8, image_scale = 0.4, command = self.complete, pos = (0.78, 0, -2.43))
         self.typeANameGui.append(self.pickANameButton)
         self.typeANameGui.append(self.nameEntry)
         self.typeANameGui.append(self.nameEntryGuidelines)
         if self.cr:
             self.typeANameGui.append(self.nameEntryGuidelinesURL)
+        
         self.hide()
-        return
-
+    
     def _makeScrolledList(self, items, pos, makeExtraArgs, extraArgs):
         lst = items[:]
-        dsl = DirectScrolledList(parent=self._parent, relief=None, items=lst, itemMakeFunction=self._makeItemLabel, itemMakeExtraArgs=makeExtraArgs, extraArgs=extraArgs, command=self._listsChanged, pos=pos, scale=0.08, incButton_pos=(1.5,
-                                                                                                                                                                                                                                         0,
-                                                                                                                                                                                                                                         -6), incButton_relief=None, incButton_image=(self.triangleGui.find('**/triangle'), self.triangleGui.find('**/triangle_down'), self.triangleGui.find('**/triangle_over')), incButton_image_scale=1.8, incButton_image_hpr=(0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                   0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                   90), incButton_image_pos=(0, 0, -0.5), decButton_pos=(1.5,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         2), decButton_relief=None, decButton_image=(self.triangleGui.find('**/triangle'), self.triangleGui.find('**/triangle_down'), self.triangleGui.find('**/triangle_over')), decButton_image_scale=1.8, decButton_image_hpr=(0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  270), decButton_image_pos=(0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             0.5), itemFrame_relief=None, itemFrame_pos=(-0.75, 0, 0), itemFrame_scale=1.0, itemFrame_image=self.charGui.find('**/chargui_frame04'), itemFrame_image_scale=(14,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            10,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            10), itemFrame_image_pos=(2.4,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      -2), itemFrame_text_fg=(1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              1,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              1), forceHeight=1.1, numItemsVisible=5)
+        dsl = DirectScrolledList(parent = self.parent,
+                                 relief = None,
+                                 items = lst,
+                                 itemMakeFunction = self._makeItemLabel,
+                                 itemMakeExtraArgs = makeExtraArgs,
+                                 extraArgs = extraArgs,
+                                 command = self._listsChanged,
+                                 pos = pos,
+                                 scale = 0.08,
+                                 incButton_pos = (1.5, 0, -6),
+                                 incButton_relief = None,
+                                 incButton_image = (self.triangleGui.find('**/triangle'),
+                                                    self.triangleGui.find('**/triangle_down'),
+                                                    self.triangleGui.find('**/triangle_over')),
+                                 incButton_image_scale = 1.8,
+                                 incButton_image_hpr = (0, 0, 90),
+                                 incButton_image_pos = (0, 0, -0.5),
+                                 decButton_pos = (1.5, 0, 2),
+                                 decButton_relief = None,
+                                 decButton_image = (self.triangleGui.find('**/triangle'),
+                                                    self.triangleGui.find('**/triangle_down'),
+                                                    self.triangleGui.find('**/triangle_over')),
+                                 decButton_image_scale = 1.8,
+                                 decButton_image_hpr = (0, 0, 270),
+                                 decButton_image_pos = (0, 0, 0.5),
+                                 itemFrame_relief = None,
+                                 itemFrame_pos = (-0.75, 0, 0),
+                                 itemFrame_scale = 1.0,
+                                 itemFrame_image = self.charGui.find('**/chargui_frame04'),
+                                 itemFrame_image_scale = (14, 10, 10),
+                                 itemFrame_image_pos = (2.4, 0, -2),
+                                 itemFrame_text_fg = (1, 1, 1, 1),
+                                 forceHeight = 1.1,
+                                 numItemsVisible = 5
+                                 )
         return dsl
-
+    
     def _makeHighlight(self, pos):
-        return DirectFrame(parent=self._parent, relief=DGG.FLAT, frameColor=(1, 1, 1,
-                                                                            0.4), frameSize=(-1.1,
-                                                                                             4,
-                                                                                             -2.2,
-                                                                                             -1.1), borderWidth=(1,
-                                                                                                                 0.5), pos=pos, scale=0.09)
-
-    def _makeItemLabel(self, text, index, args=[]):
-        f = DirectFrame(state='normal', relief=None, text=text, text_scale=1.0, text_pos=(-0.3, 0.14, 0), text_align=TextNode.ALeft, text_fg=(1,
-                                                                                                                                              1,
-                                                                                                                                              1,
-                                                                                                                                              1), textMayChange=0)
+        return DirectFrame(parent = self.parent, relief = DGG.FLAT, frameColor = (1, 1, 1, 0.4), frameSize = (-1.1, 4, -2.2, -1.1), borderWidth = (1, 0.5), pos = pos, scale = 0.09)
+    
+    def _makeItemLabel(self, text, index, args = []):
+        f = DirectFrame(state = 'normal', relief = None, text = text, text_scale = 1.0, text_pos = (-0.3, 0.14, 0), text_align = TextNode.ALeft, text_fg = (1, 1, 1, 1), textMayChange = 0)
         if len(args) > 0:
             listType = args[0]
-            f.bind(DGG.B1PRESS, lambda x, f=f: self._nameClickedOn(listType, index))
+            f.bind(DGG.B1PRESS, lambda x, f = f: self._nameClickedOn(listType, index))
+        
         return f
 
     def _makeButton(self, text, command, pos):
-        b = DirectButton(parent=self._parent, relief=None, image=(self.charGui.find('**/chargui_frame02'), self.charGui.find('**/chargui_frame02_down'), self.charGui.find('**/chargui_frame02_over')), text=text, text_fg=(1,
-                                                                                                                                                                                                                           1,
-                                                                                                                                                                                                                           1,
-                                                                                                                                                                                                                           1), text_align=TextNode.ACenter, text_scale=0.1, command=command, pos=pos)
+        b = DirectButton(parent = self.parent, relief = None, image = (self.charGui.find('**/chargui_frame02'), self.charGui.find('**/chargui_frame02_down'), self.charGui.find('**/chargui_frame02_over')), text = text, text_fg = (1, 1, 1, 1), text_align = TextNode.ACenter, text_scale = 0.1, command = command, pos = pos)
         return b
 
     def _makeCheckbox(self, text, command, pos):
-        c = DirectCheckButton(parent=self._parent, relief=None, scale=0.1, boxBorder=0.08, boxRelief=None, pos=pos, text=text, text_fg=(1,
-                                                                                                                                       1,
-                                                                                                                                       1,
-                                                                                                                                       1), text_scale=0.8, text_pos=(0.4,
-                                                                                                                                                                     0), indicator_pos=(0,
-                                                                                                                                                                                        0,
-                                                                                                                                                                                        0), indicator_text_fg=(1,
-                                                                                                                                                                                                               1,
-                                                                                                                                                                                                               1,
-                                                                                                                                                                                                               1), command=command, text_align=TextNode.ALeft)
+        c = DirectCheckButton(parent = self.parent, relief = None, scale = 0.1, boxBorder = 0.08, boxRelief = None, pos = pos, text = text, text_fg = (1, 1, 1, 1), text_scale = 0.8, text_pos = (0.4, 0), indicator_pos = (0, 0, 0), indicator_text_fg = (1, 1, 1, 1), command = command, text_align = TextNode.ALeft)
         return c
-
+    
     def _nameClickedOn(self, listType, index):
         if listType == self.NICKNAME:
             self.nicknameIndex = index
@@ -498,12 +487,16 @@ class NameGUI(DirectFrame, StateData.StateData):
                     self.names[3] = ''
                     self.suffixHigh.hide()
                 self.suffixIndex = self.suffixList.index + 2
+            
             if len(self.names[0] + self.names[1] + self.names[2] + self.names[3]) > 0:
                 self.updateName()
 
     def _updateLists(self):
         oldIndices = [
-         self.nicknameIndex, self.firstIndex, self.prefixIndex, self.suffixIndex]
+            self.nicknameIndex,
+            self.firstIndex,
+            self.prefixIndex,
+            self.suffixIndex]
         self.firstList.scrollTo(self.firstIndex - 2)
         self._restoreIndices(oldIndices)
         self.prefixList.scrollTo(self.prefixIndex - 2)
@@ -519,9 +512,11 @@ class NameGUI(DirectFrame, StateData.StateData):
             newName += self.names[0]
             if len(newName) > 0 and len(self.names[1]) > 0:
                 newName += ' '
+            
             newName += self.names[1]
             if len(newName) > 0 and len(self.names[2]) > 0:
                 newName += ' '
+            
             newName += self.names[2]
             if self.names[2] in PL.PirateNames_LastNamePrefixesCapped:
                 newName += self.names[3].capitalize()
@@ -542,7 +537,7 @@ class NameGUI(DirectFrame, StateData.StateData):
         listToEnable.show()
         listToEnable.decButton['state'] = 'normal'
         listToEnable.incButton['state'] = 'normal'
-
+    
     def disableList(self, listToDisable):
         listToDisable.decButton['state'] = 'disabled'
         listToDisable.incButton['state'] = 'disabled'
@@ -560,8 +555,9 @@ class NameGUI(DirectFrame, StateData.StateData):
             self.nameEntryGuidelines.destroy()
             if self.cr:
                 self.nameEntryGuidelinesURL.destroy()
+        
         del self.main
-        del self._parent
+        del self.parent
         del self.avatar
         del self.fsm
 
@@ -569,7 +565,7 @@ class NameGUI(DirectFrame, StateData.StateData):
         for item in self.nicknameList['items'] + self.firstList['items'] + self.prefixList['items'] + self.suffixList['items']:
             if item.__class__.__name__ != 'str':
                 item.destroy()
-
+        
         self.nicknameIndex = 2
         self.firstIndex = 2
         self.prefixIndex = 2
@@ -598,13 +594,14 @@ class NameGUI(DirectFrame, StateData.StateData):
         self.nameFrameTitle.hide()
         for elt in self.pickANameGui:
             elt.hide()
-
+        
         for elt in self.typeANameGui:
             elt.hide()
 
     def makeRandomName(self):
         if self.customName and not self.independent:
             return
+        
         if self.getDNA().getGender() == 'f':
             self.nicknameIndex = ''
             self.firstIndex = random.choice(range(len(self.firstNamesFemale) - 4)) + 2
@@ -616,13 +613,19 @@ class NameGUI(DirectFrame, StateData.StateData):
             self.prefixIndex = random.choice(range(len(self.lastPrefixesMale) - 4)) + 2
             self.suffixIndex = random.choice(range(len(self.lastSuffixesMale) - 4)) + 2
         nameCombo = random.choice(self.POSSIBLE_NAME_COMBOS.keys())
-        self.nicknameActive, self.firstActive, self.lastActive = self.POSSIBLE_NAME_COMBOS[nameCombo]
-        self._updateGuiToPickAName([self.nicknameActive, self.firstActive, self.lastActive], [
-         0, self.firstIndex, self.prefixIndex, self.suffixIndex])
+        (self.nicknameActive, self.firstActive, self.lastActive) = self.POSSIBLE_NAME_COMBOS[nameCombo]
+        self._updateGuiToPickAName([
+            self.nicknameActive,
+            self.firstActive,
+            self.lastActive], [
+            0,
+            self.firstIndex,
+            self.prefixIndex,
+            self.suffixIndex])
 
     def _updateGuiToPickAName(self, actives, indices):
-        self.nicknameActive, self.firstActive, self.lastActive = actives
-        nickname, self.firstIndex, self.prefixIndex, self.suffixIndex = indices
+        (self.nicknameActive, self.firstActive, self.lastActive) = actives
+        (nickname, self.firstIndex, self.prefixIndex, self.suffixIndex) = indices
         if self.listsCreated:
             self._updateLists()
             self._updateCheckBoxes()
@@ -648,6 +651,7 @@ class NameGUI(DirectFrame, StateData.StateData):
             if not (nameInFirst or nameInLast):
                 self.__assignNameToTyped(name)
                 return
+            
         elif len(nameParts) == 2:
             if self.__checkForNameInNicknameList(nameParts[0]):
                 nameInFirst = self.__checkForNameInFirstList(nameParts[1])
@@ -655,12 +659,14 @@ class NameGUI(DirectFrame, StateData.StateData):
                 if not (nameInFirst or nameInLast):
                     self.__assignNameToTyped(name)
                     return
+                
             else:
                 nameInFirst = self.__checkForNameInFirstList(nameParts[0])
                 nameInLast = self.__checkForNameInLastList(nameParts[1])
                 if not (nameInFirst and nameInLast):
                     self.__assignNameToTyped(name)
                     return
+                
         elif len(nameParts) == 3:
             nameInNick = self.__checkForNameInNicknameList(nameParts[0])
             nameInFirst = self.__checkForNameInFirstList(nameParts[1])
@@ -668,13 +674,14 @@ class NameGUI(DirectFrame, StateData.StateData):
             if not (nameInNick and nameInFirst and nameInLast):
                 self.__assignNameToTyped(name)
                 return
+            
         else:
             self.__assignNameToTyped(name)
             return
         self.mode = self.__MODE_PICKANAME
         self._updateLists()
         self._updateCheckBoxes()
-
+    
     def __checkForNameInNicknameList(self, name):
         if self.getDNA().getGender() == 'f':
             nicknameTextList = self.nicknamesFemale
@@ -714,7 +721,7 @@ class NameGUI(DirectFrame, StateData.StateData):
                 self.prefixIndex = prefixTextList.index(prefix)
                 self.suffixIndex = suffixTextList.index(name[len(prefix):])
                 return True
-
+        
         self.lastEnabled = 0
         return False
 
@@ -722,36 +729,41 @@ class NameGUI(DirectFrame, StateData.StateData):
         self.nameEntry.enterText(name)
         self.mode = self.__MODE_TYPEANAME
         self.fsm.request('Pay')
-
+    
     def nicknameToggle(self, value):
         self.nicknameActive = self.nicknameCheck['indicatorValue']
         self._listsChanged(0)
         if self.nicknameActive:
             self.nicknameList.refresh()
+        
         self._updateCheckBoxes()
-
+    
     def firstToggle(self, value):
         self.firstActive = self.firstCheck['indicatorValue']
         if not (self.firstActive or self.lastActive):
             self.firstActive = 1
             self.notify.debug(random.choice(PL.NameGUI_NoNameWarnings))
+        
         self._listsChanged(1)
         if self.firstActive:
             self.firstList.refresh()
+        
         self._updateCheckBoxes()
-
+    
     def lastToggle(self, value):
         self.lastActive = self.lastCheck['indicatorValue']
         if not (self.firstActive or self.lastActive):
             self.lastActive = 1
             self.notify.debug(random.choice(PL.NameGUI_NoNameWarnings))
+        
         self._listsChanged(2)
         self._listsChanged(3)
         if self.lastActive:
             self.prefixList.refresh()
             self.suffixList.refresh()
+        
         self._updateCheckBoxes()
-
+    
     def _updateCheckBoxes(self):
         self.nicknameCheck['indicatorValue'] = self.nicknameActive
         self.nicknameCheck['text'] = PL.NameGUI_CheckboxText[int(self.nicknameActive)]
@@ -768,7 +780,7 @@ class NameGUI(DirectFrame, StateData.StateData):
 
     def exitInit(self):
         pass
-
+    
     def enterPay(self):
         if self.mode == self.__MODE_TYPEANAME:
             self.fsm.request('TypeAName')
@@ -792,12 +804,14 @@ class NameGUI(DirectFrame, StateData.StateData):
     def exitPickAName(self):
         if self.independent:
             self.randomButton.hide()
+        
         self.hide()
 
     def enterTypeAName(self):
         self.mode = self.__MODE_TYPEANAME
         if not self.independent:
             self.main.disableRandom()
+        
         self.typeANameButton.hide()
         self.showTypeAName()
         self.nameEntry['focus'] = 1
@@ -807,7 +821,8 @@ class NameGUI(DirectFrame, StateData.StateData):
         name = self.nameEntry.get()
         self.nameEntry.enterText(name.strip())
         self.notify.debug('Chosen name: %s' % self.nameEntry.get())
-        problem = NameCheck.checkName(name, [self._checkNpcNames])
+        problem = NameCheck.checkName(name, [
+            self._checkNpcNames])
         if problem:
             print problem
             self.nameEntry.enterText('')
@@ -817,22 +832,22 @@ class NameGUI(DirectFrame, StateData.StateData):
     def exitTypeAName(self):
         self.typeANameButton.show()
         self.hide()
-
+    
     def enterApproved(self):
         self.fsm.request('Accepted')
 
     def exitApproved(self):
         pass
-
+    
     def enterRejected(self):
         pass
-
+    
     def exitRejected(self):
         pass
 
     def enterAccepted(self):
         pass
-
+    
     def exitAccepted(self):
         pass
 
@@ -842,14 +857,21 @@ class NameGUI(DirectFrame, StateData.StateData):
             self.save()
             messenger.send('NameGUIFinished', [1])
             return
+        
         if self.getDNA().gender == 'm':
-            self.savedMaleActiveStates = (
-             self.nicknameActive, self.firstActive, self.lastActive)
-            self.savedMaleName = [self.nicknameIndex, self.firstIndex, self.prefixIndex, self.suffixIndex]
+            self.savedMaleActiveStates = (self.nicknameActive, self.firstActive, self.lastActive)
+            self.savedMaleName = [
+                self.nicknameIndex,
+                self.firstIndex,
+                self.prefixIndex,
+                self.suffixIndex]
             self.savedGender = 'm'
         elif self.getDNA().gender == 'f':
             self.savedFemaleName = [
-             self.nicknameIndex, self.firstIndex, self.prefixIndex, self.suffixIndex]
+                self.nicknameIndex,
+                self.firstIndex,
+                self.prefixIndex,
+                self.suffixIndex]
             self.savedFemaleActiveStates = (self.nicknameActive, self.firstActive, self.lastActive)
             self.savedGender = 'f'
 
@@ -862,7 +884,8 @@ class NameGUI(DirectFrame, StateData.StateData):
         self.nameEntry.enterText(name.strip())
         self.notify.debug('Chosen name: %s' % name)
         if self.customName:
-            problem = NameCheck.checkName(name, [self._checkNpcNames])
+            problem = NameCheck.checkName(name, [
+                self._checkNpcNames])
             if problem:
                 print problem
                 self.nameEntry.enterText('')
@@ -881,11 +904,12 @@ class NameGUI(DirectFrame, StateData.StateData):
         suff = 0
         if self.firstActive:
             first = self.firstIndex
+        
         if self.lastActive:
             pre = self.prefixIndex
             suff = self.suffixIndex
-        return (
-         nick, first, pre, suff)
+        
+        return (nick, first, pre, suff)
 
     def findWidestInList(self, nameList):
         maxWidth = 0
@@ -895,10 +919,10 @@ class NameGUI(DirectFrame, StateData.StateData):
             if width > maxWidth:
                 maxWidth = self.text.calcWidth(name)
                 maxName = name
-
+        
         print maxName + ' ' + str(maxWidth)
         return maxName
-
+    
     def findWidestName(self):
         longestBoyTitle = self.findWidestInList(self.nicknamesMale[:])
         longestGirlTitle = self.findWidestInList(self.nicknamesFemale[:])
@@ -908,7 +932,9 @@ class NameGUI(DirectFrame, StateData.StateData):
         longestLastSuffix = self.findWidestInList(self.lastSuffixesFemale[:] + self.lastSuffixesMale[:])
         longestBoyName = longestBoyTitle + ' ' + longestBoyFirst + ' ' + longestLastPrefix + longestLastSuffix
         longestGirlName = longestGirlTitle + ' ' + longestGirlFirst + ' ' + longestLastPrefix + longestLastSuffix
-        longestName = self.findWidestInList([longestBoyName, longestGirlName])
+        longestName = self.findWidestInList([
+            longestBoyName,
+            longestGirlName])
         return longestName
 
     def getDNA(self):
@@ -916,3 +942,5 @@ class NameGUI(DirectFrame, StateData.StateData):
             return self.main.dna
         else:
             return self.main.pirate.style
+
+

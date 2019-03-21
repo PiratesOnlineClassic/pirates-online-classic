@@ -1,29 +1,25 @@
-import random
-
 from direct.directnotify import DirectNotifyGlobal
+from direct.showbase.ShowBaseGlobal import *
+from direct.showbase import DirectObject
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
-from direct.showbase import DirectObject
-from direct.showbase.ShowBaseGlobal import *
-from panda3d.core import *
-from pirates.pirate import HumanDNA
+from pandac.PandaModules import *
 from pirates.piratesbase import PLocalizer
-
+from pirates.pirate import HumanDNA
+import random
 
 class GenderGUI(DirectFrame, StateData.StateData):
-    
     notify = DirectNotifyGlobal.directNotify.newCategory('GenderGUI')
-
-    def __init__(self, main=None):
+    
+    def __init__(self, main = None):
         self.main = main
-        self._parent = main.bookModel
+        self.parent = main.bookModel
         self.avatar = main.avatar
         self.mode = None
         self.maleDNA = HumanDNA.HumanDNA('m')
         self.femaleDNA = HumanDNA.HumanDNA('f')
         self.navyDNA = HumanDNA.HumanDNA('n')
-        return
 
     def setGenderGuiState(self, gender):
         if gender == 0:
@@ -39,54 +35,47 @@ class GenderGUI(DirectFrame, StateData.StateData):
             self.load()
             self.mode = -1
             self.setGenderGuiState(0)
+        
         self.show()
-        return
 
     def exit(self):
         self.notify.debug('called genderGUI exit')
         self.hide()
-
+    
     def save(self):
         if self.mode == -1:
             pass
-
+    
     def assignAvatar(self, avatar):
         self.avatar = avatar
-
+    
     def load(self):
         self.notify.debug('loading GenderGUI')
         self.setupButtons()
-
+    
     def unload(self):
         self.notify.debug('called genderGUI unload')
         del self.main
-        del self._parent
+        del self.parent
         del self.avatar
 
     def show(self):
         self.genderFrameTitle.show()
         self.genderMaleButton.show()
         self.genderFemaleButton.show()
-
+    
     def hide(self):
         self.genderFrameTitle.hide()
         self.genderMaleButton.hide()
         self.genderFemaleButton.hide()
-
+    
     def setupButtons(self):
-        self.genderFrameTitle = DirectFrame(parent=self._parent, relief=None, text=PLocalizer.GenderFrameTitle, text_scale=0.18, text_pos=(0,
-                                                                                                                                          0), text_fg=(1,
-                                                                                                                                                       1,
-                                                                                                                                                       1,
-                                                                                                                                                       1), pos=(0,
-                                                                                                                                                                0,
-                                                                                                                                                                0.4), scale=0.7)
+        self.genderFrameTitle = DirectFrame(parent = self.parent, relief = None, text = PLocalizer.GenderFrameTitle, text_scale = 0.18, text_pos = (0, 0), text_fg = (1, 1, 1, 1), pos = (0, 0, 0.4), scale = 0.7)
         self.genderFrameTitle.hide()
-        self.genderMaleButton = DirectButton(parent=self.genderFrameTitle, relief=None, pos=(-0.3, 0, -0.25), image=(self.main.charGui.find('**/chargui_male'), self.main.charGui.find('**/chargui_male_down'), self.main.charGui.find('**/chargui_male_over')), command=self.handleMale)
+        self.genderMaleButton = DirectButton(parent = self.genderFrameTitle, relief = None, pos = (-0.3, 0, -0.25), image = (self.main.charGui.find('**/chargui_male'), self.main.charGui.find('**/chargui_male_down'), self.main.charGui.find('**/chargui_male_over')), command = self.handleMale)
         self.genderMaleButton.hide()
-        self.genderFemaleButton = DirectButton(parent=self.genderFrameTitle, relief=None, pos=(0.3, 0, -0.25), image=(self.main.charGui.find('**/chargui_female'), self.main.charGui.find('**/chargui_female_down'), self.main.charGui.find('**/chargui_female_over')), command=self.handleFemale)
+        self.genderFemaleButton = DirectButton(parent = self.genderFrameTitle, relief = None, pos = (0.3, 0, -0.25), image = (self.main.charGui.find('**/chargui_female'), self.main.charGui.find('**/chargui_female_down'), self.main.charGui.find('**/chargui_female_over')), command = self.handleFemale)
         self.genderFemaleButton.hide()
-        return
 
     def reset(self, index):
         if index:
@@ -95,7 +84,9 @@ class GenderGUI(DirectFrame, StateData.StateData):
             self.handleMale()
 
     def randomPick(self):
-        choice = random.choice([0, 1])
+        choice = random.choice([
+            0,
+            1])
         if choice:
             self.handleFemale()
         else:
@@ -104,9 +95,9 @@ class GenderGUI(DirectFrame, StateData.StateData):
     def handleMale(self):
         if self.main.pirate.style.gender == 'f':
             self.femaleDNA = self.main.pirate.style
-        else:
-            if self.main.pirate.style.gender == 'n':
-                self.navyDNA = self.main.pirate.style
+        elif self.main.pirate.style.gender == 'n':
+            self.navyDNA = self.main.pirate.style
+        
         self.main.pirate.style = self.maleDNA
         self.setGenderGuiState(0)
         self.main.refresh()
@@ -117,9 +108,9 @@ class GenderGUI(DirectFrame, StateData.StateData):
     def handleFemale(self):
         if self.main.pirate.style.gender == 'm':
             self.maleDNA = self.main.pirate.style
-        else:
-            if self.main.pirate.style.gender == 'n':
-                self.navyDNA = self.main.pirate.style
+        elif self.main.pirate.style.gender == 'n':
+            self.navyDNA = self.main.pirate.style
+        
         self.main.pirate.setDNA(self.femaleDNA)
         self.setGenderGuiState(1)
         self.main.refresh()
@@ -130,10 +121,12 @@ class GenderGUI(DirectFrame, StateData.StateData):
     def handleNavy(self):
         if self.main.pirate.style.gender == 'm':
             self.maleDNA = self.main.pirate.style
-        else:
-            if self.main.pirate.style.gender == 'f':
-                self.femaleDNA = self.main.pirate.style
+        elif self.main.pirate.style.gender == 'f':
+            self.femaleDNA = self.main.pirate.style
+        
         self.main.pirate.style = self.navyDNA
         self.setGenderGuiState(1)
         self.main.bodyGui.restore()
         self.main.headGui.restore()
+
+

@@ -1,23 +1,21 @@
-from pirates.makeapirate import Ear
-from pirates.makeapirate import Eyes
-from pirates.makeapirate import Mouth
-from pirates.makeapirate import Nose
-from pirates.makeapirate import Shape
 from direct.directnotify import DirectNotifyGlobal
-from direct.showbase import DirectObject
 from direct.showbase.ShowBaseGlobal import *
-
+from direct.showbase import DirectObject
+import Shape
+import Mouth
+import Eyes
+import Nose
+import Ear
 
 class HeadGUI(DirectObject.DirectObject):
     notify = DirectNotifyGlobal.directNotify.newCategory('HeadGUI')
-
-    def __init__(self, main=None):
+    
+    def __init__(self, main = None):
         self.main = main
-        self._parent = main.bookModel
+        self.parent = main.bookModel
         self.avatar = main.avatar
         self.mode = None
         self.load()
-        return
 
     def load(self):
         self.shape = Shape.Shape(self)
@@ -38,9 +36,9 @@ class HeadGUI(DirectObject.DirectObject):
         del self.nose
         del self.ear
         del self.main
-        del self._parent
+        del self.parent
         del self.avatar
-
+    
     def assignAvatar(self, avatar):
         self.avatar = avatar
         self.shape.avatar = avatar
@@ -48,7 +46,7 @@ class HeadGUI(DirectObject.DirectObject):
         self.eyes.avatar = avatar
         self.nose.avatar = avatar
         self.ear.avatar = avatar
-
+    
     def restore(self):
         self.notify.debug('restoring dna')
         self.shape.restore()
@@ -68,3 +66,5 @@ class HeadGUI(DirectObject.DirectObject):
         self.eyes.saveDNA()
         self.nose.saveDNA()
         self.ear.saveDNA()
+
+
