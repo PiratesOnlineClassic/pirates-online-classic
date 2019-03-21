@@ -251,7 +251,7 @@ GameTypes = {
     PiratesGlobals.GAME_TYPE_TM: {
         'style': gatherGameStyleInfo,
         'hidden': True}}
-pvpMode = ConfigVariableBool('pvp-testing-level', 0).getIntWord(0)
+pvpMode = ConfigVariableBool('pvp-testing-level', 0).getValue()
 if pvpMode < 1:
     del GameTypes[PiratesGlobals.GAME_TYPE_PVP]['style'][PiratesGlobals.GAME_STYLE_CTL]
 

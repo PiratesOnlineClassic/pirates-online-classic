@@ -40,11 +40,10 @@ def getIsDefensiveBuff(effectId):
 vfs = VirtualFileSystem.getGlobalPtr()
 filename = Filename('WeaponGlobals.pkl')
 searchPath = DSearchPath()
-searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$PIRATES/src/battle')))
-searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('pirates/src/battle')))
-searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('pirates/battle')))
-searchPath.appendDirectory(Filename('.'))
-searchPath.appendDirectory(Filename('etc'))
+if __debug__:
+    searchPath.appendDirectory(Filename.expandFrom('../resources/phase_2/etc'))
+else:
+    searchPath.appendDirectory(Filename.expandFrom('phase_2/etc'))
 found = vfs.resolveFilename(filename, searchPath)
 if not found:
     print 'WeaponGlobals.pkl file not found: %s' % filename.cStr()

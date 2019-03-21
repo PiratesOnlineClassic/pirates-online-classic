@@ -54,8 +54,8 @@ instant-skill-recharge #f
 want-dev #f
 
 # Manual Overrides:
-always-allow-digging #t
-always-allow-searching #t
+always-allow-digging #f
+always-allow-searching #f
 
 # Shards:
 show-total-population #t

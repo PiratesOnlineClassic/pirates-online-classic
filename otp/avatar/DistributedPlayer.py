@@ -9,6 +9,8 @@ from otp.avatar import DistributedAvatar
 import time
 from otp.avatar import Avatar, PlayerBase
 from otp.chat import ChatAssistant
+from libotp import *
+
 if base.config.GetBool('want-chatfilter-hacks', 0):
     from otp.switchboard import badwordpy
     import os

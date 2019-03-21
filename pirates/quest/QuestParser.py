@@ -1717,11 +1717,11 @@ class NPCMoviePlayer(DirectObject.DirectObject):
 
 
 searchPath = DSearchPath()
-searchPath.appendDirectory(Filename('etc'))
-searchPath.appendDirectory(Filename.fromOsSpecific(os.path.expandvars('$PIRATES/src/quest')))
-searchPath.appendDirectory(Filename.fromOsSpecific('pirates/src/quest'))
-searchPath.appendDirectory(Filename.fromOsSpecific('pirates/quest'))
-searchPath.appendDirectory(Filename('.'))
+if __debug__:
+    searchPath.appendDirectory(Filename.expandFrom('../resources/phase_3/etc'))
+else:
+    searchPath.appendDirectory(Filename.expandFrom('phase_3/etc'))
+
 scriptFile = Filename('QuestScripts.txt')
 found = vfs.resolveFilename(scriptFile, searchPath)
 if not found:

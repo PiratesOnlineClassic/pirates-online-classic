@@ -24,6 +24,7 @@ from otp.otpgui import OTPDialog
 from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPLocalizer
 from pirates.piratesgui import PDialog
+from libotp import *
 import PiratesGlobals
 import __builtin__
 
@@ -157,10 +158,10 @@ class PiratesBase(OTPBase):
         self.useDrive()
         self.disableMouse()
         if self.mouseInterface:
-            self.mouseInterface.reparentTo(self.dataUnused)
+            self.mouseInterface.reparentTo(render)
         
         if base.mouse2cam:
-            self.mouse2cam.reparentTo(self.dataUnused)
+            self.mouse2cam.reparentTo(render)
         
         for key in PiratesGlobals.ScreenshotHotkeyList:
             self.accept(key, self.takeScreenShot)
@@ -250,6 +251,9 @@ class PiratesBase(OTPBase):
         self.displayCpuFrequencyDialog = False
         self.taskMgr.doMethodLater(120.0, self.memoryMonitorTask, 'memory-monitor-task')
         self.supportAlphaFb = self.win.getFbProperties().getAlphaBits()
+
+    def isMainWindowOpen(self):
+        return True
     
     def deleteDialogs(self):
         if self.cpuSpeedDialog:
@@ -585,10 +589,12 @@ class PiratesBase(OTPBase):
         self.wantTattoos = base.config.GetBool('want-tattoos', 0)
         self.wantSocks = base.config.GetBool('want-socks', 0)
         self.wantJewelry = base.config.GetBool('want-jewelry', 0)
+        self.wantSsl = base.config.GetBool('want-ssl-scheme', 0)
         serverList = []
         for name in gameServer.split(';'):
             url = URLSpec(name, 1)
-            url.setScheme('s')
+            if self.wantSsl:
+                url.setScheme('s')
             if not url.hasPort():
                 url.setPort(serverPort)
             

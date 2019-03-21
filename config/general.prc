@@ -1,7 +1,6 @@
 # Window:
 window-title Pirates Online Classic
 icon-filename phase_3/etc/Pirates_Adds.ico
-win-orig -2 -2
 win-size 800 600
 fullscreen #f
 
@@ -46,8 +45,9 @@ dc-file astron/dclass/pirates.dc
 dc-file astron/dclass/otp.dc
 
 # Server:
-server-port 7198
+server-port 6667
 server-version pirates-dev
+want-ssl-scheme 0
 
 # Notifier:
 notify-level-tiff error

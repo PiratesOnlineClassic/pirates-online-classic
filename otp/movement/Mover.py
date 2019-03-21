@@ -4,7 +4,7 @@ from otp.movement.PyVec3 import PyVec3
 from direct.showbase import PythonUtil
 import __builtin__
 
-class Mover(CMover):
+class Mover:
     notify = DirectNotifyGlobal.directNotify.newCategory('Mover')
     SerialNum = 0
     Profile = 0
@@ -14,7 +14,6 @@ class Mover(CMover):
     PSCInt = 'App:Show code:moveObjects:MoverIntegrate'
     
     def __init__(self, objNodePath, fwdSpeed = 1, rotSpeed = 1):
-        CMover.__init__(self, objNodePath, fwdSpeed, rotSpeed)
         self.serialNum = Mover.SerialNum
         Mover.SerialNum += 1
         self.VecType = Vec3
@@ -30,17 +29,12 @@ class Mover(CMover):
             self.removeImpulse(name)
     
     def addImpulse(self, name, impulse):
-        if impulse.isCpp():
-            CMover.addCImpulse(self, name, impulse)
-        else:
-            self.impulses[name] = impulse
-            impulse._setMover(self)
+        self.impulses[name] = impulse
+        impulse._setMover(self)
     
     def removeImpulse(self, name):
         if name not in self.impulses:
-            if not CMover.removeCImpulse(self, name):
-                Mover.notify.warning("Mover.removeImpulse: unknown impulse '%s'" % name)
-            
+            self.notify.warning("Mover.removeImpulse: unknown impulse '%s'" % name)
             return
         
         self.impulses[name]._clearMover(self)
@@ -64,8 +58,7 @@ class Mover(CMover):
         
         if Mover.Pstats:
             self.pscCpp.start()
-        
-        CMover.processCImpulses(self, dt)
+
         if Mover.Pstats:
             self.pscCpp.stop()
             self.pscPy.start()
@@ -76,8 +69,7 @@ class Mover(CMover):
         if Mover.Pstats:
             self.pscPy.stop()
             self.pscInt.start()
-        
-        CMover.integrate(self)
+
         if Mover.Pstats:
             self.pscInt.stop()
 

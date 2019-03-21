@@ -6,11 +6,11 @@ from direct.interval.IntervalGlobal import *
 import os
 import math
 
-class ShipFog(NodePath.NodePath):
+class ShipFog(NodePath):
     notify = DirectNotifyGlobal.directNotify.newCategory('ShipFog')
     
     def __init__(self, parent, psbskp, bin, binPriority, camera, renderParent = None, color = Vec4(1)):
-        NodePath.NodePath.__init__(self, 'ShipFog')
+        NodePath.__init__(self, 'ShipFog')
         self.assign(parent.attachNewNode('fog'))
         self.ival = None
         if renderParent:

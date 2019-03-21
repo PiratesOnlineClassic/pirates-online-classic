@@ -331,8 +331,8 @@ class Options(OptionSpace):
         self.default()
         win_size = ConfigVariableInt('win-size')
         self.resolution = GameOptions.width_to_resolution_id(base.config.GetInt('win-size', 800))
-        horizontal_resolution = win_size.getIntWord(0)
-        vertical_resolution = win_size.getIntWord(1)
+        horizontal_resolution = int(win_size.getValue())
+        vertical_resolution = int(win_size.getValue())
         self.widescreen = 0
         if horizontal_resolution == 1280 and vertical_resolution == 720:
             self.widescreen = 1
