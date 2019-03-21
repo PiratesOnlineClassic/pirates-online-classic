@@ -5,6 +5,7 @@ from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from otp.avatar import AvatarDNA
 from pirates.makeapirate import ClothingGlobals
+from pirates.piratesbase import PiratesGlobals
 from otp.speedchat import ColorSpace
 notify = directNotify.newCategory('HumanDNA')
 LAYER1_CLOTHES = 1
@@ -1216,6 +1217,8 @@ class HumanDNA(AvatarDNA.AvatarDNA):
         return self.jewelryZone8
 
     def getTutorial(self):
+        if config.GetBool('force-tutorial-complete', 0):
+            return PiratesGlobals.TUT_FINISHED
         return self.tutorial
 
     def getDNAName(self):

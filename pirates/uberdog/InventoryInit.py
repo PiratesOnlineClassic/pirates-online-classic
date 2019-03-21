@@ -381,7 +381,6 @@ StartingStacks = {
     InventoryType.SailBroadsideRight: 2,
     InventoryType.CutlassSlash: 2,
     InventoryType.CutlassHack: 2,
-    InventoryType.CutlassSweep: 1,
 
     # Skill Points
     InventoryType.UnspentCutlass: 1,

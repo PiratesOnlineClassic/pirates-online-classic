@@ -53,6 +53,9 @@ dclass DistributedObject {
   broadcastMessage() broadcast;
 };
 
+dclass DistributedObjectGlobal : DistributedObject {
+};
+
 dclass DistributedTestObject : DistributedObject {
   uint32 AutoInterest[];
   setParentingRules(string, string) broadcast ram;

@@ -14,6 +14,8 @@ AllAccessHoliday = False
 
 def getPaidStatus(avId):
     av = base.cr.getDo(avId)
+    if not config.GetBool('want-membership', 0):
+        return FULL
     if av:
         if AllAccessHoliday:
             return FULL
@@ -33,6 +35,8 @@ def getFounderStatus(avId):
 
 def getPaidStatusAI(playerID):
     playerOb = simbase.air.getDo(playerID)
+    if not config.GetBool('want-membership', 0):
+        return FULL
     if playerOb:
         if AllAccessHoliday:
             return FULL

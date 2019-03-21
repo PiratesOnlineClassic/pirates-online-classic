@@ -1230,6 +1230,8 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
         return None
     
     def getAccess(self):
+        if not config.GetBool('want-membership', 0):
+            return FULL
         if Freebooter.AllAccessHoliday:
             return 2
         else:
@@ -1534,6 +1536,8 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
             self.guiMgr.messageStack.addTextMessage(PLocalizer.LookoutInviteFail % numFailed, icon = ('lookout', None))
     
     def getTutorialState(self):
+        if config.GetBool('force-tutorial-complete', 0):
+            return PiratesGlobals.TUT_FINISHED
         return self.tutorialState
     
     def updateClientTutorialStatus(self, val):
