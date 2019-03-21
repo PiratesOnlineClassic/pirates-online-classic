@@ -1216,8 +1216,6 @@ class HumanDNA(AvatarDNA.AvatarDNA):
         return self.jewelryZone8
 
     def getTutorial(self):
-        if config.GetBool('force-tutorial-complete', False):
-            return PiratesGlobals.TUT_FINISHED
         return self.tutorial
 
     def getDNAName(self):
