@@ -157,6 +157,7 @@ class PiratesBase(OTPBase):
         TextureStage.getDefault().setPriority(10)
         self.useDrive()
         self.disableMouse()
+        self.addCullBins()
         if self.mouseInterface:
             self.mouseInterface.reparentTo(render)
         
@@ -232,7 +233,6 @@ class PiratesBase(OTPBase):
         from pirates.creature import Dog
         from pirates.ship import ShipGlobals
         Dog.Dog.setupAssets()
-        CullBinManager.getGlobalPtr().addBin('ShipRigging', CullBinEnums.BTBackToFront, 100)
         self.bamCache = BamCache()
         if base.config.GetBool('want-dev', 0):
             self.bamCache.setRoot(Filename('/c/cache'))
@@ -548,6 +548,15 @@ class PiratesBase(OTPBase):
 
         taskMgr.doMethodLater(3.0, clearScreenshotMsg, 'clearWarning')
 
+    def addCullBins(self):
+        cbm = CullBinManager.getGlobalPtr()
+        cbm.addBin('gui-popup', CullBinManager.BTUnsorted, 60)
+        cbm.addBin('shadow', CullBinManager.BTFixed, 15)
+        cbm.addBin('ground', CullBinManager.BTFixed, 14)
+        cbm.addBin('water', CullBinManager.BTFixed, 28)
+        cbm.addBin('gui-fixed', CullBinManager.BTFixed, 55)
+        cbm.addBin('ShipRigging', CullBinEnums.BTBackToFront, 100)
+
     def showScreenshots(self):
         if not self.screenshotViewer:
             self.screenshotViewer = ScreenshotViewer.ScreenshotViewer()
@@ -582,7 +591,7 @@ class PiratesBase(OTPBase):
             gameServer = launcher.getGameServer()
             self.notify.info('Using gameServer from launcher: %s ' % gameServer)
         else:
-            gameServer = 'localhost'
+            gameServer = '127.0.0.1'
             self.notify.info('Using gameServer localhost')
         serverPort = base.config.GetInt('server-port', 6667)
         debugQuests = base.config.GetBool('debug-quests', True)

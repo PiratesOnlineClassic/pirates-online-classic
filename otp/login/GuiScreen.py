@@ -287,7 +287,6 @@ class GuiScreen:
         
         taskMgr.remove('waitingForDatabase')
 
-    
     def __handleCancelWaiting(self, value):
         self.cleanupWaitingForDatabase()
         messenger.send(self.doneEvent, [

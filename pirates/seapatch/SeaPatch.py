@@ -4,6 +4,8 @@ from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 from direct.task import Task
 from pirates.seapatch.LerpSeaPatchInterval import LerpSeaPatchInterval
+from pirates.seapatch.SeaPatchRoot import SeaPatchRoot
+from pirates.seapatch.SeaPatchNode import SeaPatchNode
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.showbase.DirectObject import DirectObject
 from pirates.piratesbase import PiratesGlobals

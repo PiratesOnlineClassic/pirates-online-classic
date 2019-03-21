@@ -204,7 +204,7 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
         filePrefix = self.getPrefix(self.dna.mastType)
         self.collisions = loader.loadModelCopy(filePrefix + 'zero_collisions')
         self.collisions.reparentTo(self.propCollisions)
-        coll = self.collisions.findAllMatches('**/collision_*').asList()
+        coll = self.collisions.findAllMatches('**/collision_*')
         for c in coll:
             c.setTag('objType', str(PiratesGlobals.COLL_SHIPPART))
             c.setTag('propId', str(self.doId))

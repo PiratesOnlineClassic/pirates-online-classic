@@ -305,7 +305,7 @@ class SplattableObject(NodePath):
 
         self.configColor(geom, 'bottom_hull', 255)
         if self.dna.hullTextureIndex or self.dna.stripeTextureIndex or self.dna.patternTextureIndex:
-            panels = geom.findAllMatches('**/panel_*/*').asList()
+            panels = geom.findAllMatches('**/panel_*/*')
             self.reloadPanelTex(panels)
 
     def configColor(self, geom, prefix, texIndex = 0, color = 0, hilightColor = 0):

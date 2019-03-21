@@ -46,6 +46,7 @@ from PotentialAvatar import PotentialAvatar
 
 class OTPClientRepository(ClientRepositoryBase):
     notify = directNotify.newCategory('OTPClientRepository')
+    notify.setDebug(True)
     avatarLimit = 6
     WishNameResult = Enum([
         'Failure',
@@ -323,7 +324,13 @@ class OTPClientRepository(ClientRepositoryBase):
         self.uberZoneInterest = None
         self.wantSwitchboard = config.GetBool('want-switchboard', 0)
         self.wantSwitchboardHacks = base.config.GetBool('want-switchboard-hacks', 0)
+
+        self.__pendingGenerates = {}
+        self.__pendingMessages = {}
+        self.__doId2pendingInterest = {}
+
         self.centralLogger = self.generateGlobalObject(OtpDoGlobals.OTP_DO_ID_CENTRAL_LOGGER, 'CentralLogger')
+        self.csm = None
 
     def startLeakDetector(self):
         if hasattr(self, 'leakDetector'):
@@ -375,8 +382,21 @@ class OTPClientRepository(ClientRepositoryBase):
         self.connectingBox = dialogClass(message = OTPLocalizer.CRConnecting)
         self.connectingBox.show()
         self.renderFrame()
-        self.handler = self.handleMessageType
-        self.connect(self.serverList, successCallback = self._handleConnected, failureCallback = self.failedToConnect)
+        self.handler = self.handleConnecting
+        self.connect(self.serverList, successCallback = self._sendHello, failureCallback = self.failedToConnect)
+
+    def _sendHello(self):
+        datagram = PyDatagram()
+        datagram.addUint16(CLIENT_HELLO)
+        datagram.addUint32(self.hashVal)
+        datagram.addString(self.serverVersion)
+        self.send(datagram)
+
+    def handleConnecting(self, msgtype, di):
+        if msgtype == CLIENT_HELLO_RESP:
+            self._handleConnected()
+        else:
+            self.handleMessageType(msgtype, di)
 
     def failedToConnect(self, statusCode, statusString):
         self.loginFSM.request('failedToConnect', [
@@ -420,12 +440,17 @@ class OTPClientRepository(ClientRepositoryBase):
         self.loginFSM.request('login')
     
     def enterLogin(self):
-        self.sendSetAvatarIdMsg(0)
+        self.renderFrame()
         self.loginDoneEvent = 'loginDone'
-        self.loginScreen = LoginScreen.LoginScreen(self, self.loginDoneEvent)
         self.accept(self.loginDoneEvent, self.__handleLoginDone)
-        self.loginScreen.load()
-        self.loginScreen.enter()
+        self.csm.performLogin(self.loginDoneEvent)
+        self.waitForDatabaseTimeout(requestName='WaitOnCSMLoginResponse')
+
+        if config.GetBool('want-login-screen', 0):
+            self.loginScreen = LoginScreen.LoginScreen(self, self.loginDoneEvent)
+            self.accept(self.loginDoneEvent, self.__handleLoginDone)
+            self.loginScreen.load()
+            self.loginScreen.enter()
     
     def setGameType(self):
         if self.createAvatarClass:
@@ -440,7 +465,6 @@ class OTPClientRepository(ClientRepositoryBase):
     def __handleLoginDone(self, doneStatus):
         mode = doneStatus['mode']
         if mode == 'success':
-            self.setGameType()
             self.setIsNotNewInstallation()
             self.loginFSM.request('waitForGameList')
         elif mode == 'getChatPassword':
@@ -451,7 +475,7 @@ class OTPClientRepository(ClientRepositoryBase):
             self.loginFSM.request('createAccount', [
                 {
                     'back': 'login',
-                    'backArgs': [] }])
+                    'backArgs': []}])
         elif mode == 'reject':
             self.loginFSM.request('reject')
         elif mode == 'quit':
@@ -474,7 +498,7 @@ class OTPClientRepository(ClientRepositoryBase):
         del self.loginDoneEvent
         self.handler = None
 
-    def enterCreateAccount(self, createAccountDoneData = {'back': 'login', 'backArgs': [] }):
+    def enterCreateAccount(self, createAccountDoneData = {'back': 'login', 'backArgs': []}):
         self.createAccountDoneData = createAccountDoneData
         self.createAccountDoneEvent = 'createAccountDone'
         self.createAccountScreen = None
@@ -486,7 +510,6 @@ class OTPClientRepository(ClientRepositoryBase):
     def __handleCreateAccountDone(self, doneStatus):
         mode = doneStatus['mode']
         if mode == 'success':
-            self.setGameType()
             self.setIsNotNewInstallation()
             self.loginFSM.request('waitForGameList')
         elif mode == 'reject':
@@ -723,7 +746,7 @@ class OTPClientRepository(ClientRepositoryBase):
         self.__currentAvId = 0
         self.stopHeartbeat()
         self.stopReaderPollTask()
-        gameUsername = os.environ.get('GAME_USERNAME', base.cr.userName)
+        gameUsername = '???' # TODO: Pull playtoken?
         if self.bootedIndex != None and OTPLocalizer.CRBootedReasons.has_key(self.bootedIndex):
             message = OTPLocalizer.CRBootedReasons[self.bootedIndex] % {
                 'name': gameUsername}
@@ -734,12 +757,12 @@ class OTPClientRepository(ClientRepositoryBase):
         reconnect = 1
         if self.bootedIndex == 152:
             reconnect = 0
-        
+
         style = OTPDialog.Acknowledge
         if reconnect and self.loginInterface.supportsRelogin():
             message += OTPLocalizer.CRTryConnectAgain
             style = OTPDialog.TwoChoice
-        
+
         dialogClass = OTPGlobals.getGlobalDialogClass()
         self.lostConnectionBox = dialogClass(doneEvent = 'lostConnectionAck', message = message, text_wordwrap = 18, style = style)
         self.lostConnectionBox.show()
@@ -794,12 +817,10 @@ class OTPClientRepository(ClientRepositoryBase):
         self.handler = None
 
     def enterWaitForAvatarList(self):
-        self.handler = self.handleWaitForAvatarList
         self._requestAvatarList()
     
     def _requestAvatarList(self):
-        self.cleanupWaitingForDatabase()
-        self.sendGetAvatarsMsg()
+        self.csm.requestAvatars()
         self.waitForDatabaseTimeout(requestName = 'WaitForAvatarList')
         self.acceptOnce(OtpAvatarManager.OtpAvatarManager.OnlineEvent, self._requestAvatarList)
 
@@ -808,11 +829,14 @@ class OTPClientRepository(ClientRepositoryBase):
         datagram.addUint16(CLIENT_GET_AVATARS)
         self.send(datagram)
 
-    
     def exitWaitForAvatarList(self):
         self.cleanupWaitingForDatabase()
         self.ignore(OtpAvatarManager.OtpAvatarManager.OnlineEvent)
         self.handler = None
+
+    def handleAvatarsList(self, avatars):
+        self.avList = avatars
+        self.loginFSM.request('chooseAvatar', [self.avList])
 
     def handleWaitForAvatarList(self, msgType, di):
         if msgType == CLIENT_GET_AVATARS_RESP:
@@ -843,7 +867,7 @@ class OTPClientRepository(ClientRepositoryBase):
                 aname = di.getUint8()
                 potAv = PotentialAvatar(avNum, avNames, avDNA, avPosition, aname)
                 avList.append(potAv)
-            
+
             self.avList = avList
             self.loginFSM.request('chooseAvatar', [
                 self.avList])
@@ -869,7 +893,7 @@ class OTPClientRepository(ClientRepositoryBase):
                 aname = None
                 potAv = PotentialAvatar(avNum, avNames, avDNA, avPosition, aname)
                 avList.append(potAv)
-            
+
             self.avList = avList
             self.loginFSM.request('chooseAvatar', [
                 self.avList])
@@ -1217,7 +1241,7 @@ class OTPClientRepository(ClientRepositoryBase):
         self.handlerArgs = {
             'hoodId': hoodId,
             'zoneId': zoneId,
-            'avId': avId }
+            'avId': avId}
         if shardId is not None:
             district = self.activeDistrictMap.get(shardId)
         else:
@@ -1423,28 +1447,17 @@ class OTPClientRepository(ClientRepositoryBase):
         if self.notify.getDebug():
             self.notify.debug('handle play game got message type: ' + `msgType`)
         
-        if msgType == CLIENT_CREATE_OBJECT_REQUIRED:
+        if self.__recordObjectMessage(msgType, di):
+            return
+
+        if msgType == CLIENT_ENTER_OBJECT_REQUIRED:
             self.handleGenerateWithRequired(di)
-        elif msgType == CLIENT_CREATE_OBJECT_REQUIRED_OTHER:
-            self.handleGenerateWithRequiredOther(di)
-        elif msgType == CLIENT_OBJECT_UPDATE_FIELD:
+        elif msgType == CLIENT_ENTER_OBJECT_REQUIRED_OTHER:
+            self.handleGenerateWithRequired(di, other=True)
+        elif msgType == CLIENT_OBJECT_SET_FIELD:
             self.handleUpdateField(di)
-        elif msgType == CLIENT_OBJECT_DISABLE_RESP:
-            self.handleDisable(di)
-        elif msgType == CLIENT_OBJECT_DELETE_RESP:
+        elif msgType == CLIENT_OBJECT_LEAVING:
             self.handleDelete(di)
-        elif msgType == CLIENT_GET_FRIEND_LIST_RESP:
-            self.handleGetFriendsList(di)
-        elif msgType == CLIENT_GET_FRIEND_LIST_EXTENDED_RESP:
-            self.handleGetFriendsListExtended(di)
-        elif msgType == CLIENT_FRIEND_ONLINE:
-            self.handleFriendOnline(di)
-        elif msgType == CLIENT_FRIEND_OFFLINE:
-            self.handleFriendOffline(di)
-        elif msgType == CLIENT_GET_AVATAR_DETAILS_RESP:
-            self.handleGetAvatarDetailsResp(di)
-        elif msgType == CLIENT_GET_PET_DETAILS_RESP:
-            self.handleGetAvatarDetailsResp(di)
         else:
             self.handleMessageType(msgType, di)
 
@@ -1625,7 +1638,7 @@ class OTPClientRepository(ClientRepositoryBase):
         OTPClientRepository.notify.debug('waiting for database timeout %s at %s' % (requestName, globalClock.getFrameTime()))
         taskMgr.remove('waitingForDatabase')
         globalClock.tick()
-        taskMgr.doMethodLater((OTPGlobals.DatabaseDialogTimeout + extraTimeout) * choice(__dev__, 10, 1), self.__showWaitingForDatabase, 'waitingForDatabase', extraArgs = [
+        taskMgr.doMethodLater((OTPGlobals.DatabaseDialogTimeout + extraTimeout) * 10 if __dev__ else 1, self.__showWaitingForDatabase, 'waitingForDatabase', extraArgs = [
             requestName])
 
     def __showWaitingForDatabase(self, requestName):
@@ -1717,34 +1730,30 @@ class OTPClientRepository(ClientRepositoryBase):
         return Task.done
 
     def handleMessageType(self, msgType, di):
-        if msgType == CLIENT_GO_GET_LOST:
+        if self.__recordObjectMessage(msgType, di):
+            return
+        if msgType == CLIENT_EJECT:
             self.handleGoGetLost(di)
         elif msgType == CLIENT_HEARTBEAT:
             self.handleServerHeartbeat(di)
-        elif msgType == CLIENT_SYSTEM_MESSAGE:
-            self.handleSystemMessage(di)
-        elif msgType == CLIENT_CREATE_OBJECT_REQUIRED:
+        elif msgType == CLIENT_ENTER_OBJECT_REQUIRED:
             self.handleGenerateWithRequired(di)
-        elif msgType == CLIENT_CREATE_OBJECT_REQUIRED_OTHER:
-            self.handleGenerateWithRequiredOther(di)
-        elif msgType == CLIENT_CREATE_OBJECT_REQUIRED_OTHER_OWNER:
-            self.handleGenerateWithRequiredOtherOwner(di)
-        elif msgType == CLIENT_OBJECT_UPDATE_FIELD:
+        elif msgType == CLIENT_ENTER_OBJECT_REQUIRED_OTHER:
+            self.handleGenerateWithRequired(di, other=True)
+        elif msgType == CLIENT_ENTER_OBJECT_REQUIRED_OWNER:
+            self.handleGenerateWithRequiredOwner(di)
+        elif msgType == CLIENT_ENTER_OBJECT_REQUIRED_OTHER_OWNER:
+            self.handleGenerateWithRequiredOwner(di, other=True)
+        elif msgType == CLIENT_OBJECT_SET_FIELD:
             self.handleUpdateField(di)
-        elif msgType == CLIENT_OBJECT_DISABLE:
+        elif msgType == CLIENT_OBJECT_LEAVING:
             self.handleDisable(di)
-        elif msgType == CLIENT_OBJECT_DISABLE_OWNER:
-            self.handleDisable(di, ownerView = True)
-        elif msgType == CLIENT_OBJECT_DELETE_RESP:
-            self.handleDelete(di)
+        elif msgType == CLIENT_OBJECT_LEAVING_OWNER:
+            self.handleDisable(di, ownerView=True)
         elif msgType == CLIENT_DONE_INTEREST_RESP:
             self.gotInterestDoneMessage(di)
-        elif msgType == CLIENT_GET_STATE_RESP:
-            pass
         elif msgType == CLIENT_OBJECT_LOCATION:
             self.gotObjectLocationMessage(di)
-        elif msgType == CLIENT_SET_WISHNAME_RESP:
-            self.gotWishnameResponse(di)
         else:
             currentLoginState = self.loginFSM.getCurrentState()
             if currentLoginState:
@@ -1756,7 +1765,6 @@ class OTPClientRepository(ClientRepositoryBase):
                 currentGameStateName = currentGameState.getName()
             else:
                 currentGameStateName = 'None'
-            ClientRepositoryBase.notify.warning('Ignoring unexpected message type: ' + str(msgType) + ' login state: ' + currentLoginStateName + ' game state: ' + currentGameStateName)
 
     def gotInterestDoneMessage(self, di):
         if self.deferredGenerates:
@@ -1764,6 +1772,13 @@ class OTPClientRepository(ClientRepositoryBase):
             di = DatagramIterator(dg, di.getCurrentIndex())
             self.deferredGenerates.append((CLIENT_DONE_INTEREST_RESP, (dg, di)))
         else:
+            # Peek ahead:
+            di2 = DatagramIterator(di.getDatagram(), di.getCurrentIndex())
+            di2.getUint32() # Context, ignore this
+            handle = di2.getUint16() # Handle
+
+            self.__playBackGenerates(handle)
+
             self.handleInterestDoneMessage(di)
 
     def gotObjectLocationMessage(self, di):
@@ -1852,7 +1867,206 @@ class OTPClientRepository(ClientRepositoryBase):
         else:
             self.handler(msgType, di)
         self.considerHeartbeat()
-    
+
+    def handleGenerateWithRequired(self, di, other=False):
+        doId = di.getUint32()
+        parentId = di.getUint32()
+        zoneId = di.getUint32()
+        classId = di.getUint16()
+
+        # At this point, we must decide whether to add this to the interest's
+        # 'pending generates' or process it straight away:
+        for handle, interest in self._interests.items():
+            if parentId != interest.parentId:
+                continue
+
+            if isinstance(interest.zoneIdList, list):
+                if zoneId not in interest.zoneIdList:
+                    continue
+            else:
+                if zoneId != interest.zoneIdList:
+                    continue
+
+            break
+        else:
+            self.notify.warning('Received generate for %d from %d:%d, not part '
+                                'of any existing interest!' % (doId, parentId, zoneId))
+            interest = None
+
+        if not interest or not interest.events:
+            # This object can be generated straight away:
+            return self.__doGenerate(doId, parentId, zoneId, classId, di, other)
+
+        # This object must be generated when the operation completes:
+        pending = self.__pendingGenerates.setdefault(handle, [])
+        dgData = di.getDatagram().getMessage()
+        pending.append((doId,parentId, zoneId, classId, Datagram(dgData), other))
+        self.__doId2pendingInterest[doId] = handle
+
+    def __playBackGenerates(self, handle):
+        if handle not in self.__pendingGenerates:
+            return
+
+        # This interest has pending generates! Play them.
+        generates = self.__pendingGenerates[handle]
+        del self.__pendingGenerates[handle]
+        generates.sort(key=lambda x: x[3])  # sort by classId
+        for doId, parentId, zoneId, classId, dg, other in generates:
+            di = DatagramIterator(dg)
+            # MsgType (2), zoneId, doId, parentId (3x4), classId (2)
+            di.skipBytes(16)
+            self.__doGenerate(doId, parentId, zoneId, classId, di, other)
+            if doId in self.__doId2pendingInterest:
+                del self.__doId2pendingInterest[doId]
+
+        # Also play back any messages, if we have those too:
+        self.__playBackMessages(handle)
+
+    def __playBackMessages(self, handle):
+        if handle not in self.__pendingMessages:
+            return
+
+        # Any pending messages? Play those back as well:
+        for dg in self.__pendingMessages[handle]:
+            di = DatagramIterator(dg)
+            msgType = di.getUint16()
+            if self.handler is None:
+                self.handleMessageType(msgType, di)
+            else:
+                self.handler(msgType, di)
+
+        del self.__pendingMessages[handle]
+
+    def __recordObjectMessage(self, msgType, di):
+        if msgType not in (CLIENT_OBJECT_SET_FIELD,
+                           CLIENT_OBJECT_LEAVING,
+                           CLIENT_OBJECT_LOCATION):
+            return False
+
+        di2 = DatagramIterator(di.getDatagram(), di.getCurrentIndex())
+        doId = di2.getUint32()
+
+        if doId not in self.__doId2pendingInterest:
+            return False
+
+        pending = self.__pendingMessages.setdefault(
+            self.__doId2pendingInterest[doId], [])
+        pending.append(Datagram(di.getDatagram()))
+
+        return True
+
+    def __doGenerate(self, doId, parentId, zoneId, classId, di, other):
+        dclass = self.dclassesByNumber[classId]
+        # if self._isInvalidPlayerAvatarGenerate(doId, dclass, parentId, zoneId):
+        #    return
+        dclass.startGenerate()
+        if other:
+            distObj = self.generateWithRequiredOtherFields(
+                dclass, doId, di, parentId, zoneId)
+        else:
+            distObj = self.generateWithRequiredFields(
+                dclass, doId, di, parentId, zoneId)
+        dclass.stopGenerate()
+
+    def handleGenerateWithRequiredOwner(self, di, other=False):
+        doId = di.getUint32()
+        parentId = di.getUint32()
+        zoneId = di.getUint32()
+        classId = di.getUint16()
+
+        dclass = self.dclassesByNumber[classId]
+        dclass.startGenerate()
+
+        if other:
+            distObj = self.generateWithRequiredOtherFieldsOwner(dclass, doId, di)
+        else:
+            distObj = self.generateWithRequiredFieldsOwner(dclass, doId, di)
+
+        dclass.stopGenerate()
+
+    def generateWithRequiredFieldsOwner(self, dclass, doId, di):
+        if doId in self.doId2ownerView:
+            self.notify.error('Duplicate owner generate for %s (%s)' % (
+                doId, dclass.getName()))
+
+            distObj = self.doId2ownerView[doId]
+            assert distObj.dclass == dclass
+            distObj.generate()
+            distObj.updateRequiredFields(dclass, di)
+        elif self.cacheOwner.contains(doId):
+            distObj = self.cacheOwner.retrieve(doId)
+            assert distObj.dclass == dclass
+            self.doId2ownerView[doId] = distObj
+            distObj.generate()
+            distObj.updateRequiredFields(dclass, di)
+        else:
+            classDef = dclass.getOwnerClassDef()
+            if not classDef:
+                self.notify.error('Could not create an undefined %s object. Have you created an owner view?' % (
+                    dclass.getName()))
+
+            distObj = classDef(self)
+            distObj.dclass = dclass
+            distObj.doId = doId
+            self.doId2ownerView[doId] = distObj
+            distObj.generateInit()
+            distObj.generate()
+            distObj.updateRequiredFields(dclass, di)
+
+        return distObj
+
+    def handleQuietZoneGenerateWithRequired(self, di):
+        doId = di.getUint32()
+        parentId = di.getUint32()
+        zoneId = di.getUint32()
+        classId = di.getUint16()
+        dclass = self.dclassesByNumber[classId]
+        dclass.startGenerate()
+        distObj = self.generateWithRequiredFields(
+            dclass, doId, di, parentId, zoneId)
+        dclass.stopGenerate()
+
+    def handleQuietZoneGenerateWithRequiredOther(self, di):
+        doId = di.getUint32()
+        parentId = di.getUint32()
+        zoneId = di.getUint32()
+        classId = di.getUint16()
+        dclass = self.dclassesByNumber[classId]
+        dclass.startGenerate()
+        distObj = self.generateWithRequiredOtherFields(
+            dclass, doId, di, parentId, zoneId)
+        dclass.stopGenerate()
+
+    def handleDisable(self, di, ownerView=False):
+        doId = di.getUint32()
+        if not self.isLocalId(doId):
+            self.disableDoId(doId, ownerView)
+
+    def sendSetLocation(self, doId, parentId, zoneId):
+        datagram = PyDatagram()
+        datagram.addUint16(CLIENT_OBJECT_LOCATION)
+        datagram.addUint32(doId)
+        datagram.addUint32(parentId)
+        datagram.addUint32(zoneId)
+        self.send(datagram)
+
+    def sendHeartbeat(self):
+        datagram = PyDatagram()
+        datagram.addUint16(CLIENT_HEARTBEAT)
+        self.send(datagram)
+        self.lastHeartbeat = globalClock.getRealTime()
+        self.considerFlush()
+
+    def sendDisconnect(self):
+        if self.isConnected():
+            datagram = PyDatagram()
+            datagram.addUint16(CLIENT_DISCONNECT)
+            self.send(datagram)
+            self.notify.info('Sent disconnect message to server')
+            self.disconnect()
+
+        self.stopHeartbeat()
+
     def askAvatarKnown(self, avId):
         return 0
     

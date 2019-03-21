@@ -199,7 +199,7 @@ class AvatarChooser(DirectObject, StateData):
                 self.ship = ShipModel(None, ShipGlobals.INTERCEPTORL1, 0, 1)
                 self.ship.setPosHpr(140.86, 538.97, -3.62, -133.04, 0.0, 0.0)
                 self.ship.reparentTo(self.scene)
-                for n in self.ship.findAllMatches('**/+LODNode').asList():
+                for n in self.ship.findAllMatches('**/+LODNode'):
                     n.node().forceSwitch(n.node().getHighestSwitch())
 
         self.avatarListFrame = DirectFrame(parent = base.a2dTopLeft, relief = None)
@@ -974,10 +974,7 @@ class AvatarChooser(DirectObject, StateData):
         else:
             self.nextSubButton.show()
         self.currentSubId = self.subIds[self.currentSubIndex]
-        subName = base.cr.accountDetailRecord.subDetails[self.currentSubId].subName
-        subAccess = base.cr.accountDetailRecord.subDetails[self.currentSubId].subAccess
-        subAccessStr = PLocalizer.AccessLevel[subAccess]
-        subLabelText = '\x01white\x01%s\x02\n\x01smallCaps\x01%s\x02' % (subName, subAccessStr)
+        subLabelText = '\x01white\x01%s\x02' % base.cr.launcher.getPlayToken()
         self.subLabel['text'] = subLabelText
         for frame in self.subFrames.values():
             frame.hide()

@@ -80,13 +80,13 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         linePos -= buttonLineHeight
         self.dialogDoneEvent = 'loginDialogAck'
         dialogClass = OTPGlobals.getGlobalDialogClass()
-        self.dialog = dialogClass(dialogName = 'loginDialog', doneEvent = self.dialogDoneEvent, message = '', style = OTPDialog.Acknowledge, sortOrder = NO_FADE_SORT_INDEX + 100)
+        self.dialog = dialogClass(dialogName = 'loginDialog', doneEvent = self.dialogDoneEvent, message = '', style = OTPDialog.Acknowledge, sortOrder = DGG.NO_FADE_SORT_INDEX + 100)
         self.dialog.hide()
         self.failDialog = DirectFrame(parent = aspect2dp, relief = DGG.RAISED, borderWidth = (0.01,
           0.01), pos = (0,
           0.1,
           0), text = '', text_scale = 0.08, text_pos = (0.0,
-          0.3), text_wordwrap = 15, sortOrder = NO_FADE_SORT_INDEX)
+          0.3), text_wordwrap = 15, sortOrder = DGG.NO_FADE_SORT_INDEX)
         linePos = -.05
         self.failTryAgainButton = DirectButton(parent = self.failDialog, relief = DGG.RAISED, borderWidth = (0.01,
           0.01), pos = (0, 0, linePos), scale = 0.9, text = OTPLocalizer.LoginScreenTryAgain, text_scale = 0.06, text_pos = (0, -.02), command = self.__handleFailTryAgain)
@@ -97,7 +97,7 @@ class LoginScreen(StateData.StateData, GuiScreen.GuiScreen):
         self.failDialog.hide()
         self.connectionProblemDialogDoneEvent = 'loginConnectionProblemDlgAck'
         dialogClass = OTPGlobals.getGlobalDialogClass()
-        self.connectionProblemDialog = dialogClass(dialogName = 'connectionProblemDialog', doneEvent = self.connectionProblemDialogDoneEvent, message = '', style = OTPDialog.Acknowledge, sortOrder = NO_FADE_SORT_INDEX + 100)
+        self.connectionProblemDialog = dialogClass(dialogName = 'connectionProblemDialog', doneEvent = self.connectionProblemDialogDoneEvent, message = '', style = OTPDialog.Acknowledge, sortOrder = DGG.NO_FADE_SORT_INDEX + 100)
         self.connectionProblemDialog.hide()
 
     def unload(self):

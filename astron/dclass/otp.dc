@@ -32,15 +32,12 @@ struct AvatarPendingDel {
 
 dclass Account {
   string DcObjectType db;
-  uint32array ACCOUNT_AV_SET required db;
-  uint32array pirateAvatars required db;
-  uint32array HOUSE_ID_SET db;
-  uint32 ESTATE_ID db;
+  uint32 ACCOUNT_AV_SET[] required db;
   AvatarPendingDel ACCOUNT_AV_SET_DEL[] db;
-  string PLAYED_MINUTES db;
-  string PLAYED_MINUTES_PERIOD db;
   string CREATED db;
   string LAST_LOGIN db;
+  string ACCOUNT_ID db;
+  uint16 ACCESS_LEVEL db;
 };
 
 struct BarrierData {

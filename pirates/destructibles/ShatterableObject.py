@@ -80,8 +80,8 @@ class ShatterableObject(DirectObject):
                 i.stash()
 
     def findDebris(self):
-        self.break1High = self.prop.findAllMatches('**/debrisA*').asList()
-        self.break2High = self.prop.findAllMatches('**/debrisB*').asList()
+        self.break1High = self.prop.findAllMatches('**/debrisA*')
+        self.break2High = self.prop.findAllMatches('**/debrisB*')
         self.break1Med = None
         self.break2Med = None
         self.break1Low = None

@@ -85,9 +85,11 @@ class SpawnNodeBase:
     def canRespawn(self):
         holidayName = self.objectData.get('Holiday', None)
         if holidayName:
-            holidayId = HolidayGlobals.getHolidayIdFromName(holidayName)
-            if holidayId:
-                return self.air.newsManager.isHolidayActive(holidayId)
+            # TODO
+            pass
+            #holidayId = HolidayGlobals.getHolidayIdFromName(holidayName)
+            #if holidayId:
+            #    return self.air.newsManager.isHolidayActive(holidayId)
 
         return True
 
@@ -171,7 +173,7 @@ class SpawnNodeBase:
         npc.setUniqueId('' if avatarType.getBoss() else self.objKey)
         npc.setPos(self.objectData.get('GridPos', self.objectData.get('Pos', (0, 0, 0))))
         npc.setHpr(self.objectData.get('Hpr', (0, 0, 0)))
-        npc.setSpawnPosHpr(npc.getPos(), npc.getHpr())
+        npc.setSpawnPos(npc.getPos())
         npc.setInitZ(npc.getZ())
         npc.setTeam(self.getNPCTeam(avatarType))
 
