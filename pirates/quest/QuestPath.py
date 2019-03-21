@@ -1,35 +1,33 @@
-import types
-
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.PythonUtil import report
 from pirates.pirate import AvatarType, AvatarTypes
-from pirates.piratesbase import PiratesGlobals, TeamUtils
+from pirates.piratesbase import PiratesGlobals
 from pirates.quest import QuestConstants
-
+from pirates.piratesbase import TeamUtils
+import types
 
 class QuestGoal:
-    
     Type_Uid = 0
     Type_Custom = 1
-
+    
     def __init__(self, typeInfo):
         self.__goalDataStr = None
         self.__goalData = typeInfo
         self.__goalDataLen = len(self.__goalData)
         self.__goalType = type(self.__goalData)
-        return
-
+    
     def getType(self):
         if self.__goalType == types.ListType:
             return self.Type_Custom
+        
         return self.Type_Uid
-
+    
     def getTargetType(self):
         if self.__goalType == types.ListType:
             return self.__goalData[1]
-        return
+        return None
 
-    def compareTo(self, object, goalOwner=None):
+    def compareTo(self, object, goalOwner = None):
         if self.__goalType == types.ListType:
             if self.__goalData[0] > 0 and self.__goalData[0] > object.getLevel():
                 return 1
@@ -53,16 +51,17 @@ class QuestGoal:
                     return 0
             elif object.getAvatarType().isA(self.__goalData[1]):
                 return 0
-        else:
-            if self.__goalData == object.getUniqueId():
-                return 0
+        elif self.__goalData == object.getUniqueId():
+            return 0
         return 1
-
+    
     def _asString(self):
         if self.__goalDataStr != None:
             return self.__goalDataStr
+        
         if self.__goalData == None:
             resultStr = ''
+        
         if self.__goalType == types.StringType:
             resultStr = self.__goalData
         else:
@@ -70,7 +69,7 @@ class QuestGoal:
             for currField in self.__goalData:
                 strRep += str(currField)
                 strRep += '-'
-
+            
             resultStr = strRep
         self.__goalDataStr = resultStr
         return resultStr
@@ -86,9 +85,9 @@ class QuestGoal:
         otherStrRep = other._asString()
         if strRep < otherStrRep:
             return -1
-        else:
-            if strRep > otherStrRep:
-                return 1
+        elif strRep > otherStrRep:
+            return 1
+        
         return 0
 
     def __hash__(self):
@@ -106,8 +105,8 @@ class QuestStep:
     STQuestNode = 7
     STShip = 8
     NullStep = None
-
-    def __init__(self, originDoId, stepDoId, stepType, posH=(0, 0, 0, 0), islandId=''):
+    
+    def __init__(self, originDoId, stepDoId, stepType, posH = (0, 0, 0, 0), islandId = ''):
         self.originDoId = originDoId
         self.stepDoId = stepDoId
         self.stepType = stepType
@@ -115,11 +114,11 @@ class QuestStep:
         self.islandId = islandId
 
     def __repr__(self):
-        return 'QuestStep(%d, %d, %d, %s, %s)' % (self.getOriginDoId(), self.getStepDoId(), self.getStepType(), `(self.getPosH())`, self.islandId)
-
+        return 'QuestStep(%d, %d, %d, %s, %s)' % (self.getOriginDoId(), self.getStepDoId(), self.getStepType(), `self.getPosH()`, self.islandId)
+    
     def __cmp__(self, other):
         return not isinstance(other, QuestStep) or cmp(self.originDoId, other.originDoId) or cmp(self.stepDoId, other.stepDoId) or cmp(self.stepType, other.stepType) or cmp(self.posH, other.posH) or cmp(self.islandId, other.islandId)
-
+    
     def getOriginDoId(self):
         return self.originDoId
 
@@ -128,11 +127,11 @@ class QuestStep:
 
     def getStepType(self):
         return self.stepType
-
+    
     def getPosH(self):
         return self.posH
-
-    def setIsland(self, islandId=''):
+    
+    def setIsland(self, islandId = ''):
         self.islandId = islandId
 
     def getIsland(self):
@@ -149,7 +148,7 @@ class QuestStep:
 
 class QuestPath:
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestPath')
-
+    
     def __init__(self, air):
         self.world = None
         self.posH = (0, 0, 0, 0)
@@ -159,28 +158,24 @@ class QuestPath:
         self.preferredStepUids = set()
         if __dev__:
             pass
-        return
 
     def delete(self):
         self.islandDoId = None
         self.islandStep = None
         self.questSteps = {}
         self.world = None
-        return
 
     def setWorld(self, world):
         self.world = world
 
     def setQuestStepPosH(self, x, y, z, h):
-        self.posH = (
-         x, y, z, h)
+        self.posH = (x, y, z, h)
 
     def getIslandDoId(self):
         if self.islandDoId:
             pass
-        else:
-            if self._isIsland():
-                self.islandDoId = self.doId
+        elif self._isIsland():
+            self.islandDoId = self.doId
         return self.islandDoId
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
@@ -222,26 +217,29 @@ class QuestPath:
                     destIsland = self.air.doId2do.get(questIslandDoId)
                     if destIsland:
                         return QuestStep(self.doId, questIslandDoId, questIsland._getQuestStepType())
-        return
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
     def getExitIslandStep(self):
         if self._isIsland() or self._isShip():
-            return
+            return None
+        
         if not self.islandStep:
             self._getIslandPath([], [], {})
+        
         return self.islandStep
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
-    def getIntoIslandStep(self, questDestUid, isPrivate, avId=None):
+    def getIntoIslandStep(self, questDestUid, isPrivate, avId = None):
         questStep = self.questSteps.get(questDestUid)
         if not questStep:
             self._getQuestPath(questDestUid, isPrivate, [], [], {}, avId)
+        
         questStep = self.questSteps.get(questDestUid)
         if questStep and questDestUid.getType() == QuestGoal.Type_Custom:
             self.questSteps.pop(questDestUid, None)
+        
         return questStep
-
+    
     def getOntoOceanStep(self, questDestUid, avId):
         questDest = None
         questDoId = self.world.queryGoal(questDestUid, self, avId)
@@ -252,23 +250,27 @@ class QuestPath:
                 avObj = self.air.doId2do.get(avId)
                 if avObj:
                     avObj.setQuestGoalDoId(questGoalObj)
+
         return questDest
 
     def _getExitLinkDoIds(self, questGoalUid):
         if __dev__:
             pass
-        return []
 
+        return []
+    
     def _getQuestStepType(self):
         if __dev__:
             pass
+
         return 0
 
     def _isIsland(self):
         if __dev__:
             pass
-        return False
 
+        return False
+    
     def _isShip(self):
         return False
 
@@ -317,6 +319,7 @@ class QuestPath:
         step = self.air.doId2do[stepDoId]
         if __dev__:
             pass
+
         self.islandStep = QuestStep(self.doId, stepDoId, step._getQuestStepType(), step._getQuestStepPosH())
         self.islandDoId = step.islandDoId
 
@@ -353,11 +356,10 @@ class QuestPath:
                 except AttributeError:
                     pass
 
-        else:
-            if not questPath:
-                if self.air.worldCreator.isObjectDefined(str(questDestUid), self.world.getFileName() + '.py'):
-                    questPath = alreadyVisited + [self.doId]
-                    needToStore = False
+        elif not questPath:
+            if self.air.worldCreator.isObjectDefined(str(questDestUid), self.world.getFileName() + '.py'):
+                questPath = alreadyVisited + [self.doId]
+                needToStore = False
         if questPath:
             finalPath = [
              questPath[-1]]
@@ -368,7 +370,7 @@ class QuestPath:
 
             finalPath.reverse()
         else:
-            exitLinks = [linkDoId for linkDoId in self._getExitLinkDoIds(str(questDestUid)) if linkDoId not in alreadyVisited if linkDoId not in needToVisit]
+            exitLinks = [ linkDoId for linkDoId in self._getExitLinkDoIds(str(questDestUid)) if linkDoId not in alreadyVisited if linkDoId not in needToVisit ]
             for link in exitLinks:
                 pathDict[link] = self.doId
 
@@ -391,17 +393,21 @@ class QuestPath:
         return finalPath
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
-    def _storeQuestStep(self, path, questDestUid, questStep=None):
+    def _storeQuestStep(self, path, questDestUid, questStep = None):
         if not questStep:
             stepDoId = path[path.index(self.doId) + 1]
             step = self.air.doId2do[stepDoId]
             if __dev__:
                 pass
-            questStep = QuestStep(self.doId, stepDoId, step._getQuestStepType(), step._getQuestStepPosH())
-        self.questSteps[questDestUid] = questStep
 
+            questStep = QuestStep(self.doId, stepDoId, step._getQuestStepType(), step._getQuestStepPosH())
+        
+        self.questSteps[questDestUid] = questStep
+    
     def setAsPreferredStepFor(self, questGoalUid):
         self.preferredStepUids.add(questGoalUid)
-
+    
     def isPreferredStep(self, questGoalUid):
         return questGoalUid in self.preferredStepUids
+
+

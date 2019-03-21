@@ -7,10 +7,9 @@ from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PDialog
 from otp.otpgui import OTPDialog
 
-
 class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestHolder):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedQuestAvatar')
-
+    
     def __init__(self):
         self.lastQuestStepRequest = None
         self.questStep = None
@@ -18,14 +17,14 @@ class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestH
         self.questIndicator = QuestStepIndicator()
         self.activeQuestId = ''
         self.popupDialog = None
-
+    
     def delete(self):
         self.activeQuestId = ''
         self.questIndicator.delete()
         self.questStep = None
         self.oldQuestStep = None
         self.lastQuestStepRequest = None
-
+    
     def setQuestHistory(self, history):
         self.questHistory = history
 
@@ -43,23 +42,23 @@ class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestH
 
     def getCurrentQuestChoiceContainers(self):
         return self.currentQuestChoiceContainers
-
+    
     def requestDropQuest(self, questId):
         DistributedQuestAvatar.notify.debug('requestDropQuest: %s (%s)' % (questId, self.doId))
         self.sendUpdate('requestDropQuest', [questId])
-
+    
     def requestShareQuest(self, questId):
         DistributedQuestAvatar.notify.debug('requestShareQuest: %s (%s)' % (questId, self.doId))
         self.sendUpdate('requestShareQuest', [questId])
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
-    def refreshActiveQuestStep(self, forceClear=False, forceRefresh=False):
+    def refreshActiveQuestStep(self, forceClear = False, forceRefresh = False):
         if self.activeQuestId:
             if forceRefresh or forceClear:
                 self.lastQuestStepRequest = None
                 self.oldQuestStep = None
                 self.questStep = None
-
+            
             if not forceClear:
                 self.b_requestQuestStep(self.activeQuestId)
             else:
@@ -81,6 +80,7 @@ class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestH
                 else:
                     self.d_requestQuestStep(stepRequest)
                     self.l_requestQuestStep(stepRequest)
+            
         else:
             self.l_requestQuestStep(None)
             self.l_setQuestStep(None)
@@ -102,7 +102,7 @@ class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestH
         if questStep == QuestStep.getNullStep():
             localAvatar.guiMgr.mapPage.worldMap.mapBall.removeDart()
             return
-
+        
         mapPage = localAvatar.guiMgr.mapPage
         doId = base.cr.uidMgr.uid2doId.get(questStep.getIsland())
         island = base.cr.doId2do.get(doId)
@@ -118,10 +118,9 @@ class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestH
         if questStep == QuestStep.getNullStep():
             self.oldQuestStep = None
             questStep = None
-        else:
-            if not questStep and self.questStep:
-                self.oldQuestStep = self.questStep
-
+        elif not questStep and self.questStep:
+            self.oldQuestStep = self.questStep
+        
         self.questStep = questStep
         self.questIndicator.showQuestStep(self.questStep)
 
@@ -129,7 +128,7 @@ class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestH
     def b_requestActiveQuest(self, questId):
         if not questId == self.activeQuestId:
             self.d_requestActiveQuest(questId)
-
+        
         self.l_requestActiveQuest(questId)
 
     @report(types=['frameCount', 'args'], dConfigParam='want-quest-indicator-report')
@@ -148,32 +147,33 @@ class DistributedQuestAvatar(QuestAvatarBase.QuestAvatarBase, QuestHolder.QuestH
     def l_setActiveQuest(self, questId):
         if questId != self.activeQuestId:
             self.activeQuestId = questId
-            messenger.send('localAvatarActiveQuestId', sentArgs=[self.activeQuestId])
+            messenger.send('localAvatarActiveQuestId', sentArgs = [self.activeQuestId])
             self.b_requestQuestStep(questId)
             if self.guiMgr and self.guiMgr.mapPage:
                 questDartName = localAvatar.guiMgr.mapPage.worldMap.mapBall.questDartName
                 if questDartName:
                     localAvatar.guiMgr.mapPage.worldMap.mapBall.updateDartText(questDartName, questId)
-
+    
     def popupProgressBlocker(self, questId):
         if questId == 'c3visitJoshamee':
-            localAvatar.guiMgr.showNonPayer(quest=questId, focus=9)
+            localAvatar.guiMgr.showNonPayer(quest = questId, focus = 9)
             return
-        else:
-            if questId == 'c4.1visitValentina':
-                localAvatar.guiMgr.showStayTuned(quest=questId, focus=0)
-                return
-
+        elif questId == 'c4.1visitValentina':
+            localAvatar.guiMgr.showStayTuned(quest = questId, focus = 0)
+            return
+        
         popupDialogText = PLocalizer.ProgressBlockPopupDialog.get(questId)
         if popupDialogText:
-            self.popupDialog = PDialog.PDialog(text=popupDialogText, style=OTPDialog.Acknowledge,
-                command=self.__cleanupDialog)
+            self.popupDialog = PDialog.PDialog(text = popupDialogText, style = OTPDialog.Acknowledge, command = self.__cleanupDialog)
         else:
-            localAvatar.guiMgr.showNonPayer(quest=questId, focus=9)
+            localAvatar.guiMgr.showNonPayer(quest = questId, focus = 9)
             self.notify.warning('%s: No progressBlock dialog found!' % questId)
-
-    def __cleanupDialog(self, value=None):
+    
+    def __cleanupDialog(self, value = None):
         if self.popupDialog:
             self.popupDialog.destroy()
             del self.popupDialog
             self.popupDialog = None
+        
+
+

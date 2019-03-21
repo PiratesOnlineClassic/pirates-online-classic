@@ -1,25 +1,37 @@
-import random
-
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.PythonUtil import POD
-from pirates.piratesbase import PLocalizer
-from pirates.quest import QuestDB
+from pirates.quest.QuestLadder import QuestLadder, QuestChoice
+from pirates.quest.QuestLadder import QuestChoiceSingle
 from pirates.quest.QuestDNA import QuestDNA
-from pirates.quest.QuestLadder import (QuestChoice, QuestChoiceSingle,
-                                       QuestLadder)
 from pirates.quest.QuestTaskDNA import VisitTaskDNA
-
+from pirates.quest import QuestDB
+from pirates.piratesbase import PLocalizer
+import random
 
 class QuestContainerDNA(POD):
     notify = DirectNotifyGlobal.directNotify.newCategory('QuestContainerDNA')
     Counter = 1102
-    DataSet = {'name': None, 'questInt': -1, 'title': '', 'description': '', 'giverId': None, 'firstQuestId': None, 'containers': None, 'rewards': tuple(), 'completeCount': QuestChoice.CompleteAll, 'dialogBefore': '', 'dialogDuring': '', 'dialogAfter': '', 'dialogBrushoff': '', 'droppable': False}
-
+    DataSet = {
+        'name': None,
+        'questInt': -1,
+        'title': '',
+        'description': '',
+        'giverId': None,
+        'firstQuestId': None,
+        'containers': None,
+        'rewards': tuple(),
+        'completeCount': QuestChoice.CompleteAll,
+        'dialogBefore': '',
+        'dialogDuring': '',
+        'dialogAfter': '',
+        'dialogBrushoff': '',
+        'droppable': False}
+    
     def hasQuest(self, questId):
         for container in self.getContainers():
             if container.hasQuest(questId):
                 return True
-
+        
         return False
 
     def isContainer(self):
@@ -27,26 +39,26 @@ class QuestContainerDNA(POD):
 
     def getQuestId(self):
         return self.name
-
+    
     def getObject(self, id):
         if self.getQuestId() == id:
             return self
-        for container in self.getContainers():
-            container.getObject(id)
-
-        return
+        else:
+            for container in self.getContainers():
+                container.getObject(id)
+        return None
 
     def getContainer(self, name):
         if self.name == name:
             return self
-        for container in self.getContainers():
-            ctr = container.getContainer(name)
-            if ctr:
-                return ctr
+        else:
+            for container in self.getContainers():
+                ctr = container.getContainer(name)
+                if ctr:
+                    return ctr
+        return None
 
-        return
-
-    def oldinitialize(self, parentIsChoice=False):
+    def oldinitialize(self, parentIsChoice = False):
         giverId = self.getGiverId()
         if giverId:
             parentIsChoice = True
@@ -56,15 +68,18 @@ class QuestContainerDNA(POD):
                 title = PLocalizer.ReturnVisitQuestTitle % PLocalizer.NPCNames[giverId]
                 desc = PLocalizer.ReturnVisitQuestDesc % PLocalizer.NPCNames[giverId]
                 dialog = PLocalizer.ReturnVisitQuestDialog
-                PLocalizer.QuestStrings[id] = {'title': title, 'description': desc, 'dialogAfter': dialog}
-                self.containers = (
-                 questDNA,) + self.containers
+                PLocalizer.QuestStrings[id] = {
+                    'title': title,
+                    'description': desc,
+                    'dialogAfter': dialog}
+                self.containers = (questDNA,) + self.containers
             else:
                 self.notify.warning('%s not found in QuestDB!' % id)
+        
         for container in self.getContainers():
             container.initialize(parentIsChoice)
-
-    def initialize(self, parentIsChoice=False):
+    
+    def initialize(self, parentIsChoice = False):
         for container in self.getContainers():
             container.initialize(parentIsChoice)
 
@@ -72,53 +87,60 @@ class QuestContainerDNA(POD):
         for container in self.getContainers():
             container.initializeFortune(droppable)
 
-    def constructDynamicCopy(self, av, parent=None):
+    def constructDynamicCopy(self, av, parent = None):
         dynCopy = self._makeDynamicCopy(self.getName(), self.getTitle(), av, self.getQuestInt(), parent, self.getGiverId(), self.getRewards(), self.getFirstQuestId(), self.getDescription(), self.getCompleteCount())
         goal = 0
         for container in self.getContainers():
-            dynObj = container.constructDynamicCopy(av, parent=dynCopy)
+            dynObj = container.constructDynamicCopy(av, parent = dynCopy)
             goal += dynObj.getGoal()
             dynCopy.addContainer(dynObj)
-
+        
         dynCopy.setGoal(goal)
         return dynCopy
 
     def _getString(self, stringName):
         if self.name not in PLocalizer.QuestStrings:
-            return
+            return None
+        
         string = PLocalizer.QuestStrings[self.name].get(stringName)
         if string is None or len(string) == 0:
-            return
+            return None
+        
         return string
-
+    
     def getDialogBefore(self):
         dialog = self._getString('dialogBefore')
         if dialog is not None:
             return dialog
+        
         return random.choice(PLocalizer.QuestDefaultDialogBefore)
 
     def getDialogDuring(self):
         dialog = self._getString('dialogDuring')
         if dialog is not None:
             return dialog
+        
         return random.choice(PLocalizer.QuestDefaultDialogDuring)
 
     def getDialogAfter(self):
         dialog = self._getString('dialogAfter')
         if dialog is not None:
             return dialog
+        
         return random.choice(PLocalizer.QuestDefaultDialogAfter)
 
     def getDialogBrushoff(self):
         dialog = self._getString('dialogBrushoff')
         if dialog is not None:
             return dialog
+        
         return random.choice(PLocalizer.QuestDefaultDialogBrushoff)
 
     def getDescriptionText(self):
         dialog = self._getString('description')
         if dialog is not None:
             return dialog
+        
         return 'Unknown'
 
     def compileStats(self, questStatData):
@@ -128,21 +150,23 @@ class QuestContainerDNA(POD):
             containers = self.containers[:self.completeCount]
         for container in containers:
             container.compileStats(questStatData)
-
+        
 
 class QuestChoiceDNA(QuestContainerDNA):
-
+    
     def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId, description, completeCount):
         return QuestChoice(name, title, av, questInt, parent, giverId, rewards, description, completeCount)
 
 
 class QuestChoiceSingleDNA(QuestContainerDNA):
-
+    
     def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId, description, completeCount):
         return QuestChoiceSingle(name, title, av, questInt, parent, giverId, rewards, firstQuestId, description)
 
 
 class QuestLadderDNA(QuestContainerDNA):
-
+    
     def _makeDynamicCopy(self, name, title, av, questInt, parent, giverId, rewards, firstQuestId, description, completeCount):
         return QuestLadder(name, title, av, questInt, parent, giverId, rewards, firstQuestId, description)
+
+
