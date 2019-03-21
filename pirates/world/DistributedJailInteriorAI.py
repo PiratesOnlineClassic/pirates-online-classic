@@ -1,9 +1,11 @@
 import random
 
-from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 from direct.directnotify import DirectNotifyGlobal
+
+from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 from pirates.piratesbase import PiratesGlobals
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
+
 
 class DistributedJailInteriorAI(DistributedGAInteriorAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedJailInteriorAI')
@@ -13,21 +15,13 @@ class DistributedJailInteriorAI(DistributedGAInteriorAI):
 
         self.__cellDoors = {}
 
-    def handleChildArrive(self, childObj, zoneId):
-        if isinstance(childObj, DistributedPlayerPirateAI) and not childObj.isNpc:
-            if childObj.getJailCellIndex() < 100:
-                childObj.b_setGameState('ThrownInJail')
-
-        DistributedGAInteriorAI.handleChildArrive(self, childObj, zoneId)
-
     def handleChildLeave(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerPirateAI) and not childObj.isNpc:
             if childObj.getJailCellIndex() < 100:
                 cellDoor = self.getCellDoor(avatarId=childObj.doId)
-
                 if not cellDoor:
-                    self.notify.warning('Cannot reset cell door for avatar %d, no cell door found!' % (
-                        avatar.doId))
+                    self.notify.warning('Cannot reset cell door for avatar %d, '
+                        'no cell door found!' % avatar.doId)
 
                     return
 
@@ -52,16 +46,15 @@ class DistributedJailInteriorAI(DistributedGAInteriorAI):
         del self.__cellDoors[cellDoor.doId]
 
     def getCellDoor(self, cellDoorId=None, avatarId=None):
-        if avatarId:
+        if avatarId is not None:
             for cellDoor in self.__cellDoors.values():
                 if cellDoor.getAvatarId() == avatarId:
-                    cellDoorId = cellDoor.doId
-                    break
+                    return cellDoor
 
-        if not cellDoorId:
-            cellDoorId = random.choice(self.__cellDoors.keys())
+        if len(self.__cellDoors) == 0:
+            return None
 
-        return self.__cellDoors.get(cellDoorId)
+        return random.choice(self.__cellDoors.values())
 
     def avatarAlreadyInJail(self):
         pass

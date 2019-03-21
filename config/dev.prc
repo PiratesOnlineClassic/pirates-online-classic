@@ -16,6 +16,7 @@ model-path ../resources/phase_5
 want-townfolk #t
 want-enemies #t
 want-animals #t
+want-random-bosses #f
 
 # Hotkeys:
 want-dev-hotkeys #f

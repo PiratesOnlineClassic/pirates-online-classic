@@ -24,11 +24,42 @@ class PirateInventoryAI(DistributedInventoryAI):
         if repType == InventoryType.OverallRep and newLevel > avatar.getLevel():
             avatar.b_setLevel(newLevel)
             avatar.d_levelUpMsg(repType, avatar.getLevel(), 0)
+
+            # Assign level up quests...
+            try:
+                level_up_quests = RepChart.getLevelUpQuest(repType, newLevel)[0]
+                if not self.air.questMgr.hasQuest(level_up_quests):
+                    self.air.questMgr.createQuest(avatar, level_up_quests)
+            except IndexError:
+                self.notify.debug('Failed to give level up quest for %s(Level: %s); '
+                    'They\'re not the proper level!' % (avatar.getName(), newLevel))
+
         else:
             # only play the level up message for the avatar if their new reputation
             # is greater than their previous reputation...
             if newLevel > oldLevel:
                 avatar.d_levelUpMsg(repType, newLevel, 0)
+
+                # Give level up skills
+                earnedUnspent, earnedSkill = RepChart.getLevelUpSkills(repType, newLevel)
+                for unspent in earnedUnspent:
+                    self.b_setStackQuantity(unspent, 1)
+
+                for earnedSkill in earnedSkill:
+                    self.b_setStackQuantity(earnedSkill, 1)
+
+                for unspent in RepChart.getLevelUpSkills(repType, 0)[1] + RepChart.getLevelUpSkills(repType, 1)[1]:
+                    if not self.getStackQuantity(unspent):
+                        self.b_setStackQuantity(unspent, 1)
+
+                # Give weapon level up quests...
+                try:
+                    weapon_quests = RepChart.getWeaponLevelUpQuest(repType, newLevel, avatar)[0]
+                    if not self.air.questMgr.hasQuest(weapon_quests):
+                        self.air.questMgr.createQuest(avatar, weapon_quests)
+                except IndexError:
+                    self.notify.debug('Failed to give weapon level up quest for %s(Level: %s); '
+                        'They\'re not the proper level!' % (avatar.getName(), newLevel))
 
                 maxMojo = avatar.getMaxMojo()
                 maxMojo += RepChart.getManaGain(repType)
@@ -38,6 +69,10 @@ class PirateInventoryAI(DistributedInventoryAI):
 
                 avatar.b_setMaxHp(maxHp)
                 avatar.b_setMaxMojo(maxMojo)
+
+        if repType == InventoryType.OverallRep and newLevel > avatar.getLevel() or newLevel > oldLevel:
+            avatar.b_setHp(avatar.getMaxHp())
+            avatar.b_setMojo(avatar.getMaxMojo())
 
         self.b_setAccumulator(repType, quantity)
 

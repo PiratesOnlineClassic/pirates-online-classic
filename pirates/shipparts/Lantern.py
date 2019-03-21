@@ -25,7 +25,7 @@ class Lantern(NodePath, ShatterableObject.ShatterableObject, ShipPart.ShipPart):
         self.lanternGlowEffect = None
         if not self.glassBreakSfx:
             self.glassBreakSfx = (loader.loadSfx('audio/glass_break1.mp3'), loader.loadSfx('audio/glass_break2.mp3'), loader.loadSfx('audio/glass_break3.mp3'))
-    
+
     def disable(self):
         ShatterableObject.ShatterableObject.disable(self)
         ShipPart.ShipPart.disable(self)
@@ -129,7 +129,7 @@ class Lantern(NodePath, ShatterableObject.ShatterableObject, ShipPart.ShipPart):
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         sfx = random.choice(self.glassBreakSfx)
         base.playSfx(sfx, node = self, cutoff = 2500)
-    
+
     def death(self):
         if self.prop and self.isAlive:
             self.showBrokenState()

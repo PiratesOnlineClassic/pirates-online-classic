@@ -1,7 +1,82 @@
 from direct.distributed.DistributedObjectGlobalAI import DistributedObjectGlobalAI
 from direct.directnotify import DirectNotifyGlobal
+from direct.fsm.FSM import FSM
+
 from otp.ai.MagicWordGlobal import *
+
 from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
+from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
+
+
+class InventoryOperationFSM(FSM):
+    notify = DirectNotifyGlobal.directNotify.newCategory('InventoryOperationFSM')
+
+    def __init__(self, air, avatar, callback=None):
+        FSM.__init__(self, self.__class__.__name__)
+
+        self.air = air
+        self.avatar = avatar
+        self.callback = callback
+
+    def enterOff(self):
+        pass
+
+    def exitOff(Self):
+        pass
+
+    def cleanup(self, *args, **kwargs):
+        del self.air.inventoryManager.avatar2fsm[self.avatar.doId]
+        self.ignoreAll()
+        self.demand('Off')
+
+        if self.callback:
+            self.callback(*args, **kwargs)
+
+
+class LoadInventoryFSM(InventoryOperationFSM):
+
+    def enterStart(self):
+        self.air.dbInterface.queryObject(self.air.dbId,
+            self.avatar.doId,
+            callback=self.avatarQueryResponse,
+            dclass=self.air.dclassesByName['DistributedPlayerPirateAI'])
+
+        self.acceptOnce(self.avatar.getDeleteEvent(), lambda: self.cleanup(None))
+
+    def avatarQueryResponse(self, dclass, fields):
+        if not dclass or not fields:
+            self.notify.debug('Failed to query avatar %d!' % self.avatar.doId)
+            self.cleanup(None)
+            return
+
+        inventoryId, = fields.get('setInventoryId', (0,))
+        if not inventoryId:
+            self.notify.warning('Avatar %d does not have an inventory!' % self.avatar.doId)
+            self.cleanup(None)
+            return
+
+        inventory = self.air.doId2do.get(inventoryId)
+        if not inventory:
+            self.acceptOnce('generate-%d' % inventoryId, self.inventoryArrivedCallback)
+        else:
+            self.inventoryArrivedCallback(inventory)
+
+    def inventoryArrivedCallback(self, inventory):
+        self.inventory = inventory
+        if not inventory:
+            self.notify.warning('Failed to retrieve inventory for avatar %d!' % self.avatar.doId)
+            self.cleanup(None)
+            return
+
+        self.inventory.b_setStackLimit(InventoryType.Hp, self.avatar.getMaxHp())
+        self.inventory.b_setStackLimit(InventoryType.Mojo, self.avatar.getMaxMojo())
+        self.inventory.d_requestInventoryComplete()
+
+        # we're done.
+        self.cleanup(self.inventory)
+
+    def exitStart(self):
+        pass
 
 
 class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
@@ -10,8 +85,8 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
     def __init__(self, air):
         DistributedObjectGlobalAI.__init__(self, air)
 
+        self.avatar2fsm = {}
         self.inventories = {}
-        self.pendingInventories = {}
 
     def announceGenerate(self):
         DistributedObjectGlobalAI.announceGenerate(self)
@@ -58,123 +133,31 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         self.air.netMessenger.send('getInventoryResponse', [callback,
             self.getInventory(avatarId)])
 
+    def runInventoryFSM(self, fsmtype, avatar, *args, **kwargs):
+        if avatar.doId in self.avatar2fsm:
+            self.notify.debug('Failed to run inventory FSM for avatar %d, '
+                'an FSM already running!' % avatar.doId)
+
+            return
+
+        callback = kwargs.pop('callback', None)
+
+        self.avatar2fsm[avatar.doId] = fsmtype(self.air, avatar, callback)
+        self.avatar2fsm[avatar.doId].request('Start', *args, **kwargs)
+
     def requestInventory(self):
         avatarId = self.air.getAvatarIdFromSender()
         if not avatarId:
             return
 
-        self.initiateInventory(avatarId)
-
-    def initiateInventory(self, avatarId):
-
-        def queryResponse(dclass, fields):
-            if not dclass or not fields:
-                self.notify.debug('Failed to query avatar %d!' % (
-                    avatarId))
-
-                return
-
-            inventoryId, = fields.get('setInventoryId', (0,))
-            if not inventoryId:
-                self.notify.warning('Avatar %d does not have an inventory!' % avatarId)
-                return
-
-            self.__sendInventory(avatarId, inventoryId)
-
-        self.air.dbInterface.queryObject(self.air.dbId,
-            avatarId,
-            callback=queryResponse,
-            dclass=self.air.dclassesByName['DistributedPlayerPirateAI'])
-
-    def __waitForInventory(self, avatarId, inventoryId, task):
-        inventory = self.inventories.get(inventoryId)
-        if not inventory:
-            self.notify.debug('Failed to retrieve inventory %d for avatar %d!' % (
-                inventoryId, avatarId))
-
-            return task.done
-
-        self.__sendInventory(avatarId, inventory.doId)
-        return task.done
-
-    def __cleanupWaitForInventory(self, avatarId):
-        if avatarId not in self.pendingInventories:
-            return
-
-        self.ignore('distObjDelete-%d' % avatarId)
-        taskMgr.remove(self.pendingInventories[avatarId])
-        del self.pendingInventories[avatarId]
-
-    def __sendInventory(self, avatarId, inventoryId):
-        inventory = self.inventories.get(inventoryId)
-
-        self.acceptOnce('distObjDelete-%d' % avatarId, lambda: \
-            self.__cleanupWaitForInventory(avatarId))
-
-        if not inventory:
-            if avatarId in self.pendingInventories:
-                self.notify.debug('Cannot retrieve inventory for avatar %d, '
-                    'already trying to get inventory!' % avatarId)
-
-                return
-
-            self.pendingInventories[avatarId] = taskMgr.doMethodLater(5.0,
-                self.__waitForInventory,
-                self.uniqueName('waitForInventory-%d' % avatarId),
-                appendTask=True,
-                extraArgs=[avatarId, inventoryId])
-
-            return
-
         avatar = self.air.doId2do.get(avatarId)
         if not avatar:
-            return
+            self.accept('generate-%d' % avatarId, self.initiateInventory)
+        else:
+            self.initiateInventory(avatar)
 
-        def inventoryResponseCalback(dclass, fields):
-            if not dclass or not fields:
-                self.notify.debug('Failed to query inventory %d for avatar %d!' % (
-                    inventoryId, avatarId))
-
-                return
-
-            categoriesAndLimits, = fields.get('setCategoryLimits', [])
-            categoriesAndDoIds, = fields.get('setDoIds', [])
-            accumulatorTypesAndQuantities, = fields.get('setAccumulators', [])
-            stackTypesAndLimits, = fields.get('setStackLimits', [])
-            stackTypesAndQuantities, = fields.get('setStacks', [])
-
-            for categoryAndLimit in categoriesAndLimits:
-                inventory.b_setCategoryLimit(*categoryAndLimit)
-
-            inventory.b_setDoIds(categoriesAndDoIds)
-
-            for accumulatorTypeAndQuantity in accumulatorTypesAndQuantities:
-                inventory.b_setAccumulator(*accumulatorTypeAndQuantity)
-
-            for stackTypeAndLimit in stackTypesAndLimits:
-                inventory.b_setStackLimit(*stackTypeAndLimit)
-
-            for stackTypeAndQuantity in stackTypesAndQuantities:
-                inventory.b_setStackQuantity(*stackTypeAndQuantity)
-
-            inventory.b_setStackLimit(InventoryType.Hp, avatar.getMaxHp())
-            inventory.b_setStackLimit(InventoryType.Mojo, avatar.getMaxMojo())
-
-            # take into account for potential race conditions,
-            # this can sometimes occur and leave the avatar's
-            # inventory disabled...
-            taskMgr.doMethodLater(0.2, self.__inventoryComplete,
-                self.uniqueName('inventoryTask-%d' % inventoryId),
-                extraArgs=[inventory], appendTask=True)
-
-        self.air.dbInterface.queryObject(self.air.dbId,
-            inventoryId,
-            callback=inventoryResponseCalback,
-            dclass=self.air.dclassesByName['DistributedInventoryAI'])
-
-    def __inventoryComplete(self, inventory, task):
-        inventory.d_requestInventoryComplete()
-        return task.done
+    def initiateInventory(self, avatar, callback=None):
+        self.runInventoryFSM(LoadInventoryFSM, avatar, callback=callback)
 
     def proccessCallbackResponse(self, callback, *args, **kwargs):
         if callback and callable(callback):

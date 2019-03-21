@@ -10,6 +10,8 @@ from pirates.uberdog import UberDogGlobals
 from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
 from pirates.battle.ComboDiaryAI import ComboDiaryAI
 from pirates.piratesbase import Freebooter
+from pirates.pirate import AvatarTypes
+
 
 class BattleManagerAI(BattleManagerBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManagerAI')
@@ -191,7 +193,7 @@ class BattleManagerAI(BattleManagerBase):
             experience = self.getModifiedAttackReputation(avatar, target,
                 skillId, ammoSkillId)
 
-            if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEXPHOLIDAY):
+            if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEXPHOLIDAY) or avatar.hasTempDoubleXPReward():
                 experience *= 2
 
             skillData[2] += experience
@@ -302,14 +304,17 @@ class BattleManagerAI(BattleManagerBase):
         if not target.getDamagable():
             return
 
-        target.b_setHp(max(0, min(target.getHp()[0] - targetEffects[0], target.getMaxHp())))
-        target.b_setPower(max(0, min(target.getPower() - targetEffects[1], target.getMaxPower())))
-        target.b_setLuck(max(0, min(target.getLuck() - targetEffects[2], target.getMaxLuck())))
-        target.b_setMojo(max(0, min(target.getMojo() - targetEffects[3], target.getMaxMojo())))
-        target.b_setSwiftness(max(0, min(target.getSwiftness() - targetEffects[4], target.getMaxSwiftness())))
+        target.b_setHp(max(0, min(target.getHp()[0] + targetEffects[0], target.getMaxHp())))
+        target.b_setPower(max(0, min(target.getPower() + targetEffects[1], target.getMaxPower())))
+        target.b_setLuck(max(0, min(target.getLuck() + targetEffects[2], target.getMaxLuck())))
+        target.b_setMojo(max(0, min(target.getMojo() + targetEffects[3], target.getMaxMojo())))
+        target.b_setSwiftness(max(0, min(target.getSwiftness() + targetEffects[4], target.getMaxSwiftness())))
 
     def __hurtTarget(self, target, targetEffects):
         if not target.getDamagable():
+            return
+
+        if target.getAvatarType() == AvatarTypes.Monkey:
             return
 
         target.b_setHp(max(0, min(target.getHp()[0] + targetEffects[0], target.getMaxHp())))

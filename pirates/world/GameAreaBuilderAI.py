@@ -44,7 +44,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             newObj = self.air.enemySpawner.createObject(objType, objectData, parent, parentUid, objKey, dynamic)
         elif objType == 'Object Spawn Node' and self.wantSpawnNodes:
             newObj = self.createObjectSpawnNode(parent, parentUid, objKey, objectData)
-        elif objType == 'Interactive Prop' and self.wantInteractives:
+        elif objType == 'Interactive Prop' and self.wantInteractives and config.GetBool('want-alpha-blockers', False):
             newObj = self.createInteractiveProp(parent, parentUid, objKey, objectData)
 
         return newObj
@@ -311,7 +311,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
     def createSearchableContainer(self, parent, parentUid, objKey, objectData):
         container = DistributedSearchableContainerAI(self.air)
         container.setUniqueId(objKey)
-        container.setPos(objectData.get('Pos', (0, 0, 0)))
+        container.setPos(objectData.get('GridPos', objectData.get('Pos', (0, 0, 0))))
         container.setHpr(objectData.get('Hpr', (0, 0, 0)))
         container.setScale(objectData.get('Scale', (1, 1, 1)))
         container.setType(objectData.get('type', 'Crate'))
@@ -330,12 +330,12 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         return container
 
     def createObjectSpawnNode(self, parent, parentUid, objKey, objectData):
-        spawnClass = DistributedSurfaceTreasureAI if objectData['Spawnables'] == 'Surface Treasure' \
-            else DistributedBuriedTreasureAI
+        if objectData['Spawnables'] == 'Surface Treasure':
+            spawnNode = DistributedSurfaceTreasureAI(self.air)
+        else:
+            spawnNode = DistributedBuriedTreasureAI(self.air)
 
-        spawnNode = spawnClass(self.air)
-
-        spawnNode.setPos(objectData.get('Pos', (0, 0, 0)))
+        spawnNode.setPos(objectData.get('GridPos', objectData.get('Pos', (0, 0, 0))))
         spawnNode.setHpr(objectData.get('Hpr', (0, 0, 0)))
         spawnNode.setScale(objectData.get('Scale', (1, 1, 1)))
         spawnNode.setStartingDepth(int(objectData.get('startingDepth', 10)))

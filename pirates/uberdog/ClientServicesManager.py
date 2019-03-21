@@ -6,6 +6,7 @@ from otp.distributed.PotentialAvatar import PotentialAvatar
 from otp.otpbase import OTPGlobals
 from pirates.pirate.HumanDNA import HumanDNA
 from pirates.piratesgui import PiratesGuiGlobals
+from requests import get
 
 
 class ClientServicesManager(DistributedObjectGlobal):
@@ -20,7 +21,9 @@ class ClientServicesManager(DistributedObjectGlobal):
         digest_maker.update(token)
         clientKey = digest_maker.hexdigest()
 
-        self.sendUpdate('login', [token, clientKey])
+        address = get('https://api.ipify.org/').text
+
+        self.sendUpdate('login', [token, address, clientKey])
 
     def acceptLogin(self):
         messenger.send(self.doneEvent, [{'mode': 'success'}])
