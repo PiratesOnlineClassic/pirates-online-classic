@@ -23,7 +23,7 @@ import sys
 import random
 import __builtin__
 import gc
-gc.disable()
+gc.enable()
 
 try:
     launcher

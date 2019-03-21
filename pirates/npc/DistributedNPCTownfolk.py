@@ -34,6 +34,8 @@ from pirates.piratesgui import PiratesGuiGlobals
 from pirates.quest.QuestConstants import NPCIds
 from pirates.battle import WeaponGlobals
 
+from libotp import *
+
 class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, DistributedShopKeeper.DistributedShopKeeper, Townfolk.Townfolk):
     DiskWaitingColor = (0, 0, 1, 0.5)
     DiskUseColor = None

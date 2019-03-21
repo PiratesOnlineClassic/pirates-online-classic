@@ -215,7 +215,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         return (Point3(0), Vec3(0))
 
     def setupEntranceNodes(self):
-        entranceNodes = self.findAllMatches('**/entrance_locator_*').asList()
+        entranceNodes = self.findAllMatches('**/entrance_locator_*')
         eNodeMap = dict(zip([ node.getName() for node in entranceNodes ], entranceNodes))
         eNodeMapKeys = eNodeMap.keys()
         eNodeMapKeys.sort()
