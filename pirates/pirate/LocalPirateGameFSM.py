@@ -15,6 +15,8 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.piratesgui.RewardPanel import RewardPanel
 from PlayerPirateGameFSM import PlayerPirateGameFSM
 
+from libotp import *
+
 class LocalPirateGameFSM(PlayerPirateGameFSM):
     notify = directNotify.newCategory('LocalPirateGameFSM')
     
