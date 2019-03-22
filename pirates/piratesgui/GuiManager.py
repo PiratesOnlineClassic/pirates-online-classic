@@ -1857,7 +1857,7 @@ class GuiManager(FSM.FSM):
         self.effectIvals = []
 
     def toggleGameOptions(self, args = None):
-        if self.gameOptions:
+        if self.gameOptions is not None:
             if self.gameOptions.isHidden():
                 self.gameOptions.show()
             else:
