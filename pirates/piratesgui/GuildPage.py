@@ -68,6 +68,7 @@ class GuildPage(SocialPage.SocialPage):
 
     def show(self):
         SocialPage.SocialPage.show(self)
+        self.initGuildPage()
         self.determineButtonState()
         if self.nameEntry:
             self.nameEntry.hide()
