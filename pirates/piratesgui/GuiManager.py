@@ -1862,16 +1862,17 @@ class GuiManager(FSM.FSM):
                 self.gameOptions.show()
             else:
                 self.gameOptions.hide()
-        elif base.config.GetBool('want-custom-keys', 0):
-            width = 1.8
         else:
-            width = 1.6
-        height = 1.6
-        x = -width / 2
-        y = -height / 2
-        self.gameOptions = GameOptions('Game Options', x, y, width, height, base.options)
-        self.gameOptions.show()
-        base.options = self.gameOptions.options
+            if base.config.GetBool('want-custom-keys', 0):
+                width = 1.8
+            else:
+                width = 1.6
+            height = 1.6
+            x = -width / 2
+            y = -height / 2
+            self.gameOptions = GameOptions('Game Options', x, y, width, height, base.options)
+            self.gameOptions.show()
+            base.options = self.gameOptions.options
 
     def showDirtPanel(self):
         if not self.dirtPanel:
