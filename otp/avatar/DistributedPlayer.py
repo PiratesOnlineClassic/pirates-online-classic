@@ -41,6 +41,7 @@ class DistributedPlayer(DistributedAvatar.DistributedAvatar, PlayerBase.PlayerBa
             self.DISLid = 0
             self.autoRun = 0
             self.whiteListEnabled = base.config.GetBool('whitelist-chat-enabled', 1)
+            self.adminAccess = 0
 
     def disable(self):
         DistributedAvatar.DistributedAvatar.disable(self)
@@ -470,5 +471,11 @@ class DistributedPlayer(DistributedAvatar.DistributedAvatar, PlayerBase.PlayerBa
     
     def getAutoRun(self):
         return self.autoRun
+
+    def setAdminAccess(self, access):
+        self.adminAccess = access
+
+    def getAdminAccess(self):
+        return self.adminAccess
 
 

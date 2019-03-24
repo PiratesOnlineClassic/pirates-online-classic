@@ -179,6 +179,7 @@ want-tattoos 1
 want-jewelry 1
 want-emotes 1
 want-slash-commands 1
+want-magic-words 1
 want-map-flavor-anims 1
 low-weapons-only 1
 want-running 0

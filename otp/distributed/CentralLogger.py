@@ -23,11 +23,7 @@ class CentralLogger(DistributedObjectGlobal):
             targetAvId])
         return True
 
-    def writeClientEvent(self, eventString):
-        self.sendUpdate('sendMessage', [
-            'ClientEvent',
-            eventString,
-            0,
-            0])
+    def writeClientEvent(self, eventString, targetDISLId = 0, targetAvId = 0):
+        self.sendUpdate('sendMessage', ['ClientEvent', eventString, targetDISLId, targetAvId])
 
 

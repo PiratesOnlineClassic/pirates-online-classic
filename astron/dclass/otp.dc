@@ -188,10 +188,16 @@ dclass DistributedPlayer : DistributedAvatar {
 };
 
 dclass MagicWordManager : DistributedObject {
+  sendMagicWord(string, uint32) airecv clsend;
+  sendMagicWordResponse(string);
+};
+
+// Original Magic Word Manager struct
+/*dclass MagicWordManager : DistributedObject {
   setMagicWord(string, uint32, uint32, string) airecv clsend;
   setMagicWordResponse(string) airecv;
   setWho(uint32array) airecv clsend;
-};
+};*/
 
 dclass OtpAvatarManager : DistributedObject {
   online();

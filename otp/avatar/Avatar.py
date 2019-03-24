@@ -8,6 +8,8 @@ from otp.avatar.ShadowCaster import ShadowCaster
 import random
 from otp.otpbase import OTPRender
 from direct.showbase.PythonUtil import recordCreationStack
+from direct.showbase.InputStateGlobal import inputState
+from otp.ai.MagicWordGlobal import *
 from libotp import *
 
 def reconsiderAllUnderstandable():
@@ -575,4 +577,18 @@ class Avatar(Actor, ShadowCaster):
     def loop(self, animName, restart = 1, partName = None, fromFrame = None, toFrame = None):
         return Actor.loop(self, animName, restart, partName, fromFrame, toFrame)
 
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def run():
+    """
+    Toggles the debug running on/off
+    """
+
+    debugRunning = not inputState.isSet('debugRunning')
+    inputState.set('debugRunning', debugRunning)
+
+    if not debugRunning:
+        return 'Debug running disabled!'
+
+    return 'Debug running enabled!'
 
