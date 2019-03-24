@@ -109,12 +109,12 @@ dclass DistributedDistrict : DistributedObject {
 dclass DistributedNode : DistributedObject {
   setParentStr(blob) broadcast ram ownsend airecv;
   setParent(uint32) broadcast ram ownsend airecv;
-  setX(int16/10) broadcast ram ownsend airecv;
-  setY(int16/10) broadcast ram ownsend airecv;
-  setZ(int16/10) broadcast ram ownsend airecv;
-  setH(int16%360/10) broadcast ram ownsend airecv;
-  setP(int16%360/10) broadcast ram ownsend airecv;
-  setR(int16%360/10) broadcast ram ownsend airecv;
+  setX(int32/10) required broadcast ram ownsend airecv;
+  setY(int32/10) required broadcast ram ownsend airecv;
+  setZ(int32/10) required broadcast ram ownsend airecv;
+  setH(int16%360/10) required broadcast ram ownsend airecv;
+  setP(int16%360/10) required broadcast ram ownsend airecv;
+  setR(int16%360/10) required broadcast ram ownsend airecv;
   setPos : setX, setY, setZ;
   setHpr : setH, setP, setR;
   setPosHpr : setX, setY, setZ, setH, setP, setR;
