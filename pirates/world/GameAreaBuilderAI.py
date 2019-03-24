@@ -44,7 +44,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             newObj = self.air.enemySpawner.createObject(objType, objectData, parent, parentUid, objKey, dynamic)
         elif objType == 'Object Spawn Node' and self.wantSpawnNodes:
             newObj = self.createObjectSpawnNode(parent, parentUid, objKey, objectData)
-        elif objType == 'Interactive Prop' and self.wantInteractives and config.GetBool('want-alpha-blockers', False):
+        elif objType == 'Interactive Prop' and self.wantInteractives and not config.GetBool('want-alpha-blockers', False):
             newObj = self.createInteractiveProp(parent, parentUid, objKey, objectData)
 
         return newObj
