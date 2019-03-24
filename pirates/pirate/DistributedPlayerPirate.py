@@ -1231,7 +1231,7 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
     
     def getAccess(self):
         if not config.GetBool('want-membership', 0):
-            return FULL
+            return 2
         if Freebooter.AllAccessHoliday:
             return 2
         else:
