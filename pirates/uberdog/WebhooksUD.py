@@ -369,6 +369,17 @@ class PiratesWebhookManager(object):
         Logs a holiday message to Discord
         """
 
+        disableLogHolidayMessage = True
+
+        if disableLogHolidayMessage:
+            # Temp patch; we're not worried about implementing this just yet
+            # Also in the future, maybe instead of this; we can have different sections on the website
+            # and one of them would be a holiday section, and everytime a post is made in that section
+            # it'll send it to a channel in discord.
+            # Alternatively, we can also have it send a generic message,
+            # along with a newspost for that specific holiday.
+            return
+
         if self.want_holiday_logs and len(self.holiday_log_urls) == 0:
             self.notify.warning('Failed to send holiday webhook; No holiday webhook urls defined!')
             return
