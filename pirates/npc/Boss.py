@@ -58,11 +58,11 @@ class Boss(BossBase):
         ts.setCombineRgb(ts.CMReplace, ts.CSConstant, ts.COSrcColor)
         ts.setCombineAlpha(ts.CMReplace, ts.CSConstant, ts.COSrcAlpha)
         ts.setColor(Vec4(1, 1, 1, 0.01))
-        image = PNMImage.PNMImage(2, 2)
-        t = Texture.Texture()
+        image = PNMImage(2, 2)
+        t = Texture()
         t.load(image)
         self.instanceNode.setTexture(ts, t)
-        self.instanceNode.getState().getAttrib(3).addOnStage(ts, t)
+        self.instanceNode.getState().getAttrib(TextureAttrib.getClassType()).addOnStage(ts, t)
         TextureAttrib.makeAllOff().addOnStage(ts, t)
 
     def _getBossModelScale(self):
