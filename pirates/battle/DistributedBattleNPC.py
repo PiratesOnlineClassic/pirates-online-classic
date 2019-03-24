@@ -5,6 +5,7 @@ from direct.distributed.ClockDelta import *
 from direct.task import Task
 from otp.otpbase import OTPGlobals
 from pirates.uberdog.UberDogGlobals import *
+from libotp import *
 from pirates.reputation.DistributedReputationAvatar import DistributedReputationAvatar
 from pirates.battle import DistributedBattleAvatar
 from pirates.battle import EnemyGlobals
