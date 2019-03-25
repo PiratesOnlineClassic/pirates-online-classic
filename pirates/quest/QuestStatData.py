@@ -1,6 +1,3 @@
-# File: Q (Python 2.4)
-
-
 class QuestStatData:
     EnemyDefeatTime = 0.00833333
     ShipDefeatTime = 0.05

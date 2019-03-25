@@ -1,5 +1,3 @@
-# File: Q (Python 2.4)
-
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase.PythonUtil import ParamObj, makeTuple
 from direct.showbase.PythonUtil import getSetter, POD
