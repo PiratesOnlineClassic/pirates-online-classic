@@ -20,6 +20,7 @@ from direct.motiontrail.MotionTrail import MotionTrail
 from direct.directnotify import DirectNotifyGlobal
 from pirates.piratesgui import GameOptionsMatrix
 from pirates.piratesgui.GameOptionsGui import *
+from libotp import NametagGlobals
 
 try:
     import embedded
