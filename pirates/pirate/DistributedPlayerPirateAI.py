@@ -611,22 +611,21 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             isHalloween = self.air.timeOfDayMgr.isHalloweenMoon()
             newState = (isOutside and isHalloween and parentObj)
 
-        # TODO
-        '''if newState != self.getZombie():
+        if newState != self.getZombie():
             self.b_setZombie(bool(newState))
 
-    def setZombie(self, zombie):
+    def setZombie(self, zombie, cursed=False):
         self.zombie = zombie
 
-    def d_setZombie(self, zombie):
-        self.sendUpdate('setZombie', [zombie])
+    def d_setZombie(self, zombie, cursed=False):
+        self.sendUpdate('setZombie', [zombie, cursed])
 
-    def b_setZombie(self, zombie):
-        self.setZombie(zombie)
-        self.d_setZombie(zombie)
+    def b_setZombie(self, zombie, cursed=False):
+        self.setZombie(zombie, cursed)
+        self.d_setZombie(zombie, cursed)
 
     def getZombie(self):
-        return self.zombie'''
+        return self.zombie
 
     def setAllowGMNameTag(self, gmNameTagAllowed):
         self.gmNameTagAllowed = gmNameTagAllowed
