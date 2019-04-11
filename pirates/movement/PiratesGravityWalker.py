@@ -11,10 +11,6 @@ class PiratesGravityWalker(GravityWalker):
         self.predicting = 0
 
     def handleAvatarControls(self, task):
-        # TODO: Disney did some weird stuff, we shouldn't have to do this.
-        from pirates.piratesbase import PiratesGlobals
-        self.setWalkSpeed(*PiratesGlobals.PirateSpeeds[PiratesGlobals.SPEED_NORMAL_INDEX])
-
         run = inputState.isSet('run')
         forward = inputState.isSet('forward')
         reverse = inputState.isSet('reverse')
