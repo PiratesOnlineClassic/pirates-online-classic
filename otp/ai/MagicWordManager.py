@@ -23,7 +23,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
             return
 
         if magicWord.startswith('~~'):
-            if lastClickedNametag is None:
+            if lastClickedNametag == None:
                 target = base.localAvatar
             else:
                 target = lastClickedNametag
@@ -51,12 +51,5 @@ class MagicWordManager(DistributedObject.DistributedObject):
 
     def sendMagicWordResponse(self, response):
         self.notify.info(response)
-        chatFlags = 0
 
-        chatFlags &= ~(CFQuicktalker | CFPageButton | CFQuitButton)
-        if chatFlags & CFThought:
-            chatFlags &= ~(CFSpeech | CFTimeout)
-        else:
-            chatFlags |= CFSpeech | CFTimeout
-
-        base.localAvatar.setChatAbsolute('Spellbook: ' + str(response), chatFlags, quiet = 1)
+        base.localAvatar.setChatAbsolute('Spellbook: ' + str(response), CFSpeech | CFTimeout, quiet = 1)
