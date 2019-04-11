@@ -674,7 +674,7 @@ CRBootedReasons = {
     151: 'You have been logged out by an administrator working on the servers.',
     153: 'The world you were playing on has been reset.  Everyone who was playing on that world has been disconnected.  However, you should be able to connect again and go right back into the game.',
     288: 'Sorry, you have used up all of your available minutes this month.',
-    349: 'Sorry, you have used up all of your available minutes this month.' }
+    349: 'Sorry, you have used up all of your available minutes this month.'}
 CRBootedReasonUnknownCode = 'An unexpected problem has occurred (error code %s).  Your connection has been lost, but you should be able to connect again and go right back into the game.'
 CRTryConnectAgain = '\n\nTry to connect again?'
 CRToontownUnavailable = 'Pirates appears to be temporarily unavailable, still trying...'
@@ -1135,7 +1135,7 @@ ShipClassNames = {
     ShipGlobals.SKEL_BLOOD_SCOURGE_FR: 'French Blood Scourge',
     ShipGlobals.SKEL_SHADOW_CROW_SP: 'Spanish Shadow Crow',
     ShipGlobals.SKEL_HELLHOUND_SP: 'Spanish Cerberus',
-    ShipGlobals.SKEL_BLOOD_SCOURGE_SP: 'Spanish Blood Scourge' }
+    ShipGlobals.SKEL_BLOOD_SCOURGE_SP: 'Spanish Blood Scourge'}
 InventoryTypeNames = {
     InventoryType.GoldInPocket: 'Gold in Pocket',
     InventoryType.GoldWagered: 'Gold Wagered',
@@ -1726,7 +1726,7 @@ SkillDescriptions = {
     InventoryType.Potion4: (Consumable, '', ''),
     InventoryType.Potion5: (Consumable, '', ''),
     InventoryType.ShipRepairKit: (ShipRepairSkill, '', ''),
-    InventoryType.PorkChunk: (Consumable, '', '') }
+    InventoryType.PorkChunk: (Consumable, '', '')}
 PoisonDesc = 'Poisons an enemy for %d seconds!'
 PoisonUpgrade = 'Poison duration'
 AcidDesc = 'Causes acid burns on an enemy for %d seconds!'
@@ -1930,7 +1930,7 @@ VoodooNames = {
     1: 'Strength',
     2: 'Swiftness',
     3: 'Luck',
-    4: 'Voodoo' }
+    4: 'Voodoo'}
 SkillResultNames = {
     0: 'Miss',
     1: 'Hit',
@@ -1941,7 +1941,7 @@ SkillResultNames = {
     6: 'Against Pirate Code',
     7: 'Parry',
     8: 'Dodge',
-    9: 'Resist' }
+    9: 'Resist'}
 Mistimed = 'Mistimed'
 Disengage = 'Disengage'
 InteractCancel = lExit
@@ -2684,21 +2684,21 @@ TrackAvTypeNames = {
     1: {
         0: ('Navy Soldiers', ('a Navy Soldier', 'Navy Soldiers')),
         1: ('Navy Marksmen', ('a Navy Marksman', 'Navy Marksmen')),
-        2: ('Navy Officer', ('a Navy Officer', 'Navy Officers')) },
+        2: ('Navy Officer', ('a Navy Officer', 'Navy Officers'))},
     2: {
         0: ('Land Creatures', ('a Land Creature', 'Land Creatures')),
         1: ('Sea Creatures', ('a Sea Creature', 'Sea Creatures')),
         2: ('Air Creatures', ('an Air Creature', 'Air Creatures')),
         3: ('Sea Monsters', ('a Sea Monster', 'Sea Monsters')),
-        4: ('Animals', ('an Animal', 'Animals')) },
+        4: ('Animals', ('an Animal', 'Animals'))},
     3: {
         0: ('Commoners', ('a Commoner', 'Commoners')),
         1: ('Merchants', ('a Merchant', 'Merchants')),
-        2: ('Cast', ('a Character', 'Characters')) },
+        2: ('Cast', ('a Character', 'Characters'))},
     4: {
         0: ('Players', ('a Player', 'Players')),
         1: ('Pirate Brawler', ('a Pirate Brawler', 'Pirate Brawlers')),
-        2: ('Pirate Gunner', ('a Pirate Gunner', 'Pirate Gunners')) },
+        2: ('Pirate Gunner', ('a Pirate Gunner', 'Pirate Gunners'))},
     5: {
         0: ('Trading Co Mercenaries', ('a Trading Co Mercenary', 'Trading Co Mercenaries')),
         1: ('Trading Co Assassins', ('a Trading Co Assassin', 'Trading Co Assassins')),
@@ -2728,7 +2728,7 @@ BossNames = {
             8: {
                 0: 'Jeremy Coldhand'},
             9: {
-                0: 'Stench' }}},
+                0: 'Stench'}}},
     1: {
         1: {
             0: {
@@ -2771,7 +2771,7 @@ BossNames = {
             3: {
                 0: 'Firesting'},
             4: {
-                0: 'Devilwing' }}},
+                0: 'Devilwing'}}},
     5: {
         0: {
             0: {
@@ -2854,7 +2854,7 @@ AvatarNames = {
             0: ('French Undead Quarter Master', ('a French Undead Quarter Master', 'French Undead Quarter Masters'), 'Fr.Undead Qtr.Master'),
             1: ('French Undead Maitre', ('a French Undead Maitre', 'French Undead Maitres'), 'Fr.Undead Maitres'),
             2: ('French Undead Lieutenant', ('a French Undead Lieutenant', 'French Undead Lieutenants'), 'Fr.Undead Lieutenant'),
-            3: ('French Undead Capitaine', ('a French Undead Captaine', 'French Undead Captaines'), 'Fr.Undead Capitaine') },
+            3: ('French Undead Capitaine', ('a French Undead Captaine', 'French Undead Captaines'), 'Fr.Undead Capitaine')},
         7: {
             0: ('Spanish Undead Conquistador', ('a Spanish Undead Conquistador', 'Spanish Undead Conquistadors'), 'Sp.Undead Conquistador'),
             1: ('Spanish Undead Bandido', ('a Spanish Undead Bandido', 'Spanish Undead Bandidos'), 'Sp.Undead Bandido'),
@@ -2898,7 +2898,7 @@ AvatarNames = {
             14: ('Seagull', ('a Seagull', 'Seagulls')),
             15: ('Monkey', ('a Monkey', 'Monkies'))},
         1: {
-            0: ('Fish', ('a Fish', 'Fish')) },
+            0: ('Fish', ('a Fish', 'Fish'))},
         2: {
             0: ('Seagull', ('a Seagull', 'Seagulls')),
             1: ('Cave Bat', ('a Cave Bat', 'Cave Bats')),
@@ -2968,7 +2968,7 @@ AvatarNames = {
             1: ('Musketeer', ('a Musketeer', 'Musketeers')),
             2: ('Cannoneer', ('a Cannoneer', 'Cannoneers')),
             3: ('Grenadier', ('a Grenadier', 'Grenadiers')),
-            4: ('Master Gunner', ('a Master Gunner', 'Master Gunners')) },
+            4: ('Master Gunner', ('a Master Gunner', 'Master Gunners'))},
         2: {
             0: ('First Mate', ('a First Mate', 'First Mates')),
             1: ('Captain', ('a Captain', 'Captains')),
@@ -5512,7 +5512,7 @@ LocationNames = {
     '1196970035.53sdnaik': 'Isla de la Avaricia',
     '1196970080.56sdnaik': "Ile d'Etable de Porc",
     '1202846053.19akelts0': "Porc's Tavern",
-    '1204237124.2akelts0': "Avaricia's Tavern" }
+    '1204237124.2akelts0': "Avaricia's Tavern"}
 UNDEAD_SPANISH_NAMES = ('Undead Spanish Soldier', 'Undead Spanish Soldiers')
 UNDEAD_FRENCH_NAMES = ('Undead French Soldier', 'Undead French Soldiers')
 LoadingScreen_Jail = 'Jail'
@@ -5817,7 +5817,7 @@ HintMap_Levels = {
     37: (),
     38: (),
     39: (),
-    40: () }
+    40: ()}
 HintMap_Locations = {
     '1150922126.8dzlu': (),
     '1155695180.13sdnaik': (),
@@ -5885,7 +5885,7 @@ HintMap_Locations = {
     'AnyLargeIsland': (),
     'AnyLargePort': (),
     'AnyWildPort': (),
-    'AnyLocation': () }
+    'AnyLocation': ()}
 Hints_VelvetRope = [
     'With Unlimited Access, you can use all 6 Weapons!',
     'With Basic Member Access, you earn 40% less Reputation when defeating enemies!',
@@ -6034,7 +6034,7 @@ WeaponUnlockText = {
     InventoryType.DollRep: 'Unlocked at Notoriety Level 5',
     InventoryType.DaggerRep: 'Unlocked at Notoriety Level 10',
     InventoryType.GrenadeRep: 'Unlocked at Notoriety Level 20',
-    InventoryType.WandRep: 'Unlocked at Notoriety Level 30' }
+    InventoryType.WandRep: 'Unlocked at Notoriety Level 30'}
 ReportPlayerTitle = 'Report A Player'
 ReportPlayerCancel = 'Cancel'
 ReportPlayerContinue = 'Continue'

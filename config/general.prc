@@ -108,6 +108,7 @@ want-new-avatar #t
 
 # Membership:
 want-membership #f
+force-paid-status FULL
 
 # Islands:
 want-island-barriers #t
