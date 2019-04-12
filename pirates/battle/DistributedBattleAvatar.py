@@ -1969,8 +1969,10 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
             if gNode and not gNode.isEmpty():
                 if self.gNodeFwdPt == None:
                     self.gNodeFwdPt = gNode.getRelativePoint(self, Point3(0, 1, 0))
-                
-                gNode.headsUp(self.gNodeFwdPt, self.getRelativeVector(self.getParentObj(), self.floorNorm))
+
+                parentObj = self.getParentObj()
+                if parentObj:
+                    gNode.headsUp(self.gNodeFwdPt, self.getRelativeVector(self.getParentObj(), self.floorNorm))
 
         return self.tracksTerrain
 
