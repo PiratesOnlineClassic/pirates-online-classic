@@ -4,6 +4,7 @@ import tokenize
 import copy
 from direct.showbase.ShowBaseGlobal import *
 from direct.interval.IntervalGlobal import *
+from libotp.NametagConstants import *
 from pandac.PandaModules import *
 from direct.gui.DirectGui import *
 from direct.directnotify import DirectNotifyGlobal
