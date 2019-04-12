@@ -128,7 +128,7 @@ class ActivateQuestsFSM(QuestOperationFSM):
         self.inventory = self.avatar.getInventory()
         if not self.inventory:
             self.notify.warning('Failed to activate quests for avatar %d, '
-                'no inventory found!' % (questId, self.avatar.doId))
+                'no inventory found!' % self.avatar.doId)
 
             self.cleanup()
             return
