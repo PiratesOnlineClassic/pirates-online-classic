@@ -351,7 +351,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
     def createInteractiveProp(self, parent, parentUid, objKey, objectData):
         prop = DistributedInteractivePropAI(self.air)
         prop.setUniqueId(objKey)
-        prop.setPos(objectData.get('Pos', (0, 0, 0)))
+        prop.setPos(objectData.get('GridPos', objectData.get('Pos', (0, 0, 0))))
         prop.setHpr(objectData.get('Hpr', (0, 0, 0)))
         prop.setScale(objectData.get('Scale', (1, 1, 1)))
 
