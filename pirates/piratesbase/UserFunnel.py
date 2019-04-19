@@ -37,6 +37,7 @@ class UserFunnel:
             1: 'ehg-dig.hitbox.com/HG?',
             2: 'ehg-dig.hitbox.com/HG?',
             3: 'w88.go.com/b/ss/'}
+        self.wantFunnel = config.GetBool('want-user-funnel', False)
         self.CurrentHost = ''
         self.URLtoSend = ''
         self.gameName = 'Pirates'
@@ -358,6 +359,9 @@ class UserFunnel:
             return
 
     def prerun(self):
+        if not self.wantFunnel:
+            return
+
         self.getFunnelURL()
         self.buildURL()
         if os.path.isfile(self.cfCookieFile) == True:

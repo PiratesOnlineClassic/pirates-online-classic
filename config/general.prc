@@ -49,6 +49,7 @@ server-port 6667
 server-version pirates-dev
 want-ssl-scheme 0
 game-server 127.0.0.1
+want-user-funnel #f
 
 # Notifier:
 notify-level-tiff error
