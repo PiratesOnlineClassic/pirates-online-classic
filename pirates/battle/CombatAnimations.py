@@ -56,6 +56,7 @@ from pirates.effects.HealSparks import HealSparks
 from pirates.effects.FadingCard import FadingCard
 from GrenadeProjectile import GrenadeProjectile
 from pirates.piratesbase import PLocalizer
+from libotp import CFSpeech, CFTimeout
 import random
 
 class CombatAnimations:
