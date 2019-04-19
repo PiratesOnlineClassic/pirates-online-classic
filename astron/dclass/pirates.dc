@@ -965,12 +965,12 @@ dclass DistributedBattleAvatar : WeaponBase, DistributedReputationAvatar, Teamab
   setMaxSwiftness(int16) required broadcast ram;
   setPower(int16) required broadcast ram ownrecv;
   setMaxPower(int16) required broadcast ram;
-  setLuckMod(int16) required broadcast ram ownrecv;
-  setMojoMod(int16) required broadcast ram ownrecv;
-  setSwiftnessMod(int16/10) required broadcast ram ownrecv;
-  setHasteMod(int16/10) required broadcast ram ownrecv;
-  setStunMod(int16/10) required broadcast ram ownrecv;
-  setPowerMod(int16) required broadcast ram ownrecv;
+  setLuckMod(int16=0) required broadcast ram ownrecv;
+  setMojoMod(int16=0) required broadcast ram ownrecv;
+  setSwiftnessMod(int16/10=0) required broadcast ram ownrecv;
+  setHasteMod(int16/10=0) required broadcast ram ownrecv;
+  setStunMod(int16/10=0) required broadcast ram ownrecv;
+  setPowerMod(int16=0) required broadcast ram ownrecv;
   setCombo(uint8, uint8, int16, uint32) required broadcast ram;
   setSkillEffects(BuffList) required broadcast ram;
   setEnsnaredTargetId(uint32) required broadcast ram;
@@ -1161,8 +1161,8 @@ dclass DistributedPlayerPirate : DistributedPlayer, HumanDNA, DistributedBattleA
   setMaxLuck(int16) required broadcast db;
   setMojo(int16) required broadcast db;
   setMaxMojo(int16=50) required broadcast db;
-  setSwiftness(int16) required broadcast;
-  setMaxSwiftness(int16) required broadcast db;
+  setSwiftness(int16=1) required broadcast;
+  setMaxSwiftness(int16=1) required broadcast db;
   setPower(int16) required broadcast;
   setMaxPower(int16) required broadcast db;
   setQuestRewardFlags(uint32) required ownrecv db;
@@ -2222,4 +2222,3 @@ dclass DistributedHolidayPig : DistributedHolidayObject {
   setPigRoasting(bool) required broadcast ram;
   makeTradeResponse(uint32) ownrecv;
 };
-
