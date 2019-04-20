@@ -1944,6 +1944,8 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
         return self.avatarType.isA(AvatarTypes.BossType)
     
     def getShortName(self):
+        if self.isBoss():
+            return self.getName()
         return self.avatarType.getShortName()
 
     def trackTerrain(self):

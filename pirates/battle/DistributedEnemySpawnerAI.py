@@ -175,7 +175,6 @@ class SpawnNodeBase:
         npc.setHpr(self.objectData.get('Hpr', (0, 0, 0)))
         npc.setSpawnPos(npc.getPos())
         npc.setInitZ(npc.getZ())
-        npc.setTeam(self.getNPCTeam(avatarType))
 
         npc.setAvatarType(avatarType)
         npc.setAggroRadius(float(self.objectData.get('Aggro Radius', 0.0)))
@@ -184,6 +183,30 @@ class SpawnNodeBase:
         if avatarType.getBoss() and hasattr(npc, 'loadBossData'):
             bossId = self.objKey if self.objType != 'Spawn Node' else npc.getUniqueId()
             npc.loadBossData(bossId, avatarType)
+
+        avType = self.objectData.get('Type', '')
+
+        # In special cases, we may need to check the 'type' string in the worlddata,
+        # if we don't, an EITC boss for example would spawn as a level 1 navy sailor
+        # instead of it's normal level as an eitc type.
+        if avType == 'NavySailor' and avatarType.getBoss():
+            factionName = self.objectData.get('NavyFaction', 'Navy')
+            if not hasattr(AvatarTypes, factionName):
+                return
+
+            faction = getattr(AvatarTypes, factionName, AvatarTypes.Navy)
+
+            avId = self.objectData.get('AvId', 1)
+            avTrack = self.objectData.get('AvTrack', 0)
+            avatarType = AvatarType(faction=faction.faction, track=avTrack, id=avId)
+            avatarType = avatarType.getBossType()
+
+            if factionName == 'TradingCo':
+                npc.setLevel(npc.bossData['Level'] or EnemyGlobals.getRandomEnemyLevel(avatarType))
+
+            npc.setAvatarType(avatarType)
+
+        npc.setTeam(self.getNPCTeam(avatarType))
 
         # Set NPC health
         if hasattr(npc, 'bossData'):
@@ -371,12 +394,21 @@ class BossEnemySpawnNode(EnemySpawnNode):
     def getAvatarType(self):
         avId = self.objectData.get('AvId', 1)
         avTrack = self.objectData.get('AvTrack', 0)
+        species = self.objectData.get('Species', '')
 
         faction = AvatarTypes.Undead.faction
         if self.objType == 'Creature':
             faction = AvatarTypes.Creature.faction
         elif self.objType == 'NavySailor':
             faction = AvatarTypes.Navy.faction
+
+        if species:
+            self.spawnable = self.objectData['Species']
+            if self.spawnable not in AvatarTypes.NPC_SPAWNABLES:
+                return
+
+            avatarType = AvatarTypes.NPC_SPAWNABLES[self.spawnable][0]()
+            return avatarType.getBossType()
 
         avatarType = AvatarType(faction=faction, track=avTrack, id=avId)
         return avatarType.getBossType()
