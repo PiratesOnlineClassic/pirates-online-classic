@@ -96,25 +96,37 @@ class LocalTrade(TradeBase):
         inventory.b_setStackQuantity(skillType, value)
 
     def giveCutlassTraining(self):
+        self.giveStack(InventoryType.CutlassToken, 1)
+
         self.giveSkill(InventoryType.CutlassHack, 2)
         self.giveSkill(InventoryType.CutlassSlash, 2)
 
     def givePistolTraining(self):
+        self.giveStack(InventoryType.PistolToken, 1)
+
         self.giveSkill(InventoryType.PistolShoot, 2)
         self.giveSkill(InventoryType.PistolLeadShot, 2)
 
     def giveDollTraining(self):
+        self.giveStack(InventortyType.DollToken, 1)
+
         self.giveSkill(InventoryType.DollAttune, 2)
         self.giveSkill(InventoryType.DollPoke, 2)
 
     def giveDaggersTraining(self):
+        self.giveStack(InventoryType.DaggerToken, 1)
+
         self.giveSkill(InventoryType.DaggerCut, 2)
         self.giveSkill(InventoryType.DaggerSwipe, 2)
 
     def giveGrenadeTraining(self):
+        self.giveStack(InventoryType.GrenadeToken, 1)
+
         self.giveSkill(InventoryType.GrenadeThrow, 2)
 
     def giveWandTraining(self):
+        self.giveStack(InventoryType.WandToken, 1)
+
         self.giveSkill(InventoryType.StaffBlast, 2)
         self.giveSkill(InventoryType.StaffSoulFlay, 2)
 

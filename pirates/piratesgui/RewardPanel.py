@@ -57,7 +57,7 @@ class RewardPanel(PDialog):
         isWeapon = TextDict[type][4]
         if isWeapon:
             background = skillIcons.find('**/box_base_over')
-            background.setTransparency(0.5)
+            background.setTransparency(1)
         else:
             background = skillIcons.find('**/base_over')
         icon.reparentTo(background)
