@@ -24,7 +24,7 @@ from pirates.piratesbase import Freebooter
 FACE_CAMERA = 0
 
 class BarberStoreTab(LeftTab):
-    
+
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('suffix', '_d', None), ('borderScale', 0.38, None), ('bgBuffer', 0.15, None))
         self.defineoptions(kw, optiondefs)
@@ -34,14 +34,14 @@ class BarberStoreTab(LeftTab):
 
 
 class BarberStoreTabBar(TabBar):
-    
+
     def refreshTabs(self):
         for (x, name) in enumerate(self.tabOrder):
             tab = self.tabs[name]
             tab.reparentTo(self.bParent)
             tab.setPos(-0.07, 0, 1.1 - 0.1 * (x + self.offset))
             (tab.setScale(0.2, 1, 0.2),)
-        
+
         self.activeIndex = max(0, min(self.activeIndex, len(self.tabOrder) - 1))
         if len(self.tabOrder):
             name = self.tabOrder[self.activeIndex]
@@ -61,7 +61,7 @@ class BarberStoreGUI(DirectFrame):
     height = 1.5
     columnWidth = PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.05
     holidayIdList = []
-    
+
     def __init__(self, npc, shopId, **kw):
         optiondefs = (('relief',
                        None,
@@ -181,11 +181,11 @@ class BarberStoreGUI(DirectFrame):
         self.model.setScale(0.337, 0.0, 0.327)
         if localAvatar.guiMgr.questPage:
             localAvatar.guiMgr.questPage.trackedQuestLabel.hide()
-        
+
         self.initTabs()
         self.updateBalance()
         self.focusCamera()
-    
+
     def hideDisplayRegions(self):
         for id in range(len(self.clothRenders)):
             if self.clothRenders[id].isHidden():
@@ -230,44 +230,44 @@ class BarberStoreGUI(DirectFrame):
             self.camIval.finish()
             self.camIval = None
             camera.setHpr(0, 0, 0)
-        
+
         self.rotateSlider.destroy()
         self.cleanupRegions()
         self.unloadPirate()
         if self.confirmBox:
             self.confirmBox.destroy()
             self.confirmBox = None
-        
+
         if self.model:
             self.model.removeNode()
             self.model = None
-        
+
         if self.CoinImage:
             self.CoinImage.removeNode()
             self.CoinImage = None
-        
+
         if self.ParchmentIcon:
             self.ParchmentIcon.removeNode()
             self.ParchmentIcon = None
-        
+
         if self.barberIconsA:
             self.barberIconsA.removeNode()
             self.barberIconsA = None
-        
+
         if self.barberIconsB:
             self.barberIconsB.removeNode()
             self.barberIconsB = None
-        
+
         if self.ShirtIcon:
             self.ShirtIcon.removeNode()
             self.ShirtIcon = None
-        
+
         if self.alertDialog:
             self.alertDialog.destroy()
-        
+
         if localAvatar.guiMgr.questPage and len(localAvatar.guiMgr.questPage.trackedQuestLabel['text']):
             localAvatar.guiMgr.questPage.trackedQuestLabel.show()
-        
+
         localAvatar.guiMgr.chatPanel.hide()
 
     def createPirate(self):
@@ -304,7 +304,7 @@ class BarberStoreGUI(DirectFrame):
         if self.camIval:
             self.camIval.finish()
             self.camIval = None
-        
+
         self.pirate.setH(self.initialPirateH)
         self.rotateSlider['value'] = self.rotateSliderOrigin = 0.5
         dummy = self.pirate.attachNewNode('dummy')
@@ -330,10 +330,10 @@ class BarberStoreGUI(DirectFrame):
         h = camHpr[0] % 360
         if camH > h:
             h += 360
-        
+
         if h - camH > 180:
             h -= 360
-        
+
         camHpr.setX(h)
         camera.setH(camH)
         t = 1.5
@@ -348,56 +348,56 @@ class BarberStoreGUI(DirectFrame):
             if self.confirmBox:
                 self.confirmBox.destroy()
                 self.confirmBox = None
-            
-        elif self.confirmBox:
-            self.confirmBox.destroy()
-            self.confirmBox = None
-        
-        item = BarberGlobals.barber_id.get(uid)
-        if not item:
-            return
-        
-        itemColor = button.color
-        itemId = item[0]
-        type = item[1]
-        currentColor = localAvatar.style.getHairColor()
-        if type == BarberGlobals.HAIR:
-            current = [
-                localAvatar.style.getHairHair(),
-                itemColor]
-        elif type == BarberGlobals.BEARD:
-            current = [
-                localAvatar.style.getHairBeard(),
-                itemColor]
-        elif type == BarberGlobals.MUSTACHE:
-            current = [
-                localAvatar.style.getHairMustache(),
-                itemColor]
         else:
-            current = 0
-        if current == [
-            itemId,
-            currentColor]:
-            self.showCurrentlyOwnedAlert()
-        else:
-            text = PLocalizer.BarberConfirm % (str(item[3]), str(item[4]))
-            self.confirmBox = PiratesConfirm.PiratesConfirm(PLocalizer.BarberPurchase, text, self.buyItem, barber = [uid, button, True])
-            self.confirmBox.setPos(-self.confirmBox.getWidth() / 2, 0, -self.confirmBox.getHeight() / 2)
+            if self.confirmBox:
+                self.confirmBox.destroy()
+                self.confirmBox = None
+
+            item = BarberGlobals.barber_id.get(uid)
+            if not item:
+                return
+
+            itemColor = button.color
+            itemId = item[0]
+            type = item[1]
+            currentColor = localAvatar.style.getHairColor()
+            if type == BarberGlobals.HAIR:
+                current = [
+                    localAvatar.style.getHairHair(),
+                    itemColor]
+            elif type == BarberGlobals.BEARD:
+                current = [
+                    localAvatar.style.getHairBeard(),
+                    itemColor]
+            elif type == BarberGlobals.MUSTACHE:
+                current = [
+                    localAvatar.style.getHairMustache(),
+                    itemColor]
+            else:
+                current = 0
+            if current == [
+                itemId,
+                currentColor]:
+                self.showCurrentlyOwnedAlert()
+            else:
+                text = PLocalizer.BarberConfirm % (str(item[3]), str(item[4]))
+                self.confirmBox = PiratesConfirm.PiratesConfirm(PLocalizer.BarberPurchase, text, self.buyItem, barber = [uid, button, True])
+                self.confirmBox.setPos(-self.confirmBox.getWidth() / 2, 0, -self.confirmBox.getHeight() / 2)
 
     def applyItem(self, pirate, type, uid, button = None):
         if not hasattr(pirate, 'style'):
             return
-        
+
         if type == BarberGlobals.HAIR:
             pirate.style.setHairHair(uid)
         elif type == BarberGlobals.BEARD:
             pirate.style.setHairBeard(uid)
         elif type == BarberGlobals.MUSTACHE:
             pirate.style.setHairMustache(uid)
-        
+
         if button:
             pirate.style.setHairColor(button.color)
-        
+
         pirate.model.handleHeadHiding()
 
     def barberPurchase(self, uid, color):
@@ -415,7 +415,7 @@ class BarberStoreGUI(DirectFrame):
             self.pirate.cleanupHuman()
             self.pirate.delete()
             self.pirate = None
-        
+
         localAvatar.unstash()
 
     def closePanel(self):
@@ -443,7 +443,7 @@ class BarberStoreGUI(DirectFrame):
             if gender == 'f':
                 if id in [BarberGlobals.BEARD, BarberGlobals.MUSTACHE]:
                     continue
-            
+
             if not self.isPageAdded(id):
                 self.addTab(id)
 
@@ -475,7 +475,7 @@ class BarberStoreGUI(DirectFrame):
 
     def isPageAdded(self, pageName):
         return self.pageNames.count(pageName) > 0
-    
+
     def nextPage(self):
         if self.itemAmount - (self.buttonIndex + self.buttonsPerPage) > 0:
             startIndex = self.buttonIndex + self.buttonsPerPage
@@ -498,7 +498,7 @@ class BarberStoreGUI(DirectFrame):
     def reloadPirateDNA(self, pirate):
         if pirate is None:
             return
-        
+
         pirate.style.setHairHair(localAvatar.style.getHairHair())
         pirate.style.setHairBeard(localAvatar.style.getHairBeard())
         pirate.style.setHairMustache(localAvatar.style.getHairMustache())
@@ -534,7 +534,7 @@ class BarberStoreGUI(DirectFrame):
         buttonScale = Vec3(0.8, 0.8, 0.8)
         for item in self.buttons:
             item.destroy()
-        
+
         self.buttons = []
         choices = []
         regionData = []
@@ -549,7 +549,7 @@ class BarberStoreGUI(DirectFrame):
                 startRange = BarberGlobals.MALE_BEARD
             elif pageName == BarberGlobals.MUSTACHE:
                 startRange = BarberGlobals.MALE_MUSTACHE
-            
+
         elif GENDER == 'FEMALE':
             if pageName == BarberGlobals.HAIR:
                 startRange = BarberGlobals.FEMALE_HAIR
@@ -566,7 +566,7 @@ class BarberStoreGUI(DirectFrame):
         set = BarberGlobals.stores.get(store)
         if set is None:
             return
-        
+
         for index in range(startRange, startRange + 9999):
             if index in set:
                 item = BarberGlobals.barber_id.get(index)
@@ -579,11 +579,11 @@ class BarberStoreGUI(DirectFrame):
                     if type == BarberGlobals.HAIR:
                         if itemId == currentHair:
                             owned = True
-                        
+
                     elif type == BarberGlobals.BEARD:
                         if itemId == currentBeard:
                             owned = True
-                        
+
                     elif type == BarberGlobals.MUSTACHE:
                         if itemId == currentMustache:
                             owned = True
@@ -595,7 +595,7 @@ class BarberStoreGUI(DirectFrame):
                                 owned,
                                 cost,
                                 holiday])
-                        
+
                     else:
                         choices.append([
                             index,
@@ -623,7 +623,7 @@ class BarberStoreGUI(DirectFrame):
                     self.numPages = 1
                     for item in self.clothRenders:
                         item.hide()
-                    
+
                     return
 
             if self.itemAmount - startIndex < self.buttonsPerPage and self.itemAmount >= startIndex:
@@ -647,14 +647,14 @@ class BarberStoreGUI(DirectFrame):
                 if cost > localAvatar.getMoney():
                     itemButton.buy['state'] = DGG.DISABLED
                     itemButton.cost['text_fg'] = PiratesGuiGlobals.TextFG6
-                
+
                 if owned:
                     if itemId == 0:
                         itemButton.buy['state'] = DGG.DISABLED
                         itemButton['state'] = DGG.DISABLED
-                    
+
                     itemButton.previewText['text'] = PLocalizer.TattooShopOwned
-                
+
                 if itemId != 0 or GENDER == 'FEMALE':
                     xOffset = -0.05
                     yOffset = 0.0
@@ -662,7 +662,7 @@ class BarberStoreGUI(DirectFrame):
                     holiday = PiratesGlobals.SAINTPATRICKSDAY
                     if holiday in BarberStoreGUI.holidayIdList:
                         choices.insert(0, 8)
-                    
+
                     for i in choices:
                         hairColor = hairColors[i]
                         hairTone = (hairColor[0], hairColor[1], hairColor[2], 1.0)
@@ -686,20 +686,20 @@ class BarberStoreGUI(DirectFrame):
                     itemButton.buy['extraArgs'] = [
                         'BARBER_CANNOT_BUY',
                         10]
-                
+
                 itemButton.color = currentHairColor
                 itemButton.uid = uid
                 itemButton.type = type
                 itemButton.itemId = itemId
-            
+
             self.itemAmount += 1
-        
+
         if self.itemAmount > self.buttonsPerPage:
             numPages = float(self.itemAmount) / float(self.buttonsPerPage)
             remainder = numPages - int(numPages)
             if remainder > 0:
                 numPages += 1.0 - remainder
-            
+
             page = startIndex / self.buttonsPerPage + 1
         else:
             numPages = 1
@@ -709,18 +709,18 @@ class BarberStoreGUI(DirectFrame):
         else:
             for item in self.clothRenders:
                 item.hide()
-            
+
         if self.itemAmount <= self.buttonsPerPage:
             self.nextPageButton['state'] = DGG.DISABLED
             self.prevPageButton['state'] = DGG.DISABLED
-        
+
         if startIndex:
             self.prevPageButton['state'] = DGG.NORMAL
-        
+
         if startIndex + self.buttonsPerPage < self.itemAmount:
             self.nextPageButton['state'] = DGG.NORMAL
             self.prevPageButton['state'] = DGG.NORMAL
-        
+
         self.pageNumber['text'] = '%s %s / %s' % (PLocalizer.TailorPage, page, int(numPages))
         self.numPages = numPages
 
@@ -761,27 +761,27 @@ class BarberStoreGUI(DirectFrame):
         for item in self.clothWindows:
             base.win.removeDisplayRegion(item)
             item = None
-        
+
         self.clothWindows = []
         for item in self.clothCameras:
             del item
-        
+
         self.clothCameras = []
         for item in self.clothRenders:
             item.remove()
             item.removeNode()
-        
+
         self.clothRenders = []
         for item in self.clothHumans:
             item.delete()
             item.remove()
             item.removeNode()
-        
+
         self.clothHumans = []
         for item in self.clothCameraNPs:
             item.remove()
             item.removeNode()
-        
+
         self.clothCameraNPs = []
 
     def createDisplayRegions(self):
@@ -809,7 +809,7 @@ class BarberStoreGUI(DirectFrame):
             self.clothRenders.append(clothRender)
             startRegion -= Vec4(0.0, 0.0, 0.12, 0.12)
             self.displayRegionStates[x] = True
-    
+
     def setupDisplayRegions(self, regionData, pageName):
         bodyShape = localAvatar.style.getBodyShape()
         if bodyShape == 0:
@@ -822,7 +822,7 @@ class BarberStoreGUI(DirectFrame):
             bodyOffset = 1
         elif bodyShape == 4:
             bodyOffset = 0.5
-        
+
         x = 0
         m = Mat4(Mat4.identMat())
         headPos = None
@@ -837,7 +837,7 @@ class BarberStoreGUI(DirectFrame):
             if headPos is None:
                 source.getLOD('2000').getChild(0).node().findJoint('def_head01').getNetTransform(m)
                 headPos = TransformState.makeMat(m).getPos().getZ()
-            
+
             if pageName == BarberGlobals.HAIR:
                 if gender == 'f':
                     offsetZ = -headPos * 1.04
@@ -848,7 +848,7 @@ class BarberStoreGUI(DirectFrame):
             elif pageName == BarberGlobals.MUSTACHE:
                 offsetZ = -headPos * 1.03
                 offsetY = 1.5
-            
+
             self.clothHumans[x].setY(offsetY)
             self.clothHumans[x].setZ(offsetZ)
             self.clothHumans[x].setH(offsetH)
@@ -859,7 +859,7 @@ class BarberStoreGUI(DirectFrame):
             itemId = item[0]
             self.applyItem(self.clothHumans[x], type, itemId)
             self.clothRenders[x].show()
-        
+
         x = len(regionData)
         if x < self.buttonsPerPage:
             for y in range(self.buttonsPerPage - x):
@@ -882,6 +882,6 @@ class BarberStoreGUI(DirectFrame):
         if self.alertDialog:
             self.alertDialog.destroy()
             self.alertDialog = None
-        
+
 
 
