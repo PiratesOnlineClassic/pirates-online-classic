@@ -150,7 +150,12 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
                 if base.config.GetString('gm-nametag-color', '') != '':
                     self.gmNameTagColorLocal = base.config.GetString('gm-nametag-color')
             soundEffects = [
-             'jollyroger_laugh_01.mp3', 'jollyroger_laugh_02.mp3', 'jollyroger_enjoy.mp3', 'jollyroger_submit.mp3', 'jollyroger_joinme.mp3']
+                'jollyroger_laugh_01.mp3',
+                'jollyroger_laugh_02.mp3',
+                'jollyroger_enjoy.mp3',
+                'jollyroger_submit.mp3',
+                'jollyroger_joinme.mp3'
+            ]
             self.jollySfx = loader.loadSfx('audio/' + random.choice(soundEffects))
 
     def sendUpdate(self, *args, **kw):
@@ -372,8 +377,6 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             del base.localAvatar
             del __builtins__['localAvatar']
 
-        return
-
     def targetMgrCreated(self):
         self.startLookAroundTask()
 
@@ -499,7 +502,6 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         self.cleanupLocalProjectiles()
         messenger.send('localPirateDisabled')
         DistributedPlayerPirate.disable(self)
-        return
 
     def clearInventoryInterest(self):
         self.removeInterest(self.invInterest, event=self.uniqueName('localAvatar-close-inventory'))
