@@ -1041,7 +1041,57 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         self.surfaceIndex = PiratesGlobals.SURFACE_DEFAULT
         self.movementIndex = PiratesGlobals.STAND_INDEX
         self.curMoveSound = None
-        self.moveSound = {PiratesGlobals.STAND_INDEX: {PiratesGlobals.SURFACE_DEFAULT: None,PiratesGlobals.SURFACE_WATER: swimSound},PiratesGlobals.WALK_INDEX: {PiratesGlobals.SURFACE_DEFAULT: walkSand,PiratesGlobals.SURFACE_WATER: swimSound,PiratesGlobals.SURFACE_WOOD: walkWood},PiratesGlobals.RUN_INDEX: {PiratesGlobals.SURFACE_DEFAULT: runSand,PiratesGlobals.SURFACE_WATER: swimSound,PiratesGlobals.SURFACE_WOOD: runWood},PiratesGlobals.REVERSE_INDEX: {PiratesGlobals.SURFACE_DEFAULT: walkSand,PiratesGlobals.SURFACE_WATER: swimSound,PiratesGlobals.SURFACE_WOOD: walkWood},PiratesGlobals.STRAFE_LEFT_INDEX: {PiratesGlobals.SURFACE_DEFAULT: runSand,PiratesGlobals.SURFACE_WATER: swimSound,PiratesGlobals.SURFACE_WOOD: runWood},PiratesGlobals.STRAFE_RIGHT_INDEX: {PiratesGlobals.SURFACE_DEFAULT: runSand,PiratesGlobals.SURFACE_WATER: swimSound,PiratesGlobals.SURFACE_WOOD: runWood},PiratesGlobals.STRAFE_LEFT_DIAG_INDEX: {PiratesGlobals.SURFACE_DEFAULT: runSand,PiratesGlobals.SURFACE_WATER: swimSound,PiratesGlobals.SURFACE_WOOD: runWood},PiratesGlobals.STRAFE_RIGHT_DIAG_INDEX: {PiratesGlobals.SURFACE_DEFAULT: runSand,PiratesGlobals.SURFACE_WATER: swimSound,PiratesGlobals.SURFACE_WOOD: runWood},PiratesGlobals.STRAFE_LEFT_DIAG_REV_INDEX: {PiratesGlobals.SURFACE_DEFAULT: walkSand,PiratesGlobals.SURFACE_WATER: swimSound,PiratesGlobals.SURFACE_WOOD: walkWood},PiratesGlobals.STRAFE_RIGHT_DIAG_REV_INDEX: {PiratesGlobals.SURFACE_DEFAULT: walkSand,PiratesGlobals.SURFACE_WATER: swimSound,PiratesGlobals.SURFACE_WOOD: walkWood}}
+        self.moveSound = {
+          PiratesGlobals.STAND_INDEX: {
+            PiratesGlobals.SURFACE_DEFAULT: None,
+            PiratesGlobals.SURFACE_WATER: swimSound
+          },
+          PiratesGlobals.WALK_INDEX: {
+            PiratesGlobals.SURFACE_DEFAULT: walkSand,
+            PiratesGlobals.SURFACE_WATER: swimSound,
+            PiratesGlobals.SURFACE_WOOD: walkWood
+          },
+          PiratesGlobals.RUN_INDEX: {
+            PiratesGlobals.SURFACE_DEFAULT: runSand,
+            PiratesGlobals.SURFACE_WATER: swimSound,
+            PiratesGlobals.SURFACE_WOOD: runWood
+          },
+          PiratesGlobals.REVERSE_INDEX: {
+            PiratesGlobals.SURFACE_DEFAULT: walkSand,
+            PiratesGlobals.SURFACE_WATER: swimSound,
+            PiratesGlobals.SURFACE_WOOD: walkWood
+          },
+          PiratesGlobals.STRAFE_LEFT_INDEX: {
+            PiratesGlobals.SURFACE_DEFAULT: runSand,
+            PiratesGlobals.SURFACE_WATER: swimSound,
+            PiratesGlobals.SURFACE_WOOD: runWood
+          },
+          PiratesGlobals.STRAFE_RIGHT_INDEX: {
+            PiratesGlobals.SURFACE_DEFAULT: runSand,
+            PiratesGlobals.SURFACE_WATER: swimSound,
+            PiratesGlobals.SURFACE_WOOD: runWood
+          },
+          PiratesGlobals.STRAFE_LEFT_DIAG_INDEX: {
+            PiratesGlobals.SURFACE_DEFAULT: runSand,
+            PiratesGlobals.SURFACE_WATER: swimSound,
+            PiratesGlobals.SURFACE_WOOD: runWood
+          },
+          PiratesGlobals.STRAFE_RIGHT_DIAG_INDEX: {
+            PiratesGlobals.SURFACE_DEFAULT: runSand,
+            PiratesGlobals.SURFACE_WATER: swimSound,
+            PiratesGlobals.SURFACE_WOOD: runWood
+          },
+          PiratesGlobals.STRAFE_LEFT_DIAG_REV_INDEX: {
+            PiratesGlobals.SURFACE_DEFAULT: walkSand,
+            PiratesGlobals.SURFACE_WATER: swimSound,
+            PiratesGlobals.SURFACE_WOOD: walkWood
+          },
+          PiratesGlobals.STRAFE_RIGHT_DIAG_REV_INDEX: {
+            PiratesGlobals.SURFACE_DEFAULT: walkSand,
+            PiratesGlobals.SURFACE_WATER: swimSound,
+            PiratesGlobals.SURFACE_WOOD: walkWood
+          }
+        }
 
     def setSurfaceIndex(self, surfaceIndex):
         if surfaceIndex != self.surfaceIndex:
