@@ -1,4 +1,5 @@
 from direct.directnotify.DirectNotifyGlobal import *
+from otp.ai.MagicWordGlobal import *
 
 from pirates.pirate.HumanDNA import HumanDNA
 
@@ -54,3 +55,23 @@ class HumanDNAAI(HumanDNA):
 
     def d_setHair(self):
         self.sendUpdate('setHair', [self.getHairHair(), self.getHairBeard(), self.getHairMustache(), self.getHairColor()])
+
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str, int])
+def dna(dnaType, val=0):
+    target = spellbook.getTarget()
+
+    # TODO: Implement a check to see if the value is not in the range of the dna type.
+    # TODO: clothing, tattoo, jewelry, etc.
+    if dnaType == 'hair':
+        target.b_setHairHair(val)
+        return 'Hair value set to: %s' % val
+    elif dnaType == 'mustache':
+        target.b_setHairMustache(val)
+        return 'Mustache value set to: %s' % val
+    elif dnaType == 'beard':
+        target.b_setHairBeard(val)
+        return 'Beard value set to: %s' % val
+    else:
+        return 'DNA Type: %s is not yet supported!'
+
