@@ -415,53 +415,43 @@ class SkillButton(DirectFrame):
                 description += ' ' + PLocalizer.HealsDamageRange
             else:
                 description += ' ' + PLocalizer.HealsDamage
-        
         if mpDamage < 0:
             description += ' ' + PLocalizer.DealsMpDamage
-        
         effectId = WeaponGlobals.getSkillEffectFlag(self.skillId)
         if effectId:
             description += ' ' + SkillEffectDescriptions.get(effectId)[0]
-        
-        if self.skillId == InventoryType.SailBroadsideLeft or self.skillId == InventoryType.SailBroadsideRight and damageMod > 0:
-            description += ' ' + PLocalizer.BroadsideDesc
-        
-        if self.skillId == InventoryType.CannonShoot and rechargeMod:
-            description += ' ' + PLocalizer.CannonShootDesc
-        
-        if self.skillId == InventoryType.DollAttune:
-            description += ' ' + PLocalizer.MultiAttuneDesc
-        
-        if WeaponGlobals.getSkillInterrupt(self.skillId):
-            description += ' ' + PLocalizer.InterruptDesc
-        
-        if WeaponGlobals.getSkillUnattune(self.skillId):
-            description += ' ' + PLocalizer.UnattuneDesc
-        
         upgradeInfo = ''
-        if self.showUpgrade and self.skillRank < 5:
-            if self.skillRank > 0:
-                upgradeInfo = skillInfo[2]
-                if upgradeInfo == '':
-                    if damage < 0:
-                        upgradeInfo += PLocalizer.UpgradesDamage
-                    elif damage > 0:
-                        upgradeInfo += PLocalizer.UpgradesHealing
-                    
-                    if mpDamage < 0:
-                        upgradeInfo += ' ' + PLocalizer.UpgradesMpDamage
-                    
-                    if effectId:
-                        entry = SkillEffectDescriptions.get(effectId)
-                        if len(entry) > 1:
-                            if not damage:
-                                upgradeInfo += PLocalizer.UpgradesDuration
+        if self.skillId == InventoryType.SailBroadsideLeft or self.skillId == InventoryType.SailBroadsideRight:
+            if damageMod > 0:
+                description += ' ' + PLocalizer.BroadsideDesc
+            if self.skillId == InventoryType.CannonShoot and rechargeMod:
+                description += ' ' + PLocalizer.CannonShootDesc
+            if self.skillId == InventoryType.DollAttune:
+                description += ' ' + PLocalizer.MultiAttuneDesc
+            if WeaponGlobals.getSkillInterrupt(self.skillId):
+                description += ' ' + PLocalizer.InterruptDesc
+            if WeaponGlobals.getSkillUnattune(self.skillId):
+                description += ' ' + PLocalizer.UnattuneDesc
+            if self.showUpgrade and self.skillRank < 5:
+                if self.skillRank > 0:
+                    upgradeInfo = skillInfo[2]
+                    if upgradeInfo == '':
+                        if damage < 0:
+                            upgradeInfo += PLocalizer.UpgradesDamage
+                        else:
+                            if damage > 0:
+                                upgradeInfo += PLocalizer.UpgradesHealing
+                        if mpDamage < 0:
+                            upgradeInfo += ' ' + PLocalizer.UpgradesMpDamage
+                        if effectId:
+                            entry = SkillEffectDescriptions.get(effectId)
+                            if len(entry) > 1:
+                                if not damage:
+                                    upgradeInfo += PLocalizer.UpgradesDuration
                             else:
                                 upgradeInfo += ' ' + PLocalizer.And
                             upgradeInfo += ' ' + entry[1]
-
                     upgradeInfo += '!'
-                
             elif len(upgradeInfo) >= 4:
                 upgradeInfo = skillInfo[3]
             else:
@@ -470,72 +460,52 @@ class SkillButton(DirectFrame):
             unlockLevel = RepChart.getSkillUnlockLevel(self.skillId)
             if unlockLevel > 0:
                 upgradeInfo = PLocalizer.UnlocksAtLevel % unlockLevel
-
         if self.skillId in SkillComboReq and SkillComboReq[self.skillId] and inv.getStackQuantity(self.skillId - 1) < 2:
             color = '\x01red\x01'
             if inv.getStackQuantity(self.skillId) == 1:
                 color = '\x01red\x01'
                 upgradeInfo = ''
-            
             description += '\n' + color + SkillComboReq[self.skillId] + '.'
-        
         skillDesc = skillTitle + '\n' + skillType + '\n\n' + description + '\n\x01green\x01' + upgradeInfo + '\x02'
         stats = []
         if manaCost:
             stats.append(abs(manaCost))
-        
         if damage and loDamage:
             stats.append(abs(loDamage))
             stats.append(abs(damage))
         elif damage:
             stats.append(abs(damage))
-        
         if mpDamage:
             stats.append(abs(mpLoDamage))
             stats.append(abs(mpDamage))
-        
         if buff == WeaponGlobals.C_CURSE:
             stats.append(WeaponGlobals.CURSED_DAM_AMP * 100)
-        
         if buff == WeaponGlobals.C_ATTUNE:
             stats.append(baseRank)
-        
         if buff == WeaponGlobals.C_WEAKEN:
             stats.append(WeaponGlobals.WEAKEN_PENALTY * 100)
-        
         if effect > 0:
             stats.append(effect)
-        
         if dodge:
             stats.append(abs(dodge))
-        
         if accuracy:
             stats.append(abs(accuracy))
-        
         if damageMod:
             stats.append(abs(damageMod))
-        
         if reduceDamMod:
             stats.append(abs(reduceDamMod))
-        
         if reduceManaMod:
             stats.append(abs(reduceManaMod))
-        
         if rechargeMod:
             stats.append(abs(rechargeMod))
-        
         if shipTurningMod:
             stats.append(abs(shipTurningMod))
-        
         if shipSpeedMod:
             stats.append(abs(shipSpeedMod))
-        
         if chargeMod:
             stats.append(abs(chargeMod))
-        
         if rangeMod:
             stats.append(abs(rangeMod))
-        
         if self.skillId == InventoryType.SailTreasureSense:
             stats.append(abs(treasureSenseMod))
         
