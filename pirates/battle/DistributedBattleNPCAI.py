@@ -1,16 +1,18 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import globalClockDelta
+from direct.fsm.FSM import FSM
 
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.pirate.BattleNPCGameFSMAI import BattleNPCGameFSMAI
 from pirates.piratesbase import PLocalizerEnglish
 
 
-class DistributedBattleNPCAI(DistributedBattleAvatarAI):
+class DistributedBattleNPCAI(DistributedBattleAvatarAI, FSM):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleNPCAI')
 
     def __init__(self, air):
         DistributedBattleAvatarAI.__init__(self, air)
+        FSM.__init__(self, self.__class__.__name__)
 
         self.gameFSM = BattleNPCGameFSMAI(self.air, self)
 
@@ -109,6 +111,12 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def handleClientAggro(self, avatar):
         self.d_setChat(PLocalizerEnglish.getNavyAggroPhrase())
+
+    def demand(self, state, *args):
+        FSM.demand(self, state, *args)
+
+        self.setGameState(state, globalClockDelta.getRealNetworkTime())
+        self.b_setGameState(state)
 
     def delete(self):
         self.air.battleMgr.removeTarget(self)
