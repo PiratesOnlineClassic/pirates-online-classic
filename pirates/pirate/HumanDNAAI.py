@@ -73,5 +73,5 @@ def dna(dnaType, val=0):
         target.b_setHairBeard(val)
         return 'Beard value set to: %s' % val
     else:
-        return 'DNA Type: %s is not yet supported!'
+        return 'DNA Type: %s is not yet supported!' % dnaType
 
