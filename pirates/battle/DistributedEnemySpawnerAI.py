@@ -255,7 +255,13 @@ class SpawnNodeBase:
 
         # Set starting state info
         npc.setAnimSet(self.objectData.get('AnimSet', 'default'))
-        npc.setStartState(self.objectData.get('Start State', 'Idle'))
+
+        state = self.objectData['Start State']
+
+        if state in ('Walk', 'Patrol'):
+            state = 'Idle'
+
+        npc.setStartState(state)
 
         # Generate npc
         zoneId = self.parent.getZoneFromXYZ(npc.getPos())
