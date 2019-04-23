@@ -377,7 +377,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
             # check to see if the player can purchase anymore stacks
             # for this type...
-            if skillQuantity >= 5:
+            if skillQuantity >= 6:
                 self.notify.debug('Cannot update stack %d, stack limit reached; skillQuantity=%d, skillLimit=5' % (
                     stackType, skillQuantity))
 
