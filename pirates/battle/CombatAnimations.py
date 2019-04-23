@@ -237,7 +237,7 @@ class CombatAnimations:
         return track
 
     def getDaggerViperNestInterval(self, av, skillId, ammoSkillId, charge, target):
-        numDaggers = 12.0
+        numDaggers = 12
         time = 0.7
         placeHolder = av.attachNewNode('daggerPlaceHolder')
         daggerTossIval = Parallel(Sequence(Func(self.lockInput, av), Func(av.currentWeapon.setTrailLength, 0.25), av.actorInterval('dagger_vipers_nest', startFrame = 21, endFrame = 35, blendInT = 0, blendOutT = 0.4), Func(av.currentWeapon.showWeapon), Func(av.motionFSM.on), Func(self.unlockInput, av)))
