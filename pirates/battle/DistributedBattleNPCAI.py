@@ -17,7 +17,7 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI, FSM):
         self.gameFSM = BattleNPCGameFSMAI(self.air, self)
 
         self.name = ''
-        self.spawnPos = [0, 0, 0, 0, 0, 0]
+        self.spawnPos = [0, 0, 0]
         self.animSet = ''
         self.collisionMode = 0
         self.initZ = 0
@@ -44,11 +44,11 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI, FSM):
     def setSpawnPos(self, (x, y, z)):
         self.spawnPos = [x, y, z]
 
-    def d_setSpawnPos(self, x, y, z):
+    def d_setSpawnPos(self, (x, y, z)):
         self.sendUpdate('setSpawnPos', [x, y, z])
 
-    def b_setSpawnPos(self, x, y, z):
-        self.setSpawnPosH(x, y, z)
+    def b_setSpawnPos(self, (x, y, z)):
+        self.setSpawnPos(x, y, z)
         self.d_setSpawnPos(x, y, z)
 
     def getSpawnPos(self):
