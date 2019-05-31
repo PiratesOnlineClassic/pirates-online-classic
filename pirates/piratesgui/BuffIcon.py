@@ -66,9 +66,14 @@ class BuffIcon(DirectFrame):
         self.Background.copyTo(self)
         self.dial = DialMeter(parent = self, meterColor = Vec4(0.3, 0.0, 0.8, 1), baseColor = Vec4(0, 0, 0, 1), scale = 0.17, sortOrder = 0)
         info = buffTable.get(self.effectId)
-        self.myIcon = DirectButton(parent = self, relief = None, geom = self.Card.find('**/' + info[0]), geom_scale = self.iconScale, sortOrder = 1)
-        self.myIcon.bind(DGG.ENTER, self.showDetails)
-        self.myIcon.bind(DGG.EXIT, self.hideDetails)
+        if info:
+            self.myIcon = DirectButton(parent = self, relief = None, geom = self.Card.find('**/' + info[0]), geom_scale = self.iconScale, sortOrder = 1)
+            self.myIcon.bind(DGG.ENTER, self.showDetails)
+            self.myIcon.bind(DGG.EXIT, self.hideDetails)
+        else:
+            # TODO: Disney neglected some of these... in the future, perhaps we should add it ourselves?
+            print('Could not find description and image for effectId: %s!' % self.effectId)
+
         self.updateIconInfo()
 
     def makeDetails(self):
