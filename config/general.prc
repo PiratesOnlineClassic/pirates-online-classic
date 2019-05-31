@@ -19,9 +19,7 @@ audio-library-name p3fmod_audio
 audio-output-rate 44100
 
 # Models:
-model-cache-models #f
-model-cache-textures #f
-want-disk-cache #f
+want-disk-cache 1
 default-model-extension .bam
 
 # Exclude:
@@ -61,34 +59,22 @@ notify-level-pgraph error
 notify-level-collide error
 notify-level-abs error
 notify-level-Actor error
-notify-level-AnimationMixer error
-notify-level-UsesAnimationMixer warning
 notify-level-DisplayOptions debug
 notify-timestamp 1
-
-# Options:
-enable-frame-rate-counter #t
 
 # Buffer:
 framebuffer-hardware #t
 framebuffer-software #f
 framebuffer-alpha 1
-prefer-parasite-buffer #t
-force-parasite-buffer #f
 alpha-bits 8
+prefer-parasite-buffer 1
+force-parasite-buffer 1
 hardware-animated-vertices #t
-basic-shaders-only #f
-driver-compress-textures #t
 textures-auto-power-2 #t
 
 # Performance:
 lock-to-one-cpu #f
 lock-to-one-core #f
-
-# Animations:
-want-smooth-anims #t
-anim-blend-type normalized_linear
-interpolate-frames #t
 
 # Tutorial:
 skip-tutorial #f
@@ -106,6 +92,7 @@ want-make-a-pirate #t
 want-new-avatars #t
 want-avatar-shadows #t
 want-new-avatar #t
+want-npc-viewer #f
 
 # Membership:
 want-membership #f

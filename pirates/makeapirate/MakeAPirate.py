@@ -1340,6 +1340,7 @@ class MakeAPirate(DirectObject, StateData.StateData, FSM.FSM):
             taskMgr.doMethodLater(dur, self.restoreIdle, 'avCreate-restoreIdle')
         except:
             self.notify.warning("task to restore idle didn't work")
+            self.restoreIdle
 
         return Task.done
     
