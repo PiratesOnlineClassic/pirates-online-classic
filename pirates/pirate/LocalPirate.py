@@ -57,6 +57,8 @@ import Pirate
 import LocalPirateGameFSM
 from DistributedPlayerPirate import DistributedPlayerPirate
 from direct.gui import OnscreenText
+from libotp import CFThought, CFTimeout
+
 globalClock = ClockObject.getGlobalClock()
 from direct.controls.ControlManager import ControlManager
 if base.config.GetBool('want-custom-keys', 0):
@@ -1942,3 +1944,4 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
     def teleportResponse(self, avId, available, shardId, instanceDoId, areaDoId):
         if self.isGenerated():
             self.cr.teleportMgr.handleAvatarTeleportResponse(avId, available, shardId, instanceDoId, areaDoId)
+
