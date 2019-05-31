@@ -117,6 +117,18 @@ class BattleManagerAI(BattleManagerBase):
         if not avatar:
             return None
 
+        inventory = avatar.getInventory()
+
+        # Subtract ammo
+        if ammoSkillId and not WeaponGlobals.isInfiniteAmmo(ammoSkillId):
+            ammoId = WeaponGlobals.getSkillAmmoInventoryId(ammoSkillId)
+            if ammoId:
+                ammoAmt = inventory.getStackQuantity(ammoId)
+
+                # We should not attempt to remove ammo if we don't have any for that type.
+                if not ammoAmt < 1:
+                    inventory.b_setStackQuantity(ammoId, ammoAmt - 1)
+
         # this is just the client requesting an action for the skill used,
         # they are not actually attacking any kind of target...
         if not target:
@@ -244,6 +256,7 @@ class BattleManagerAI(BattleManagerBase):
             # handle interactive props
             if hasattr(target, 'd_propSlashed'):
                 target.d_propSlashed()
+
         elif skillResult == WeaponGlobals.RESULT_MISS:
             pass
         elif skillResult == WeaponGlobals.RESULT_DODGE:
