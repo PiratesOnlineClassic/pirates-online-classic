@@ -1375,7 +1375,7 @@ class GuiManager(FSM.FSM):
             self.bg.reparentTo(self.interactionalFrame)
             self.bg.setTransparency(1)
             self.bg.setColorScale(1, 1, 1, 0.85)
-            self.bg.setScale(0.32, 0.032000000000000001, 0.2)
+            self.bg.setScale(0.32, 0.032, 0.2)
             self.bg.setHpr(0, 90, 0)
             self.interactionalSubtitler.text.reparentTo(self.interactionalFrame)
             self.interactionalSubtitler.text.setScale(1)
