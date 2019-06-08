@@ -12,7 +12,7 @@ from pirates.piratesgui.BorderFrame import BorderFrame
 class GuiButton(DirectButton):
     notify = directNotify.newCategory('GuiButton')
     genericButton = None
-    
+
     def __init__(self, parent = None, hotkeys = (), hotkeyLabel = None, helpText = '', helpPos = (0, 0, 0), helpDelay = PiratesGuiGlobals.HelpPopupTime, helpColorOff = False, helpLeftAlign = False, **kw):
         self.loadGui()
         self.helpBox = None
@@ -24,7 +24,7 @@ class GuiButton(DirectButton):
         self.initialiseoptions(GuiButton)
         self.hotkeys = ()
         self.setupHotkeys(hotkeys, hotkeyLabel, self['command'], self['extraArgs'])
-    
+
     def destroy(self):
         self.hideDetails()
         if self.helpWatcher:
@@ -32,14 +32,14 @@ class GuiButton(DirectButton):
             self.helpWatcher.unbind(DGG.WITHOUT)
             self.helpWatcher.destroy()
             self.helpWatcher = None
-        
+
         self.ignoreAll()
         DirectButton.destroy(self)
-    
+
     def loadGui(self):
         if GuiButton.genericButton:
             return
-        
+
         gui = loader.loadModel('models/gui/toplevel_gui')
         GuiButton.genericButton = (gui.find('**/generic_button'), gui.find('**/generic_button_down'), gui.find('**/generic_button_over'), gui.find('**/generic_button_disabled'))
 
@@ -47,17 +47,17 @@ class GuiButton(DirectButton):
         if self.hotkeys:
             self.ignoreHotkeys()
             self.hotkeyLabel.destroy()
-        
+
         self.hotkeys = hotkeys
         if self.hotkeys:
-            self.hotkeyLabel = DirectLabel(parent = self, relief = None, state = DGG.DISABLED, text = hotkeyLabel, text_font = PiratesGlobals.getPirateBoldOutlineFont(), text_scale = PiratesGuiGlobals.TextScaleMed, text_pos = (0.091999999999999998, 0.01), text_fg = PiratesGuiGlobals.TextFG2, text_shadow = PiratesGuiGlobals.TextShadow, textMayChange = 1)
+            self.hotkeyLabel = DirectLabel(parent = self, relief = None, state = DGG.DISABLED, text = hotkeyLabel, text_font = PiratesGlobals.getPirateBoldOutlineFont(), text_scale = PiratesGuiGlobals.TextScaleMed, text_pos = (0.092, 0.01), text_fg = PiratesGuiGlobals.TextFG2, text_shadow = PiratesGuiGlobals.TextShadow, textMayChange = 1)
             self.acceptHotkeys(self.hotkeys, command, extraArgs)
-    
+
     def ignoreHotkeys(self):
         if self.hotkeys:
             for hotkey in self.hotkeys:
                 self.ignore(hotkey)
-    
+
     def acceptHotkeys(self, hotkeys, command, extraArgs):
         if self.hotkeys:
             for hotkey in self.hotkeys:
@@ -84,7 +84,7 @@ class GuiButton(DirectButton):
         bounds = self['frameSize'] or self.getBounds()
         pos = Vec3(bounds[0] + w / 2, 0, bounds[2] + h / 2)
         return pos
-    
+
     def resetHelpWatcher(self):
         if self.helpWatcher:
             self.helpWatcher.setPos(self, 0, 0, 0)
@@ -92,7 +92,7 @@ class GuiButton(DirectButton):
     def createHelpBox(self):
         if not self.helpWatcher:
             self.createHelpWatcher()
-        
+
         helpLabel = DirectLabel(relief = None, state = DGG.DISABLED, text = self['helpText'], text_align = TextNode.ACenter, text_scale = PiratesGuiGlobals.TextScaleMed, text_fg = PiratesGuiGlobals.TextFG1, text_wordwrap = 12, text_shadow = (0, 0, 0, 1), textMayChange = 0, sortOrder = 91)
         height = helpLabel.getHeight()
         width = helpLabel.getWidth() + 0.05
@@ -144,7 +144,7 @@ class GuiButton(DirectButton):
             self.helpTextUpdated()
 
     def waitShowDetails(self, event):
-        
+
         try:
             self['helpDelay']
         except AttributeError:
@@ -152,13 +152,13 @@ class GuiButton(DirectButton):
 
         if not self.helpBox:
             self.createHelpBox()
-        
+
         if self['helpDelay']:
             self.hideDetails()
             taskMgr.doMethodLater(self['helpDelay'], self.helpBox.show, 'helpInfoTask-%s' % self.getName(), extraArgs = [])
         else:
             self.helpBox.show()
-    
+
     def hideDetails(self, event = None):
         taskMgr.remove('helpInfoTask-%s' % self.getName())
         if self.helpBox and not self.helpBox.isEmpty():
@@ -221,13 +221,10 @@ class GuiButton(DirectButton):
         DirectButton.stash(self)
         if self.helpWatcher:
             self.helpWatcher.stash()
-    
+
     def unstash(self):
         DirectButton.unstash(self)
         self.reparentTo(self.getParent(), sort = self['sortOrder'])
         if self.helpWatcher:
             self.helpWatcher.unstash()
             self.helpWatcher.reparentTo(self.helpWatcher.getParent(), sort = self.helpWatcher['sortOrder'])
-        
-
-

@@ -10,16 +10,16 @@ from pirates.piratesbase import PLocalizer
 
 class WorkMeter(DirectFrame):
     Card = None
-    
+
     def __init__(self):
         if self.Card == None:
             self.Card = loader.loadModel('models/gui/ship_battle')
-        
+
         DirectFrame.__init__(self, relief = None, parent = base.a2dBottomCenter, image = self.Card.find('**/ship_battle_speed_bar*'), image_scale = (0.5, 1, 0.8), pos = (0, 0, 0.09))
         self.initialiseoptions(WorkMeter)
         self.setName(self.uniqueName('workMeter'))
         self.duration = 0.0
-        self.meter = DirectWaitBar(parent = self, relief = DGG.FLAT, text = '', text_pos = (0, 0.04), text_scale = PiratesGuiGlobals.TextScaleLarge, text_align = TextNode.ACenter, text_fg = PiratesGuiGlobals.TextFG1, text_shadow = PiratesGuiGlobals.TextShadow, textMayChange = 0, range = 1.0, value = 0.0, frameColor = Vec4(0.20000000000000001, 0.16, 0.10000000000000001, 1), barColor = Vec4(1, 0.80000000000000004, 0.5, 1), pos = (0, 0, 0), frameSize = (-0.33000000000000002, 0.33000000000000002, -0.012500000000000001, 0.012500000000000001))
+        self.meter = DirectWaitBar(parent = self, relief = DGG.FLAT, text = '', text_pos = (0, 0.04), text_scale = PiratesGuiGlobals.TextScaleLarge, text_align = TextNode.ACenter, text_fg = PiratesGuiGlobals.TextFG1, text_shadow = PiratesGuiGlobals.TextShadow, textMayChange = 0, range = 1.0, value = 0.0, frameColor = Vec4(0.2, 0.16, 0.1, 1), barColor = Vec4(1, 0.8, 0.5, 1), pos = (0, 0, 0), frameSize = (-0.33, 0.33, -0.0125, 0.0125))
         self.flattenStrong()
 
     def destroy(self):
@@ -28,16 +28,16 @@ class WorkMeter(DirectFrame):
 
     def updateText(self, text):
         self.meter['text'] = text
-    
+
     def update(self, value):
         self.meter['value'] = value
-    
+
     def startTimer(self, totalTime, timeRemaining = None):
         self.show()
         taskMgr.remove(self.taskName('workMeter'))
         if timeRemaining is None:
             timeRemaining = totalTime
-        
+
         timeAlreadyElapsed = totalTime - timeRemaining
         self.startSearchTime = globalClock.getFrameTime() - timeAlreadyElapsed
         self.duration = float(totalTime)
@@ -52,9 +52,7 @@ class WorkMeter(DirectFrame):
         else:
             self.meter['value'] = value
             return Task.cont
-    
+
     def stopTimer(self):
         taskMgr.remove(self.taskName('workMeter'))
         self.hide()
-
-

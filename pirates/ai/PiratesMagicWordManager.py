@@ -30,7 +30,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesMagicWordManager')
     neverDisable = 1
     GameAvatarClass = DistributedPlayerPirate.DistributedPlayerPirate
-    
+
     def __init__(self, cr):
         MagicWordManager.MagicWordManager.__init__(self, cr)
         self.pendingCameraReparent = None
@@ -53,13 +53,13 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
         MagicWordManager.MagicWordManager.doLoginMagicWords(self)
         if base.config.GetBool('want-chat', 0):
             self.d_setMagicWord('~chat', localAvatar.doId, 0)
-        
+
         if base.config.GetBool('want-run', 0) or base.config.GetBool('want-pirates-run', 0):
             self.toggleRun()
-        
+
         if base.config.GetBool('immortal-mode', 0):
             self.d_setMagicWord('~immortal', localAvatar.doId, 0)
-    
+
     def disable(self):
         taskMgr.remove('setGMNameTag')
         self.ignore('magicWord')
@@ -70,7 +70,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             self.pendingCameraReparent = None
 
     def doMagicWord(self, word, avId, zoneId):
-        
+
         def wordIs(w, word=word):
             return word[:len(w) + 1] == '%s ' % w or word == w
 
@@ -735,7 +735,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 camModel = NodePath('camera')
                 lens = PerspectiveLens()
                 lens.setFov(base.camLens.getFov())
-                lens.setFov(39.307600000000001)
+                lens.setFov(39.3076)
                 g = lens.makeGeometry()
                 gn = GeomNode('frustum')
                 gn.addGeom(g)
@@ -757,14 +757,14 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                         camParent.setHpr(camData[1])
                         camParent.setScale(10)
                         camModel.instanceTo(camParent)
-                
+
             elif wordIs('~hideCams'):
                 render.findAllMatches('**/liveCamParent*').detach()
             elif wordIs('~dropBlockers'):
                 ga = localAvatar.getParentObj()
                 blockers = ga.findAllMatches('**/blocker_*')
                 blockers.stash()
-    
+
     def cameraFollowTgt(self, target, parentId):
         targetObj = base.cr.doId2do[target.getDoId()]
         localAvatar.cTrav.removeCollider(localAvatar.cFloorNodePath)
@@ -783,14 +783,14 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             self.originalLocation = [
                 localAvatar.getLocation(),
                 localAvatar.getPos()]
-        
+
         if not base.cr.doId2do.has_key(targetParentId):
             self.notify.debug('Parent of target object to reparent avatar/camera to does not yet exist, skipping reparent request')
             return None
-        
+
         if isinstance(base.cr.doId2do[targetParentId], DistributedCartesianGrid.DistributedCartesianGrid):
             base.cr.doId2do[targetParentId].visAvatar = localAvatar
-        
+
         localAvatar.b_setLocation(targetParentId, zoneId, teleport = 1)
         if base.cr.doId2do.has_key(targetId):
             self.cameraFollowTgt(base.cr.doId2do[targetId], targetParentId)
@@ -812,5 +812,3 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
 
     def recvServerTime(self, sinceEpoch):
         base.chatAssistant.receiveGameMessage(PLocalizer.getServerTimeString(sinceEpoch))
-
-

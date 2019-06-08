@@ -8,12 +8,12 @@ from pirates.piratesgui import GuiPanel
 from pirates.piratesgui import PiratesGuiGlobals
 
 class QuestDetailBase(DirectFrame):
-    
+
     def __init__(self, parent = aspect2d, pos = (0, 0, 0), *args, **kw):
         topGui = loader.loadModel('models/gui/toplevel_gui')
         questScroll = topGui.find('**/main_gui_quest_scroll')
         topGui.removeNode()
-        optiondefs = (('relief', None, None), ('pos', pos, None), ('image', questScroll, None), ('image_scale', 0.47, None), ('text', '', None), ('text_align', TextNode.ALeft, None), ('text_fg', PiratesGuiGlobals.TextFG2, None), ('text_scale', PiratesGuiGlobals.TextScaleLarge, None), ('text_pos', (-0.41999999999999998, 0.20999999999999999), None), ('text_shadow', (0, 0, 0, 1), None), ('text_wordwrap', 22, None))
+        optiondefs = (('relief', None, None), ('pos', pos, None), ('image', questScroll, None), ('image_scale', 0.47, None), ('text', '', None), ('text_align', TextNode.ALeft, None), ('text_fg', PiratesGuiGlobals.TextFG2, None), ('text_scale', PiratesGuiGlobals.TextScaleLarge, None), ('text_pos', (-0.42, 0.21), None), ('text_shadow', (0, 0, 0, 1), None), ('text_wordwrap', 22, None))
         self.defineoptions(kw, optiondefs)
         DirectFrame.__init__(self, parent = parent, *args, **kw)
         self.initialiseoptions(QuestDetailBase)
@@ -21,7 +21,7 @@ class QuestDetailBase(DirectFrame):
 
 
 class QuestDetailGUI(QuestDetailBase):
-    
+
     def __init__(self, offer, callback, quest = None):
         self.width = 1
         QuestDetailBase.__init__(self, parent = base.a2dBottomRight, pos = (0.6, 0, 0.52))
@@ -33,7 +33,7 @@ class QuestDetailGUI(QuestDetailBase):
             self.setQuestInfoFromQuest(quest)
         self.buildIvals()
         self.showPanel()
-    
+
     def destroy(self):
         self.showIval.pause()
         self.showIval = None
@@ -61,7 +61,7 @@ class QuestDetailGUI(QuestDetailBase):
             containerDNA = QuestLadderDB.getContainer(questId)
             if containerDNA:
                 status = containerDNA.getDescriptionText()
-            
+
         else:
             status = QuestDB.QuestDict[questId].getDescriptionText(offer.initialTaskStates)
         questStrings = PLocalizer.QuestStrings.get(questId)
@@ -83,13 +83,13 @@ class QuestDetailGUI(QuestDetailBase):
                 'status': status,
                 'desc': desc}
         self['text'] = text
-    
+
     def setQuestInfoFromQuest(self, quest):
         questId = quest.getQuestId()
         taskStates = getattr(quest, 'taskStates', None)
         if not taskStates:
             taskStates = QuestDB.QuestDict[questId].getInitialTaskStates(localAvatar)
-        
+
         status = QuestDB.QuestDict[questId].getDescriptionText(taskStates)
         questStrings = PLocalizer.QuestStrings.get(questId)
         if questStrings:
@@ -105,12 +105,10 @@ class QuestDetailGUI(QuestDetailBase):
             base.cr.centralLogger.writeClientEvent('Debug_QuestDetailGUI_GetRewardCrash: Error would have occured for localAvatar=%s; with questId=%s' % (localAvatar.getDoId(), questId))
             if hasattr(quest, 'doId'):
                 base.cr.centralLogger.writeClientEvent('Debug_QuestDetailGUI_GetRewardCrash: Error would have occured for localAvatar=%s; with questDoId=%s' % (localAvatar.getDoId(), quest.getDoId()))
-            
+
         text = PLocalizer.QuestItemGuiIncompleteFormat % {
             'title': title,
             'status': status,
             'desc': desc,
             'reward': reward}
         self['text'] = text
-
-
