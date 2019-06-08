@@ -122,7 +122,8 @@ class BattleManagerAI(BattleManagerBase):
         # Subtract ammo
         if ammoSkillId and not WeaponGlobals.isInfiniteAmmo(ammoSkillId):
             ammoId = WeaponGlobals.getSkillAmmoInventoryId(ammoSkillId)
-            if ammoId:
+            if ammoId and ammoId not in InventoryType.Potions:
+
                 ammoAmt = inventory.getStackQuantity(ammoId)
 
                 # We should not attempt to remove ammo if we don't have any for that type.
