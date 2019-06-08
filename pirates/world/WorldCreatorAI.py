@@ -9,6 +9,7 @@ from pirates.leveleditor import ObjectList
 from pirates.leveleditor import WorldDataGlobals
 from pirates.world import WorldGlobals
 from pirates.instance.DistributedMainWorldAI import DistributedMainWorldAI
+from pirates.instance.DistributedInstanceWorldAI import DistributedInstanceWorldAI
 from pirates.tutorial import TutorialGlobals
 from pirates.tutorial.DistributedPiratesTutorialWorldAI import DistributedPiratesTutorialWorldAI
 from pirates.treasuremap.TreasureMapBlackPearlAI import TreasureMapBlackPearlAI
@@ -305,7 +306,7 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
             self.world = TreasureMapBlackPearlAI(self.air)
         else:
             if worldName == '':
-                self.world = DistributedMainWorldAI(self.air)
+                self.world = DistributedInstanceWorldAI(self.air)
                 self.world.setType(PiratesGlobals.INSTANCE_MAINSUB)
             elif worldName == 'default':
                 self.world = DistributedMainWorldAI(self.air)
