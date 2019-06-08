@@ -113,6 +113,19 @@ class BattleManagerAI(BattleManagerBase):
 
         return attackerNP.getDistance(targetNP)
 
+    def getIsWeaponAmmo(self, ammoId):
+        if ammoId:
+            if ammoId >= InventoryType.begin_WeaponPistolAmmo and ammoId <= InventoryType.end_WeaponPistolAmmo:
+                return True
+            elif ammoId >= InventoryType.begin_WeaponGrenadeAmmo and ammoId <= InventoryType.end_WeaponGrenadeAmmo:
+                return True
+            elif ammoId >= InventoryType.begin_WeaponCannonAmmo and ammoId <= InventoryType.end_WeaponCannonAmmo:
+                return True
+            elif ammoId >= InventoryType.begin_WeaponDaggerAmmo and ammoId <= InventoryType.end_WeaponCannonAmmo:
+                return True
+            else:
+                return False
+
     def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge=0):
         if not avatar:
             return None
@@ -122,7 +135,7 @@ class BattleManagerAI(BattleManagerBase):
         # Subtract ammo
         if ammoSkillId and not WeaponGlobals.isInfiniteAmmo(ammoSkillId):
             ammoId = WeaponGlobals.getSkillAmmoInventoryId(ammoSkillId)
-            if ammoId and ammoId not in InventoryType.Potions:
+            if ammoId and self.getIsWeaponAmmo(ammoId):
 
                 ammoAmt = inventory.getStackQuantity(ammoId)
 
