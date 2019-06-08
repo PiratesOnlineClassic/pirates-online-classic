@@ -27,6 +27,7 @@ from pirates.trades.TradeManagerAI import TradeManagerAI
 from pirates.world.WorldCreatorAI import WorldCreatorAI
 from pirates.battle.BattleManagerAI import BattleManagerAI
 from pirates.band.DistributedCrewMatchAI import DistributedCrewMatchAI
+from pirates.band.DistributedPirateBandManagerAI import DistributedPirateBandManagerAI
 from pirates.tutorial.PiratesTutorialManagerAI import PiratesTutorialManagerAI
 
 
@@ -144,6 +145,9 @@ class PiratesAIRepository(PiratesInternalRepository):
 
         self.crewMatch = DistributedCrewMatchAI(self)
         self.crewMatch.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+
+        self.bandManager = DistributedPirateBandManagerAI(self)
+        self.bandManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
         self.tutorialManager = PiratesTutorialManagerAI(self)
         self.tutorialManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
