@@ -108,7 +108,7 @@ class LocalTrade(TradeBase):
         self.giveSkill(InventoryType.PistolLeadShot, 2)
 
     def giveDollTraining(self):
-        self.giveStack(InventortyType.DollToken, 1)
+        self.giveStack(InventoryType.DollToken, 1)
 
         self.giveSkill(InventoryType.DollAttune, 2)
         self.giveSkill(InventoryType.DollPoke, 2)
