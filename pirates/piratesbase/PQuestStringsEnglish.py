@@ -7838,7 +7838,7 @@ NPCNames = {
   '1181267968.0dxschafe': 'Jonathan Fairbanks',
   '1181348864.0dxschafe': 'Nelson Welch',
   '1181593472.0dxschafe': 'Boatswain Bill',
-  '1181605248.0dxschafe': 'Daniel\xc2\xa0 Vallance',
+  '1181605248.0dxschafe': 'Daniel Vallance',
   '1181606272.0dxschafe': 'Alexander Thayer',
   '1181607808.0dxschafe': 'Samuel Wright',
   '1181610880.0dchiappe': 'Christopher Scott',
@@ -7990,4 +7990,3 @@ NPCNames = {
   'tutorial_dan': 'Doggerel Dan',
   'tutorial_stumpy': 'Captain Bo Beck'
 }
-
