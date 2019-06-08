@@ -121,7 +121,7 @@ class BattleManagerAI(BattleManagerBase):
                 return True
             elif ammoId >= InventoryType.begin_WeaponCannonAmmo and ammoId <= InventoryType.end_WeaponCannonAmmo:
                 return True
-            elif ammoId >= InventoryType.begin_WeaponDaggerAmmo and ammoId <= InventoryType.end_WeaponCannonAmmo:
+            elif ammoId >= InventoryType.begin_WeaponDaggerAmmo and ammoId <= InventoryType.end_WeaponDaggerAmmo:
                 return True
             else:
                 return False
