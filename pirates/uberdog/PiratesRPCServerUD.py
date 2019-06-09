@@ -95,7 +95,7 @@ class PiratesRPCServerUD(Thread):
             [str message] = The message to broadcast.
         """
 
-        channel = (channel << 32) | 2
+        channel = (channel + 1 << 32) | 2
         self.air.systemMessage(message, channel)
         return self.formatCallback()
 
