@@ -116,7 +116,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setStackLimit(stackType, limit)
 
     def setStackQuantity(self, stackType, quantity):
-        self.stacks[stackType] = quantity
+        self.stacks[stackType] = min(quantity, self.getStackLimit(stackType))
         self.d_setStacks(self.getStacks())
 
     def d_setStackQuantity(self, stackType, quantity):
