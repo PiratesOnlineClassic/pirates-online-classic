@@ -205,7 +205,7 @@ class DistributedShopKeeper:
             
             self.storeMenuGUI = StoreGUI.StoreGUI(inventory, PLocalizer.MerchantStore)
         elif storeType == InteractGlobals.MUSICIAN:
-            self.fadeIval = Sequence(Func(self.setTransparency, 1.0), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
+            self.fadeIval = Sequence(Func(self.setTransparency, 1), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
             self.fadeIval.start()
             inventory = self.shopInventory[:]
             self.storeMenuGUI = MusicianGUI.MusicianGUI(inventory, PLocalizer.InteractMusician)
@@ -216,23 +216,23 @@ class DistributedShopKeeper:
         elif storeType == InteractGlobals.UPGRADE:
             pass
         elif storeType == InteractGlobals.ACCESSORIES_STORE:
-            self.fadeIval = Sequence(Func(self.setTransparency, 1.0), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
+            self.fadeIval = Sequence(Func(self.setTransparency, 1), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
             self.fadeIval.start()
             self.storeMenuGUI = AccessoriesStoreGUI.AccessoriesStoreGUI(npc = self, shopId = self.getShopId())
         elif storeType == InteractGlobals.TATTOO_STORE:
-            self.fadeIval = Sequence(Func(self.setTransparency, 1.0), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
+            self.fadeIval = Sequence(Func(self.setTransparency, 1), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
             self.fadeIval.start()
             self.storeMenuGUI = TattooStoreGUI.TattooStoreGUI(npc = self, shopId = self.getShopId())
         elif storeType == InteractGlobals.JEWELRY_STORE:
-            self.fadeIval = Sequence(Func(self.setTransparency, 1.0), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
+            self.fadeIval = Sequence(Func(self.setTransparency, 1), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
             self.fadeIval.start()
             self.storeMenuGUI = JewelryStoreGUI.JewelryStoreGUI(npc = self, shopId = self.getShopId())
         elif storeType == InteractGlobals.BARBER_STORE:
-            self.fadeIval = Sequence(Func(self.setTransparency, 1.0), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
+            self.fadeIval = Sequence(Func(self.setTransparency, 1), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
             self.fadeIval.start()
             self.storeMenuGUI = BarberStoreGUI.BarberStoreGUI(npc = self, shopId = self.getShopId())
         elif storeType == InteractGlobals.PVP_REWARDS_TATTOO:
-            self.fadeIval = Sequence(Func(self.setTransparency, 1.0), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
+            self.fadeIval = Sequence(Func(self.setTransparency, 1), self.colorScaleInterval(1.0, VBase4(1.0, 1.0, 1.0, 0.0)), Func(self.hide))
             self.fadeIval.start()
             self.storeMenuGUI = TattooStoreGUI.TattooStoreGUI(npc = self, shopId = PiratesGlobals.PRIVATEER_TATTOOS)
 
