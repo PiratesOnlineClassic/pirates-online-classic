@@ -271,7 +271,7 @@ class CutlassReward(QuestReward):
         trade.giveStack(InventoryType.CutlassWeaponL1, 1)
 
     def getDescriptionText(self):
-        return PLocalizer.PistolRewardDesc
+        return PLocalizer.CutlassRewardDesc
 
 
 class PistolReward(QuestReward):
