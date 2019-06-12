@@ -202,6 +202,8 @@ def areaTeleport(locationUid):
         locationUid = '1150922126.8dzlu'
     elif locationUid == 'tortuga':
         locationUid = '1156207188.95dzlu'
+    elif locationUid == 'cuba':
+        locationUid = '1160614528.73sdnaik'
     elif locationUid == 'delfuego':
         locationUid = '1142018473.22dxschafe'
     elif locationUid == 'tormenta':
