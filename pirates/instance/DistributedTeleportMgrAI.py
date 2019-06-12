@@ -197,8 +197,20 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
-def areaTeleport(areaUid):
-    simbase.air.teleportMgr.d_initiateTeleport(spellbook.getTarget(),
-        locationUid=areaUid)
+def areaTeleport(locationUid):
+    if locationUid == 'portroyal':
+        locationUid = '1150922126.8dzlu'
+    elif locationUid == 'tortuga':
+        locationUid = '1156207188.95dzlu'
+    elif locationUid == 'delfuego':
+        locationUid = '1142018473.22dxschafe'
+    elif locationUid == 'tormenta':
+        locationUid = '1164150392.42dzlu'
+    elif locationUid == 'devilsanvil':
+        locationUid = '1164135492.81dzlu'
+    elif locationUid == 'outcast':
+        locationUid = '1173381952.2sdnaik'
 
-    return 'Teleporting to area: %s.' % areaUid
+    avatar = spellbook.getTarget()
+    simbase.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
+    return 'Teleporting avatar %d to area: %s...' % (avatar.doId, areaUid)
