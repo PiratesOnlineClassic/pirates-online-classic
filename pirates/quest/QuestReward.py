@@ -267,7 +267,7 @@ class PistolUpgradeReward(QuestReward):
 class CutlassReward(QuestReward):
 
     def applyTo(self, trade, av):
-        trade.givePistolTraining()
+        trade.giveCutlassTraining()
         trade.giveStack(InventoryType.CutlassWeaponL1, 1)
 
     def getDescriptionText(self):
