@@ -55,18 +55,18 @@ class OTPInternalRepository(AstronInternalRepository):
     def clientAddInterestMultiple(self, clientChannel, interestId, parentId, zoneList):
         dg = PyDatagram()
         dg.addServerHeader(clientChannel, self.ourChannel, CLIENTAGENT_ADD_INTEREST_MULTIPLE)
-        dg.add_uint16(interestId)
-        dg.add_uint32(parentId)
-        dg.add_uint16(len(zoneList))
+        dg.addUint16(interestId)
+        dg.addUint32(parentId)
+        dg.addUint16(len(zoneList))
         for zoneId in zoneList:
-            dg.add_uint32(zoneId)
+            dg.addUint32(zoneId)
 
         self.send(dg)
 
     def clientRemoveInterest(self, clientChannel, interestId):
         dg = PyDatagram()
         dg.addServerHeader(clientChannel, self.ourChannel, CLIENTAGENT_REMOVE_INTEREST)
-        dg.add_uint16(interestId)
+        dg.addUint16(interestId)
         self.send(dg)
 
     def _isValidPlayerLocation(self, parentId, zoneId):
@@ -93,6 +93,13 @@ class OTPInternalRepository(AstronInternalRepository):
         dg.addUint16(reason)
         dg.addString(message)
         self.send(dg)
+
+    def handleDatagram(self, di):
+        msgType = self.getMsgType()
+        if msgType == CLIENTAGENT_DONE_INTEREST_RESP:
+            pass
+        else:
+            AstronInternalRepository.handleDatagram(self, di)
 
     def readerPollOnce(self):
         try:

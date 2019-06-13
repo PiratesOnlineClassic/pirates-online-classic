@@ -699,6 +699,12 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getConstructedShipDoId(self):
         return self.constructedShipDoId
 
+    def addZoneInterestDone(self, zoneId, context):
+        self.air.worldGridManager.addZoneInterestDone(self, zoneId, context)
+
+    def d_addZoneInterest(self, parentId, zoneId):
+        self.sendUpdateToAvatarId(self.doId, 'addZoneInterest', [parentId, zoneId])
+
     def disable(self):
         DistributedPlayerAI.disable(self)
         DistributedBattleAvatarAI.disable(self)

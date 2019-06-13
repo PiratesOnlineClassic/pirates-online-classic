@@ -5,12 +5,6 @@ from direct.distributed.DistributedCartesianGridAI import DistributedCartesianGr
 
 from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 
-
-# give us some room so we don't allocate a interest context
-# with the same context that of the client's interest handles...
-GRID_INTEREST_CONTEXT_MIN = 10000
-GRID_INTEREST_CONTEXT_MAX = 25000
-
 # this constant defines the number of zones we want to get
 # from the getConcentricZones function based on the client's current cell...
 GRID_INTEREST_ZONES_COUNT = 3
@@ -24,14 +18,17 @@ class GridInterestHandle(object):
 
 
 class GridInterestHandler(object):
+    notify = DirectNotifyGlobal.directNotify.newCategory('GridInterestHandler')
 
     def __init__(self, air, parentObj, avatar):
         self.air = air
         self.parentObj = parentObj
         self.avatar = avatar
 
-        self.contextAllocator = UniqueIdAllocator(GRID_INTEREST_CONTEXT_MIN, GRID_INTEREST_CONTEXT_MAX)
         self.interestHandles = []
+        self.pendingInterestHandles = []
+
+        self.oldZoneId = 0
 
     def getInterestHandleFromZoneId(self, zoneId):
         for interestHandle in self.interestHandles:
@@ -43,17 +40,11 @@ class GridInterestHandler(object):
     def hasInterestHandleByZoneId(self, zoneId):
         return self.getInterestHandleFromZoneId(zoneId) is not None
 
-    def addInterestHandle(self, zoneId):
-        if self.hasInterestHandleByZoneId(zoneId):
+    def addInterestHandle(self, context, newZoneId):
+        if self.hasInterestHandleByZoneId(newZoneId):
             return
 
-        interestId = zoneId#self.contextAllocator.allocate()
-        interestHandle = GridInterestHandle(interestId, zoneId)
-
-        clientChannel = self.avatar.GetPuppetConnectionChannel(self.avatar.doId)
-        self.air.clientAddInterest(clientChannel, interestHandle.interestId,
-            self.parentObj.doId, interestHandle.interestZone)
-
+        interestHandle = GridInterestHandle(context, newZoneId)
         self.interestHandles.append(interestHandle)
 
     def removeInterestHandle(self, interestHandle):
@@ -61,34 +52,46 @@ class GridInterestHandler(object):
             return
 
         clientChannel = self.avatar.GetPuppetConnectionChannel(self.avatar.doId)
-        self.air.clientRemoveInterest(clientChannel, interestHandle.interestZone)
-
-        #self.contextAllocator.free(interestHandle.interestId)
+        self.air.clientRemoveInterest(clientChannel, interestHandle.interestId)
         self.interestHandles.remove(interestHandle)
 
+    def handleGotInterestContext(self, zoneId, context):
+        if zoneId not in self.pendingInterestHandles:
+            self.notify.debug('Failed to handle interest context %d for zone %d, '
+                'zone is not a pending interest handle!' % (context, zoneId))
+
+            return
+
+        self.addInterestHandle(context, zoneId)
+        self.pendingInterestHandles.remove(zoneId)
+
     def handleLocationChanged(self, zoneId):
+        if zoneId == self.oldZoneId:
+            return
+
+        # we don't want to force the client to have to tell us about all of
+        # the interest requests, the client will handle adding it's own interest
+        # for the pending zones, and we will handle removal of interest...
+        self.pendingInterestHandles = []
         previousZones = set([interestHandle.interestZone for interestHandle in self.interestHandles])
         newZones = set()
         for x in xrange(1, GRID_INTEREST_ZONES_COUNT + 1):
             newZones.update(self.parentObj.getConcentricZones(zoneId, x))
 
-        # get the difference between the old zones and remove interest
-        # to any zones we should no longer have interest in...
-        oldZones = newZones.difference(previousZones)
-        for zoneId in oldZones:
-            interestHandle = self.getInterestHandleFromZoneId(zoneId)
+        oldConcentricZones = previousZones.difference(newZones)
+        for oldZoneId in oldConcentricZones:
+            interestHandle = self.getInterestHandleFromZoneId(oldZoneId)
             if not interestHandle:
                 continue
 
             self.removeInterestHandle(interestHandle)
 
-        #if not isinstance(self.parentObj, DistributedGAInteriorAI):
-        #    parentObj = self.parentObj.getParentObj()
-        #    parentObj.d_sendAutoInterest(self.avatar.doId, list(newZones))
+        newConcentricZones = newZones.difference(previousZones)
+        self.pendingInterestHandles = list(newConcentricZones)
+        for newZoneId in newConcentricZones:
+            self.avatar.d_addZoneInterest(self.parentObj.doId, newZoneId)
 
-        # add interest to the new zones we should now have interest in...
-        for zoneId in newZones:
-            self.addInterestHandle(zoneId)
+        self.oldZoneId = zoneId
 
     def clearInterestZones(self):
         clientChannel = self.avatar.GetPuppetConnectionChannel(self.avatar.doId)
@@ -96,10 +99,13 @@ class GridInterestHandler(object):
             self.air.clientRemoveInterest(clientChannel, interestHandle.interestZone)
 
         self.interestHandles = []
+        self.pendingInterestHandles = []
 
     def destroy(self):
         self.lastInterestId = 0
         self.interestHandles = []
+        self.pendingInterestHandles = []
+        self.oldZoneId = 0
 
 
 class WorldGridManagerAI(object):
@@ -108,6 +114,13 @@ class WorldGridManagerAI(object):
     def __init__(self, air):
         self.air = air
         self.gridInterestHandlers = {}
+
+    def addZoneInterestDone(self, avatar, zoneId, context):
+        gridHandler = self.gridInterestHandlers.get(avatar.doId)
+        if not gridHandler:
+            return
+
+        gridHandler.handleGotInterestContext(zoneId, context)
 
     def handleLocationChanged(self, parentObj, avatar, zoneId):
         if not isinstance(parentObj, DistributedCartesianGridAI):
