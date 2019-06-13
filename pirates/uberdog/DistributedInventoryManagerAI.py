@@ -343,6 +343,17 @@ def maxWeapons():
 
     return "Failed to max Weapons"
 
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, int])
+def givePlayerStack(stackId, amount):
+    invoker = spellbook.getInvoker()
+    inventory = invoker.getInventory()
+
+    if not inventory:
+        return
+
+    inventory.b_setStackQuantity(stackId, amount)
+    return 'Gave %s stackId %d with a quantity of %d' % (invoker.getName(), stackId, amount)
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def gold(amount):
