@@ -904,6 +904,8 @@ class LoadAvatarFSM(AvatarOperationFSM):
         datagram.addChannel(self.target << 32 | self.avId)
         self.csm.air.send(datagram)
 
+        self.csm.air.clientAddSessionObject(self.csm.GetPuppetConnectionChannel(self.avId), self.avId)
+
         def inventoryActivatedCallback(inventoryId):
             self.csm.air.writeServerEvent('avatarChosen', avId=self.avId, target=self.target)
             self.demand('Off')
