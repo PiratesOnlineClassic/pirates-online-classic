@@ -11,6 +11,10 @@ from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 GRID_INTEREST_CONTEXT_MIN = 10000
 GRID_INTEREST_CONTEXT_MAX = 25000
 
+# this constant defines the number of zones we want to get
+# from the getConcentricZones function based on the client's current cell...
+GRID_INTEREST_ZONES_COUNT = 3
+
 
 class GridInterestHandle(object):
 
@@ -67,7 +71,9 @@ class GridInterestHandler(object):
 
     def handleLocationChanged(self, zoneId):
         previousZones = set([interestHandle.interestZone for interestHandle in self.interestHandles])
-        newZones = set(self.parentObj.getConcentricZones(zoneId, self.parentObj.gridRadius))
+        newZones = set()
+        for x in xrange(1, GRID_INTEREST_ZONES_COUNT + 1):
+            newZones.update(self.parentObj.getConcentricZones(zoneId, x))
 
         # get the difference between the old zones and remove interest
         # to any zones we should no longer have interest in...
@@ -79,11 +85,11 @@ class GridInterestHandler(object):
 
             self.removeInterestHandle(interestHandle)
 
-        # add interest to the new zones we should now have interest in...
-        if not isinstance(self.parentObj, DistributedGAInteriorAI):
-            parentObj = self.parentObj.getParentObj()
-            parentObj.d_sendAutoInterest(self.avatar.doId, list(newZones))
+        #if not isinstance(self.parentObj, DistributedGAInteriorAI):
+        #    parentObj = self.parentObj.getParentObj()
+        #    parentObj.d_sendAutoInterest(self.avatar.doId, list(newZones))
 
+        # add interest to the new zones we should now have interest in...
         for zoneId in newZones:
             self.addInterestHandle(zoneId)
 
