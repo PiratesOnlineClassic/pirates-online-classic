@@ -212,6 +212,8 @@ def areaTeleport(locationUid):
         locationUid = '1164135492.81dzlu'
     elif locationUid == 'outcast':
         locationUid = '1173381952.2sdnaik'
+    elif locationUid == 'kingshead':
+        locationUid = '1159933206.48sdnaik'
 
     avatar = spellbook.getTarget()
     simbase.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
