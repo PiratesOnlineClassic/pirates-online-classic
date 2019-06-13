@@ -291,7 +291,7 @@ class SpawnNodeBase:
         npc.d_setSpawnIn()
         npc.b_setGameState(npc.getStartState())
 
-        #taskMgr.doMethodLater(0.2, self.__updateNPC, npc.uniqueName('update-pos-task'))
+        taskMgr.doMethodLater(0.2, self.__updateNPC, npc.uniqueName('update-pos-task'))
 
         # Print out useful debugging information
         locationName = self.parent.getLocalizerName()
