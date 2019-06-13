@@ -33,9 +33,6 @@ class GridInterestHandler(object):
         self.contextAllocator = UniqueIdAllocator(GRID_INTEREST_CONTEXT_MIN, GRID_INTEREST_CONTEXT_MAX)
         self.interestHandles = []
 
-    def GetPuppetConnectionChannel(self, doId):
-        return doId + (1001 << 32)
-
     def getInterestHandleFromZoneId(self, zoneId):
         for interestHandle in self.interestHandles:
             if interestHandle.interestZone == zoneId:
@@ -53,7 +50,7 @@ class GridInterestHandler(object):
         interestId = zoneId#self.contextAllocator.allocate()
         interestHandle = GridInterestHandle(interestId, zoneId)
 
-        clientChannel = self.GetPuppetConnectionChannel(self.avatar.doId)
+        clientChannel = self.avatar.GetPuppetConnectionChannel(self.avatar.doId)
         self.air.clientAddInterest(clientChannel, interestHandle.interestId,
             self.parentObj.doId, interestHandle.interestZone)
 
@@ -63,7 +60,7 @@ class GridInterestHandler(object):
         if interestHandle not in self.interestHandles:
             return
 
-        clientChannel = self.GetPuppetConnectionChannel(self.avatar.doId)
+        clientChannel = self.avatar.GetPuppetConnectionChannel(self.avatar.doId)
         self.air.clientRemoveInterest(clientChannel, interestHandle.interestZone)
 
         #self.contextAllocator.free(interestHandle.interestId)
@@ -94,7 +91,7 @@ class GridInterestHandler(object):
             self.addInterestHandle(zoneId)
 
     def clearInterestZones(self):
-        clientChannel = self.GetPuppetConnectionChannel(self.avatar.doId)
+        clientChannel = self.avatar.GetPuppetConnectionChannel(self.avatar.doId)
         for interestHandle in self.interestHandles:
             self.air.clientRemoveInterest(clientChannel, interestHandle.interestZone)
 
