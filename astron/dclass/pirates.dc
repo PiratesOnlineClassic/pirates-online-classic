@@ -272,16 +272,16 @@ dclass DistributedInstanceBase : DistributedObject {
   sendLocalAvatarToJail(uint32, uint32, uint32) broadcast;
 };
 
-dclass DistributedMainWorld : DistributedInstanceBase {
-};
-
-dclass DistributedWelcomeWorld : DistributedInstanceBase {
-};
-
 dclass DistributedInstanceWorld : DistributedInstanceBase {
 };
 
-dclass DistributedTeleportZone : DistributedInstanceBase {
+dclass DistributedMainWorld : DistributedInstanceWorld {
+};
+
+dclass DistributedWelcomeWorld : DistributedInstanceWorld {
+};
+
+dclass DistributedTeleportZone : DistributedInstanceWorld {
 };
 
 dclass HumanDNA {
@@ -427,14 +427,14 @@ dclass ClientServicesManager : DistributedObjectGlobal {
 };
 
 dclass DistributedAvatarManager : OtpAvatarManager {
-  requestCreateAvatar(uint32, uint32) airecv clsend;
-  requestPopulateAvatar(uint32, uint32, HumanDNA, bool, uint16, uint16, uint16, uint16) airecv clsend;
-  populateAvatarResponse(bool);
-  requestPatternName(uint32, uint32, uint16, uint16, uint16, uint16) airecv clsend;
-  patternNameResponse(bool);
-  requestFinalize(uint32, uint32) airecv clsend;
-  sendAvIdList(uint32 []);
-  avatarListResponse(AccountInfo [], uint16);
+  requestCreateAvatar(uint32, uint32 subId) airecv clsend;
+  requestPopulateAvatar(uint32, uint32 avId, HumanDNA dna, bool usePattern, uint16 nicknameIndex, uint16 firstIndex, uint16 prefixIndex, uint16 suffixIndex) airecv clsend;
+  populateAvatarResponse(bool success);
+  requestPatternName(uint32, uint32 avId, uint16 nicknameIndex, uint16 firstIndex, uint16 prefixIndex, uint16 suffixIndex) airecv clsend;
+  patternNameResponse(bool success);
+  requestFinalize(uint32, uint32 avId) airecv clsend;
+  sendAvIdList(uint32 avIdList[]);
+  avatarListResponse(AccountInfo accounts[], uint16 numInventoryManagers);
   requestAwardableAvatars(uint32, uint32);
   requestAvatarGender(uint32, uint32);
 };
@@ -444,10 +444,6 @@ struct PresenceStatus {
   uint8 openChatYesNo;
   uint32 location;
   uint32 sublocation;
-};
-
-dclass Manager : DistributedObject {
-  online();
 };
 
 dclass DistributedGoldReceipt : DistributedObject {
@@ -504,16 +500,16 @@ struct TradeSlot {
 dclass DistributedInventory : DistributedObject {
   uint32 AutoInterest[];
   setParentingRules(string, string) broadcast ram;
-  setInventoryVersion(uint8) required airecv db;
+  setInventoryVersion(uint8) airecv db required;
   setOwnerId(uint32) required broadcast airecv db;
-  setCategoryLimits(InventoryCategoryLimit []) db required broadcast;
-  setDoIds(InventoryDoIdSlot []) required airecv db broadcast;
+  setCategoryLimits(InventoryCategoryLimit []) airecv db required broadcast;
+  setDoIds(InventoryDoIdSlot []) airecv db required broadcast;
   accumulator(uint16, uint32);
-  setAccumulators(InventoryAccumulatorSlot []) required broadcast db;
+  setAccumulators(InventoryAccumulatorSlot []) airecv db required;
   stackLimit(uint16, uint16);
   stack(uint16, uint16);
-  setStackLimits(InventoryTypeLimit []) required broadcast db;
-  setStacks(InventoryStackableSlot []) required broadcast db ownrecv;
+  setStackLimits(InventoryTypeLimit []) airecv db required;
+  setStacks(InventoryStackableSlot []) airecv db required ownrecv;
   setTemporaryInventory(bool);
   setTemporaryStack(uint16, uint16);
   sendMaxHp(uint16, uint32) airecv clsend;
@@ -601,7 +597,7 @@ dclass DistributedInteractive : DistributedNode, DistributedLocatableObject {
   rejectInteraction();
   acceptInteraction();
   rejectExit();
-  offerOptions(uint8array, uint8array);
+  offerOptions(uint8[], uint8[]);
   selectOption(uint8) airecv clsend;
   setUserId(DoId) broadcast ram;
   setUniqueId(string) required broadcast ram;
@@ -681,10 +677,10 @@ dclass DistributedShip : DistributedMovingObject, DistributedCharterableObject, 
   setSp(int16) required broadcast ram db ownrecv;
   setHullCondition(uint8) required broadcast ram db ownrecv;
   setMaxCargo(uint8) required broadcast ram db ownrecv;
-  setCargo(uint8array) required broadcast ram db ownrecv;
+  setCargo(uint8[]) required broadcast ram db ownrecv;
   setMaxCrew(uint8) required broadcast ram db ownrecv;
   setWorldKey(uint32) required broadcast ram;
-  setCrew(uint32array) required broadcast ram ownrecv;
+  setCrew(uint32[]) required broadcast ram ownrecv;
   setBandId(uint32, uint32) broadcast ram;
   setGuildId(uint32) broadcast ram;
   setGameState(string, uint32, int16) required broadcast ram ownrecv;
@@ -701,7 +697,7 @@ dclass DistributedShip : DistributedMovingObject, DistributedCharterableObject, 
   forceBoardShip();
   forceExitShip();
   sendCrewToIsland(uint32, PosH);
-  notifyReceivedLoot(uint8array) broadcast;
+  notifyReceivedLoot(uint8[]) broadcast;
   damage(int16, Pos, DoId) broadcast;
   setBadge(int8, int8) required broadcast ram;
   setDeploy(uint8, int16) broadcast ram;
@@ -754,7 +750,7 @@ dclass DistributedFormation : DistributedSmoothNode {
 };
 
 dclass DistributedFlag : DistributedObject {
-  setDNAString(string) required broadcast ram db;
+  setDNAString(blob) required broadcast ram db;
   requestDNAString(string) airecv clsend;
 };
 
@@ -768,39 +764,10 @@ struct AvatarType {
   uint8 boss;
 };
 
-typedef string QuestId;
-
-typedef string QuestGiverId;
-
 struct QuestTaskState {
-  switch (uint16) {
-  case 1:
-    uint16 attempts;
-    break;
-  case 4:
-    uint16 attempts;
-    break;
-  case 10:
-    uint16 attempts;
-    break;
-  case 11:
-    uint16 attempts;
-    break;
-  case 17:
-    uint16 attempts;
-    break;
-  case 19:
-    AvatarType enemyType;
-    break;
-  case 20:
-    AvatarType faction;
-    uint8 hull;
-    break;
-  case 0:
-    break;
-  default:
-    break;
-  };
+  uint16 attempts;
+  AvatarType enemyType;
+  AvatarType faction;
   uint16 progress;
   uint16 goal;
 };
@@ -808,13 +775,13 @@ struct QuestTaskState {
 struct QuestRewardStruct {
   uint16 rewardType;
   uint16 amount;
-  QuestId questId;
+  string questId;
 };
 
 dclass DistributedQuest : DistributedObject {
   string DcObjectType;
-  setQuestId(QuestId) required broadcast db;
-  setGiverId(QuestGiverId) required broadcast db;
+  setQuestId(string) required broadcast db;
+  setGiverId(string) required broadcast db;
   announceNewQuest() broadcast ram;
   setCombineOp(uint8) required broadcast db;
   setTaskStates(QuestTaskState []) required broadcast db;
@@ -827,13 +794,13 @@ dclass DistributedQuest : DistributedObject {
 };
 
 struct QuestOffer {
-  QuestId questId;
+  string questId;
   QuestTaskState initialTaskStates[];
   QuestRewardStruct rewardStructs[];
 };
 
 struct QuestLadderOffer {
-  QuestId questId;
+  string questId;
   QuestRewardStruct rewardStructs[];
 };
 
@@ -849,27 +816,27 @@ dclass DistributedQuestGiver {
   setQuestOffer(QuestOffer []);
   setQuestLadderOffer(QuestLadderOffer [], int8);
   setOfferResponse(int8, int8) airecv clsend;
-  setQuestsCompleted(int8, QuestId [], QuestId [], QuestId [], uint32 []);
+  setQuestsCompleted(int8, string [], string [], string [], uint32 []);
   playDialogMovie(string);
   dialogMovieComplete() airecv clsend;
 };
 
 dclass DistributedQuestAvatar {
-  setActiveQuest(QuestId) ownrecv required db;
-  setQuestHistory(uint16 []) ownrecv required db;
-  setQuestLadderHistory(uint16 []) ownrecv required db;
-  setCurrentQuestChoiceContainers(uint16 []) ownrecv required db;
+  setActiveQuest(string="") ownrecv required db;
+  setQuestHistory(uint16 [] = []) ownrecv required db;
+  setQuestLadderHistory(uint16 [] = []) ownrecv required db;
+  setCurrentQuestChoiceContainers(uint16 [] = []) ownrecv required db;
   setQuestStep(QuestStep) ownrecv;
-  requestActiveQuest(QuestId) airecv ownsend;
-  requestDropQuest(QuestId) airecv ownsend;
-  requestShareQuest(QuestId) airecv ownsend;
-  requestQuestStep(QuestId) airecv ownsend;
-  popupProgressBlocker(QuestId);
+  requestActiveQuest(string) airecv ownsend;
+  requestDropQuest(string) airecv ownsend;
+  requestShareQuest(string) airecv ownsend;
+  requestQuestStep(string) airecv ownsend;
+  popupProgressBlocker(string);
 };
 
 struct ItemNameHolder {
   string typedName;
-  uint8array nameIndices;
+  uint8[] nameIndices;
 };
 
 struct Accessory {
@@ -907,7 +874,7 @@ dclass DistributedShopKeeper {
   responseShipRepair(uint32) ownrecv;
   makeTattooResponse(uint16, uint16, bool) ownrecv;
   makeBarberResponse(uint32, uint8, bool) ownrecv;
-  responseClothingList(uint32, uint32array []) ownrecv;
+  responseClothingList(uint32, uint32[]) ownrecv;
   responseTattooList(uint32, int32 []) ownrecv;
   responseJewelryList(uint32, jewelryIdList) ownrecv;
 };
@@ -941,11 +908,11 @@ dclass WeaponBase {
   useShipSkill(SkillId, SkillId, uint8, DoId, SkillEffects, ShipEffects, uint32) broadcast;
   requestProjectileSkill(SkillId, SkillId, PosHpr, uint32, uint8) clsend airecv;
   useProjectileSkill(SkillId, SkillId, PosHpr, uint32, uint8) broadcast;
-  suggestProjectileSkillResult(SkillId, SkillId, uint8, DoId, DoIdList, Pos, Normal, uint8array, uint32) clsend airecv;
-  setProjectileSkillResult(SkillId, SkillId, uint8, DoId, DoIdList, SkillEffects, SkillEffects, SkillEffectsList, Pos, Normal, uint8array, DoId, uint32) broadcast;
+  suggestProjectileSkillResult(SkillId, SkillId, uint8, DoId, DoIdList, Pos, Normal, uint8[], uint32) clsend airecv;
+  setProjectileSkillResult(SkillId, SkillId, uint8, DoId, DoIdList, SkillEffects, SkillEffects, SkillEffectsList, Pos, Normal, uint8[], DoId, uint32) broadcast;
 };
 
-dclass DistributedBattleAvatar : WeaponBase, DistributedReputationAvatar, Teamable {
+dclass DistributedBattleAvatar : DistributedReputationAvatar, WeaponBase, Teamable {
   setAvatarType(AvatarType) required broadcast ram;
   setGameState(string, int16) broadcast ram;
   playMotionAnim(string, int16) broadcast ownsend;
@@ -965,12 +932,12 @@ dclass DistributedBattleAvatar : WeaponBase, DistributedReputationAvatar, Teamab
   setMaxSwiftness(int16) required broadcast ram;
   setPower(int16) required broadcast ram ownrecv;
   setMaxPower(int16) required broadcast ram;
-  setLuckMod(int16=0) required broadcast ram ownrecv;
-  setMojoMod(int16=0) required broadcast ram ownrecv;
-  setSwiftnessMod(int16/10=0) required broadcast ram ownrecv;
-  setHasteMod(int16/10=0) required broadcast ram ownrecv;
-  setStunMod(int16/10=0) required broadcast ram ownrecv;
-  setPowerMod(int16=0) required broadcast ram ownrecv;
+  setLuckMod(int16) required broadcast ram ownrecv;
+  setMojoMod(int16) required broadcast ram ownrecv;
+  setSwiftnessMod(int16/10) required broadcast ram ownrecv;
+  setHasteMod(int16/10) required broadcast ram ownrecv;
+  setStunMod(int16/10) required broadcast ram ownrecv;
+  setPowerMod(int16) required broadcast ram ownrecv;
   setCombo(uint8, uint8, int16, uint32) required broadcast ram;
   setSkillEffects(BuffList) required broadcast ram;
   setEnsnaredTargetId(uint32) required broadcast ram;
@@ -1088,7 +1055,7 @@ struct MissionData {
   uint8 repairCost;
   uint16 exp;
   uint16 gold;
-  uint8array cargo;
+  uint8[] cargo;
   uint8 numCrew;
 };
 
@@ -1102,7 +1069,7 @@ struct HUDIcons {
   uint8 actionIcon;
 };
 
-dclass DistributedPlayerPirate : DistributedPlayer, HumanDNA, DistributedBattleAvatar, DistributedQuestAvatar {
+dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, HumanDNA, DistributedQuestAvatar {
   setParentingRules(string, string) broadcast ram;
   setAvatarType(AvatarType) required broadcast ram;
   setOnWelcomeWorld(bool) required ownrecv airecv db;
@@ -1130,7 +1097,7 @@ dclass DistributedPlayerPirate : DistributedPlayer, HumanDNA, DistributedBattleA
   setDefaultShard(uint32) ownsend ownrecv required db;
   setDefaultZone(uint32) ownrecv required db;
   setLastLogout(uint32) required db;
-  setCustomMessages(uint16array) ownrecv required db;
+  setCustomMessages(uint16[]) ownrecv required db;
   setSCEmote(uint16) broadcast ownsend airecv;
   setSpeedChatQuest(uint16, uint16, uint16) broadcast ownsend airecv;
   setSpeedChatStyleIndex(uint8) required ownsend broadcast db;
@@ -1154,7 +1121,7 @@ dclass DistributedPlayerPirate : DistributedPlayer, HumanDNA, DistributedBattleA
   sendJewelryMessage(uint32) ownrecv;
   sendTattooMessage(uint32) ownrecv;
   sendClothingMessage(uint32, uint16) ownrecv;
-  sendReputationMessage(uint32, uint16array, uint16array, uint16, uint16, uint16, uint16) ownrecv;
+  sendReputationMessage(uint32, uint16[], uint16[], uint16, uint16, uint16, uint16) ownrecv;
   sendRenownMessage(uint32, uint16, uint16) ownrecv;
   sendSalvageMessage(uint32, uint16) ownrecv;
   setLuck(int16) required broadcast;
@@ -1229,23 +1196,12 @@ dclass DistributedTeleportMgr : DistributedObject {
 };
 
 dclass DistributedTravelAgent : DistributedObjectGlobal {
+  registerShard(uint32);
   requestInitLocUD(string, uint32) clsend;
   requestInitLocUDtoAI(DoId) airecv;
   requestTeleportToShardAItoUD(DoId, uint32, uint8, string, string);
   requestTeleportToShardUDtoAI(DoId, uint32, uint8, string, string) airecv;
 };
-
-// Original DistributedTravelAgent fields
-/*dclass DistributedTravelAgent : DistributedObject {
-  registerAsManager(uint32, uint32, uint32, uint8, uint32, uint8);
-  managerOffline(uint32, uint32, uint32);
-  requestPopLimits(uint32);
-  initiateTeleportUD(string, uint8, uint8, uint32, string, uint32, uint32 [], uint32, uint32, int32, shipList [], uint32, uint32);
-  requestInitLocUD(string, uint32) clsend;
-  setFullShardTeleportAllowed(uint8);
-  requestInstanceUpdates();
-  requestShipDeployUD(uint32, uint32, string, uint32);
-};*/
 
 dclass DistributedMatchMaker : DistributedObject {
   requestActivity(uint32, uint32, int32, resultPair [], uint32 [], uint32, uint16);
@@ -1477,27 +1433,27 @@ dclass DistributedHullDNA {
   setShipClass(uint8) required broadcast ram db ownrecv;
   setBaseTeam(int8) required broadcast ram db ownrecv;
   setHullClass : setShipClass, setBaseTeam;
-  setHullTextureIndex(uint8array) required broadcast ram db ownrecv;
-  setStripeTextureIndex(uint8array) required broadcast ram db ownrecv;
-  setPatternTextureIndex(uint8array) required broadcast ram db ownrecv;
-  setHullColorIndex(uint8array) required broadcast ram db ownrecv;
-  setStripeColorIndex(uint8array) required broadcast ram db ownrecv;
-  setPatternColorIndex(uint8array) required broadcast ram db ownrecv;
-  setHullHilightColorIndex(uint8array) required broadcast ram db ownrecv;
-  setStripeHilightColorIndex(int8array) required broadcast ram db ownrecv;
-  setPatternHilightColorIndex(uint8array) required broadcast ram db ownrecv;
+  setHullTextureIndex(uint8[]) required broadcast ram db ownrecv;
+  setStripeTextureIndex(uint8[]) required broadcast ram db ownrecv;
+  setPatternTextureIndex(uint8[]) required broadcast ram db ownrecv;
+  setHullColorIndex(uint8[]) required broadcast ram db ownrecv;
+  setStripeColorIndex(uint8[]) required broadcast ram db ownrecv;
+  setPatternColorIndex(uint8[]) required broadcast ram db ownrecv;
+  setHullHilightColorIndex(uint8[]) required broadcast ram db ownrecv;
+  setStripeHilightColorIndex(int8[]) required broadcast ram db ownrecv;
+  setPatternHilightColorIndex(uint8[]) required broadcast ram db ownrecv;
   setHullConfig : setHullTextureIndex, setStripeTextureIndex, setPatternTextureIndex, setHullColorIndex, setStripeColorIndex, setPatternColorIndex, setHullHilightColorIndex, setStripeHilightColorIndex, setPatternHilightColorIndex;
   setProwType(uint8) required broadcast ram db ownrecv;
   setRamType(uint8) required broadcast ram db ownrecv;
   setCabinType(uint8) required broadcast ram db ownrecv;
   setAttachmentConfig : setProwType, setRamType, setCabinType;
-  setCannonConfig(uint16array) required broadcast ram db ownrecv;
-  setLeftBroadsideConfig(uint16array) required broadcast ram db ownrecv;
-  setRightBroadsideConfig(uint16array) required broadcast ram db ownrecv;
+  setCannonConfig(uint16[]) required broadcast ram db ownrecv;
+  setLeftBroadsideConfig(uint16[]) required broadcast ram db ownrecv;
+  setRightBroadsideConfig(uint16[]) required broadcast ram db ownrecv;
   setBroadsideAmmo(SkillId) required broadcast ram db ownrecv;
   setWeaponConfig : setCannonConfig, setLeftBroadsideConfig, setRightBroadsideConfig, setBroadsideAmmo;
-  setWallDecorConfig(uint8array) required broadcast ram db;
-  setFloorDecorConfig(uint8array) required broadcast ram db;
+  setWallDecorConfig(uint8[]) required broadcast ram db;
+  setFloorDecorConfig(uint8[]) required broadcast ram db;
   setDecorConfig : setWallDecorConfig, setFloorDecorConfig;
 };
 
@@ -1506,20 +1462,20 @@ dclass DistributedCabinDNA {
   setCabinType(uint8) required broadcast ram db;
   setBaseTeam(int8) required broadcast ram db;
   setCabinClass : setShipClass, setBaseTeam, setCabinType;
-  setHullTextureIndex(uint8array) required broadcast ram db;
-  setStripeTextureIndex(uint8array) required broadcast ram db;
-  setPatternTextureIndex(uint8array) required broadcast ram db;
-  setHullColorIndex(uint8array) required broadcast ram db;
-  setStripeColorIndex(uint8array) required broadcast ram db;
-  setPatternColorIndex(uint8array) required broadcast ram db;
-  setHullHilightColorIndex(uint8array) required broadcast ram db;
-  setStripeHilightColorIndex(int8array) required broadcast ram db;
-  setPatternHilightColorIndex(uint8array) required broadcast ram db;
+  setHullTextureIndex(uint8[]) required broadcast ram db;
+  setStripeTextureIndex(uint8[]) required broadcast ram db;
+  setPatternTextureIndex(uint8[]) required broadcast ram db;
+  setHullColorIndex(uint8[]) required broadcast ram db;
+  setStripeColorIndex(uint8[]) required broadcast ram db;
+  setPatternColorIndex(uint8[]) required broadcast ram db;
+  setHullHilightColorIndex(uint8[]) required broadcast ram db;
+  setStripeHilightColorIndex(int8[]) required broadcast ram db;
+  setPatternHilightColorIndex(uint8[]) required broadcast ram db;
   setCabinConfig : setHullTextureIndex, setStripeTextureIndex, setPatternTextureIndex, setHullColorIndex, setStripeColorIndex, setPatternColorIndex, setHullHilightColorIndex, setStripeHilightColorIndex, setPatternHilightColorIndex;
-  setCannonConfig(uint16array) required broadcast ram db;
-  setWallDecorConfig(uint8array) required broadcast ram db;
-  setFloorDecorConfig(uint8array) required broadcast ram db;
-  setWindowConfig(uint8array) required broadcast ram db;
+  setCannonConfig(uint16[]) required broadcast ram db;
+  setWallDecorConfig(uint8[]) required broadcast ram db;
+  setFloorDecorConfig(uint8[]) required broadcast ram db;
+  setWindowConfig(uint8[]) required broadcast ram db;
   setDecorConfig : setWallDecorConfig, setFloorDecorConfig, setWindowConfig;
 };
 
@@ -1528,7 +1484,7 @@ dclass DistributedMastDNA {
   setBaseTeam(int8) required broadcast ram db ownrecv;
   setMastType(uint8) required broadcast ram db ownrecv;
   setPosIndex(uint8) required broadcast ram db ownrecv;
-  setSailConfig(uint8array) required broadcast ram db ownrecv;
+  setSailConfig(uint8[]) required broadcast ram db ownrecv;
   setMastConfig : setShipClass, setBaseTeam, setMastType, setPosIndex, setSailConfig;
   setTextureIndex(uint8) required broadcast ram db;
   setColorIndex(uint8) required broadcast ram db;
@@ -1576,8 +1532,8 @@ dclass DistributedBarrel : DistributedDestructibleObject {
 };
 
 dclass DistributedDestructibleArray : DistributedDestructibleObject {
-  setMaxArrayHp(int16array) required broadcast ram db;
-  setArrayHp(int16array) required broadcast ram db;
+  setMaxArrayHp(int16[]) required broadcast ram db;
+  setArrayHp(int16[]) required broadcast ram db;
 };
 
 dclass DistributedHull : DistributedHullDNA, DistributedShippart, DistributedDestructibleArray {
@@ -1624,9 +1580,8 @@ dclass DistributedShipRepairSpot : DistributedInteractive {
   setIndex(uint8) required broadcast ram;
 };
 
-dclass DistributedWeapon : WeaponBase, DistributedInteractive {
+dclass DistributedWeapon : DistributedInteractive, WeaponBase {
   setMovie(uint8, uint32) broadcast ram;
-  doAIAttack(int32/10, int32/10, int32/10, uint32, SkillId, SkillId, int16) broadcast;
 };
 
 dclass DistributedPCCannon : DistributedWeapon {
@@ -1648,15 +1603,19 @@ dclass DistributedIslandCannon : DistributedPCCannon {
   hitByProjectile() airecv clsend;
 };
 
+struct delays {
+ uint8/100 delay;
+}
+
 dclass DistributedShipBroadside : DistributedWeapon {
-  requestBroadside(uint8, uint8/100 [], PosList, uint32, uint8) airecv clsend;
-  doBroadside(uint8, uint8/100 [], PosList, uint32, uint8, int16) broadcast;
+  requestBroadside(uint8, delays [], PosList, uint32, uint8) airecv clsend;
+  doBroadside(uint8, delays [], PosList, uint32, uint8, int16) broadcast;
   setShipId(uint32) required broadcast ram;
   setGeomParentId(uint32) required broadcast ram;
   requestCannonEnabledState(uint8, uint8, uint8) airecv clsend;
   setCannonAnim(uint8, uint8, uint8, int16) airecv clsend broadcast;
-  setLeftBroadside(uint16array) required broadcast ram;
-  setRightBroadside(uint16array) required broadcast ram;
+  setLeftBroadside(uint16[]) required broadcast ram;
+  setRightBroadside(uint16[]) required broadcast ram;
   setLeftBroadsideEnabledState(uint8 []) required broadcast ram;
   setRightBroadsideEnabledState(uint8 []) required broadcast ram;
   setBroadside : setLeftBroadside, setRightBroadside;
@@ -1690,10 +1649,9 @@ dclass DistributedGameArea : DistributedNode {
   setName(string) required broadcast ram;
   addSpawnTriggers(triggerSphere []) broadcast ram;
   spawnNPC(string, uint32) airecv clsend;
-  requestNPCRemoval(uint32) airecv clsend;
 };
 
-dclass DistributedGAInterior : DistributedGameArea, DistributedCartesianGrid {
+dclass DistributedGAInterior : DistributedCartesianGrid, DistributedGameArea {
   uint32 AutoInterest[];
   setParentingRules(string, string) required broadcast ram;
   setConnectorId(uint32) required broadcast ram;
@@ -1704,7 +1662,7 @@ struct PortCollisionSphere {
   Pos pos;
 };
 
-dclass DistributedIsland : DistributedGameArea, DistributedCartesianGrid, Teamable {
+dclass DistributedIsland : DistributedCartesianGrid, DistributedGameArea, Teamable {
   setParentingRules(string, string) required broadcast ram;
   setIslandTransform(int32/10, int32/10, int32/10, int32/10) broadcast required ram ownsend airecv;
   setZoneSphereSize(uint16, uint16, uint16) required broadcast ram;
@@ -1733,7 +1691,7 @@ dclass DistributedGATunnel : DistributedGAConnector {
 dclass DistributedGADoor : DistributedGAConnector {
 };
 
-dclass DistributedLocationManager : Manager {
+dclass DistributedLocationManager : DistributedObjectGlobal {
   requestLocation(uint8) airecv clsend;
   locationResponse(uint8);
 };
@@ -1852,7 +1810,9 @@ dclass DistributedLiarsDice : DistributedDiceGame {
   displayChallenge(uint8, uint8, uint8, uint8, string) broadcast;
 };
 
-typedef uint8(0-255) PlayingCard;
+struct PlayingCard {
+  uint8(0-255) card;
+};
 
 typedef PlayingCard CardHand[];
 
@@ -2105,8 +2065,8 @@ dclass DistributedDinghy : DistributedInteractive {
   selectBandShip(uint32) clsend airecv;
   selectGuildShip(uint32) clsend airecv;
   selectPublicShip(uint32) clsend airecv;
-  responseFriendsList(uint32, uint32array);
-  responseGuildMatesList(uint32, uint32array);
+  responseFriendsList(uint32, uint32[]);
+  responseGuildMatesList(uint32, uint32[]);
 };
 
 dclass DistributedShipDeployer : DistributedNode {
@@ -2145,9 +2105,9 @@ dclass NewsManager : DistributedObject {
 };
 
 dclass AvatarAccessoriesManager : DistributedObject {
-  migrateDNAElements(uint32, uint32, uint32, uint32array [], uint8);
+  migrateDNAElements(uint32, uint32, uint32, uint32[], uint8);
   requestClothingFromDB(uint32, uint32, uint32);
-  responseClothingFromDB(uint32, uint32array []);
+  responseClothingFromDB(uint32, uint32[]);
   requestClothingAddDB(uint32, uint32, uint32, ClothingDNAElement [], uint32, uint8);
   responseClothingAddDB(uint32, uint8, uint32);
   sendCurrentDNAtoAccDB(uint32, uint8);
@@ -2160,7 +2120,7 @@ dclass AvatarAccessoriesManager : DistributedObject {
   requestJewelryDeleteDB(uint32, uint32, uint32, uint32, uint32);
   responseJewelryDeleteDB(uint32, uint8, uint32, uint32);
   requestPaidToUnpaidRollBackDB(uint32, uint32, uint32);
-  responsePaidToUnpaidRollBack(uint32, uint32array [], uint8);
+  responsePaidToUnpaidRollBack(uint32, uint32[], uint8);
   requestClothingDropDB(uint32, uint32, uint32, char, uint8);
   responseClothingDropFromDB(uint32, uint32, uint8);
   requestTattooListDB(uint32, uint32, uint32);
@@ -2171,7 +2131,7 @@ dclass AvatarAccessoriesManager : DistributedObject {
   responseTattooDelete(uint32, uint8, uint32, uint32);
   requestAward(uint32, uint8, uint32, uint32, uint32);
   requestTattoosInDNA(uint32);
-  responseTattoosInDNA(uint32, uint32, uint32, uint32array);
+  responseTattoosInDNA(uint32, uint32, uint32, uint32[]);
 };
 
 dclass DistributedCrewMatch : DistributedObject {

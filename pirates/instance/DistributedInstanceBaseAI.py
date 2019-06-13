@@ -101,6 +101,9 @@ class DistributedInstanceBaseAI(DistributedObjectAI):
     def d_sendLocalAvatarToJail(self, avatarId, jailDoId, jailWorldParentId, jailWorldZone):
         self.sendUpdateToAvatarId(avatarId, 'sendLocalAvatarToJail', [jailDoId, jailWorldParentId, jailWorldZone])
 
+    def d_sendAutoInterest(self, avatarId, zoneList):
+        self.sendUpdateToAvatarId(avatarId, 'AutoInterest', zoneList)
+
     def generateChildWithRequired(self, do, zoneId, optionalFields=[]):
         self.generateChildWithRequiredAndId(do, self.air.allocateChannel(), self.doId, zoneId, optionalFields)
 

@@ -52,6 +52,12 @@ class OTPInternalRepository(AstronInternalRepository):
 
         self.send(dg)
 
+    def clientRemoveInterest(self, clientChannel, interestId):
+        dg = PyDatagram()
+        dg.addServerHeader(clientChannel, self.ourChannel, CLIENTAGENT_REMOVE_INTEREST)
+        dg.add_uint16(interestId)
+        self.send(dg)
+
     def _isValidPlayerLocation(self, parentId, zoneId):
         return True
 

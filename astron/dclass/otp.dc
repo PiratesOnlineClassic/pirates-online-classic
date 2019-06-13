@@ -87,8 +87,7 @@ dclass TimeManager : DistributedObject {
   setDisconnectReason(uint8) airecv clsend;
   setExceptionInfo(string) airecv clsend;
   setSignature(string, char [16], char [16]) airecv clsend;
-  // TODO
-  //setFrameRate(uint16/10, uint16/1000, uint16, string, uint32/10, uint32/10, string, uint16, uint16, uint16/10, uint16/10, uint16/10, uint32, OSInfo, CPUSpeed) airecv clsend;
+  setFrameRate(uint16/10, uint16/1000, uint16, string(0-256), uint32/10, uint32/10, string(0-256), uint16, uint16, uint32/10, uint32/10, uint32/10, uint32, OSInfo, CPUSpeed, uint16, uint16, string(0-256)) airecv clsend;
 };
 
 dclass ObjectServer {
@@ -162,9 +161,14 @@ dclass DistributedAvatar : DistributedSmoothNode {
   confirmAvOnShard(uint32, int8);
 };
 
+struct FriendEntry {
+  uint32 friendId;
+  uint8 friendType;
+};
+
 dclass DistributedPlayer : DistributedAvatar {
   arrivedOnDistrict(uint32) ownrecv ram;
-  setAccountName(string) required ownrecv db;
+  setAccountName(string="") required ownrecv db;
   setChat(string, uint8, uint32) broadcast ownsend;
   setWLChat(string, uint8, uint32) broadcast ownsend;
   setWhisperFrom(uint32, string, uint32) ownrecv clsend;
@@ -176,13 +180,13 @@ dclass DistributedPlayer : DistributedAvatar {
   setCommonChatFlags(uint8) broadcast ownrecv ram;
   setSC(uint16) broadcast ownsend airecv;
   setSCCustom(uint16) broadcast ownsend airecv;
-  setFriendsList(uint32uint8array) ownrecv required db airecv;
+  setFriendsList(FriendEntry friendsList[] = []) ownrecv required db airecv;
   setDISLname(string) broadcast ownrecv ram;
-  setDISLid(uint32) broadcast ownrecv ram db;
+  setDISLid(uint32=0) broadcast ownrecv ram db;
   OwningAccount(uint32);
-  WishName(string) db ram;
-  WishNameState(string) db ram;
-  setPreviousAccess(uint8) required db airecv;
+  WishName(string="") db ram;
+  WishNameState(string="") db ram;
+  setPreviousAccess(uint8=0) required db airecv;
   setAccess(uint8) broadcast ownrecv required ram airecv;
   setAdminAccess(uint16) ownrecv required airecv;
 };
@@ -192,32 +196,25 @@ dclass MagicWordManager : DistributedObject {
   sendMagicWordResponse(string);
 };
 
-// Original Magic Word Manager struct
-/*dclass MagicWordManager : DistributedObject {
-  setMagicWord(string, uint32, uint32, string) airecv clsend;
-  setMagicWordResponse(string) airecv;
-  setWho(uint32array) airecv clsend;
-};*/
-
 dclass OtpAvatarManager : DistributedObject {
   online();
   requestAvatarList(uint32) airecv clsend;
-  rejectAvatarList(uint32);
-  avatarListResponse(blob);
-  requestAvatarSlot(uint32, uint32, uint8) clsend airecv;
-  rejectAvatarSlot(uint32, uint32, uint8);
-  avatarSlotResponse(uint32, uint8);
-  requestPlayAvatar(uint32, uint32, uint32) clsend airecv;
-  rejectPlayAvatar(uint32, uint32);
-  playAvatarResponse(uint32, uint32, uint8, uint8);
-  rejectCreateAvatar(uint32);
-  createAvatarResponse(uint32, uint32, uint8, uint8);
-  requestRemoveAvatar(uint32, uint32, uint32, string) airecv clsend;
-  rejectRemoveAvatar(uint32);
-  removeAvatarResponse(uint32, uint32);
-  requestShareAvatar(uint32, uint32, uint32, uint8) airecv clsend;
-  rejectShareAvatar(uint32);
-  shareAvatarResponse(uint32, uint32, uint8);
+  rejectAvatarList(uint32 result);
+  avatarListResponse(blob pickleData);
+  requestAvatarSlot(uint32, uint32 subId, uint8 slot) clsend airecv;
+  rejectAvatarSlot(uint32, uint32 subId, uint8 slot);
+  avatarSlotResponse(uint32 subId, uint8 slot);
+  requestPlayAvatar(uint32, uint32 avatarId, uint32 subId) clsend airecv;
+  rejectPlayAvatar(uint32 reasonId, uint32 avatarId);
+  playAvatarResponse(uint32 avatarId, uint32 subId, uint8 access, uint8 founder);
+  rejectCreateAvatar(uint32 result);
+  createAvatarResponse(uint32 avatarId, uint32 subId, uint8 access, uint8 founder);
+  requestRemoveAvatar(uint32, uint32 avatarId, uint32 subId, string confirmPassword) airecv clsend;
+  rejectRemoveAvatar(uint32 reasonId);
+  removeAvatarResponse(uint32 avatarId, uint32 subId);
+  requestShareAvatar(uint32, uint32 avatarId, uint32 subId, uint8 shared) airecv clsend;
+  rejectShareAvatar(uint32 reasonId);
+  shareAvatarResponse(uint32 avatarId, uint32 subId, uint8 shared);
 };
 
 dclass DistributedChatManager : DistributedObject {
@@ -448,4 +445,3 @@ dclass SettingsMgr : DistributedObject {
   requestAllChangedSettings() airecv clsend;
   settingChange(string, string) airecv;
 };
-

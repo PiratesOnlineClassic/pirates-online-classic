@@ -171,8 +171,11 @@ class SpawnNodeBase:
         # Set NPC Node data
         npc.setScale(self.objectData.get('Scale'))
         npc.setUniqueId('' if avatarType.getBoss() else self.objKey)
-        npc.setPos(self.objectData.get('GridPos', self.objectData.get('Pos', (0, 0, 0))))
+
+        spawnPos = self.objectData.get('GridPos', self.objectData.get('Pos', (0, 0, 0)))
+        npc.setPos(spawnPos)
         npc.setHpr(self.objectData.get('Hpr', (0, 0, 0)))
+
         npc.setSpawnPos(npc.getPos())
         npc.setInitZ(npc.getZ())
 
@@ -255,23 +258,18 @@ class SpawnNodeBase:
 
         # Set starting state info
         npc.setAnimSet(self.objectData.get('AnimSet', 'default'))
-
-        state = self.objectData['Start State']
-
-        if state in ('Walk', 'Patrol'):
-            state = 'Idle'
-
-        npc.setStartState(state)
+        npc.setStartState(self.objectData.get('Start State', 'Idle'))
 
         # Generate npc
         zoneId = self.parent.getZoneFromXYZ(npc.getPos())
         self.parent.generateChildWithRequired(npc, zoneId)
         self.parent.builder.parentObjectToCell(npc, zoneId)
         self.parent.builder.addObject(npc)
+        #self.parent.addObjectToGrid(npc)
 
         npc.d_setInitZ(npc.getZ())
         npc.d_setSpawnIn()
-        npc.demand(npc.getStartState())
+        npc.b_setGameState(npc.getStartState())
 
         # Save a copy of the npc and tell it about myself. This will come in handy
         self._npc = npc

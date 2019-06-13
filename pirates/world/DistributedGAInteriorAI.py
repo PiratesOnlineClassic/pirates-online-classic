@@ -8,14 +8,12 @@ class DistributedGAInteriorAI(DistributedCartesianGridAI, DistributedGameAreaAI)
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGAInteriorAI')
 
     def __init__(self, air, isBuilding=False):
-        startingZone = WorldGlobals.GAME_AREA_INTERIOR_STARTING_ZONE
-        cellWidth = WorldGlobals.GAME_AREA_INTERIOR_CELL_SIZE
-        gridRadius = WorldGlobals.GAME_AREA_INTERIOR_GRID_RADIUS * cellWidth
-        gridSize = 1 if isBuilding else WorldGlobals.GAME_AREA_INTERIOR_GRID_SIZE + cellWidth
+        startingZone = WorldGlobals.GAME_AREA_INTERIOR_STARTING_ZONE if isBuilding else WorldGlobals.GAME_AREA_STARTING_ZONE
+        cellWidth = WorldGlobals.GAME_AREA_INTERIOR_CELL_SIZE if isBuilding else WorldGlobals.GAME_AREA_CELL_SIZE
+        gridRadius = WorldGlobals.GAME_AREA_INTERIOR_GRID_RADIUS if isBuilding else WorldGlobals.GAME_AREA_GRID_RADIUS
+        gridSize = WorldGlobals.GAME_AREA_INTERIOR_GRID_SIZE if isBuilding else WorldGlobals.GAME_AREA_GRID_SIZE
 
-        DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize,
-            gridRadius, cellWidth)
-
+        DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize, gridRadius, cellWidth)
         DistributedGameAreaAI.__init__(self, air)
 
         self.connectorId = 0

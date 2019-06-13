@@ -74,8 +74,6 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def setZoneSphereSize(self, rad0, rad1, rad2):
         self.sphereRadii = [rad0, rad1, rad2]
-        self.cellWidth += self.getGridSizeFromSphereRadius((rad0 + rad1 + rad2) / self.gridRadius,
-            self.cellWidth, self.gridRadius) + self.gridSize
 
     def d_setZoneSphereSize(self, rad0, rad1, rad2):
         self.sendUpdate('setZoneSphereSize', [rad0, rad1, rad2])
@@ -89,10 +87,6 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def setZoneSphereCenter(self, x, y):
         self.sphereCenter = [x, y]
-        self.cellWidth += self.getGridSizeFromSphere((x * y) / self.gridRadius,
-            self.sphereCenter, self.cellWidth, self.gridRadius) + self.gridSize
-
-        self.gridSize += self.cellWidth
 
     def d_setZoneSphereCenter(self, x, y):
         self.sendUpdate('setZoneSphereCenter', [x, y])

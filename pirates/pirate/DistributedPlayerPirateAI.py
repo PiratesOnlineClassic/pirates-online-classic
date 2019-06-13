@@ -136,6 +136,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                 self.b_setCurrentIsland(parentObj.getUniqueId())
 
             self.attemptToSetCursedZombie()
+            self.air.worldGridManager.handleLocationChanged(parentObj, self, zoneId)
 
     def getWorld(self):
         parentObj = self.getParentObj()
@@ -703,6 +704,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         DistributedBattleAvatarAI.disable(self)
 
     def delete(self):
+        self.air.worldGridManager.clearAvatarInterests(self)
+
         inventory = self.getInventory()
         if inventory:
             self.air.questMgr.deactivateQuests(self)
