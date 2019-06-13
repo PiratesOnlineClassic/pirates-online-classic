@@ -215,4 +215,4 @@ def areaTeleport(locationUid):
 
     avatar = spellbook.getTarget()
     simbase.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
-    return 'Teleporting avatar %d to area: %s...' % (avatar.doId, areaUid)
+    return 'Teleporting avatar %d to area: %s...' % (avatar.doId, locationUid)
