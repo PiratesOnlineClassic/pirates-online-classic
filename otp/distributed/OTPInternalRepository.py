@@ -52,6 +52,17 @@ class OTPInternalRepository(AstronInternalRepository):
 
         self.send(dg)
 
+    def clientAddInterestMultiple(self, clientChannel, interestId, parentId, zoneList):
+        dg = PyDatagram()
+        dg.addServerHeader(clientChannel, self.ourChannel, CLIENTAGENT_ADD_INTEREST_MULTIPLE)
+        dg.add_uint16(interestId)
+        dg.add_uint32(parentId)
+        dg.add_uint16(len(zoneList))
+        for zoneId in zoneList:
+            dg.add_uint32(zoneId)
+
+        self.send(dg)
+
     def clientRemoveInterest(self, clientChannel, interestId):
         dg = PyDatagram()
         dg.addServerHeader(clientChannel, self.ourChannel, CLIENTAGENT_REMOVE_INTEREST)
