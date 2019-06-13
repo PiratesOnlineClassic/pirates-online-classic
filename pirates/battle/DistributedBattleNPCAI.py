@@ -7,12 +7,11 @@ from pirates.pirate.BattleNPCGameFSMAI import BattleNPCGameFSMAI
 from pirates.piratesbase import PLocalizerEnglish
 
 
-class DistributedBattleNPCAI(DistributedBattleAvatarAI, FSM):
+class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleNPCAI')
 
     def __init__(self, air):
         DistributedBattleAvatarAI.__init__(self, air)
-        FSM.__init__(self, self.__class__.__name__)
 
         self.gameFSM = BattleNPCGameFSMAI(self.air, self)
 
@@ -22,7 +21,7 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI, FSM):
         self.collisionMode = 0
         self.initZ = 0
 
-        self.spawnerNode = None
+        self.spawnNode = None
 
     def generate(self):
         DistributedBattleAvatarAI.generate(self)
@@ -95,15 +94,14 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI, FSM):
     def getInitZ(self):
         return self.initZ
 
-    def setSpawner(self, spawnerNode):
-        self.spawnerNode = spawnerNode
+    def setSpawnNode(self, spawnNode):
+        self.spawnNode = spawnNode
 
-    def getSpawner(self):
-        return self.spawnerNode
+    def getSpawnNode(self):
+        return self.spawnNode
 
     def requestClientAggro(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             return
 
@@ -111,12 +109,6 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI, FSM):
 
     def handleClientAggro(self, avatar):
         self.d_setChat(PLocalizerEnglish.getNavyAggroPhrase())
-
-    def demand(self, state, *args):
-        FSM.demand(self, state, *args)
-
-        self.setGameState(state, globalClockDelta.getRealNetworkTime())
-        self.b_setGameState(state)
 
     def delete(self):
         self.air.battleMgr.removeTarget(self)

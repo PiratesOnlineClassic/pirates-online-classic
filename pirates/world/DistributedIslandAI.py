@@ -17,7 +17,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         cellWidth = WorldGlobals.ISLAND_CELL_SIZE
         gridRadius = WorldGlobals.ISLAND_GRID_RADIUS
 
-        DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize, gridRadius, cellWidth)
+        DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize, gridRadius, cellWidth, style='CartesianStated')
         DistributedGameAreaAI.__init__(self, air)
         Teamable.__init__(self)
 

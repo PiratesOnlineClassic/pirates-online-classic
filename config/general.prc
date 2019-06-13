@@ -19,7 +19,7 @@ audio-library-name p3fmod_audio
 audio-output-rate 44100
 
 # Models:
-want-disk-cache 1
+want-disk-cache #t
 default-model-extension .bam
 
 # Exclude:
@@ -103,8 +103,9 @@ want-island-barriers #t
 object-load-delay #f
 
 # Motion:
-motionfsm-lag #f
+motionfsm-lag #t
 avatar-physics-freq 2.0
+npc-sidestep #t
 
 # Smoothing:
 smooth-lag 1

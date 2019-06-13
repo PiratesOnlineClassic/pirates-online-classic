@@ -14,9 +14,7 @@ class DistributedOceanGridAI(DistributedCartesianGridAI, OceanGridBase):
         gridSize = WorldGlobals.OCEAN_GRID_SIZE
         cellWidth = WorldGlobals.OCEAN_CELL_SIZE
 
-        DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize,
-            gridRadius, cellWidth)
-
+        DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize, gridRadius, cellWidth)
         OceanGridBase.__init__(self)
 
     def generateChildWithRequired(self, do, zoneId, optionalFields=[]):

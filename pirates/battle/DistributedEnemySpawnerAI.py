@@ -3,6 +3,8 @@ import random
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
+from direct.distributed.ClockDelta import *
+
 from pirates.creature.DistributedAnimalAI import DistributedAnimalAI
 from pirates.npc.DistributedNPCTownfolkAI import DistributedNPCTownfolkAI
 from pirates.npc.DistributedNPCSkeletonAI import DistributedNPCSkeletonAI
@@ -158,6 +160,16 @@ class SpawnNodeBase:
         self.__spawn()
         return Task.done
 
+    def __updateNPC(self, task):
+        if not self._npc:
+            return task.done
+
+        x, y, z = self._npc.getPos()
+        h, p, r = self._npc.getHpr()
+        timestamp = globalClockDelta.getRealNetworkTime(bits=16)
+        self._npc.sendUpdate('setSmPosHpr', [x, y, z, h, p, r, timestamp])
+        return task.again
+
     def __spawn(self, task=None):
         # Create the npc class
         avatarType = self.getAvatarType()
@@ -263,17 +275,23 @@ class SpawnNodeBase:
         # Generate npc
         zoneId = self.parent.getZoneFromXYZ(npc.getPos())
         self.parent.generateChildWithRequired(npc, zoneId)
-        self.parent.builder.parentObjectToCell(npc, zoneId)
         self.parent.builder.addObject(npc)
-        #self.parent.addObjectToGrid(npc)
+        self.parent.addObjectToGrid(npc, zoneId)
+
+        npc.setPos(self.parent, *spawnPos)
+
+        # TODO FIXME!
+        #npc.startPosHprBroadcast()
+
+        # Save a copy of the npc and tell it about myself. This will come in handy
+        self._npc = npc
+        npc.setSpawnNode(self)
 
         npc.d_setInitZ(npc.getZ())
         npc.d_setSpawnIn()
         npc.b_setGameState(npc.getStartState())
 
-        # Save a copy of the npc and tell it about myself. This will come in handy
-        self._npc = npc
-        npc.setSpawner(self)
+        #taskMgr.doMethodLater(0.2, self.__updateNPC, npc.uniqueName('update-pos-task'))
 
         # Print out useful debugging information
         locationName = self.parent.getLocalizerName()
