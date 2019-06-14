@@ -218,3 +218,23 @@ def areaTeleport(locationUid):
     avatar = spellbook.getTarget()
     simbase.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
     return 'Teleporting avatar %d to area: %s...' % (avatar.doId, locationUid)
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
+def tp(locationName):
+    from pirates.piratesbase import PLocalizer as localizer
+    locationUid = None
+
+    for uid, name in localizer.LocationNames.items():
+        name = name.lower()
+        name = name.replace("'", '')
+
+        if name == locationName:
+            locationUid = uid
+            break
+
+    if locationUid != None:
+        avatar = spellbook.getTarget()
+        simbase.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
+        return 'Teleporting avatar %d to area: %s...' % (avatar.doId, locationUid)
+    else:
+        return 'Unknown location %s' % locationName
