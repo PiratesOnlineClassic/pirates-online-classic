@@ -83,7 +83,6 @@ class GridInterestHandler(object):
         self.oldZoneId = zoneId
 
     def clearInterestZones(self):
-        clientChannel = self.avatar.GetPuppetConnectionChannel(self.avatar.doId)
         for interestHandle in list(self.interestHandles):
             self.removeInterestHandle(interestHandle)
 
