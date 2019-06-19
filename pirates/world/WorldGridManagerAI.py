@@ -23,7 +23,7 @@ class GridInterestHandler(object):
         self.oldZoneId = 0
 
     def getInterestHandleFromZoneId(self, zoneId):
-        for interestHandle in self.interestHandles:
+        for interestHandle in list(self.interestHandles):
             if interestHandle.zoneId == zoneId:
                 return interestHandle
 
@@ -84,8 +84,8 @@ class GridInterestHandler(object):
 
     def clearInterestZones(self):
         clientChannel = self.avatar.GetPuppetConnectionChannel(self.avatar.doId)
-        for interestHandle in self.interestHandles:
-            self.air.clientRemoveInterest(clientChannel, interestHandle.context)
+        for interestHandle in list(self.interestHandles):
+            self.removeInterestHandle(interestHandle)
 
         self.interestHandles = []
 
