@@ -6,6 +6,7 @@ from otp.ai.MagicWordGlobal import *
 
 from pirates.quest.QuestConstants import LocationIds
 from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.instance.DistributedTeleportZoneAI import DistributedTeleportZoneAI
 from pirates.instance.DistributedTeleportHandlerAI import DistributedTeleportHandlerAI
@@ -197,23 +198,10 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
-def areaTeleport(locationUid):
-    if locationUid == 'portroyal':
-        locationUid = '1150922126.8dzlu'
-    elif locationUid == 'tortuga':
-        locationUid = '1156207188.95dzlu'
-    elif locationUid == 'cuba':
-        locationUid = '1160614528.73sdnaik'
-    elif locationUid == 'delfuego':
-        locationUid = '1142018473.22dxschafe'
-    elif locationUid == 'tormenta':
-        locationUid = '1164150392.42dzlu'
-    elif locationUid == 'devilsanvil':
-        locationUid = '1164135492.81dzlu'
-    elif locationUid == 'outcast':
-        locationUid = '1173381952.2sdnaik'
-    elif locationUid == 'kingshead':
-        locationUid = '1159933206.48sdnaik'
+def uidtp(locationUid):
+    """
+    Teleport command for teleporting to an object by it's UID
+    """
 
     avatar = spellbook.getTarget()
     simbase.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
@@ -221,10 +209,12 @@ def areaTeleport(locationUid):
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def tp(locationName):
-    from pirates.piratesbase import PLocalizer as localizer
-    locationUid = None
+    """
+    Teleport command for teleporting to an object by it's location name defined
+    """
 
-    for uid, name in localizer.LocationNames.items():
+    locationUid = None
+    for uid, name in PLocalizer.LocationNames.items():
         name = name.lower()
         name = name.replace("'", '')
 
@@ -236,5 +226,5 @@ def tp(locationName):
         avatar = spellbook.getTarget()
         simbase.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
         return 'Teleporting avatar %d to area: %s...' % (avatar.doId, locationUid)
-    else:
-        return 'Unknown location %s' % locationName
+
+    return 'Unknown location %s' % locationName
