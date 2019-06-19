@@ -3,8 +3,6 @@ from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.DistributedCartesianGridAI import DistributedCartesianGridAI
 
-from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
-
 # this constant defines the number of zones we want to get
 # from the getConcentricZones function based on the client's current cell...
 GRID_INTEREST_ZONES_COUNT = 3
@@ -91,6 +89,12 @@ class GridInterestHandler(object):
         for newZoneId in newConcentricZones:
             self.avatar.d_addZoneInterest(self.parentObj.doId, newZoneId)
 
+        previousZones.clear()
+        newZones.clear()
+
+        oldConcentricZones.clear()
+        newConcentricZones.clear()
+
         self.oldZoneId = zoneId
 
     def clearInterestZones(self):
@@ -151,3 +155,4 @@ class WorldGridManagerAI(object):
 
         gridHandler.clearInterestZones()
         gridHandler.destroy()
+        del gridHandler
