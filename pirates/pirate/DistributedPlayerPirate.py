@@ -1663,10 +1663,3 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
             DistributedPlayer.setChatAbsolute(self, chatString, chatFlags, dialogue, interrupt, quiet)
         elif not quiet:
             base.chatAssistant.receiveGMOpenTypedChat(chatString, chatFlags, self.doId)
-
-    def d_addZoneInterestDone(self, zoneId, context):
-        self.sendUpdate('addZoneInterestDone', [zoneId, context])
-
-    def addZoneInterest(self, parentId, zoneId):
-        interestHandle = self.cr.addInterest(parentId, zoneId, 'zoneInterest-%d' % zoneId, None)
-        self.d_addZoneInterestDone(zoneId, interestHandle.asInt())

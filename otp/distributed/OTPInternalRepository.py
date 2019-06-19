@@ -52,7 +52,16 @@ class OTPInternalRepository(AstronInternalRepository):
 
         self.send(dg)
 
-    def clientAddInterestMultiple(self, clientChannel, interestId, parentId, zoneList):
+    def clientAddInterest(self, clientChannel, interestId, parentId, zoneId, sendInterestDone=True):
+        dg = PyDatagram()
+        dg.addServerHeader(clientChannel, self.ourChannel, CLIENTAGENT_ADD_INTEREST)
+        dg.addUint16(interestId)
+        dg.addUint32(parentId)
+        dg.addUint32(zoneId)
+        dg.addBool(sendInterestDone)
+        self.send(dg)
+
+    def clientAddInterestMultiple(self, clientChannel, interestId, parentId, zoneList, sendInterestDone=True):
         dg = PyDatagram()
         dg.addServerHeader(clientChannel, self.ourChannel, CLIENTAGENT_ADD_INTEREST_MULTIPLE)
         dg.addUint16(interestId)
@@ -61,12 +70,14 @@ class OTPInternalRepository(AstronInternalRepository):
         for zoneId in zoneList:
             dg.addUint32(zoneId)
 
+        dg.addBool(sendInterestDone)
         self.send(dg)
 
-    def clientRemoveInterest(self, clientChannel, interestId):
+    def clientRemoveInterest(self, clientChannel, interestId, sendInterestDone=True):
         dg = PyDatagram()
         dg.addServerHeader(clientChannel, self.ourChannel, CLIENTAGENT_REMOVE_INTEREST)
         dg.addUint16(interestId)
+        dg.addBool(sendInterestDone)
         self.send(dg)
 
     def _isValidPlayerLocation(self, parentId, zoneId):
