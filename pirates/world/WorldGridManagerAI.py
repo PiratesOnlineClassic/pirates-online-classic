@@ -3,10 +3,6 @@ from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.DistributedCartesianGridAI import DistributedCartesianGridAI
 
-# this constant defines the number of zones we want to get
-# from the getConcentricZones function based on the client's current cell...
-GRID_INTEREST_ZONES_COUNT = 3
-
 
 class GridInterestHandle(object):
 
@@ -73,7 +69,10 @@ class GridInterestHandler(object):
         self.pendingInterestHandles = []
         previousZones = set([interestHandle.interestZone for interestHandle in self.interestHandles])
         newZones = set()
-        for x in xrange(1, GRID_INTEREST_ZONES_COUNT + 1):
+
+        # determine how many zones we want to see ahead of us based on
+        # the cartesian grid radius set by constants for the parent object
+        for x in xrange(1, self.parentObj.gridRadius + 1):
             newZones.update(self.parentObj.getConcentricZones(zoneId, x))
 
         oldConcentricZones = previousZones.difference(newZones)
