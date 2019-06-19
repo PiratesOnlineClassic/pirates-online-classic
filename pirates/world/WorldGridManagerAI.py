@@ -102,9 +102,6 @@ class WorldGridManagerAI(object):
         self.air = air
         self.gridInterestHandlers = {}
 
-    def addZoneInterestDone(self, avatar, zoneId, context):
-        pass
-
     def handleLocationChanged(self, parentObj, avatar, zoneId):
         if not isinstance(parentObj, DistributedCartesianGridAI):
             return
