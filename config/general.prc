@@ -105,7 +105,7 @@ object-load-delay #f
 # Motion:
 motionfsm-lag #t
 avatar-physics-freq 2.0
-npc-sidestep #t
+npc-sidestep #f
 
 # Smoothing:
 smooth-lag 1
