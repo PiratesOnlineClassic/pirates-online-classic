@@ -60,6 +60,7 @@ notify-level-collide error
 notify-level-abs error
 notify-level-Actor error
 notify-level-DisplayOptions debug
+notify-level-express error
 notify-timestamp 1
 
 # Buffer:
