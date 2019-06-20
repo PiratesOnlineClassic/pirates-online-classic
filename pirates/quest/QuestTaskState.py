@@ -1,22 +1,24 @@
 from direct.showbase.PythonUtil import ParamObj
 
+from pirates.pirate import AvatarTypes
+
 class QuestTaskState(ParamObj):
-    
+
     class ParamSet(ParamObj.ParamSet):
         Params = {
-            'taskType': None,
+            'taskType': 0,
             'progress': 0,
             'goal': 1,
             'attempts': 0,
-            'enemyType': None,
-            'faction': None,
+            'enemyType': AvatarTypes.AnyAvatar,
+            'faction': AvatarTypes.AnyAvatar,
             'hull': None,
             'containersSearched': None}
 
     def acquire(self):
         if not hasattr(self, '_refcount'):
             self._refcount = 0
-        
+
         self._refcount += 1
 
     def release(self):
@@ -32,7 +34,7 @@ class QuestTaskState(ParamObj):
 
     def resetModified(self):
         self.modified = False
-    
+
     def handleProgress(self, num = 1):
         self.setProgress(min(self.progress + num, self.goal))
 
@@ -41,7 +43,7 @@ class QuestTaskState(ParamObj):
 
     def isComplete(self):
         return self.progress >= self.goal
-    
+
     def hasSearchedContainer(self, containerId):
         return self.containersSearched is not None and containerId in self.containersSearched
 
@@ -50,8 +52,6 @@ class QuestTaskState(ParamObj):
             self.containersSearched = []
         elif containerId in self.containersSearched:
             return False
-        
+
         self.containersSearched.append(containerId)
         return True
-
-

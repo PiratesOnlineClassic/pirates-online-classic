@@ -113,3 +113,21 @@ class PirateInventoryAI(DistributedInventoryAI):
 
     def setQuestList(self, questList):
         self.b_setDoIdListCategory(InventoryCategory.QUESTS, questList)
+
+    def populateInventory(self):
+        avatar = self.air.doId2do.get(self.ownerId)
+        if not avatar:
+            self.notify.warning('Failed to populate inventory %d, '
+                'for non-existant AI owner object: %d' % (self.doId, self.ownerId))
+
+            return
+
+        # populate the avatar's quest list
+        self.air.questMgr.activateQuests(avatar)
+
+        # populate the avatar's ship doId list
+        #shipDoIdList = self.getShipDoIdList()
+        #for shipId in shipDoIdList:
+        #    self.air.shipLoader.activateShip(avatar, shipId)
+
+        DistributedInventoryAI.populateInventory(self)

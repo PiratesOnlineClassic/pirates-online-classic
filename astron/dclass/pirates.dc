@@ -764,6 +764,7 @@ struct AvatarType {
 };
 
 struct QuestTaskState {
+  uint16 taskType;
   uint16 attempts;
   AvatarType enemyType;
   AvatarType faction;

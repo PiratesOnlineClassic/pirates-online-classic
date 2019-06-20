@@ -185,6 +185,9 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
     def d_requestInventoryComplete(self):
         self.sendUpdateToAvatarId(self.ownerId, 'requestInventoryComplete', [])
 
+    def populateInventory(self):
+        self.d_requestInventoryComplete()
+
     def proccessCallbackResponse(self, callback, *args, **kwargs):
         if callback and callable(callback):
             callback(*args, **kwargs)
