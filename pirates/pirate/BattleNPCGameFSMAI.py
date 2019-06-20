@@ -8,7 +8,7 @@ from direct.distributed.GridParent import GridParent
 from pirates.battle import EnemyGlobals
 from pirates.pirate.BattleAvatarGameFSMAI import BattleAvatarGameFSMAI
 from pirates.movement import MotionFSM
-
+from pirates.piratesbase import PiratesGlobals
 
 def decision(probability):
     """
@@ -78,7 +78,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         return self.avatar.uniqueName('watch-target')
 
     def findNextWalkToPoint(self):
-        if self.state == 'Patrol':
+        if self.state == 'Patrol' or self.state == 'Walk':
             patrolPoint = self.getPatrolPoint(self.avatar)
             if patrolPoint is None:
                 return
@@ -133,6 +133,25 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         if self.__pausedTask:
             taskMgr.remove(self.__pausedTask)
             self.__pausedTask = None
+
+    def enterWalk(self):
+        patrolPoint = self.getPatrolPoint(self.avatar)
+        if not patrolPoint:
+            self.notify.warning('Could not find patrol point for NPC with doId: %d!' % self.avatar.doId)
+            return
+
+        self.walkToPoint(patrolPoint)
+
+    def exitPatrol(self):
+        if self.__movementInterval:
+
+            self.__movementInterval.finish()
+            self.__movementInterval = None
+
+        if self.__pausedTask:
+            taskMgr.remove(self.__pausedTask)
+            self.__pausedTask = None
+
 
     def __watchTarget(self, task):
         if not self.attackTarget:
