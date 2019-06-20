@@ -13,31 +13,29 @@ class PirateInventoryAI(DistributedInventoryAI):
         if not avatar:
             return
 
-        oldLevel, oldReputation = ReputationGlobals.getLevelFromTotalReputation(
-            repType, self.getReputation(repType))
+        totalRep = self.getReputation(repType)
+        currentLevel, currentReputation = ReputationGlobals.getLevelFromTotalReputation(repType, totalRep)
+        newLevel, newReputation = ReputationGlobals.getLevelFromTotalReputation(repType, quantity)
 
-        newLevel, newReputation = ReputationGlobals.getLevelFromTotalReputation(
-            repType, quantity)
+        if newLevel > currentLevel:
+            # check to see if the type of reputation we're giving the avatar is
+            # their overall reputation/level, then set their level...
+            if repType == InventoryType.OverallRep:
+                avatar.b_setLevel(newLevel)
+                avatar.d_levelUpMsg(repType, avatar.getLevel(), 0)
 
-        # check to see if the type of reputation we're giving the avatar is
-        # their overall reputation/level, then set their level...
-        if repType == InventoryType.OverallRep and newLevel > avatar.getLevel():
-            avatar.b_setLevel(newLevel)
-            avatar.d_levelUpMsg(repType, avatar.getLevel(), 0)
+                # Assign level up quests...
+                try:
+                    level_up_quests = RepChart.getLevelUpQuest(repType, newLevel)[0]
+                    if not self.air.questMgr.hasQuest(level_up_quests):
+                        self.air.questMgr.createQuest(avatar, level_up_quests)
+                except IndexError:
+                    self.notify.debug('Failed to give level up quest for %s(Level: %s); '
+                        'They\'re not the proper level!' % (avatar.getName(), newLevel))
 
-            # Assign level up quests...
-            try:
-                level_up_quests = RepChart.getLevelUpQuest(repType, newLevel)[0]
-                if not self.air.questMgr.hasQuest(level_up_quests):
-                    self.air.questMgr.createQuest(avatar, level_up_quests)
-            except IndexError:
-                self.notify.debug('Failed to give level up quest for %s(Level: %s); '
-                    'They\'re not the proper level!' % (avatar.getName(), newLevel))
-
-        else:
-            # only play the level up message for the avatar if their new reputation
-            # is greater than their previous reputation...
-            if newLevel > oldLevel:
+                avatar.b_setHp(avatar.getMaxHp())
+                avatar.b_setMojo(avatar.getMaxMojo())
+            else:
                 avatar.d_levelUpMsg(repType, newLevel, 0)
 
                 # Give level up skills
@@ -70,10 +68,6 @@ class PirateInventoryAI(DistributedInventoryAI):
                 avatar.b_setMaxHp(maxHp)
                 avatar.b_setMaxMojo(maxMojo)
 
-        if repType == InventoryType.OverallRep and newLevel > avatar.getLevel() or newLevel > oldLevel:
-            avatar.b_setHp(avatar.getMaxHp())
-            avatar.b_setMojo(avatar.getMaxMojo())
-
         self.b_setAccumulator(repType, quantity)
 
     def getReputation(self, repType):
@@ -82,12 +76,14 @@ class PirateInventoryAI(DistributedInventoryAI):
     def setOverallRep(self, quantity):
         self.setReputation(InventoryType.OverallRep, quantity)
 
-        # since the client still makes use of the general reputation type,
-        # let's just set the value as well...
-        self.b_setAccumulator(InventoryType.GeneralRep, quantity)
-
     def getOverallRep(self):
         return self.getReputation(InventoryType.OverallRep)
+
+    def setGeneralRep(self, quantity):
+        self.setReputation(InventoryType.GeneralRep, quantity)
+
+    def getGeneralRep(self, quantity):
+        return self.getReputation(InventoryType.GeneralRep)
 
     def setGoldInPocket(self, quantity):
         self.b_setStackQuantity(InventoryType.GoldInPocket, min(quantity, 65000))
