@@ -184,8 +184,8 @@ class SpawnNodeBase:
         npc.setScale(self.objectData.get('Scale'))
         npc.setUniqueId('' if avatarType.getBoss() else self.objKey)
 
-        spawnPos = self.objectData.get('GridPos', self.objectData.get('Pos', (0, 0, 0)))
-        npc.setPos(spawnPos)
+        sx, sy, sz = self.objectData.get('GridPos', self.objectData.get('Pos', (0, 0, 0)))
+        npc.setPos(sx, sy, sz)
         npc.setHpr(self.objectData.get('Hpr', (0, 0, 0)))
 
         npc.setSpawnPos(npc.getPos())
@@ -278,7 +278,9 @@ class SpawnNodeBase:
         self.parent.builder.addObject(npc)
         self.parent.addObjectToGrid(npc, zoneId)
 
-        npc.setPos(self.parent, *spawnPos)
+        # position the npc relative to it's parent object
+        npc.setPos(self.parent, (sx, sy, sz))
+        npc.setZ(sz)
 
         # TODO FIXME!
         #npc.startPosHprBroadcast()
