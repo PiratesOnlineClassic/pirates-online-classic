@@ -118,6 +118,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.__movementInterval.start()
 
     def enterPatrol(self, *args, **kwargs):
+        return
         patrolPoint = self.getPatrolPoint(self.avatar)
         if not patrolPoint:
             self.notify.warning('Could not find patrol point for NPC with doId: %d!' % self.avatar.doId)
