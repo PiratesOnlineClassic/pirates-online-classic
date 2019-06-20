@@ -188,6 +188,9 @@ class SpawnNodeBase:
         npc.setPos(sx, sy, sz)
         npc.setHpr(self.objectData.get('Hpr', (0, 0, 0)))
 
+        # Set collision mode
+        npc.setCollisionMode(PiratesGlobals.COLL_MODE_FLOORS_CL)
+
         npc.setSpawnPos(npc.getPos())
         npc.setInitZ(npc.getZ())
 
