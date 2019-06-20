@@ -11,7 +11,7 @@ from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, Inventory
 from pirates.battle.ComboDiaryAI import ComboDiaryAI
 from pirates.piratesbase import Freebooter
 from pirates.pirate import AvatarTypes
-
+import random
 
 class BattleManagerAI(BattleManagerBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManagerAI')
@@ -492,6 +492,12 @@ class BattleManagerAI(BattleManagerBase):
         # used to kill the target
         inventory.setOverallRep(inventory.getOverallRep() + overallReputation)
         inventory.setGoldInPocket(inventory.getGoldInPocket() + goldReward)
+
+        if random.random() >= 0.8:
+            cardId = random.randint(InventoryType.begin_Cards, InventoryType.end_Cards)
+            attacker.giveCardMessage(cardId)
+
+            inventory.b_setStackQuantity(cardId, 1)
 
         # attempt to update the avatar's active task progress...
         self.air.questMgr.enemyDefeated(attacker, target)
