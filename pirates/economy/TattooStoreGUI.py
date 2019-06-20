@@ -156,7 +156,7 @@ class TattooStoreCartList(DirectScrolledFrame):
         tattooId = data[2]
         tattoo = TattooGlobals.tattoos.get(uid)
         if tattoo is not None:
-            if self.parent.mode == 1:
+            if self.__parent.mode == 1:
                 itemCost = int(tattoo[4] * 0.25)
             else:
                 itemCost = tattoo[4]
@@ -166,10 +166,10 @@ class TattooStoreCartList(DirectScrolledFrame):
         maxLength = 23 - len(str(itemCost))
         isDisabled = 0
         panel = DirectButton(parent = self, relief = None, text = itemText[:maxLength], text_fg = self.itemColor, text_align = TextNode.ALeft, text_scale = PiratesGuiGlobals.TextScaleMed, text_shadow = PiratesGuiGlobals.TextShadow, text_pos = (0.06, 0.0), command = self.removePanel, extraArgs = [data])
-        if self.parent.pvpMode:
-            cImage = self.parent.RenownImage
+        if self.__parent.pvpMode:
+            cImage = self.__parent.RenownImage
         else:
-            cImage = self.parent.CoinImage
+            cImage = self.__parent.CoinImage
         panel.costLabel = DirectLabel(parent = panel, relief = None, text = str(itemCost), text_fg = self.itemColor, text_align = TextNode.ARight, text_scale = PiratesGuiGlobals.TextScaleMed, text_shadow = PiratesGuiGlobals.TextShadow, text_pos = (0.45, 0.0), image = cImage, image_scale = 0.15, image_pos = (0.48, 0.0, 0.014))
         panel.bind(DGG.ENTER, self.highlightStart, extraArgs = [panel])
         panel.bind(DGG.EXIT, self.highlightStop, extraArgs = [panel])
@@ -192,14 +192,14 @@ class TattooStoreCartList(DirectScrolledFrame):
     def removePanel(self, data, repack = 1):
         for panel in self.panels:
             if panel.data == data:
-                self.parent.updateButton(data, 1)
+                self.__parent.updateButton(data, 1)
                 self.panels.remove(panel)
                 self.purchases.remove(data)
                 panel.destroy()
                 if repack:
                     self.repackPanels()
 
-                self.parent.updateBalance()
+                self.__parent.updateBalance()
                 return
 
     def hasPanel(self, data):

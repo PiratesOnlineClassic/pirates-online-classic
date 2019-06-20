@@ -28,7 +28,7 @@ LHAND_CAMERA = 6
 RHAND_CAMERA = 7
 
 class JewelryStoreTab(LeftTab):
-    
+
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('suffix', '_d', None), ('borderScale', 0.38, None), ('bgBuffer', 0.15, None))
         self.defineoptions(kw, optiondefs)
@@ -38,14 +38,14 @@ class JewelryStoreTab(LeftTab):
 
 
 class JewelryStoreTabBar(TabBar):
-    
+
     def refreshTabs(self):
         for (x, name) in enumerate(self.tabOrder):
             tab = self.tabs[name]
             tab.reparentTo(self.bParent)
             tab.setPos(-0.07, 0, 1.1 - 0.1 * (x + self.offset))
             (tab.setScale(0.2, 1, 0.2),)
-        
+
         self.activeIndex = max(0, min(self.activeIndex, len(self.tabOrder) - 1))
         if len(self.tabOrder):
             name = self.tabOrder[self.activeIndex]
@@ -60,13 +60,13 @@ class JewelryStoreTabBar(TabBar):
 
 
 class JewelryStoreCartList(DirectScrolledFrame):
-    
+
     def __init__(self, parent, width, height, itemWidth, itemHeight):
         self.width = width + PiratesGuiGlobals.ScrollbarSize
         self.listItemHeight = itemHeight
         self.listItemWidth = itemWidth
         self.height = height
-        self.parent = parent
+        self.__parent = parent
         charGui = loader.loadModelOnce('models/gui/char_gui')
         DirectScrolledFrame.__init__(self,
                                      relief = None,
@@ -106,7 +106,7 @@ class JewelryStoreCartList(DirectScrolledFrame):
         self.ignoreAll()
         for panel in self.panels:
             panel.destroy()
-        
+
         del self.panels
         del self.purchases
         DirectScrolledFrame.destroy(self)
@@ -120,12 +120,12 @@ class JewelryStoreCartList(DirectScrolledFrame):
         for i in range(len(self.panels)):
             self.panels[i].setPos(0.01, 0, -z * (i + 1))
             self.panels[i].origionalPos = self.panels[i].getPos(render2d)
-        
+
         self['canvasSize'] = (0, self.listItemWidth - 0.09, -z * (i + 1), 0)
 
     def addPanel(self, data, repack = 1):
         uid = data[1]
-        if self.parent.mode == 1:
+        if self.__parent.mode == 1:
             itemCost = int(JewelryGlobals.jewelry_id.get(uid)[3] * 0.25)
         else:
             itemCost = JewelryGlobals.jewelry_id.get(uid)[3]
@@ -151,7 +151,7 @@ class JewelryStoreCartList(DirectScrolledFrame):
                                       text_scale = PiratesGuiGlobals.TextScaleMed,
                                       text_shadow = PiratesGuiGlobals.TextShadow,
                                       text_pos = (0.45, 0.0),
-                                      image = self.parent.CoinImage,
+                                      image = self.__parent.CoinImage,
                                       image_scale = 0.15,
                                       image_pos = (0.48, 0.0, 0.014)
                                       )
@@ -177,27 +177,27 @@ class JewelryStoreCartList(DirectScrolledFrame):
     def removePanel(self, data, repack = 1):
         for panel in self.panels:
             if panel.data == data:
-                self.parent.updateButton(data, 1)
+                self.__parent.updateButton(data, 1)
                 self.panels.remove(panel)
                 self.purchases.remove(data)
                 panel.destroy()
                 if repack:
                     self.repackPanels()
-                
-                self.parent.updateBalance()
+
+                self.__parent.updateBalance()
                 return
 
     def hasPanel(self, data):
         for panel in self.panels:
             if panel.data == data:
                 return True
-        
+
         return False
 
     def removeAllPanels(self):
         for panel in self.panels:
             panel.destroy()
-        
+
         self.panels = []
         self.purchases = []
         self.repackPanels()
@@ -213,7 +213,7 @@ class JewelryStoreCartList(DirectScrolledFrame):
         for panel in self.panels:
             if panel.data[0] == itemId:
                 counter += panel.data[1]
-        
+
         return counter
 
 
@@ -224,7 +224,7 @@ class JewelryStoreGUI(DirectFrame):
     height = 1.5
     columnWidth = PiratesGuiGlobals.InventoryItemGuiWidth + PiratesGuiGlobals.ScrollbarSize + 0.05
     holidayIdList = []
-    
+
     def __init__(self, npc, shopId, **kw):
         optiondefs = (('relief', None, None), ('framSize', (0, self.width, 0, self.height), None), ('sortOrder', 20, None))
         self.defineoptions(kw, optiondefs)
@@ -261,7 +261,7 @@ class JewelryStoreGUI(DirectFrame):
         if localAvatar.gameFSM.camIval is not None:
             if localAvatar.gameFSM.camIval.isPlaying():
                 localAvatar.gameFSM.camIval.finish()
-        
+
         self.initialCamPos = camera.getPos()
         self.initialCamHpr = camera.getHpr()
         self.initialPirateH = 0
@@ -378,7 +378,7 @@ class JewelryStoreGUI(DirectFrame):
             else:
                 self.displayRegionStates[id] = True
             self.clothRenders[id].hide()
-    
+
     def showDisplayRegions(self):
         for id in range(len(self.clothRenders)):
             if self.displayRegionStates[id]:
@@ -415,37 +415,37 @@ class JewelryStoreGUI(DirectFrame):
             self.camIval.finish()
             self.camIval = None
             camera.setHpr(0, 0, 0)
-        
+
         self.rotateSlider.destroy()
         self.cleanupRegions()
         self.unloadPirate()
         if self.model:
             self.model.removeNode()
             self.model = None
-        
+
         if self.CoinImage:
             self.CoinImage.removeNode()
             self.CoinImage = None
-        
+
         if self.ParchmentIcon:
             self.ParchmentIcon.removeNode()
             self.ParchmentIcon = None
-        
+
         if self.ShirtIcon:
             self.ShirtIcon.removeNode()
             self.ShirtIcon = None
-        
+
         if self.jewelerIconsA:
             self.jewelerIconsA.removeNode()
             self.jewelerIconsA = None
-        
+
         if self.jewelerIconsB:
             self.jewelerIconsB.removeNode()
             self.jewelerIconsB = None
-        
+
         if self.alertDialog:
             self.alertDialog.destroy()
-        
+
         if localAvatar.guiMgr.questPage and len(localAvatar.guiMgr.questPage.trackedQuestLabel['text']):
             if self.showQuestLabel:
                 localAvatar.guiMgr.questPage.trackedQuestLabel.show()
@@ -476,7 +476,7 @@ class JewelryStoreGUI(DirectFrame):
             self.pirate.lookAt(self.npc)
             dummy.detachNode()
             self.initialPirateH = self.pirate.getH()
-        
+
         self.pirate.show()
         localAvatar.stash()
 
@@ -488,10 +488,10 @@ class JewelryStoreGUI(DirectFrame):
         if self.camIval:
             self.camIval.finish()
             self.camIval = None
-        
+
         if self.pirate is None:
             self.createPirate()
-        
+
         self.pirate.setH(self.initialPirateH)
         self.rotateSlider['value'] = self.rotateSliderOrigin = 0.5
         dummy = self.pirate.attachNewNode('dummy')
@@ -542,10 +542,10 @@ class JewelryStoreGUI(DirectFrame):
         h = camHpr[0] % 360
         if camH > h:
             h += 360
-        
+
         if h - camH > 180:
             h -= 360
-        
+
         camHpr.setX(h)
         camera.setH(camH)
         t = 1.5
@@ -559,7 +559,7 @@ class JewelryStoreGUI(DirectFrame):
             self.pirate.cleanupHuman()
             self.pirate.delete()
             self.pirate = None
-        
+
         localAvatar.unstash()
 
     def closePanel(self):
@@ -613,20 +613,20 @@ class JewelryStoreGUI(DirectFrame):
             localAvatar.generateHuman(gender, base.cr.human)
             localAvatar.motionFSM.off()
             localAvatar.motionFSM.on()
-        
+
         self.unloadPirate()
 
     def handleCommitPurchase(self):
         if self.purchaseInventory == []:
             base.localAvatar.guiMgr.createWarning(PLocalizer.EmptyPurchaseWarning, PiratesGuiGlobals.TextFG6)
             return
-        
+
         inventory = base.localAvatar.getInventory()
         if inventory:
             if inventory.getStackQuantity(InventoryType.GoldInPocket) < self.balance:
                 base.localAvatar.guiMgr.createWarning(PLocalizer.NotEnoughMoneyWarning, PiratesGuiGlobals.TextFG6)
                 return
-            
+
             if self.balance < 0 and inventory.getStackQuantity(InventoryType.GoldInPocket) + self.balance > inventory.getStackLimit(InventoryType.GoldInPocket):
                 base.localAvatar.guiMgr.createWarning(PLocalizer.CannotHoldGoldWarning, PiratesGuiGlobals.TextFG6)
                 return
@@ -643,7 +643,7 @@ class JewelryStoreGUI(DirectFrame):
                 secondary = item[5]
                 purchaseArgList.append(uid)
                 self.equipRequests[type] = [uid, id, primary, secondary]
-        
+
         for item in self.sellInventory.purchases:
             uid = item[1]
             item = JewelryGlobals.jewelry_id.get(uid)
@@ -671,10 +671,10 @@ class JewelryStoreGUI(DirectFrame):
         self.balance = 0
         for item in self.purchaseInventory.panels:
             self.balance += max(item.price, 1)
-        
+
         for item in self.sellInventory.panels:
             self.balance -= max(item.price, 1)
-        
+
         transactions = len(self.purchaseInventory.purchases) + len(self.sellInventory.purchases)
         if self.balance > 0:
             self.balanceTitle['text'] = PLocalizer.Total
@@ -691,7 +691,7 @@ class JewelryStoreGUI(DirectFrame):
         if self.balance > localAvatar.getMoney() or transactions == 0:
             if self.balance > localAvatar.getMoney():
                 self.balanceValue['text_fg'] = PiratesGuiGlobals.TextFG6
-            
+
             self.commitButton['state'] = DGG.DISABLED
         elif self.balance < 0:
             self.balanceValue['text_fg'] = PiratesGuiGlobals.TextFG4
@@ -781,7 +781,7 @@ class JewelryStoreGUI(DirectFrame):
         item = JewelryGlobals.jewelry_id.get(uid)
         if not item:
             return
-        
+
         idx = item[0]
         primaryColor = item[4]
         secondaryColor = item[5]
@@ -824,16 +824,16 @@ class JewelryStoreGUI(DirectFrame):
                     itemType = item.data[0]
                     if itemType == type:
                         current += 1
-                
+
                 for item in self.sellInventory.panels:
                     itemType = item.data[0]
                     if itemType == type:
                         current -= 1
-                
+
                 if current >= limit:
                     self.showWardrobeLimitAlert(type)
                     return
-                
+
                 self.purchaseInventory.addPanel(data)
                 button.addToCart['text'] = PLocalizer.TailorRemove
                 button.addToCart.buyState = 0
@@ -852,9 +852,9 @@ class JewelryStoreGUI(DirectFrame):
                 button.equip['state'] = DGG.NORMAL
                 button.addToCart.buyState = 1
                 self.sellInventory.removePanel(data)
-        
+
         self.updateBalance()
-    
+
     def updateButton(self, data, buyState):
         for item in self.buttons:
             if item.jewelryUID == data[1]:
@@ -863,7 +863,7 @@ class JewelryStoreGUI(DirectFrame):
                 elif self.mode == 1:
                     item.addToCart['text'] = PLocalizer.TailorSell
                     item.equip['state'] = DGG.NORMAL
-                
+
                 item.addToCart.buyState = 1
                 return
 
@@ -873,7 +873,7 @@ class JewelryStoreGUI(DirectFrame):
         elif self.mode == mode and refresh:
             self.setPage(self.currentPage, 0, refreshWardrobe = refresh)
             return
-        
+
         if self.mode == 0:
             self.prevIdx = self.buttonIndex
             idx = 0
@@ -885,10 +885,10 @@ class JewelryStoreGUI(DirectFrame):
     def setWardrobe(self, jewelry):
         if self.currentWardrobe:
             self.currentWardrobe = []
-        
+
         self.currentWardrobe = jewelry
         self.setPage(self.currentPage, refreshWardrobe = False)
-    
+
     def reloadPirateDNA(self, pirate):
         if self.equipRequests[JewelryGlobals.RBROW] is None:
             jewelryZone4 = list(localAvatar.style.getJewelryZone4())
@@ -924,7 +924,7 @@ class JewelryStoreGUI(DirectFrame):
             jewelryZone8 = list(self.equipRequests[JewelryGlobals.RHAND][1:])
         if not hasattr(pirate, 'style'):
             return None
-        
+
         pirate.style.setJewelryZone1(jewelryZone1[0], jewelryZone1[1], jewelryZone1[2])
         pirate.style.setJewelryZone2(jewelryZone2[0], jewelryZone2[1], jewelryZone2[2])
         pirate.style.setJewelryZone3(jewelryZone3[0], jewelryZone3[1], jewelryZone3[2])
@@ -960,7 +960,7 @@ class JewelryStoreGUI(DirectFrame):
                         button.jewelryUID]]
                 if button.questDrop is True:
                     button.itemText['text'] = PLocalizer.ShopQuestItem
-        
+
         itemButton.itemText['text'] = PLocalizer.TattooShopOwned
         if item:
             itemButton.equip['text'] = PLocalizer.TailorTakeOff
@@ -1019,19 +1019,19 @@ class JewelryStoreGUI(DirectFrame):
         previousPage = self.currentPage
         if self.currentPage != pageName:
             self.prevIdx = 0
-        
+
         self.currentPage = pageName
         jewelryType = pageName
         if self.currentPage != previousPage:
             self.focusCamera(self.currentPage)
-        
+
         if localAvatar.style.getGender() == 'm':
             GENDER = 'MALE'
         else:
             GENDER = 'FEMALE'
         if refreshWardrobe:
             self.npc.sendRequestJewelryList()
-        
+
         if self.equipRequests[JewelryGlobals.RBROW] is None:
             currentRBROW = localAvatar.style.getJewelryZone4()
         else:
@@ -1068,7 +1068,7 @@ class JewelryStoreGUI(DirectFrame):
         if self.mode == 0:
             if not self.currentWardrobe:
                 return
-            
+
             startRange = 0
             if GENDER == 'MALE':
                 if jewelryType == JewelryGlobals.RBROW:
@@ -1087,7 +1087,7 @@ class JewelryStoreGUI(DirectFrame):
                     startRange = JewelryGlobals.MALE_LHAND
                 elif jewelryType == JewelryGlobals.RHAND:
                     startRange = JewelryGlobals.MALE_RHAND
-                
+
             elif GENDER == 'FEMALE':
                 if jewelryType == JewelryGlobals.RBROW:
                     startRange = JewelryGlobals.FEMALE_RBROW
@@ -1110,7 +1110,7 @@ class JewelryStoreGUI(DirectFrame):
             set = JewelryGlobals.stores.get(store)
             if set is None:
                 return
-            
+
             for index in range(startRange, startRange + 9999):
                 if index in set:
                     item = JewelryGlobals.jewelry_id.get(index)
@@ -1130,7 +1130,7 @@ class JewelryStoreGUI(DirectFrame):
                                     primary,
                                     secondary,
                                     holiday])
-                            
+
                         else:
                             jewelry.append([
                                 index,
@@ -1157,31 +1157,31 @@ class JewelryStoreGUI(DirectFrame):
                         if type == JewelryGlobals.RBROW:
                             if currentRBROW == [combo, primaryColor, secondaryColor]:
                                 equipped = True
-                            
+
                         elif type == JewelryGlobals.LBROW:
                             if currentLBROW == [combo, primaryColor, secondaryColor]:
                                 equipped = True
-                            
+
                         elif type == JewelryGlobals.LEAR:
                             if currentLEAR == [combo, primaryColor, secondaryColor]:
                                 equipped = True
-                            
+
                         elif type == JewelryGlobals.REAR:
                             if currentREAR == [combo, primaryColor, secondaryColor]:
                                 equipped = True
-                            
+
                         elif type == JewelryGlobals.NOSE:
                             if currentNOSE == [combo, primaryColor, secondaryColor]:
                                 equipped = True
-                            
+
                         elif type == JewelryGlobals.MOUTH:
                             if currentMOUTH == [combo, primaryColor, secondaryColor]:
                                 equipped = True
-                            
+
                         elif type == JewelryGlobals.LHAND:
                             if currentLHAND == [combo, primaryColor, secondaryColor]:
                                 equipped = True
-                            
+
                         elif type == JewelryGlobals.RHAND:
                             if currentRHAND == [combo, primaryColor, secondaryColor]:
                                 equipped = True
@@ -1194,17 +1194,17 @@ class JewelryStoreGUI(DirectFrame):
                             primaryColor,
                             secondaryColor,
                             holiday])
-                
+
             else:
                 return
-        
+
         jewelry.sort(self.sortItems)
         jewelryAmount = 0
         startPos = Vec3(0.35, 0.0, 1.05)
         buttonScale = Vec3(0.6, 0.6, 0.6)
         for item in self.buttons:
             item.destroy()
-        
+
         self.buttons = []
         self.jewelryAmount = 0
         self.buttonIndex = startIndex
@@ -1220,7 +1220,7 @@ class JewelryStoreGUI(DirectFrame):
             buttonColorA = Vec4(0.95, 0.7, 0.7, 1.0)
             buttonColorB = Vec4(0.65, 0.4, 0.4, 1.0)
             self.sellInventory.setItemColor(Vec4(0.95, 0.3, 0.3, 1.0))
-        
+
         self.reloadPirateDNA(self.pirate)
         regionData = []
         for jewel in jewelry:
@@ -1238,14 +1238,14 @@ class JewelryStoreGUI(DirectFrame):
                 questDrop = False
                 if uid in JewelryGlobals.quest_items:
                     questDrop = True
-                
+
                 if self.mode == 1:
                     cost = int(cost * 0.25)
-                
+
                 for item in self.currentWardrobe:
                     if uid == item:
                         owned = True
-                
+
                 if self.mode == 1:
                     buttonState = DGG.DISABLED
                 else:
@@ -1289,7 +1289,7 @@ class JewelryStoreGUI(DirectFrame):
                                 jewelryButton,
                                 type,
                                 -1]]
-                
+
                 if self.paid == OTPGlobals.AccessVelvetRope:
                     if self.mode == 1:
                         jewelryButton.equip['geom'] = self.LockIcon
@@ -1299,7 +1299,7 @@ class JewelryStoreGUI(DirectFrame):
                         jewelryButton.equip['extraArgs'] = [
                             'JEWELRY_CANNOT_EQUIP',
                             10]
-                    
+
                     jewelryButton.addToCart['geom'] = self.LockIcon
                     jewelryButton.addToCart['geom_scale'] = 0.2
                     jewelryButton.addToCart['geom_pos'] = Vec3(-0.1, 0.0, 0.0)
@@ -1307,7 +1307,7 @@ class JewelryStoreGUI(DirectFrame):
                     jewelryButton.addToCart['extraArgs'] = [
                         'JEWELRY_CANNOT_BUY-SELL',
                         10]
-                
+
                 data = [
                     type,
                     uid]
@@ -1333,7 +1333,7 @@ class JewelryStoreGUI(DirectFrame):
                     elif self.mode == 1:
                         jewelryButton.equip['state'] = DGG.NORMAL
                         jewelryButton.addToCart['text'] = PLocalizer.TailorSell
-                    
+
                 startPos -= Vec3(0.0, 0.0, jewelryButton.getHeight() - 0.02)
                 jewelryButton.jewelryType = jewelryType
                 jewelryButton.jewelryCombo = combo
@@ -1344,39 +1344,39 @@ class JewelryStoreGUI(DirectFrame):
                     jewelryType,
                     uid])
                 self.buttons.append(jewelryButton)
-            
+
             self.jewelryAmount += 1
-        
+
         if not len(jewelry):
             jewelryButton = GuiButton.GuiButton(parent = self.panel, state = DGG.DISABLED, text = PLocalizer.TailorEmptyWardrobe, text_fg = PiratesGuiGlobals.TextFG2, text_pos = (0.0, 0.0), text_scale = PiratesGuiGlobals.TextScaleLarge, text_align = TextNode.ACenter, text_shadow = PiratesGuiGlobals.TextShadow, pos = startPos, image_scale = buttonScale, image_color = buttonColorA)
             jewelryButton.jewelryType = -1
             jewelryButton.jewelryCombo = -1
             jewelryButton.jewelryUID = -1
             self.buttons.append(jewelryButton)
-        
+
         if len(jewelry):
             self.setupDisplayRegions(regionData, pageName)
         else:
             for item in self.clothRenders:
                 item.hide()
-            
+
         if self.jewelryAmount <= self.buttonsPerPage:
             self.nextPageButton['state'] = DGG.DISABLED
             self.prevPageButton['state'] = DGG.DISABLED
-        
+
         if startIndex:
             self.prevPageButton['state'] = DGG.NORMAL
-        
+
         if startIndex + self.buttonsPerPage < self.jewelryAmount:
             self.nextPageButton['state'] = DGG.NORMAL
             self.prevPageButton['state'] = DGG.NORMAL
-        
+
         if self.jewelryAmount > self.buttonsPerPage:
             numPages = float(self.jewelryAmount) / float(self.buttonsPerPage)
             remainder = numPages - int(numPages)
             if remainder > 0:
                 numPages += 1.0 - remainder
-            
+
             page = startIndex / self.buttonsPerPage + 1
         else:
             numPages = 1
@@ -1409,10 +1409,10 @@ class JewelryStoreGUI(DirectFrame):
                 value = max(-1, min(1, value + dx * 0.004))
                 self.rotateSlider['value'] = value
         return Task.cont
-    
+
     def highlightJewelryStart(self, item, event = None):
         pass
-    
+
     def highlightJewelryStop(self, item, event = None):
         pass
 
@@ -1420,29 +1420,29 @@ class JewelryStoreGUI(DirectFrame):
         for item in self.clothWindows:
             base.win.removeDisplayRegion(item)
             item = None
-        
+
         self.clothWindows = []
         for item in self.clothCameras:
             del item
-        
+
         self.clothCameras = []
         for item in self.clothRenders:
             item.remove()
             item.removeNode()
-        
+
         self.clothRenders = []
         for item in self.clothHumans:
             item.delete()
             item.remove()
             item.removeNode()
-        
+
         self.clothHumans = []
         for item in self.clothCameraNPs:
             item.remove()
             item.removeNode()
-        
+
         self.clothCameraNPs = []
-    
+
     def createDisplayRegions(self):
         startRegion = Vec4(0.526, 0.596, 0.62, 0.69)
         for x in range(self.buttonsPerPage):
@@ -1468,7 +1468,7 @@ class JewelryStoreGUI(DirectFrame):
             self.clothRenders.append(clothRender)
             startRegion -= Vec4(0.0, 0.0, 0.12, 0.12)
             self.displayRegionStates[x] = True
-    
+
     def setupDisplayRegions(self, regionData, pageName):
         bodyShape = localAvatar.style.getBodyShape()
         if bodyShape == 0:
@@ -1481,7 +1481,7 @@ class JewelryStoreGUI(DirectFrame):
             bodyOffset = 0.5
         elif bodyShape == 4:
             bodyOffset = 0.5
-        
+
         x = 0
         m = Mat4(Mat4.identMat())
         rightEyeHeight = None
@@ -1499,7 +1499,7 @@ class JewelryStoreGUI(DirectFrame):
                 if rightEyeHeight is None:
                     source.getLOD('2000').getChild(0).node().findJoint('trs_right_eyebrow').getNetTransform(m)
                     rightEyeHeight = TransformState.makeMat(m).getPos().getZ()
-                
+
                 if gender == 'f':
                     offsetX = -0.3
                     offsetZ = -rightEyeHeight
@@ -1513,7 +1513,7 @@ class JewelryStoreGUI(DirectFrame):
                 if rightEyeHeight is None:
                     source.getLOD('2000').getChild(0).node().findJoint('trs_right_eyebrow').getNetTransform(m)
                     rightEyeHeight = TransformState.makeMat(m).getPos().getZ()
-                
+
                 if gender == 'f':
                     offsetX = 0.4
                     offsetZ = -rightEyeHeight
@@ -1527,7 +1527,7 @@ class JewelryStoreGUI(DirectFrame):
                 if leftEarHeight is None:
                     source.getLOD('2000').getChild(0).node().findJoint('def_trs_left_ear').getNetTransform(m)
                     leftEarHeight = TransformState.makeMat(m).getPos().getZ()
-                
+
                 if gender == 'f':
                     offsetZ = -leftEarHeight
                     offsetY = 0.6 + bodyOffset
@@ -1541,7 +1541,7 @@ class JewelryStoreGUI(DirectFrame):
                 if leftEarHeight is None:
                     source.getLOD('2000').getChild(0).node().findJoint('def_trs_left_ear').getNetTransform(m)
                     leftEarHeight = TransformState.makeMat(m).getPos().getZ()
-                
+
                 if gender == 'f':
                     offsetZ = -leftEarHeight
                     offsetY = 0.4 + bodyOffset
@@ -1555,7 +1555,7 @@ class JewelryStoreGUI(DirectFrame):
                 if noseHeight is None:
                     source.getLOD('2000').getChild(0).node().findJoint('def_trs_mid_nose_bot').getNetTransform(m)
                     noseHeight = TransformState.makeMat(m).getPos().getZ()
-                
+
                 if gender == 'f':
                     offsetZ = -noseHeight - 0.01
                     offsetY = 0.45 + bodyOffset
@@ -1568,7 +1568,7 @@ class JewelryStoreGUI(DirectFrame):
                 if mouthHeight is None:
                     source.getLOD('2000').getChild(0).node().findJoint('trs_lips_top').getNetTransform(m)
                     mouthHeight = TransformState.makeMat(m).getPos().getZ()
-                
+
                 offsetZ = -mouthHeight + 0.02
                 offsetY = 0.6 + bodyOffset
                 offsetX = 0.08
@@ -1577,7 +1577,7 @@ class JewelryStoreGUI(DirectFrame):
                 if leftIndexHeight is None:
                     source.getLOD('2000').getChild(0).node().findJoint('def_left_index01').getNetTransform(m)
                     leftIndexHeight = TransformState.makeMat(m).getPos().getZ()
-                
+
                 if gender == 'f':
                     offsetZ = -leftIndexHeight + 0.05
                     offsetX = -0.7
@@ -1604,7 +1604,7 @@ class JewelryStoreGUI(DirectFrame):
                 if rightIndexHeight is None:
                     source.getLOD('2000').getChild(0).node().findJoint('def_right_index01').getNetTransform(m)
                     rightIndexHeight = TransformState.makeMat(m).getPos().getZ()
-                
+
                 if gender == 'f':
                     offsetZ = -rightIndexHeight + 0.05
                     offsetX = 0.8
@@ -1645,14 +1645,14 @@ class JewelryStoreGUI(DirectFrame):
             self.clothHumans[x].style.setClothesHat(0, 0)
             self.clothHumans[x].model.handleHeadHiding()
             self.clothRenders[x].show()
-        
+
         x = len(regionData)
         if x < self.buttonsPerPage:
             for y in range(self.buttonsPerPage - x):
                 self.clothRenders[self.buttonsPerPage - 1 - y].hide()
 
         self.aspectRatioChange()
-    
+
     def showWardrobeLimitAlert(self, type):
         self.removeAlertDialog()
         limit = str(PiratesGlobals.WARDROBE_LIMIT_JEWELER)
@@ -1664,6 +1664,3 @@ class JewelryStoreGUI(DirectFrame):
         if self.alertDialog:
             self.alertDialog.destroy()
             self.alertDialog = None
-        
-
-
