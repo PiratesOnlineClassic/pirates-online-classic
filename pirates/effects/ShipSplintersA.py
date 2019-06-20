@@ -20,7 +20,7 @@ class ShipSplintersA(PooledEffect, EffectController):
         self.card = model.find('**/particleRockShower')
         if not self.splashSfx:
             for filename in self.SfxNames:
-                self.splashSfx.append(base.loadSfx('audio/' + filename))
+                self.splashSfx.append(base.loader.loadSfx('audio/' + filename))
 
         if not ShipSplintersA.particleDummy:
             ShipSplintersA.particleDummy = render.attachNewNode(ModelNode('ShipSplintersAParticleDummy'))

@@ -21,7 +21,7 @@ class MysticFire(PooledEffect, EffectController):
         model = loader.loadModel('models/effects/particleMaps')
         self.card = model.find('**/particleFire2')
         if not self.burningSfx:
-            self.burningSfx = base.loadSfx('audio/sfx_grenade_impact_firebomb_loop.mp3')
+            self.burningSfx = base.loader.loadSfx('audio/sfx_grenade_impact_firebomb_loop.mp3')
         
         if not MysticFire.particleDummy:
             MysticFire.particleDummy = render.attachNewNode(ModelNode('FireParticleDummy'))

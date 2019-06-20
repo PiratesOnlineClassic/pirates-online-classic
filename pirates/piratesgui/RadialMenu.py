@@ -623,7 +623,7 @@ class SkillTray:
         self.callback = None
         self.numberOfItems = 0
         self.repMeter = None
-        self.skillRechargedSound = base.loadSfx('audio/sword-swoosh2.mp3')
+        self.skillRechargedSound = base.loader.loadSfx('audio/sword-swoosh2.mp3')
         self.skillTray = DirectFrame(parent = base.a2dBottomCenter, pos = (0, 0, -0.12), scale = 0.9, sortOrder = 2)
         self.hide()
         moveUp = 0.25

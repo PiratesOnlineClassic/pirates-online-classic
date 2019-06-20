@@ -74,11 +74,11 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
         if not self.localFireSfx:
             for filename in localFireSfxNames:
                 audioPath = 'audio/'
-                self.localFireSfx.append(base.loadSfx('audio/' + filename))
+                self.localFireSfx.append(base.loader.loadSfx('audio/' + filename))
 
         if not self.distFireSfx:
             for filename in distFireSfxNames:
-                self.distFireSfx.append(base.loadSfx('audio/' + filename))
+                self.distFireSfx.append(base.loader.loadSfx('audio/' + filename))
 
         self.aimAITrack = None
         if __dev__ and config.GetBool('want-broadside-assist', 0):

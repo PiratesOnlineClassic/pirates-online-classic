@@ -39,9 +39,9 @@ class LockGUI(DirectFrame):
         self.lockSpeed = LockGlobals.StartSpeed
         self.lockSpeed += self.difficulty / 50
         self.toolState = LockGlobals.LSTATE_ACTIVE
-        self.unlockSound = base.loadSfx('audio/unlock_success.mp3')
-        self.missSound = base.loadSfx('audio/unlock_fail.mp3')
-        self.trySound = base.loadSfx('audio/unlock_try.mp3')
+        self.unlockSound = base.loader.loadSfx('audio/unlock_success.mp3')
+        self.missSound = base.loader.loadSfx('audio/unlock_fail.mp3')
+        self.trySound = base.loader.loadSfx('audio/unlock_try.mp3')
         base.musicMgr.request('lockpick', priority = 1, volume = 0.8)
         self.layerModel = loader.loadModel('models/props/Keys')
         print 'Found ', self.layerModel

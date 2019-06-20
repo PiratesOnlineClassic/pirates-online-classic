@@ -420,7 +420,7 @@ class CombatAnimations:
             timeToWayPoint = duration
             duration = None
             endPlaneZ = wayPoint.getZ() - 100
-        ival = Sequence(ProjectileInterval(grenade, startPos = startPos, endPos = endPos, duration = duration, startVel = startVel, endZ = endPlaneZ, collNode = collNode, wayPoint = wayPoint, timeToWayPoint = timeToWayPoint), Func(self.removeCollider, av, collNode), Func(grenade.destroy), name = 'Grenade-%s-%s' % (av.doId, grenade.id()))
+        ival = Sequence(ProjectileInterval(grenade, startPos = startPos, endPos = endPos, duration = duration, startVel = startVel, endZ = endPlaneZ, collNode = collNode, wayPoint = wayPoint, timeToWayPoint = timeToWayPoint), Func(self.removeCollider, av, collNode), Func(grenade.destroy), name = 'Grenade-%s-%s' % (av.doId, grenade.get_key()))
         grenade.setIval(ival, start = True)
     
     def putGrenadeInHand(self, av, grenade):

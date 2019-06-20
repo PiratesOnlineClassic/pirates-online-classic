@@ -25,7 +25,7 @@ class Bonfire(NodePath):
         if Bonfire.HackCount == 0:
             Bonfire.HackCount += 1
             self._hasSound = True
-            self._sound = SoundInterval(base.loadSfx('audio/bonfire.wav'), node = self, volume = 0.5)
+            self._sound = SoundInterval(base.loader.loadSfx('audio/bonfire.wav'), node = self, volume = 0.5)
         else:
             self._hasSound = False
 

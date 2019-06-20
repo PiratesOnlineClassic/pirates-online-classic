@@ -45,7 +45,7 @@ class QuestIndicatorNode(NodePath, FSM, ZoneLOD):
         
         self.__cleanup()
         ZoneLOD.delete(self)
-        self.remove()
+        self.remove_node()
         self.questStep = None
         self.farEffect = None
     

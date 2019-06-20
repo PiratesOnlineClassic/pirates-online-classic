@@ -29,7 +29,7 @@ class SoundFX(NodePath):
         
         self.setHpr(hpr)
         if sfxFile:
-            self.sfx = base.loadSfx(sfxFile)
+            self.sfx = base.loader.loadSfx(sfxFile)
             self.playSfx(taskName)
         else:
             self.sfx = None
@@ -74,7 +74,7 @@ class SoundFX(NodePath):
         if self.sfx:
             del self.sfx
         
-        self.sfx = base.loadSfx(sfxFile)
+        self.sfx = base.loader.loadSfx(sfxFile)
 
     def setVolume(self, volume):
         self.volume = volume

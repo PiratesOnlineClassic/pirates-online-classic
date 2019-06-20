@@ -20,7 +20,7 @@ class WakeMist(PooledEffect, EffectController):
         self.card = model.find('**/particleSplash')
         if not self.splashSfx:
             for filename in self.splashSfxNames:
-                self.splashSfx.append(base.loadSfx('audio/' + filename))
+                self.splashSfx.append(base.loader.loadSfx('audio/' + filename))
 
         if not WakeMist.particleDummy:
             WakeMist.particleDummy = render.attachNewNode(ModelNode('WakeMistParticleDummy'))
