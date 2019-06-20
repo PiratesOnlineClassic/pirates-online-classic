@@ -495,9 +495,8 @@ class BattleManagerAI(BattleManagerBase):
 
         if random.random() >= 0.8:
             cardId = random.randint(InventoryType.begin_Cards, InventoryType.end_Cards)
-            attacker.giveCardMessage(cardId)
 
-            inventory.b_setStackQuantity(cardId, 1)
+            inventory.giveCards(cardId, 1)
 
         # attempt to update the avatar's active task progress...
         self.air.questMgr.enemyDefeated(attacker, target)

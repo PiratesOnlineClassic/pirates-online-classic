@@ -104,6 +104,14 @@ class PirateInventoryAI(DistributedInventoryAI):
     def getVitaeLeft(self):
         return self.getStackQuantity(InventoryType.Vitae_Left)
 
+    def giveCards(self, cardId, amount):
+        avatar = self.air.doId2do.get(self.ownerId)
+        if not avatar:
+            return
+
+        avatar.giveCardMessage(cardId)
+        self.b_setStackQuantity(cardId, amount)
+
     def setShipList(self, shipList):
         return self.b_setDoIdListCategory(InventoryCategory.SHIPS, shipList)
 
