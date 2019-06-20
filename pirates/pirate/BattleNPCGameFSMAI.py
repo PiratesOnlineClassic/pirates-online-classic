@@ -113,7 +113,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.acceptOnce(self.getWalkToPointDoneName(), self.findNextWalkToPoint)
         walkSpeed = MotionFSM.WALK_CUTOFF * 2
 
-        self.__movementInterval = self.avatar.posInterval(walkSpeed, walkPoint, other=parent)
+        self.__movementInterval = self.avatar.posInterval(walkSpeed, walkPoint, other=parent, blendType='easeInOut')
         self.__movementInterval.setDoneEvent(self.getWalkToPointDoneName())
         self.__movementInterval.start()
 
