@@ -183,4 +183,5 @@ class ClientAreaBuilderAI(DirectObject):
         self.parent.generateChildWithRequired(island, PiratesGlobals.IslandAvailableZoneStart)
         self.addObject(island)
         self.air.worldCreator.linkManager.registerLinkData(objKey)
+        self.air.worldCreator.movementLinkManager.registerMovementLinkData(objKey)
         return island

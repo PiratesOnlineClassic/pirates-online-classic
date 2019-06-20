@@ -197,6 +197,62 @@ class ConnectorManager(object):
 
         self._callbacks[uniqueId] = lambda: function(*args, **kwargs)
 
+class MovementLinkManager(object):
+
+    def __init__(self, air, movementLinkData={}):
+        self.air = air
+        self._movementLinkData = movementLinkData
+
+    @property
+    def movementLinkData(self):
+        return self._movementLinkData
+
+    def addMovementLinkData(self, parentUid, movementLinkData):
+        movementLinks = self._movementLinkData.setdefault(parentUid, [])
+        movementLinks.append(movementLinkData)
+
+    def removeMovementLink(self, parentUid, movementLinkData):
+        if parentUid not in self._movementLinkData:
+            return
+
+        movementLinks = self._movementLinkData[parentUid]
+        movementLinks.remove(movementLinkData)
+
+    def getMovementLinkData(self, movementLinkUid):
+        for parentUid, movementLinks in list(self._movementLinkData.items()):
+            for movementLink in movementLinks:
+                if movementLinkUid not in movementLink:
+                    continue
+
+                return movementLink
+
+        return None
+
+    def movementLinkExists(self, movementLinkUid):
+        return self.getMovementLinkData(movementLinkUid) != None
+
+    def getOtherMovementLinkUid(self, movementLinkUid):
+        movementLinks = self.getMovementLinkData(movementLinkUid)
+        if not movementLinks:
+            return None
+
+        if movementLinks.index(movementLinkUid) == 0:
+            return movementLinks[1]
+
+        return movementLinks[0]
+
+    def registerMovementLinkData(self, uniqueId):
+        fileName = self.air.worldCreator.getObjectFilenameByUid(uniqueId)
+        fileData = self.air.worldCreator.openFile(fileName + '.py')
+
+        for movementLinkData in fileData.get(WorldDataGlobals.LINK_TYPE_AI_NODE, []):
+            self.addMovementLinkData(uniqueId, movementLinkData)
+
+    def unregisterMovementLinkData(self, uniqueId):
+        movementLinks = self._movementLinkData[uniqueId]
+        for movementLinkData in movementLinks:
+            self.removeMovementLink(uniqueId, movementLinkData)
+
 class WorldCreatorAI(WorldCreatorBase, DirectObject):
     notify = directNotify.newCategory('WorldCreatorAI')
 
@@ -213,6 +269,7 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
         self.linkManager = LinkManager(self.air)
         self.locatorManager = LocatorManager(self.air)
         self.connectorManager = ConnectorManager(self.air)
+        self.movementLinkManager = MovementLinkManager(self.air)
 
     @classmethod
     def isObjectInCurrentGamePhase(cls, object):
