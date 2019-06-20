@@ -270,7 +270,11 @@ class SpawnNodeBase:
 
         # Set starting state info
         npc.setAnimSet(self.objectData.get('AnimSet', 'default'))
-        npc.setStartState(self.objectData.get('Start State', 'Idle'))
+        startState = self.objectData.get('Start State', 'Idle')
+        if isinstance(npc, DistributedNPCTownfolkAI):
+            startState = 'Idle'
+
+        npc.setStartState(startState)
 
         # Generate npc
         zoneId = self.parent.getZoneFromXYZ(npc.getPos())
