@@ -218,7 +218,8 @@ def tp(locationName):
         name = name.lower()
         name = name.replace("'", '')
 
-        if name == locationName:
+        valid = any(char.isdigit() for char in uid)
+        if name == locationName and valid:
             locationUid = uid
             break
 
