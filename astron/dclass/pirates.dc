@@ -500,22 +500,21 @@ struct TradeSlot {
 dclass DistributedInventory : DistributedObject {
   uint32 AutoInterest[];
   setParentingRules(string, string) broadcast ram;
-  setInventoryVersion(uint8) airecv db required;
-  setOwnerId(uint32) required broadcast airecv db;
-  setCategoryLimits(InventoryCategoryLimit []) airecv db required broadcast;
-  setDoIds(InventoryDoIdSlot []) airecv db required broadcast;
+  setInventoryVersion(uint8) required broadcast ram db;
+  setOwnerId(uint32) required broadcast ram db;
+  setCategoryLimits(InventoryCategoryLimit []) required broadcast ram db;
+  setDoIds(InventoryDoIdSlot []) required broadcast ram db;
   accumulator(uint16, uint32);
-  setAccumulators(InventoryAccumulatorSlot []) airecv db required;
+  setAccumulators(InventoryAccumulatorSlot []) required broadcast ram db;
   stackLimit(uint16, uint16);
   stack(uint16, uint16);
-  setStackLimits(InventoryTypeLimit []) airecv db required;
-  setStacks(InventoryStackableSlot []) airecv db required ownrecv;
+  setStackLimits(InventoryTypeLimit []) required broadcast ram db;
+  setStacks(InventoryStackableSlot []) required broadcast ram db;
   setTemporaryInventory(bool);
   setTemporaryStack(uint16, uint16);
-  sendMaxHp(uint16, uint32) airecv clsend;
-  sendMaxMojo(uint16, uint32) airecv clsend;
+  sendMaxHp(uint16, uint32) clsend airecv;
+  sendMaxMojo(uint16, uint32) clsend airecv;
   requestInventoryComplete();
-  approvedTradeResponse(uint32) airecv db;
 };
 
 dclass PirateInventory : DistributedInventory {
