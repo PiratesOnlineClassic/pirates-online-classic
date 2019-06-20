@@ -70,9 +70,9 @@ class LoadInventoryFSM(InventoryOperationFSM):
 
         self.inventory.b_setStackLimit(InventoryType.Hp, self.avatar.getMaxHp())
         self.inventory.b_setStackLimit(InventoryType.Mojo, self.avatar.getMaxMojo())
-        self.inventory.d_requestInventoryComplete()
 
         # we're done.
+        self.inventory.populateInventory()
         self.cleanup(self.inventory)
 
     def exitStart(self):

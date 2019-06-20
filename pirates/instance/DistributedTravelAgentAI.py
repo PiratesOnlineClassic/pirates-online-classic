@@ -28,10 +28,7 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
 
                 return
 
-            avatar.d_relayTeleportLoc(self.air.districtId, self.air.distributedDistrict.zoneId,
-                self.air.teleportMgr.doId)
-
-            self.air.questMgr.activateQuests(avatar)
+            avatar.d_relayTeleportLoc(self.air.districtId, self.air.distributedDistrict.zoneId, self.air.teleportMgr.doId)
 
         self.__getAvatarArrival(avatarId, avatarArrived)
 
