@@ -299,16 +299,12 @@ class BattleManagerAI(BattleManagerBase):
         if target.getSkillEffectCount(targetEffectId) <= maxEffectStack:
             target.addSkillEffect(targetEffectId, targetEffectDuration, attacker.doId)
 
-    def updateTarget(self, targetId, attackers):
-        target = self.air.doId2do.get(targetId)
-        if not target:
-            return
-
+    def updateSkillEffects(self, avatar):
         # process the targets current skill effects and damage
         # associated with them
-        skillEffects = target.getSkillEffects()
+        skillEffects = avatar.getSkillEffects()
         if len(skillEffects) > 0:
-            # process a targets skill effects here
+            # process an avatar's skill effects here
             currentTime = globalClockDelta.getFrameNetworkTime()
             for index in range(len(skillEffects)):
                 # verify skill effect index
@@ -326,13 +322,20 @@ class BattleManagerAI(BattleManagerBase):
                     del skillEffects[index]
 
             # update the active skill effects
-            target.b_setSkillEffects(skillEffects)
+            avatar.b_setSkillEffects(skillEffects)
 
+    def updateTarget(self, targetId, attackers):
+        target = self.air.doId2do.get(targetId)
+        if not target:
+            return
+
+        self.updateSkillEffects(target)
         for attackerId in attackers:
             attacker = self.air.doId2do.get(attackerId)
             if not attacker:
                 continue
 
+            self.updateSkillEffects(attacker)
             self.__checkAttacker(attacker, target)
 
     def __checkAttacker(self, attacker, target):
