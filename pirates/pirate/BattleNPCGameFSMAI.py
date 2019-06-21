@@ -282,7 +282,11 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
         # check to see if the target goes out of range of us,
         # this is mostly useful for fly traps (which don't move).
-        distanceFromTarget = self.avatar.getDistance(self.attackTarget)
+        try:
+            distanceFromTarget = self.avatar.getDistance(self.attackTarget)
+        except TypeError:
+            return task.done
+
         if distanceFromTarget > EnemyGlobals.AGGRO_RADIUS_TOLERANCE:
             # the player has went too far away, walk us back to our spawn node,
             # then set our default state and wait for a new battle...
