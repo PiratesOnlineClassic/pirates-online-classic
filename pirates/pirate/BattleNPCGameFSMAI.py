@@ -316,6 +316,9 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
         # begin following our target
         self.findNextWalkToPoint()
+
+        # start attacking our target
+        self.beginAttacking()
         self.__updateBattleStateTask = taskMgr.add(self.__updateBattleState, self.getWatchTargetName())
 
     def exitAttackChase(self):
