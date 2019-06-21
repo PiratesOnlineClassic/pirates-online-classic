@@ -15,10 +15,10 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
         BattleAvatarGameFSMAI.__init__(self, air, avatar)
 
     def enterLandRoam(self):
-        self.startToonUp()
+        self.avatar.startToonUp()
 
     def exitLandRoam(self):
-        self.stopToonUp()
+        self.avatar.stopToonUp()
 
     def enterDeath(self):
         inventory = self.avatar.getInventory()
