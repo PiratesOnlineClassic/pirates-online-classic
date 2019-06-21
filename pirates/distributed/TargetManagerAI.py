@@ -44,11 +44,11 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
             return
 
         # clear all of our previously targeted attackers
-        attackers = self.objectDict[target.doId]
-        for attackerDoId in attackers:
+        attackerDoIds = self.objectDict[target.doId]
+        for attackerDoId in attackerDoIds:
             attacker = self.air.doId2do.get(attackerDoId)
             assert(attacker is not None)
-            self.air.battleMgr.clearAttacker(target, attacker)
+            self.removeAttacker(attacker, target)
 
         del self.objectDict[target.doId]
 

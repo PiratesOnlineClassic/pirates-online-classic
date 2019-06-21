@@ -134,6 +134,15 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getInventory(self):
         return self.air.inventoryManager.getInventory(self.doId)
 
+    def setCurrentTarget(self, currentTargetDoId):
+        if self.currentTarget is not None:
+            if not currentTargetDoId:
+                self.startToonUp()
+        else:
+            self.stopToonUp()
+
+        DistributedBattleAvatarAI.setCurrentTarget(self, currentTargetDoId)
+
     def d_setFounder(self, founder):
         self.sendUpdate('setFounder', [founder])
 
@@ -652,8 +661,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.b_setTempDoubleXPReward(tempDoubleXPReward)
 
     def startToonUp(self):
-        self.toonUpTask = taskMgr.doMethodLater(2.0, self.toonUp,
-            self.uniqueName('toonUp'))
+        self.toonUpTask = taskMgr.doMethodLater(2.0, self.toonUp, self.taskName('toonUp'))
 
     def toonUp(self, task):
         if self.getHp()[0] >= self.getMaxHp() and self.getMojo() >= self.getMaxMojo():

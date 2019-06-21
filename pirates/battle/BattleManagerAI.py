@@ -119,7 +119,6 @@ class BattleManagerAI(BattleManagerBase):
         # if not we will assume this is a new attacker to the target and assign them accordingly...
         if not self.air.targetMgr.hasTarget(avatar.doId) and not self.air.targetMgr.hasAttacker(avatar.doId, target.doId):
             self.air.targetMgr.addAttacker(avatar, target)
-            avatar.b_setCurrentTarget(target.doId)
 
         # add the skill info to the attackers battle skill diary to track
         # what skills they have used and when...
