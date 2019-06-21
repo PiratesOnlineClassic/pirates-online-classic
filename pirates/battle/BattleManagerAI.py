@@ -1,6 +1,10 @@
+import random
+
 from panda3d.core import *
-from pirates.battle.BattleManagerBase import BattleManagerBase
+
 from direct.directnotify import DirectNotifyGlobal
+
+from pirates.battle.BattleManagerBase import BattleManagerBase
 from pirates.piratesbase import PiratesGlobals
 from pirates.battle import WeaponGlobals
 from pirates.battle import EnemyGlobals
@@ -11,7 +15,8 @@ from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, Inventory
 from pirates.battle.ComboDiaryAI import ComboDiaryAI
 from pirates.piratesbase import Freebooter
 from pirates.pirate import AvatarTypes
-import random
+from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
+
 
 class BattleManagerAI(BattleManagerBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManagerAI')
@@ -60,10 +65,13 @@ class BattleManagerAI(BattleManagerBase):
         if target.doId not in self.__targets:
             return
 
-        if attacker.doId in self.__targets[target.doId]:
+        attackers = self.__targets[target.doId]
+        if attacker.doId in attackers:
             return
 
-        self.__targets[target.doId].append(attacker.doId)
+        attackers.append(attacker.doId)
+        if target.gameFSM.attackTarget is None and target.gameFSM.state != 'Battle':
+            target.b_setGameState('Battle')
 
     def removeAttacker(self, attacker, target):
         if not attacker or not target:
@@ -72,28 +80,27 @@ class BattleManagerAI(BattleManagerBase):
         if target.doId not in self.__targets:
             return
 
-        if attacker.doId not in self.__targets[target.doId]:
+        attackers = self.__targets[target.doId]
+        if attacker.doId not in attackers:
             return
+
+        attackers.remove(attacker.doId)
 
         # clear the avatar's skill diaries since the target it
         # previously attacked is now gone...
         attacker.battleSkillDiary.clear()
         attacker.comboDiary.clear()
 
-        self.__targets[target.doId].remove(attacker.doId)
-
     def getAttackers(self, targetId):
-        return self.__targets.get(targetId, {})
+        return self.__targets.get(targetId, [])
 
     def getTargetInRange(self, attacker, target, skillId, ammoSkillId):
         tolerance = 0
         attackRange = self.getModifiedAttackRange(attacker, skillId, ammoSkillId)
-
         if attackRange == WeaponGlobals.INF_RANGE:
             return True
 
         distance = self.getRelativePosition(attacker, target)
-
         if distance <= attackRange + tolerance:
             return True
 
@@ -128,35 +135,32 @@ class BattleManagerAI(BattleManagerBase):
 
         return False
 
-    def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge=0):
+    def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge=0):
         if not avatar:
             return None
 
-        inventory = avatar.getInventory()
-
         # Subtract ammo
-        if ammoSkillId and not WeaponGlobals.isInfiniteAmmo(ammoSkillId):
-            ammoId = WeaponGlobals.getSkillAmmoInventoryId(ammoSkillId)
-            if ammoId and self.getIsWeaponAmmo(ammoId):
+        if isinstance(avatar, DistributedPlayerPirateAI):
+            inventory = avatar.getInventory()
+            if ammoSkillId and not WeaponGlobals.isInfiniteAmmo(ammoSkillId):
+                ammoId = WeaponGlobals.getSkillAmmoInventoryId(ammoSkillId)
+                if ammoId and self.getIsWeaponAmmo(ammoId):
+                    ammoAmt = inventory.getStackQuantity(ammoId)
 
-                ammoAmt = inventory.getStackQuantity(ammoId)
-
-                # We should not attempt to remove ammo if we don't have any for that type.
-                if not ammoAmt < 1:
-                    inventory.b_setStackQuantity(ammoId, ammoAmt - 1)
+                    # We should not attempt to remove ammo if we don't have any for that type.
+                    if not ammoAmt < 1:
+                        inventory.b_setStackQuantity(ammoId, ammoAmt - 1)
 
         # this is just the client requesting an action for the skill used,
         # they are not actually attacking any kind of target...
         if not target:
-            return self.__otherSkillResult(avatar, target, skillId, ammoSkillId, clientResult, areaIdList,
-                timestamp, pos, charge)
+            return self.__otherSkillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
 
         # the client requested a valid skill result, attempt to calculate
         # the result for the client and send the result back...
-        return self.__skillResult(avatar, target, skillId, ammoSkillId, clientResult, areaIdList,
-            timestamp, pos, charge)
+        return self.__skillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
 
-    def __skillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
+    def __skillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge):
         currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
 
         # ensure the avatar that has sent this skill request actually
@@ -183,7 +187,7 @@ class BattleManagerAI(BattleManagerBase):
 
         # check to see if our dictionary of target to attacker data contains this attacker,
         # if not we will assume this is a new attacker to the target and assign them accordingly...
-        if not self.hasAttacker(avatar.doId, target.doId):
+        if not self.hasTarget(avatar.doId) and not self.hasAttacker(avatar.doId, target.doId):
             self.addAttacker(avatar, target)
 
         # add the skill info to the attackers battle skill diary to track
@@ -214,22 +218,21 @@ class BattleManagerAI(BattleManagerBase):
             # update this skills current reputation, this will eventually add up
             # and all skills used will be rewarded reputation...
             skillData = avatar.battleSkillDiary.getSkill(skillId)
-
             if not skillData:
                 return None
 
-            experience = self.getModifiedAttackReputation(avatar, target,
-                skillId, ammoSkillId)
-
-            if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEXPHOLIDAY) or avatar.hasTempDoubleXPReward():
-                experience *= 2
+            # only update the experience for avatar's, enemies do not need experience...
+            experience = 0
+            if isinstance(avatar, DistributedPlayerPirateAI):
+                experience = self.getModifiedAttackReputation(avatar, target, skillId, ammoSkillId)
+                if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEXPHOLIDAY) or avatar.hasTempDoubleXPReward():
+                    experience *= 2
 
             skillData[2] += experience
 
             # check to see if the avatar knows of any skills that are valid combos,
             # recent attacks are measured within a certain time frame...
             totalCombo, totalDamage, numAttackers = avatar.comboDiary.getCombo()
-
             if totalCombo and numAttackers > 1:
                 # apply the combo damage including the combo bonus damage to the
                 # target, then broadcast the combo info to all targets with interest...
@@ -290,7 +293,7 @@ class BattleManagerAI(BattleManagerBase):
         return [skillId, ammoSkillId, skillResult, target.doId, areaIdList, attackerEffects, targetEffects,
             areaIdEffects, timestamp, pos, charge]
 
-    def __otherSkillResult(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
+    def __otherSkillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge):
         # since this skill doesn't have a target we cannot set an effect for it,
         # just send some "place holder" data to satisfy the dc field...
         attackerEffects = [
@@ -354,7 +357,6 @@ class BattleManagerAI(BattleManagerBase):
 
     def __applySkillEffect(self, target, targetEffects, attacker, skillId, ammoSkillId):
         targetEffectId = targetEffects[2]
-
         if not targetEffectId:
             return
 
@@ -446,7 +448,6 @@ class BattleManagerAI(BattleManagerBase):
     def rewardAttackers(self, target):
         for attackerId in self.__targets[target.doId]:
             attacker = self.air.doId2do.get(attackerId)
-
             if not attacker:
                 continue
 
@@ -454,7 +455,6 @@ class BattleManagerAI(BattleManagerBase):
 
     def __rewardAttacker(self, attacker, target):
         inventory = attacker.getInventory()
-
         if not inventory:
             self.notify.debug('Cannot reward avatar %d for killing %d, unknown inventory!' % (
                 attacker.doId, target.doId))

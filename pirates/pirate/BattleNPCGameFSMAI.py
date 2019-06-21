@@ -2,13 +2,18 @@ import random
 
 from panda3d.core import *
 
+from direct.distributed.ClockDelta import *
+from direct.showbase import PythonUtil
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.GridParent import GridParent
 
 from pirates.battle import EnemyGlobals
 from pirates.pirate.BattleAvatarGameFSMAI import BattleAvatarGameFSMAI
 from pirates.movement import MotionFSM
-from pirates.piratesbase import PiratesGlobals
+from pirates.battle import WeaponGlobals
+from pirates.battle.EnemySkills import EnemySkills
+from pirates.pirate import AvatarTypes
+
 
 def decision(probability):
     """
@@ -28,7 +33,8 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
         self.__movementInterval = None
         self.__pausedTask = None
-        self.__watchTargetTask = None
+        self.__updateBattleStateTask = None
+        self.__nextAttackTask = None
 
     def getPatrolRadius(self):
         return float(self.avatar.spawnNode.objectData.get('Patrol Radius', 0.0))
@@ -39,20 +45,12 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
     def getPauseDuration(self):
         return float(self.avatar.spawnNode.objectData.get('Pause Duration', 15.0))
 
-    def getMinFollowDist(self, attackTarget):
-        aggroRadius = attackTarget.getAggroRadius()
-        if aggroRadius <= EnemyGlobals.AGGRO_RADIUS_FALLOFF_RATE * 2:
-            return EnemyGlobals.AGGRO_RADIUS_FALLOFF_RATE
-
-        return aggroRadius / EnemyGlobals.AGGRO_RADIUS_FALLOFF_RATE
-
     def shouldFollowTarget(self, attackTarget):
-        if attackTarget is None:
+        if not attackTarget:
             return False
 
         distance = self.avatar.getDistance(attackTarget)
-        minFollowDistance = self.getMinFollowDist(attackTarget)
-        return distance <= EnemyGlobals.AGGRO_RADIUS_TOLERANCE and distance >= minFollowDistance
+        return distance > EnemyGlobals.INSTANT_AGGRO_RADIUS_DEFAULT / 2
 
     def getPatrolPoint(self, avatar):
         parentObj = avatar.getParentObj()
@@ -77,10 +75,111 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
     def getWatchTargetName(self):
         return self.avatar.uniqueName('watch-target')
 
+    def getNextAttackName(self):
+        return self.avatar.uniqueName('next-attack')
+
+    def getTargetSwitchType(self):
+        targetSwitchTypes = [
+            TARGET_SWITCH_TYPE_RANDOM,
+            TARGET_SWITCH_TYPE_DAMAGE,
+            TARGET_SWITCH_TYPE_LOW_LVL,
+            TARGET_SWITCH_TYPE_HIGH_LVL]
+
+        return random.choice(targetSwitchTypes)
+
+    def getAttackDelayModdifier(self):
+        delayInfo = [
+            WeaponGlobals.NO_DELAY,
+            WeaponGlobals.SHORT_DELAY,
+            WeaponGlobals.MED_DELAY,
+            WeaponGlobals.LONG_DELAY]
+
+        return random.choice(delayInfo)
+
+    def getNewAttackTargetDoId(self):
+        attackTargets = self.air.battleMgr.getAttackers(self.avatar.doId)
+        if not attackTargets:
+            return None
+
+        # if we only have a single attack target, don't bother trying to
+        # select a target based on a random weighted switch type...
+        if len(attackTargets) == 1:
+            return attackTargets[0]
+
+        targetSwitchType = self.getTargetSwitchType()
+        if targetSwitchType == TARGET_SWITCH_TYPE_RANDOM:
+            return random.choice(attackTargets)
+        elif targetSwitchType == TARGET_SWITCH_TYPE_DAMAGE:
+            weights = {}
+            for attackTarget in attackTargets:
+                totalDamageDone = 0
+                recordedAttacks = list(attackTarget.comboDiary.timers[attacker.doId])
+                for recordedAttack in recordedAttacks:
+                    totalDamageDone += recordedAttack[2]
+
+                weights[attackTarget] = totalDamageDone
+
+            return max(weights, key=weights.get)
+        elif targetSwitchType == TARGET_SWITCH_TYPE_LOW_LVL:
+            weights = {}
+            for attackTarget in attackTargets:
+                weights[attackTarget] = attackTarget.getLevel()
+
+            return min(weights, key=weights.get)
+        elif targetSwitchType == TARGET_SWITCH_TYPE_HIGH_LVL:
+            weights = {}
+            for attackTarget in attackTargets:
+                weights[attackTarget] = attackTarget.getLevel()
+
+            return max(weights, key=weights.get)
+
+        return None
+
+    def getNewAttackTarget(self):
+        attackTargetDoId = self.getNewAttackTargetDoId()
+        if not attackTargetDoId:
+            return None
+
+        return self.air.doId2do.get(attackTargetDoId)
+
+    def getDistFromSpawnNode(self):
+        spawnNodeNP = NodePath('spawnNode-%d' % self.avatar.doId)
+        spawnNodeNP.setPos(*self.avatar.getSpawnPos())
+        return self.avatar.getDistance(spawnNodeNP)
+
+    def _chooseNextAttack(self, task):
+        self.chooseNextAttack()
+        return task.done
+
+    def chooseNextAttack(self):
+        # choose a random skill to attack the player with
+        baseSkills = EnemyGlobals.getBaseSkills(self.avatar.getAvatarType())
+        skillList = baseSkills[1]
+        skillId = random.choice(skillList)
+
+        areaIdList = self.air.battleMgr.getAttackers(self.avatar.doId)
+        timestamp = globalClockDelta.getRealNetworkTime(bits=16)
+        self.avatar.useTargetedSkill(self.avatar, self.attackTarget, skillId, 0, areaIdList, timestamp, self.avatar.getPos(), 0)
+
+        # get the total delay on how long it will take the enemy to
+        # use this attack, once the enemy has completed it's attack,
+        # select another attack until this loop is broken...
+        delay = WeaponGlobals.getAttackDelay(skillId)
+        duration = WeaponGlobals.getAttackDuration(skillId)
+        delay = EnemyGlobals.getAttackDelay(skillId, [delay, duration])
+        delay += self.getAttackDelayModdifier()
+
+        self.__nextAttackTask = taskMgr.doMethodLater(delay, self._chooseNextAttack, self.getNextAttackName())
+
     def findNextWalkToPoint(self):
         if self.state == 'Patrol' or self.state == 'Walk':
             patrolPoint = self.getPatrolPoint(self.avatar)
-            if patrolPoint is None:
+            if not patrolPoint:
+                self.notify.warning('Could not find patrol point for NPC with doId: %d' % self.avatar.doId)
+
+                # since we couldn't find an attack target, we cannot just do nothing;
+                # instead let's just set our current state to our starting state.
+                self.avatar.b_setGameState(self.avatar.getStartState())
                 return
 
             doPause = decision(self.getPauseChance())
@@ -92,38 +191,48 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
                 self.walkToPoint(patrolPoint)
         elif self.state == 'AttackChase':
             if not self.attackTarget:
+                self.avatar.b_setGameState('BreakCombat')
                 return
 
-            distance = self.avatar.getDistance(self.attackTarget)
-            if distance > EnemyGlobals.AGGRO_RADIUS_TOLERANCE:
-                # the player has went too far away, walk us back to our spawn node...
-                self.attackTarget = None
+            spawnNodeDistance = self.getDistFromSpawnNode()
+            if spawnNodeDistance > EnemyGlobals.AGGRO_RADIUS_TOLERANCE:
+                # we've went too far away from our spawn node, walk us back to our spawn node,
+                # then set our default state and wait for a new battle...
+                self.avatar.b_setGameState('BreakCombat')
                 return
 
             shouldFollowTarget = self.shouldFollowTarget(self.attackTarget)
             if not shouldFollowTarget:
+                # we've arrived at the walk point and the attacker hasn't gone
+                # outside our aggro radius, let's begin attacking the avatar...
+                self.avatar.b_setGameState('Battle')
                 return
 
-            self.walkToPoint(self.attackTarget.getPos())
+            self.walkToPoint(self.attackTarget.getPos(), self.attackTarget.getParent())
+        elif self.state == 'BreakCombat':
+            self.avatar.b_setGameState(self.avatar.getStartState())
 
-    def walkToPoint(self, walkPoint):
-        parent = self.avatar.getParentObj()
-        self.avatar.lookAt(walkPoint)
+    def walkToPoint(self, walkPoint, parent=None):
+        if not parent or parent.isEmpty():
+            parent = self.avatar.getParentObj()
+
+        # setup a node applying the walkPoint relative to the parent
+        # parameter provided by this function, this allows us to properly
+        # face towards the correct location even across the cartesian grid...
+        walkPointNode = NodePath('walkPoint-%d' % self.avatar.doId)
+        walkPointNode.setPos(parent, walkPoint)
+
+        self.avatar.lookAt(walkPointNode)
 
         self.acceptOnce(self.getWalkToPointDoneName(), self.findNextWalkToPoint)
         walkSpeed = MotionFSM.WALK_CUTOFF * 2
 
-        self.__movementInterval = self.avatar.posInterval(walkSpeed, walkPoint, other=parent, blendType='easeInOut')
+        self.__movementInterval = self.avatar.posInterval(walkSpeed, walkPoint, other=parent)
         self.__movementInterval.setDoneEvent(self.getWalkToPointDoneName())
         self.__movementInterval.start()
 
     def enterPatrol(self, *args, **kwargs):
-        patrolPoint = self.getPatrolPoint(self.avatar)
-        if not patrolPoint:
-            self.notify.warning('Could not find patrol point for NPC with doId: %d!' % self.avatar.doId)
-            return
-
-        self.walkToPoint(patrolPoint)
+        self.findNextWalkToPoint()
 
     def exitPatrol(self):
         if self.__movementInterval:
@@ -135,16 +244,10 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             self.__pausedTask = None
 
     def enterWalk(self):
-        patrolPoint = self.getPatrolPoint(self.avatar)
-        if not patrolPoint:
-            self.notify.warning('Could not find patrol point for NPC with doId: %d!' % self.avatar.doId)
-            return
+        self.findNextWalkToPoint()
 
-        self.walkToPoint(patrolPoint)
-
-    def exitPatrol(self):
+    def exitWalk(self):
         if self.__movementInterval:
-
             self.__movementInterval.finish()
             self.__movementInterval = None
 
@@ -152,34 +255,99 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             taskMgr.remove(self.__pausedTask)
             self.__pausedTask = None
 
-
-    def __watchTarget(self, task):
+    def __updateBattleState(self, task):
         if not self.attackTarget:
+            self.avatar.b_setGameState('BreakCombat')
+            return task.done
+
+        # check to see if the target is even on the same cartesian grid...
+        if self.attackTarget.parentId != self.avatar.parentId:
+            self.avatar.b_setGameState('BreakCombat')
             return task.done
 
         shouldFollowTarget = self.shouldFollowTarget(self.attackTarget)
-        if self.state == 'AttackChase' and shouldFollowTarget:
-            self.walkToPoint(self.attackTarget.getPos())
+        if shouldFollowTarget and self.avatar.getAvatarType() != AvatarTypes.FlyTrap:
+            if self.state == 'Battle':
+                self.avatar.b_setGameState('AttackChase')
+                return task.done
+
+            self.findNextWalkToPoint()
+
+        # check to see if the target goes out of range of us,
+        # this is mostly useful for fly traps (which don't move).
+        distanceFromTarget = self.avatar.getDistance(self.attackTarget)
+        if distanceFromTarget > EnemyGlobals.AGGRO_RADIUS_TOLERANCE:
+            # the player has went too far away, walk us back to our spawn node,
+            # then set our default state and wait for a new battle...
+            self.avatar.b_setGameState('BreakCombat')
+            return task.done
+
+        # only rotate our avatar to face the attacker if we are not moving
+        if self.state == 'Battle':
+            self.avatar.lookAt(self.attackTarget)
 
         return task.cont
 
-    def enterAttackChase(self, attackTarget, *args, **kwargs):
-        self.attackTarget = attackTarget
+    def enterBattle(self):
+        if not self.attackTarget:
+            self.attackTarget = self.getNewAttackTarget()
+            assert(self.attackTarget is not None)
 
-        self.__watchTargetTask = taskMgr.add(self.__watchTarget, self.getWatchTargetName())
+        # draw the enemy's weapon if it's now already drawn
+        if not self.avatar.isWeaponDrawn:
+            self.avatar.b_setCurrentWeapon(self.avatar.currentWeaponId, 1)
 
-        self.walkToPoint(self.attackTarget.getPos())
+        # update our anim state
+        self.avatar.b_setAnimSet('default')
+
+        # start attacking our target
+        self.chooseNextAttack()
+        self.__updateBattleStateTask = taskMgr.add(self.__updateBattleState, self.getWatchTargetName())
+
+    def exitBattle(self):
+        if self.__updateBattleStateTask is not None:
+            taskMgr.remove(self.__updateBattleStateTask)
+            self.__updateBattleStateTask = None
+
+        if self.__nextAttackTask is not None:
+            taskMgr.remove(self.__nextAttackTask)
+            self.__nextAttackTask = None
+
+        # put away the enemies weapon
+        self.avatar.b_setCurrentWeapon(self.avatar.currentWeaponId, 0)
+
+        # update our anim state
+        spawnNode = self.avatar.getSpawnNode()
+        self.avatar.b_setAnimSet(spawnNode.objectData.get('AnimSet', 'default'))
+
+    def enterAttackChase(self, *args, **kwargs):
+        assert(self.attackTarget is not None)
+
+        # begin following our target
+        self.findNextWalkToPoint()
+        self.__updateBattleStateTask = taskMgr.add(self.__updateBattleState, self.getWatchTargetName())
 
     def exitAttackChase(self):
         if self.__movementInterval:
             self.__movementInterval.finish()
             self.__movementInterval = None
 
-        if self.__watchTargetTask is not None:
-            taskMgr.remove(self.__watchTargetTask)
-            self.__watchTargetTask = None
+        if self.__updateBattleStateTask is not None:
+            taskMgr.remove(self.__updateBattleStateTask)
+            self.__updateBattleStateTask = None
 
+        if self.__nextAttackTask is not None:
+            taskMgr.remove(self.__nextAttackTask)
+            self.__nextAttackTask = None
+
+    def enterBreakCombat(self):
         self.attackTarget = None
+
+        # walk us back to our spawn point then set our default state.
+        self.walkToPoint(Point3(*self.avatar.getSpawnPos()))
+
+    def exitBreakCombat(self):
+        pass
 
     def enterDeath(self, *args, **kwargs):
         self.air.battleMgr.rewardAttackers(self.avatar)

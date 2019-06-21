@@ -1,4 +1,4 @@
-from panda3d.core import *
+from pandac.PandaModules import *
 import string
 import types
 
@@ -44,5 +44,3 @@ if checkLanguage:
     for key in foreignModule.__dict__.keys():
         if not englishModule.__dict__.has_key(key):
             print 'WARNING: Foreign module: %s extra key: %s' % (_languageModule, key)
-    
-

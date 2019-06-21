@@ -195,7 +195,12 @@ class SpawnNodeBase:
         npc.setInitZ(npc.getZ())
 
         npc.setAvatarType(avatarType)
-        npc.setAggroRadius(float(self.objectData.get('Aggro Radius', 0.0)))
+
+        aggroRadius = self.objectData.get('Aggro Radius')
+        aggroInfo = EnemyGlobals.determineAggroInfo(aggroRadius)
+
+        npc.setAggroMode(aggroInfo[0])
+        npc.setAggroRadius(aggroInfo[1])
 
         # Load boss data if applicable
         if avatarType.getBoss() and hasattr(npc, 'loadBossData'):
@@ -228,8 +233,7 @@ class SpawnNodeBase:
 
         # Set NPC health
         if hasattr(npc, 'bossData'):
-            npc.setLevel(npc.bossData.get('Level', 0) or EnemyGlobals.getRandomEnemyLevel(
-                avatarType))
+            npc.setLevel(npc.bossData.get('Level', 0) or EnemyGlobals.getRandomEnemyLevel(avatarType))
         else:
             npc.setLevel(EnemyGlobals.getRandomEnemyLevel(avatarType))
 

@@ -5,6 +5,7 @@ from direct.fsm.FSM import FSM
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.pirate.BattleNPCGameFSMAI import BattleNPCGameFSMAI
 from pirates.piratesbase import PLocalizerEnglish
+from pirates.battle import EnemyGlobals
 
 
 class DistributedBattleNPCAI(DistributedBattleAvatarAI):
@@ -26,6 +27,9 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     def generate(self):
         DistributedBattleAvatarAI.generate(self)
         self.air.battleMgr.addTarget(self)
+
+    def getMonsterDmg(self):
+        return EnemyGlobals.getMonsterDmg(self.level)
 
     def setName(self, name):
         self.name = name
@@ -64,6 +68,10 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def d_setAnimSet(self, animSet):
         self.sendUpdate('setAnimSet', [animSet])
+
+    def b_setAnimSet(self, animSet):
+        self.setAnimSet(animSet)
+        self.d_setAnimSet(animSet)
 
     def getAnimSet(self):
         return self.animSet
