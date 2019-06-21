@@ -47,12 +47,21 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
         attackers = self.objectDict[target.doId]
         for attackerDoId in attackers:
             attacker = self.air.doId2do.get(attackerDoId)
-            if not attacker:
-                continue
-
+            assert(attacker is not None)
             self.air.battleMgr.clearAttacker(target, attacker)
 
         del self.objectDict[target.doId]
+
+    def clearTarget(self, target):
+        assert(target is not None)
+        if target.doId not in self.objectDict:
+            return
+
+        attackerDoIds = self.objectDict[target.doId]
+        for attackerDoId in list(attackerDoIds):
+            attacker = self.air.doId2do.get(attackerDoId)
+            assert(attacker is not None)
+            self.removeAttacker(attacker, target)
 
     def hasAttacker(self, attackerId, targetId):
         if targetId not in self.objectDict:
@@ -99,9 +108,7 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
         # entirely from the target manager
         for targetDoId, attackerDoIds in list(self.objectDict.items()):
             target = self.air.doId2do.get(targetDoId)
-            if not target:
-                continue
-
+            assert(target is not None)
             if attacker.doId in attackerDoIds:
                 attackerDoIds.remove(attacker.doId)
                 self.air.battleMgr.clearAttacker(target, attacker)

@@ -26,6 +26,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.__updateBattleStateTask = None
         self.__nextAttackTask = None
         self.__chaseTargetTask = None
+        self.__returnToSpawnTask = None
 
         # update our game state as we change it
         self.setBroadcastStateChanges(True)
@@ -78,6 +79,9 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
     def getChaseTargetTaskName(self):
         return self.avatar.taskName('chase-target')
+
+    def getReturnToSpawnTaskName(self):
+        return self.avatar.taskName('return-to-spawn')
 
     def getAttackDelayModdifier(self):
         delayInfo = [
@@ -139,6 +143,15 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         # we setup a task for this because we do not want to block
         # the state call with an infinite recursive loop...
         self.__chaseTargetTask = taskMgr.add(self._chaseTarget, self.getChaseTargetTaskName())
+
+    def _returnToSpawn(self, task):
+        self.walkToPoint(Point3(*self.avatar.getSpawnPos()))
+        return task.done
+
+    def doReturnToSpawn(self):
+        # we setup a task for this because we do not want to block
+        # the state call with an infinite recursive loop...
+        self.__returnToSpawnTask = taskMgr.add(self._returnToSpawn, self.getReturnToSpawnTaskName())
 
     def findNextWalkToPoint(self):
         state = self.getCurrentOrNextState()
@@ -302,7 +315,6 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
         # start attacking our target
         self.beginAttackingTarget()
-        print ('enterAttackChase', 'beginAttackingTarget')
 
         # begin following our target
         self.beginChasingTarget()
@@ -333,8 +345,11 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         # put away our weapon
         self._putAwayWeapon()
 
+        # clear our attackers from the target mgr
+        self.air.targetMgr.clearTarget(self.avatar)
+
         # walk us back to our spawn point then set our default state.
-        self.walkToPoint(Point3(*self.avatar.getSpawnPos()))
+        self.doReturnToSpawn()
 
     def filterBreakCombat(self, request, args=[]):
         if request == 'advance':
@@ -346,9 +361,16 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         return self.defaultFilter(request, args)
 
     def exitBreakCombat(self):
+        if self.__returnToSpawnTask:
+            taskMgr.remove(self.__returnToSpawnTask)
+            self.__returnToSpawnTask = None
+
         # update our anim state
         spawnNode = self.avatar.getSpawnNode()
         self.avatar.b_setAnimSet(spawnNode.objectData.get('AnimSet', 'default'))
+
+        # set the rotation of the avatar to be that of it's initial spawn constants
+        self.avatar.setHpr(spawnNode.objectData.get('Hpr', (0, 0, 0)))
 
     def enterDeath(self, *args, **kwargs):
         self.air.battleMgr.rewardAttackers(self.avatar)
