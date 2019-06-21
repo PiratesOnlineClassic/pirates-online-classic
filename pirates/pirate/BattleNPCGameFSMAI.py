@@ -52,8 +52,8 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         distance = self.avatar.getDistance(attackTarget)
         return distance > EnemyGlobals.INSTANT_AGGRO_RADIUS_DEFAULT / 2
 
-    def getPatrolPoint(self, avatar):
-        parentObj = avatar.getParentObj()
+    def getPatrolPoint(self):
+        parentObj = self.avatar.getParentObj()
         if not parentObj:
             return None
 
@@ -61,7 +61,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         if patrolRadius == 0.0:
             return None
 
-        sx, sy, sz = avatar.getSpawnPos()
+        sx, sy, sz = self.avatar.getSpawnPos()
         x = random.uniform(sx - patrolRadius, sx + patrolRadius)
         y = random.uniform(sy - patrolRadius, sy + patrolRadius)
         return Point3(x, y, sz)
@@ -131,8 +131,9 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.__nextAttackTask = taskMgr.doMethodLater(delay, self._chooseNextAttack, self.getNextAttackName())
 
     def findNextWalkToPoint(self):
-        if self.state == 'Patrol' or self.state == 'Walk':
-            patrolPoint = self.getPatrolPoint(self.avatar)
+        state = self.getCurrentOrNextState()
+        if state == 'Patrol' or state == 'Walk':
+            patrolPoint = self.getPatrolPoint()
             if not patrolPoint:
                 self.notify.warning('Could not find patrol point for NPC with doId: %d' % self.avatar.doId)
 
@@ -141,14 +142,10 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
                 self.avatar.b_setGameState(self.avatar.getStartState())
                 return
 
-            doPause = decision(self.getPauseChance())
-            if doPause:
-                pauseDuration = random.uniform(1.0, self.getPauseDuration())
-                self.__pausedTask = taskMgr.doMethodLater(pauseDuration, self.walkToPoint, self.getWalkToPointPausedName(),
-                    extraArgs=[patrolPoint], appendTask=False)
-            else:
-                self.walkToPoint(patrolPoint)
-        elif self.state == 'AttackChase':
+            pauseDuration = random.uniform(1.0, self.getPauseDuration())
+            self.__pausedTask = taskMgr.doMethodLater(pauseDuration, self.walkToPoint, self.getWalkToPointPausedName(),
+                extraArgs=[patrolPoint], appendTask=False)
+        elif state == 'AttackChase':
             if not self.attackTarget:
                 self.avatar.b_setGameState('BreakCombat')
                 return
@@ -168,7 +165,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
                 return
 
             self.walkToPoint(self.attackTarget.getPos(), self.attackTarget.getParent())
-        elif self.state == 'BreakCombat':
+        elif state == 'BreakCombat':
             self.avatar.b_setGameState(self.avatar.getStartState())
 
     def walkToPoint(self, walkPoint, parent=None):
@@ -250,6 +247,12 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             self.avatar.lookAt(self.attackTarget)
 
         return task.cont
+
+    def enterOff(self):
+        pass
+
+    def exitOff(self):
+        pass
 
     def enterBattle(self):
         if not self.attackTarget:
