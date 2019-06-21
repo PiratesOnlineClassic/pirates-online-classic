@@ -26,7 +26,7 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def generate(self):
         DistributedBattleAvatarAI.generate(self)
-        self.air.battleMgr.addTarget(self)
+        self.air.targetMgr.addTarget(self)
 
     def getMonsterDmg(self):
         return EnemyGlobals.getMonsterDmg(self.level)
@@ -119,5 +119,5 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         self.d_setChat(PLocalizerEnglish.getNavyAggroPhrase())
 
     def delete(self):
-        self.air.battleMgr.removeTarget(self)
+        self.air.targetMgr.removeTarget(self)
         DistributedBattleAvatarAI.delete(self)

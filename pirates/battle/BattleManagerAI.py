@@ -3,13 +3,13 @@ import random
 from panda3d.core import *
 
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed.ClockDelta import globalClockDelta
 
 from pirates.battle.BattleManagerBase import BattleManagerBase
 from pirates.piratesbase import PiratesGlobals
 from pirates.battle import WeaponGlobals
 from pirates.battle import EnemyGlobals
 from pirates.battle import WeaponConstants
-from direct.distributed.ClockDelta import globalClockDelta
 from pirates.uberdog import UberDogGlobals
 from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
 from pirates.battle.ComboDiaryAI import ComboDiaryAI
@@ -23,76 +23,6 @@ class BattleManagerAI(BattleManagerBase):
 
     def __init__(self, air):
         self.air = air
-
-        self.__updateTask = None
-        self.__targets = {}
-
-    def startup(self):
-        self.__updateTask = taskMgr.add(self.__update, '%s-update-task-%s' % (
-            self.__class__.__name__, id(self)))
-
-    def __update(self, task):
-        for targetId, attackers in self.__targets.items():
-            self.__checkTarget(targetId, attackers)
-
-        return task.cont
-
-    def hasTarget(self, targetId):
-        return targetId in self.__targets
-
-    def addTarget(self, target):
-        if target.doId in self.__targets:
-            return
-
-        self.__targets[target.doId] = []
-
-    def removeTarget(self, target):
-        if target.doId not in self.__targets:
-            return
-
-        del self.__targets[target.doId]
-
-    def hasAttacker(self, attackerId, targetId):
-        if targetId not in self.__targets:
-            return False
-
-        return attackerId in self.__targets[targetId]
-
-    def addAttacker(self, attacker, target):
-        if not attacker or not target:
-            return
-
-        if target.doId not in self.__targets:
-            return
-
-        attackers = self.__targets[target.doId]
-        if attacker.doId in attackers:
-            return
-
-        attackers.append(attacker.doId)
-        if target.gameFSM.attackTarget is None and target.gameFSM.state != 'Battle':
-            target.b_setGameState('Battle')
-
-    def removeAttacker(self, attacker, target):
-        if not attacker or not target:
-            return
-
-        if target.doId not in self.__targets:
-            return
-
-        attackers = self.__targets[target.doId]
-        if attacker.doId not in attackers:
-            return
-
-        attackers.remove(attacker.doId)
-
-        # clear the avatar's skill diaries since the target it
-        # previously attacked is now gone...
-        attacker.battleSkillDiary.clear()
-        attacker.comboDiary.clear()
-
-    def getAttackers(self, targetId):
-        return self.__targets.get(targetId, [])
 
     def getTargetInRange(self, attacker, target, skillId, ammoSkillId):
         tolerance = 0
@@ -187,8 +117,8 @@ class BattleManagerAI(BattleManagerBase):
 
         # check to see if our dictionary of target to attacker data contains this attacker,
         # if not we will assume this is a new attacker to the target and assign them accordingly...
-        if not self.hasTarget(avatar.doId) and not self.hasAttacker(avatar.doId, target.doId):
-            self.addAttacker(avatar, target)
+        if not self.air.targetMgr.hasTarget(avatar.doId) and not self.air.targetMgr.hasAttacker(avatar.doId, target.doId):
+            self.air.targetMgr.addAttacker(avatar, target)
 
         # add the skill info to the attackers battle skill diary to track
         # what skills they have used and when...
@@ -241,9 +171,8 @@ class BattleManagerAI(BattleManagerBase):
 
             # update the avatar's combo diary so we can determine if any other attacks
             # made by avatars attacking the avatar's current target is a combo...
-            for attackerDoId in self.getAttackers(target.doId):
+            for attackerDoId in self.air.targetMgr.getAttackers(target.doId):
                 attacker = self.air.doId2do.get(attackerDoId)
-
                 if not attacker:
                     continue
 
@@ -369,9 +298,8 @@ class BattleManagerAI(BattleManagerBase):
         if target.getSkillEffectCount(targetEffectId) <= maxEffectStack:
             target.addSkillEffect(targetEffectId, targetEffectDuration, attacker.doId)
 
-    def __checkTarget(self, targetId, attackers):
+    def updateTarget(self, targetId, attackers):
         target = self.air.doId2do.get(targetId)
-
         if not target:
             return
 
@@ -401,7 +329,6 @@ class BattleManagerAI(BattleManagerBase):
 
         for attackerId in attackers:
             attacker = self.air.doId2do.get(attackerId)
-
             if not attacker:
                 continue
 
@@ -443,10 +370,17 @@ class BattleManagerAI(BattleManagerBase):
                 attacker.removeSkillEffect(WeaponGlobals.C_ATTUNE)
                 attacker.removeStickyTarget(target.doId)
 
-            self.removeAttacker(attacker, target)
+
+            self.air.targetMgr.removeAttacker(attacker, target)
+
+            # clear the avatar's skill diaries since the target it
+            # previously attacked is now gone...
+            attacker.battleSkillDiary.clear()
+            attacker.comboDiary.clear()
 
     def rewardAttackers(self, target):
-        for attackerId in self.__targets[target.doId]:
+        attackers = self.air.targetMgr.getAttackers(target.doId)
+        for attackerId in attackers:
             attacker = self.air.doId2do.get(attackerId)
             if not attacker:
                 continue
@@ -502,8 +436,4 @@ class BattleManagerAI(BattleManagerBase):
         self.air.questMgr.enemyDefeated(attacker, target)
 
     def destroy(self):
-        if self.__updateTask:
-            taskMgr.remove(self.__updateTask)
-            self.__updateTask = None
-
-        self.__targets = {}
+        BattleManagerBase.destroy(self)

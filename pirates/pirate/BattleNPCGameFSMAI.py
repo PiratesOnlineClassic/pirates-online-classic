@@ -78,15 +78,6 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
     def getNextAttackName(self):
         return self.avatar.uniqueName('next-attack')
 
-    def getTargetSwitchType(self):
-        targetSwitchTypes = [
-            TARGET_SWITCH_TYPE_RANDOM,
-            TARGET_SWITCH_TYPE_DAMAGE,
-            TARGET_SWITCH_TYPE_LOW_LVL,
-            TARGET_SWITCH_TYPE_HIGH_LVL]
-
-        return random.choice(targetSwitchTypes)
-
     def getAttackDelayModdifier(self):
         delayInfo = [
             WeaponGlobals.NO_DELAY,
@@ -96,47 +87,8 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
         return random.choice(delayInfo)
 
-    def getNewAttackTargetDoId(self):
-        attackTargets = self.air.battleMgr.getAttackers(self.avatar.doId)
-        if not attackTargets:
-            return None
-
-        # if we only have a single attack target, don't bother trying to
-        # select a target based on a random weighted switch type...
-        if len(attackTargets) == 1:
-            return attackTargets[0]
-
-        targetSwitchType = self.getTargetSwitchType()
-        if targetSwitchType == TARGET_SWITCH_TYPE_RANDOM:
-            return random.choice(attackTargets)
-        elif targetSwitchType == TARGET_SWITCH_TYPE_DAMAGE:
-            weights = {}
-            for attackTarget in attackTargets:
-                totalDamageDone = 0
-                recordedAttacks = list(attackTarget.comboDiary.timers[attacker.doId])
-                for recordedAttack in recordedAttacks:
-                    totalDamageDone += recordedAttack[2]
-
-                weights[attackTarget] = totalDamageDone
-
-            return max(weights, key=weights.get)
-        elif targetSwitchType == TARGET_SWITCH_TYPE_LOW_LVL:
-            weights = {}
-            for attackTarget in attackTargets:
-                weights[attackTarget] = attackTarget.getLevel()
-
-            return min(weights, key=weights.get)
-        elif targetSwitchType == TARGET_SWITCH_TYPE_HIGH_LVL:
-            weights = {}
-            for attackTarget in attackTargets:
-                weights[attackTarget] = attackTarget.getLevel()
-
-            return max(weights, key=weights.get)
-
-        return None
-
     def getNewAttackTarget(self):
-        attackTargetDoId = self.getNewAttackTargetDoId()
+        attackTargetDoId = self.air.targetMgr.findTargetableObject(self.avatar.doId)
         if not attackTargetDoId:
             return None
 
@@ -164,7 +116,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         skillList = baseSkills[1]
         skillId = random.choice(skillList)
 
-        areaIdList = self.air.battleMgr.getAttackers(self.avatar.doId)
+        areaIdList = self.air.targetMgr.getAttackers(self.avatar.doId)
         timestamp = globalClockDelta.getRealNetworkTime(bits=16)
         self.avatar.useTargetedSkill(self.avatar, self.attackTarget, skillId, 0, areaIdList, timestamp, self.avatar.getPos(), 0)
 

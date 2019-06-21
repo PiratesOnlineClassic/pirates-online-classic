@@ -121,14 +121,14 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.friendManager = FriendManagerAI(self)
         self.friendManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
-        self.targetMgr = TargetManagerAI(self)
-        self.targetMgr.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
-
         self.enemySpawner = DistributedEnemySpawnerAI(self)
         self.enemySpawner.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
         self.battleMgr = BattleManagerAI(self)
-        self.battleMgr.startup()
+
+        self.targetMgr = TargetManagerAI(self)
+        self.targetMgr.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+        self.targetMgr.startup()
 
         self.inventoryManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_INVENTORY_MANAGER, 'DistributedInventoryManager')
 
