@@ -1,6 +1,7 @@
 from direct.fsm.FSM import FSM
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
+
 class BattleAvatarGameFSMAI(FSM):
     notify = directNotify.newCategory('BattleAvatarGameFSMAI')
 
@@ -39,3 +40,7 @@ class BattleAvatarGameFSMAI(FSM):
 
     def exitThrownInJail(self):
         pass
+
+    def destroy(self):
+        self.ignoreAll()
+        FSM.cleanup(self)

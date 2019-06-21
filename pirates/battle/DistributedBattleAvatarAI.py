@@ -471,10 +471,13 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
         if self.battleRandom:
             self.battleRandom.delete()
+            self.battleRandom = None
 
         if self.weapon:
             self.weapon.requestDelete()
+            self.weapon = None
 
-        self.battleRandom = None
-        self.weapon = None
+        self.gameFSM.destroy()
+        self.gameFSM = None
+
         DistributedReputationAvatarAI.delete(self)
