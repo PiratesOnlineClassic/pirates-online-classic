@@ -85,13 +85,14 @@ class SpawnNodeBase:
         taskMgr.doMethodLater(5, self.__respawn, 'perform-respawn-%s' % self.objKey)
 
     def canRespawn(self):
+
+        # Check for holiday requirements
         holidayName = self.objectData.get('Holiday', None)
         if holidayName:
-            # TODO
-            pass
-            #holidayId = HolidayGlobals.getHolidayIdFromName(holidayName)
-            #if holidayId:
-            #    return self.air.newsManager.isHolidayActive(holidayId)
+            for holidayId, name in HolidayGlobals.holidayNames.items():
+                if name == holidayName:
+                    return self.air.newsManager.isHolidayActive(holidayId)
+            return False
 
         return True
 
@@ -100,6 +101,7 @@ class SpawnNodeBase:
             return
 
         if self.canRespawn():
+            self.notify.debug('Spawning holiday npc for holiday: %s' % holidayId)
             self.__attemptSpawn()
 
     def processHolidayEnd(self, holidayId):
@@ -107,6 +109,7 @@ class SpawnNodeBase:
             return
 
         if not self.canRespawn():
+            self.notify.debug('Despawning holiday npc for holiday: %s' % holidayId)
             self.__died(self._npc)
 
     def __died(self, npc):
