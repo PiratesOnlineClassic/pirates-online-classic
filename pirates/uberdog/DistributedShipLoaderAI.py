@@ -1,24 +1,19 @@
 from direct.distributed.DistributedObjectGlobalAI import DistributedObjectGlobalAI
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm.FSM import FSM
+
 from pirates.ship import ShipGlobals
-from pirates.uberdog import UberDogGlobals
-from direct.distributed.MsgTypes import *
-from direct.distributed.PyDatagram import PyDatagram
 
-class ShipFSM(FSM):
 
-    def __init__(self, manager, avatar, callback=None):
-        FSM.__init__(self, 'ShipFSM')
+class ShipLoaderOperationFSM(FSM):
+    notify = DirectNotifyGlobal.directNotify.newCategory('ShipLoaderOperationFSM')
 
-        self.manager = manager
+    def __init__(self, air, avatar, callback=None):
+        FSM.__init__(self, self.__class__.__name__)
+
+        self.air = air
         self.avatar = avatar
         self.callback = callback
-
-    def cleanup(self):
-        # we're done.
-        del self.manager.avatar2fsm[self.avatar.doId]
-        self.demand('Off')
 
     def enterOff(self):
         pass
@@ -32,139 +27,91 @@ class ShipFSM(FSM):
     def exitStart(self):
         pass
 
-    def enterStop(self):
+    def enterFinish(self):
         pass
 
-    def exitStop(self):
+    def exitFinish(self):
         pass
 
+    def cleanup(self, *args, **kwargs):
+        del self.air.shipLoader.avatar2fsm[self.avatar.doId]
+        self.ignoreAll()
+        self.demand('Off')
 
-class CreateShipFSM(ShipFSM):
+        if self.callback:
+            self.callback(*args, **kwargs)
+
+
+class CreateShipFSM(ShipLoaderOperationFSM):
 
     def enterStart(self, shipClass):
+        self.modelClass = ShipGlobals.getModelClass(shipClass)
+        if not self.modelClass:
+            self.notify.warning('Failed to create ship for avatar %d, '
+                'with invalid ship class: %r!' % (self.avatar.doId, shipClass))
 
-        def shipCreatedCallback(shipId):
-            inventory = self.avatar.getInventory()
+            self.cleanup(0)
+            return
 
-            if not inventory:
-                self.notify.warning('Failed to create ship %d, avatar %d has no inventory!' % (
-                    shipId, self.avatar.doId))
+        self.inventory = self.avatar.getInventory()
+        if not self.inventory:
+            self.notify.warning('Failed to create ship for avatar %d, '
+                'avatar has no inventory!' % self.avatar.doId)
 
-                return
+            self.cleanup(0)
+            return
 
-            # update the players inventory ship list array,
-            # this is how the inventory knows the player has a ship...
-            shipList = inventory.getShipDoIdList()
-            shipList.append(shipId)
-            inventory.setShipList(shipList)
-
-            self.cleanup()
-
-            # we've just created a ship object, now attempt to
-            # load it on the state server...
-            self.manager.loadShips(self.avatar, shipList=[shipId])
-
-        shipConfig = ShipGlobals.getShipConfig(shipClass)
-        hullConfig = ShipGlobals.getHullConfig(shipClass)
-
-        fields = {
-            'setBaseTeam': (0,),
-            'setShipClass': (shipConfig['setShipClass'][0],),
-            'setName': ('Unnamed Ship',),
-            'setInventoryId': (0,),
-            'setIsFlagship': (0,),
-            'setMaxHp': (shipConfig['setMaxHp'][0],),
-            'setHp': (shipConfig['setHp'][0],),
-            'setMaxSp': (hullConfig['setMaxSp'][0],),
-            'setSp': (hullConfig['setSp'][0],),
-            'setHullCondition': (1 << 7,),
-            'setMaxCargo': (hullConfig['setMaxCargo'][0],),
-            'setCargo': ([],),
-            'setMaxCrew': (shipConfig['setMaxCrew'][0],),
-            'setWishName': ('',),
-            'setWishNameState': ('',),
-        }
-
-        self.manager.air.dbInterface.createObject(self.manager.air.dbId,
-            self.manager.air.dclassesByName['PlayerShipAI'],
-            fields=fields,
-            callback=shipCreatedCallback)
+        self.air.shipLoader.sendCreateShip(self.avatar.doId, shipClass)
 
     def exitStart(self):
         pass
 
+    def enterFinish(self, shipId):
+        self.shipId = shipId
+        if not self.shipId:
+            self.notify.warning('Failed to create ship for avatar %d, '
+                'ship database object creation failed!' % self.avatar.doId)
 
-class LoadShipsFSM(ShipFSM):
-
-    def __init__(self, *args, **kwargs):
-        ShipFSM.__init__(self, *args, **kwargs)
-
-        self.pendingShips = []
-
-    def enterStart(self, shipList):
-        inventory = self.avatar.getInventory()
-
-        if not inventory:
-            self.notify.warning('Cannot load ships for avatar %d, unknown inventory!' % (
-                self.avatar.doId))
-
-            self.demand('Stop')
+            self.cleanup(0)
             return
 
-        self.pendingShips = shipList or inventory.getShipDoIdList()
+        shipDoIdList = self.inventory.getShipDoIdList()
+        shipDoIdList.append(self.shipId)
+        self.inventory.setShipDoIdList(shipDoIdList)
 
-        if not self.pendingShips:
-            self.cleanup()
-        else:
-            for shipId in self.pendingShips:
-                self.__loadShip(shipId)
+        self.cleanup(self.shipId)
 
-    def __loadShip(self, shipId):
+    def exitFinish(self):
+        pass
 
-        def shipLoadedCallback(dclass, fields):
-            self.pendingShips.remove(shipId)
-            self.manager.air.sendActivate(shipId,
-                self.manager.air.districtId,
-                0,
-                dclass=self.manager.air.dclassesByName['PlayerShipAI'])
 
-            # TODO FIXME: find a cleaner way to get the avatar's
-            # connection channel id...
-            channel = self.avatar.getDISLid() << 32 | self.avatar.doId
-            self.manager.air.setOwner(shipId, channel)
+class ActivateShipFSM(ShipLoaderOperationFSM):
 
-            def shipGeneratedCallback(ship):
-                ship.setOwnerId(self.avatar.doId)
-                ship.loadParts()
+    def enterStart(self, shipId):
+        self.shipId = shipId
+        if not self.shipId:
+            self.notify.warning('Failed to activate unknown ship for avatar %d!' % self.avatar.doId)
+            self.cleanup(False)
+            return
 
-            self.accept('generate-%d' % shipId, shipGeneratedCallback)
+        self.inventory = self.avatar.getInventory()
+        if not self.inventory:
+            self.notify.warning('Failed to create ship for avatar %d, '
+                'avatar has no inventory!' % self.avatar.doId)
 
-            # set a post remove for the ship object so that if the client
-            # disconnects, their ships will be deleted...
-            datagramCleanup = PyDatagram()
-            datagramCleanup.addServerHeader(
-                shipId,
-                channel,
-                STATESERVER_OBJECT_DELETE_RAM)
-            datagramCleanup.addUint32(shipId)
+            self.cleanup(False)
+            return
 
-            datagram = PyDatagram()
-            datagram.addServerHeader(
-                channel,
-                self.manager.air.ourChannel,
-                CLIENTAGENT_ADD_POST_REMOVE)
-            datagram.addString(datagramCleanup.getMessage())
-            self.manager.air.send(datagram)
-
-            if not self.pendingShips:
-                self.cleanup()
-
-        self.manager.air.dbInterface.queryObject(self.manager.air.dbId,
-            shipId,
-            shipLoadedCallback,
-            dclass=self.manager.air.dclassesByName['PlayerShipAI'])
+        self.air.shipLoader.sendActivateShip(self.avatar.doId, self.shipId)
 
     def exitStart(self):
+        pass
+
+    def enterFinish(self):
+        # we're done.
+        self.cleanup(True)
+
+    def exitFinish(self):
         pass
 
 
@@ -176,18 +123,77 @@ class DistributedShipLoaderAI(DistributedObjectGlobalAI):
 
         self.avatar2fsm = {}
 
-    def runShipFSM(self, fsmType, avatar, *args):
+    def announceGenerate(self):
+        DistributedObjectGlobalAI.announceGenerate(self)
+
+        self.air.netMessenger.accept('createShipResponse', self, self.createShipResponse)
+        self.air.netMessenger.accept('activateShipResponse', self, self.activateShipResponse)
+
+    def runShipLoaderFSM(self, fsmtype, avatar, *args, **kwargs):
         if avatar.doId in self.avatar2fsm:
-            self.notify.warning('Cannot start shipFSM, an FSM is already running for avatar %d!' % (
-                avatar.doId))
+            self.notify.warning('Failed to run ship loader fsm, '
+                'an FSM is already running for avatar %d!' % avatar.doId)
 
             return
 
-        self.avatar2fsm[avatar.doId] = fsmType(self, avatar)
-        self.avatar2fsm[avatar.doId].request('Start', *args)
+        callback = kwargs.pop('callback', None)
+
+        self.avatar2fsm[avatar.doId] = fsmtype(self.air, avatar, callback)
+        self.avatar2fsm[avatar.doId].request('Start', *args, **kwargs)
 
     def createShip(self, avatar, shipClass):
-        self.runShipFSM(CreateShipFSM, avatar, shipClass)
 
-    def loadShips(self, avatar, shipList=[]):
-        self.runShipFSM(LoadShipsFSM, avatar, shipList)
+        def shipCreatedCallback(shipId):
+            if not shipId:
+                return
+
+            # we've just created this ship object, the avatar will have expected
+            # that we automatically activate their ship. This is only done after creation of
+            # a new ship object, the Uberdog will activate the avatar's ships object on login...
+            self.sendActivateShip(avatar.doId, shipId)
+
+        self.runShipLoaderFSM(CreateShipFSM, avatar, shipClass, callback=shipCreatedCallback)
+
+    def sendCreateShip(self, avatarId, shipClass):
+        self.air.netMessenger.send('createShip', [avatarId, shipClass])
+
+    def createShipResponse(self, avatarId, shipId):
+        fsm = self.avatar2fsm.get(avatarId)
+        if not fsm:
+            return
+
+        if not shipId:
+            self.notify.warning('Failed to create ship for avatar %d!' % avatarId)
+            fsm.cleanup(0)
+            return
+
+        if avatarId not in self.avatar2fsm:
+            self.notify.warning('Failed to handle ship response for avatar %d, '
+                'no ship creation FSM found!' % avatarId)
+
+            fsm.cleanup(0)
+            return
+
+        fsm.request('Finish', shipId)
+
+    def activateShip(self, avatar, shipId):
+
+        def shipActivatedCallback(success):
+            pass
+
+        self.runShipLoaderFSM(ActivateShipFSM, avatar, shipId, callback=shipActivatedCallback)
+
+    def sendActivateShip(self, avatarId, shipId):
+        self.air.netMessenger.send('activateShip', [avatarId, shipId])
+
+    def activateShipResponse(self, avatarId, shipId, success):
+        fsm = self.avatar2fsm.get(avatarId)
+        if not fsm:
+            return
+
+        if not success:
+            self.notify.warning('Failed to activate ship %d for avatar %d!' % (shipId, avatarId))
+            fsm.cleanup(False)
+            return
+
+        fsm.request('Finish')

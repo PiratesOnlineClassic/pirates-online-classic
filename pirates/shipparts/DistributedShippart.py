@@ -7,7 +7,7 @@ from pirates.piratesbase import PLocalizer
 
 class DistributedShippart(DistributedNode.DistributedNode):
     notify = directNotify.newCategory('DistributedShippart')
-    
+
     def __init__(self, cr):
         DistributedNode.DistributedNode.__init__(self, cr)
         self.dna = None
@@ -27,7 +27,7 @@ class DistributedShippart(DistributedNode.DistributedNode):
         self.instLow = None
         self.instFlat = None
         self.instColl = None
-    
+
     def generate(self):
         DistributedNode.DistributedNode.generate(self)
 
@@ -39,14 +39,14 @@ class DistributedShippart(DistributedNode.DistributedNode):
     def disable(self):
         self.unload()
         DistributedNode.DistributedNode.disable(self)
-    
+
     def delete(self):
         if self.prop:
             self.prop = None
-        
+
         self.ship = None
         DistributedNode.DistributedNode.delete(self)
-    
+
     def load(self):
         self.createProp()
         if not self.prop.loaded:
@@ -54,10 +54,10 @@ class DistributedShippart(DistributedNode.DistributedNode):
             self.loadModel()
             self.addPropToShip()
             self.propLoaded()
-    
+
     def propLoaded(self):
         pass
-    
+
     def createProp(self):
         pass
 
@@ -70,7 +70,7 @@ class DistributedShippart(DistributedNode.DistributedNode):
         self.prop.loadHigh()
         self.prop.loadMedium()
         self.prop.loadLow()
-    
+
     def unloadModel(self):
         self.prop.unloadModel()
 
@@ -79,10 +79,10 @@ class DistributedShippart(DistributedNode.DistributedNode):
             return self.ship.getLevel()
         else:
             return 1
-    
+
     def addPropToShip(self):
         self.prop.addToShip()
-    
+
     def isReady(self):
         return self.sentReadyMessage
 
@@ -90,10 +90,10 @@ class DistributedShippart(DistributedNode.DistributedNode):
         if not self.sentReadyMessage:
             self.sentReadyMessage = 1
             messenger.send('shippartReady-%s' % self.doId, [self])
-    
+
     def setGeomParentId(self, geomParentId):
         self.geomParentId = geomParentId
-    
+
     def getGeomParentId(self):
         return self.geomParentId
 
@@ -105,7 +105,7 @@ class DistributedShippart(DistributedNode.DistributedNode):
 
     def setClassType(self, val):
         self.classType = val
-    
+
     def setLevel(self, val):
         self.level = val
 
@@ -114,4 +114,3 @@ class DistributedShippart(DistributedNode.DistributedNode):
 
     def getPVPTeam(self):
         return self.ship.getPVPTeam()
-

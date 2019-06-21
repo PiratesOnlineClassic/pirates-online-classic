@@ -1427,6 +1427,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         ship.unstashFloorCollisions()
         self.cnode.broadcastPosHprFull()
         ship.sendUpdate('shipBoarded')
+        self.reparentTo(render)
 
     @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def removeFromShip(self, ship):
@@ -1944,4 +1945,3 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
     def teleportResponse(self, avId, available, shardId, instanceDoId, areaDoId):
         if self.isGenerated():
             self.cr.teleportMgr.handleAvatarTeleportResponse(avId, available, shardId, instanceDoId, areaDoId)
-

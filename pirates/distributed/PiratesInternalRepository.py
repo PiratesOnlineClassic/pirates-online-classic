@@ -66,6 +66,13 @@ class PiratesInternalRepository(OTPInternalRepository):
         self._registerInternalNetMessage('getStackLimitResponse')
         self._registerInternalNetMessage('getStackResponse')
 
+        # DistributedShipLoader
+        self._registerInternalNetMessage('createShip')
+        self._registerInternalNetMessage('createShipResponse')
+
+        self._registerInternalNetMessage('activateShip')
+        self._registerInternalNetMessage('activateShipResponse')
+
     def logPotentialHacker(self, message, kickChannel=False, **kwargs):
         self.notify.warning(message)
 

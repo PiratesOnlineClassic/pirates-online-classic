@@ -19,7 +19,7 @@ audio-library-name p3fmod_audio
 audio-output-rate 44100
 
 # Models:
-want-disk-cache #t
+want-disk-cache #f
 default-model-extension .bam
 
 # Exclude:

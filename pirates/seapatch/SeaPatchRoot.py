@@ -6,7 +6,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 
 class SeaPatchRoot(object):
     notify = directNotify.newCategory('SeaPatchRoot')
-    
+
     noiseTableSize = 64
     WTZ = None #TODO
     WTV = None #TODO
@@ -81,7 +81,7 @@ class SeaPatchRoot(object):
 
     def animateUv(self, doAnimate):
         pass
-       
+
     def recurseChildren(self, node, netTransMat):
         # This isn't the same as the one as in libpirates but similar to the one
         # in the leaked SeaPatchNode. Granted we're rewriting waves anyway.
@@ -93,10 +93,10 @@ class SeaPatchRoot(object):
         return 0
 
     def calcFilteredHeight(self, apX, apY, minWaveLength, dist2):
-        pass
+        return 0
 
     def calcHeightForMass(self, todo1, todo2, todo3, todo4, todo5):
-        pass
+        return 0
 
     def calcNormal(self, height, ax, ay, dist):
         return 0

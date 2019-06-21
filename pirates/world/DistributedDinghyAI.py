@@ -1,5 +1,9 @@
 from direct.directnotify import DirectNotifyGlobal
+
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
+from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
+from pirates.piratesbase import PiratesGlobals
+
 
 class DistributedDinghyAI(DistributedInteractiveAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedDinghyAI')
@@ -59,22 +63,41 @@ class DistributedDinghyAI(DistributedInteractiveAI):
 
     def selectOwnShip(self, shipId, teamSpec):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             return
 
         inventory = avatar.getInventory()
-
         if not inventory:
-            self.notify.warning('Failed to select ship %d, avatar %d has no inventory!' % (
-                shipId, avatar.doId))
+            self.notify.warning('Failed to select ship %d, '
+                'avatar %d has no inventory!' % (shipId, avatar.doId))
 
+            self.d_sendAvatarToShip(avatar.doId, 0)
             return
 
-        #if shipId not in inventory.getShipDoIdList():
-        #    self.notify.warning('Failed to select ship %d, avatar %d doesn\'t own that ship!' % (
-        #        shipId, avatar.doId))
-        #
-        #    return
+        parentObj = avatar.getParentObj()
+        if not isinstance(parentObj, DistributedGameAreaAI):
+            self.notify.warning('Failed to select avatar ship %d, '
+                'avatar %d has invalid parent object %r!' % (shipId, avatar.doId, parentObj))
 
-        self.sendUpdateToAvatarId(avatar.doId, 'sendAvatarToShip', [shipId])
+            self.d_sendAvatarToShip(avatar.doId, 0)
+            return
+
+        shipDoIdList = inventory.getShipDoIdList()
+        if shipId not in shipDoIdList:
+            self.notify.warning('Failed to select avatar ship %d, '
+                'avatar %d does not own that ship!' % (shipId, avatar.doId))
+
+            self.d_sendAvatarToShip(avatar.doId, 0)
+            return
+
+        def deployShipCallback(success):
+            if not success:
+                self.d_sendAvatarToShip(avatar.doId, 0)
+                return
+
+            self.d_sendAvatarToShip(avatar.doId, shipId)
+
+        parentObj.shipDeployer.deployShip(avatar, shipId, deployShipCallback)
+
+    def d_sendAvatarToShip(self, avatarId, shipId):
+        self.sendUpdateToAvatarId(avatarId, 'sendAvatarToShip', [shipId])

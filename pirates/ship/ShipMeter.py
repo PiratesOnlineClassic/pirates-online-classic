@@ -72,7 +72,7 @@ MastDict = {
     ShipGlobals.SKEL_AFTMASTL3: 'models/shipparts/L2aftmast'}
 
 class ShipMeter(DirectObject, NodePath):
-    
+
     def __init__(self, shipId, shipClass = 0, mastInfo = [], siegeTeam = 0):
         NodePath.__init__(self, 'ShipMeter')
         self.shipId = shipId
@@ -131,7 +131,7 @@ class ShipMeter(DirectObject, NodePath):
             if ship:
                 if ship.hull and ship.hull[1]:
                     self.setHullHp(*ship.hull[1].getArrayHp())
-                
+
                 if ship.masts:
                     for (mast, dMast) in ship.masts.itervalues():
                         if dMast:
@@ -164,56 +164,56 @@ class ShipMeter(DirectObject, NodePath):
     def setHullType(self, type):
         if self.panels:
             return
-        
+
         if not type:
             return
-        
+
         self.shipClass = type
         self.modelClass = type
         modelType = ShipGlobals.getModelClass(type)
         filePrefix = HullDict.get(modelType)
         self.hull = loader.loadModel(filePrefix)
         self.hull.reparentTo(self.modelRoot)
-        allPanels = self.hull.findAllMatches('**/panel_*').asList()
+        allPanels = self.hull.findAllMatches('**/panel_*')
         for i in range(len(allPanels)):
             panel = self.hull.find('**/panel_' + str(i))
             if not panel.isEmpty():
                 self.panels.append(panel)
                 self.panelStates.append(0)
                 self.smokeEffects.append(None)
-        
+
         self.bowsprit = self.hull.find('**/bowsprit')
         self.ram = self.hull.find('**/ram')
         self.cabin = self.hull.find('**/cabin')
         self.bowsprit.detachNode()
         if self.modelClass == 1:
             self.cabin.detachNode()
-        
+
         self.placeMasts()
 
     def setMastType(self, type, index, sailConfig):
         if self.masts[index]:
             return
-        
+
         if not type:
             return
-        
+
         filePrefix = MastDict.get(type)
         self.mastModels[index] = loader.loadModel(filePrefix)
         myMasts = []
         myMastStates = []
         mySails = []
-        mastSegments = self.mastModels[index].findAllMatches('**/mast_*').asList()
+        mastSegments = self.mastModels[index].findAllMatches('**/mast_*')
         for i in range(len(mastSegments)):
             mastSegment = self.mastModels[index].find('**/mast_' + str(i))
             if not mastSegment.isEmpty():
                 if i >= len(sailConfig):
                     mastSegment.stash()
                     continue
-                
+
                 myMasts.append(mastSegment)
                 myMastStates.append(0)
-            
+
             sail = self.mastModels[index].find('**/sail_' + str(i))
             if not sail.isEmpty():
                 sailType = 0
@@ -225,12 +225,12 @@ class ShipMeter(DirectObject, NodePath):
                     mySails.append(None)
             else:
                 mySails.append(None)
-        
+
         for i in range(len(mySails)):
             if not mySails[i]:
                 sail = self.mastModels[index].find('**/sail_' + str(i))
                 sail.stash()
-        
+
         self.masts[index] = myMasts
         self.mastStates[index] = myMastStates
         self.mastTypes[index] = type
@@ -254,7 +254,7 @@ class ShipMeter(DirectObject, NodePath):
                         locator = self.hull.find('**/location_mainmast_' + str(index) + ';+s')
                 elif id == ShipGlobals.AFTMAST:
                     locator = self.hull.find('**/location_aftmast;+s')
-                
+
                 self.mastModels[index].setPos(locator.getPos())
                 self.mastModels[index].setHpr(locator.getHpr())
                 self.mastModels[index].setScale(locator.getScale())
@@ -262,7 +262,7 @@ class ShipMeter(DirectObject, NodePath):
     def setHullHp(self, hpArray, maxHpArray):
         if not self.panels:
             return
-        
+
         for i in range(len(self.panels)):
             if i <= len(hpArray) - 1:
                 hpFraction = float(hpArray[i]) / float(maxHpArray[i])
@@ -280,13 +280,13 @@ class ShipMeter(DirectObject, NodePath):
                         self.smokeEffects[i].endLoop()
             else:
                 self.panels[i].stash()
-        
+
         self.oldHullHp = copy.copy(hpArray)
 
     def setMastHp(self, index, hpArray, maxHpArray):
         if not self.masts[index]:
             return
-        
+
         for i in range(len(self.masts[index])):
             if i > len(hpArray) - 1:
                 if self.masts[index][i]:
@@ -300,12 +300,12 @@ class ShipMeter(DirectObject, NodePath):
                 if self.oldMastHp[index]:
                     if self.oldMastHp[index][i] > hpArray[i]:
                         self.playFlash(self.masts[index][i], damageColor)
-                
+
                 if hpFraction <= 0:
                     self.mastStates[index][i] = 1
                 else:
                     self.mastStates[index][i] = 0
-        
+
         hasBreak = 0
         for i in range(len(hpArray)):
             if i <= len(self.masts[index]) - 1:
@@ -313,13 +313,13 @@ class ShipMeter(DirectObject, NodePath):
                     self.masts[index][i].show()
                     if self.sails[index][i]:
                         self.sails[index][i].show()
-                    
+
                 else:
                     hasBreak = 1
                     self.masts[index][i].hide()
                     if self.sails[index][i]:
                         self.sails[index][i].hide()
-                    
+
                     self.oldMastHp[index] = copy.copy(hpArray)
 
     def setSailHp(self, mastIndex, sailIndex, hp, maxHp):
@@ -378,7 +378,7 @@ class ShipMeter(DirectObject, NodePath):
             return Vec4(1, 0, 0.1, 1)
         elif hpFraction <= 0:
             return Vec4(0.5, 0, 0, 1)
-    
+
     def playFlash(self, target, normalColor):
         flash = Sequence(Func(target.setColor, Vec4(1, 1, 0, 1)), Wait(0.1), Func(target.setColor, Vec4(1, 0, 0, 1)), Wait(0.1), Func(target.setColor, Vec4(1, 1, 0, 1)), Wait(0.1), Func(target.setColor, Vec4(1, 0, 0, 1)), Wait(0.1), Func(target.setColor, Vec4(1, 1, 0, 1)), Wait(0.1), Func(target.setColor, Vec4(1, 0, 0, 1)), Wait(0.1), Func(target.setColorOff))
         flash.start()
@@ -424,15 +424,13 @@ class ShipMeter(DirectObject, NodePath):
         gn = self.find('**/+GeomNode')
         for i in xrange(gn.node().getNumGeoms()):
             gn.node().setGeomState(i, RenderState.makeEmpty())
-        
+
         gn.setTwoSided(1)
         gn.flattenStrong()
         return gn
 
     def setTeam(self, team):
         self.team = team
-    
+
     def setModelClass(self, mc):
         self.modelClass = mc
-
-

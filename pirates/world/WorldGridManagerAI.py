@@ -3,6 +3,8 @@ from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.DistributedCartesianGridAI import DistributedCartesianGridAI
 
+from pirates.ship.DistributedShipAI import DistributedShipAI
+
 
 class GridInterestHandle(object):
 
@@ -102,8 +104,13 @@ class WorldGridManagerAI(object):
         self.gridInterestHandlers = {}
 
     def handleLocationChanged(self, parentObj, avatar, zoneId):
-        if not isinstance(parentObj, DistributedCartesianGridAI):
-            return
+        if isinstance(parentObj, DistributedShipAI):
+            shipParentObj = parentObj
+            parentObj = shipParentObj.getParentObj()
+            zoneId = parentObj.getZoneFromXYZ(shipParentObj.getPos())
+        else:
+            if not isinstance(parentObj, DistributedCartesianGridAI):
+                return
 
         if not parentObj.isValidZone(zoneId):
             self.notify.warning('Failed to handle avatar %d grid location change, '

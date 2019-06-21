@@ -9,7 +9,7 @@ from pandac.PandaModules import *
 from OceanGridBase import OceanGridBase
 
 class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
-    
+
     def __init__(self, cr):
         DistributedCartesianGrid.__init__(self, cr)
         OceanGridBase.__init__(self)
@@ -23,7 +23,7 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
         water.loadSeaPatchFile('out.spf')
         self.water = water
         self.setupShipBarrier()
-    
+
     def setLocation(self, parentId, zoneId):
         DistributedCartesianGrid.setLocation(self, parentId, zoneId)
         world = self.cr.doId2do.get(self.parentId)
@@ -34,15 +34,15 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
         DistributedCartesianGrid.disable(self)
         if hasattr(base, 'localAvatar') and base.localAvatar is not None:
             self.removeObjectFromGrid(base.localAvatar)
-        
+
         self.shipBarrierNP.removeNode()
         self.ignore('enter' + self.cName)
-    
+
     def delete(self):
         self.water.delete()
         self.water = None
         DistributedCartesianGrid.delete(self)
-    
+
     def setupShipBarrier(self):
         worldRadius = WorldGlobals.OCEAN_GRID_SIZE * WorldGlobals.OCEAN_CELL_SIZE / 2.0 - 50
         shipBarrier = CollisionInvSphere(0.0, 0.0, 0.0, worldRadius)
@@ -53,7 +53,7 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
         cSphereNode.addSolid(shipBarrier)
         self.shipBarrierNP = self.attachNewNode(cSphereNode)
         self.accept('enter' + self.cName, self.handleEdgeOfWorld)
-    
+
     def handleEdgeOfWorld(self, event):
         localAvatar.guiMgr.messageStack.addTextMessage(PLocalizer.EdgeOfWorldWarning)
 
@@ -68,7 +68,7 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
             self.addObjectToGrid(base.localAvatar)
 
     oceanAreas = {}
-    
+
     def addOceanArea(self, pos1, pos2, name, uid):
         ul = Point3(min(pos2.getX(), pos1.getX()), max(pos2.getY(), pos1.getY()), 0)
         lr = Point3(max(pos2.getX(), pos1.getX()), min(pos2.getY(), pos1.getY()), 0)
@@ -76,7 +76,7 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
             (pos1, pos2) = self.oceanAreas[name][0:2]
             ul = Point3(min(ul.getX(), pos1.getX()), max(ul.getY(), pos1.getY()), 0)
             lr = Point3(max(lr.getX(), pos2.getX()), min(lr.getY(), pos2.getY()), 0)
-        
+
         self.oceanAreas[name] = [
             ul,
             lr,
@@ -96,15 +96,15 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
         islandId = island.doId
         if self.islandGrids.get(islandId):
             del self.islandGrids[islandId]
-        
+
         self.updateLocalAvatarParent()
 
     def updateLocalAvatarParent(self, parent = None):
         if base.localAvatar.ship:
             return
-        
+
         self.reparentLocalAvatarToWorld(parent)
-    
+
     def turnOff(self):
         DistributedCartesianGrid.turnOff(self)
         self.stash()
@@ -118,8 +118,6 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
     @report(types=['deltaStamp', 'avLocation', 'args'], dConfigParam=['want-connector-report', 'want-shipboard-report'])
     def stopProcessVisibility(self, *args, **kw):
         DistributedCartesianGrid.stopProcessVisibility(self, *args, **kw)
-    
+
     def getTeleportDestPosH(self, index = 0):
         return (0, 0, 0, 0)
-
-

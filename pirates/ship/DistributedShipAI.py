@@ -1,13 +1,19 @@
-from pirates.movement.DistributedMovingObjectAI import DistributedMovingObjectAI
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed.ClockDelta import *
+
 from pirates.battle.Teamable import Teamable
 from pirates.ship import ShipGlobals
+from pirates.movement.DistributedMovingObjectAI import DistributedMovingObjectAI
+from pirates.distributed.DistributedCharterableObjectAI import DistributedCharterableObjectAI
+from pirates.shipparts.DistributedShippartAI import DistributedShippartAI
 
-class DistributedShipAI(DistributedMovingObjectAI, Teamable):
+
+class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipAI')
 
     def __init__(self, air):
         DistributedMovingObjectAI.__init__(self, air)
+        DistributedCharterableObjectAI.__init__(self, air)
         Teamable.__init__(self)
 
         self.uniqueId = ''
@@ -35,6 +41,24 @@ class DistributedShipAI(DistributedMovingObjectAI, Teamable):
         self.landedGrapples = []
         self.wishName = ''
         self.wishNameState = ''
+
+    def sendCurrentPosition(self):
+        x, y, z = self.getPos()
+        h, p, r = self.getHpr()
+        print (x, y, z, h, p, r)
+        timestamp = globalClockDelta.getRealNetworkTime(bits=16)
+        self.sendUpdate('setSmPosHpr', [x, y, z, h, p, r, timestamp])
+
+    def startPosHprBroadcast(self):
+
+        def _broadcast(task):
+            try:
+                self.sendCurrentPosition()
+            except:
+                pass
+            return task.again
+
+        taskMgr.doMethodLater(0.2, _broadcast, self.uniqueName('broadcast-pos'))
 
     def setUniqueId(self, uniqueId):
         self.uniqueId = uniqueId
@@ -87,6 +111,9 @@ class DistributedShipAI(DistributedMovingObjectAI, Teamable):
 
     def getName(self):
         return self.name
+
+    def getInventory(self):
+        return self.air.inventoryManager.getInventory(self.inventoryId)
 
     def setInventoryId(self, inventoryId):
         self.inventoryId = inventoryId
@@ -283,13 +310,16 @@ class DistributedShipAI(DistributedMovingObjectAI, Teamable):
     def getCrew(self):
         return self.crew
 
-    def setGameState(self, stateName, avId, timeStamp):
-        self.gamestate = [stateName, avId, timeStamp]
+    def setGameState(self, stateName, avId, timeStamp=0):
+        self.gameState = [stateName, avId, timeStamp]
 
-    def d_setGameState(self, stateName, avId, timeStamp):
+    def d_setGameState(self, stateName, avId, timeStamp=0):
         self.sendUpdate('setGameState', [stateName, avId, timeStamp])
 
-    def b_setGameState(self, stateName, avId, timeStamp):
+    def b_setGameState(self, stateName, avId, timeStamp=0):
+        if not timeStamp:
+            timeStamp = globalClockDelta.getRealNetworkTime(bits=16)
+
         self.setGameState(stateName, avId, timeStamp)
         self.d_setGameState(stateName, avId, timeStamp)
 
@@ -360,3 +390,6 @@ class DistributedShipAI(DistributedMovingObjectAI, Teamable):
 
     def getWishNameState(self):
         return self.wishNameState
+
+    def shipBoarded(self):
+        print ('shipBoarded')
