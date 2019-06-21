@@ -455,7 +455,7 @@ StartingStacks = {
 
     # Teleport Tokens
     InventoryType.TortugaTeleportToken: 0,
-    InventoryType.PortRoyalTeleportToken: 1,
+    InventoryType.PortRoyalTeleportToken: 0,
     InventoryType.KingsheadTeleportToken: 0,
     InventoryType.PadresDelFuegoTeleportToken: 0,
     InventoryType.CubaTeleportToken: 0,
