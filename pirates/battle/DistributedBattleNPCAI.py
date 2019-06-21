@@ -129,9 +129,14 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         if not avatar:
             return
 
-        self.handleClientAggro(avatar)
+        # if we are in ambush mode and an avatar just entered our aggro
+        # sphere, ambush them and try to kill them.
+        if self.gameFSM.state == 'Ambush':
+            self.handleClientAggro(avatar)
 
     def handleClientAggro(self, avatar):
+        self.b_setCurrentTarget(avatar.doId)
+        self.b_setGameState('Battle')
         self.d_setChat(PLocalizerEnglish.getNavyAggroPhrase())
 
     def delete(self):

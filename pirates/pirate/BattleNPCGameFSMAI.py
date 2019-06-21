@@ -29,8 +29,6 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
     def __init__(self, air, avatar):
         BattleAvatarGameFSMAI.__init__(self, air, avatar)
 
-        self.attackTarget = None
-
         self.__movementInterval = None
         self.__pausedTask = None
         self.__updateBattleStateTask = None
@@ -107,10 +105,6 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.avatar.b_setCurrentWeapon(self.avatar.currentWeaponId, 0)
 
     def _chooseNextAttack(self, task):
-        self.chooseNextAttack()
-        return task.done
-
-    def chooseNextAttack(self):
         # choose a random skill to attack the player with
         baseSkills = EnemyGlobals.getBaseSkills(self.avatar.getAvatarType())
         skillList = baseSkills[1]
@@ -118,17 +112,21 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
         areaIdList = self.air.targetMgr.getAttackers(self.avatar.doId)
         timestamp = globalClockDelta.getRealNetworkTime(bits=16)
-        self.avatar.useTargetedSkill(self.avatar, self.attackTarget, skillId, 0, areaIdList, timestamp, self.avatar.getPos(), 0)
+        self.avatar.useTargetedSkill(self.avatar, self.avatar.currentTarget, skillId, 0, areaIdList, timestamp, self.avatar.getPos(), 0)
 
         # get the total delay on how long it will take the enemy to
         # use this attack, once the enemy has completed it's attack,
         # select another attack until this loop is broken...
         delay = WeaponGlobals.getAttackDelay(skillId)
-        duration = WeaponGlobals.getAttackDuration(skillId)
-        delay = EnemyGlobals.getAttackDelay(skillId, [delay, duration])
+        delay += WeaponGlobals.getAttackDuration(skillId)
         delay += self.getAttackDelayModdifier()
 
-        self.__nextAttackTask = taskMgr.doMethodLater(delay, self._chooseNextAttack, self.getNextAttackName())
+        # update our task delay
+        task.setDelay(delay)
+        return task.again
+
+    def beginAttacking(self):
+        self.__nextAttackTask = taskMgr.doMethodLater(WeaponGlobals.SHORT_DELAY, self._chooseNextAttack, self.getNextAttackName())
 
     def findNextWalkToPoint(self):
         state = self.getCurrentOrNextState()
@@ -146,7 +144,8 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             self.__pausedTask = taskMgr.doMethodLater(pauseDuration, self.walkToPoint, self.getWalkToPointPausedName(),
                 extraArgs=[patrolPoint], appendTask=False)
         elif state == 'AttackChase':
-            if not self.attackTarget:
+            currentTarget = self.avatar.currentTarget
+            if not currentTarget:
                 self.avatar.b_setGameState('BreakCombat')
                 return
 
@@ -157,14 +156,14 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
                 self.avatar.b_setGameState('BreakCombat')
                 return
 
-            shouldFollowTarget = self.shouldFollowTarget(self.attackTarget)
+            shouldFollowTarget = self.shouldFollowTarget(currentTarget)
             if not shouldFollowTarget:
                 # we've arrived at the walk point and the attacker hasn't gone
                 # outside our aggro radius, let's begin attacking the avatar...
                 self.avatar.b_setGameState('Battle')
                 return
 
-            self.walkToPoint(self.attackTarget.getPos(), self.attackTarget.getParent())
+            self.walkToPoint(currentTarget.getPos(), currentTarget.getParent())
         elif state == 'BreakCombat':
             self.avatar.b_setGameState(self.avatar.getStartState())
 
@@ -187,6 +186,18 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.__movementInterval.setDoneEvent(self.getWalkToPointDoneName())
         self.__movementInterval.start()
 
+    def enterOff(self):
+        pass
+
+    def exitOff(self):
+        pass
+
+    def filterPatrol(self, request, args):
+        if request in ['Battle', 'Death']:
+            return (request,) + args
+
+        return None
+
     def enterPatrol(self, *args, **kwargs):
         self.findNextWalkToPoint()
 
@@ -198,6 +209,12 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         if self.__pausedTask:
             taskMgr.remove(self.__pausedTask)
             self.__pausedTask = None
+
+    def filterWalk(self, request, args):
+        if request in ['Battle', 'Death']:
+            return (request,) + args
+
+        return None
 
     def enterWalk(self):
         self.findNextWalkToPoint()
@@ -212,16 +229,12 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             self.__pausedTask = None
 
     def __updateBattleState(self, task):
-        if not self.attackTarget:
+        currentTarget = self.avatar.currentTarget
+        if not currentTarget:
             self.avatar.b_setGameState('BreakCombat')
             return task.done
 
-        # check to see if the target is even on the same cartesian grid...
-        if self.attackTarget.parentId != self.avatar.parentId:
-            self.avatar.b_setGameState('BreakCombat')
-            return task.done
-
-        shouldFollowTarget = self.shouldFollowTarget(self.attackTarget)
+        shouldFollowTarget = self.shouldFollowTarget(currentTarget)
         if shouldFollowTarget and self.avatar.getAvatarType() != AvatarTypes.FlyTrap:
             if self.state == 'Battle':
                 self.avatar.b_setGameState('AttackChase')
@@ -231,11 +244,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
         # check to see if the target goes out of range of us,
         # this is mostly useful for fly traps (which don't move).
-        try:
-            distanceFromTarget = self.avatar.getDistance(self.attackTarget)
-        except TypeError:
-            return task.done
-
+        distanceFromTarget = self.avatar.getDistance(currentTarget)
         if distanceFromTarget > EnemyGlobals.AGGRO_RADIUS_TOLERANCE:
             # the player has went too far away, walk us back to our spawn node,
             # then set our default state and wait for a new battle...
@@ -244,17 +253,29 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
         return task.cont
 
-    def enterOff(self):
+    def filterAmbush(self, request, args):
+        if request in ['Battle', 'Death']:
+            return (request,) + args
+
+        return None
+
+    def enterAmbush(self):
         pass
 
-    def exitOff(self):
+    def exitAmbush(self):
         pass
+
+    def filterBattle(self, request, args):
+        if request in ['Patrol', 'Walk', 'Ambush', 'AttackChase', 'Death']:
+            return (request,) + args
+
+        return None
 
     def enterBattle(self):
-        if not self.attackTarget:
-            self.attackTarget = self.getNewAttackTarget()
-            assert(self.attackTarget is not None)
-            self.avatar.b_setCurrentTarget(self.attackTarget.doId)
+        if not self.avatar.currentTarget:
+            attackTarget = self.getNewAttackTarget()
+            assert(attackTarget is not None)
+            self.avatar.b_setCurrentTarget(attackTarget.doId)
 
         self.avatar.startLookAt()
 
@@ -265,7 +286,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self._drawWeapon()
 
         # start attacking our target
-        self.chooseNextAttack()
+        self.beginAttacking()
         self.__updateBattleStateTask = taskMgr.add(self.__updateBattleState, self.getWatchTargetName())
 
     def exitBattle(self):
@@ -283,9 +304,14 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         spawnNode = self.avatar.getSpawnNode()
         self.avatar.b_setAnimSet(spawnNode.objectData.get('AnimSet', 'default'))
 
-    def enterAttackChase(self, *args, **kwargs):
-        assert(self.attackTarget is not None)
+    def filterAttackChase(self, request, args):
+        if request in ['Battle', 'BreakCombat', 'Death']:
+            return (request,) + args
 
+        return None
+
+    def enterAttackChase(self, *args, **kwargs):
+        assert(self.avatar.currentTarget is not None)
         self.avatar.startLookAt()
 
         # begin following our target
@@ -307,8 +333,13 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
         self.avatar.stopLookAt()
 
+    def filterAttackChase(self, request, args):
+        if request in ['Patrol', 'Walk', 'Ambush', 'Battle', 'Death']:
+            return (request,) + args
+
+        return None
+
     def enterBreakCombat(self):
-        self.attackTarget = None
         self.avatar.b_setCurrentTarget(0)
 
         # put away our weapon
@@ -319,6 +350,12 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
     def exitBreakCombat(self):
         pass
+
+    def filterDeath(self, request, args):
+        if request in ['Patrol', 'Walk', 'Ambush', 'Battle', 'AttackChase']:
+            return (request,) + args
+
+        return None
 
     def enterDeath(self, *args, **kwargs):
         self.air.battleMgr.rewardAttackers(self.avatar)

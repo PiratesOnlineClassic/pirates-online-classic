@@ -32,12 +32,14 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
         return targetId in self.objectDict
 
     def addTarget(self, target):
+        assert(target is not None)
         if target.doId in self.objectDict:
             return
 
         self.objectDict[target.doId] = []
 
     def removeTarget(self, target):
+        assert(target is not None)
         if target.doId not in self.objectDict:
             return
 
@@ -59,8 +61,8 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
         return attackerId in self.objectDict[targetId]
 
     def addAttacker(self, attacker, target):
-        if not attacker or not target:
-            return
+        assert(attacker is not None)
+        assert(target is not None)
 
         if target.doId not in self.objectDict:
             return
@@ -70,14 +72,14 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
             return
 
         attackers.append(attacker.doId)
-        if target.gameFSM.attackTarget is None and target.gameFSM.state != 'Battle':
+        if len(attackers) == 1 and not target.currentTarget and target.gameFSM.state != 'Battle':
             target.b_setGameState('Battle')
 
         attacker.b_setCurrentTarget(target.doId)
 
     def removeAttacker(self, attacker, target):
-        if not attacker or not target:
-            return
+        assert(attacker is not None)
+        assert(target is not None)
 
         if target.doId not in self.objectDict:
             return
@@ -88,6 +90,22 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
 
         attackers.remove(attacker.doId)
         self.air.battleMgr.clearAttacker(target, attacker)
+        attacker.b_setCurrentTarget(0)
+
+    def clearAttacker(self, attacker):
+        assert(attacker is not None)
+
+        # removes attacker from all targets and clears the attacker
+        # entirely from the target manager
+        for targetDoId, attackerDoIds in list(self.objectDict.items()):
+            target = self.air.doId2do.get(targetDoId)
+            if not target:
+                continue
+
+            if attacker.doId in attackerDoIds:
+                attackerDoIds.remove(attacker.doId)
+                self.air.battleMgr.clearAttacker(target, attacker)
+
         attacker.b_setCurrentTarget(0)
 
     def getAttackers(self, targetDoId):

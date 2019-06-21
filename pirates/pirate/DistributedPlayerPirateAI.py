@@ -683,8 +683,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         DistributedBattleAvatarAI.disable(self)
 
     def delete(self):
+        self.air.targetMgr.clearAttacker(self)
         self.air.worldGridManager.clearAvatarInterests(self)
-
         inventory = self.getInventory()
         if inventory:
             self.air.questMgr.deactivateQuests(self)
