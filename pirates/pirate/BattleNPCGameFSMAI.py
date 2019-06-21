@@ -147,6 +147,13 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         spawnNodeNP.setPos(*self.avatar.getSpawnPos())
         return self.avatar.getDistance(spawnNodeNP)
 
+    def _drawWeapon(self):
+        if not self.avatar.isWeaponDrawn:
+            self.avatar.b_setCurrentWeapon(self.avatar.currentWeaponId, 1)
+
+    def _putAwayWeapon(self):
+        self.avatar.b_setCurrentWeapon(self.avatar.currentWeaponId, 0)
+
     def _chooseNextAttack(self, task):
         self.chooseNextAttack()
         return task.done
@@ -293,12 +300,11 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             self.attackTarget = self.getNewAttackTarget()
             assert(self.attackTarget is not None)
 
-        # draw the enemy's weapon if it's now already drawn
-        if not self.avatar.isWeaponDrawn:
-            self.avatar.b_setCurrentWeapon(self.avatar.currentWeaponId, 1)
-
         # update our anim state
         self.avatar.b_setAnimSet('default')
+
+        # draw our weapon
+        self._drawWeapon()
 
         # start attacking our target
         self.chooseNextAttack()
@@ -312,9 +318,6 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         if self.__nextAttackTask is not None:
             taskMgr.remove(self.__nextAttackTask)
             self.__nextAttackTask = None
-
-        # put away the enemies weapon
-        self.avatar.b_setCurrentWeapon(self.avatar.currentWeaponId, 0)
 
         # update our anim state
         spawnNode = self.avatar.getSpawnNode()
@@ -342,6 +345,9 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
     def enterBreakCombat(self):
         self.attackTarget = None
+
+        # put away our weapon
+        self._putAwayWeapon()
 
         # walk us back to our spawn point then set our default state.
         self.walkToPoint(Point3(*self.avatar.getSpawnPos()))
