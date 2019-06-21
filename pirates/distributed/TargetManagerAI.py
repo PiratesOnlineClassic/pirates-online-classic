@@ -41,6 +41,15 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
         if target.doId not in self.objectDict:
             return
 
+        # clear all of our previously targeted attackers
+        attackers = self.objectDict[target.doId]
+        for attackerDoId in attackers:
+            attacker = self.air.doId2do.get(attackerDoId)
+            if not attacker:
+                continue
+
+            self.air.battleMgr.clearAttacker(target, attacker)
+
         del self.objectDict[target.doId]
 
     def hasAttacker(self, attackerId, targetId):
@@ -64,6 +73,8 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
         if target.gameFSM.attackTarget is None and target.gameFSM.state != 'Battle':
             target.b_setGameState('Battle')
 
+        attacker.b_setCurrentTarget(target.doId)
+
     def removeAttacker(self, attacker, target):
         if not attacker or not target:
             return
@@ -76,6 +87,8 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
             return
 
         attackers.remove(attacker.doId)
+        self.air.battleMgr.clearAttacker(target, attacker)
+        attacker.b_setCurrentTarget(0)
 
     def getAttackers(self, targetDoId):
         return self.objectDict.get(targetDoId)

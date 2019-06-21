@@ -119,6 +119,7 @@ class BattleManagerAI(BattleManagerBase):
         # if not we will assume this is a new attacker to the target and assign them accordingly...
         if not self.air.targetMgr.hasTarget(avatar.doId) and not self.air.targetMgr.hasAttacker(avatar.doId, target.doId):
             self.air.targetMgr.addAttacker(avatar, target)
+            avatar.b_setCurrentTarget(target.doId)
 
         # add the skill info to the attackers battle skill diary to track
         # what skills they have used and when...
@@ -338,10 +339,8 @@ class BattleManagerAI(BattleManagerBase):
         # check to see if the avatar's recent recorded combos are expired,
         # if they are removed them from the combo diary...
         combos = attacker.comboDiary.getCombos(attacker.doId)
-
         for combo in combos:
             skillId = combo[ComboDiaryAI.SKILLID_INDEX]
-
             if attacker.comboDiary.checkComboExpired(attacker.doId, skillId):
                 attacker.comboDiary.removeCombo(attacker.doId, skillId)
 
@@ -353,7 +352,6 @@ class BattleManagerAI(BattleManagerBase):
         # check the current weapon skill and determine if the avatar is still in
         # range that they may still be able to use that weapon in battle...
         skillId = attacker.battleSkillDiary.getCurrentSkill()
-
         if not skillId:
             return
 
@@ -365,18 +363,20 @@ class BattleManagerAI(BattleManagerBase):
             self.notify.debug('Attacker %d has gone out of range of target %d with skill %d!' % (
                 attacker.doId, target.doId, skillId))
 
-            # remove the doll attuning when out of range.
-            if attacker.hasStickyTarget(target.doId):
-                attacker.removeSkillEffect(WeaponGlobals.C_ATTUNE)
-                attacker.removeStickyTarget(target.doId)
+            self.air.targetMgr.removeAttacker(target, attacker)
 
+    def clearAttacker(self, target, attacker):
+        assert(target is not None)
+        assert(attacker is not None)
 
-            self.air.targetMgr.removeAttacker(attacker, target)
+        # remove the doll attuning when out of range.
+        if attacker.hasStickyTarget(target.doId):
+            attacker.removeSkillEffect(WeaponGlobals.C_ATTUNE)
+            attacker.removeStickyTarget(target.doId)
 
-            # clear the avatar's skill diaries since the target it
-            # previously attacked is now gone...
-            attacker.battleSkillDiary.clear()
-            attacker.comboDiary.clear()
+        # clear the avatar's skill diaries
+        attacker.battleSkillDiary.clear()
+        attacker.comboDiary.clear()
 
     def rewardAttackers(self, target):
         attackers = self.air.targetMgr.getAttackers(target.doId)
@@ -410,8 +410,7 @@ class BattleManagerAI(BattleManagerBase):
             # update the avatar's skill reputation for each skill it used to kill the target,
             # adding onto the overall reputation rewarded
             overallReputation += reputation
-            inventory.setReputation(reputationCategoryId, inventory.getReputation(
-                reputationCategoryId) + reputation)
+            inventory.setReputation(reputationCategoryId, inventory.getReputation(reputationCategoryId) + reputation)
 
         # clear the avatar's skill diary since they've been given their
         # reward in full...
@@ -428,12 +427,8 @@ class BattleManagerAI(BattleManagerBase):
         inventory.setGoldInPocket(inventory.getGoldInPocket() + goldReward)
 
         if random.random() >= 0.8:
-            cardId = random.randint(InventoryType.begin_Cards, InventoryType.end_Cards)
-
+            cardId = random.randint(InventoryType.begin_Cards, InventoryType.end_Cards - 1)
             inventory.giveCards(cardId, 1)
 
         # attempt to update the avatar's active task progress...
         self.air.questMgr.enemyDefeated(attacker, target)
-
-    def destroy(self):
-        BattleManagerBase.destroy(self)

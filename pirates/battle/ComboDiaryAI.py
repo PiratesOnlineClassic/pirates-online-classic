@@ -40,4 +40,4 @@ class ComboDiaryAI(ComboDiary):
         del self.timers[avId]
 
     def getCombos(self, avId):
-        return self.timers.get(avId, {})
+        return self.timers.get(avId, [])
