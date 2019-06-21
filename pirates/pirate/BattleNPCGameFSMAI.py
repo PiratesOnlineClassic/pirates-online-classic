@@ -303,6 +303,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         if not self.attackTarget:
             self.attackTarget = self.getNewAttackTarget()
             assert(self.attackTarget is not None)
+            self.avatar.b_setCurrentTarget(self.attackTarget.doId)
 
         # update our anim state
         self.avatar.b_setAnimSet('default')
@@ -349,6 +350,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
     def enterBreakCombat(self):
         self.attackTarget = None
+        self.avatar.b_setCurrentTarget(0)
 
         # put away our weapon
         self._putAwayWeapon()

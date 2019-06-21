@@ -136,6 +136,19 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
     def getShipId(self):
         return self.shipId
 
+    def setCurrentTarget(self, currentTargetDoId):
+        self.currentTargetDoId = currentTargetDoId
+
+    def d_setCurrentTarget(self, currentTargetDoId):
+        self.sendUpdate('setCurrentTarget', [currentTargetDoId])
+
+    def b_setCurrentTarget(self, currentTargetDoId):
+        self.setCurrentTarget(currentTargetDoId)
+        self.d_setCurrentTarget(currentTargetDoId)
+
+    def getCurrentTarget(self):
+        return self.currentTargetDoId
+
     def setCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
         self.currentWeaponId = currentWeaponId
         self.isWeaponDrawn = isWeaponDrawn
