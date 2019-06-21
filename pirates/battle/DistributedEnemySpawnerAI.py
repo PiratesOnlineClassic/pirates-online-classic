@@ -373,9 +373,9 @@ class EnemySpawnNode(SpawnNodeBase):
     def setNPCAttributes(self, npc):
         weapons = EnemyGlobals.getEnemyWeapons(npc.getAvatarType(), npc.getLevel()).keys()
 
-        #TODO: Better place to add this?
-        drawnAnimSets = ['attention']
-        defaultDrawn = True if self.objectData.get('AnimSet', '') in drawnAnimSets else False
+        animSet = self.objectData.get('AnimSet', '')
+        drawnAnimSets = ['attention', 'bayonet_drill']
+        defaultDrawn = True if animSet in drawnAnimSets or 'attack_' in animSet else False
         npc.setCurrentWeapon(random.choice(weapons), config.GetBool('want-enemy-weapons', defaultDrawn))
 
     def getNPCClass(self, avatarType):
