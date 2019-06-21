@@ -113,8 +113,8 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
                     continue
 
                 totalDamageDone = 0
-                recordedAttacks = list(attacker.comboDiary.timers[attacker.doId])
-                for recordedAttack in recordedAttacks:
+                recordedAttacks = attacker.comboDiary.getCombos(attacker.doId)
+                for recordedAttack in list(recordedAttacks):
                     totalDamageDone += recordedAttack[2]
 
                 weights[attackTargetDoId] = totalDamageDone
