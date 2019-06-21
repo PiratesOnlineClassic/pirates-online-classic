@@ -242,10 +242,6 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             self.avatar.b_setGameState('BreakCombat')
             return task.done
 
-        # only rotate our avatar to face the attacker if we are not moving
-        if self.state == 'Battle':
-            self.avatar.lookAt(self.attackTarget)
-
         return task.cont
 
     def enterOff(self):
@@ -259,6 +255,8 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             self.attackTarget = self.getNewAttackTarget()
             assert(self.attackTarget is not None)
             self.avatar.b_setCurrentTarget(self.attackTarget.doId)
+
+        self.avatar.startLookAt()
 
         # update our anim state
         self.avatar.b_setAnimSet('default')
@@ -279,12 +277,16 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             taskMgr.remove(self.__nextAttackTask)
             self.__nextAttackTask = None
 
+        self.avatar.stopLookAt()
+
         # update our anim state
         spawnNode = self.avatar.getSpawnNode()
         self.avatar.b_setAnimSet(spawnNode.objectData.get('AnimSet', 'default'))
 
     def enterAttackChase(self, *args, **kwargs):
         assert(self.attackTarget is not None)
+
+        self.avatar.startLookAt()
 
         # begin following our target
         self.findNextWalkToPoint()
@@ -302,6 +304,8 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         if self.__nextAttackTask is not None:
             taskMgr.remove(self.__nextAttackTask)
             self.__nextAttackTask = None
+
+        self.avatar.stopLookAt()
 
     def enterBreakCombat(self):
         self.attackTarget = None

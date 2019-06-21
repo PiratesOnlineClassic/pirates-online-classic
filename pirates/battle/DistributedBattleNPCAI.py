@@ -108,6 +108,22 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     def getSpawnNode(self):
         return self.spawnNode
 
+    def lookAtTarget(self, task):
+        if self.currentTarget:
+            self.headsUp(self.currentTarget)
+            return task.cont
+
+        return task.done
+
+    def getUpdateLookAtTaskName(self):
+        return self.taskName('lookAtTarget')
+
+    def startLookAt(self):
+        taskMgr.add(self.lookAtTarget, self.getUpdateLookAtTaskName())
+
+    def stopLookAt(self):
+        taskMgr.remove(self.getUpdateLookAtTaskName())
+
     def requestClientAggro(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:

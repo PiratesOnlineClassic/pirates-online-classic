@@ -57,6 +57,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.ensaredTargetId = 0
         self.level = 0
 
+        self.currentTarget = None
         self.skillTask = None
         self.weapon = None
 
@@ -137,7 +138,11 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         return self.shipId
 
     def setCurrentTarget(self, currentTargetDoId):
-        self.currentTargetDoId = currentTargetDoId
+        if self.currentTarget is not None:
+            if not currentTargetDoId:
+                self.currentTarget.resetComboLevel()
+
+        self.currentTarget = self.air.doId2do.get(currentTargetDoId)
 
     def d_setCurrentTarget(self, currentTargetDoId):
         self.sendUpdate('setCurrentTarget', [currentTargetDoId])
@@ -147,7 +152,10 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.d_setCurrentTarget(currentTargetDoId)
 
     def getCurrentTarget(self):
-        return self.currentTargetDoId
+        if not self.currentTarget:
+            return 0
+
+        return self.currentTarget.doId
 
     def setCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
         self.currentWeaponId = currentWeaponId
