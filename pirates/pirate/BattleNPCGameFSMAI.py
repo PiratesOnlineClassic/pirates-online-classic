@@ -217,6 +217,20 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
     def exitOff(self):
         pass
 
+    def enterIdle(self):
+        pass
+
+    def filterIdle(self, request, args=[]):
+        # the monkey cannot attack anyone, as it does not have a weapon or skills;
+        # with this in mind we can argue the monkey will never leave Idle state.
+        if self.avatar.avatarType == AvatarTypes.Monkey:
+            return None
+
+        return self.defaultFilter(request, args)
+
+    def exitIdle(self):
+        pass
+
     def enterPatrol(self, *args, **kwargs):
         self.findNextWalkToPoint()
 
@@ -291,13 +305,6 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.beginAttackingTarget()
         self.__updateBattleStateTask = taskMgr.add(self.__updateBattleState, self.getUpdateBattleStateTaskName())
 
-    def filterBreakCombat(self, request, args=[]):
-        # the monkey cannot attack anyone, as it does not have a weapon or skills...
-        if request == 'Battle' and self.avatar.avatarType == AvatarTypes.Monkey:
-            return
-
-        return self.defaultFilter(request, args)
-
     def exitBattle(self):
         if self.__updateBattleStateTask:
             taskMgr.remove(self.__updateBattleStateTask)
@@ -356,7 +363,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             return 'LandRoam'
 
         if request == 'Battle':
-            return
+            return None
 
         return self.defaultFilter(request, args)
 
