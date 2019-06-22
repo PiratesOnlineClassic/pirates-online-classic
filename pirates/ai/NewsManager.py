@@ -97,6 +97,12 @@ class NewsManager(DistributedObject.DistributedObject):
                 if localAvatar.guiMgr.prevTag:
                     localAvatar.guiMgr.prevTag.hide()
 
+            if holidayId == PiratesGlobals.FOURTHOFJULY:
+                base.fourthOfJuly = True
+
+            if holidayId == PiratesGlobals.SAINTPATRICKSDAY:
+                base.saintPatricksDay = True
+
             messenger.send('HolidayStarted', [HolidayGlobals.getHolidayName(holidayId)])
 
     def endHoliday(self, holidayId):
@@ -118,6 +124,12 @@ class NewsManager(DistributedObject.DistributedObject):
             if holidayId == PiratesGlobals.ALLACCESSWEEKEND:
                 Freebooter.AllAccessHoliday = False
             
+            if holidayId == PiratesGlobals.FOURTHOFJULY:
+                base.fourthOfJuly = False
+
+            if holidayId == PiratesGlobals.SAINTPATRICKSDAY:
+                base.saintPatricksDay = False
+
             messenger.send('HolidayEnded', [HolidayGlobals.getHolidayName(holidayId)])
 
     def setHolidayIdList(self, holidayIdArray):
