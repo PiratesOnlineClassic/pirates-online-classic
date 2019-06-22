@@ -638,6 +638,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         self.hullCenter = self.transNode.attachNewNode('hullCenter')
         self.stern.setPos(Point3(0, tb[1][1], 0))
         self.bow.setPos(Point3(0, tb[0][1], 0))
+        print ('BOW IS OBJECT!!!!!', self.bow)
         self.starboard.setPos(Point3(tb[1][0], 0, 0))
         self.port.setPos(Point3(tb[0][0], 0, 0))
         self.keel.setPos(Point3(0, 0, tb[0][2]))
@@ -1472,7 +1473,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.wheel[1].acceptInteraction()
             localAvatar.b_setGameState('ShipPilot', [
                 self])
-            self.accept(self.exitWorldEvent, self.handleOutOfRange)
+            #self.accept(self.exitWorldEvent, self.handleOutOfRange)
             self.enableShipControls()
             self.setupRammingCollisions()
             collNPs = self.findAllMatches('**/+CollisionNode')

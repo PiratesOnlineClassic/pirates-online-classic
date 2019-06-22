@@ -6,6 +6,7 @@ from direct.distributed.PyDatagram import PyDatagram
 
 from pirates.ship import ShipGlobals
 from pirates.shipparts.HullDNA import HullDNA
+from pirates.shipparts.MastDNA import MastDNA
 from pirates.piratesbase import PiratesGlobals
 from pirates.uberdog.UberDogGlobals import InventoryCategory
 
@@ -147,41 +148,68 @@ class CreateShipFSM(ShipLoaderOperationFSM):
             self.cleanup(0)
             return
 
-        self.mastConfig = ShipGlobals.getMastConfig(self.modelClass, 0)
+        self.mastInfo = ShipGlobals.getMastInfo(self.modelClass)
+        self.pendingMasts = [ShipGlobals.SHIP_MAST] * len(self.mastInfo)
+        self.mastDoIds = []
 
-        #fields = {
-        #    # DistributedShippart:
-        #    'setOwnerId': (self.avatarId,),
-        #    'setShipId': (self.shipId,),
-        #    'setGeomParentId': (0,),
-        #
-        #    # DistributedDestructibleArray:
-        #    'setMaxArrayHp': (self.mastConfig['setMaxArrayHp'][0],),
-        #    'setArrayHp': (self.mastConfig['setArrayHp'][0],),
-        #
-        #    # DistributedMastDNA:
-        #    'setShipClass': (self.modelClass,),
-        #    'setBaseTeam': (0,),
-        #
-        #    'setSailConfig': (self.mastConfig['setSailConfig'],),
-        #    'setTextureIndex': (self.mastConfig['setTextureIndex'],),
-        #    'setPosIndex': (self.mastConfig['setPosIndex'],)
-        #}
-        #
-        #self.air.dbInterface.createObject(self.air.dbId,
-        #    self.air.dclassesByName['DistributedMastUD'],
-        #    fields=fields,
-        #    callback=self.shipMastCreatedCallback)
+        for mastType, x, sailTypes in self.mastInfo:
+            mastConfig = ShipGlobals.getMastConfig(self.modelClass, x)
 
-    #def shipMastCreatedCallback(self, shipMastDoId):
-    #    self.shipMastDoId = shipMastDoId
-    #    if not self.shipMastDoId:
-    #        self.notify.warning('Failed to create ship %d for avatar %d, '
-    #            'ship mast database object creation failed!' % (self.shipId, self.avatarId))
-    #
-    #        self.cleanup(0)
-    #        return
+            fields = {
+                # DistributedShippart
+                'setOwnerId': (self.avatarId,),
+                'setShipId': (self.shipId,),
+                'setGeomParentId': (0,),
 
+                # DistributedDestructibleArray:
+                'setMaxArrayHp': (mastConfig['setMaxArrayHp'][0],),
+                'setArrayHp': (mastConfig['setArrayHp'][0],),
+            }
+
+            mastDNA = MastDNA()
+            mastDNA.setShipClass(self.modelClass)
+            mastDNA.setBaseTeam(PiratesGlobals.PLAYER_TEAM)
+            mastDNA.setMastType(mastType)
+            for key, value in mastConfig.items():
+                if not hasattr(mastDNA, key):
+                    continue
+
+                if key == 'setShipClass' or key == 'setMastType':
+                    continue
+
+                getattr(mastDNA, key)(value)
+
+            dclass = self.air.dclassesByName['DistributedMastDNA']
+            for fieldIndex in xrange(dclass.getNumFields()):
+                field = dclass.getInheritedField(fieldIndex)
+                if not field.asAtomicField():
+                    continue
+
+                fieldValue = getattr(mastDNA, field.getName().replace('set', 'get'))()
+                if isinstance(fieldValue, list):
+                    fields[field.getName()] = fieldValue
+                else:
+                    fields[field.getName()] = (fieldValue,)
+
+            self.air.dbInterface.createObject(self.air.dbId,
+                self.air.dclassesByName['DistributedMastUD'],
+                fields=fields,
+                callback=self.shipMastCreatedCallback)
+
+    def shipMastCreatedCallback(self, shipMastDoId):
+        if not shipMastDoId:
+            self.notify.warning('Failed to create ship %d for avatar %d, '
+                'ship mast database object creation failed!' % (self.shipId, self.avatarId))
+
+            self.cleanup(0)
+            return
+
+        self.pendingMasts.remove(ShipGlobals.SHIP_MAST)
+        self.mastDoIds.append(shipMastDoId)
+        if not self.pendingMasts:
+            self.shipMastsCreatedCallback()
+
+    def shipMastsCreatedCallback(self):
         self.air.dbInterface.queryObject(self.air.dbId,
             self.inventoryId,
             self.shipInventoryQueryCallback,
@@ -198,7 +226,8 @@ class CreateShipFSM(ShipLoaderOperationFSM):
         # manually update the ship's inventory's doId list containing the shippart doId's...
         doIds, = fields['setDoIds']
         doIds.append([InventoryCategory.SHIP_MAINPARTS, self.shipHullDoId])
-        #doIds.append([InventoryCategory.SHIP_MAINPARTS, self.shipMastDoId])
+        for shipMastDoId in self.mastDoIds:
+            doIds.append([InventoryCategory.SHIP_MAINPARTS, shipMastDoId])
 
         fields = {
             'setDoIds': (doIds,),
@@ -311,12 +340,15 @@ class ActivateShipFSM(ShipLoaderOperationFSM):
 
         self.pendingShipparts = []
         doIdsInCategory, = fields['setDoIds']
-        for category, doId in doIdsInCategory:
+        for category, shippartDoId in doIdsInCategory:
             if category == InventoryCategory.SHIP_MAINPARTS:
-                self.pendingShipparts.append(doId)
-                self.air.dbInterface.queryObject(self.air.dbId,
-                    doId,
-                    lambda dclass, fields: self.shippartQueryCallback(doId, dclass, fields))
+                self.loadShippart(shippartDoId)
+
+    def loadShippart(self, shippartDoId):
+        self.pendingShipparts.append(shippartDoId)
+        self.air.dbInterface.queryObject(self.air.dbId,
+            shippartDoId,
+            lambda dclass, fields: self.shippartQueryCallback(shippartDoId, dclass, fields))
 
     def shippartQueryCallback(self, shippartDoId, dclass, fields):
         if not dclass and fields:

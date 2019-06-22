@@ -3,9 +3,13 @@ from direct.distributed.ClockDelta import *
 
 from pirates.battle.Teamable import Teamable
 from pirates.ship import ShipGlobals
+from pirates.piratesbase import PiratesGlobals
 from pirates.movement.DistributedMovingObjectAI import DistributedMovingObjectAI
 from pirates.distributed.DistributedCharterableObjectAI import DistributedCharterableObjectAI
 from pirates.shipparts.DistributedShippartAI import DistributedShippartAI
+from pirates.shipparts.DistributedSteeringWheelAI import DistributedSteeringWheelAI
+from pirates.shipparts.DistributedBowSpritAI import DistributedBowSpritAI
+from pirates.shipparts.DistributedSailAI import DistributedSailAI
 
 
 class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectAI, Teamable):
@@ -41,6 +45,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.landedGrapples = []
         self.wishName = ''
         self.wishNameState = ''
+        self.clientControllerDoId = 0
 
     def sendCurrentPosition(self):
         x, y, z = self.getPos()
@@ -56,9 +61,54 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
                 self.sendCurrentPosition()
             except:
                 pass
+
             return task.again
 
         taskMgr.doMethodLater(0.2, _broadcast, self.uniqueName('broadcast-pos'))
+
+    def announceGenerate(self):
+        DistributedMovingObjectAI.announceGenerate(self)
+        DistributedCharterableObjectAI.announceGenerate(self)
+
+        self.steeringWheel = DistributedSteeringWheelAI(self.air)
+        self.steeringWheel.setShipId(self.doId)
+        self.generateChildWithRequired(self.steeringWheel, PiratesGlobals.ShipZoneOnDeck)
+
+        #self.bowSprit = DistributedBowSpritAI(self.air)
+        #self.bowSprit.setShipId(self.doId)
+        #
+        #prowConfig = ShipGlobals.getProwConfig(self.shipClass)
+        #for key, value in prowConfig.items():
+        #    if not hasattr(self.bowSprit, key):
+        #        continue
+        #
+        #    if isinstance(value, list):
+        #        value = value[0]
+        #
+        #    getattr(self.bowSprit, key)(value)
+        #
+        #self.generateChildWithRequired(self.bowSprit, PiratesGlobals.ShipZoneOnDeck)
+
+        mastInfo = ShipGlobals.getMastInfo(self.shipClass)
+        for mastType, x, sailTypes in mastInfo:
+            sailIndex = 0
+            for sailType in sailTypes:
+                sailConfig = ShipGlobals.getSailConfig(self.shipClass, x, sailIndex)
+                sail = DistributedSailAI(self.air)
+                sail.setShipId(self.doId)
+                sail.setAnimState('TiedUp')
+
+                for key, value in sailConfig.items():
+                    if not hasattr(sail, key):
+                        continue
+
+                    if isinstance(value, list):
+                        value = value[0]
+
+                    getattr(sail, key)(value)
+
+                self.generateChildWithRequired(sail, PiratesGlobals.ShipZoneOnDeck)
+                sailIndex += 1
 
     def setUniqueId(self, uniqueId):
         self.uniqueId = uniqueId
@@ -326,6 +376,19 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
     def getGameState(self):
         return self.gameState
 
+    def setClientController(self, clientControllerDoId):
+        self.clientControllerDoId = clientControllerDoId
+
+    def d_setClientController(self, clientControllerDoId):
+        self.sendUpdate('setClientController', [clientControllerDoId])
+
+    def b_setClientController(self, clientControllerDoId):
+        self.setClientController(clientControllerDoId)
+        self.d_setClientController(clientControllerDoId)
+
+    def getClientController(self):
+        return self.clientControllerDoId
+
     def setBadge(self, titleId, rank):
         self.badge = [titleId, rank]
 
@@ -392,4 +455,10 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         return self.wishNameState
 
     def shipBoarded(self):
-        print ('shipBoarded')
+        pass
+
+    def generateChildWithRequired(self, do, zoneId, optionalFields=[]):
+        self.generateChildWithRequiredAndId(do, self.air.allocateChannel(), self.doId, zoneId, optionalFields)
+
+    def generateChildWithRequiredAndId(self, do, doId, parentId, zoneId, optionalFields=[]):
+        do.generateWithRequiredAndId(doId, parentId, zoneId, optionalFields)

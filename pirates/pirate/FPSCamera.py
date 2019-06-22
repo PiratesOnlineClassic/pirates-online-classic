@@ -244,7 +244,11 @@ class FPSCamera(CameraMode.CameraMode, NodePath, ParamObj):
         if self._cHandlerQueue.getNumEntries() > 0:
             self._cHandlerQueue.sortEntries()
             collEntry = self._cHandlerQueue.getEntry(0)
-            cPoint = collEntry.getSurfacePoint(self)
+            try:
+                cPoint = collEntry.getSurfacePoint(self)
+            except AssertionError:
+                return Task.cont
+
             cNormal = collEntry.getSurfaceNormal(self)
             offset = 0.9
             camera.setPos(cPoint + cNormal * offset)
