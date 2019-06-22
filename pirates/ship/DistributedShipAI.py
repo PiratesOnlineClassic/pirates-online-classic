@@ -10,6 +10,7 @@ from pirates.shipparts.DistributedShippartAI import DistributedShippartAI
 from pirates.shipparts.DistributedSteeringWheelAI import DistributedSteeringWheelAI
 from pirates.shipparts.DistributedBowSpritAI import DistributedBowSpritAI
 from pirates.shipparts.DistributedSailAI import DistributedSailAI
+from pirates.shipparts.DistributedCabinAI import DistributedCabinAI
 
 
 class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectAI, Teamable):
@@ -108,6 +109,22 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
                 self.generateChildWithRequired(sail, PiratesGlobals.ShipZoneSilhouette)
                 sailIndex += 1
+
+        cabinType = ShipGlobals.getCabinType(self.shipClass)
+        if cabinType != -1:
+            cabinConfig = ShipGlobals.getCabinConfig(self.shipClass)
+            cabin = DistributedCabinAI(self.air)
+            cabin.setShipId(self.doId)
+            for key, value in cabinConfig.items():
+                if not hasattr(cabin, key):
+                    continue
+
+                if isinstance(value, list):
+                    value = value[0]
+
+                getattr(cabin, key)(value)
+
+            self.generateChildWithRequired(cabin, PiratesGlobals.ShipZoneSilhouette)
 
     #def setLocation(self, parentId, zoneId):
     #    if self.owner is not None:
