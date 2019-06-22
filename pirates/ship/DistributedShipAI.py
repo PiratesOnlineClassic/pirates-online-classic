@@ -50,7 +50,6 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
     def sendCurrentPosition(self):
         x, y, z = self.getPos()
         h, p, r = self.getHpr()
-        print (x, y, z, h, p, r)
         timestamp = globalClockDelta.getRealNetworkTime(bits=16)
         self.sendUpdate('setSmPosHpr', [x, y, z, h, p, r, timestamp])
 

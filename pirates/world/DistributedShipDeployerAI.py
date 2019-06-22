@@ -89,7 +89,9 @@ class DeployShipFSM(ShipDeployerOperationFSM):
 
         self.air.worldGridManager.handleLocationChanged(self.oceanGrid, self.avatar, self.ship.zoneId)
 
-        self.ship.startPosHprBroadcast()
+        # only send our current position to initially position the ship,
+        # the client will take over and control the ship beyond this point...
+        self.sendCurrentPosition()
         self.ship.b_setGameState('Docked', 0)
 
         self.inventory = self.air.doId2do.get(self.ship.inventoryId)
