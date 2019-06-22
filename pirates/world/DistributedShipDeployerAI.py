@@ -96,7 +96,7 @@ class DeployShipFSM(ShipDeployerOperationFSM):
         self.ship.b_setGameState('Docked', 0)
 
         # add the ship to the deployer's deployed list
-        self.shipDeployer.addDeployedShip(self.ship)
+        #self.shipDeployer.addDeployedShip(self.ship)
 
         self.inventory = self.air.doId2do.get(self.ship.inventoryId)
         if not self.inventory:

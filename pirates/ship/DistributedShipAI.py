@@ -125,7 +125,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
         self.steeringWheel = DistributedSteeringWheelAI(self.air)
         self.steeringWheel.setShipId(self.doId)
-        self.generateChildWithRequired(self.steeringWheel, PiratesGlobals.ShipZoneSilhouette)
+        self.generateChildWithRequired(self.steeringWheel, PiratesGlobals.ShipZoneOnDeck)
 
     def setUniqueId(self, uniqueId):
         self.uniqueId = uniqueId
