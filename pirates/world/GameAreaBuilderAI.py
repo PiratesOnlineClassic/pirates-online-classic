@@ -9,7 +9,8 @@ from pirates.interact.DistributedSearchableContainerAI import DistributedSearcha
 from pirates.interact.DistributedInteractivePropAI import DistributedInteractivePropAI
 from pirates.treasuremap.DistributedBuriedTreasureAI import DistributedBuriedTreasureAI
 from pirates.treasuremap.DistributedSurfaceTreasureAI import DistributedSurfaceTreasureAI
-
+from pirates.holiday.DistributedHolidayBonfireAI import DistributedHolidayBonfireAI
+from pirates.holiday.DistributedHolidayPigAI import DistributedHolidayPigAI
 
 class GameAreaBuilderAI(ClientAreaBuilderAI):
     notify = directNotify.newCategory('GameAreaBuilderAI')
@@ -46,6 +47,8 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             newObj = self.createObjectSpawnNode(parent, parentUid, objKey, objectData)
         elif objType == 'Interactive Prop' and self.wantInteractives and not config.GetBool('want-alpha-blockers', False):
             newObj = self.createInteractiveProp(parent, parentUid, objKey, objectData)
+        elif objType == 'Holiday Object' and self.wantInteractives:
+            newObj = self.createHolidayProp(parent, parentUid, objKey, objectData)
 
         return newObj
 
@@ -366,3 +369,33 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         self.addObject(prop)
 
         return prop
+
+    def createHolidayProp(self, parent, parentUid, objKey, objectData):
+
+        propCls = None
+        subType = objectData.get('SubType', 'Unknown')
+        if subType == 'Roast Pig':
+            propCls = DistributedHolidayPigAI
+        elif subType == 'Bonfire':
+            propCls = DistributedHolidayBonfireAI
+        
+        if not propCls:
+            self.notify.warning('Unknown holiday prop type: %s' % subType)
+            return None
+
+        prop = propCls(self.air)
+        prop.setUniqueId(objKey)
+        prop.setPos(objectData.get('GridPos', objectData.get('Pos', (0, 0, 0))))
+        prop.setHpr(objectData.get('Hpr', (0, 0, 0)))
+        prop.setScale(objectData.get('Scale', (1, 1, 1)))
+        prop.setInteractRadius(float(objectData.get('Aggro Radius', 12.0)))
+        prop.setActiveInteractMode(objectData.get('Interact Mode', 'All'))
+        prop.setHoliday(objectData.get('Holiday', 'FoundersFeast'))
+
+        zoneId = self.parent.getZoneFromXYZ(prop.getPos())
+        parent.generateChildWithRequired(prop, zoneId)
+        self.parentObjectToCell(prop, zoneId)
+        self.addObject(prop)
+
+        return prop
+        
