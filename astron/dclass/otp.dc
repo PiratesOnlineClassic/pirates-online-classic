@@ -125,9 +125,9 @@ dclass DistributedNode : DistributedObject {
 
 dclass DistributedSmoothNode : DistributedNode {
   setComponentL(uint64) broadcast ram ownsend airecv;
-  setComponentX(int16/10) broadcast ram ownsend airecv;
-  setComponentY(int16/10) broadcast ram ownsend airecv;
-  setComponentZ(int16/10) broadcast ram ownsend airecv;
+  setComponentX(int32/10) broadcast ram ownsend airecv;
+  setComponentY(int32/10) broadcast ram ownsend airecv;
+  setComponentZ(int32/10) broadcast ram ownsend airecv;
   setComponentH(int16%360/10) broadcast ram ownsend airecv;
   setComponentP(int16%360/10) broadcast ram ownsend airecv;
   setComponentR(int16%360/10) broadcast ram ownsend airecv;

@@ -58,8 +58,22 @@ class DeployShipFSM(ShipDeployerOperationFSM):
         self.islandParentObj = self.island.getParentObj()
         self.oceanGrid = self.islandParentObj.oceanGrid
 
+        deployerSphere = self.shipDeployer.getRandomSphere()
+        self.spawnPoint = self.getSpawnPointFromSphere(*deployerSphere)
+        zoneId = self.oceanGrid.getZoneFromXYZ(self.spawnPoint)
+
+        # take control of the avatar's grid interest
+        self.avatar.setCanControlInterests(False)
+        self.air.worldGridManager.handleLocationChanged(self.oceanGrid, self.avatar, zoneId)
+
         self.acceptOnce('generate-%d' % self.shipId, self.shipArrivedCallback)
-        self.air.sendSetObjectLocation(self.shipId, self.shipDeployer.parentId, self.shipDeployer.zoneId)
+        self.air.sendSetObjectLocation(self.shipId, self.oceanGrid.doId, zoneId)
+
+    def getSpawnPointFromSphere(self, sx, sy, sz):
+        radius = self.shipDeployer.getSpacing() / 2.0
+        x = random.uniform(sx - radius, sx + radius)
+        y = random.uniform(sy - radius, sy + radius)
+        return Point3(x, y, sz)
 
     def shipArrivedCallback(self, ship):
         self.ship = ship
@@ -70,23 +84,13 @@ class DeployShipFSM(ShipDeployerOperationFSM):
             self.cleanup(False)
             return
 
-        deployerSphere = self.shipDeployer.getRandomSphere()
-        x, y, z = deployerSphere.getPos()
-        print('x, y, z = deployerSphere.getPos()', x, y, z)
-        x, y, z = 1000, 1000, 0
-
-        print(x, y, z)
-        self.ship.setPos(x, y, z)
         self.oceanGrid.addObjectToGrid(self.ship)
+        self.ship.setPos(self.oceanGrid, *self.spawnPoint)
+
+        self.air.worldGridManager.handleLocationChanged(self.oceanGrid, self.avatar, self.ship.zoneId)
+
         self.ship.startPosHprBroadcast()
         self.ship.b_setGameState('Docked', 0)
-
-        x, y, z = self.ship.getPos()
-        h, p, r = self.ship.getHpr()
-        timestamp = globalClockDelta.getRealNetworkTime(bits=16)
-        self.ship.sendUpdate('setSmPosHpr', [x, y, z, h, p, r, timestamp])
-
-        #self.avatar.b_setXYZH(x, y, 10, 0)
 
         self.inventory = self.air.doId2do.get(self.ship.inventoryId)
         if not self.inventory:
@@ -106,7 +110,7 @@ class DeployShipFSM(ShipDeployerOperationFSM):
 
         for shippartDoId in self.shipMainpartsDoIdList:
             self.acceptOnce('generate-%d' % shippartDoId, self.shippartArrivedCallback)
-            self.air.sendSetObjectLocation(shippartDoId, self.ship.parentId, self.ship.zoneId)
+            self.air.sendSetObjectLocation(shippartDoId, self.ship.doId, PiratesGlobals.ShipZoneSilhouette)
 
     def shippartArrivedCallback(self, shippart):
         self.shipMainpartsDoIdList.remove(shippart.doId)
@@ -201,13 +205,13 @@ class DistributedShipDeployerAI(DistributedNodeAI):
 
         for x in xrange(numSpheres):
             pos = getSpherePos(x)
-            cSphere = CollisionSphere(pos[0], pos[1], pos[2], self.spacing / 2.0)
-            cSphere.setTangible(0)
-            cSphereNode = CollisionNode(self.uniqueName('ShipDeploySphere'))
-            cSphereNode.addSolid(cSphere)
-            sphere = self.attachNewNode(cSphereNode)
-            sphere.setTag('deploySphereId', `x`)
-            self.deploySpheres.append(sphere)
+            #cSphere = CollisionSphere(pos[0], pos[1], 0, self.spacing / 2.0)
+            #cSphere.setTangible(0)
+            #cSphereNode = CollisionNode(self.uniqueName('ShipDeploySphere'))
+            #cSphereNode.addSolid(cSphere)
+            #sphere = self.attachNewNode(cSphereNode)
+            #sphere.setTag('deploySphereId', `x`)
+            self.deploySpheres.append(pos)
 
     def getSphere(self, index):
         return self.deploySpheres[index]

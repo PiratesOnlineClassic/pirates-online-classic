@@ -25,6 +25,9 @@ class DistributedShippartAI(DistributedObjectAI):
     def getOwnerId(self):
         return self.ownerId
 
+    def getOwner(self):
+        return self.air.doId2do.get(self.shipId)
+
     def setShipId(self, shipId):
         self.shipId = shipId
 
@@ -37,6 +40,9 @@ class DistributedShippartAI(DistributedObjectAI):
 
     def getShipId(self):
         return self.shipId
+
+    def getShip(self):
+        return self.air.doId2do.get(self.shipId)
 
     def setGeomParentId(self, geomParentId):
         self.geomParentId = geomParentId

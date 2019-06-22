@@ -325,6 +325,8 @@ class ActivateShipFSM(ShipLoaderOperationFSM):
         datagram.addString(datagramCleanup.getMessage())
         self.air.send(datagram)
 
+        #self.air.clientAddSessionObject(channel, self.shipId)
+
         self.air.dbInterface.queryObject(self.air.dbId,
             self.inventoryId,
             self.shipInventoryQueryCallback,

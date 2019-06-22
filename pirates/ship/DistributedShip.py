@@ -860,7 +860,6 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def delete(self):
         self.deleteNametag3d()
-        self.notify.error('delete!')
         if self.iconNodePath:
             self.iconNodePath.removeNode()
             self.iconNodePath = None

@@ -100,19 +100,6 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
     def getGameState(self):
         return self.gameFsm.getCurrentOrNextState()
 
-    def setShipId(self, shipId):
-        self.shipId = shipId
-
-    def d_setShipId(self, shipId):
-        self.sendUpdate('setShipId', [shipId])
-
-    def b_setShipId(self, shipId):
-        self.setShipId(shipId)
-        self.d_setShipId(shipId)
-
-    def getShipId(self):
-        return self.shipId
-
     def setCurrentWeapon(self, currentWeapon, isWeaponDrawn):
         self.currentWeaponId = currentWeapon
         self.isWeaponDrawn = isWeaponDrawn

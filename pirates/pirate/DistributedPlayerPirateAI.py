@@ -59,6 +59,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.tempDoubleXPReward = 0
         self.toonUpTask = None
         self.constructedShipDoId = 0
+        self.activeShipId = 0
+        self.crewShipId = 0
+        self.canControlInterests = True
 
     def announceGenerate(self):
         DistributedPlayerAI.announceGenerate(self)
@@ -136,7 +139,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                 self.b_setCurrentIsland(parentObj.getUniqueId())
 
             self.attemptToSetCursedZombie()
-            self.air.worldGridManager.handleLocationChanged(parentObj, self, zoneId)
+            if self.canControlInterests:
+                self.air.worldGridManager.handleLocationChanged(parentObj, self, zoneId)
 
     def getWorld(self):
         parentObj = self.getParentObj()
@@ -693,11 +697,43 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             taskMgr.remove(self.toonUpTask)
             self.toonUpTask = None
 
+    def setActiveShipId(self, activeShipId):
+        self.activeShipId = activeShipId
+
+    def d_setActiveShipId(self, activeShipId):
+        self.sendUpdate('setActiveShipId', [activeShipId])
+
+    def b_setActiveShipId(self, activeShipId):
+        self.setActiveShipId(activeShipId)
+        self.d_setActiveShipId(activeShipId)
+
+    def getActiveShipId(self):
+        return self.activeShipId
+
+    def setCrewShipId(self, crewShipId):
+        self.crewShipId = crewShipId
+
+    def d_setCrewShipId(self, crewShipId):
+        self.sendUpdate('setCrewShipId', [crewShipId])
+
+    def b_setCrewShipId(self, crewShipId):
+        self.setCrewShipId(crewShipId)
+        self.d_setCrewShipId(crewShipId)
+
+    def getCrewShipId(self):
+        return self.crewShipId
+
     def setConstructedShipDoId(self, constructedShipDoId):
         self.constructedShipDoId = constructedShipDoId
 
     def getConstructedShipDoId(self):
         return self.constructedShipDoId
+
+    def setCanControlInterests(self, canControlInterests):
+        self.canControlInterests = canControlInterests
+
+    def getCanControlInterests(self):
+        return self.canControlInterests
 
     def disable(self):
         DistributedPlayerAI.disable(self)

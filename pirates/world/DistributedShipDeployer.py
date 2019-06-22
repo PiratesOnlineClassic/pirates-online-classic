@@ -7,7 +7,7 @@ from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
 
 class DistributedShipDeployer(DistributedNode):
-    
+
     def __init__(self, cr):
         DistributedNode.__init__(self, cr)
         NodePath.__init__(self, 'ShipDeployer')
@@ -65,7 +65,7 @@ class DistributedShipDeployer(DistributedNode):
 
     def setHeading(self, heading):
         self.heading = heading
-    
+
     def d_shipEnteredSphere(self, shipId, sphereId):
         self.sendUpdate('shipEnteredSphere', [
             shipId,
@@ -75,7 +75,7 @@ class DistributedShipDeployer(DistributedNode):
         self.sendUpdate('shipExitedSphere', [
             shipId,
             sphereId])
-    
+
     def d_shipExitedBarrier(self, shipId):
         self.sendUpdate('shipExitedBarrier', [
             shipId])
@@ -85,7 +85,7 @@ class DistributedShipDeployer(DistributedNode):
         self.createMinSphere()
         self.createMaxSpheres()
         self.createDeploySpheres()
-    
+
     def createMinSphere(self):
         cSphere = CollisionSphere(0, 0, 0, self.minRadius)
         cSphere.setTangible(1)
@@ -94,7 +94,7 @@ class DistributedShipDeployer(DistributedNode):
         cSphereNode.setIntoCollideMask(PiratesGlobals.ShipCollideBitmask)
         cSphereNode.addSolid(cSphere)
         self.minSphere = self.attachNewNode(cSphereNode)
-    
+
     def createMaxSpheres(self):
         cSphere = CollisionSphere(0, 0, 0, self.maxRadius)
         cSphere.setTangible(0)
@@ -116,7 +116,7 @@ class DistributedShipDeployer(DistributedNode):
         C = 2 * math.pi * deployRingRadius
         numSpheres = int(C / self.spacing)
         stepAngle = 360.0 / numSpheres
-        
+
         def getSpherePos(sphereId):
             h = sphereId * stepAngle + 90.0 + self.heading
             angle = h * math.pi / 180.0
@@ -157,7 +157,7 @@ class DistributedShipDeployer(DistributedNode):
         self.d_shipEnteredSphere(shipId, sphereId)
         for sphere in self.deploySpheres:
             sphere.stash()
-        
+
         padding = 3
         numSpheres = len(self.deploySpheres)
         for sphere in (s % numSpheres for s in xrange(sphereId - padding, sphereId + padding + 1)):
@@ -205,13 +205,11 @@ class DistributedShipDeployer(DistributedNode):
     def enableDeploySpheres(self, enable):
         if base.config.GetBool('want-shipboard-report', 0):
             self.showSpheres()
-        
+
         if enable:
             for sphere in self.deploySpheres:
                 sphere.unstash()
-            
+
         else:
             for sphere in self.deploySpheres:
                 sphere.stash()
-
-

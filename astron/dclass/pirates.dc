@@ -1553,7 +1553,7 @@ dclass DistributedSail : DistributedShippart, DistributedDestructibleObject, Dis
   setMaxSp(int16) required broadcast ram db;
   setSp(int16) required broadcast ram db;
   requestSetAnimState(string) airecv clsend;
-  setAnimState(string) required broadcast ram airecv;
+  setAnimState(string) required broadcast ram airecv clsend;
 };
 
 dclass DistributedBowSprit : DistributedShippart, DistributedDestructibleObject, DistributedBowSpritDNA {

@@ -33,6 +33,7 @@ class DistributedShippart(DistributedNode.DistributedNode):
 
     def announceGenerate(self):
         DistributedNode.DistributedNode.announceGenerate(self)
+        #self.pendingShipRequest = base.cr.relatedObjectMgr.requestObjects([self.shipId], eachCallback=self.load)
         self.ship = self.cr.doId2do[self.shipId]
         self.load()
 

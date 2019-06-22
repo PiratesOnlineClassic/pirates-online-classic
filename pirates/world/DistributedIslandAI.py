@@ -57,7 +57,6 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         self.shipDeployer.setMaxRadius(maxRadius)
         self.shipDeployer.setMinRadius(minRadius)
         self.shipDeployer.setSpacing(spacing)
-        self.shipDeployer.reparentTo(self)
 
         self.generateChildWithRequired(self.shipDeployer, PiratesGlobals.IslandShipDeployerZone)
 

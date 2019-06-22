@@ -87,7 +87,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         #
         #    getattr(self.bowSprit, key)(value)
         #
-        #self.generateChildWithRequired(self.bowSprit, PiratesGlobals.ShipZoneOnDeck)
+        #self.generateChildWithRequired(self.bowSprit, PiratesGlobals.ShipZoneSilhouette)
 
         mastInfo = ShipGlobals.getMastInfo(self.shipClass)
         for mastType, x, sailTypes in mastInfo:
@@ -107,8 +107,12 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
                     getattr(sail, key)(value)
 
-                self.generateChildWithRequired(sail, PiratesGlobals.ShipZoneOnDeck)
+                self.generateChildWithRequired(sail, PiratesGlobals.ShipZoneSilhouette)
                 sailIndex += 1
+
+    #def setLocation(self, parentId, zoneId):
+    #    if self.owner is not None:
+    #        self.air.worldGridManager.handleLocationChanged(self, self.owner, zoneId)
 
     def setUniqueId(self, uniqueId):
         self.uniqueId = uniqueId
@@ -438,7 +442,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.setWishName(wishName)
         self.d_setWishName(wishName)
 
-    def getWishName(slef):
+    def getWishName(self):
         return self.wishName
 
     def setWishNameState(self, wishNameState):
@@ -455,7 +459,13 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         return self.wishNameState
 
     def shipBoarded(self):
-        pass
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        avatar.b_setShipId(self.doId)
+        avatar.b_setActiveShipId(self.doId)
+        avatar.b_setCrewShipId(self.doId)
 
     def generateChildWithRequired(self, do, zoneId, optionalFields=[]):
         self.generateChildWithRequiredAndId(do, self.air.allocateChannel(), self.doId, zoneId, optionalFields)
