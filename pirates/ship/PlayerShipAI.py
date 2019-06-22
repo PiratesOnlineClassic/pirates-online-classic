@@ -1,6 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
 
 from pirates.ship.DistributedShipAI import DistributedShipAI
+from pirates.world.DistributedOceanGridAI import DistributedOceanGridAI
 
 
 class PlayerShipAI(DistributedShipAI):
@@ -13,6 +14,15 @@ class PlayerShipAI(DistributedShipAI):
         self.allowFriendState = False
         self.allowGuildState = False
         self.allowPublicState = False
+
+    def setLocation(self, parentId, zoneId):
+        parentObj = self.air.doId2do.get(parentId)
+        if parentObj is not None and isinstance(parentObj, DistributedOceanGridAI):
+            captain = self.air.doId2do.get(self.captainId)
+            if captain is not None:
+                self.air.worldGridManager.handleLocationChanged(parentObj, captain, zoneId)
+
+        DistributedShipAI.setLocation(self, parentId, zoneId)
 
     def setAllowCrewState(self, allowCrewState):
         self.allowCrewState = allowCrewState

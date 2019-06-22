@@ -58,13 +58,12 @@ class DeployShipFSM(ShipDeployerOperationFSM):
         self.islandParentObj = self.island.getParentObj()
         self.oceanGrid = self.islandParentObj.oceanGrid
 
+        # take control of the avatar's grid interest
+        self.avatar.setCanControlInterests(False)
+
         deployerSphere = self.shipDeployer.getRandomSphere()
         self.spawnPoint = self.getSpawnPointFromSphere(*deployerSphere)
         zoneId = self.oceanGrid.getZoneFromXYZ(self.spawnPoint)
-
-        # take control of the avatar's grid interest
-        self.avatar.setCanControlInterests(False)
-        self.air.worldGridManager.handleLocationChanged(self.oceanGrid, self.avatar, zoneId)
 
         self.acceptOnce('generate-%d' % self.shipId, self.shipArrivedCallback)
         self.air.sendSetObjectLocation(self.shipId, self.oceanGrid.doId, zoneId)
@@ -84,15 +83,20 @@ class DeployShipFSM(ShipDeployerOperationFSM):
             self.cleanup(False)
             return
 
-        self.oceanGrid.addObjectToGrid(self.ship)
-        self.ship.setPos(self.oceanGrid, *self.spawnPoint)
+        # set the ship's captain
+        self.ship.b_setCaptainId(self.avatar.doId)
 
-        self.air.worldGridManager.handleLocationChanged(self.oceanGrid, self.avatar, self.ship.zoneId)
+        # move the ship to it's appropriate locations
+        self.ship.setPos(self.island, *self.spawnPoint)
+        self.oceanGrid.addObjectToGrid(self.ship)
 
         # only send our current position to initially position the ship,
         # the client will take over and control the ship beyond this point...
         self.ship.sendCurrentPosition()
         self.ship.b_setGameState('Docked', 0)
+
+        # add the ship to the deployer's deployed list
+        self.shipDeployer.addDeployedShip(self.ship)
 
         self.inventory = self.air.doId2do.get(self.ship.inventoryId)
         if not self.inventory:
@@ -136,6 +140,24 @@ class DistributedShipDeployerAI(DistributedNodeAI):
 
         self.deploySpheres = []
         self.avatar2fsm = {}
+        self.deployedShips = {}
+
+    def hasDeployedShip(self, shipDoId):
+        return shipDoId in self.deployedShips
+
+    def addDeployedShip(self, ship):
+        assert(ship is not None)
+        if ship.doId in self.deployedShips:
+            return
+
+        self.deployedShips[ship.doId] = ship
+
+    def removeDeployedShip(self, ship):
+        assert(ship is not None)
+        if ship.doId not in self.deployedShips:
+            return
+
+        del self.deployedShips[ship.doId]
 
     def setMinRadius(self, minRadius):
         self.minRadius = minRadius

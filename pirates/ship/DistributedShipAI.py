@@ -47,6 +47,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.wishName = ''
         self.wishNameState = ''
         self.clientControllerDoId = 0
+        self.captainId = 0
 
     def sendCurrentPosition(self):
         x, y, z = self.getPos()
@@ -69,10 +70,6 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
     def announceGenerate(self):
         DistributedMovingObjectAI.announceGenerate(self)
         DistributedCharterableObjectAI.announceGenerate(self)
-
-        self.steeringWheel = DistributedSteeringWheelAI(self.air)
-        self.steeringWheel.setShipId(self.doId)
-        self.generateChildWithRequired(self.steeringWheel, PiratesGlobals.ShipZoneOnDeck)
 
         #self.bowSprit = DistributedBowSpritAI(self.air)
         #self.bowSprit.setShipId(self.doId)
@@ -126,9 +123,9 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
             self.generateChildWithRequired(cabin, PiratesGlobals.ShipZoneSilhouette)
 
-    #def setLocation(self, parentId, zoneId):
-    #    if self.owner is not None:
-    #        self.air.worldGridManager.handleLocationChanged(self, self.owner, zoneId)
+        self.steeringWheel = DistributedSteeringWheelAI(self.air)
+        self.steeringWheel.setShipId(self.doId)
+        self.generateChildWithRequired(self.steeringWheel, PiratesGlobals.ShipZoneSilhouette)
 
     def setUniqueId(self, uniqueId):
         self.uniqueId = uniqueId
@@ -473,6 +470,19 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
     def getWishNameState(self):
         return self.wishNameState
+
+    def setCaptainId(self, captainId):
+        self.captainId = captainId
+
+    def d_setCaptainId(self, captainId):
+        self.sendUpdate('setCaptainId', [captainId])
+
+    def b_setCaptainId(self, captainId):
+        self.setCaptainId(captainId)
+        self.d_setCaptainId(captainId)
+
+    def getCaptainId(self):
+        return self.captainId
 
     def shipBoarded(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())

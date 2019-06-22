@@ -101,6 +101,7 @@ force-paid-status FULL
 # Islands:
 want-island-barriers #t
 object-load-delay #f
+remove-island-barriers #f
 
 # Motion:
 motionfsm-lag #t
@@ -187,7 +188,7 @@ want-privateering 1
 want-infamy 0
 
 # Options:
-ocean-visibility 1
+ocean-visibility #t
 
 # Other:
 test-saint-patricks-day #f

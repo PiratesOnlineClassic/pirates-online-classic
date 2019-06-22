@@ -16,11 +16,73 @@ class DistributedDinghyAI(DistributedInteractiveAI):
         self.locationId = 0
         self.siegeTeam = 0
 
+    def announceGenerate(self):
+        DistributedInteractiveAI.announceGenerate(self)
+
+        parentObj = self.getParentObj()
+        self.shipDeployer = parentObj.shipDeployer
+        assert(self.shipDeployer is not None)
+
+    def getPublicShipInfo(self, shipDoId):
+        ship = self.air.doId2do.get(shipDoId)
+        assert(ship is not None)
+
+        captain = self.air.doId2do.get(ship.getCaptainId())
+        assert(captain is not None)
+
+        shipInfo = [
+            captain.doId,
+            ship.doId,
+            ship.getHp(),
+            ship.getSp(),
+            len(ship.getCargo()),
+            len(ship.getCrew()),
+            1, # TODO!
+            ship.getShipClass(),
+            ship.getName(),
+            ship.getSiegeTeam(),
+            captain.getName()
+        ]
+
+        return shipInfo
+
+    def getOfferPublicOptions(self):
+        publicOptions = []
+        for shipDoId, ship in list(self.shipDeployer.deployedShips.items()):
+            #if ship.getAllowPublicState():
+            publicOptions.append(self.getPublicShipInfo(ship.doId))
+
+        return publicOptions
+
+    def d_offerPublicOptions(self, avatarId, publicOptions):
+        self.sendUpdateToAvatarId(avatarId, 'offerPublicOptions', [publicOptions])
+
     def handleRequestInteraction(self, avatar, interactType, instant):
+        self.d_offerPublicOptions(avatar.doId, self.getOfferPublicOptions())
         return self.ACCEPT
 
     def handleRequestExit(self, avatar):
         return self.ACCEPT
+
+    def selectPublicShip(self, shipDoId):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        ship = self.air.doId2do.get(shipDoId)
+        if not ship:
+            return
+
+        if not self.shipDeployer.hasDeployedShip(ship.doId):
+            self.notify.warning('Cannot send avatar %d to ship %d, '
+                'ship was never deployed!' % avatar.doId, ship.doId)
+
+            return
+
+        if not ship.getAllowPublicState():
+            return
+
+        self.d_sendAvatarToShip(avatar.doId, ship.doId)
 
     def setInteractRadius(self, interactRadius):
         self.interactRadius = interactRadius

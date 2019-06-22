@@ -57,12 +57,13 @@ class GridInterestHandler(object):
             return
 
         previousZones = set([interestHandle.zoneId for interestHandle in self.interestHandles])
-        newZones = set()
+        newZones = set([zoneId])
 
         # determine how many zones we want to see ahead of us based on
         # the cartesian grid radius set by constants for the parent object
         for x in xrange(1, self.parentObj.gridRadius + 1):
-            newZones.update(self.parentObj.getConcentricZones(zoneId, x))
+            concentricZones = set(self.parentObj.getConcentricZones(zoneId, x))
+            newZones.update(concentricZones)
 
         oldConcentricZones = previousZones.difference(newZones)
         for oldZoneId in oldConcentricZones:
@@ -104,13 +105,8 @@ class WorldGridManagerAI(object):
         self.gridInterestHandlers = {}
 
     def handleLocationChanged(self, parentObj, avatar, zoneId):
-        if isinstance(parentObj, DistributedShipAI):
-            shipParentObj = parentObj
-            parentObj = shipParentObj.getParentObj()
-            zoneId = parentObj.getZoneFromXYZ(shipParentObj.getPos())
-        else:
-            if not isinstance(parentObj, DistributedCartesianGridAI):
-                return
+        if not isinstance(parentObj, DistributedCartesianGridAI):
+            return
 
         if not parentObj.isValidZone(zoneId):
             self.notify.warning('Failed to handle avatar %d grid location change, '

@@ -10,6 +10,7 @@ from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.instance.DistributedTeleportZoneAI import DistributedTeleportZoneAI
 from pirates.instance.DistributedTeleportHandlerAI import DistributedTeleportHandlerAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
+from pirates.ship.DistributedShipAI import DistributedShipAI
 
 
 class TeleportOperationFSM(FSM):
@@ -199,10 +200,14 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
         target = self.air.doId2do.get(locationId)
         if not target:
-            self.notify.warning('Cannot send target location for avatar %d, '
+            self.notify.debug('Cannot send target location for avatar %d, '
                 'unknown target object %d!' % (avatar.doId, locationId))
 
             return
+
+        if isinstance(target, DistributedShipAI):
+            parentObj = target.getParentObj()
+            self.air.worldGridManager.handleLocationChanged(parentObj, avatar, target.zoneId)
 
         self.d_localTeleportToIdResponse(avatar.doId, target.parentId, target.zoneId)
 
