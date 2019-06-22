@@ -91,7 +91,7 @@ class DeployShipFSM(ShipDeployerOperationFSM):
 
         # only send our current position to initially position the ship,
         # the client will take over and control the ship beyond this point...
-        self.sendCurrentPosition()
+        self.ship.sendCurrentPosition()
         self.ship.b_setGameState('Docked', 0)
 
         self.inventory = self.air.doId2do.get(self.ship.inventoryId)
