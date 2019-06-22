@@ -638,7 +638,6 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         self.hullCenter = self.transNode.attachNewNode('hullCenter')
         self.stern.setPos(Point3(0, tb[1][1], 0))
         self.bow.setPos(Point3(0, tb[0][1], 0))
-        print ('BOW IS OBJECT!!!!!', self.bow)
         self.starboard.setPos(Point3(tb[1][0], 0, 0))
         self.port.setPos(Point3(tb[0][0], 0, 0))
         self.keel.setPos(Point3(0, 0, tb[0][2]))
@@ -861,6 +860,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def delete(self):
         self.deleteNametag3d()
+        self.notify.error('delete!')
         if self.iconNodePath:
             self.iconNodePath.removeNode()
             self.iconNodePath = None
