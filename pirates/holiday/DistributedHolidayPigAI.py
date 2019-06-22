@@ -1,5 +1,6 @@
 from direct.directnotify import DirectNotifyGlobal
 from pirates.holiday.DistributedHolidayObjectAI import DistributedHolidayObjectAI
+from pirates.uberdog.UberDogGlobals import InventoryType
 
 class DistributedHolidayPigAI(DistributedHolidayObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedHolidayPigAI')
@@ -52,11 +53,23 @@ class DistributedHolidayPigAI(DistributedHolidayObjectAI):
             self.notify.warning('Attempted to interact with an unroasted pig!')
             return self.DENY
 
-        try:
-            #TODO: write proper inventory code
+        inventory = avatar.getInventory()
+        if not inventory:
+            return
+
+        porkQuantity = inventory.getStackQuantity(InventoryType.PorkChunk)
+        porkMaxQuantity = inventory.getStackLimit(InventoryType.PorkChunk)
+
+        # You've already got your helping...
+        if porkQuantity == porkMaxQuantity:
+            self.d_makeTradeResponse(avatar.doId, self.ROAST_FULL)
+            return self.ACCEPT
+
+        if porkQuantity != porkMaxQuantity:
+            inventory.b_setStackQuantity(InventoryType.PorkChunk, 10)
             self.d_makeTradeResponse(avatar.doId, self.ROAST_GIVEN)
-        except Exception as e:
+        else:
             self.d_makeTradeResponse(avatar.doId, self.ROAST_ERROR)
+            return self.DENY
 
         return self.ACCEPT
-        
