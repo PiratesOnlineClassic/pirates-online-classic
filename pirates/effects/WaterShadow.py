@@ -1,11 +1,10 @@
-from otp.otpbase import OTPRender
 from pandac.PandaModules import *
+from otp.otpbase import OTPRender
 from pirates.seapatch.SeaPatchNode import SeaPatchNode
-
 
 class WaterShadow(NodePath):
 
-    def __init__(self, name, shadow_model, parent, use_water_bin=True, bin_number=7):
+    def __init__(self, name, shadow_model, parent, use_water_bin = True, bin_number = 7):
         self.use_water_bin = use_water_bin
         self.bin_number = bin_number
         self.shadow_model = shadow_model
@@ -36,6 +35,6 @@ class WaterShadow(NodePath):
             else:
                 shadow_spn.setEffect(CompassEffect.make(base.cr.activeWorld.getWater().patchNP, CompassEffect.PZ))
             if self.use_water_bin:
-                mask = 4294967295L
+                mask = 0xFFFFFFFFL
                 stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
                 self.setAttrib(stencil)
