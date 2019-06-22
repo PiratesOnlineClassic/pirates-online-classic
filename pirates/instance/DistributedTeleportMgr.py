@@ -210,9 +210,9 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
                 return
 
             teleportToObj.setZoneLevel(3)
+            self.acceptOnce(teleportToObj.getParentObj().uniqueName('visibility'), self._localTeleportToIdDone)
             teleportToObj.registerMainBuiltFunction(localAvatar.placeOnShip, [teleportToObj])
             teleportToObj.registerBuildCompleteFunction(teleportToObj.enableOnDeckInteractions)
-            self.acceptOnce(teleportToObj.getParentObj().uniqueName('visibility'), self._localTeleportToIdDone)
             base.setLocationCode('Ship')
         else:
             self.notify.debug('teleporting obj position is %s' % self.localTeleportingObj.getPos())
