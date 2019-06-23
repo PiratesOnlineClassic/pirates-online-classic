@@ -11,6 +11,7 @@ from pirates.shipparts.DistributedSteeringWheelAI import DistributedSteeringWhee
 from pirates.shipparts.DistributedBowSpritAI import DistributedBowSpritAI
 from pirates.shipparts.DistributedSailAI import DistributedSailAI
 from pirates.shipparts.DistributedCabinAI import DistributedCabinAI
+from pirates.battle.DistributedShipBroadsideAI import DistributedShipBroadsideAI
 from pirates.battle.DistributedShipCannonAI import DistributedShipCannonAI
 
 
@@ -54,6 +55,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.bowSprit = None
         self.sails = []
         self.cannons = []
+        self.broadside = None
         self.steeringWheel = None
 
     def sendCurrentPosition(self):
@@ -113,10 +115,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         for mastType, x, sailTypes in mastInfo:
             sailIndex = 0
             for sailType in sailTypes:
-                try:
-                    sailConfig = ShipGlobals.getSailConfig(self.shipClass, x, sailIndex)
-                except:
-                    continue
+                sailConfig = ShipGlobals.getSailConfig(self.shipClass, x, sailIndex)
                 sail = DistributedSailAI(self.air)
                 sail.setShipId(self.doId)
                 sail.setAnimState('TiedUp')
@@ -131,35 +130,38 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
                     getattr(sail, key)(value)
 
                 self.generateChildWithRequired(sail, PiratesGlobals.ShipZoneSilhouette)
+                self.sails.append(sail)
                 sailIndex += 1
 
         shipConfig = ShipGlobals.getShipConfigAll(self.shipClass)
         cannonIndex = 0
         for cannonType in shipConfig['setCannonConfig']:
-            self.createCannon(cannonType, cannonIndex)
+            cannon = DistributedShipCannonAI(self.air)
+            cannon.setShipId(self.doId)
+            cannon.setCannonType(cannonType)
+            cannon.setCannonIndex(cannonIndex)
+            self.generateChildWithRequired(cannon, PiratesGlobals.ShipZoneOnDeck)
+            self.cannons.append(cannon)
             cannonIndex += 1
 
-        cannonIndex = 0
-        for cannonType in shipConfig['setLeftBroadsideConfig']:
-            self.createCannon(cannonType, cannonIndex)
-            cannonIndex += 1
+        self.broadside = DistributedShipBroadsideAI(self.air)
+        self.broadside.setShipId(self.doId)
 
-        cannonIndex = 0
-        for cannonType in shipConfig['setRightBroadsideConfig']:
-            self.createCannon(cannonType, cannonIndex)
-            cannonIndex += 1
+        leftBroadsideConfig = shipConfig['setLeftBroadsideConfig']
+        rightBroadsideConfig = shipConfig['setRightBroadsideConfig']
+
+        self.broadside.setLeftBroadside(leftBroadsideConfig)
+        self.broadside.setRightBroadside(rightBroadsideConfig)
+
+        self.broadside.setLeftBroadsideEnabledState([True] * len(leftBroadsideConfig))
+        self.broadside.setRightBroadsideEnabledState([True] * len(leftBroadsideConfig))
+
+        self.broadside.setAmmoType(shipConfig['setBroadsideAmmo'])
+        self.generateChildWithRequired(self.broadside, PiratesGlobals.ShipZoneSilhouette)
 
         self.steeringWheel = DistributedSteeringWheelAI(self.air)
         self.steeringWheel.setShipId(self.doId)
         self.generateChildWithRequired(self.steeringWheel, PiratesGlobals.ShipZoneOnDeck)
-
-    def createCannon(self, cannonType, cannonIndex):
-        cannon = DistributedShipCannonAI(self.air)
-        cannon.setShipId(self.doId)
-        cannon.setCannonType(cannonType)
-        cannon.setCannonIndex(cannonIndex)
-        self.generateChildWithRequired(cannon, PiratesGlobals.ShipZoneOnDeck)
-        self.cannons.append(cannon)
 
     def setUniqueId(self, uniqueId):
         self.uniqueId = uniqueId

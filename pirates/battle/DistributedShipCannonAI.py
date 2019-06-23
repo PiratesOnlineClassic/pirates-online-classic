@@ -29,3 +29,9 @@ class DistributedShipCannonAI(DistributedPCCannonAI, DistributedShippartAI, Dist
 
     def getCannonIndex(self):
         return self.cannonIndex
+
+    def handleRequestInteraction(self, avatar, interactType, instant):
+        return self.ACCEPT
+
+    def handleRequestExit(self, avatar):
+        return self.ACCEPT

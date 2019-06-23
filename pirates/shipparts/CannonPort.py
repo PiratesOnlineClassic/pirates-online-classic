@@ -18,13 +18,13 @@ DefaultAnimDict = (('zero', '_zero'), ('Fire', '_fire'), ('Open', '_open'), ('Cl
 
 class CannonPort(NodePath):
     notify = directNotify.newCategory('cannonPort')
-    
+
     def __init__(self, cannonType, parent, locator, side, index):
         NodePath.__init__(self, 'cannonPort')
         self.cannonType = cannonType
         self.side = side
         self.index = index
-        self.parent = parent
+        self.__parent = parent
         self.locator = locator
         self.bf = None
         self.collSphereNodePath = None
@@ -37,11 +37,11 @@ class CannonPort(NodePath):
             InventoryType.CannonL4]:
             self._isTargetable = 1
             self._addCollisionSphere(parent, side, index)
-    
+
     def _loadModel(self, cannonType):
         if config.GetBool('disable-ship-geom', 0):
             return
-        
+
         filePrefix = CannonPortDict.get(cannonType)
         self.prop = ShipGlobals.getActor(filePrefix)[1]
         self.openIval = Sequence(self.prop.actorInterval('Open'))
@@ -51,7 +51,7 @@ class CannonPort(NodePath):
         self.geom_Medium = self.prop.getLOD('med')
         self.geom_High = self.prop.getLOD('hi')
         self.loaded = True
-    
+
     def _addCollisionSphere(self, parent, side, index):
         radius = 3.0
         collSphere = CollisionSphere(0, 0, 0, radius)
@@ -62,7 +62,7 @@ class CannonPort(NodePath):
         collSphereNode.setFromCollideMask(BitMask32.allOff())
         collSphereNode.setIntoCollideMask(PiratesGlobals.TargetBitmask)
         collSphereNode.setTag('objType', str(PiratesGlobals.COLL_CANNON))
-        collSphereNode.setTag('broadsideId', str(self.parent.doId))
+        collSphereNode.setTag('broadsideId', str(self.__parent.doId))
         collSphereNode.setTag('sideId', str(side))
         collSphereNode.setTag('portId', str(index))
         collSphereNode.addSolid(collSphere)
@@ -76,16 +76,16 @@ class CannonPort(NodePath):
     def delete(self):
         if self.prop:
             self.prop.clearPythonData()
-        
+
         self.prop.removeNode()
         self.removeNode()
-        self.parent = None
+        self.__parent = None
         if self.collSphereNodePath:
             self.collSphereNodePath.removeNode()
-        
+
         self.collSphereNodePath = None
         self.ship = None
-    
+
     def playOpen(self, offset = 0):
         if self._isEnabled:
             self.openIval.start(offset, playRate = 2.0)
@@ -97,7 +97,7 @@ class CannonPort(NodePath):
     def playFire(self, offset = 0):
         if self._isEnabled:
             self.fireIval.start(offset)
-    
+
     def setEnabled(self, state):
         if self._isEnabled != state:
             if state == 0:
@@ -109,9 +109,8 @@ class CannonPort(NodePath):
                 if self.bf:
                     self.bf.removeNode()
                     self.bf = None
-            
+
             self._isEnabled = state
 
     def isEnabled(self):
         return self._isEnabled
-
