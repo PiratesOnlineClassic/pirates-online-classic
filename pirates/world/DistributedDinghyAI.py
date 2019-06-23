@@ -16,13 +16,6 @@ class DistributedDinghyAI(DistributedInteractiveAI):
         self.locationId = 0
         self.siegeTeam = 0
 
-    def announceGenerate(self):
-        DistributedInteractiveAI.announceGenerate(self)
-
-        parentObj = self.getParentObj()
-        self.shipDeployer = parentObj.shipDeployer
-        assert(self.shipDeployer is not None)
-
     def getPublicShipInfo(self, shipDoId):
         ship = self.air.doId2do.get(shipDoId)
         assert(ship is not None)
@@ -48,8 +41,10 @@ class DistributedDinghyAI(DistributedInteractiveAI):
 
     def getOfferPublicOptions(self):
         publicOptions = []
-        for shipDoId, ship in list(self.shipDeployer.deployedShips.items()):
-            #if ship.getAllowPublicState():
+        for shipDoId, ship in list(self.air.shipManager.getActivePlayerShips()):
+            if not ship.getAllowPublicState():
+                continue
+
             publicOptions.append(self.getPublicShipInfo(ship.doId))
 
         return publicOptions
@@ -58,8 +53,10 @@ class DistributedDinghyAI(DistributedInteractiveAI):
         self.sendUpdateToAvatarId(avatarId, 'offerPublicOptions', [publicOptions])
 
     def handleRequestInteraction(self, avatar, interactType, instant):
-        self.d_offerPublicOptions(avatar.doId, self.getOfferPublicOptions())
         return self.ACCEPT
+
+    def handlePostRequestInteraction(self, avatar):
+        self.d_offerPublicOptions(avatar.doId, self.getOfferPublicOptions())
 
     def handleRequestExit(self, avatar):
         return self.ACCEPT
@@ -82,7 +79,7 @@ class DistributedDinghyAI(DistributedInteractiveAI):
         if not ship.getAllowPublicState():
             return
 
-        self.d_sendAvatarToShip(avatar.doId, ship.doId)
+        self.sendAvatarToShip(avatar, ship)
 
     def setInteractRadius(self, interactRadius):
         self.interactRadius = interactRadius
@@ -157,9 +154,28 @@ class DistributedDinghyAI(DistributedInteractiveAI):
                 self.d_sendAvatarToShip(avatar.doId, 0)
                 return
 
-            self.d_sendAvatarToShip(avatar.doId, shipId)
+            ship = self.air.doId2do.get(shipId)
+            if not ship:
+                self.notify.warning('Failed to select avatar %d ship to deploy %d, '
+                    'ship never deployed!' % (avatar.doId, shipId))
+
+                self.d_sendAvatarToShip(avatar.doId, 0)
+                return
+
+            self.sendAvatarToShip(avatar, ship)
 
         parentObj.shipDeployer.deployShip(avatar, shipId, deployShipCallback)
+
+    def sendAvatarToShip(self, avatar, ship):
+        assert(avatar is not None)
+        assert(ship is not None)
+
+        def _interestDoneCallback():
+            self.d_sendAvatarToShip(avatar.doId, ship.doId)
+
+        avatar.setCanControlInterests(False)
+        self.air.worldGridManager.handleLocationChanged(ship.getParentObj(), avatar, ship.zoneId,
+            callback=_interestDoneCallback)
 
     def d_sendAvatarToShip(self, avatarId, shipId):
         self.sendUpdateToAvatarId(avatarId, 'sendAvatarToShip', [shipId])

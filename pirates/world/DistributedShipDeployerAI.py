@@ -58,15 +58,12 @@ class DeployShipFSM(ShipDeployerOperationFSM):
         self.islandParentObj = self.island.getParentObj()
         self.oceanGrid = self.islandParentObj.oceanGrid
 
-        # take control of the avatar's grid interest
-        self.avatar.setCanControlInterests(False)
-
         deployerSphere = self.shipDeployer.getRandomSphere()
         self.spawnPoint = self.getSpawnPointFromSphere(*deployerSphere)
-        zoneId = self.oceanGrid.getZoneFromXYZ(self.spawnPoint)
+        self.zoneId = self.oceanGrid.getZoneFromXYZ(self.spawnPoint)
 
         self.acceptOnce('generate-%d' % self.shipId, self.shipArrivedCallback)
-        self.air.sendSetObjectLocation(self.shipId, self.oceanGrid.doId, zoneId)
+        self.air.sendSetObjectLocation(self.shipId, self.oceanGrid.doId, self.zoneId)
 
     def getSpawnPointFromSphere(self, sx, sy, sz):
         radius = self.shipDeployer.getSpacing() / 2.0
@@ -96,7 +93,7 @@ class DeployShipFSM(ShipDeployerOperationFSM):
         self.ship.b_setGameState('Docked', 0)
 
         # add the ship to the deployer's deployed list
-        #self.shipDeployer.addDeployedShip(self.ship)
+        self.shipDeployer.addDeployedShip(self.ship)
 
         self.inventory = self.air.doId2do.get(self.ship.inventoryId)
         if not self.inventory:
@@ -118,9 +115,18 @@ class DeployShipFSM(ShipDeployerOperationFSM):
             self.acceptOnce('generate-%d' % shippartDoId, self.shippartArrivedCallback)
             self.air.sendSetObjectLocation(shippartDoId, self.ship.doId, PiratesGlobals.ShipZoneSilhouette)
 
+    def _finalizeDeploy(self):
+        # the ship has been successfully deployed, mark it as deployed,
+        # this will allow anyone who wants to join the ship to be able to do so...
+        self.ship.b_setDeploy(True)
+
+        # add the ship to the ship manager's list of deployed ships
+        self.air.shipManager.addActiveShip(self.ship)
+
     def shippartArrivedCallback(self, shippart):
         self.shipMainpartsDoIdList.remove(shippart.doId)
         if not self.shipMainpartsDoIdList:
+            self._finalizeDeploy()
             self.cleanup(True)
 
     def exitStart(self):

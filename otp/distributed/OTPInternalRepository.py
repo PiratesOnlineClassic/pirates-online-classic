@@ -112,13 +112,6 @@ class OTPInternalRepository(AstronInternalRepository):
         dg.addString(message)
         self.send(dg)
 
-    def handleDatagram(self, di):
-        msgType = self.getMsgType()
-        if msgType == CLIENTAGENT_DONE_INTEREST_RESP:
-            pass
-        else:
-            AstronInternalRepository.handleDatagram(self, di)
-
     def readerPollOnce(self):
         try:
             return AstronInternalRepository.readerPollOnce(self)

@@ -51,6 +51,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.wishNameState = ''
         self.clientControllerDoId = 0
         self.captainId = 0
+        self.deployState = 0
 
         self.cabin = None
         self.bowSprit = None
@@ -76,6 +77,10 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             return task.again
 
         taskMgr.doMethodLater(0.2, _broadcast, self.uniqueName('broadcast-pos'))
+
+    def generate(self):
+        DistributedMovingObjectAI.generate(self)
+        DistributedCharterableObjectAI.generate(self)
 
     def announceGenerate(self):
         DistributedMovingObjectAI.announceGenerate(self)
@@ -181,6 +186,12 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
         DistributedMovingObjectAI.handleChildLeave(self, childObj, zoneId)
         DistributedCharterableObjectAI.handleChildLeave(self, childObj, zoneId)
+
+    def delete(self):
+        self.air.shipManager.removeActiveShip(self)
+
+        DistributedMovingObjectAI.delete(self)
+        DistributedCharterableObjectAI.delete(self)
 
     def setUniqueId(self, uniqueId):
         self.uniqueId = uniqueId
@@ -555,6 +566,22 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
     def getCaptainId(self):
         return self.captainId
+
+    def setDeploy(self, deployState, timestamp):
+        self.deployState = deployState
+
+    def d_setDeploy(self, deployState, timestamp):
+        self.sendUpdate('setDeploy', [deployState, timestamp])
+
+    def b_setDeploy(self, deployState, timestamp=0):
+        if not timestamp:
+            timestamp = globalClockDelta.getRealNetworkTime(bits=16)
+
+        self.setDeploy(deployState, timestamp)
+        self.d_setDeploy(deployState, timestamp)
+
+    def getDeploy(self):
+        return self.deployState
 
     def shipBoarded(self):
         pass

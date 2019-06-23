@@ -1,6 +1,7 @@
 from panda3d.core import *
 
 from direct.directnotify import DirectNotifyGlobal
+from direct.showbase import PythonUtil
 from direct.distributed.DistributedCartesianGridAI import DistributedCartesianGridAI
 
 from pirates.ship.DistributedShipAI import DistributedShipAI
@@ -20,6 +21,9 @@ class GridInterestHandler(object):
         self.air = air
         self.parentObj = parentObj
         self.avatar = avatar
+
+        self.pendingCallbackContexts = []
+        self.pendingCallback = None
 
         self.interestHandles = []
         self.oldZoneId = 0
@@ -52,10 +56,23 @@ class GridInterestHandler(object):
         self.air.clientRemoveInterest(clientChannel, interestHandle.context, False)
         self.interestHandles.remove(interestHandle)
 
-    def handleLocationChanged(self, zoneId):
-        if zoneId == self.oldZoneId:
+    def _callbackInterestContext(self):
+        assert(len(self.pendingCallbackContexts) == 0)
+        assert(self.pendingCallback is not None)
+        self.pendingCallback.finish()
+
+        self.pendingCallbackContexts = []
+        self.pendingCallback = None
+
+    def handleInterestContextDone(self, context):
+        if context not in self.pendingCallbackContexts:
             return
 
+        self.pendingCallbackContexts.remove(context)
+        if len(self.pendingCallbackContexts) == 0:
+            self._callbackInterestContext()
+
+    def handleLocationChanged(self, zoneId, callback):
         previousZones = set([interestHandle.zoneId for interestHandle in self.interestHandles])
         newZones = set([zoneId])
 
@@ -74,6 +91,10 @@ class GridInterestHandler(object):
             self.removeInterestHandle(interestHandle)
 
         newConcentricZones = newZones.difference(previousZones)
+        if callback is not None:
+            self.pendingCallbackContexts = list(newConcentricZones)
+            self.pendingCallback = PythonUtil.FrameDelayedCall('interest-context-callback-%d' % self.avatar.doId, callback)
+
         for newZoneId in newConcentricZones:
             self.addInterestHandle(newZoneId)
 
@@ -82,8 +103,6 @@ class GridInterestHandler(object):
 
         oldConcentricZones.clear()
         newConcentricZones.clear()
-
-        self.oldZoneId = zoneId
 
     def clearInterestZones(self):
         for interestHandle in list(self.interestHandles):
@@ -104,7 +123,14 @@ class WorldGridManagerAI(object):
         self.air = air
         self.gridInterestHandlers = {}
 
-    def handleLocationChanged(self, parentObj, avatar, zoneId):
+    def handleInterestContextDone(self, avatarId, context):
+        gridHandler = self.gridInterestHandlers.get(avatarId)
+        if not gridHandler:
+            return
+
+        gridHandler.handleInterestContextDone(context)
+
+    def handleLocationChanged(self, parentObj, avatar, zoneId, callback=None):
         if not isinstance(parentObj, DistributedCartesianGridAI):
             return
 
@@ -124,7 +150,7 @@ class WorldGridManagerAI(object):
             gridHandler = GridInterestHandler(self.air, parentObj, avatar)
             self.gridInterestHandlers[avatar.doId] = gridHandler
 
-        gridHandler.handleLocationChanged(zoneId)
+        gridHandler.handleLocationChanged(zoneId, callback)
 
     def clearAvatarInterests(self, avatar):
         gridHandler = self.gridInterestHandlers.pop(avatar.doId, None)

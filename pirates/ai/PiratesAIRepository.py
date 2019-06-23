@@ -30,6 +30,7 @@ from pirates.band.DistributedCrewMatchAI import DistributedCrewMatchAI
 from pirates.band.DistributedPirateBandManagerAI import DistributedPirateBandManagerAI
 from pirates.tutorial.PiratesTutorialManagerAI import PiratesTutorialManagerAI
 from pirates.world.WorldGridManagerAI import WorldGridManagerAI
+from pirates.ship.ShipManagerAI import ShipManagerAI
 
 
 class PiratesAIRepository(PiratesInternalRepository):
@@ -154,6 +155,8 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.tutorialManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
         self.worldGridManager = WorldGridManagerAI(self)
+
+        self.shipManager = ShipManagerAI(self)
 
     def createWorlds(self):
         """

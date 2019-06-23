@@ -21,6 +21,17 @@ class PiratesInternalRepository(OTPInternalRepository):
         self.webhookManager = PiratesWebhookManager(self)
         self._registerNetMessages()
 
+    def handleDatagram(self, di):
+        msgType = self.getMsgType()
+        if msgType == CLIENTAGENT_DONE_INTEREST_RESP:
+            channel = di.getUint64()
+            context = di.getUint16()
+
+            avatarId = channel & 0xffffffff
+            self.worldGridManager.handleInterestContextDone(avatarId, context)
+        else:
+            OTPInternalRepository.handleDatagram(self, di)
+
     def _registerNetMessages(self):
         # District Status
         self._registerInternalNetMessage('districtStatus')
