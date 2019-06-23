@@ -174,6 +174,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             self.addCrewMember(childObj)
             childObj.b_setShipId(self.doId)
             childObj.b_setActiveShipId(self.doId)
+            childObj.b_setCrewShipId(self.doId)
 
         DistributedMovingObjectAI.handleChildArrive(self, childObj, zoneId)
         DistributedCharterableObjectAI.handleChildArrive(self, childObj, zoneId)
@@ -183,6 +184,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             self.removeCrewMember(childObj)
             childObj.b_setShipId(0)
             childObj.b_setActiveShipId(0)
+            childObj.b_setCrewShipId(0)
 
         DistributedMovingObjectAI.handleChildLeave(self, childObj, zoneId)
         DistributedCharterableObjectAI.handleChildLeave(self, childObj, zoneId)
