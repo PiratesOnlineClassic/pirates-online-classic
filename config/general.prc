@@ -104,8 +104,8 @@ object-load-delay #f
 remove-island-barriers #f
 
 # Motion:
-motionfsm-lag #t
-avatar-physics-freq 2.0
+motionfsm-lag #f
+avatar-physics-freq 60.0
 npc-sidestep #t
 
 # Smoothing:
