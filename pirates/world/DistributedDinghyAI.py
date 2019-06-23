@@ -41,7 +41,7 @@ class DistributedDinghyAI(DistributedInteractiveAI):
 
     def getOfferPublicOptions(self):
         publicOptions = []
-        for shipDoId, ship in list(self.air.shipManager.getActivePlayerShips()):
+        for ship in self.air.shipManager.getActivePlayerShips():
             if not ship.getAllowPublicState():
                 continue
 
