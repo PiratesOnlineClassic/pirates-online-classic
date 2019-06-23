@@ -18,9 +18,10 @@ class PlayerShipAI(DistributedShipAI):
     def setLocation(self, parentId, zoneId):
         parentObj = self.air.doId2do.get(parentId)
         if parentObj is not None and isinstance(parentObj, DistributedOceanGridAI):
-            captain = self.air.doId2do.get(self.captainId)
-            if captain is not None:
-                self.air.worldGridManager.handleLocationChanged(parentObj, captain, zoneId)
+            for avatarId in self.crew:
+                avatar = self.air.doId2do.get(avatarId)
+                if avatar is not None:
+                    self.air.worldGridManager.handleLocationChanged(parentObj, avatar, zoneId)
 
         DistributedShipAI.setLocation(self, parentId, zoneId)
 
