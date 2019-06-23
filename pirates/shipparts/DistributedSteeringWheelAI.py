@@ -12,13 +12,17 @@ class DistributedSteeringWheelAI(DistributedInteractiveAI, DistributedShippartAI
         DistributedShippartAI.__init__(self, air)
 
     def handleRequestInteraction(self, avatar, interactType, instant):
+        return self.ACCEPT
+
+    def handlePostRequestInteraction(self, avatar):
         ship = self.getShip()
         assert(ship is not None)
+        ship.b_setClientController(avatar.doId)
         ship.b_setGameState('ClientSteering', avatar.doId)
-        return self.ACCEPT
 
     def handleRequestExit(self, avatar):
         ship = self.getShip()
         assert(ship is not None)
+        ship.b_setClientController(0)
         ship.b_setGameState('Adrift', 0)
         return self.ACCEPT

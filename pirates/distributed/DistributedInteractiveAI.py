@@ -28,7 +28,6 @@ class DistributedInteractiveAI(DistributedNodeAI):
             return
 
         handle = self.handleRequestInteraction(avatar, interactType, instant)
-
         if not handle:
             self.d_rejectInteraction(avatar.doId)
             return
@@ -39,12 +38,16 @@ class DistributedInteractiveAI(DistributedNodeAI):
             self.sendUpdateToAvatarId(avatar.doId, 'setUserId', [avatar.doId])
 
         self.sendUpdateToAvatarId(avatar.doId, 'acceptInteraction', [])
+        self.handlePostRequestInteraction(avatar)
 
     def handleRequestInteraction(self, avatar, interactType, instant):
         self.notify.debug('handleRequestInteraction not overriden by %s; Defaulting to DENY' % \
             self.__class__.__name__)
 
         return self.DENY
+
+    def handlePostRequestInteraction(self, avatar):
+        pass
 
     def requestExit(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
