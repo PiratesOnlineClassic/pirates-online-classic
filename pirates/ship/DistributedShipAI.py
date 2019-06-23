@@ -6,6 +6,7 @@ from pirates.ship import ShipGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.movement.DistributedMovingObjectAI import DistributedMovingObjectAI
 from pirates.distributed.DistributedCharterableObjectAI import DistributedCharterableObjectAI
+from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
 from pirates.shipparts.DistributedShippartAI import DistributedShippartAI
 from pirates.shipparts.DistributedSteeringWheelAI import DistributedSteeringWheelAI
 from pirates.shipparts.DistributedBowSpritAI import DistributedBowSpritAI
@@ -162,6 +163,26 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.steeringWheel = DistributedSteeringWheelAI(self.air)
         self.steeringWheel.setShipId(self.doId)
         self.generateChildWithRequired(self.steeringWheel, PiratesGlobals.ShipZoneOnDeck)
+
+    def handleChildArrive(self, childObj, zoneId):
+        if isinstance(childObj, DistributedPlayerPirateAI):
+            self.addCrewMember(childObj)
+            childObj.b_setShipId(self.doId)
+            childObj.b_setActiveShipId(self.doId)
+            childObj.b_setCrewShipId(self.doId)
+
+        DistributedMovingObjectAI.handleChildArrive(self, childObj, zoneId)
+        DistributedCharterableObjectAI.handleChildArrive(self, childObj, zoneId)
+
+    def handleChildLeave(self, childObj, zoneId):
+        if isinstance(childObj, DistributedPlayerPirateAI):
+            self.removeCrewMember(childObj)
+            childObj.b_setShipId(0)
+            childObj.b_setActiveShipId(0)
+            childObj.b_setCrewShipId(0)
+
+        DistributedMovingObjectAI.handleChildLeave(self, childObj, zoneId)
+        DistributedCharterableObjectAI.handleChildLeave(self, childObj, zoneId)
 
     def setUniqueId(self, uniqueId):
         self.uniqueId = uniqueId
@@ -413,6 +434,23 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
     def getCrew(self):
         return self.crew
 
+    def hasCrewMember(self, avatarId):
+        return avatarId in self.crew
+
+    def addCrewMember(self, avatar):
+        if avatar.doId in self.crew:
+            return
+
+        self.crew.append(avatar.doId)
+        self.d_setCrew(self.crew)
+
+    def removeCrewMember(self, avatar):
+        if avatar.doId not in self.crew:
+            return
+
+        self.crew.remove(avatar.doId)
+        self.d_setCrew(self.crew)
+
     def setGameState(self, stateName, avId, timeStamp=0):
         self.gameState = [stateName, avId, timeStamp]
 
@@ -521,13 +559,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         return self.captainId
 
     def shipBoarded(self):
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-        if not avatar:
-            return
-
-        avatar.b_setShipId(self.doId)
-        avatar.b_setActiveShipId(self.doId)
-        avatar.b_setCrewShipId(self.doId)
+        pass
 
     def generateChildWithRequired(self, do, zoneId, optionalFields=[]):
         self.generateChildWithRequiredAndId(do, self.air.allocateChannel(), self.doId, zoneId, optionalFields)
