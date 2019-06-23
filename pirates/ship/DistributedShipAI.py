@@ -11,6 +11,7 @@ from pirates.shipparts.DistributedSteeringWheelAI import DistributedSteeringWhee
 from pirates.shipparts.DistributedBowSpritAI import DistributedBowSpritAI
 from pirates.shipparts.DistributedSailAI import DistributedSailAI
 from pirates.shipparts.DistributedCabinAI import DistributedCabinAI
+from pirates.battle.DistributedShipCannonAI import DistributedShipCannonAI
 
 
 class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectAI, Teamable):
@@ -49,6 +50,12 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.clientControllerDoId = 0
         self.captainId = 0
 
+        self.cabin = None
+        self.bowSprit = None
+        self.sails = []
+        self.cannons = []
+        self.steeringWheel = None
+
     def sendCurrentPosition(self):
         x, y, z = self.getPos()
         h, p, r = self.getHpr()
@@ -71,6 +78,22 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         DistributedMovingObjectAI.announceGenerate(self)
         DistributedCharterableObjectAI.announceGenerate(self)
 
+        cabinType = ShipGlobals.getCabinType(self.shipClass)
+        if cabinType != -1:
+            cabinConfig = ShipGlobals.getCabinConfig(self.shipClass)
+            self.cabin = DistributedCabinAI(self.air)
+            self.cabin.setShipId(self.doId)
+            for key, value in cabinConfig.items():
+                if not hasattr(self.cabin, key):
+                    continue
+
+                if isinstance(value, list):
+                    value = value[0]
+
+                getattr(self.cabin, key)(value)
+
+            self.generateChildWithRequired(self.cabin, PiratesGlobals.ShipZoneSilhouette)
+
         #self.bowSprit = DistributedBowSpritAI(self.air)
         #self.bowSprit.setShipId(self.doId)
         #
@@ -90,7 +113,10 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         for mastType, x, sailTypes in mastInfo:
             sailIndex = 0
             for sailType in sailTypes:
-                sailConfig = ShipGlobals.getSailConfig(self.shipClass, x, sailIndex)
+                try:
+                    sailConfig = ShipGlobals.getSailConfig(self.shipClass, x, sailIndex)
+                except:
+                    continue
                 sail = DistributedSailAI(self.air)
                 sail.setShipId(self.doId)
                 sail.setAnimState('TiedUp')
@@ -107,25 +133,33 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
                 self.generateChildWithRequired(sail, PiratesGlobals.ShipZoneSilhouette)
                 sailIndex += 1
 
-        cabinType = ShipGlobals.getCabinType(self.shipClass)
-        if cabinType != -1:
-            cabinConfig = ShipGlobals.getCabinConfig(self.shipClass)
-            cabin = DistributedCabinAI(self.air)
-            cabin.setShipId(self.doId)
-            for key, value in cabinConfig.items():
-                if not hasattr(cabin, key):
-                    continue
+        shipConfig = ShipGlobals.getShipConfigAll(self.shipClass)
+        cannonIndex = 0
+        for cannonType in shipConfig['setCannonConfig']:
+            self.createCannon(cannonType, cannonIndex)
+            cannonIndex += 1
 
-                if isinstance(value, list):
-                    value = value[0]
+        cannonIndex = 0
+        for cannonType in shipConfig['setLeftBroadsideConfig']:
+            self.createCannon(cannonType, cannonIndex)
+            cannonIndex += 1
 
-                getattr(cabin, key)(value)
-
-            self.generateChildWithRequired(cabin, PiratesGlobals.ShipZoneSilhouette)
+        cannonIndex = 0
+        for cannonType in shipConfig['setRightBroadsideConfig']:
+            self.createCannon(cannonType, cannonIndex)
+            cannonIndex += 1
 
         self.steeringWheel = DistributedSteeringWheelAI(self.air)
         self.steeringWheel.setShipId(self.doId)
         self.generateChildWithRequired(self.steeringWheel, PiratesGlobals.ShipZoneOnDeck)
+
+    def createCannon(self, cannonType, cannonIndex):
+        cannon = DistributedShipCannonAI(self.air)
+        cannon.setShipId(self.doId)
+        cannon.setCannonType(cannonType)
+        cannon.setCannonIndex(cannonIndex)
+        self.generateChildWithRequired(cannon, PiratesGlobals.ShipZoneOnDeck)
+        self.cannons.append(cannon)
 
     def setUniqueId(self, uniqueId):
         self.uniqueId = uniqueId
