@@ -1427,7 +1427,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         ship.unstashFloorCollisions()
         self.cnode.broadcastPosHprFull()
         ship.sendUpdate('shipBoarded')
-        self.reparentTo(ship)
+        self.reparentTo(render)
 
     @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def removeFromShip(self, ship):

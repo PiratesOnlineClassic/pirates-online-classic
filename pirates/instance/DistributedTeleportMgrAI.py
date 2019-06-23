@@ -205,10 +205,6 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
             return
 
-        if isinstance(target, DistributedShipAI):
-            parentObj = target.getParentObj()
-            self.air.worldGridManager.handleLocationChanged(parentObj, avatar, target.zoneId)
-
         self.d_localTeleportToIdResponse(avatar.doId, target.parentId, target.zoneId)
 
     def d_localTeleportToIdResponse(self, avatarId, parentId, zoneId):

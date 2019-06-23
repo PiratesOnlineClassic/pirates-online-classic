@@ -87,7 +87,7 @@ class DeployShipFSM(ShipDeployerOperationFSM):
         self.ship.b_setCaptainId(self.avatar.doId)
 
         # move the ship to it's appropriate locations
-        self.ship.setPos(self.island, *self.spawnPoint)
+        self.ship.setPos(self.oceanGrid, *self.spawnPoint)
         self.oceanGrid.addObjectToGrid(self.ship)
 
         # only send our current position to initially position the ship,
