@@ -1039,7 +1039,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def optimizeShip(self):
         if not self.hull or self.optimized:
-            self.notify.warning('ship not in a state for optimizing (may allready be optimized)')
+            self.notify.warning('ship not in a state for optimizing (may already be optimized)')
             return
 
         self.hull[0].cutState()
