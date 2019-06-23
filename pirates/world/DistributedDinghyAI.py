@@ -70,7 +70,7 @@ class DistributedDinghyAI(DistributedInteractiveAI):
         if not ship:
             return
 
-        if not self.shipDeployer.hasDeployedShip(ship.doId):
+        if not self.air.shipManager.hasActiveShip(ship.doId):
             self.notify.warning('Cannot send avatar %d to ship %d, '
                 'ship was never deployed!' % avatar.doId, ship.doId)
 
