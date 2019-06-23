@@ -141,7 +141,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             cannon.setShipId(self.doId)
             cannon.setCannonType(cannonType)
             cannon.setCannonIndex(cannonIndex)
-            self.generateChildWithRequired(cannon, PiratesGlobals.ShipZoneOnDeck)
+            self.generateChildWithRequired(cannon, PiratesGlobals.ShipZoneSilhouette)
             self.cannons.append(cannon)
             cannonIndex += 1
 
@@ -162,14 +162,13 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
         self.steeringWheel = DistributedSteeringWheelAI(self.air)
         self.steeringWheel.setShipId(self.doId)
-        self.generateChildWithRequired(self.steeringWheel, PiratesGlobals.ShipZoneOnDeck)
+        self.generateChildWithRequired(self.steeringWheel, PiratesGlobals.ShipZoneSilhouette)
 
     def handleChildArrive(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerPirateAI):
             self.addCrewMember(childObj)
             childObj.b_setShipId(self.doId)
             childObj.b_setActiveShipId(self.doId)
-            childObj.b_setCrewShipId(self.doId)
 
         DistributedMovingObjectAI.handleChildArrive(self, childObj, zoneId)
         DistributedCharterableObjectAI.handleChildArrive(self, childObj, zoneId)
@@ -179,7 +178,6 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             self.removeCrewMember(childObj)
             childObj.b_setShipId(0)
             childObj.b_setActiveShipId(0)
-            childObj.b_setCrewShipId(0)
 
         DistributedMovingObjectAI.handleChildLeave(self, childObj, zoneId)
         DistributedCharterableObjectAI.handleChildLeave(self, childObj, zoneId)
