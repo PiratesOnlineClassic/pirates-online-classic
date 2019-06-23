@@ -1,9 +1,12 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import globalClockDelta
+
+from otp.avatar.DistributedAvatarAI import DistributedAvatarAI
+
 from pirates.battle.WeaponBaseBase import WeaponBaseBase
 from pirates.piratesbase import PiratesGlobals
-from otp.avatar.DistributedAvatarAI import DistributedAvatarAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
+
 
 class WeaponBaseAI(WeaponBaseBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('WeaponBaseAI')
@@ -13,7 +16,6 @@ class WeaponBaseAI(WeaponBaseBase):
 
     def requestTargetedSkill(self, skillId, ammoSkillId, clientResult, targetId, areaIdList, timestamp, pos, charge):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             return
 
@@ -35,25 +37,23 @@ class WeaponBaseAI(WeaponBaseBase):
                 continue
 
             target = self.air.doId2do.get(targetId)
-
             if not target:
-                self.notify.debug('Cannot request targeted skill, unknown areaId target; avatarId=%d skillId=%d!' % (
-                    avatar.doId, skillId))
+                self.notify.debug('Cannot request targeted skill, unknown areaId target; '
+                    'avatarId=%d skillId=%d!' % (avatar.doId, skillId))
 
                 continue
 
             self.__useTargetedSkill(avatar, target, skillId, ammoSkillId, clientResult,
                 areaIdList, timestamp, pos, charge)
 
-    def requestProjectileSkill(self, skillId, ammoSkillId, posHpr, power, timestamp):
+    def requestProjectileSkill(self, skillId, ammoSkillId, posHpr, timestamp, power):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             return
 
         if self.air.targetMgr.hasProjectile(avatar.doId, skillId, ammoSkillId):
-            self.notify.debug('Avatar %d tried to request projectile skill for already used skill; skillId=%d ammoSkillId=%d!' % (
-                avatar.doId, skillId, ammoSkillId))
+            self.notify.debug('Avatar %d tried to request projectile skill for already used skill; '
+                'skillId=%d ammoSkillId=%d!' % (avatar.doId, skillId, ammoSkillId))
 
             return
 
@@ -77,8 +77,8 @@ class WeaponBaseAI(WeaponBaseBase):
             target = None
 
         if not self.air.targetMgr.hasProjectile(avatar.doId, skillId, ammoSkillId):
-            self.notify.debug('Avatar %d tried to request projectile skill for skill never used; skillId=%d ammoSkillId=%d!' % (
-                avatar.doId, skillId, ammoSkillId))
+            self.notify.debug('Avatar %d tried to request projectile skill for skill never used; '
+                'skillId=%d ammoSkillId=%d!' % (avatar.doId, skillId, ammoSkillId))
 
             return
 
@@ -92,10 +92,9 @@ class WeaponBaseAI(WeaponBaseBase):
         # for example if an attacker uses a skill that effects enemies around it...
         for targetId in areaIdList:
             target = self.air.doId2do.get(targetId)
-
             if not target:
-                self.notify.debug('Cannot request projectil skill, unknown areaId target; avatarId=%d skillId=%d!' % (
-                    avatar.doId, skillId))
+                self.notify.debug('Cannot request projectil skill, unknown areaId target; '
+                    'avatarId=%d skillId=%d!' % (avatar.doId, skillId))
 
                 continue
 
@@ -111,20 +110,18 @@ class WeaponBaseAI(WeaponBaseBase):
             clientResult, areaIdList, timestamp, pos, charge)
 
         if not targetResult:
-            self.notify.debug('Cannot get targeted skill, no valid result was given; avatarId=%d, skillId=%d!' % (
-                avatar.doId, skillId))
+            self.notify.debug('Cannot get targeted skill, no valid result was given; '
+                'avatarId=%d, skillId=%d!' % (avatar.doId, skillId))
 
             return
 
         self.sendUpdate('useTargetedSkill', targetResult)
 
     def __useProjectileSkill(self, avatar, target, skillId, ammoSkillId, result, targetId, areaIdList, pos, normal, codes, timestamp):
-        targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId,
-            result, areaIdList, timestamp, pos)
-
+        targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId, result, areaIdList, timestamp, pos)
         if not targetResult:
-            self.notify.debug('Cannot get projectile targeted skill, no valid result was given; avatarId=%d, skillId=%d!' % (
-                avatar.doId, skillId))
+            self.notify.debug('Cannot get projectile targeted skill, no valid result was given; '
+                'avatarId=%d, skillId=%d!' % (avatar.doId, skillId))
 
             return
 
