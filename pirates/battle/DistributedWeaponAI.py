@@ -30,9 +30,13 @@ class DistributedWeaponAI(DistributedInteractiveAI, WeaponBaseAI):
         return [self.mode, self.avatarId]
 
     def startWeapon(self, avatarId):
-        assert(self.mode != WeaponGlobals.WEAPON_MOVIE_START)
+        if self.mode == WeaponGlobals.WEAPON_MOVIE_START:
+            return
+
         self.b_setMovie(WeaponGlobals.WEAPON_MOVIE_START, avatarId)
 
     def stopWeapon(self, avatarId):
-        assert(self.mode != WeaponGlobals.WEAPON_MOVIE_STOP)
+        if self.mode == WeaponGlobals.WEAPON_MOVIE_STOP:
+            return
+
         self.b_setMovie(WeaponGlobals.WEAPON_MOVIE_STOP, avatarId)
