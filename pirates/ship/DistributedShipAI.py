@@ -176,6 +176,11 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             childObj.b_setActiveShipId(self.doId)
             childObj.b_setCrewShipId(self.doId)
 
+            # this will parent the avatar object to the ship so that
+            # other avatars can see them, and our position data will be
+            # broadcasted relative to the ship parent object...
+            self.sendUpdateToAvatarId(childObj.doId, 'setMovie', [0, childObj.doId, 0, 1, 0])
+
         DistributedMovingObjectAI.handleChildArrive(self, childObj, zoneId)
         DistributedCharterableObjectAI.handleChildArrive(self, childObj, zoneId)
 
@@ -586,7 +591,15 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         return self.deployState
 
     def shipBoarded(self):
-        pass
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+    def d_setMovie(self, mode, avatarId, fromShipId, instant, timestamp=0):
+        if not timestamp:
+            timestamp = globalClockDelta.getRealNetworkTime(bits=16)
+
+        self.sendUpdate('setMovie', [mode, avatarId, fromShipId, instant, timestamp])
 
     def generateChildWithRequired(self, do, zoneId, optionalFields=[]):
         self.generateChildWithRequiredAndId(do, self.air.allocateChannel(), self.doId, zoneId, optionalFields)

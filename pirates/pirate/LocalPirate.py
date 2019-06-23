@@ -1428,9 +1428,6 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         self.cnode.broadcastPosHprFull()
         ship.sendUpdate('shipBoarded')
 
-        # TODO FIXME: why is the avatar's parent "(empty)" at this point????
-        self.reparentTo(ship.root)
-
     @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def removeFromShip(self, ship):
         ship.disableOnDeckInteractions()
