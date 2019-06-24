@@ -8,7 +8,6 @@ from pirates.world.IslandAreaBuilderAI import IslandAreaBuilderAI
 from pirates.piratesbase import PiratesGlobals
 from pirates.treasuremap.DistributedTreasureMapInstanceAI import DistributedTreasureMapInstanceAI
 from pirates.world.DistributedShipDeployerAI import DistributedShipDeployerAI
-from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
 
 
 class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Teamable):
@@ -55,27 +54,6 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         self.shipDeployer.setSpacing(spacing)
 
         self.generateChildWithRequired(self.shipDeployer, PiratesGlobals.IslandShipDeployerZone)
-
-    def handleChildArrive(self, childObj, zoneId):
-        if isinstance(childObj, DistributedPlayerPirateAI):
-            self.air.worldGridManager.handleLocationChanged(self, childObj, zoneId)
-
-        DistributedCartesianGridAI.handleChildArrive(self, childObj, zoneId)
-        DistributedGameAreaAI.handleChildArrive(self, childObj, zoneId)
-
-    def handleChildArriveZone(self, childObj, zoneId):
-        if isinstance(childObj, DistributedPlayerPirateAI):
-            self.air.worldGridManager.handleLocationChanged(self, childObj, zoneId)
-
-        DistributedCartesianGridAI.handleChildArriveZone(self, childObj, zoneId)
-        DistributedGameAreaAI.handleChildArriveZone(self, childObj, zoneId)
-
-    def handleChildLeave(self, childObj, zoneId):
-        if isinstance(childObj, DistributedPlayerPirateAI):
-            self.air.worldGridManager.clearAvatarInterest(self, childObj)
-
-        DistributedCartesianGridAI.handleChildLeave(self, childObj, zoneId)
-        DistributedGameAreaAI.handleChildLeave(self, childObj, zoneId)
 
     def holidayStart(self, holidayId):
         if self.uniqueId == '1156207188.95dzlu' and holidayId == PiratesGlobals.FOUNDERSFEAST:

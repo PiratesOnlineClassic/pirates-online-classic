@@ -1,6 +1,8 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.DistributedNodeAI import DistributedNodeAI
 
+from otp.avatar.DistributedPlayerAI import DistributedPlayerAI
+
 from pirates.piratesbase import PLocalizer
 from pirates.world.GameAreaBuilderAI import GameAreaBuilderAI
 from pirates.piratesbase import PLocalizer
@@ -19,6 +21,24 @@ class DistributedGameAreaAI(DistributedNodeAI):
         self.fileName = ''
         self.jailInterior = None
         self.builder = GameAreaBuilderAI(self.air, self)
+
+    def handleChildArrive(self, childObj, zoneId):
+        if isinstance(childObj, DistributedPlayerAI):
+            self.air.worldGridManager.handleLocationChanged(self, childObj, zoneId)
+
+        DistributedNodeAI.handleChildArrive(self, childObj, zoneId)
+
+    def handleChildArriveZone(self, childObj, zoneId):
+        if isinstance(childObj, DistributedPlayerAI):
+            self.air.worldGridManager.handleLocationChanged(self, childObj, zoneId)
+
+        DistributedNodeAI.handleChildArriveZone(self, childObj, zoneId)
+
+    def handleChildLeave(self, childObj, zoneId):
+        if isinstance(childObj, DistributedPlayerAI):
+            self.air.worldGridManager.clearAvatarInterest(self, childObj)
+
+        DistributedNodeAI.handleChildLeave(self, childObj, zoneId)
 
     def setModelPath(self, modelPath):
         self.modelPath = modelPath
