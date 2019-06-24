@@ -574,7 +574,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
     def getCaptainId(self):
         return self.captainId
 
-    def setDeploy(self, deployState, timestamp):
+    def setDeploy(self, deployState, timestamp=0):
         self.deployState = deployState
 
     def d_setDeploy(self, deployState, timestamp):

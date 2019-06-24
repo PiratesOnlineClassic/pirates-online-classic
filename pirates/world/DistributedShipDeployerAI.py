@@ -118,7 +118,7 @@ class DeployShipFSM(ShipDeployerOperationFSM):
     def _finalizeDeploy(self):
         # the ship has been successfully deployed, mark it as deployed,
         # this will allow anyone who wants to join the ship to be able to do so...
-        self.ship.b_setDeploy(True)
+        self.ship.setDeploy(True)
 
         # add the ship to the ship manager's list of deployed ships
         self.air.shipManager.addActiveShip(self.ship)
