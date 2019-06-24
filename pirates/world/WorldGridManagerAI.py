@@ -115,6 +115,12 @@ class GridInterestHandler(object):
         self.interestHandles = []
         self.oldZoneId = 0
 
+        if self.pendingCallback is not None:
+            self.pendingCallback.destroy()
+            self.pendingCallback = None
+
+        self.pendingCallbackContexts = []
+
 
 class WorldGridManagerAI(object):
     notify = DirectNotifyGlobal.directNotify.newCategory('WorldGridManagerAI')
