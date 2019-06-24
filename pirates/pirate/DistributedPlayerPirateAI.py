@@ -896,7 +896,7 @@ def setGuildName(name):
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def getAccess():
-    access = spellbook.getInvoker().getAccess()
+    access = spellbook.getInvoker().getGameAccess()
     if access == Freebooter.NONE:
         return 'Unpaid'
     elif access == Freebooter.VELVET_ROPE:
