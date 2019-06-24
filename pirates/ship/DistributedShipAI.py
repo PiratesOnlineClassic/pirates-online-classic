@@ -12,6 +12,8 @@ from pirates.shipparts.DistributedSteeringWheelAI import DistributedSteeringWhee
 from pirates.shipparts.DistributedBowSpritAI import DistributedBowSpritAI
 from pirates.shipparts.DistributedSailAI import DistributedSailAI
 from pirates.shipparts.DistributedCabinAI import DistributedCabinAI
+from pirates.shipparts.DistributedHullAI import DistributedHullAI
+from pirates.shipparts.DistributedMastAI import DistributedMastAI
 from pirates.battle.DistributedShipBroadsideAI import DistributedShipBroadsideAI
 from pirates.battle.DistributedShipCannonAI import DistributedShipCannonAI
 from pirates.world.DistributedIslandAI import DistributedIslandAI
@@ -78,10 +80,6 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             return task.again
 
         taskMgr.doMethodLater(0.2, _broadcast, self.uniqueName('broadcast-pos'))
-
-    def generate(self):
-        DistributedMovingObjectAI.generate(self)
-        DistributedCharterableObjectAI.generate(self)
 
     def announceGenerate(self):
         DistributedMovingObjectAI.announceGenerate(self)
@@ -170,6 +168,33 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.steeringWheel.setShipId(self.doId)
         self.generateChildWithRequired(self.steeringWheel, PiratesGlobals.ShipZoneOnDeck)
 
+    def getShipHull(self):
+        inventory = self.getInventory()
+        assert(inventory is not None)
+
+        mainparts = inventory.getShipMainpartsList()
+        hull = None
+        for mainpart in mainparts:
+            assert(mainpart is not None)
+            if isinstance(mainpart, DistributedHullAI):
+                hull = mainpart
+                break
+
+        return hull
+
+    def getShipMasts(self):
+        inventory = self.getInventory()
+        assert(inventory is not None)
+
+        mainparts = inventory.getShipMainpartsList()
+        masts = []
+        for mainpart in mainparts:
+            assert(mainpart is not None)
+            if isinstance(mainpart, DistributedMastAI):
+                masts.append(mainpart)
+
+        return masts
+
     def handleChildArrive(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerPirateAI):
             self.addCrewMember(childObj)
@@ -220,6 +245,14 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         if self.cabin:
             self.cabin.requestDelete()
             self.cabin = None
+
+        masts = self.getShipMasts()
+        for mast in masts:
+            mast.requestDelete()
+
+        hull = self.getShipHull()
+        if hull:
+            hull.requestDelete()
 
         self.air.shipManager.removeActiveShip(self)
         DistributedMovingObjectAI.delete(self)
