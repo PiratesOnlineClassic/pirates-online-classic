@@ -4,7 +4,8 @@ from direct.fsm.FSM import FSM
 
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.pirate.BattleNPCGameFSMAI import BattleNPCGameFSMAI
-from pirates.piratesbase import PLocalizerEnglish
+from pirates.piratesbase import PLocalizer
+from pirates.pirate import AvatarTypes
 from pirates.battle import EnemyGlobals
 
 
@@ -124,6 +125,54 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     def stopLookAt(self):
         taskMgr.remove(self.getUpdateLookAtTaskName())
 
+    def getAggroPhrase(self):
+        if self.avatarType == AvatarTypes.Navy:
+            return PLocalizer.getNavyAggroPhrase()
+        elif self.avatarType == AvatarTypes.Undead:
+            return PLocalizer.getUndeadAggroPhrase()
+        elif self.avatarType == AvatarTypes.TradingCo:
+            return PLocalizer.getEITCAggroPhrase()
+        elif self.avatarType == AvatarTypes.EarthUndead:
+            return PLocalizer.getDavyJonesGuysAggroPhrase()
+
+        return ''
+
+    def getBreakCombatPhrase(self):
+        if self.avatarType == AvatarTypes.Navy:
+            return PLocalizer.getNavyBreakCombatPhrase()
+        elif self.avatarType == AvatarTypes.Undead:
+            return PLocalizer.getUndeadBreakCombatPhrase()
+        elif self.avatarType == AvatarTypes.TradingCo:
+            return PLocalizer.getEITCBreakCombatPhrase()
+        elif self.avatarType == AvatarTypes.EarthUndead:
+            return PLocalizer.getDavyJonesGuysBreakCombatPhrase()
+
+        return ''
+
+    def getTauntPhrase(self):
+        if self.avatarType == AvatarTypes.Navy:
+            return PLocalizer.getNavyTauntPhrase()
+        elif self.avatarType == AvatarTypes.Undead:
+            return PLocalizer.getUndeadTauntPhrase()
+        elif self.avatarType == AvatarTypes.TradingCo:
+            return PLocalizer.getEITCTauntPhrase()
+        elif self.avatarType == AvatarTypes.EarthUndead:
+            return PLocalizer.getDavyJonesGuysTauntPhrase()
+
+        return ''
+
+    def getTeamTalkPhrase(self):
+        if self.avatarType == AvatarTypes.Navy:
+            return PLocalizer.getNavyTeamTalkPhrase()
+        elif self.avatarType == AvatarTypes.Undead:
+            return PLocalizer.getUndeadTeamTalkPhrase()
+        elif self.avatarType == AvatarTypes.TradingCo:
+            return PLocalizer.getEITCTeamTalkPhrase()
+        elif self.avatarType == AvatarTypes.EarthUndead:
+            return PLocalizer.getDavyJonesGuysTeamTalkPhrase()
+
+        return ''
+
     def requestClientAggro(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
@@ -137,7 +186,7 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     def handleClientAggro(self, avatar):
         self.b_setCurrentTarget(avatar.doId)
         self.b_setGameState('Battle')
-        self.d_setChat(PLocalizerEnglish.getNavyAggroPhrase())
+        self.d_setChat(self.getAggroPhrase())
 
     def delete(self):
         self.air.targetMgr.removeTarget(self)
