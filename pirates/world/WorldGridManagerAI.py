@@ -62,7 +62,7 @@ class GridInterestHandler(object):
     def _callbackInterestContext(self):
         assert(len(self.pendingCallbackContexts) == 0)
         assert(self.pendingCallback is not None)
-        self.pendingCallback.finish()
+        self.pendingCallback()
 
         self.pendingCallbackContexts = []
         self.pendingCallback = None
@@ -96,7 +96,7 @@ class GridInterestHandler(object):
         newConcentricZones = newZones.difference(previousZones)
         if callback is not None:
             self.pendingCallbackContexts = list(newConcentricZones)
-            self.pendingCallback = PythonUtil.FrameDelayedCall('interest-context-callback-%d' % self.avatar.doId, callback)
+            self.pendingCallback = PythonUtil.DelayedFunctor(callback, 'interest-context-callback-%d' % self.avatar.doId, 0.2)
 
         for newZoneId in newConcentricZones:
             self.addInterestHandle(newZoneId)
@@ -118,10 +118,7 @@ class GridInterestHandler(object):
         self.interestHandles = []
         self.oldZoneId = 0
 
-        if self.pendingCallback is not None:
-            self.pendingCallback.destroy()
-            self.pendingCallback = None
-
+        self.pendingCallback = None
         self.pendingCallbackContexts = []
 
 
