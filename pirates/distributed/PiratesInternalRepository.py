@@ -87,8 +87,13 @@ class PiratesInternalRepository(OTPInternalRepository):
     def logPotentialHacker(self, message, kickChannel=False, **kwargs):
         self.notify.warning(message)
 
-        avatarId = self.getAvatarIdFromSender() or 0
-        accountId = self.getAccountIdFromSender() or 0
+        accountId = self.getAccountIdFromSender()
+        if not accountId:
+            return
+
+        avatarId = self.getAvatarIdFromSender()
+        if not accountId:
+            return
 
         # Log to event logger
         self.writeServerEvent('suspicious-event',
@@ -106,8 +111,13 @@ class PiratesInternalRepository(OTPInternalRepository):
     def logException(self, e):
         trace = traceback.format_exc()
 
-        avatarId = self.getAvatarIdFromSender() or 0
-        accountId = self.getAccountIdFromSender() or 0
+        accountId = self.getAccountIdFromSender()
+        if not accountId:
+            return
+
+        avatarId = self.getAvatarIdFromSender()
+        if not accountId:
+            return
 
         senderName =  districtName = self.distributedDistrict.getName() if hasattr(self, 'distributedDistrict') else None
         if not senderName:
