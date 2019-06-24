@@ -92,7 +92,7 @@ class PiratesInternalRepository(OTPInternalRepository):
             return
 
         avatarId = self.getAvatarIdFromSender()
-        if not accountId:
+        if not avatarId:
             return
 
         # Log to event logger
@@ -116,7 +116,7 @@ class PiratesInternalRepository(OTPInternalRepository):
             return
 
         avatarId = self.getAvatarIdFromSender()
-        if not accountId:
+        if not avatarId:
             return
 
         senderName =  districtName = self.distributedDistrict.getName() if hasattr(self, 'distributedDistrict') else None
