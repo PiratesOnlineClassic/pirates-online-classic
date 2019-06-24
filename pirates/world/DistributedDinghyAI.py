@@ -61,6 +61,16 @@ class DistributedDinghyAI(DistributedInteractiveAI):
     def handleRequestExit(self, avatar):
         return self.ACCEPT
 
+    def canSelectShip(self, ship):
+        if not self.air.shipManager.hasActiveShip(ship.doId):
+            return False
+
+        # check to see if the ship is full
+        if len(ship.getCrew()) >= ship.getMaxCrew():
+            return False
+
+        return True
+
     def selectPublicShip(self, shipDoId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
@@ -68,15 +78,15 @@ class DistributedDinghyAI(DistributedInteractiveAI):
 
         ship = self.air.doId2do.get(shipDoId)
         if not ship:
+            self.d_sendAvatarToShip(avatar.doId, 0)
             return
 
-        if not self.air.shipManager.hasActiveShip(ship.doId):
-            self.notify.warning('Cannot send avatar %d to ship %d, '
-                'ship was never deployed!' % avatar.doId, ship.doId)
-
+        if not self.canSelectShip(ship):
+            self.d_sendAvatarToShip(avatar.doId, 0)
             return
 
         if not ship.getAllowPublicState():
+            self.d_sendAvatarToShip(avatar.doId, 0)
             return
 
         self.sendAvatarToShip(avatar, ship)
