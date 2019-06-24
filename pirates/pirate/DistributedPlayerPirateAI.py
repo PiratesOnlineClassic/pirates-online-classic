@@ -697,7 +697,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def b_setAccess(self, access):
         self.setAccess(access)
-        self.d_setAccess(accesss)
+        self.d_setAccess(access)
 
     def setGameAccess(self, access):
         self.gameAccess = access
