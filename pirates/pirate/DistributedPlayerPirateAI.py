@@ -129,9 +129,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                         self.b_setReturnLocation(self.currentIsland)
 
                 self.b_setCurrentIsland(parentObj.getUniqueId())
-            else:
-                if self.currentIsland:
-                    self.b_setCurrentIsland('')
 
             self.attemptToSetCursedZombie()
 

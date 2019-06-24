@@ -207,6 +207,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             childObj.b_setShipId(self.doId)
             childObj.b_setActiveShipId(self.doId)
             childObj.b_setCrewShipId(self.doId)
+            childObj.b_setCurrentIsland('')
 
             # this will parent the avatar object to the ship so that
             # other avatars can see them, and our position data will be
