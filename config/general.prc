@@ -96,8 +96,7 @@ want-new-avatar #t
 want-npc-viewer #f
 
 # Membership:
-want-membership #f
-force-paid-status FULL
+want-membership #t
 
 # Islands:
 want-island-barriers #t

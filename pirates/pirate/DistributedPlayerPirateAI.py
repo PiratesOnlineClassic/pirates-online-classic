@@ -22,7 +22,7 @@ from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from pirates.battle import WeaponGlobals
 from pirates.reputation import ReputationGlobals
-
+from pirates.piratesbase import Freebooter
 
 class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNAAI, DistributedQuestAvatarAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerPirateAI')
@@ -716,6 +716,25 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getConstructedShipDoId(self):
         return self.constructedShipDoId
 
+    def getAccess(self):
+        return Freebooter.getPaidStatusAI(self.doId)
+
+    def setAccess(self, access):
+        self.setGameAccess(access)
+
+    def d_setAccess(self, access):
+        self.sendUpdate('setAccess', [access])
+
+    def b_setAccess(self, access):
+        self.setAccess(access)
+        self.d_setAccess(access)
+
+    def setGameAccess(self, access):
+        self.gameAccess = access
+
+    def getGameAccess(self):
+        return self.gameAccess
+
     def disable(self):
         DistributedPlayerAI.disable(self)
         DistributedBattleAvatarAI.disable(self)
@@ -904,3 +923,21 @@ def location():
 def setGuildName(name):
     spellbook.getInvoker().b_setGuildName(name)
     return "Set Guild Name to %s" % name
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def getAccess():
+    access = spellbook.getInvoker().getAccess()
+    if access == Freebooter.NONE:
+        return 'Unpaid'
+    elif access == Freebooter.VELVET_ROPE:
+        return 'Velvet Rope'
+    elif access == Freebooter.FULL:
+        return 'Full'
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def setAccess(access):
+    if access < 0 or access > 2:
+        return 'Invalid access level 0-2'
+
+    spellbook.getInvoker().b_setAccess(access)
+    return 'Access level changed: %d' % access

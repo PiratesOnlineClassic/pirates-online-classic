@@ -5,6 +5,8 @@ from pirates.piratesbase import PiratesGlobals
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.fsm.FSM import FSM
 from pirates.piratesbase import PiratesGlobals
+from pirates.quest.QuestConstants import LocationIds
+from pirates.piratesbase import Freebooter
 
 class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedDoorBaseAI')
@@ -27,6 +29,10 @@ class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
         if self.locked:
             return self.DENY
 
+        if self.buildingUid == LocationIds.KINGSHEAD_DOOR and not Freebooter.getPaidStatusAI(avatar.doId):
+            self.notify.warning('Freebooter (%s) attempted to force open KINGSHEAD_DOOR' % avatar.doId)
+            return self.DENY
+        
         if not self.avatarId:
             self.request('Opened', avatar.doId)
 
