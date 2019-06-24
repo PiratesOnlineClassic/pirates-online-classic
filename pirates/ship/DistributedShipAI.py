@@ -168,7 +168,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
         self.steeringWheel = DistributedSteeringWheelAI(self.air)
         self.steeringWheel.setShipId(self.doId)
-        self.generateChildWithRequired(self.steeringWheel, PiratesGlobals.ShipZoneSilhouette)
+        self.generateChildWithRequired(self.steeringWheel, PiratesGlobals.ShipZoneOnDeck)
 
     def handleChildArrive(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerPirateAI):
