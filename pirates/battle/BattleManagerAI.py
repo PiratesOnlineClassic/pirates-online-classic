@@ -408,7 +408,7 @@ class BattleManagerAI(BattleManagerBase):
             return
 
         # Verify the user has not exceeded the level cap
-        if hasattr(avatar, 'getGameAccess'):
+        if hasattr(attacker, 'getGameAccess'):
             if not attacker.getGameAccess() and attacker.getLevel() >= Freebooter.FreeOverallLevelCap:
                 return
 
