@@ -1603,13 +1603,9 @@ dclass DistributedIslandCannon : DistributedPCCannon {
   hitByProjectile() airecv clsend;
 };
 
-struct delays {
- uint8/100 delay;
-}
-
 dclass DistributedShipBroadside : DistributedWeapon {
-  requestBroadside(uint8, delays [], PosList, uint32, uint8) airecv clsend;
-  doBroadside(uint8, delays [], PosList, uint32, uint8, int16) broadcast;
+  requestBroadside(uint8, uint8 [], PosList, uint32, uint8) airecv clsend;
+  doBroadside(uint8, uint8 [], PosList, uint32, uint8, int16) broadcast;
   setShipId(uint32) required broadcast ram;
   setGeomParentId(uint32) required broadcast ram;
   requestCannonEnabledState(uint8, uint8, uint8) airecv clsend;
