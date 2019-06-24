@@ -3,7 +3,7 @@ from direct.directnotify import DirectNotifyGlobal
 
 from pirates.world.OceanGridBase import OceanGridBase
 from pirates.world import WorldGlobals
-from pirates.movement.DistributedNodeAI import DistributedNodeAI
+from pirates.movement.DistributedMovingObjectAI import DistributedMovingObjectAI
 
 
 class DistributedOceanGridAI(DistributedCartesianGridAI, OceanGridBase):
@@ -33,13 +33,13 @@ class DistributedOceanGridAI(DistributedCartesianGridAI, OceanGridBase):
         self.removeObjectFromGrid(av)
 
     def handleChildArrive(self, childObj, zoneId):
-        if isinstance(childObj, DistributedNodeAI):
+        if isinstance(childObj, DistributedMovingObjectAI):
             self.addObjectToOceanGrid(childObj)
 
         DistributedNodeAI.handleChildArrive(self, childObj, zoneId)
 
     def handleChildLeave(self, childObj, zoneId):
-        if isinstance(childObj, DistributedNodeAI):
+        if isinstance(childObj, DistributedMovingObjectAI):
             self.removeObjectFromOceanGrid(childObj)
 
         DistributedCartesianGridAI.handleChildLeave(self, childObj, zoneId)
