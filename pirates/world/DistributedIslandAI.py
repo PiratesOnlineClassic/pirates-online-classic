@@ -8,6 +8,7 @@ from pirates.world.IslandAreaBuilderAI import IslandAreaBuilderAI
 from pirates.piratesbase import PiratesGlobals
 from pirates.treasuremap.DistributedTreasureMapInstanceAI import DistributedTreasureMapInstanceAI
 from pirates.world.DistributedShipDeployerAI import DistributedShipDeployerAI
+from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
 
 
 class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Teamable):
@@ -33,10 +34,6 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         self.shipDeployer = None
         self.builder = IslandAreaBuilderAI(self.air, self)
 
-    def announceGenerate(self):
-        DistributedCartesianGridAI.announceGenerate(self)
-        DistributedGameAreaAI.announceGenerate(self)
-
     def generate(self):
         DistributedCartesianGridAI.generate(self)
         DistributedGameAreaAI.generate(self)
@@ -58,6 +55,17 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         self.shipDeployer.setSpacing(spacing)
 
         self.generateChildWithRequired(self.shipDeployer, PiratesGlobals.IslandShipDeployerZone)
+
+    def handleChildArrive(self, childObj, zoneId):
+        if isinstance(childObj, DistributedPlayerPirateAI):
+            # if the child object does not have their own grid interests enabled,
+            # give them back control over it, in some cases this may occur after
+            # leaving a ship they previously boarded.
+            if not childObj.canControlInterests:
+                childObj.setCanControlInterests(True)
+
+        DistributedCartesianGridAI.handleChildArrive(self, childObj, zoneId)
+        DistributedGameAreaAI.handleChildArrive(self, childObj, zoneId)
 
     def holidayStart(self, holidayId):
         if self.uniqueId == '1156207188.95dzlu' and holidayId == PiratesGlobals.FOUNDERSFEAST:
