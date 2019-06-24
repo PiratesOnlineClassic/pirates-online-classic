@@ -8,7 +8,6 @@ from pirates.world.IslandAreaBuilderAI import IslandAreaBuilderAI
 from pirates.piratesbase import PiratesGlobals
 from pirates.treasuremap.DistributedTreasureMapInstanceAI import DistributedTreasureMapInstanceAI
 from pirates.world.DistributedShipDeployerAI import DistributedShipDeployerAI
-from pirates.ship.DistributedShipAI import DistributedShipAI
 
 
 class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Teamable):

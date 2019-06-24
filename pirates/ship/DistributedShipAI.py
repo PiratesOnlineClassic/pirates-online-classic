@@ -14,6 +14,7 @@ from pirates.shipparts.DistributedSailAI import DistributedSailAI
 from pirates.shipparts.DistributedCabinAI import DistributedCabinAI
 from pirates.battle.DistributedShipBroadsideAI import DistributedShipBroadsideAI
 from pirates.battle.DistributedShipCannonAI import DistributedShipCannonAI
+from pirates.world.DistributedIslandAI import DistributedIslandAI
 
 
 class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectAI, Teamable):
@@ -482,6 +483,35 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
     def getGameState(self):
         return self.gameState
+
+    def dropAnchor(self, islandDoId):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        island = self.air.doId2do.get(islandDoId)
+        if not island:
+            return
+
+        if not isinstance(island, DistributedIslandAI):
+            self.notify.debug('Cannot drop anchor for avatar: %d with ship: %d, '
+                'avatar wants to drop anchor at invalid island port: %d!' % (avatar.doId, self.doId, islandDoId))
+
+            return
+
+        # get a random spawn point
+        parentObj = island.getParentObj()
+        assert(parentObj is not None)
+        spawnPt = parentObj.getSpawnPt(island.getUniqueId())
+
+        # send everyone on the ship to the island
+        for avatarId in self.crew:
+            avatar = self.air.doId2do.get(avatarId)
+            assert(avatar is not None)
+            self.d_sendCrewToIsland(avatar.doId, islandDoId, spawnPt)
+
+    def d_sendCrewToIsland(self, avatarId, islandDoId, posH):
+        self.sendUpdateToAvatarId(avatarId, 'sendCrewToIsland', [islandDoId, posH])
 
     def setClientController(self, clientControllerDoId):
         self.clientControllerDoId = clientControllerDoId
