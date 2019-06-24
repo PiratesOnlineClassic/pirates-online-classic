@@ -42,15 +42,15 @@ holidays = {
     PiratesGlobals.FREEHATWEEK: HolidayDates(HolidayDates.TYPE_CUSTOM, [
         (2008, Month.FEBRUARY, 25, 0, 0, 0),
         (2008, Month.MARCH, 2, 0, 0, 0)]),
-    PiratesGlobals.SAINTPATRICKSDAY: HolidayDates(HolidayDates.TYPE_CUSTOM, [
-        (2008, Month.MARCH, 14, 0, 0, 0),
-        (2008, Month.MARCH, 18, 0, 0, 0)]),
-    PiratesGlobals.MOTHERSDAY: HolidayDates(HolidayDates.TYPE_CUSTOM, [
-        (2008, Month.MAY, 10, 0, 0, 0),
-        (2008, Month.MAY, 12, 0, 0, 0)]),
-    PiratesGlobals.FATHERSDAY: HolidayDates(HolidayDates.TYPE_CUSTOM, [
-        (2008, Month.JUNE, 13, 0, 0, 0),
-        (2008, Month.JUNE, 16, 0, 0, 0)]),
+    PiratesGlobals.SAINTPATRICKSDAY: HolidayDates(HolidayDates.TYPE_YEARLY, [
+        (Month.MARCH, 14, 0, 0, 0),
+        (Month.MARCH, 18, 0, 0, 0)]),
+    PiratesGlobals.MOTHERSDAY: HolidayDates(HolidayDates.TYPE_YEARLY, [
+        (Month.MAY, 10, 0, 0, 0),
+        (Month.MAY, 12, 0, 0, 0)]),
+    PiratesGlobals.FATHERSDAY: HolidayDates(HolidayDates.TYPE_YEARLY, [
+        (Month.JUNE, 13, 0, 0, 0),
+        (Month.JUNE, 16, 0, 0, 0)]),
     PiratesGlobals.FOURTHOFJULY: HolidayDates(HolidayDates.TYPE_YEARLY, [
         (Month.JULY, 3, 18, 0, 0),
         (Month.JULY, 7, 0, 0, 0)]),
