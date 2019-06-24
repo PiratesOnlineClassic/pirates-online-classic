@@ -1067,7 +1067,7 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
             self.notify.warning('Tried to kill connection %d for duplicate FSM, but none exists!' % connId)
             return
 
-        self.killConnection(connId, 'An operation is already underway: ' + fsm.__name__)
+        self.killConnection(connId, 'An operation is already underway: ' + fsm.__class__.__name__)
 
     def killAccount(self, accountId, reason, code=122):
         self.killConnection(self.GetAccountConnectionChannel(accountId), reason, code)
@@ -1075,11 +1075,10 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
     def killAccountFSM(self, accountId):
         fsm = self.account2fsm.get(accountId)
         if not fsm:
-
             self.notify.warning('Tried to kill account %d for duplicate FSM, but none exists!' % accountId)
             return
 
-        self.killAccount(accountId, 'An operation is already underway: ' + fsm.__name__)
+        self.killAccount(accountId, 'An operation is already underway: ' + fsm.__class__.__name__)
 
     def runAccountFSM(self, fsmtype, *args):
         sender = self.air.getAccountIdFromSender()

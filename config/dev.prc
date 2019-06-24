@@ -36,9 +36,6 @@ skip-tutorial #t
 force-tutorial #f
 force-tutorial-complete #t
 
-# Teleport:
-teleport-all #t
-
 # Quests:
 disable-blockers #t
 
@@ -63,5 +60,5 @@ always-allow-searching #f
 
 # Shards:
 show-total-population #t
-teleport-all #t
+teleport-all #f
 shard-page-disable #f

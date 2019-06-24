@@ -425,7 +425,6 @@ class DecoratedMapBall(MapBall):
         ship = self.placedItems.pop(name, None)
         if ship:
             ship.removeNode()
-            ship.remove()
 
     def placeIsland(self, name, islandUid, modelPath, worldPos, rotation):
         scale = 25.0
@@ -455,8 +454,7 @@ class DecoratedMapBall(MapBall):
         island = self.placedItems.pop(name, None)
         if island:
             islandUid = island.getTag('islandUid')
-            island.removeNode()
-            island.remove()
+            island.remove_node()
     
     def placeDart(self, id, worldPos, color = Vec4(0.2, 1, 0.6, 1.0)):
         name = 'dart-' + str(id)

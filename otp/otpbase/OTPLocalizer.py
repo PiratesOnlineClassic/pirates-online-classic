@@ -1,4 +1,4 @@
-from pandac.libpandaexpressModules import *
+from pandac.PandaModules import *
 import string
 import types
 
@@ -38,7 +38,7 @@ if checkLanguage:
                 if not fval.has_key(dkey):
                     print 'WARNING: Foreign module: %s missing key: %s.%s' % (_languageModule, key, dkey)
                     fval[dkey] = dval
-            
+
             for dkey in fval.keys():
                 if not val.has_key(dkey):
                     print 'WARNING: Foreign module: %s extra key: %s.%s' % (_languageModule, key, dkey)
@@ -46,4 +46,3 @@ if checkLanguage:
     for key in foreignModule.__dict__.keys():
         if not englishModule.__dict__.has_key(key):
             print 'WARNING: Foreign module: %s extra key: %s' % (_languageModule, key)
-

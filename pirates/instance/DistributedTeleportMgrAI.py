@@ -6,6 +6,7 @@ from otp.ai.MagicWordGlobal import *
 
 from pirates.quest.QuestConstants import LocationIds
 from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.instance.DistributedTeleportZoneAI import DistributedTeleportZoneAI
 from pirates.instance.DistributedTeleportHandlerAI import DistributedTeleportHandlerAI
@@ -216,4 +217,30 @@ def areaTeleport(areaUid):
     simbase.air.teleportMgr.d_initiateTeleport(spellbook.getTarget(),
         locationUid=areaUid)
 
-    return 'Teleporting to area: %s.' % areaUid
+    avatar = spellbook.getTarget()
+    simbase.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
+    return 'Teleporting avatar %d to area: %s...' % (avatar.doId, locationUid)
+
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
+def tp(locationName):
+    """
+    Teleport command for teleporting to an object by it's location name defined
+    """
+
+    locationUid = None
+    for uid, name in PLocalizer.LocationNames.items():
+        name = name.lower()
+        name = name.replace("'", '')
+
+        valid = any(char.isdigit() for char in uid)
+        if name == locationName and valid:
+            locationUid = uid
+            break
+
+    if locationUid != None:
+        avatar = spellbook.getTarget()
+        simbase.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
+        return 'Teleporting avatar %d to area: %s...' % (avatar.doId, locationUid)
+
+    return 'Unknown location %s' % locationName

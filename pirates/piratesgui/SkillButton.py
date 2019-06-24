@@ -121,7 +121,7 @@ class SkillButton(DirectFrame):
         if not SkillButton.SkillIcons:
             SkillButton.SkillIcons = loader.loadModel('models/textureCards/skillIcons')
             SkillButton.Image = (SkillButton.SkillIcons.find('**/base'), SkillButton.SkillIcons.find('**/base_down'), SkillButton.SkillIcons.find('**/base_over'))
-            SkillButton.SkillRechargedSound = base.loadSfx('audio/sword-swoosh2.mp3')
+            SkillButton.SkillRechargedSound = base.loader.loadSfx('audio/sword-swoosh2.mp3')
             SkillButton.SubLock = gui.find('**/subscribers_lock')
         
         model = loader.loadModel('models/effects/particleMaps')

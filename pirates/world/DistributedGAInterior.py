@@ -42,7 +42,7 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         self.initBlockers(self.staticGridRoot)
         self.startCustomEffects()
         self.resumeSFX()
-        self.closeSfx = base.loadSfx('audio/sfx_door_shanty_slam.mp3')
+        self.closeSfx = base.loader.loadSfx('audio/sfx_door_shanty_slam.mp3')
         if base.options.terrain_detail_level == 0:
             self.handleLowTerrainDetail()
 

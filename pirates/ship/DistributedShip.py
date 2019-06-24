@@ -78,7 +78,7 @@ RIGHT = 1
 LEFT = -1
 
 def getRamSfx():
-    hitSfxs = (base.loadSfx('audio/wood_impact_1.mp3'), base.loadSfx('audio/wood_impact_3.mp3'))
+    hitSfxs = (base.loader.loadSfx('audio/wood_impact_1.mp3'), base.loader.loadSfx('audio/wood_impact_3.mp3'))
     return hitSfxs
 
 
@@ -1969,7 +1969,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                 self.collHandler = None
 
             if self.rammingSphereNodePath:
-                self.rammingSphereNodePath.remove()
+                self.rammingSphereNodePath.remove_node()
                 self.rammingSphereNodePath = None
 
     def isRamming(self):

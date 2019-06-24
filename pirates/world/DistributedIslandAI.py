@@ -172,8 +172,6 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         return self.feastFireEnabled
 
     def delete(self):
-        self.ignore('HolidayStarted')
-        self.ignore('HolidayEnded')
 
         DistributedCartesianGridAI.delete(self)
         DistributedGameAreaAI.delete(self)

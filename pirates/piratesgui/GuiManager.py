@@ -1528,7 +1528,7 @@ class GuiManager(FSM.FSM):
         codeMessage1 = DirectLabel(parent = self.pirateCode, relief = None, text = PLocalizer.PirateCodeWarning1, text_fg = (1, 1, 1, 1), text_shadow = (0, 0, 0, 1), pos = (0.5, 0, 0.18), text_scale = 0.08)
         codeMessage2 = DirectLabel(parent = self.pirateCode, relief = None, text = PLocalizer.PirateCodeWarning2, text_fg = (1, 1, 1, 1), text_shadow = (0, 0, 0, 1), pos = (0.49, 0, 0.09), text_scale = 0.08)
         self.pirateCode.hide()
-        self.pirateCodeDialog = base.loadSfx('audio/dialog/will_turner_7.2.b.mp3')
+        self.pirateCodeDialog = base.loader.loadSfx('audio/dialog/will_turner_7.2.b.mp3')
 
     def showPirateCode(self):
         if not self.pirateCode:

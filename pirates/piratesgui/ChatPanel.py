@@ -46,7 +46,7 @@ class ChatPanel(DirectFrame, FSM):
         if hasattr(self, 'chatBar'):
             self.chatBar.detachNode()
         
-        self.removeChildren()
+        self.get_children().detach()
         guib = loader.loadModel('models/gui/chat_frame_b')
         guic = loader.loadModel('models/gui/chat_frame_c')
         charGui = loader.loadModel('models/gui/char_gui')

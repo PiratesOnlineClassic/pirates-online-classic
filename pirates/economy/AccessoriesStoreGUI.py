@@ -1727,18 +1727,18 @@ class AccessoriesStoreGUI(DirectFrame):
 
         self.clothCameras = []
         for item in self.clothRenders:
-            item.remove()
+            item.remove_node()
             item.removeNode()
 
         self.clothRenders = []
         for item in self.clothHumans:
             item.delete()
-            item.remove()
+            item.remove_node()
             item.removeNode()
 
         self.clothHumans = []
         for item in self.clothCameraNPs:
-            item.remove()
+            item.remove_node()
             item.removeNode()
 
         self.clothCameraNPs = []

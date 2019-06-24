@@ -56,7 +56,7 @@ class Flag(NodePath):
     def __activate(self):
         self.clearColor()
         self.clearTexture()
-        self.removeChildren()
+        self.get_children().detach()
         if self.node().getNumGeoms() > 0:
             self.node().removeGeom(0)
         
@@ -91,7 +91,7 @@ class Flag(NodePath):
         oldEmblemNps = self.findAllMatches('**/emblem-*').asList()
         for np in oldEmblemNps:
             np.detachNode()
-            np.remove()
+            np.remove_node()
             np.removeNode()
         
         del oldEmblemNps
@@ -119,7 +119,7 @@ class Flag(NodePath):
         
         def completeFlatten(par = par, tex = tex):
             if not par.isActive():
-                self.removeChildren()
+                self.get_children().detach()
                 self.clearEffect(DecalEffect.make().getType())
                 if callback:
                     callback()
@@ -160,7 +160,7 @@ class Flag(NodePath):
         oldBgNps = self.findAllMatches('**/bg-*').asList()
         for np in oldBgNps:
             np.detachNode()
-            np.remove()
+            np.remove_node()
             np.removeNode()
         
         del oldBgNps
@@ -332,7 +332,7 @@ class Flag(NodePath):
         oldNp = self.find('**/emblem-%02d*' % index)
         if not oldNp.isEmpty():
             oldNp.detachNode()
-            oldNp.remove()
+            oldNp.remove_node()
             oldNp.removeNode()
         
         del oldNp

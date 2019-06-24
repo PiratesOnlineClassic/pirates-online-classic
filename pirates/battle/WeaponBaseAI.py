@@ -24,8 +24,7 @@ class WeaponBaseAI(WeaponBaseBase):
         # this will handle the attackers targeted skill request, however we will not check if the target
         # specified in this update is valid. because, if their is no target then the client is
         # just requesting targeted skill for no target...
-        self.__useTargetedSkill(avatar, target, skillId, ammoSkillId, clientResult,
-            areaIdList, timestamp, pos, charge)
+        self.useTargetedSkill(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
 
         # this will handle the targeted skill for any targets in the range of the attacker,
         # for example if an attacker uses a skill that effects enemies around it...
@@ -43,8 +42,7 @@ class WeaponBaseAI(WeaponBaseBase):
 
                 continue
 
-            self.__useTargetedSkill(avatar, target, skillId, ammoSkillId, clientResult,
-                areaIdList, timestamp, pos, charge)
+            self.useTargetedSkill(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
 
     def requestProjectileSkill(self, skillId, ammoSkillId, posHpr, timestamp, power):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
@@ -68,7 +66,6 @@ class WeaponBaseAI(WeaponBaseBase):
 
     def suggestProjectileSkillResult(self, skillId, ammoSkillId, result, targetId, areaIdList, pos, normal, codes, timestamp):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             return
 
@@ -85,7 +82,7 @@ class WeaponBaseAI(WeaponBaseBase):
         # this will handle the attackers projectile targeted skill request, however we will not check if the target
         # specified in this update is valid. because, if their is no target then the client is
         # just requesting targeted skill for no target...
-        self.__useProjectileSkill(avatar, target, skillId, ammoSkillId, result, targetId,
+        self.useProjectileSkill(avatar, target, skillId, ammoSkillId, result, targetId,
             areaIdList, pos, normal, codes, timestamp)
 
         # this will handle the targeted skill for any targets in the range of the attacker,
@@ -98,17 +95,15 @@ class WeaponBaseAI(WeaponBaseBase):
 
                 continue
 
-            self.__useProjectileSkill(avatar, target, skillId, ammoSkillId, result, targetId,
+            self.useProjectileSkill(avatar, target, skillId, ammoSkillId, result, targetId,
                 areaIdList, pos, normal, codes, timestamp)
 
         # the projectile has been successfully used, remove the projectile
         # from the target manager so the avatar can use the skill again...
         self.air.targetMgr.removeProjectile(avatar.doId, skillId, ammoSkillId)
 
-    def __useTargetedSkill(self, avatar, target, skillId, ammoSkillId, clientResult, areaIdList, timestamp, pos, charge):
-        targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId,
-            clientResult, areaIdList, timestamp, pos, charge)
-
+    def useTargetedSkill(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge):
+        targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
         if not targetResult:
             self.notify.debug('Cannot get targeted skill, no valid result was given; '
                 'avatarId=%d, skillId=%d!' % (avatar.doId, skillId))
@@ -117,7 +112,7 @@ class WeaponBaseAI(WeaponBaseBase):
 
         self.sendUpdate('useTargetedSkill', targetResult)
 
-    def __useProjectileSkill(self, avatar, target, skillId, ammoSkillId, result, targetId, areaIdList, pos, normal, codes, timestamp):
+    def useProjectileSkill(self, avatar, target, skillId, ammoSkillId, result, targetId, areaIdList, pos, normal, codes, timestamp):
         targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId, result, areaIdList, timestamp, pos)
         if not targetResult:
             self.notify.debug('Cannot get projectile targeted skill, no valid result was given; '

@@ -24,7 +24,7 @@ class SmallSplash(PooledEffect, EffectController):
         
         if not self.splashSfx:
             for filename in self.splashSfxNames:
-                self.splashSfx.append(base.loadSfx('audio/' + filename))
+                self.splashSfx.append(base.loader.loadSfx('audio/' + filename))
 
         self.f = ParticleEffect.ParticleEffect()
         self.f.reparentTo(self)

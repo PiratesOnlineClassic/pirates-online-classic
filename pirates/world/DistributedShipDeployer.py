@@ -44,7 +44,7 @@ class DistributedShipDeployer(DistributedNode):
         self.ignore(self.uniqueName('enterShipDeploy-MaxSphereHard'))
         self.ignore(self.uniqueName('exitShipDeploy-MaxSphereHard'))
         self.ignore(self.uniqueName('enterShipDeploy-MinSphere'))
-        self.removeChildren()
+        self.get_children().detach()
         self.minSphere = None
         self.maxSphereSoft = None
         self.maxSphereHard = None

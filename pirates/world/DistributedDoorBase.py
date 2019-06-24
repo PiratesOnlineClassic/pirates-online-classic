@@ -150,14 +150,14 @@ class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
         else:
             self.hasDoors = 1
         if string.find(modelName, 'english') >= 0:
-            self.openSfx = base.loadSfx('audio/sfx_door_english_open.mp3')
+            self.openSfx = base.loader.loadSfx('audio/sfx_door_english_open.mp3')
         elif string.find(modelName, 'shanty') >= 0:
-            self.openSfx = base.loadSfx('audio/sfx_door_shanty_open.mp3')
+            self.openSfx = base.loader.loadSfx('audio/sfx_door_shanty_open.mp3')
         elif string.find(modelName, 'spanish') >= 0:
-            self.openSfx = base.loadSfx('audio/sfx_door_spanish_open.mp3')
+            self.openSfx = base.loader.loadSfx('audio/sfx_door_spanish_open.mp3')
         else:
-            self.openSfx = base.loadSfx('audio/sfx_door_english_open.mp3')
-        self.closeSfx = base.loadSfx('audio/sfx_door_shanty_slam.mp3')
+            self.openSfx = base.loader.loadSfx('audio/sfx_door_english_open.mp3')
+        self.closeSfx = base.loader.loadSfx('audio/sfx_door_shanty_slam.mp3')
         self.openDoorIval.append(Func(base.playSfx, self.openSfx, node = self.soundNode, volume = 0.7, cutoff = 100))
 
     def getOtherSideParentModel(self):

@@ -1491,7 +1491,7 @@ class DistributedPlayerPirate(DistributedPirateBase, DistributedPlayer, Distribu
                 anim = emote[0]
                 sfx = emote[5]
                 if emote[5]:
-                    sfx = base.loadSfx(emote[5])
+                    sfx = base.loader.loadSfx(emote[5])
                     self.emote_track = Sequence(Parallel(self.actorInterval(anim), SoundInterval(sfx, node = self, duration = self.getDuration(anim))), Func(self.b_setGameState, 'LandRoam'))
                 else:
                     self.emote_track = Sequence(self.actorInterval(anim), Func(self.b_setGameState, 'LandRoam'))

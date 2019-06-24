@@ -71,11 +71,11 @@ class Cannon(ShipPart.ShipPart, NodePath):
             Cannon.localFireSfx = []
             for filename in localFireSfxNames:
                 audioPath = 'audio/'
-                Cannon.localFireSfx.append(base.loadSfx('audio/' + filename))
+                Cannon.localFireSfx.append(base.loader.loadSfx('audio/' + filename))
             
             Cannon.distFireSfx = []
             for filename in distFireSfxNames:
-                Cannon.distFireSfx.append(base.loadSfx('audio/' + filename))
+                Cannon.distFireSfx.append(base.loader.loadSfx('audio/' + filename))
 
         self.isShipCannon = shipCannon
     

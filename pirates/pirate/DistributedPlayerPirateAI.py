@@ -9,7 +9,6 @@ from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.pirate.HumanDNAAI import HumanDNAAI
 from pirates.quest.DistributedQuestAvatarAI import DistributedQuestAvatarAI
 from pirates.tutorial import TutorialGlobals
-from pirates.battle.BattleRandom import BattleRandom
 from pirates.pirate.PlayerPirateGameFSMAI import PlayerPirateGameFSMAI
 from pirates.quest.DistributedQuestAvatar import DistributedQuestAvatar
 from pirates.quest.QuestStatus import QuestStatus
@@ -18,13 +17,11 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.pirate import AvatarTypes
 from pirates.quest.QuestConstants import LocationIds
 from pirates.quest import QuestDB
-from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from pirates.battle import WeaponGlobals
 from pirates.reputation import ReputationGlobals
-from pirates.battle.BattleSkillDiaryAI import BattleSkillDiaryAI
 
 
 class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNAAI, DistributedQuestAvatarAI):
@@ -39,7 +36,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.gameFSM = PlayerPirateGameFSMAI(self.air, self)
         self.questStatus = None
         self.isNpc = False
-        self.battleRandom = None
 
         self.avatarType = AvatarTypes.Pirate
         self.inventoryId = 0
@@ -70,9 +66,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def generate(self):
         DistributedPlayerAI.generate(self)
         DistributedBattleAvatarAI.generate(self)
-
-        self.battleRandom = BattleRandom(self.doId)
-        self.battleSkillDiary = BattleSkillDiaryAI(self.air, self)
 
         self.accept('HolidayStarted', self.processHolidayStart)
         self.accept('HolidayEnded', self.processHolidayEnd)
@@ -145,22 +138,17 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             if self.canControlInterests:
                 self.air.worldGridManager.handleLocationChanged(parentObj, self, zoneId)
 
-    def getWorld(self):
-        parentObj = self.getParentObj()
-        if parentObj:
-            if isinstance(parentObj, DistributedGameAreaAI):
-                parentObj = parentObj.getParentObj()
-
-        if not parentObj:
-            return None
-
-        if isinstance(parentObj, DistributedInstanceBaseAI):
-            return parentObj
-
-        return None
-
     def getInventory(self):
         return self.air.inventoryManager.getInventory(self.doId)
+
+    def setCurrentTarget(self, currentTargetDoId):
+        if self.currentTarget is not None:
+            if not currentTargetDoId:
+                self.startToonUp()
+        else:
+            self.stopToonUp()
+
+        DistributedBattleAvatarAI.setCurrentTarget(self, currentTargetDoId)
 
     def d_setFounder(self, founder):
         self.sendUpdate('setFounder', [founder])
@@ -680,8 +668,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.b_setTempDoubleXPReward(tempDoubleXPReward)
 
     def startToonUp(self):
-        self.toonUpTask = taskMgr.doMethodLater(2.0, self.toonUp,
-            self.uniqueName('toonUp'))
+        self.toonUpTask = taskMgr.doMethodLater(2.0, self.toonUp, self.taskName('toonUp'))
 
     def toonUp(self, task):
         if self.getHp()[0] >= self.getMaxHp() and self.getMojo() >= self.getMaxMojo():
@@ -743,17 +730,12 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         DistributedBattleAvatarAI.disable(self)
 
     def delete(self):
+        self.air.targetMgr.clearAttacker(self)
         self.air.worldGridManager.clearAvatarInterests(self)
-
         inventory = self.getInventory()
         if inventory:
             self.air.questMgr.deactivateQuests(self)
             self.air.inventoryManager.removeInventory(inventory)
-
-        if self.battleRandom:
-            self.battleRandom.delete()
-
-        self.battleRandom = None
 
         self.ignore('HolidayStarted')
         self.ignore('HolidayEnded')

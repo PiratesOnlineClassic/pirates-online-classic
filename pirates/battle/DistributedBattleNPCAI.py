@@ -5,6 +5,7 @@ from direct.fsm.FSM import FSM
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.pirate.BattleNPCGameFSMAI import BattleNPCGameFSMAI
 from pirates.piratesbase import PLocalizerEnglish
+from pirates.battle import EnemyGlobals
 
 
 class DistributedBattleNPCAI(DistributedBattleAvatarAI):
@@ -25,7 +26,10 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def generate(self):
         DistributedBattleAvatarAI.generate(self)
-        self.air.battleMgr.addTarget(self)
+        self.air.targetMgr.addTarget(self)
+
+    def getMonsterDmg(self):
+        return EnemyGlobals.getMonsterDmg(self.level)
 
     def setName(self, name):
         self.name = name
@@ -65,6 +69,10 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     def d_setAnimSet(self, animSet):
         self.sendUpdate('setAnimSet', [animSet])
 
+    def b_setAnimSet(self, animSet):
+        self.setAnimSet(animSet)
+        self.d_setAnimSet(animSet)
+
     def getAnimSet(self):
         return self.animSet
 
@@ -100,16 +108,37 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     def getSpawnNode(self):
         return self.spawnNode
 
+    def lookAtTarget(self, task):
+        if self.currentTarget:
+            self.headsUp(self.currentTarget)
+            return task.cont
+
+        return task.done
+
+    def getUpdateLookAtTaskName(self):
+        return self.taskName('lookAtTarget')
+
+    def startLookAt(self):
+        taskMgr.add(self.lookAtTarget, self.getUpdateLookAtTaskName())
+
+    def stopLookAt(self):
+        taskMgr.remove(self.getUpdateLookAtTaskName())
+
     def requestClientAggro(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
             return
 
-        self.handleClientAggro(avatar)
+        # if we are in ambush mode and an avatar just entered our aggro
+        # sphere, ambush them and try to kill them.
+        if self.gameFSM.state == 'Ambush':
+            self.handleClientAggro(avatar)
 
     def handleClientAggro(self, avatar):
+        self.b_setCurrentTarget(avatar.doId)
+        self.b_setGameState('Battle')
         self.d_setChat(PLocalizerEnglish.getNavyAggroPhrase())
 
     def delete(self):
-        self.air.battleMgr.removeTarget(self)
+        self.air.targetMgr.removeTarget(self)
         DistributedBattleAvatarAI.delete(self)

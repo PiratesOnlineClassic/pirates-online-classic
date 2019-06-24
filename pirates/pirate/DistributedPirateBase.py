@@ -38,7 +38,7 @@ class DistributedPirateBase(DistributedObject.DistributedObject, Pirate.Pirate):
     
     def hideBeacon(self):
         if self.beacon:
-            self.beacon.remove()
+            self.beacon.remove_node()
         
         self.beacon = None
 

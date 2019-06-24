@@ -12,7 +12,7 @@ from pirates.battle import EnemyGlobals
 
 class DistributedMovingObject(DistributedSmoothNode.DistributedSmoothNode, DistributedTargetableObject.DistributedTargetableObject):
     notify = directNotify.newCategory('DistributedMovingObject')
-    
+
     def __init__(self, cr):
         DistributedSmoothNode.DistributedSmoothNode.__init__(self, cr)
         DistributedTargetableObject.DistributedTargetableObject.__init__(self, cr)
@@ -21,48 +21,48 @@ class DistributedMovingObject(DistributedSmoothNode.DistributedSmoothNode, Distr
         self.aggroMode = EnemyGlobals.AGGRO_MODE_FORCED
         self.debugName = None
         self.debugNameNP = None
-    
+
     def requestGameState(self, state):
         pass
-    
+
     def generate(self):
         DistributedSmoothNode.DistributedSmoothNode.generate(self)
         DistributedTargetableObject.DistributedTargetableObject.generate(self)
-        if base.config.GetBool('create-client-coll-spheres', 0) is 1:
+        if base.config.GetBool('create-client-coll-spheres', 0):
             self.setupDebugCollisions()
-    
+
     def announceGenerate(self):
         DistributedSmoothNode.DistributedSmoothNode.announceGenerate(self)
         DistributedTargetableObject.DistributedTargetableObject.announceGenerate(self)
-    
+
     def disable(self):
         self.stopSmooth()
         DistributedSmoothNode.DistributedSmoothNode.disable(self)
         DistributedTargetableObject.DistributedTargetableObject.disable(self)
-        if base.config.GetBool('create-client-coll-spheres', 0) is 1:
+        if base.config.GetBool('create-client-coll-spheres', 0):
             self.cleanupDebugcollisions()
-        
+
         base.cr.handleObjDelete(self)
-    
+
     def delete(self):
         DistributedSmoothNode.DistributedSmoothNode.delete(self)
         DistributedTargetableObject.DistributedTargetableObject.delete(self)
-    
+
     def setLocation(self, parentId, zoneId, teleport = 0):
         DistributedSmoothNode.DistributedSmoothNode.setLocation(self, parentId, zoneId, teleport)
-    
+
     def wrtReparentTo(self, parent):
         DistributedSmoothNode.DistributedSmoothNode.wrtReparentTo(self, parent)
 
     def setupDebugCollisions(self):
         pass
-    
+
     def cleanupDebugcollisions(self):
         pass
 
     def setMaxSpeed(self, speed):
         self.maxAISpeed = speed
-    
+
     def getMaxSpeed(self):
         return self.maxAISpeed
 
@@ -83,7 +83,7 @@ class DistributedMovingObject(DistributedSmoothNode.DistributedSmoothNode, Distr
             debugNameText = str(self.getDoId()) + ' (Team:' + str(self.getTeam()) + ')'
             if hasattr(self, 'level'):
                 debugNameText += ' (Lvl: ' + str(self.level) + ')'
-            
+
             self.debugName.setText(debugNameText)
             self.debugNameNP = self.attachNewNode(self.debugName.generate())
             posAndScale = self.getDebugNamePosScale()
@@ -111,4 +111,3 @@ class DistributedMovingObject(DistributedSmoothNode.DistributedSmoothNode, Distr
 
     def getAggroMode(self):
         return self.aggroMode
-

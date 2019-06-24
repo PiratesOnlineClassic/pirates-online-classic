@@ -239,10 +239,10 @@ class Hull(SplattableObject.SplattableObject, ShipPart.ShipPart):
         colls = []
         edgeRoot = self.collisions.find('**/collision_inside_edge')
         if edgeRoot != edgeRoot.notFound():
-            colls += edgeRoot.getChildrenAsList()
+            colls += edgeRoot.get_children()
         deckRoot = self.collisions.find('**/collision_deck')
         if deckRoot != deckRoot.notFound():
-            colls += deckRoot.getChildrenAsList()
+            colls += deckRoot.get_children()
         for coll in colls:
             coll.stash()
 

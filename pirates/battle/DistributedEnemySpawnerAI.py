@@ -85,13 +85,14 @@ class SpawnNodeBase:
         taskMgr.doMethodLater(5, self.__respawn, 'perform-respawn-%s' % self.objKey)
 
     def canRespawn(self):
+
+        # Check for holiday requirements
         holidayName = self.objectData.get('Holiday', None)
         if holidayName:
-            # TODO
-            pass
-            #holidayId = HolidayGlobals.getHolidayIdFromName(holidayName)
-            #if holidayId:
-            #    return self.air.newsManager.isHolidayActive(holidayId)
+            for holidayId, name in HolidayGlobals.holidayNames.items():
+                if name == holidayName:
+                    return self.air.newsManager.isHolidayActive(holidayId)
+            return False
 
         return True
 
@@ -100,6 +101,7 @@ class SpawnNodeBase:
             return
 
         if self.canRespawn():
+            self.notify.debug('Spawning holiday npc for holiday: %s' % holidayId)
             self.__attemptSpawn()
 
     def processHolidayEnd(self, holidayId):
@@ -107,6 +109,7 @@ class SpawnNodeBase:
             return
 
         if not self.canRespawn():
+            self.notify.debug('Despawning holiday npc for holiday: %s' % holidayId)
             self.__died(self._npc)
 
     def __died(self, npc):
@@ -188,11 +191,19 @@ class SpawnNodeBase:
         npc.setPos(sx, sy, sz)
         npc.setHpr(self.objectData.get('Hpr', (0, 0, 0)))
 
+        # Set collision mode
+        npc.setCollisionMode(PiratesGlobals.COLL_MODE_FLOORS_CL)
+
         npc.setSpawnPos(npc.getPos())
         npc.setInitZ(npc.getZ())
 
         npc.setAvatarType(avatarType)
-        npc.setAggroRadius(float(self.objectData.get('Aggro Radius', 0.0)))
+
+        aggroRadius = self.objectData.get('Aggro Radius')
+        aggroInfo = EnemyGlobals.determineAggroInfo(aggroRadius)
+
+        npc.setAggroMode(aggroInfo[0])
+        npc.setAggroRadius(aggroInfo[1])
 
         # Load boss data if applicable
         if avatarType.getBoss() and hasattr(npc, 'loadBossData'):
@@ -225,8 +236,7 @@ class SpawnNodeBase:
 
         # Set NPC health
         if hasattr(npc, 'bossData'):
-            npc.setLevel(npc.bossData.get('Level', 0) or EnemyGlobals.getRandomEnemyLevel(
-                avatarType))
+            npc.setLevel(npc.bossData.get('Level', 0) or EnemyGlobals.getRandomEnemyLevel(avatarType))
         else:
             npc.setLevel(EnemyGlobals.getRandomEnemyLevel(avatarType))
 
@@ -370,9 +380,9 @@ class EnemySpawnNode(SpawnNodeBase):
     def setNPCAttributes(self, npc):
         weapons = EnemyGlobals.getEnemyWeapons(npc.getAvatarType(), npc.getLevel()).keys()
 
-        #TODO: Better place to add this?
-        drawnAnimSets = ['attention']
-        defaultDrawn = True if self.objectData.get('AnimSet', '') in drawnAnimSets else False
+        animSet = self.objectData.get('AnimSet', '')
+        drawnAnimSets = ['attention', 'bayonet_drill']
+        defaultDrawn = True if animSet in drawnAnimSets or 'attack_' in animSet else False
         npc.setCurrentWeapon(random.choice(weapons), config.GetBool('want-enemy-weapons', defaultDrawn))
 
     def getNPCClass(self, avatarType):
@@ -526,6 +536,11 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         if objType == 'Animal':
             if objectData['Species'] == 'Monkey':
                 objType = 'Spawn Node'
+
+        # Verify private status of object
+        isPrivate = objectData.get('Private Status', 'All') != 'All'
+        if isPrivate:
+            return
 
         spawnClass = spawnClasses[objType]
         spawnNode = spawnClass(self.air, objType, objectData, parent, objKey)

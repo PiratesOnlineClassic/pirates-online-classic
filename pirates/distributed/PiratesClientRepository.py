@@ -808,7 +808,7 @@ class PiratesClientRepository(OTPClientRepository):
             taskMgr.remove('cleanupFakeMSP')
             taskMgr.doMethodLater(25.0, cleanupFakeMSP, 'cleanupFakeMSP')
         if not self.systemMessageSfx:
-            self.systemMessageSfx = base.loadSfx('phase_3.5/audio/sfx/GUI_whisper_3.mp3')
+            self.systemMessageSfx = base.loader.loadSfx('phase_3.5/audio/sfx/GUI_whisper_3.mp3')
         if self.systemMessageSfx:
             base.playSfx(self.systemMessageSfx)
 

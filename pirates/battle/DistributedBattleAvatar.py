@@ -486,7 +486,7 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
             aimTubeNodePath = self.attachNewNode(aimTubeNode)
             aimTubeNodePath.setTag('objType', str(PiratesGlobals.COLL_AV))
             aimTubeNodePath.setTag('avId', str(self.doId))
-            self.cr.targetMgr.addTarget(aimTubeNodePath.id(), self)
+            self.cr.targetMgr.addTarget(aimTubeNodePath.get_key(), self)
             self.aimTubeNodePaths.append(aimTubeNodePath)
 
     def deleteBattleCollisions(self):
@@ -503,7 +503,7 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
         if self.isBattleable():
             for np in self.aimTubeNodePaths:
                 if hasattr(self.cr, 'targetMgr'):
-                    self.cr.targetMgr.removeTarget(np.id())
+                    self.cr.targetMgr.removeTarget(np.get_key())
                 
                 np.removeNode()
             

@@ -42,7 +42,7 @@ class DistributedDinghy(DistributedInteractive):
             DistributedInventoryBase.cancelGetInventory(localAvatar.getInventoryId())
             self.invReq = None
 
-        self.removeChildren()
+        self.get_children().detach()
 
     def delete(self):
         if self.camIval:

@@ -13,7 +13,7 @@ import WeaponGlobals
 import CannonGlobals
 
 class WeaponBase(WeaponBaseBase.WeaponBaseBase):
-    
+
     def __init__(self):
         if __builtins__.has_key('localAvatar'):
             av = localAvatar
@@ -36,7 +36,7 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
 
     def delete(self):
         pass
-    
+
     def sendRequestTargetedSkill(self, skillId, ammoSkillId, clientResult, targetId, areaIdList, timestamp, pos, charge = 0):
         self.sendUpdate('requestTargetedSkill', [
             skillId,
@@ -61,7 +61,7 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
 
     def useShipSkill(self, skillId, ammoSkillId, actualResult, targetId, attackerEffects, targetEffects, timestamp):
         pass
-    
+
     def sendRequestProjectileSkill(self, skillId, ammoSkillId, posHpr, power, timestamp):
         self.sendUpdate('requestProjectileSkill', [
             skillId,
@@ -69,10 +69,10 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
             posHpr,
             timestamp,
             power])
-    
+
     def useProjectileSkill(self, skillId, ammoSkillId, posHpr, timestamp, charge):
         pass
-    
+
     def sendSuggestProjectileSkillResult(self, skillId, ammoSkillId, result, targetId, areaIdList, pos, normal, codes, timestamp):
         self.sendUpdate('suggestProjectileSkillResult', [
             skillId,
@@ -108,15 +108,15 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
     def projectileHitObject(self, entry):
         if not entry.hasSurfacePoint() or not entry.hasInto():
             return
-        
+
         if not entry.getInto().isTangible():
             return
-        
+
         hitObject = entry.getIntoNodePath()
         objType = hitObject.getNetTag('objType')
         if not objType:
             return
-        
+
         objType = int(objType)
         fromNodePath = entry.getFromNodePath()
         sequence = int(fromNodePath.getNetTag('ammoSequence'))
@@ -127,15 +127,15 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
             if avId:
                 avId = int(avId)
                 self.__avatarHit(avId, hitObject, entry, skillId, ammoSkillId)
-            
+
         elif objType == PiratesGlobals.COLL_NEWSHIP:
             if self.localAvatarUsingWeapon:
                 self.simpleShipHit(hitObject, entry, skillId, ammoSkillId)
-            
+
         elif objType == PiratesGlobals.COLL_SHIPPART:
             if self.localAvatarUsingWeapon:
                 self.__shippartHit(hitObject, entry, skillId, ammoSkillId)
-            
+
         elif objType == PiratesGlobals.COLL_SEA:
             self.__waterHit(hitObject, entry, skillId, ammoSkillId)
         elif objType == PiratesGlobals.COLL_LAND:
@@ -143,7 +143,7 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
             if groundId:
                 groundId = int(groundId)
                 self.__groundHit(groundId, hitObject, entry, skillId, ammoSkillId)
-            
+
         elif objType == PiratesGlobals.COLL_BLDG:
             self.__buildingHit(hitObject, entry, skillId, ammoSkillId)
         elif objType == PiratesGlobals.COLL_SHIP_WRECK:
@@ -154,17 +154,17 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
             if shipId:
                 shipId = int(shipId)
                 self.__grappleTargetHit(shipId, hitObject, entry, skillId, ammoSkillId)
-            
+
         elif objType == PiratesGlobals.COLL_CANNON:
             cannonId = hitObject.getNetTag('cannonId')
             if cannonId:
                 cannonId = int(cannonId)
                 self.__cannonHit(cannonId, hitObject, entry, skillId, ammoSkillId)
-            
+
             broadsideId = hitObject.getNetTag('broadsideId')
             if broadsideId:
                 self.__cannonPortHit(hitObject, broadsideId)
-            
+
         elif objType == PiratesGlobals.COLL_FORT:
             fortId = hitObject.getNetTag('fortId')
             if fortId:
@@ -174,7 +174,7 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
         ammo = entry.getFromNodePath().getNetPythonTag('ammo')
         if ammo and ammo.weaponControlled:
             ammo.projectileHitObject(entry)
-    
+
     def setLocalAvatarUsingWeapon(self, val):
         self.localAvatarUsingWeapon = val
         if self.prop:
@@ -191,17 +191,17 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
             attackerStr = entry.getFromNodePath().getNetTag('attackerId')
             if attackerStr:
                 attackerId = int(attackerStr)
-            
+
             attacker = self.cr.doId2do.get(attackerId)
             if not attacker:
                 return
-            
+
             if not TeamUtils.damageAllowed(attacker, av):
                 if hasattr(attacker, 'getName') and hasattr(av, 'getName'):
                     pass
 
                 return
-            
+
             areaList = self.getAreaList(skillId, ammoSkillId, av, pos, attackerId)
             result = self.cr.battleMgr.doAttack(attacker, skillId, ammoSkillId, avId, areaList, pos)
             self.sendSuggestProjectileSkillResult(skillId, ammoSkillId, result, avId, areaList, [
@@ -234,7 +234,7 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
             if ship:
                 if ship.gameFSM.state in ('Sinking', 'Inactive'):
                     return
-                
+
             else:
                 return
             fromNodePath = entry.getFromNodePath()
@@ -251,24 +251,24 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
                 attacker = self.cr.doId2do.get(attackerId)
                 if not attacker:
                     return
-                
+
             else:
                 return
             cannonCode = 0
             cannonCodeStr = hitObject.getNetTag('cannonCode')
             if cannonCodeStr:
                 cannonCode = int(cannonCodeStr)
-            
+
             hullCode = 0
             hullCodeStr = hitObject.getNetTag('hullCode')
             if hullCodeStr:
                 hullCode = int(hullCodeStr)
-            
+
             sailCode = 0
             sailCodeStr = hitObject.getNetTag('sailCode')
             if sailCodeStr:
                 sailCode = int(sailCodeStr)
-            
+
             codes = [
                 cannonCode,
                 hullCode,
@@ -282,7 +282,7 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
                 else:
                     localAvatar.guiMgr.createWarning(PLocalizer.FriendlyFireWarning, PiratesGuiGlobals.TextFG6)
                 return
-            
+
             areaList = self.getAreaList(skillId, ammoSkillId, ship, pos, attackerId)
             result = self.cr.battleMgr.doAttack(attacker, skillId, ammoSkillId, shipId, areaList, pos)
             self.sendSuggestProjectileSkillResult(skillId, ammoSkillId, result, shipId, areaList, [
@@ -320,23 +320,23 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
         ship = self.cr.doId2do.get(shipId)
         if not ship or ship.gameFSM.state == 'Inactive':
             return
-        
+
         if self.localAvatarUsingWeapon:
             cannonCode = 0
             cannonCodeStr = hitObject.getNetTag('cannonCode')
             if cannonCodeStr:
                 cannonCode = int(cannonCodeStr)
-            
+
             hullCode = 0
             hullCodeStr = hitObject.getNetTag('hullCode')
             if hullCodeStr:
                 hullCode = int(hullCodeStr)
-            
+
             sailCode = 0
             sailCodeStr = hitObject.getNetTag('sailCode')
             if sailCodeStr:
                 sailCode = int(sailCodeStr)
-            
+
             codes = [
                 cannonCode,
                 hullCode,
@@ -348,21 +348,21 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
             attackerStr = entry.getFromNodePath().getNetTag('attackerId')
             if attackerStr:
                 attackerId = int(attackerStr)
-            
+
             attacker = self.cr.doId2do.get(attackerId)
             if not attacker:
                 return
-            
+
             if not TeamUtils.damageAllowed(attacker, ship):
                 if hasattr(attacker, 'getName') and hasattr(ship, 'getName'):
                     if TeamUtils.friendOrFoe(attacker, ship) == PiratesGlobals.PVP_FRIEND:
                         localAvatar.guiMgr.createWarning(PLocalizer.TeamFireWarning, PiratesGuiGlobals.TextFG6)
                     else:
                         localAvatar.guiMgr.createWarning(PLocalizer.FriendlyFireWarning, PiratesGuiGlobals.TextFG6)
-                
+
                 attacker.battleRandom.advanceAttackSeed()
                 return
-            
+
             areaList = self.getAreaList(skillId, ammoSkillId, ship, pos, attackerId)
             result = self.cr.battleMgr.doAttack(attacker, skillId, ammoSkillId, shipId, areaList, pos)
             self.sendSuggestProjectileSkillResult(skillId, ammoSkillId, result, shipId, areaList, [
@@ -382,17 +382,17 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
         cannonCodeStr = hitObject.getNetTag('cannonCode')
         if cannonCodeStr:
             cannonCode = int(cannonCodeStr)
-        
+
         hullCode = 0
         hullCodeStr = hitObject.getNetTag('hullCode')
         if hullCodeStr:
             hullCode = int(hullCodeStr)
-        
+
         sailCode = 0
         sailCodeStr = hitObject.getNetTag('sailCode')
         if sailCodeStr:
             sailCode = int(sailCodeStr)
-        
+
         codes = [
             cannonCode,
             hullCode,
@@ -401,10 +401,10 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
         prop = self.cr.doId2do.get(propId)
         if not ship or ship.gameFSM.state == 'Inactive':
             return
-        
+
         if not prop:
             return
-        
+
         if self.localAvatarUsingWeapon:
             pos = entry.getSurfacePoint(ship)
             normal = entry.getSurfaceNormal(render)
@@ -413,21 +413,21 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
             attackerStr = entry.getFromNodePath().getNetTag('attackerId')
             if attackerStr:
                 attackerId = int(attackerStr)
-            
+
             attacker = self.cr.doId2do.get(attackerId)
             if not attacker:
                 return
-            
+
             if not TeamUtils.damageAllowed(attacker, prop) and not TeamUtils.damageAllowed(attacker, ship):
                 if hasattr(attacker, 'getName') and hasattr(prop, 'getName'):
                     if TeamUtils.friendOrFoe(attacker, ship) == PiratesGlobals.PVP_FRIEND:
                         localAvatar.guiMgr.createWarning(PLocalizer.TeamFireWarning, PiratesGuiGlobals.TextFG6)
                     else:
                         localAvatar.guiMgr.createWarning(PLocalizer.FriendlyFireWarning, PiratesGuiGlobals.TextFG6)
-                
+
                 attacker.battleRandom.advanceAttackSeed()
                 return
-            
+
             areaList = self.getAreaList(skillId, ammoSkillId, ship, pos, attackerId)
             result = self.cr.battleMgr.doAttack(attacker, skillId, ammoSkillId, propId, areaList, pos)
             self.sendSuggestProjectileSkillResult(skillId, ammoSkillId, result, propId, areaList, [
@@ -449,7 +449,7 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
         normal = entry.getSurfaceNormal(ground)
         if not ground:
             return
-        
+
         if self.localAvatarUsingWeapon:
             codes = []
             timestamp32 = globalClockDelta.getFrameNetworkTime(bits = 32)
@@ -457,16 +457,16 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
             attackerStr = entry.getFromNodePath().getNetTag('attackerId')
             if attackerStr:
                 attackerId = int(attackerStr)
-            
+
             attacker = self.cr.doId2do.get(attackerId)
             if not attacker:
                 return
-            
+
             groundCode = 0
             groundCodeStr = hitObject.getNetTag('groundCode')
             if groundCodeStr:
                 groundCode = int(groundCodeStr)
-            
+
             areaList = self.getAreaList(skillId, ammoSkillId, ground, pos, attackerId)
             result = self.cr.battleMgr.doAttack(attacker, skillId, ammoSkillId, groundId, areaList, pos)
             self.sendSuggestProjectileSkillResult(skillId, ammoSkillId, result, groundId, areaList, [
@@ -481,7 +481,7 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
                 target = self.cr.doId2do.get(doId)
                 if not target:
                     continue
-                
+
                 (attackerEffects, targetEffects) = self.cr.battleMgr.getModifiedSkillEffects(attacker, target, skillId, ammoSkillId)
                 target.projectileWeaponHit(skillId, ammoSkillId, result, targetEffects, pos, normal, codes, attacker)
 
@@ -494,10 +494,10 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
         if hasattr(parent, 'shipWreck'):
             shipWreck = parent.shipWreck
             shipWreck.projectileWeaponHit(pos)
-    
+
     def __waterHit(self, hitObject, entry, skillId, ammoSkillId):
         pass
-    
+
     def __grappleTargetHit(self, shipId, hitObject, entry, skillId, ammoSkillId):
         sequence = int(entry.getFromNodePath().getNetTag('ammoSequence'))
         ship = self.cr.doId2do.get(shipId)
@@ -547,5 +547,3 @@ class WeaponBase(WeaponBaseBase.WeaponBaseBase):
 
     def getRender(self):
         return render
-
-

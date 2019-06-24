@@ -49,7 +49,7 @@ class BattleAvatarGameFSM(FSM.FSM):
     def cleanup(self):
         FSM.FSM.cleanup(self)
         if self.treasureChest:
-            self.treasureChest.remove()
+            self.treasureChest.remove_node()
             del self.treasureChest
         
         if self.av:
@@ -644,7 +644,7 @@ class BattleAvatarGameFSM(FSM.FSM):
     def enterDoorKicking(self, extraArgs = []):
         self.av.motionFSM.off()
         kickT = self.av.getDuration('kick_door_loop')
-        self.kickSfx = base.loadSfx('phase_4/audio/sfx_kick_door_loop.mp3')
+        self.kickSfx = base.loader.loadSfx('phase_4/audio/sfx_kick_door_loop.mp3')
         self.kickTrack = Sequence(Func(base.playSfx, self.kickSfx, node = self.av), Wait(kickT))
         self.av.loop('kick_door_loop')
         self.kickTrack.loop()

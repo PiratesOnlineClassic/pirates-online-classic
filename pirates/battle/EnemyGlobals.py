@@ -835,25 +835,25 @@ def getBaseStats(avatarType):
         if __dev__:
             import pdb
             pdb.set_trace()
-        
+
         self.notify.warning('AvatarType is a string %s' % avatarType)
-    
+
     baseStats = __baseAvatarStats.get(avatarType.getNonBossType())
     if not baseStats:
         fact = avatarType.getFaction()
         track = avatarType.getTrack()
         avatarType = AvatarType(faction = fact, track = track)
         baseStats = __baseAvatarStats.get(avatarType)
-    
+
     if not baseStats:
         fact = avatarType.getFaction()
         avatarType = AvatarType(faction = fact)
         baseStats = __baseAvatarStats.get(avatarType)
-    
+
     if baseStats:
         return baseStats[:]
     return None
-    
+
 
 def getHeight(avatarType):
     baseStats = getBaseStats(avatarType.getNonBossType())
@@ -1512,7 +1512,7 @@ def getAttackDelay(skillId, default = None):
             return [
                 2,
                 2]
-    
+
     delay = delayInfo[0] + delayInfo[1] * random.random()
     return delay
 
@@ -1524,12 +1524,12 @@ def getBaseSkills(avatarType):
         track = avatarType.getTrack()
         avatarType = AvatarType(faction = fact, track = track)
         baseSkills = __baseAvatarSkills.get(avatarType)
-    
+
     if not baseSkills:
         fact = avatarType.getFaction()
         avatarType = AvatarType(faction = fact)
         baseSkills = __baseAvatarSkills.get(avatarType)
-    
+
     return (baseSkills[WEAPON_INDEX][:], baseSkills[SKILL_INDEX][:])
 
 
@@ -1576,9 +1576,9 @@ def getEnemyScaleByType(avatarType, level, scaleMultiplier = 1):
         if __dev__:
             import pdb
             pdb.set_trace()
-        
+
         level = avgLvl
-    
+
     modifier = 1.0 + 0.03 * (level - avgLvl)
     humanScale = 1.0 * scaleMultiplier
     if avatarType.isA(AvatarTypes.Navy):
@@ -1629,7 +1629,7 @@ def getEnemyWeapons(avatarType, level, weaponlist = [], weaponlevel = 0):
             weaponId = weaponset[0]
         remainder = 0
         invWeapons[weaponId] = 1
-    
+
     return invWeapons
 
 
@@ -1641,11 +1641,11 @@ def getEnemySkills(avatarType, level, skillList = [], skillLevel = 0):
     skillLevel = skillLevel or levelModifier[SKILL_MOD]
     if not simbase.config.GetBool('npcs-all-skills', 0):
         skillLevel = 15
-    
+
     skillIds = skillList[0:skillLevel]
     for skillId in skillIds:
         weaponSkills[skillId] = WeaponGlobals.getSkillMaxQuantity(skillId)
-    
+
     return weaponSkills
 
 
@@ -1653,7 +1653,7 @@ def getRandomEnemyLevel(avatarType):
     baseStats = getBaseStats(avatarType.getNonBossType())
     if not baseStats:
         return 1
-    
+
     return random.randint(baseStats[MIN_LEVEL], baseStats[MAX_LEVEL])
 
 __goldAmountByLevel = {
@@ -1821,7 +1821,7 @@ def getShipNametagColor(team):
         return Vec4(0.8, 0.7, 0.5, 1)
     elif team == PiratesGlobals.SPANISH_UNDEAD_TEAM:
         return Vec4(0.8, 0.7, 0.5, 1)
-    
+
 
 def getTeamIconModelPath(team):
     if team == PiratesGlobals.UNDEAD_TEAM:
@@ -1917,7 +1917,7 @@ def getRandomNPCByTeam(team, level):
             return AvatarTypes.FrenchUndeadC
         elif level < 30:
             return AvatarTypes.FrenchUndeadD
-        
+
     elif team == PiratesGlobals.SPANISH_UNDEAD_TEAM:
         if level < 15:
             return AvatarTypes.SpanishUndeadA
@@ -1927,7 +1927,7 @@ def getRandomNPCByTeam(team, level):
             return AvatarTypes.SpanishUndeadC
         elif level < 30:
             return AvatarTypes.SpanishUndeadD
-        
+
     elif level < 3:
         return AvatarTypes.Clod
     elif level < 5:
@@ -1984,4 +1984,3 @@ def determineAggroInfo(aggroRadius):
         aggroInfo[1] = INSTANT_AGGRO_RADIUS_DEFAULT
         aggroInfo[0] = AGGRO_MODE_DEFAULT
     return aggroInfo
-

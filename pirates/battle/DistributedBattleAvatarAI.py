@@ -1,13 +1,18 @@
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed.ClockDelta import globalClockDelta
+from direct.task import Task
+
 from pirates.reputation. DistributedReputationAvatarAI import  DistributedReputationAvatarAI
 from pirates.battle.WeaponBaseAI import WeaponBaseAI
 from pirates.battle.Teamable import Teamable
 from pirates.pirate import AvatarTypes
-from direct.distributed.ClockDelta import globalClockDelta
-from direct.task import Task
 from pirates.pirate.BattleAvatarGameFSMAI import BattleAvatarGameFSMAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
+from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
+from pirates.battle.BattleRandom import BattleRandom
+from pirates.battle.BattleSkillDiaryAI import BattleSkillDiaryAI
+
 
 class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleAvatarAI')
@@ -19,6 +24,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
         self.gameFSM = BattleAvatarGameFSMAI(self.air, self)
         self.isNpc = True
+        self.battleRandom = None
 
         self.avatarType = AvatarTypes.AnyAvatar
         self.shipId = 0
@@ -51,6 +57,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.ensaredTargetId = 0
         self.level = 0
 
+        self.currentTarget = None
         self.skillTask = None
         self.weapon = None
 
@@ -59,6 +66,9 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
     def generate(self):
         DistributedReputationAvatarAI.generate(self)
+
+        self.battleRandom = BattleRandom(self.doId)
+        self.battleSkillDiary = BattleSkillDiaryAI(self.air, self)
 
     def setLocation(self, parentId, zoneId):
         DistributedReputationAvatarAI.setLocation(self, parentId, zoneId)
@@ -73,6 +83,20 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
                 if self.weapon:
                     self.weapon.b_setLocation(parentId, zoneId)
+
+    def getWorld(self):
+        parentObj = self.getParentObj()
+        if parentObj:
+            if isinstance(parentObj, DistributedGameAreaAI):
+                parentObj = parentObj.getParentObj()
+
+        if not parentObj:
+            return None
+
+        if isinstance(parentObj, DistributedInstanceBaseAI):
+            return parentObj
+
+        return None
 
     def setAvatarType(self, avatarType):
         self.avatarType = avatarType
@@ -100,16 +124,49 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
     def getGameState(self):
         return self.gameFsm.getCurrentOrNextState()
 
-    def setCurrentWeapon(self, currentWeapon, isWeaponDrawn):
-        self.currentWeaponId = currentWeapon
+    def setShipId(self, shipId):
+        self.shipId = shipId
+
+    def d_setShipId(self, shipId):
+        self.sendUpdate('setShipId', [shipId])
+
+    def b_setShipId(self, shipId):
+        self.setShipId(shipId)
+        self.d_setShipId(shipId)
+
+    def getShipId(self):
+        return self.shipId
+
+    def setCurrentTarget(self, currentTargetDoId):
+        if self.currentTarget is not None:
+            if not currentTargetDoId:
+                self.currentTarget.resetComboLevel()
+
+        self.currentTarget = self.air.doId2do.get(currentTargetDoId)
+
+    def d_setCurrentTarget(self, currentTargetDoId):
+        self.sendUpdate('setCurrentTarget', [currentTargetDoId])
+
+    def b_setCurrentTarget(self, currentTargetDoId):
+        self.setCurrentTarget(currentTargetDoId)
+        self.d_setCurrentTarget(currentTargetDoId)
+
+    def getCurrentTarget(self):
+        if not self.currentTarget:
+            return 0
+
+        return self.currentTarget.doId
+
+    def setCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
+        self.currentWeaponId = currentWeaponId
         self.isWeaponDrawn = isWeaponDrawn
 
-    def d_setCurrentWeapon(self, currentWeapon, isWeaponDrawn):
-        self.sendUpdate('setCurrentWeapon', [currentWeapon, isWeaponDrawn])
+    def d_setCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
+        self.sendUpdate('setCurrentWeapon', [currentWeaponId, isWeaponDrawn])
 
-    def b_setCurrentWeapon(self, currentWeapon, isWeaponDrawn):
-        self.setCurrentWeapon(currentWeapon, isWeaponDrawn)
-        self.d_setCurrentWeapon(currentWeapon, isWeaponDrawn)
+    def b_setCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
+        self.setCurrentWeapon(currentWeaponId, isWeaponDrawn)
+        self.d_setCurrentWeapon(currentWeaponId, isWeaponDrawn)
 
     def getCurrentWeapon(self):
         return [self.currentWeaponId, self.isWeaponDrawn]
@@ -412,9 +469,15 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         if self.skillTask:
             taskMgr.remove(self.skillTask)
 
+        if self.battleRandom:
+            self.battleRandom.delete()
+            self.battleRandom = None
+
         if self.weapon:
             self.weapon.requestDelete()
+            self.weapon = None
 
-        self.weapon = None
+        self.gameFSM.destroy()
+        self.gameFSM = None
 
         DistributedReputationAvatarAI.delete(self)
