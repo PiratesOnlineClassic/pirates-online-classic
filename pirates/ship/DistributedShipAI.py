@@ -81,6 +81,12 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
         taskMgr.doMethodLater(0.2, _broadcast, self.uniqueName('broadcast-pos'))
 
+    def generate(self):
+        self.air.inventoryManager.initiateShipInventory(self)
+
+        DistributedMovingObjectAI.generate(self)
+        DistributedCharterableObjectAI.generate(self)
+
     def announceGenerate(self):
         DistributedMovingObjectAI.announceGenerate(self)
         DistributedCharterableObjectAI.announceGenerate(self)
@@ -221,6 +227,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         DistributedCharterableObjectAI.handleChildLeave(self, childObj, zoneId)
 
     def delete(self):
+        self.air.shipManager.removeActiveShip(self)
         if self.steeringWheel:
             self.steeringWheel.requestDelete()
             self.steeringWheel = None
@@ -254,7 +261,10 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         if hull:
             hull.requestDelete()
 
-        self.air.shipManager.removeActiveShip(self)
+        inventory = self.getInventory()
+        assert(inventory is not None)
+        self.air.inventoryManager.removeInventory(inventory)
+
         DistributedMovingObjectAI.delete(self)
         DistributedCharterableObjectAI.delete(self)
 

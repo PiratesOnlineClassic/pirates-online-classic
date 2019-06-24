@@ -18,6 +18,12 @@ class InventoryOperationFSM(FSM):
         self.avatar = avatar
         self.callback = callback
 
+    def getAvatarClassName(self):
+        return 'DistributedPlayerPirateAI'
+
+    def getInventoryClassName(self):
+        return 'PirateInventoryAI'
+
     def enterOff(self):
         pass
 
@@ -38,12 +44,12 @@ class LoadInventoryFSM(InventoryOperationFSM):
     def enterStart(self):
         self.air.dbInterface.queryObject(self.air.dbId,
             self.avatar.doId,
-            callback=self.avatarQueryResponse,
-            dclass=self.air.dclassesByName['DistributedPlayerPirateAI'])
+            callback=self._avatarQueryCallback,
+            dclass=self.air.dclassesByName[self.getAvatarClassName()])
 
         self.acceptOnce(self.avatar.getDeleteEvent(), lambda: self.cleanup(None))
 
-    def avatarQueryResponse(self, dclass, fields):
+    def _avatarQueryCallback(self, dclass, fields):
         if not dclass or not fields:
             self.notify.debug('Failed to query avatar %d!' % self.avatar.doId)
             self.cleanup(None)
@@ -57,25 +63,38 @@ class LoadInventoryFSM(InventoryOperationFSM):
 
         inventory = self.air.doId2do.get(inventoryId)
         if not inventory:
-            self.acceptOnce('generate-%d' % inventoryId, self.inventoryArrivedCallback)
+            self.acceptOnce('generate-%d' % inventoryId, self._inventoryArrivedCallback)
         else:
-            self.inventoryArrivedCallback(inventory)
+            self._inventoryArrivedCallback(inventory)
 
-    def inventoryArrivedCallback(self, inventory):
-        self.inventory = inventory
-        if not inventory:
-            self.notify.warning('Failed to retrieve inventory for avatar %d!' % self.avatar.doId)
-            self.cleanup(None)
-            return
-
+    def finalizeInventory(self):
         self.inventory.b_setStackLimit(InventoryType.Hp, self.avatar.getMaxHp())
         self.inventory.b_setStackLimit(InventoryType.Mojo, self.avatar.getMaxMojo())
 
-        # we're done.
+    def _inventoryArrivedCallback(self, inventory):
+        self.inventory = inventory
+        if not inventory:
+            self.notify.warning('Failed to retrieve inventory for avatar %d' % self.avatar.doId)
+            self.cleanup(None)
+            return
+
+        self.finalizeInventory()
         self.inventory.populateInventory()
         self.cleanup(self.inventory)
 
     def exitStart(self):
+        pass
+
+
+class LoadShipInventoryFSM(LoadInventoryFSM):
+
+    def getAvatarClassName(self):
+        return 'PlayerShipAI'
+
+    def getInventoryClassName(self):
+        return 'DistributedInventoryAI'
+
+    def finalizeInventory(self):
         pass
 
 
@@ -105,18 +124,14 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
     def addInventory(self, inventory):
         if self.hasInventory(inventory.doId):
-            self.notify.debug('Tried to add an already existing inventory %d!' % (
-                inventory.doId))
-
+            self.notify.debug('Tried to add an already existing inventory %d!' % inventory.doId)
             return
 
         self.inventories[inventory.doId] = inventory
 
     def removeInventory(self, inventory):
         if not self.hasInventory(inventory.doId):
-            self.notify.debug('Tried to remove a non-existant inventory %d!' % (
-                inventory.doId))
-
+            self.notify.debug('Tried to remove a non-existant inventory %d!' % inventory.doId)
             return
 
         inventory.requestDelete()
@@ -130,8 +145,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         return None
 
     def sendGetInventory(self, avatarId, callback):
-        self.air.netMessenger.send('getInventoryResponse', [callback,
-            self.getInventory(avatarId)])
+        self.air.netMessenger.send('getInventoryResponse', [callback, self.getInventory(avatarId)])
 
     def runInventoryFSM(self, fsmtype, avatar, *args, **kwargs):
         if avatar.doId in self.avatar2fsm:
@@ -158,6 +172,9 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 
     def initiateInventory(self, avatar, callback=None):
         self.runInventoryFSM(LoadInventoryFSM, avatar, callback=callback)
+
+    def initiateShipInventory(self, ship, callback=None):
+        self.runInventoryFSM(LoadShipInventoryFSM, ship, callback=callback)
 
     def proccessCallbackResponse(self, callback, *args, **kwargs):
         if callback and callable(callback):
@@ -277,6 +294,7 @@ def weaponrank(rank):
         inventory.b_setStackQuantity(InventoryType.WandWeaponL6, 1)
 
     return 'Set weapon rank to %s!' % rank
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def maxWeapons():
