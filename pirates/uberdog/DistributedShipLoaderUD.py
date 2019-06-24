@@ -77,9 +77,9 @@ class CreateShipFSM(ShipLoaderOperationFSM):
         self.air.dbInterface.createObject(self.air.dbId,
             self.air.dclassesByName['PlayerShipUD'],
             fields=fields,
-            callback=self.shipCreatedCallback)
+            callback=self._shipCreatedCallback)
 
-    def shipCreatedCallback(self, shipId):
+    def _shipCreatedCallback(self, shipId):
         self.shipId = shipId
         if not self.shipId:
             self.notify.warning('Failed to create ship for avatar %d, '
@@ -137,9 +137,9 @@ class CreateShipFSM(ShipLoaderOperationFSM):
         self.air.dbInterface.createObject(self.air.dbId,
             self.air.dclassesByName['DistributedHullUD'],
             fields=fields,
-            callback=self.shipHullCreatedCallback)
+            callback=self._shipHullCreatedCallback)
 
-    def shipHullCreatedCallback(self, shipHullDoId):
+    def _shipHullCreatedCallback(self, shipHullDoId):
         self.shipHullDoId = shipHullDoId
         if not self.shipHullDoId:
             self.notify.warning('Failed to create ship %d for avatar %d, '
@@ -194,9 +194,9 @@ class CreateShipFSM(ShipLoaderOperationFSM):
             self.air.dbInterface.createObject(self.air.dbId,
                 self.air.dclassesByName['DistributedMastUD'],
                 fields=fields,
-                callback=self.shipMastCreatedCallback)
+                callback=self._shipMastCreatedCallback)
 
-    def shipMastCreatedCallback(self, shipMastDoId):
+    def _shipMastCreatedCallback(self, shipMastDoId):
         if not shipMastDoId:
             self.notify.warning('Failed to create ship %d for avatar %d, '
                 'ship mast database object creation failed!' % (self.shipId, self.avatarId))
@@ -207,15 +207,15 @@ class CreateShipFSM(ShipLoaderOperationFSM):
         self.pendingMasts.remove(ShipGlobals.SHIP_MAST)
         self.mastDoIds.append(shipMastDoId)
         if not self.pendingMasts:
-            self.shipMastsCreatedCallback()
+            self._shipMastsCreatedCallback()
 
-    def shipMastsCreatedCallback(self):
+    def _shipMastsCreatedCallback(self):
         self.air.dbInterface.queryObject(self.air.dbId,
             self.inventoryId,
-            self.shipInventoryQueryCallback,
+            self._shipInventoryQueryCallback,
             dclass=self.air.dclassesByName['DistributedInventoryUD'])
 
-    def shipInventoryQueryCallback(self, dclass, fields):
+    def _shipInventoryQueryCallback(self, dclass, fields):
         if not dclass and not fields:
             self.notify.warning('Failed to query inventory %d for ship %d!' % (
                 self.inventory, self.shipId))
@@ -237,9 +237,9 @@ class CreateShipFSM(ShipLoaderOperationFSM):
             self.inventoryId,
             self.air.dclassesByName['DistributedInventoryUD'],
             fields,
-            callback=self.shipInventorySetCallback)
+            callback=self._shipInventorySetCallback)
 
-    def shipInventorySetCallback(self, fields):
+    def _shipInventorySetCallback(self, fields):
         if fields is not None:
             self.notify.warning('Failed to update inventory %d for ship %d, '
                 'invalid database response!' % (self.inventoryId, self.shipId))
@@ -266,10 +266,10 @@ class ActivateShipFSM(ShipLoaderOperationFSM):
 
         self.air.dbInterface.queryObject(self.air.dbId,
             self.avatarId,
-            self.avatarQueryCallback,
+            self._avatarQueryCallback,
             dclass=self.air.dclassesByName['DistributedPlayerPirateUD'])
 
-    def avatarQueryCallback(self, dclass, fields):
+    def _avatarQueryCallback(self, dclass, fields):
         if not dclass and not fields:
             self.notify.warning('Failed to activate ship %d for avatar %d, '
                 'could not query avatar database object!' % (self.shipId, self.avatarId))
@@ -287,10 +287,10 @@ class ActivateShipFSM(ShipLoaderOperationFSM):
 
         self.air.dbInterface.queryObject(self.air.dbId,
             self.shipId,
-            self.shipQueryCallback,
+            self._shipQueryCallback,
             dclass=self.air.dclassesByName['PlayerShipUD'])
 
-    def shipQueryCallback(self, dclass, fields):
+    def _shipQueryCallback(self, dclass, fields):
         if not dclass and not fields:
             self.notify.warning('Failed to query ship %d for avatar %d!' % (
                 self.shipId, self.avatarId))
@@ -300,9 +300,9 @@ class ActivateShipFSM(ShipLoaderOperationFSM):
 
         self.inventoryId, = fields['setInventoryId']
         self.air.inventoryManager.activateShipInventory(self.avatarId, self.shipId, self.inventoryId,
-            self.shipInventoryActivatedCallback)
+            self._shipInventoryActivatedCallback)
 
-    def shipInventoryActivatedCallback(self, inventoryId):
+    def _shipInventoryActivatedCallback(self, inventoryId):
         self.air.sendActivate(self.shipId, 0, 0,
             self.air.dclassesByName['PlayerShipUD'],
             {'setInventoryId': (inventoryId,)})
@@ -325,14 +325,12 @@ class ActivateShipFSM(ShipLoaderOperationFSM):
         datagram.addString(datagramCleanup.getMessage())
         self.air.send(datagram)
 
-        #self.air.clientAddSessionObject(channel, self.shipId)
-
         self.air.dbInterface.queryObject(self.air.dbId,
             self.inventoryId,
-            self.shipInventoryQueryCallback,
+            self._shipInventoryQueryCallback,
             dclass=self.air.dclassesByName['DistributedInventoryUD'])
 
-    def shipInventoryQueryCallback(self, dclass, fields):
+    def _shipInventoryQueryCallback(self, dclass, fields):
         if not dclass and not fields:
             self.notify.warning('Failed to activate ship %d for avatar %d!' % (
                 self.shipId, self.avatarId))
@@ -350,9 +348,9 @@ class ActivateShipFSM(ShipLoaderOperationFSM):
         self.pendingShipparts.append(shippartDoId)
         self.air.dbInterface.queryObject(self.air.dbId,
             shippartDoId,
-            lambda dclass, fields: self.shippartQueryCallback(shippartDoId, dclass, fields))
+            lambda dclass, fields: self._shippartQueryCallback(shippartDoId, dclass, fields))
 
-    def shippartQueryCallback(self, shippartDoId, dclass, fields):
+    def _shippartQueryCallback(self, shippartDoId, dclass, fields):
         if not dclass and fields:
             self.notify.warning('Failed to activate ship %d for avatar %d, '
                 'failed to query shippart %d!' % (self.shipId, self.avatarId, shippartDoId))
@@ -405,9 +403,10 @@ class DistributedShipLoaderUD(DistributedObjectGlobalUD):
         self.air.netMessenger.accept('activateShip', self, self.activateShip)
 
     def runShipLoaderFSM(self, fsmtype, avatarId, *args, **kwargs):
-        if avatarId in self.avatar2fsm:
+        fsm = self.avatar2fsm.get(avatarId)
+        if fsm is not None:
             self.notify.warning('Failed to run ship loader fsm, '
-                'an FSM is already running for avatar %d!' % avatarId)
+                'an FSM: %s is already running for avatar %d!' % (fsm.__class__.__name__, avatarId))
 
             return
 
@@ -418,14 +417,14 @@ class DistributedShipLoaderUD(DistributedObjectGlobalUD):
 
     def createShip(self, avatarId, shipClass):
 
-        def shipCreatedCallback(shipId):
+        def _shipCreatedCallback(shipId):
             self.air.netMessenger.send('createShipResponse', [avatarId, shipId])
 
-        self.runShipLoaderFSM(CreateShipFSM, avatarId, shipClass, callback=shipCreatedCallback)
+        self.runShipLoaderFSM(CreateShipFSM, avatarId, shipClass, callback=_shipCreatedCallback)
 
     def activateShip(self, avatarId, shipId):
 
-        def shipActivatedCallback(success):
+        def _shipActivatedCallback(success):
             self.air.netMessenger.send('activateShipResponse', [avatarId, shipId, success])
 
-        self.runShipLoaderFSM(ActivateShipFSM, avatarId, shipId, callback=shipActivatedCallback)
+        self.runShipLoaderFSM(ActivateShipFSM, avatarId, shipId, callback=_shipActivatedCallback)

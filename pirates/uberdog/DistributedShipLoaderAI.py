@@ -130,9 +130,10 @@ class DistributedShipLoaderAI(DistributedObjectGlobalAI):
         self.air.netMessenger.accept('activateShipResponse', self, self.activateShipResponse)
 
     def runShipLoaderFSM(self, fsmtype, avatar, *args, **kwargs):
-        if avatar.doId in self.avatar2fsm:
+        fsm = self.avatar2fsm.get(avatar.doId)
+        if fsm is not None:
             self.notify.warning('Failed to run ship loader fsm, '
-                'an FSM is already running for avatar %d!' % avatar.doId)
+                'an FSM: %s is already running for avatar %d!' % (fsm.__class__.__name__, avatar.doId))
 
             return
 
@@ -143,7 +144,7 @@ class DistributedShipLoaderAI(DistributedObjectGlobalAI):
 
     def createShip(self, avatar, shipClass):
 
-        def shipCreatedCallback(shipId):
+        def _shipCreatedCallback(shipId):
             if not shipId:
                 return
 
@@ -152,7 +153,7 @@ class DistributedShipLoaderAI(DistributedObjectGlobalAI):
             # a new ship object, the Uberdog will activate the avatar's ships object on login...
             self.sendActivateShip(avatar.doId, shipId)
 
-        self.runShipLoaderFSM(CreateShipFSM, avatar, shipClass, callback=shipCreatedCallback)
+        self.runShipLoaderFSM(CreateShipFSM, avatar, shipClass, callback=_shipCreatedCallback)
 
     def sendCreateShip(self, avatarId, shipClass):
         self.air.netMessenger.send('createShip', [avatarId, shipClass])
@@ -174,14 +175,14 @@ class DistributedShipLoaderAI(DistributedObjectGlobalAI):
             fsm.cleanup(0)
             return
 
-        fsm.request('Finish', shipId)
+        fsm.demand('Finish', shipId)
 
     def activateShip(self, avatar, shipId):
 
-        def shipActivatedCallback(success):
+        def _shipActivatedCallback(success):
             pass
 
-        self.runShipLoaderFSM(ActivateShipFSM, avatar, shipId, callback=shipActivatedCallback)
+        self.runShipLoaderFSM(ActivateShipFSM, avatar, shipId, callback=_shipActivatedCallback)
 
     def sendActivateShip(self, avatarId, shipId):
         self.air.netMessenger.send('activateShip', [avatarId, shipId])
@@ -189,11 +190,16 @@ class DistributedShipLoaderAI(DistributedObjectGlobalAI):
     def activateShipResponse(self, avatarId, shipId, success):
         fsm = self.avatar2fsm.get(avatarId)
         if not fsm:
+            self.notify.warning('Failed to activate ship %d for avatar %d, '
+                'avatar has no running FSM!' % (shipId, avatarId))
+
             return
 
         if not success:
-            self.notify.warning('Failed to activate ship %d for avatar %d!' % (shipId, avatarId))
+            self.notify.warning('Failed to activate ship %d for avatar %d, '
+                'result was unsuccessful!' % (shipId, avatarId))
+
             fsm.cleanup(False)
             return
 
-        fsm.request('Finish')
+        fsm.demand('Finish')
