@@ -16,7 +16,7 @@ from pirates.battle.ComboDiaryAI import ComboDiaryAI
 from pirates.piratesbase import Freebooter
 from pirates.pirate import AvatarTypes
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
-
+from pirates.piratesbase import Freebooter
 
 class BattleManagerAI(BattleManagerBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManagerAI')
@@ -99,6 +99,15 @@ class BattleManagerAI(BattleManagerBase):
             self.notify.debug('Cannot get skill result for avatar %d, weapon %d was never drawn!' % (
                 avatar.doId, currentWeaponId))
 
+            return None
+
+        # ensure the user has access to the requested weapon before
+        # running result calculations
+        repId = WeaponGlobals.getRepId(currentWeaponId)
+        if not avatar.getAccess() and not Freebooter.allowedFreebooterWeapon(repId):
+            self.notify.warning('Freebooter (%d) attempted to use paid weapon (%d)' % (
+                avatar.doId, currentWeaponId))
+            
             return None
 
         obeysPirateCode = self.obeysPirateCode(avatar, target)
@@ -397,7 +406,7 @@ class BattleManagerAI(BattleManagerBase):
 
             return
 
-        if config.GetBool('want-membership', False) and attacker.getLevel() == Freebooter.FreeOverallLevelCap:
+        if not attacker.getAccess() and attacker.getLevel() >= Freebooter.FreeOverallLevelCap:
             return
 
         overallReputation = 0
