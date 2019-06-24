@@ -38,6 +38,7 @@ dclass Account {
   string LAST_LOGIN db;
   string ACCOUNT_ID db;
   uint16 ACCESS_LEVEL db;
+  uint16 PAID_LEVEL db;
 };
 
 struct BarrierData {
@@ -187,7 +188,7 @@ dclass DistributedPlayer : DistributedAvatar {
   WishName(string="") db ram;
   WishNameState(string="") db ram;
   setPreviousAccess(uint8=0) required db airecv;
-  setAccess(uint8) broadcast ownrecv required db ram airecv;
+  setAccess(uint8) broadcast ownrecv required ram airecv;
   setAdminAccess(uint16) ownrecv required airecv;
 };
 

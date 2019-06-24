@@ -329,6 +329,7 @@ class LoginAccountFSM(OperationFSM):
         self.userId = result.get('userId', 0)
         self.accountId = result.get('accountId', 0)
         self.accessLevel = result.get('accessLevel', 0)
+        self.paidLevel = 2 #TODO: write this
         if self.accountId:
             self.demand('RetrieveAccount')
         else:
@@ -353,7 +354,8 @@ class LoginAccountFSM(OperationFSM):
             'CREATED': time.ctime(),
             'LAST_LOGIN': time.ctime(),
             'ACCOUNT_ID': str(self.userId),
-            'ACCESS_LEVEL': self.accessLevel
+            'ACCESS_LEVEL': self.accessLevel,
+            'PAID_LEVEL': self.paidLevel
         }
         self.csm.air.dbInterface.createObject(
             self.csm.air.dbId,
@@ -396,6 +398,13 @@ class LoginAccountFSM(OperationFSM):
                 self.accountId,
                 self.csm.air.dclassesByName['AccountUD'],
                 {'ACCESS_LEVEL': self.accessLevel})
+
+        if self.paidLevel:
+            self.csm.air.dbInterface.updateObject(
+                self.csm.air.dbId,
+                self.accountId,
+                self.csm.air.dclassesByName['AccountUD'],
+                {'PAID_LEVEL': self.paidLevel})        
 
         # If there's anybody on the account, kill them for redundant login:
         datagram = PyDatagram()
@@ -967,8 +976,10 @@ class LoadAvatarFSM(AvatarOperationFSM):
         adminAccess = self.account.get('ACCESS_LEVEL', 0)
         adminAccess = adminAccess - adminAccess % 100
 
+        paidLevel = self.account.get('PAID_LEVEL', 0)
+
         self.csm.air.sendActivate(self.avId, 0, 0, self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
-            {'setAdminAccess': (adminAccess,), 'setInventoryId': (inventoryId,)})
+            {'setAdminAccess': (adminAccess,), 'setInventoryId': (inventoryId,), 'setAccess': (paidLevel,)})
 
         # Next, add them to the avatar channel:
         datagram = PyDatagram()
