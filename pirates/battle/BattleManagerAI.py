@@ -104,11 +104,12 @@ class BattleManagerAI(BattleManagerBase):
         # ensure the user has access to the requested weapon before
         # running result calculations
         repId = WeaponGlobals.getRepId(currentWeaponId)
-        if not avatar.getAccess() and not Freebooter.allowedFreebooterWeapon(repId):
-            self.notify.warning('Freebooter (%d) attempted to use paid weapon (%d)' % (
-                avatar.doId, currentWeaponId))
-            
-            return None
+        if hasattr(avatar, 'getGameAccess'):
+            if not avatar.getGameAccess() and not Freebooter.allowedFreebooterWeapon(repId):
+                self.notify.warning('Freebooter (%d) attempted to use paid weapon (%d)' % (
+                    avatar.doId, currentWeaponId))
+                
+                return None
 
         obeysPirateCode = self.obeysPirateCode(avatar, target)
 
@@ -406,8 +407,10 @@ class BattleManagerAI(BattleManagerBase):
 
             return
 
-        if not attacker.getAccess() and attacker.getLevel() >= Freebooter.FreeOverallLevelCap:
-            return
+        # Verify the user has not exceeded the level cap
+        if hasattr(avatar, 'getGameAccess'):
+            if not attacker.getGameAccess() and attacker.getLevel() >= Freebooter.FreeOverallLevelCap:
+                return
 
         overallReputation = 0
         goldReward = EnemyGlobals.getGoldDrop(target.getAvatarType(), target.getLevel())
