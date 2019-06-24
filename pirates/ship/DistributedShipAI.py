@@ -196,8 +196,32 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         DistributedCharterableObjectAI.handleChildLeave(self, childObj, zoneId)
 
     def delete(self):
-        self.air.shipManager.removeActiveShip(self)
+        if self.steeringWheel:
+            self.steeringWheel.requestDelete()
+            self.steeringWheel = None
 
+        if self.broadside:
+            self.broadside.requestDelete()
+            self.broadside = None
+
+        for sail in self.sails:
+            sail.requestDelete()
+
+        for cannon in self.cannons:
+            cannon.requestDelete()
+
+        self.sails = []
+        self.cannons = []
+
+        if self.bowSprit:
+            self.bowSprit.requestDelete()
+            self.bowSprit = None
+
+        if self.cabin:
+            self.cabin.requestDelete()
+            self.cabin = None
+
+        self.air.shipManager.removeActiveShip(self)
         DistributedMovingObjectAI.delete(self)
         DistributedCharterableObjectAI.delete(self)
 
