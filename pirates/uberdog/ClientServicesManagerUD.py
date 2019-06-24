@@ -895,6 +895,8 @@ class LoadAvatarFSM(AvatarOperationFSM):
         self.demand('SetAvatar')
 
     def enterSetAvatarTask(self, channel, inventoryId, task):
+        channel = self.csm.GetAccountConnectionChannel(self.target)
+
         # Finally, grant ownership and shut down.
         datagram = PyDatagram()
         datagram.addServerHeader(
@@ -902,6 +904,23 @@ class LoadAvatarFSM(AvatarOperationFSM):
             self.csm.air.ourChannel,
             STATESERVER_OBJECT_SET_OWNER)
         datagram.addChannel(self.target << 32 | self.avId)
+        self.csm.air.send(datagram)
+
+        # add a post remove for removing the avatar as a session object on the ClientAgent
+        datagramCleanup = PyDatagram()
+        datagramCleanup.addServerHeader(
+            channel,
+            self.csm.air.ourChannel,
+            CLIENTAGENT_REMOVE_SESSION_OBJECT)
+
+        datagramCleanup.addUint32(self.avId)
+
+        datagram = PyDatagram()
+        datagram.addServerHeader(
+            channel,
+            self.csm.air.ourChannel,
+            CLIENTAGENT_ADD_POST_REMOVE)
+        datagram.addString(datagramCleanup.getMessage())
         self.csm.air.send(datagram)
 
         self.csm.air.clientAddSessionObject(self.csm.GetPuppetConnectionChannel(self.avId), self.avId)
@@ -928,6 +947,7 @@ class LoadAvatarFSM(AvatarOperationFSM):
             STATESERVER_OBJECT_DELETE_RAM)
 
         datagramCleanup.addUint32(self.avId)
+
         datagram = PyDatagram()
         datagram.addServerHeader(
             channel,
