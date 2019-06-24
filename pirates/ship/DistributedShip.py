@@ -1472,7 +1472,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.wheel[1].acceptInteraction()
             localAvatar.b_setGameState('ShipPilot', [
                 self])
-            #self.accept(self.exitWorldEvent, self.handleOutOfRange)
+            self.accept(self.exitWorldEvent, self.handleOutOfRange)
             self.enableShipControls()
             self.setupRammingCollisions()
             collNPs = self.findAllMatches('**/+CollisionNode')
