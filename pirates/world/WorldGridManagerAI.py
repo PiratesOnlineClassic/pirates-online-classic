@@ -209,4 +209,6 @@ class WorldGridManagerAI(object):
             return
 
         for parentId in gridInterests:
-            self.clearAvatarInterest(avatar, parentId)
+            parentObj = self.air.doId2do.get(parentId)
+            assert(parentObj is not None)
+            self.clearAvatarInterest(parentObj, avatar)
