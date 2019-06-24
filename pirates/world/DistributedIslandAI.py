@@ -58,14 +58,24 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def handleChildArrive(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerPirateAI):
-            # if the child object does not have their own grid interests enabled,
-            # give them back control over it, in some cases this may occur after
-            # leaving a ship they previously boarded.
-            if not childObj.canControlInterests:
-                childObj.setCanControlInterests(True)
+            self.air.worldGridManager.handleLocationChanged(self, childObj, zoneId)
 
         DistributedCartesianGridAI.handleChildArrive(self, childObj, zoneId)
         DistributedGameAreaAI.handleChildArrive(self, childObj, zoneId)
+
+    def handleChildArriveZone(self, childObj, zoneId):
+        if isinstance(childObj, DistributedPlayerPirateAI):
+            self.air.worldGridManager.handleLocationChanged(self, childObj, zoneId)
+
+        DistributedCartesianGridAI.handleChildArriveZone(self, childObj, zoneId)
+        DistributedGameAreaAI.handleChildArriveZone(self, childObj, zoneId)
+
+    def handleChildLeave(self, childObj, zoneId):
+        if isinstance(childObj, DistributedPlayerPirateAI):
+            self.air.worldGridManager.clearAvatarInterest(self, childObj)
+
+        DistributedCartesianGridAI.handleChildLeave(self, childObj, zoneId)
+        DistributedGameAreaAI.handleChildLeave(self, childObj, zoneId)
 
     def holidayStart(self, holidayId):
         if self.uniqueId == '1156207188.95dzlu' and holidayId == PiratesGlobals.FOUNDERSFEAST:
@@ -177,8 +187,3 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def getFeastFireEnabled(self):
         return self.feastFireEnabled
-
-    def delete(self):
-
-        DistributedCartesianGridAI.delete(self)
-        DistributedGameAreaAI.delete(self)

@@ -57,7 +57,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.constructedShipDoId = 0
         self.activeShipId = 0
         self.crewShipId = 0
-        self.canControlInterests = True
 
     def announceGenerate(self):
         DistributedPlayerAI.announceGenerate(self)
@@ -135,8 +134,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                     self.b_setCurrentIsland('')
 
             self.attemptToSetCursedZombie()
-            if self.canControlInterests:
-                self.air.worldGridManager.handleLocationChanged(parentObj, self, zoneId)
 
     def getInventory(self):
         return self.air.inventoryManager.getInventory(self.doId)
@@ -718,12 +715,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def getConstructedShipDoId(self):
         return self.constructedShipDoId
-
-    def setCanControlInterests(self, canControlInterests):
-        self.canControlInterests = canControlInterests
-
-    def getCanControlInterests(self):
-        return self.canControlInterests
 
     def disable(self):
         DistributedPlayerAI.disable(self)

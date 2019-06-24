@@ -173,7 +173,6 @@ class DistributedDinghyAI(DistributedInteractiveAI):
         def _interestDoneCallback():
             self.d_sendAvatarToShip(avatar.doId, ship.doId)
 
-        avatar.setCanControlInterests(False)
         self.air.worldGridManager.handleLocationChanged(ship.getParentObj(), avatar, ship.zoneId,
             callback=_interestDoneCallback)
 

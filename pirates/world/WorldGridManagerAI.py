@@ -56,6 +56,9 @@ class GridInterestHandler(object):
         self.air.clientRemoveInterest(clientChannel, interestHandle.context, False)
         self.interestHandles.remove(interestHandle)
 
+    def hasPendingContext(self, context):
+        return context in self.pendingCallbackContexts
+
     def _callbackInterestContext(self):
         assert(len(self.pendingCallbackContexts) == 0)
         assert(self.pendingCallback is not None)
@@ -130,13 +133,35 @@ class WorldGridManagerAI(object):
         self.gridInterestHandlers = {}
 
     def handleInterestContextDone(self, avatarId, context):
-        gridHandler = self.gridInterestHandlers.get(avatarId)
-        if not gridHandler:
+        """
+        Handles interest done callback from the ClientAgent via the msgtype CLIENTAGENT_DONE_INTEREST_RESP
+        we wait for the ClientAgent to tell us that all of our interest zone events have been handled,
+        then call the callback specified by the caller
+        """
+
+        gridInterests = self.gridInterestHandlers.get(avatarId)
+        if not gridInterests:
             return
 
-        gridHandler.handleInterestContextDone(context)
+        for parentId in gridInterests:
+            gridInterestHandler = gridInterests.get(parentId)
+            assert(gridInterestHandler is not None)
+
+            # find an interest handler with the pending context and handle it,
+            # assuming we only have a single grid interest handler with that pending context...
+            if gridInterestHandler.hasPendingContext(context):
+                gridInterestHandler.handleInterestContextDone(context)
+                break
 
     def handleLocationChanged(self, parentObj, avatar, zoneId, callback=None):
+        """
+        Updates the avatar's interest sets for a particular parent cartesian object
+        based on the center of the radius which is subject to the zoneId
+        """
+
+        assert(parentObj is not None)
+        assert(avatar is not None)
+
         if not isinstance(parentObj, DistributedCartesianGridAI):
             return
 
@@ -146,23 +171,45 @@ class WorldGridManagerAI(object):
 
             return
 
-        gridHandler = self.gridInterestHandlers.get(avatar.doId)
-        if gridHandler is not None:
-            if gridHandler.parentObj != parentObj:
-                self.clearAvatarInterests(avatar)
-                gridHandler = None
+        gridInterests = self.gridInterestHandlers.setdefault(avatar.doId, {})
+        gridInterestHandler = gridInterests.get(parentObj.doId)
+        if not gridInterestHandler:
+            gridInterestHandler = GridInterestHandler(self.air, parentObj, avatar)
+            gridInterests[parentObj.doId] = gridInterestHandler
 
-        if not gridHandler:
-            gridHandler = GridInterestHandler(self.air, parentObj, avatar)
-            self.gridInterestHandlers[avatar.doId] = gridHandler
+        assert(gridInterestHandler is not None)
+        gridInterestHandler.handleLocationChanged(zoneId, callback)
 
-        gridHandler.handleLocationChanged(zoneId, callback)
+    def clearAvatarInterest(self, parentObj, avatar):
+        """
+        Clears an avatar's interest set which is specific to a parent cartesian object
+        """
 
-    def clearAvatarInterests(self, avatar):
-        gridHandler = self.gridInterestHandlers.pop(avatar.doId, None)
-        if not gridHandler:
+        assert(parentObj is not None)
+        assert(avatar is not None)
+
+        gridInterests = self.gridInterestHandlers.get(avatar.doId)
+        if not gridInterests:
             return
 
-        gridHandler.clearInterestZones()
-        gridHandler.destroy()
-        del gridHandler
+        gridInterestHandler = gridInterests.pop(parentObj.doId, None)
+        if not gridInterestHandler:
+            return
+
+        gridInterestHandler.clearInterestZones()
+        gridInterestHandler.destroy()
+        del gridInterestHandler
+
+    def clearAvatarInterests(self, avatar):
+        """
+        Clears all of the avatar's current grid interests
+        """
+
+        assert(avatar is not None)
+
+        gridInterests = self.gridInterestHandlers.pop(avatar.doId, None)
+        if not gridInterests:
+            return
+
+        for parentId in gridInterests:
+            self.clearAvatarInterest(avatar, parentId)
