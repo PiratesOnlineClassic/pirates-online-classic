@@ -279,7 +279,7 @@ class Options(OptionSpace):
             self.sound_volume = self.validate(float, 'sound_volume', 1.0)
             self.music = self.validate(int, 'music', 1)
             self.music_volume = self.validate(float, 'music_volume', 1.0)
-            self.antialiasing = self.validate(int, 'antialiasing', 1)
+            self.antialiasing = self.validate(int, 'antialiasing', 0)
             self.gui_scale = self.validate(float, 'gui_scale', 0.5)
             self.special_effects = self.validate(int, 'special_effects', 2)
             self.texture_scale = self.validate(float, 'texture_scale', 1.0)
@@ -466,6 +466,8 @@ class Options(OptionSpace):
 
         if self.antialiasing:
             base.render.setAntialias(AntialiasAttrib.MAuto)
+        else:
+            base.render.setAntialias(AntialiasAttrib.MNone)
 
         if base.win and base.win.getGsg():
             if self.gamma_enable:
