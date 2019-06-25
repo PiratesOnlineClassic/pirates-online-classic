@@ -429,9 +429,6 @@ class GameOptionsGui(DirectFrame):
                 self.hdr_factor_slider = self.create_slider(hdr_update_function, self.gameOptions.options.hdr_factor, x + ox, y, resolution, text, parent)
             else:
                 self.hdr_factor_slider = self.create_slider(hdr_update_function, 1.0, x + ox, y, resolution, text, parent)
-            text = PLocalizer.GameOptionsRestartRequired
-            y += oy
-            self.create_label(x, y, text, parent, 0.9, color = (0.7, 0.7, 0.7, 1))
         
         if base.config.GetBool('want-cpu-frequency-warning', 0):
             y += oy
@@ -440,6 +437,20 @@ class GameOptionsGui(DirectFrame):
             self.cpuFrequencyWarningCheck = CheckButton(parent = parent, relief = None, scale = sc, pos = (x + 0.45, 0, y + 0.015), command = self.cpuFrequencyWarningCheckCB)
         else:
             self.cpuFrequencyWarningCheck = None
+
+        y += oy
+        text = PLocalizer.GameOptionsVSync + ' *'
+        self.create_label(x, y, text, parent, sl)
+        self.vSyncCheck = CheckButton(parent = parent, relief = None, scale = sc, pos = (x + 0.19, 0, y + 0.015), command = self.vSyncCheckCB)
+
+        y += oy
+        text = PLocalizer.GameOptionsFrameRate
+        self.create_label(x, y, text, parent, sl)
+        self.frameRateCheck = CheckButton(parent = parent, relief = None, scale = sc, pos = (x + 0.35, 0, y + 0.015), command = self.frameRateCheckCB)
+
+        text = PLocalizer.GameOptionsRestartRequired
+        y += oy
+        self.create_label(x, y, text, parent, 0.9, color = (0.7, 0.7, 0.7, 1))
     
     def createRadioButtonGroup(self, parent, x, y, sx, oy, variable, scale, labels, textScale, cmd = None):
         i = 0
@@ -612,6 +623,8 @@ class GameOptionsGui(DirectFrame):
         if self.gameOptions.enable_hdr:
             self.hdrCheck['value'] = self.gameOptions.options.hdr
         
+        self.vSyncCheck['value'] = self.gameOptions.options.vsync
+        self.frameRateCheck['value'] = self.gameOptions.options.frameRate
         self.update()
 
     def callShowUpsell(self, val):
@@ -791,6 +804,24 @@ class GameOptionsGui(DirectFrame):
             return None
         
         self.gameOptions.options.cpu_frequency_warning = val
+        self.update()
+
+    def vSyncCheckCB(self, val):
+        if self.gameOptions is None:
+            return None
+
+        if self.gameOptions.options.vsync != val:
+            self.gameOptions.display_restart_dialog()
+
+        self.gameOptions.options.vsync = val
+        self.update()
+
+    def frameRateCheckCB(self, val):
+        if self.gameOptions is None:
+            return None
+
+        self.gameOptions.options.frameRate = val
+        base.setFrameRateMeter(val)
         self.update()
 
     def hardwareGammaCheckCB(self, val):

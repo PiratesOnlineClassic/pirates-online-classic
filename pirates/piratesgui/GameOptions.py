@@ -75,7 +75,7 @@ class OptionSpace:
 class Options(OptionSpace):
     notify = DirectNotifyGlobal.directNotify.newCategory('Options')
     debug = False
-    options_version = 16
+    options_version = 17
     DEFAULT_API_FILE_PATH = 'game_api.txt'
     DEFAULT_FILE_PATH = 'game_options.txt'
     WORKING_FILE_PATH = 'last_working_options.txt'
@@ -198,6 +198,10 @@ class Options(OptionSpace):
                 self.write_integer(output_file, self.simple_display_option)
                 self.write_string(output_file, 'antialiasing')
                 self.write_integer(output_file, self.antialiasing)
+                self.write_string(output_file, 'vsync')
+                self.write_integer(output_file, self.vsync)
+                self.write_string(output_file, 'frameRate')
+                self.write_integer(output_file, self.frameRate)
                 output_file.close()
                 state = True
         except:
@@ -306,6 +310,8 @@ class Options(OptionSpace):
                 self.ocean_visibility = 0
 
             self.simple_display_option = self.validate(int, 'simple_display_option', 3, [0, 1, 2, 3])
+            self.vsync = self.validate(int, 'vsync', 0)
+            self.frameRate = self.validate(int, 'frameRate', 0)
             state = True
         except:
             pass
@@ -372,6 +378,8 @@ class Options(OptionSpace):
         self.music_volume = base.config.GetFloat('audio-music-volume', 1.0)
         self.ocean_visibility = base.config.GetInt('ocean-visibility', 0)
         self.antialiasing = base.config.GetBool('antialiasing', 0)
+        self.vsync = base.config.GetBool('vsync', 0)
+        self.frameRate = base.config.GetBool('frame-rate', 0)
         self.runtime()
 
     def options_to_config(self):
@@ -441,6 +449,9 @@ class Options(OptionSpace):
         
         return string
 
+    def setPipeOptions(self):
+        self.setVideoSync(self.vsync)
+
     def setRuntimeOptions(self):
         base.enableSoundEffects(self.sound)
         base.enableMusic(self.music)
@@ -468,6 +479,8 @@ class Options(OptionSpace):
             base.render.setAntialias(AntialiasAttrib.MAuto)
         else:
             base.render.setAntialias(AntialiasAttrib.MNone)
+
+        base.setFrameRateMeter(self.frameRate)
 
         if base.win and base.win.getGsg():
             if self.gamma_enable:
@@ -522,6 +535,8 @@ class Options(OptionSpace):
         self.mouse_look = 0
         self.gamma = self.gamma_save_offset
         self.gamma_enable = 0
+        self.vsync = 0
+        self.frameRate = 0
         self.cpu_frequency_warning = 1
         self.reserved10 = 0
         self.ocean_visibility = 0
@@ -678,8 +693,20 @@ class Options(OptionSpace):
         except:
             pass
 
+    def getGameOptionBool(self, state):
+        if state:
+            return '#t'
+        else:
+            return '#f'
+
     def setRuntimeAvatarDetailLevel(self, level):
         string = 'avatar-detail %s\n' % self.getGameOptionString(level)
+        self.setPrc(string)
+
+    def setVideoSync(self, state):
+        string = 'sync-video %s\n' % self.getGameOptionBool(state)
+        if self.debug:
+            print(string)
         self.setPrc(string)
 
     def setGeomCacheSize(self, pipe):
