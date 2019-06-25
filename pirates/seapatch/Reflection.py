@@ -20,8 +20,8 @@ class Reflection(DirectObject):
     @classmethod
     def initialize(self, parent):
         if Reflection.global_reflection == None:
-            buffer_width = 512
-            buffer_height = 512
+            buffer_width = base.config.GetInt('reflections-buffer-size', 512)
+            buffer_height = base.config.GetInt('reflections-buffer-size', 512)
             Reflection.global_reflection = Reflection('reflection', buffer_width, buffer_height, parent, Plane(Vec3(0, 0, 1), Point3(0, 0, 0)))
             Reflection.global_reflection.lock = True
 
@@ -84,7 +84,16 @@ class Reflection(DirectObject):
 
     def __createBuffer(self):
         self.__destroyBuffer()
-        self.reflection_buffer = base.win.makeTextureBuffer('reflection_buffer' + self.name, self.width, self.height, tex = self.reflection_texture)
+
+        buffer_properties = FrameBufferProperties()
+        if base.options.antialiasing:
+            buffer_properties.setMultisamples(base.config.GetInt('multisamples', 2))
+        buffer_properties.setRgbColor(1)
+        buffer_properties.setColorBits(1)
+        buffer_properties.setAlphaBits(1)
+        buffer_properties.setDepthBits(1)
+
+        self.reflection_buffer = base.win.makeTextureBuffer('reflection_buffer' + self.name, self.width, self.height, tex = self.reflection_texture, fbp = buffer_properties)
         if self.reflection_buffer:
             self.reflection_buffer.setSort(40)
             self.reflection_buffer.setClearColor(self.black_clear_color)

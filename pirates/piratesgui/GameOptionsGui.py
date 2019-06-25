@@ -286,6 +286,7 @@ class GameOptionsGui(DirectFrame):
                 PLocalizer.GameOptionsMedium,
                 PLocalizer.GameOptionsHigh], 0.8, self.textureDetailRadiosCB)
         y += oy
+        y2 = y
         text = PLocalizer.GameOptionsTextureCompressed + ' *'
         self.create_label(x, y, text, parent, sl)
         self.compressedTextureCheck = CheckButton(parent = parent, relief = None, scale = sc, pos = (x + 0.42, 0, y + 0.015), command = self.compressedTextureCheckCB)
@@ -309,6 +310,12 @@ class GameOptionsGui(DirectFrame):
         text = PLocalizer.GameOptionsRestartRequired
         y += oy
         self.create_label(x, y, text, parent, 0.9, color = (0.7, 0.7, 0.7, 1))
+
+        x2 = x + 0.55
+        text = PLocalizer.GameOptionsAntialiasing + ' *'
+        self.create_label(x2, y2, text, parent, sl)
+        self.antialiasingCheck = CheckButton(parent = parent, relief = None, scale = sc, pos = (x2 + 0.28, 0, y2), command = self.antiliasingCheckCB)
+
     
     def setupDisplayFrame(self):
         self.displayFrame = DirectFrame(parent = self.customFrame, relief = None)
@@ -422,9 +429,6 @@ class GameOptionsGui(DirectFrame):
                 self.hdr_factor_slider = self.create_slider(hdr_update_function, self.gameOptions.options.hdr_factor, x + ox, y, resolution, text, parent)
             else:
                 self.hdr_factor_slider = self.create_slider(hdr_update_function, 1.0, x + ox, y, resolution, text, parent)
-            text = PLocalizer.GameOptionsRestartRequired
-            y += oy
-            self.create_label(x, y, text, parent, 0.9, color = (0.7, 0.7, 0.7, 1))
         
         if base.config.GetBool('want-cpu-frequency-warning', 0):
             y += oy
@@ -433,6 +437,20 @@ class GameOptionsGui(DirectFrame):
             self.cpuFrequencyWarningCheck = CheckButton(parent = parent, relief = None, scale = sc, pos = (x + 0.45, 0, y + 0.015), command = self.cpuFrequencyWarningCheckCB)
         else:
             self.cpuFrequencyWarningCheck = None
+
+        y += oy
+        text = PLocalizer.GameOptionsVSync + ' *'
+        self.create_label(x, y, text, parent, sl)
+        self.vSyncCheck = CheckButton(parent = parent, relief = None, scale = sc, pos = (x + 0.19, 0, y + 0.015), command = self.vSyncCheckCB)
+
+        y += oy
+        text = PLocalizer.GameOptionsFrameRate
+        self.create_label(x, y, text, parent, sl)
+        self.frameRateCheck = CheckButton(parent = parent, relief = None, scale = sc, pos = (x + 0.35, 0, y + 0.015), command = self.frameRateCheckCB)
+
+        text = PLocalizer.GameOptionsRestartRequired
+        y += oy
+        self.create_label(x, y, text, parent, 0.9, color = (0.7, 0.7, 0.7, 1))
     
     def createRadioButtonGroup(self, parent, x, y, sx, oy, variable, scale, labels, textScale, cmd = None):
         i = 0
@@ -590,6 +608,7 @@ class GameOptionsGui(DirectFrame):
         self.characterDetailRadios[self.gameOptions.options.reflection].check()
         self.terrainDetailRadios[self.gameOptions.options.terrain_detail_level].check()
         self.aggressiveMemoryCheck['value'] = self.gameOptions.options.memory
+        self.antialiasingCheck['value'] = self.gameOptions.options.antialiasing
         self.soundEffectCheck['value'] = self.gameOptions.options.sound
         self.sound_volume_slider['value'] = self.gameOptions.options.sound_volume
         self.musicCheck['value'] = self.gameOptions.options.music
@@ -604,6 +623,8 @@ class GameOptionsGui(DirectFrame):
         if self.gameOptions.enable_hdr:
             self.hdrCheck['value'] = self.gameOptions.options.hdr
         
+        self.vSyncCheck['value'] = self.gameOptions.options.vsync
+        self.frameRateCheck['value'] = self.gameOptions.options.frameRate
         self.update()
 
     def callShowUpsell(self, val):
@@ -761,6 +782,16 @@ class GameOptionsGui(DirectFrame):
         base.enableMusic(val)
         self.update()
 
+    def antiliasingCheckCB(self, val):
+        if self.gameOptions is None:
+            return None
+
+        if self.gameOptions.options.antialiasing != val:
+            self.gameOptions.display_restart_dialog()
+
+        self.gameOptions.options.antialiasing = val
+        self.update()
+
     def invertMouseCheckCB(self, val):
         if self.gameOptions is None:
             return None
@@ -773,6 +804,24 @@ class GameOptionsGui(DirectFrame):
             return None
         
         self.gameOptions.options.cpu_frequency_warning = val
+        self.update()
+
+    def vSyncCheckCB(self, val):
+        if self.gameOptions is None:
+            return None
+
+        if self.gameOptions.options.vsync != val:
+            self.gameOptions.display_restart_dialog()
+
+        self.gameOptions.options.vsync = val
+        self.update()
+
+    def frameRateCheckCB(self, val):
+        if self.gameOptions is None:
+            return None
+
+        self.gameOptions.options.frameRate = val
+        base.setFrameRateMeter(val)
         self.update()
 
     def hardwareGammaCheckCB(self, val):
@@ -858,6 +907,7 @@ class GameOptionsGui(DirectFrame):
             self.reflectionRadios[0].check()
             self.specialEffectsRadios[0].check()
             self.textureDetailRadios[0].check()
+            self.antialiasingCheck['value'] = False
             self.compressedTextureCheck['value'] = True
             if self.shaderLevelCheck:
                 self.shaderLevelCheck['value'] = False
@@ -870,6 +920,7 @@ class GameOptionsGui(DirectFrame):
             self.reflectionRadios[1].check()
             self.specialEffectsRadios[1].check()
             self.textureDetailRadios[1].check()
+            self.antialiasingCheck['value'] = True
             self.compressedTextureCheck['value'] = True
             if self.shaderLevelCheck:
                 self.shaderLevelCheck['value'] = True
@@ -882,6 +933,7 @@ class GameOptionsGui(DirectFrame):
             self.reflectionRadios[2].check()
             self.specialEffectsRadios[2].check()
             self.textureDetailRadios[2].check()
+            self.antialiasingCheck['value'] = True
             self.compressedTextureCheck['value'] = True
             if self.shaderLevelCheck:
                 self.shaderLevelCheck['value'] = True

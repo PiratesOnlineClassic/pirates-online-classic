@@ -175,8 +175,8 @@ class SeaPatch(Water):
         
         self.setting_0()
         self.patchNP.setTransparency(0)
-        buffer_width = 512
-        buffer_height = 512
+        buffer_width = base.config.GetInt('reflections-buffer-size', 512)
+        buffer_height = base.config.GetInt('reflections-buffer-size', 512)
         self.texture_extension = '.jpg'
         if self.shader:
             self.seamodel.setShader(self.shader)

@@ -18,6 +18,7 @@ from pirates.pirate import AvatarTypes
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
 from pirates.piratesbase import Freebooter
 
+
 class BattleManagerAI(BattleManagerBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManagerAI')
 
@@ -92,12 +93,9 @@ class BattleManagerAI(BattleManagerBase):
 
     def __skillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge):
         currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
-
-        # ensure the avatar that has sent this skill request actually
-        # has their weapon drawn...
         if not isWeaponDrawn:
-            self.notify.debug('Cannot get skill result for avatar %d, weapon %d was never drawn!' % (
-                avatar.doId, currentWeaponId))
+            self.notify.debug('Cannot get skill result for avatar %d, '
+                'weapon %d was never drawn!' % (avatar.doId, currentWeaponId))
 
             return None
 
@@ -106,9 +104,7 @@ class BattleManagerAI(BattleManagerBase):
         repId = WeaponGlobals.getRepId(currentWeaponId)
         if hasattr(avatar, 'getGameAccess'):
             if not avatar.getGameAccess() and not Freebooter.allowedFreebooterWeapon(repId):
-                self.notify.warning('Freebooter (%d) attempted to use paid weapon (%d)' % (
-                    avatar.doId, currentWeaponId))
-                
+                self.notify.warning('Freebooter (%d) attempted to use paid weapon (%d)' % (avatar.doId, currentWeaponId))
                 return None
 
         obeysPirateCode = self.obeysPirateCode(avatar, target)
@@ -116,8 +112,8 @@ class BattleManagerAI(BattleManagerBase):
         # ensure the avatar that has sent this skill request obeys
         # the pirate code and can use the weapon on the target...
         if not obeysPirateCode:
-            self.notify.debug('Cannot get skill result for avatar %d, does not obey pirate code!' % (
-                avatar.doId))
+            self.notify.debug('Cannot get skill result for avatar %d, '
+                'does not obey pirate code!' % (avatar.doId))
 
             return None
 
@@ -138,11 +134,9 @@ class BattleManagerAI(BattleManagerBase):
         # calculate the moddified skill result for this skill, add this including
         # the attack data according to which ever weapon the avatar is using...
         if WeaponGlobals.isBladedWeapon(currentWeaponId):
-            attackerEffects, targetEffects = self.getModifiedSkillEffectsSword(avatar, target, skillId,
-                ammoSkillId, charge, distance)
+            attackerEffects, targetEffects = self.getModifiedSkillEffectsSword(avatar, target, skillId, ammoSkillId, charge, distance)
         else:
-            attackerEffects, targetEffects = self.getModifiedSkillEffects(avatar, target, skillId,
-                ammoSkillId, charge, distance)
+            attackerEffects, targetEffects = self.getModifiedSkillEffects(avatar, target, skillId, ammoSkillId, charge, distance)
 
         areaIdEffects = [
             attackerEffects,
@@ -150,11 +144,15 @@ class BattleManagerAI(BattleManagerBase):
         ]
 
         if skillResult == WeaponGlobals.RESULT_NOT_AVAILABLE:
-            self.notify.debug('Cannot get skill result for avatar %d, skill %d not available for avatar!' % (
-                avatar.doId, skillId))
+            self.notify.debug('Cannot get skill result for avatar %d, '
+                'skill %d result was not available!' % (avatar.doId, skillId))
 
             return None
-        elif skillResult == WeaponGlobals.RESULT_HIT:
+        elif skillResult == WeaponGlobals.RESULT_MISS:
+            pass
+        elif skillResult == WeaponGlobals.RESULT_DODGE:
+            pass
+        elif skillResult in [WeaponGlobals.RESULT_HIT, WeaponGlobals.RESULT_PARRY, WeaponGlobals.RESULT_RESIST]:
             # update this skills current reputation, this will eventually add up
             # and all skills used will be rewarded reputation...
             skillData = avatar.battleSkillDiary.getSkill(skillId)
@@ -188,19 +186,23 @@ class BattleManagerAI(BattleManagerBase):
 
                 attacker.comboDiary.recordAttack(avatar.doId, skillId, targetEffects[0])
 
-            # check to see if the skill used by the avatar was either a hurting effect,
-            # or a healing effect like the doll heal, cure skills...
-            if WeaponGlobals.isHealingSkill(skillId):
-                self.__healTarget(target, targetEffects)
-                self.__healTarget(avatar, attackerEffects)
-            else:
-                self.__hurtTarget(target, targetEffects)
-                self.__hurtTarget(avatar, attackerEffects)
+            # when the skill result is parry, this means that we've reversed the
+            # attack our attacker has done to us onto them
+            if skillResult == WeaponGlobals.RESULT_PARRY:
+                prevTargetEffects = targetEffects
+                prevAttackerEffects = attackerEffects
+
+                targetEffects = prevAttackerEffects
+                attackerEffects = prevTargetEffects
+
+            # apply the target effects to both the target and attacker
+            self.applyTargetEffects(target, targetEffects)
+            self.applyTargetEffects(avatar, attackerEffects)
 
             # add skill effects for both attacker and target, this will also
             # check to see if the attacker or target can be damaged...
-            self.__applySkillEffect(target, targetEffects, avatar, skillId, ammoSkillId)
-            self.__applySkillEffect(avatar, attackerEffects, avatar, skillId, ammoSkillId)
+            self.applySkillEffect(target, targetEffects, avatar, skillId, ammoSkillId)
+            self.applySkillEffect(avatar, attackerEffects, avatar, skillId, ammoSkillId)
 
             # check to see if the skill used by the avatar was the doll attuning effect,
             # and that the avatar's current weapon is infact an doll weapon...
@@ -214,18 +216,9 @@ class BattleManagerAI(BattleManagerBase):
             # handle interactive props
             if hasattr(target, 'd_propSlashed'):
                 target.d_propSlashed()
-
-        elif skillResult == WeaponGlobals.RESULT_MISS:
-            pass
-        elif skillResult == WeaponGlobals.RESULT_DODGE:
-            raise NotImplemented
-        elif skillResult == WeaponGlobals.RESULT_PARRY:
-            raise NotImplemented
-        elif skillResult == WeaponGlobals.RESULT_RESIST:
-            raise NotImplemented
         else:
-            self.notify.debug('Cannot get skill result for avatar %d, unknown skill result %d for skill %d!' % (
-                avatar.doId, skillResult, skillId))
+            self.notify.debug('Cannot get skill result for avatar %d, '
+                'unknown skill result %d for skill %d!' % (avatar.doId, skillResult, skillId))
 
             return None
 
@@ -259,29 +252,16 @@ class BattleManagerAI(BattleManagerBase):
                 avatar.useTonic(ammoSkillId)
         else:
             currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
-
-            # ensure the avatar that has sent this skill request actually
-            # has their weapon drawn...
             if not isWeaponDrawn:
-                self.notify.debug('Cannot get other skill result for avatar %d, weapon %d was never drawn!' % (
-                    avatar.doId, currentWeaponId))
+                self.notify.debug('Cannot get other skill result for avatar %d, '
+                    'weapon %d was never drawn!' % (avatar.doId, currentWeaponId))
 
                 return None
 
         return [skillId, ammoSkillId, WeaponGlobals.RESULT_HIT, 0, areaIdList, attackerEffects, targetEffects,
             areaIdEffects, timestamp, pos, charge]
 
-    def __healTarget(self, target, targetEffects):
-        if not target.getDamagable():
-            return
-
-        target.b_setHp(max(0, min(target.getHp()[0] + targetEffects[0], target.getMaxHp())))
-        target.b_setPower(max(0, min(target.getPower() + targetEffects[1], target.getMaxPower())))
-        target.b_setLuck(max(0, min(target.getLuck() + targetEffects[2], target.getMaxLuck())))
-        target.b_setMojo(max(0, min(target.getMojo() + targetEffects[3], target.getMaxMojo())))
-        target.b_setSwiftness(max(0, min(target.getSwiftness() + targetEffects[4], target.getMaxSwiftness())))
-
-    def __hurtTarget(self, target, targetEffects):
+    def applyTargetEffects(self, target, targetEffects):
         if not target.getDamagable():
             return
 
@@ -294,7 +274,7 @@ class BattleManagerAI(BattleManagerBase):
         target.b_setMojo(max(0, min(target.getMojo() + targetEffects[3], target.getMaxMojo())))
         target.b_setSwiftness(max(0, min(target.getSwiftness() + targetEffects[4], target.getMaxSwiftness())))
 
-    def __applySkillEffect(self, target, targetEffects, attacker, skillId, ammoSkillId):
+    def applySkillEffect(self, target, targetEffects, attacker, skillId, ammoSkillId):
         targetEffectId = targetEffects[2]
         if not targetEffectId:
             return
@@ -341,9 +321,7 @@ class BattleManagerAI(BattleManagerBase):
         self.updateSkillEffects(target)
         for attackerId in attackers:
             attacker = self.air.doId2do.get(attackerId)
-            if not attacker:
-                continue
-
+            assert(attacker is not None)
             self.updateSkillEffects(attacker)
             self.__checkAttacker(attacker, target)
 
@@ -358,7 +336,7 @@ class BattleManagerAI(BattleManagerBase):
 
         # check to see if the avatar doesn't have anymore combos
         # that are not expired, if so clear the combo diary...
-        if not len(combos):
+        if len(combos) == 0:
             attacker.comboDiary.clear()
 
         # check the current weapon skill and determine if the avatar is still in
@@ -394,18 +372,12 @@ class BattleManagerAI(BattleManagerBase):
         attackers = self.air.targetMgr.getAttackers(target.doId)
         for attackerId in attackers:
             attacker = self.air.doId2do.get(attackerId)
-            if not attacker:
-                continue
+            assert(attacker is not None)
+            self.rewardAttacker(attacker, target)
 
-            self.__rewardAttacker(attacker, target)
-
-    def __rewardAttacker(self, attacker, target):
+    def rewardAttacker(self, attacker, target):
         inventory = attacker.getInventory()
-        if not inventory:
-            self.notify.debug('Cannot reward avatar %d for killing %d, unknown inventory!' % (
-                attacker.doId, target.doId))
-
-            return
+        assert(inventory is not None)
 
         # Verify the user has not exceeded the level cap
         if hasattr(attacker, 'getGameAccess'):

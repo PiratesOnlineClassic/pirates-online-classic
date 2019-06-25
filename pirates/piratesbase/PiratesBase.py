@@ -101,6 +101,7 @@ class PiratesBase(OTPBase):
         if options.api == 'default':
             pass
 
+        options.setPipeOptions()
         base.makeAllPipes()
         for pipe in base.pipeList:
             if options.api == 'pandagl' and pipe.getInterfaceName() == 'OpenGL':

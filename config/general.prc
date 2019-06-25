@@ -72,6 +72,8 @@ prefer-parasite-buffer 1
 force-parasite-buffer 1
 hardware-animated-vertices #t
 textures-auto-power-2 #t
+framebuffer-multisample 1
+multisamples 2
 
 # Performance:
 lock-to-one-cpu #f
@@ -174,10 +176,14 @@ want-magic-words 1
 want-map-flavor-anims 1
 low-weapons-only 1
 want-running 0
-want-game-options-hdr 0
 enforce-clean-exit 1
 want-ships 1
 game-phase 1
+
+# Game Options:
+want-game-options-hdr 0
+want-game-options-ship-visibility 1
+want-cpu-frequency-warning #f
 
 # Cache:
 model-cache-max-kbytes 262144

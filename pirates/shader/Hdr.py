@@ -1,5 +1,6 @@
 from pandac.PandaModules import *
 from otp.otpbase import OTPGlobals
+from libotp import NametagGlobals
 from pirates.shader.Blur import *
 
 class Hdr:
