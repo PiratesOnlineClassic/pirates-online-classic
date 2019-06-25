@@ -5,6 +5,8 @@ from direct.task import Task
 from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
 from otp.otpbase import OTPGlobals
+from libotp import CFSpeech
+from libotp import CFTimeout
 from direct.showbase import PythonUtil
 import time
 import os
@@ -12,7 +14,7 @@ import os
 class TimeManager(DistributedObject.DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory('TimeManager')
     neverDisable = 1
-    
+
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
         self.updateFreq = base.config.GetFloat('time-manager-freq', 1800)
@@ -22,7 +24,7 @@ class TimeManager(DistributedObject.DistributedObject):
         self.extraSkew = base.config.GetInt('time-manager-extra-skew', 0)
         if self.extraSkew != 0:
             self.notify.info('Simulating clock skew of %0.3f s' % self.extraSkew)
-        
+
         self.reportFrameRateInterval = base.config.GetDouble('report-frame-rate-interval', 300.0)
         self.talkResult = 0
         self.thisContext = -1
@@ -35,7 +37,7 @@ class TimeManager(DistributedObject.DistributedObject):
     def generate(self):
         if self.cr.timeManager != None:
             self.cr.timeManager.delete()
-        
+
         self.cr.timeManager = self
         DistributedObject.DistributedObject.generate(self)
         self.accept(OTPGlobals.SynchronizeHotkey, self.handleHotkey)
@@ -50,7 +52,7 @@ class TimeManager(DistributedObject.DistributedObject):
         taskMgr.remove('frameRateMonitor')
         if self.cr.timeManager == self:
             self.cr.timeManager = None
-        
+
         DistributedObject.DistributedObject.disable(self)
 
     def delete(self):
@@ -60,13 +62,13 @@ class TimeManager(DistributedObject.DistributedObject):
         taskMgr.remove('frameRateMonitor')
         if self.cr.timeManager == self:
             self.cr.timeManager = None
-        
+
         DistributedObject.DistributedObject.delete(self)
 
     def startTask(self):
         self.stopTask()
         taskMgr.doMethodLater(self.updateFreq, self.doUpdate, 'timeMgrTask')
-    
+
     def stopTask(self):
         taskMgr.remove('timeMgrTask')
 
@@ -90,7 +92,7 @@ class TimeManager(DistributedObject.DistributedObject):
         if now - self.lastAttempt < self.minWait:
             self.notify.debug('Not resyncing (too soon): %s' % description)
             return 0
-        
+
         self.talkResult = 0
         self.thisContext = self.nextContext
         self.attemptCount = 0
@@ -107,7 +109,7 @@ class TimeManager(DistributedObject.DistributedObject):
         if context != self.thisContext:
             self.notify.info('Ignoring TimeManager response for old context %d' % context)
             return
-        
+
         elapsed = end - self.start
         self.attemptCount += 1
         self.notify.info('Clock sync roundtrip took %0.3f ms' % (elapsed * 1000.0))
@@ -122,12 +124,12 @@ class TimeManager(DistributedObject.DistributedObject):
                 self.start = globalClock.getRealTime()
                 self.sendUpdate('requestServerTime', [self.thisContext])
                 return
-            
+
             self.notify.info('Giving up on uncertainty requirement.')
-        
+
         if self.talkResult:
             base.localAvatar.setChatAbsolute('latency %0.0f ms, sync \xc2\xb1%0.0f ms' % (elapsed * 1000.0, globalClockDelta.getUncertainty() * 1000.0), CFSpeech | CFTimeout)
-        
+
         messenger.send('gotTimeSync')
 
     def setDisconnectReason(self, disconnectCode):
@@ -141,21 +143,21 @@ class TimeManager(DistributedObject.DistributedObject):
         self.sendUpdate('setExceptionInfo', [
             info])
         self.cr.flush()
-    
+
     def d_setSignature(self, signature, hash, pyc):
         self.sendUpdate('setSignature', [
             signature,
             hash,
             pyc])
-    
+
     def setFrameRateInterval(self, frameRateInterval):
         if frameRateInterval == 0:
             return
-        
+
         if not base.frameRateMeter:
             maxFrameRateInterval = base.config.GetDouble('max-frame-rate-interval', 30.0)
             globalClock.setAverageFrameRateInterval(min(frameRateInterval, maxFrameRateInterval))
-        
+
         taskMgr.remove('frameRateMonitor')
         task = taskMgr.add(self.frameRateMonitor, 'frameRateMonitor')
         task.delayTime = frameRateInterval
@@ -175,7 +177,7 @@ class TimeManager(DistributedObject.DistributedObject):
             if di.getDisplayState() == DisplayInformation.DSSuccess:
                 vendorId = di.getVendorId()
                 deviceId = di.getDeviceId()
-            
+
             di.updateMemoryInformation()
             oomb = 1.0 / (1024.0 * 1024.0)
             processMemory = di.getProcessMemory() * oomb
@@ -210,5 +212,3 @@ class TimeManager(DistributedObject.DistributedObject):
             pageFaultCount,
             osInfo,
             cpuSpeed])'''
-
-
