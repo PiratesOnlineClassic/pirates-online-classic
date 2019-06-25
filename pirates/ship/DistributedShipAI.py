@@ -233,8 +233,8 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         if parentObj is not None and isinstance(parentObj, DistributedOceanGridAI):
             for avatarId in self.crew:
                 avatar = self.air.doId2do.get(avatarId)
-                if avatar is not None:
-                    self.air.worldGridManager.handleLocationChanged(parentObj, avatar, zoneId)
+                assert(avatar is not None)
+                self.air.worldGridManager.handleLocationChanged(parentObj, avatar, zoneId)
 
         DistributedMovingObjectAI.setLocation(self, parentId, zoneId)
         DistributedCharterableObjectAI.setLocation(self, parentId, zoneId)
