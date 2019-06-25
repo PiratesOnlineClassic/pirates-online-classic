@@ -18,6 +18,7 @@ from pirates.pirate import AvatarTypes
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
 from pirates.piratesbase import Freebooter
 
+
 class BattleManagerAI(BattleManagerBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManagerAI')
 
@@ -92,12 +93,9 @@ class BattleManagerAI(BattleManagerBase):
 
     def __skillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge):
         currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
-
-        # ensure the avatar that has sent this skill request actually
-        # has their weapon drawn...
         if not isWeaponDrawn:
-            self.notify.debug('Cannot get skill result for avatar %d, weapon %d was never drawn!' % (
-                avatar.doId, currentWeaponId))
+            self.notify.debug('Cannot get skill result for avatar %d, '
+                'weapon %d was never drawn!' % (avatar.doId, currentWeaponId))
 
             return None
 
@@ -106,9 +104,7 @@ class BattleManagerAI(BattleManagerBase):
         repId = WeaponGlobals.getRepId(currentWeaponId)
         if hasattr(avatar, 'getGameAccess'):
             if not avatar.getGameAccess() and not Freebooter.allowedFreebooterWeapon(repId):
-                self.notify.warning('Freebooter (%d) attempted to use paid weapon (%d)' % (
-                    avatar.doId, currentWeaponId))
-
+                self.notify.warning('Freebooter (%d) attempted to use paid weapon (%d)' % (avatar.doId, currentWeaponId))
                 return None
 
         obeysPirateCode = self.obeysPirateCode(avatar, target)
@@ -116,8 +112,8 @@ class BattleManagerAI(BattleManagerBase):
         # ensure the avatar that has sent this skill request obeys
         # the pirate code and can use the weapon on the target...
         if not obeysPirateCode:
-            self.notify.debug('Cannot get skill result for avatar %d, does not obey pirate code!' % (
-                avatar.doId))
+            self.notify.debug('Cannot get skill result for avatar %d, '
+                'does not obey pirate code!' % (avatar.doId))
 
             return None
 
@@ -148,7 +144,7 @@ class BattleManagerAI(BattleManagerBase):
         ]
 
         if skillResult == WeaponGlobals.RESULT_NOT_AVAILABLE:
-            self.notify.warning('Cannot get skill result for avatar %d, '
+            self.notify.debug('Cannot get skill result for avatar %d, '
                 'skill %d result was not available!' % (avatar.doId, skillId))
 
             return None
@@ -256,12 +252,9 @@ class BattleManagerAI(BattleManagerBase):
                 avatar.useTonic(ammoSkillId)
         else:
             currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
-
-            # ensure the avatar that has sent this skill request actually
-            # has their weapon drawn...
             if not isWeaponDrawn:
-                self.notify.debug('Cannot get other skill result for avatar %d, weapon %d was never drawn!' % (
-                    avatar.doId, currentWeaponId))
+                self.notify.debug('Cannot get other skill result for avatar %d, '
+                    'weapon %d was never drawn!' % (avatar.doId, currentWeaponId))
 
                 return None
 
