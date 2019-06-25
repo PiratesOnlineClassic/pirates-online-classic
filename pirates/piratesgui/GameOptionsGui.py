@@ -876,6 +876,7 @@ class GameOptionsGui(DirectFrame):
             self.reflectionRadios[0].check()
             self.specialEffectsRadios[0].check()
             self.textureDetailRadios[0].check()
+            self.antialiasingCheck['value'] = False
             self.compressedTextureCheck['value'] = True
             if self.shaderLevelCheck:
                 self.shaderLevelCheck['value'] = False
@@ -888,6 +889,7 @@ class GameOptionsGui(DirectFrame):
             self.reflectionRadios[1].check()
             self.specialEffectsRadios[1].check()
             self.textureDetailRadios[1].check()
+            self.antialiasingCheck['value'] = True
             self.compressedTextureCheck['value'] = True
             if self.shaderLevelCheck:
                 self.shaderLevelCheck['value'] = True
@@ -900,6 +902,7 @@ class GameOptionsGui(DirectFrame):
             self.reflectionRadios[2].check()
             self.specialEffectsRadios[2].check()
             self.textureDetailRadios[2].check()
+            self.antialiasingCheck['value'] = True
             self.compressedTextureCheck['value'] = True
             if self.shaderLevelCheck:
                 self.shaderLevelCheck['value'] = True
