@@ -371,7 +371,7 @@ class Options(OptionSpace):
         self.music = base.config.GetBool('audio-music-active', 1)
         self.music_volume = base.config.GetFloat('audio-music-volume', 1.0)
         self.ocean_visibility = base.config.GetInt('ocean-visibility', 0)
-        self.antialiasing = base.config.GetBool('antialiasing', 1)
+        self.antialiasing = base.config.GetBool('antialiasing', 0)
         self.runtime()
 
     def options_to_config(self):
@@ -510,7 +510,7 @@ class Options(OptionSpace):
         self.sound_volume = 1.0
         self.music = 1
         self.music_volume = 1.0
-        self.antialiasing = 1
+        self.antialiasing = 0
         self.gui_scale = 0.5
         self.special_effects = self.SpecialEffectsHigh
         self.texture_scale = 0.0
