@@ -310,7 +310,7 @@ class Options(OptionSpace):
                 self.ocean_visibility = 0
 
             self.simple_display_option = self.validate(int, 'simple_display_option', 3, [0, 1, 2, 3])
-            self.vsync = self.validate(int, 'vsync', 0)
+            self.vsync = self.validate(int, 'vsync', 1)
             self.frameRate = self.validate(int, 'frameRate', 0)
             state = True
         except:
@@ -378,7 +378,7 @@ class Options(OptionSpace):
         self.music_volume = base.config.GetFloat('audio-music-volume', 1.0)
         self.ocean_visibility = base.config.GetInt('ocean-visibility', 0)
         self.antialiasing = base.config.GetBool('antialiasing', 0)
-        self.vsync = base.config.GetBool('vsync', 0)
+        self.vsync = base.config.GetBool('vsync', 1)
         self.frameRate = base.config.GetBool('frame-rate', 0)
         self.runtime()
 
@@ -535,7 +535,7 @@ class Options(OptionSpace):
         self.mouse_look = 0
         self.gamma = self.gamma_save_offset
         self.gamma_enable = 0
-        self.vsync = 0
+        self.vsync = 1
         self.frameRate = 0
         self.cpu_frequency_warning = 1
         self.reserved10 = 0
