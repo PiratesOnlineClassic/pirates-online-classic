@@ -4,6 +4,7 @@ from direct.distributed.ClockDelta import *
 from pirates.battle.Teamable import Teamable
 from pirates.ship import ShipGlobals
 from pirates.piratesbase import PiratesGlobals
+from pirates.world.DistributedOceanGridAI import DistributedOceanGridAI
 from pirates.movement.DistributedMovingObjectAI import DistributedMovingObjectAI
 from pirates.distributed.DistributedCharterableObjectAI import DistributedCharterableObjectAI
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
@@ -223,6 +224,24 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             childObj.b_setShipId(0)
             childObj.b_setActiveShipId(0)
             childObj.b_setCrewShipId(0)
+
+        DistributedMovingObjectAI.handleChildLeave(self, childObj, zoneId)
+        DistributedCharterableObjectAI.handleChildLeave(self, childObj, zoneId)
+
+    def setLocation(self, parentId, zoneId):
+        parentObj = self.air.doId2do.get(parentId)
+        if parentObj is not None and isinstance(parentObj, DistributedOceanGridAI):
+            for avatarId in self.crew:
+                avatar = self.air.doId2do.get(avatarId)
+                if avatar is not None:
+                    self.air.worldGridManager.handleLocationChanged(parentObj, avatar, zoneId)
+
+        DistributedMovingObjectAI.setLocation(self, parentId, zoneId)
+        DistributedCharterableObjectAI.setLocation(self, parentId, zoneId)
+
+    def handleChildLeave(self, childObj, zoneId):
+        if isinstance(childObj, DistributedPlayerPirateAI):
+            self.air.worldGridManager.clearAvatarInterest(self.getParentObj(), childObj)
 
         DistributedMovingObjectAI.handleChildLeave(self, childObj, zoneId)
         DistributedCharterableObjectAI.handleChildLeave(self, childObj, zoneId)
