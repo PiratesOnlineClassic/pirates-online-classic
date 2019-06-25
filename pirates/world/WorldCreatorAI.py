@@ -253,6 +253,43 @@ class MovementLinkManager(object):
         for movementLinkData in movementLinks:
             self.removeMovementLink(uniqueId, movementLinkData)
 
+
+class OceanArea(object):
+
+    def __init__(self, startPos, endPos, oceanName, oceanUid):
+        self.startPos = startPos
+        self.endPos = endPos
+        self.oceanName = oceanName
+        self.oceanUid = oceanUid
+
+
+class OceanAreaManager(object):
+
+    def __init__(self, air):
+        self.air = air
+        self.oceanAreas = {}
+
+    def addOceanArea(self, parentUid, oceanArea):
+        oceanAreas = self.oceanAreas.setdefault(parentUid, {})
+        assert(parentUid not in oceanAreas)
+        oceanAreas[oceanArea.oceanUid] = oceanArea
+
+    def removeOceanArea(self, parentUid, oceanUid):
+        oceanAreas = self.oceanAreas.get(parentUid)
+        assert(parentUid is not None)
+        del oceanAreas[oceanUid]
+
+    def registerOceanAreaData(self, parentUid, worldFileName):
+        fileData = self.air.worldCreator.openFile(worldFileName + '.py')
+        for oceanAreaData in fileData.get(WorldDataGlobals.OCEAN_AREAS, []):
+            oceanArea = OceanArea(*oceanAreaData)
+            self.addOceanArea(parentUid, oceanArea)
+
+    def unregisterOceanAreaData(self, parentUid):
+        assert(parentUid in self.oceanAreas)
+        del self.oceanAreas[parentUid]
+
+
 class WorldCreatorAI(WorldCreatorBase, DirectObject):
     notify = directNotify.newCategory('WorldCreatorAI')
 
@@ -270,6 +307,7 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
         self.locatorManager = LocatorManager(self.air)
         self.connectorManager = ConnectorManager(self.air)
         self.movementLinkManager = MovementLinkManager(self.air)
+        self.oceanAreaManager = OceanAreaManager(self.air)
 
     @classmethod
     def isObjectInCurrentGamePhase(cls, object):
@@ -346,17 +384,18 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
         objParent = None
 
         if objType == ObjectList.AREA_TYPE_WORLD_REGION:
-            objParent = self.createWorldInstance(object, parent, parentUid, objKey, dynamic)
+            objParent = self.createWorldInstance(object, parent, parentUid, objKey, dynamic, fileName)
         else:
-            newObj = self.world.builder.createObject(objType, object, parent, parentUid, objKey, dynamic,
-                parentIsObj, fileName, actualParentObj)
+            newObj = self.world.builder.createObject(objType, object, parent, parentUid, objKey, dynamic, parentIsObj, fileName, actualParentObj)
 
         return (newObj, objParent)
 
-    def createWorldInstance(self, objectData, parent, parentUid, objKey, dynamic):
+    def createWorldInstance(self, objectData, parent, parentUid, objKey, dynamic, fileName=None):
         worldFileName = self.getObjectFilenameByUid(objKey)
-        worldName = objectData.get('Name', '')
+        if not worldFileName:
+            worldFileName = fileName
 
+        worldName = objectData.get('Name', '')
         if worldFileName == WorldGlobals.PiratesTutorialSceneFileBase:
             self.world = DistributedPiratesTutorialWorldAI(self.air)
         elif worldFileName == 'BlackpearlWorld':
@@ -376,9 +415,9 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
         self.world.setUniqueId(objKey)
         self.world.setName(worldName)
         self.world.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
-
         if parent is None:
             self.worldDict = objectData
 
         self.air.uidMgr.addUid(self.world.getUniqueId(), self.world.doId)
+        self.oceanAreaManager.registerOceanAreaData(objKey, worldFileName)
         return self.world
