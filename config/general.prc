@@ -72,6 +72,8 @@ prefer-parasite-buffer 1
 force-parasite-buffer 1
 hardware-animated-vertices #t
 textures-auto-power-2 #t
+framebuffer-multisample 1
+multisamples 2
 
 # Performance:
 lock-to-one-cpu #f

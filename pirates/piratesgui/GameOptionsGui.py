@@ -286,6 +286,7 @@ class GameOptionsGui(DirectFrame):
                 PLocalizer.GameOptionsMedium,
                 PLocalizer.GameOptionsHigh], 0.8, self.textureDetailRadiosCB)
         y += oy
+        y2 = y
         text = PLocalizer.GameOptionsTextureCompressed + ' *'
         self.create_label(x, y, text, parent, sl)
         self.compressedTextureCheck = CheckButton(parent = parent, relief = None, scale = sc, pos = (x + 0.42, 0, y + 0.015), command = self.compressedTextureCheckCB)
@@ -309,6 +310,12 @@ class GameOptionsGui(DirectFrame):
         text = PLocalizer.GameOptionsRestartRequired
         y += oy
         self.create_label(x, y, text, parent, 0.9, color = (0.7, 0.7, 0.7, 1))
+
+        x2 = x + 0.55
+        text = PLocalizer.GameOptionsAntialiasing + ' *'
+        self.create_label(x2, y2, text, parent, sl)
+        self.antialiasingCheck = CheckButton(parent = parent, relief = None, scale = sc, pos = (x2 + 0.28, 0, y2), command = self.antiliasingCheckCB)
+
     
     def setupDisplayFrame(self):
         self.displayFrame = DirectFrame(parent = self.customFrame, relief = None)
@@ -590,6 +597,7 @@ class GameOptionsGui(DirectFrame):
         self.characterDetailRadios[self.gameOptions.options.reflection].check()
         self.terrainDetailRadios[self.gameOptions.options.terrain_detail_level].check()
         self.aggressiveMemoryCheck['value'] = self.gameOptions.options.memory
+        self.antialiasingCheck['value'] = self.gameOptions.options.antialiasing
         self.soundEffectCheck['value'] = self.gameOptions.options.sound
         self.sound_volume_slider['value'] = self.gameOptions.options.sound_volume
         self.musicCheck['value'] = self.gameOptions.options.music
@@ -759,6 +767,16 @@ class GameOptionsGui(DirectFrame):
         
         self.gameOptions.options.music = val
         base.enableMusic(val)
+        self.update()
+
+    def antiliasingCheckCB(self, val):
+        if self.gameOptions is None:
+            return None
+
+        if self.gameOptions.options.antialiasing != val:
+            self.gameOptions.display_restart_dialog()
+
+        self.gameOptions.options.antialiasing = val
         self.update()
 
     def invertMouseCheckCB(self, val):

@@ -196,6 +196,8 @@ class Options(OptionSpace):
                 self.write_integer(output_file, self.ocean_visibility)
                 self.write_string(output_file, 'simple_display_option ')
                 self.write_integer(output_file, self.simple_display_option)
+                self.write_string(output_file, 'antialiasing')
+                self.write_integer(output_file, self.antialiasing)
                 output_file.close()
                 state = True
         except:
@@ -277,6 +279,7 @@ class Options(OptionSpace):
             self.sound_volume = self.validate(float, 'sound_volume', 1.0)
             self.music = self.validate(int, 'music', 1)
             self.music_volume = self.validate(float, 'music_volume', 1.0)
+            self.antialiasing = self.validate(int, 'antialiasing', 1)
             self.gui_scale = self.validate(float, 'gui_scale', 0.5)
             self.special_effects = self.validate(int, 'special_effects', 2)
             self.texture_scale = self.validate(float, 'texture_scale', 1.0)
@@ -368,6 +371,7 @@ class Options(OptionSpace):
         self.music = base.config.GetBool('audio-music-active', 1)
         self.music_volume = base.config.GetFloat('audio-music-volume', 1.0)
         self.ocean_visibility = base.config.GetInt('ocean-visibility', 0)
+        self.antialiasing = base.config.GetBool('antialiasing', 1)
         self.runtime()
 
     def options_to_config(self):
@@ -460,6 +464,9 @@ class Options(OptionSpace):
         except:
             pass
 
+        if self.antialiasing:
+            base.render.setAntialias(AntialiasAttrib.MAuto)
+
         if base.win and base.win.getGsg():
             if self.gamma_enable:
                 base.win.getGsg().setGamma(self.optionsGammaToGamma(self.gamma))
@@ -503,6 +510,7 @@ class Options(OptionSpace):
         self.sound_volume = 1.0
         self.music = 1
         self.music_volume = 1.0
+        self.antialiasing = 1
         self.gui_scale = 0.5
         self.special_effects = self.SpecialEffectsHigh
         self.texture_scale = 0.0
