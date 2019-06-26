@@ -70,7 +70,7 @@ goto :READCONFIG
     ) else if %INPUT%==4 (
         set POC_GAMESERVER=%PRODUCTION_SERVER%
     ) else if %INPUT%==5 (
-        set /P POC_GAMESERVER=Game Server IP: 
+        set /P POC_GAMESERVER=Client Agent IP: 
     ) else (
         echo Invalid Option: %INPUT%; Defaulting to Localhost
         set POC_GAMESERVER=%LOCALHOST_SERVER%
