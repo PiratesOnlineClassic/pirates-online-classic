@@ -1,12 +1,17 @@
 @echo off
 title Pirates Online Classic - Client
 
+rem Config Settings
+set TRIALENDED=1
+
 rem User variables
 set USERPROFILE=%USERPROFILE%
 
 rem Set Advertising values
 set GAME_SHOW_ADDS=YES
-set GAME_SHOW_FIRSTADD=0
+if "%TRIALENDED%" == "1" (
+    set GAME_SHOW_FIRSTADD=0
+)
 
 rem Set Website Links
 set GAME_INGAME_UPGRADE=https://www.piratesclassic.com/
@@ -89,12 +94,12 @@ goto :CHOOSESERVER
     )
 
 :LAUNCH
-
     echo ====================================
     echo Starting Pirates Online Classic...
     echo Token: %POC_TOKEN%
     echo Gameserver: %POC_GAMESERVER%
     echo Environment: %GAME_ENVIRONMENT%
+    echo Trial Ended: %TRIALENDED%
     echo PPython: %PYTHON_CMD%
     echo ====================================
 
