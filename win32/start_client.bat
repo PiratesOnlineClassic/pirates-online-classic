@@ -15,15 +15,25 @@ set GAME_INGAME_MANAGE_ACCT=https://www.piratesclassic.com/account
 
 rem Constants
 SET LOCALHOST_SERVER=127.0.0.1
-SET SETTINGS_FILE=settings.env
+SET SETTINGS_FILE=default.env
 
 rem Start launch operation and questioning
 goto :READCONFIG
 
 :READCONFIG
-    echo Reading environment file: %SETTINGS_FILE%
-    for /F "tokens=*" %%A in (%SETTINGS_FILE%) do call SET %%A
-    goto :SETUPENVIRONMENT
+    set CONFIG_FILE=%SETTINGS_FILE%
+    set /P CONFIG_FILE=Environment File (Default: %CONFIG_FILE%): 
+
+    echo Reading environment file: %CONFIG_FILE%
+    if exist %CONFIG_FILE% (
+        for /F "tokens=*" %%A in (%CONFIG_FILE%) do call SET %%A
+        goto :SETUPENVIRONMENT
+    ) else (
+        echo Failed to locate environment file: %CONFIG_FILE%
+
+        pause
+        goto :EOF
+    )
 
 :SETUPENVIRONMENT
 
