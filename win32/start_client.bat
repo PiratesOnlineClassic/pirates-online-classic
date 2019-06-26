@@ -1,10 +1,10 @@
 @echo off
 title Pirates Online Classic - Client
 
-rem Config Settings
+rem Default config values
 set TRIAL_ENDED=NO
 set DEVELOPMENT_SERVER=142.44.142.239
-SET TEST_SERVER=142.44.142.240
+set TEST_SERVER=142.44.142.240
 set PRODUCTION_SERVER=142.44.142.241
 set GAME_SHOW_ADDS=YES
 
@@ -15,11 +15,18 @@ set GAME_INGAME_MANAGE_ACCT=https://www.piratesclassic.com/account
 
 rem Constants
 SET LOCALHOST_SERVER=127.0.0.1
+SET SETTINGS_FILE=settings.env
 
 rem Start launch operation and questioning
-goto :SETUPENVIRONMENT
+goto :READCONFIG
+
+:READCONFIG
+    echo Reading environment file: %SETTINGS_FILE%
+    for /F "tokens=*" %%A in (%SETTINGS_FILE%) do call SET %%A
+    goto :SETUPENVIRONMENT
 
 :SETUPENVIRONMENT
+
     rem User variables
     set USERPROFILE=%USERPROFILE%
 
