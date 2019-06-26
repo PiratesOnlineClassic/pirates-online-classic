@@ -2,15 +2,15 @@
 title Pirates Online Classic - Client
 
 rem Config Settings
-set TRIALENDED=1
+set TRIALENDED=NO
 
 rem User variables
 set USERPROFILE=%USERPROFILE%
 
 rem Set Advertising values
 set GAME_SHOW_ADDS=YES
-if "%TRIALENDED%" == "1" (
-    set GAME_SHOW_FIRSTADD=0
+if "%TRIALENDED%" == "YES" (
+    set GAME_SHOW_FIRSTADD=1
 )
 
 rem Set Website Links
