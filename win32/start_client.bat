@@ -44,7 +44,7 @@ goto :CHOOSESERVER
 :ENVIRONMENTTYPE
     rem Environment input
     set INPUT=DEV
-    set /P INPUT=Environment (LIVE, QA, TEST, DEV) (Default: DEV): 
+    set /P INPUT=Environment (LIVE, QA, TEST, DEV) (Default: %INPUT%): 
 
     for %%G in (LIVE QA TEST DEV) do (
         if "%INPUT%"=="%%G" (
@@ -67,8 +67,9 @@ goto :CHOOSESERVER
 :PLAYTOKEN
     rem PlayToken input
     set POC_TOKEN=dev
-    set POC_TOKEN=Token (Default: dev): || ^
-
+    echo Set Account Token (Default: %POC_TOKEN%)
+    set /P POC_TOKEN=Token:
+    
     goto :FINDPYTHON
 
 :FINDPYTHON
