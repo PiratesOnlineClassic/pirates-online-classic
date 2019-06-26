@@ -34,6 +34,9 @@ ppythona -h >nul 2>&1 && (
     set PYTHON_CMD=ppython
 )
 
+rem Environment variables
+set GAME_ENVIRONMENT=DEV
+
 echo ====================================
 echo Starting Pirates Online Classic...
 echo Token: %POC_TOKEN%
