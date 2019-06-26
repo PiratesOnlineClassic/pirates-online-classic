@@ -62,11 +62,12 @@ class SeaPatchRoot(object):
     def resetEnvironment(self):
         pass
 
-    def assignEnviormentFrom(self, todo1):
+    def assignEnvironmentFrom(self, todo1):
         pass
 
     def resetProperties(self):
         self.seaLevel = 0.0
+        self.waves = []
         self.center = NodePath('center')
         self.anchor = NodePath('anchor')
         self.overallSpeed = 0.0
@@ -158,9 +159,9 @@ class SeaPatchRoot(object):
         pass
 
     def calcNormal(self, height, ax, ay, dist):
-        h = self.getHeight(ax, ay, dist)
-        h1 = self.getHeight(ax - 0.3, ay + 0.2, dist)
-        h2 = self.getHeight(ax - 0.4, ay - 0.1, dist)
+        h = self.calcHeight(ax, ay, dist)
+        h1 = self.calcHeight(ax - 0.3, ay + 0.2, dist)
+        h2 = self.calcHeight(ax - 0.4, ay - 0.1, dist)
 
         a = LVecBase3f(ax - 0.3, ay + 0.2, h1)
         b = LVecBase3f(ax - 0.4, ay - 0.1, h2)
