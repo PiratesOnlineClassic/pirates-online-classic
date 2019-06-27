@@ -4,8 +4,8 @@ from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 from direct.task import Task
 from pirates.seapatch.LerpSeaPatchInterval import LerpSeaPatchInterval
-from pirates.seapatch.SeaPatchRoot import SeaPatchRoot
-from pirates.seapatch.SeaPatchNode import SeaPatchNode
+from libpirates import SeaPatchRoot
+from libpirates import SeaPatchNode
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.showbase.DirectObject import DirectObject
 from pirates.piratesbase import PiratesGlobals
@@ -18,12 +18,12 @@ from pirates.piratesgui.GameOptions import *
 
 class SeaPatch(Water):
     notify = directNotify.newCategory('SeaPatch')
-    
+
     def __init__(self, parentNP = render, reflection = None, todMgr = None, saintPatricksDay = False):
         Water.__init__(self, 'Sea')
         if base.win.getFbProperties().getStencilBits() == 0:
             self.use_water_bin = False
-        
+
         self.parentNP = parentNP
         self.followWater = base.config.GetBool('ships-follow-water', 1)
         self.damper = 0.2 * 180.0 / math.pi
@@ -36,7 +36,7 @@ class SeaPatch(Water):
         if base.camera:
             self.setCenter(base.camera)
             self.setAnchor(render)
-        
+
         patchNode = SeaPatchNode('seapatch', self.patch)
         patchNode.setWantReflect(0)
         self.patchNP = NodePath(patchNode)
@@ -53,20 +53,20 @@ class SeaPatch(Water):
             maximum_shader_model = len(shader_file_name_array) - 1
             if shader_model > maximum_shader_model:
                 shader_model = maximum_shader_model
-            
+
             file_name = shader_file_name_array[shader_model]
             shader_file_path = shader_directory + file_name
             self.shader = loader.loadShader(shader_file_path)
             if self.shader:
                 pass
-        
+
         if self.shader:
             self.seamodel = loader.loadModel('models/sea/SeaPatch34')
         elif self.saintPatricksDay:
             self.seamodel = loader.loadModel('models/sea/SeaPatch317')
             if self.seamodel == None:
                 self.seamodel = loader.loadModel('models/sea/SeaPatch31')
-            
+
         else:
             self.seamodel = loader.loadModel('models/sea/SeaPatch31')
         self.waterFloor = self.seamodel.find('**/water_floor')
@@ -104,7 +104,7 @@ class SeaPatch(Water):
             self.model.setAttrib(stencil)
             stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 0, mask, mask)
             self.model3.setAttrib(stencil)
-        
+
         self.flatSea = self.seamodel.find('**/flatsea')
         self.flat2 = self.flatSea.copyTo(self.flatSea)
         self.flat2.setScale(2, 2, 1)
@@ -117,10 +117,10 @@ class SeaPatch(Water):
             self.flatSea.setPos(0, 0, -1)
             if False:
                 self.flatSea.setScale(1.3)
-            
+
             if self.use_water_bin:
                 self.flatSea.setDepthWrite(0)
-        
+
         if self.use_water_bin:
             self.patchNP.setBin('water', 10)
         else:
@@ -129,7 +129,7 @@ class SeaPatch(Water):
         if self.getTodMgr():
             self.patchNP.setLightOff()
             self.patchNP.setLight(self.getTodMgr().alight)
-        
+
         (seaMin, seaMax) = self.seamodel.getTightBounds()
         seaDelta = seaMax - seaMin
         cp = CollisionPolygon(Point3(-1.0, -1.0, 0), Point3(1.0, -1.0, 0), Point3(1.0, 1.0, 0), Point3(-1.0, 1.0, 0))
@@ -163,16 +163,16 @@ class SeaPatch(Water):
 
         if self.water_panel != None:
             self.water_panel.setSeaPatch(self)
-        
+
         if self.enable_parameter_keys:
-            
+
             def showSeaPatchPanel():
                 from pirates.seapatch import SeaPatchPanel
                 self.spp = SeaPatchPanel.SeaPatchPanel()
                 self.spp.setPatch(self)
 
             self.accept('shift-5', showSeaPatchPanel)
-        
+
         self.setting_0()
         self.patchNP.setTransparency(0)
         buffer_width = base.config.GetInt('reflections-buffer-size', 512)
@@ -183,7 +183,7 @@ class SeaPatch(Water):
             self.seamodel.setFogOff()
             if self.use_alpha_map:
                 self.patchNP.setTransparency(1)
-            
+
             self.base_texture = loader.loadTexture('maps/oceanWater2' + self.texture_extension)
             self.texture_d = self.base_texture.loadRelated(InternalName.make('-d'))
             self.texture_n = self.base_texture.loadRelated(InternalName.make('-n'))
@@ -196,7 +196,7 @@ class SeaPatch(Water):
                 self.water_color_add_r = 0.0
                 self.water_color_add_g = 0.25
                 self.water_color_add_b = 0.0
-            
+
             self.water_r = 77
             self.water_g = 128
             self.water_b = 179
@@ -209,7 +209,7 @@ class SeaPatch(Water):
             if self.enable_water_panel:
                 self.water_panel.set_texture(default_water_color_texture_filename)
                 self.water_panel.set_shader(shader_file_path)
-        
+
         if True:
             if reflection:
                 self.reflection = reflection
@@ -229,7 +229,7 @@ class SeaPatch(Water):
             self.accept('timeOfDayChange', self._timeChange)
             if self.reflection:
                 self.reflection.createCard('water', 6)
-            
+
             self.setting_0()
             self.reflection_factor = 0.5
             self.set_reflection_parameters_np()
@@ -243,7 +243,7 @@ class SeaPatch(Water):
     def hide(self):
         self.patchNP.hide()
         self.hidden = True
-    
+
     def show(self):
         self.patchNP.show()
         self.hidden = False
@@ -253,12 +253,12 @@ class SeaPatch(Water):
             self.show()
         else:
             self.hide()
-    
+
     def getTodMgr(self):
         if self.todMgr:
             return self.todMgr
-        
-        
+
+
         try:
             return base.cr.timeOfDayManager
         except:
@@ -278,9 +278,9 @@ class SeaPatch(Water):
             self.notify.error('All floating objects not removed from seapatch. You must call removeFloatable')
             self.floats.clear()
             self.floatmasses.clear()
-        
+
         self.ignoreAll()
-    
+
     def disable(self):
         if self.enabled:
             self.enabled = False
@@ -301,16 +301,16 @@ class SeaPatch(Water):
     def setAnchor(self, anchor):
         self.anchor = anchor
         self.patch.setAnchor(anchor)
-    
+
     def setCenter(self, center):
         self.center = center
         self.patch.setCenter(center)
-    
+
     def camTask(self, task):
         refNode = base.cam
         if not refNode:
             return Task.cont
-        
+
         p = refNode.getPos(render)
         r = refNode.getHpr(render)
         self.patchNP.setPos(p.getX(), p.getY(), 0.0)
@@ -356,13 +356,13 @@ class SeaPatch(Water):
                 self.s = 2.0 * (1.0 / (x * sigma * math.sqrt(2.0 * math.pi))) * math.exp(-a / (2 * sigma * sigma))
                 if self.s < 0.0:
                     self.s = 0.0
-                
+
                 self.p = 80.0
             else:
                 self.s = 0.0
                 self.p = 80.0
             self.d = 1.0
-        
+
         self.update_water(task.time)
         self.setAnimateUv()
         return Task.cont
@@ -370,7 +370,7 @@ class SeaPatch(Water):
     def addFloatable(self, name, transNode, rotNode = None, mass = 1):
         if rotNode == None:
             rotNode = transNode
-        
+
         self.floats[name] = [
             transNode,
             rotNode]
@@ -380,7 +380,7 @@ class SeaPatch(Water):
         if self.floats.has_key(name):
             del self.floats[name]
             del self.floatmasses[name]
-    
+
     def showFrustum(self):
         base.cam.node().setCullCenter(base.camera)
         base.graphicsEngine.setPortalCull(1)
@@ -405,22 +405,22 @@ class SeaPatch(Water):
             p = -k * normal[1]
             rotNode.setR(r)
             rotNode.setP(p)
-        
+
         return Task.cont
-    
+
     def setReflection(self, tex, factor):
         if self.reflectStage == None:
             self.reflectStage = TextureStage('reflect')
             self.reflectStage.setTexcoordName('reflect')
             self.reflectStage.setSort(10)
-        
+
         if factor == None:
             self.reflectStage.setCombineRgb(TextureStage.CMAdd, TextureStage.CSTexture, TextureStage.COSrcColor, TextureStage.CSPrevious, TextureStage.COSrcColor)
         else:
             self.reflectStage.setCombineRgb(TextureStage.CMInterpolate, TextureStage.CSTexture, TextureStage.COSrcColor, TextureStage.CSPrevious, TextureStage.COSrcColor, TextureStage.CSConstant, TextureStage.COSrcAlpha)
             self.reflectStage.setColor(VBase4(1, 1, 1, factor))
         self.seamodel.setTexture(self.reflectStage, tex)
-    
+
     def clearReflection(self):
         if self.reflectStage != None:
             self.seamodel.clearTexture(self.reflectStage)
@@ -428,7 +428,7 @@ class SeaPatch(Water):
     def saveSeaPatchFile(self, filename):
         if not isinstance(filename, Filename):
             filename = Filename.fromOsSpecific(filename)
-        
+
         speed = self.patch.getOverallSpeed()
         radius = self.patch.getRadius()
         threshold = self.patch.getThreshold()
@@ -447,7 +447,7 @@ class SeaPatch(Water):
             mspeed.append(self.patch.getWaveSpeed(i))
             mdir.append(self.patch.getWaveDirection(i))
             mchoppy.append(self.patch.getChoppyK(i))
-        
+
         i1 = '    '
         i2 = i1 + i1
         i3 = i2 + i1
@@ -469,7 +469,7 @@ class SeaPatch(Water):
             out_file.write(i2 + 'patch.setWaveFunc(%s, %s)\n' % (i, self.__formatWaveFunc(self.patch.getWaveFunc(i))))
             if self.patch.getWaveFunc(i) == SeaPatchRoot.WFSin:
                 out_file.write(i2 + 'patch.setWaveDirection(' + str(i) + ', Vec2(%.4f, %.4f))\n' % (mdir[i][0], mdir[i][1]))
-            
+
             out_file.write(i2 + 'patch.setChoppyK(' + str(i) + ', %d)\n' % mchoppy[i])
             out_file.write(i2 + 'patch.setWaveAmplitude(%s, %.4f)\n' % (i, mamplitude[i]))
             out_file.write(i2 + 'patch.setWaveLength(%s, %.4f)\n' % (i, mlength[i]))
@@ -493,11 +493,11 @@ class SeaPatch(Water):
         if patch == None:
             patch = SeaPatchRoot()
             patch.assignEnvironmentFrom(self.patch)
-        
+
         patch.resetProperties()
         if not isinstance(filename, Filename):
             filename = Filename.fromOsSpecific(filename)
-        
+
         spfSearchPath = DSearchPath()
         if __debug__:
             spfSearchPath.appendDirectory(Filename('../resources/phase_2/etc'))
@@ -512,10 +512,10 @@ class SeaPatch(Water):
             data = data.replace('\r', '')
             exec data
         return patch
-    
+
     def loadSeaPatchFile(self, filename):
         self.loadSeaPatchFileExt(filename, patch = self.patch)
-    
+
     def lerpToSeaPatchFile(self, filename, duration, name = None, blendType = 'easeInOut'):
         newpatch = self.loadSeaPatchFileExt(filename)
         newpatch.setCenter(self.center)
@@ -527,37 +527,37 @@ class SeaPatch(Water):
         p3 = Point3(x, y, z)
         if node == None:
             node = self.anchor
-        
+
         ap = self.anchor.getRelativePoint(node, p3)
         cp = self.center.getRelativePoint(node, p3)
         dist = Vec2(cp[0], cp[1]).length()
         return self.patch.calcHeight(ap[0], ap[1], dist)
-    
+
     def calcFilteredHeight(self, x = 0, y = 0, z = 0, minWaveLength = 0, node = None):
         p3 = Point3(x, y, z)
         if node == None:
             node = self.anchor
-        
+
         ap = self.anchor.getRelativePoint(node, p3)
         cp = self.center.getRelativePoint(node, p3)
         dist = Vec2(cp[0], cp[1]).length()
         return self.patch.calcFilteredHeight(ap[0], ap[1], minWaveLength, dist)
-    
+
     def calcHeightForMass(self, x = 0, y = 0, z = 0, node = None, mass = 1, area = 1):
         p3 = Point3(x, y, z)
         if node == None:
             node = self.anchor
-        
+
         ap = self.anchor.getRelativePoint(node, p3)
         cp = self.center.getRelativePoint(node, p3)
         dist = Vec2(cp[0], cp[1]).length()
         return self.patch.calcHeightForMass(ap[0], ap[1], dist, mass, area)
-    
+
     def calcHeightAndNormal(self, x = 0, y = 0, z = 0, node = None):
         p3 = Point3(x, y, z)
         if node == None:
             node = self.anchor
-        
+
         ap = self.anchor.getRelativePoint(node, p3)
         cp = self.center.getRelativePoint(node, p3)
         dist = Vec2(cp[0], cp[1]).length()
@@ -570,7 +570,7 @@ class SeaPatch(Water):
         p3 = Point3(x, y, z)
         if node == None:
             node = self.anchor
-        
+
         ap = self.anchor.getRelativePoint(node, p3)
         cp = self.center.getRelativePoint(node, p3)
         dist = Vec2(cp[0], cp[1]).length()
@@ -617,7 +617,7 @@ class SeaPatch(Water):
         elif stateId == PiratesGlobals.TOD_HALLOWEEN or stateId == PiratesGlobals.TOD_FULLMOON or stateId == PiratesGlobals.TOD_HALF2FULLMOON or stateId == PiratesGlobals.TOD_FULL2HALFMOON:
             highColor = Vec4(1.0, 1.0, 1.0, 0.5)
             lowColor = Vec4(0.5, 0.25, 0.6, 0.8)
-        
+
         self.patch.setHighColor(highColor)
         self.patch.setLowColor(lowColor)
 
@@ -630,7 +630,7 @@ class SeaPatch(Water):
             self.waterFloor.stash()
 
     maintenanceTaskName = 'maintenanceTask'
-    
+
     def initialize(self):
         self.time = 0.0
         self.cacheTime = 0.0
@@ -644,7 +644,7 @@ class SeaPatch(Water):
         self.updateTimeInSeconds = updateTimeInSeconds
         self.cacheUpdateTimeInSeconds = cacheUpdateTimeInSeconds
         taskMgr.add(self.maintenanceTask, self.maintenanceTaskName, priority = taskPriority)
-    
+
     def maintenanceFunction(self):
         models_freed = 1
         textures_freed = 1
@@ -662,41 +662,41 @@ class SeaPatch(Water):
         if task.time - self.time >= self.updateTimeInSeconds:
             self.maintenanceFunction()
             self.time = task.time
-        
+
         if task.time - self.cacheTime >= self.cacheUpdateTimeInSeconds:
             self.clearCachesFunction()
             self.cacheTime = task.time
-        
+
         return Task.cont
-    
+
     def getSpecialEffectsLevel(self):
-        
+
         try:
             level = base.options.getSpecialEffectsSetting()
         except:
             level = Options.SpecialEffectsHigh
 
         return level
-    
+
     def setAnimateUv(self):
         animate = True
         if self.getSpecialEffectsLevel() == Options.SpecialEffectsLow:
             self.patch.animateUv(False)
         else:
             self.patch.animateUv(True)
-    
+
     def addMotionTrail(self, parent):
         if self.motion_trail == None:
             motion_trail = MotionTrail('sword_motion_trail', parent)
             if False:
                 axis = loader.loadModel('models/misc/xyzAxis')
                 axis.reparentTo(parent)
-            
+
             test_vertex_list = [
                 Vec4(0.0, 0.4, 0.0, 1.0),
                 Vec4(0.0, 2.0, 0.0, 1.0),
                 Vec4(-0.55, 2.95, 0.0, 1.0)]
-            
+
             def test_vertex_function(motion_trail_vertex, vertex_id, context):
                 return test_vertex_list[vertex_id]
 
@@ -708,27 +708,27 @@ class SeaPatch(Water):
                     if index == 0:
                         motion_trail_vertex.start_color = Vec4(0.0, 0.25, 0.0, 1.0)
                         motion_trail_vertex.end_color = Vec4(0.0, 0.0, 0.0, 1.0)
-                    
+
                     if index == 1:
                         motion_trail_vertex.start_color = Vec4(0.25, 0.0, 0.0, 1.0)
                         motion_trail_vertex.end_color = Vec4(0.0, 0.0, 0.0, 1.0)
-                    
+
                     if index == 2:
                         motion_trail_vertex.start_color = Vec4(0.0, 0.0, 1.0, 1.0)
                         motion_trail_vertex.end_color = Vec4(0.0, 0.0, 0.0, 1.0)
-                    
+
                     if index == 3:
                         motion_trail_vertex.start_color = Vec4(0.0, 1.0, 1.0, 1.0)
                         motion_trail_vertex.end_color = Vec4(0.0, 0.0, 0.0, 1.0)
-                    
+
                     if index == 4:
                         motion_trail_vertex.start_color = Vec4(1.0, 1.0, 0.0, 1.0)
                         motion_trail_vertex.end_color = Vec4(0.0, 0.0, 0.0, 1.0)
-                    
+
                     if index == 0:
                         motion_trail_vertex.start_color = Vec4(0.0, 0.1, 0.0, 1.0)
                         motion_trail_vertex.end_color = Vec4(0.0, 0.0, 0.0, 1.0)
-                    
+
                     if index == 1:
                         motion_trail_vertex.start_color = Vec4(0.25, 0.0, 0.0, 1.0)
                         motion_trail_vertex.end_color = Vec4(0.0, 0.0, 0.0, 1.0)
@@ -769,7 +769,3 @@ class SeaPatch(Water):
                 angle = (1.0 - time) * 90.0
                 matrix = Mat4.rotateMat(angle, axis)
                 self.motion_trail.update_motion_trail(time, matrix)
-            
-        
-
-
