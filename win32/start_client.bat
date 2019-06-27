@@ -15,7 +15,7 @@ set GAME_INGAME_MANAGE_ACCT=https://www.piratesclassic.com/account
 
 rem Constants
 SET LOCALHOST_SERVER=127.0.0.1
-SET SETTINGS_FILE=default.env
+SET SETTINGS_FILE=../config/default.env
 
 rem Start launch operation and questioning
 goto :READCONFIG
@@ -131,23 +131,26 @@ goto :READCONFIG
         set PYTHON_CMD=ppython
     )
 
+    rem Verify Panda3D install
     %PYTHON_CMD% -h >nul 2>&1 && (
-        goto :LAUNCH
+        echo Panda3D Python located under command: %PYTHON_CMD%
     ) || (
         echo Failed to locate Panda3D python
         pause
         goto :EOF
     )
+    rem Launch client
+    goto :LAUNCH
 
 :LAUNCH
-    echo ====================================
+    echo =============================================
     echo Starting Pirates Online Classic...
     echo Token: %POC_TOKEN%
     echo Gameserver: %POC_GAMESERVER%
     echo Environment: %GAME_ENVIRONMENT%
     echo Trial Ended: %TRIAL_ENDED%
     echo PPython: %PYTHON_CMD%
-    echo ====================================
+    echo =============================================
 
     cd ../
     goto :RUN
@@ -155,7 +158,15 @@ goto :READCONFIG
 :RUN
     rem Start the game using the PYTHON_CMD variable
     %PYTHON_CMD% -m pirates.piratesbase.PiratesStart
-
     pause
-    echo Reloading client.
+
+    rem Reload Client
+    for /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set mydate=%%c-%%a-%%b)
+    for /f "tokens=1-2 delims=/:" %%a in ('time /t') do (set mytime=%%a%%b)
+    set RELOAD_TIME=%mydate%_%mytime%
+
+    echo =============================================
+    echo Reloading client. Time: %RELOAD_TIME%
+    echo =============================================
+
     goto :RUN
