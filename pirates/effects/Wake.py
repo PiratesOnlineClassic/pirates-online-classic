@@ -11,6 +11,7 @@ from otp.otpbase import OTPRender
 from pirates.ship import ShipGlobals
 from pirates.effects.WaterShadow import WaterShadow
 from pirates.piratesbase import PiratesGlobals
+from libpirates import SeaPatchNode
 
 class Wake(PooledEffect):
     MinWakeVelocity = 6.0
@@ -19,7 +20,7 @@ class Wake(PooledEffect):
     TurnFactor = -2.0
     AvgCount = 50
     TexStage = TextureStage.getDefault()
-    
+
     def __init__(self):
         PooledEffect.__init__(self)
         self.taskName = None
@@ -52,7 +53,7 @@ class Wake(PooledEffect):
             if self.use_depth_offset:
                 depth_offset = DepthOffsetAttrib.make(5)
                 self.spNP.setAttrib(depth_offset)
-            
+
         else:
             self.wake.setBin('ground', -7)
             self.bowWave.setBin('fixed', 0)
@@ -70,7 +71,7 @@ class Wake(PooledEffect):
             mask = 0xFFFFFFFFL
             stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
             self.spNP.setAttrib(stencil)
-        
+
         self.shadow = None
 
     def attachToShip(self, ship):
@@ -91,7 +92,7 @@ class Wake(PooledEffect):
         model = ShipGlobals.getModelClass(ship.shipClass)
         if model == ShipGlobals.DINGHY:
             string = 'DINGHY'
-        
+
         if model == ShipGlobals.INTERCEPTORL1:
             scale_x = 0.7
             scale_y = 0.55
@@ -216,10 +217,10 @@ class Wake(PooledEffect):
             string = 'BLACK_PEARL'
         if model == ShipGlobals.DAUNTLESS:
             string = 'DAUNTLESS'
-        
+
         if model == ShipGlobals.FLYING_DUTCHMAN:
             string = 'FLYING_DUTCHMAN'
-        
+
         if draw_shadow:
             if self.shadow_model:
                 water_shadow = WaterShadow('p_ship_shadow', self.shadow_model, ship)
@@ -227,15 +228,15 @@ class Wake(PooledEffect):
                 water_shadow.setScale(scale_x, scale_y, scale_z)
                 if not hasattr(base, 'pe'):
                     water_shadow.setHpr(180, 0, 0)
-                
+
                 self.shadow = water_shadow
             else:
                 print 'ERROR: -------------- shadow model not found for ship class', ship.shipClass
-        
+
         self.wake.setScale(wake_scale)
         if not hasattr(base, 'pe'):
             self.wake.setHpr(180, 0, 0)
-        
+
         self.wake.setPos(wake_offset_x, wake_offset_y, wake_offset_z)
         self.wake.reparentTo(ship)
         self.wake.hide()
@@ -245,7 +246,7 @@ class Wake(PooledEffect):
         self.wake.show()
         taskMgr.add(self.__animate, self.taskName, extraArgs = [
             ship])
-    
+
     def stopAnimate(self):
         if self.wake:
             if not self.wake.isEmpty():
@@ -324,7 +325,7 @@ class Wake(PooledEffect):
         self.bowWave.detachNode()
         if self.pool and self.pool.isUsed(self):
             self.pool.checkin(self)
-        
+
         if self.shadow != None:
             self.shadow.detachNode()
 
@@ -334,7 +335,5 @@ class Wake(PooledEffect):
         self.bowWave.removeNode()
         if self.shadow != None:
             self.shadow.removeNode()
-        
+
         PooledEffect.destroy(self)
-
-
