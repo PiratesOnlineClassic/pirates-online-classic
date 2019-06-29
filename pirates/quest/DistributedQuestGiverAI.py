@@ -17,5 +17,8 @@ class DistributedQuestGiverAI(DistributedObjectAI):
     def d_playDialogMovie(self, avatarId, dialogId):
         self.sendUpdateToAvatarId(avatarId, 'playDialogMovie', [dialogId])
 
+    def d_setQuestsCompleted(self, avatarId, menuFlag=1, completedContainerIds=[], completedChainedQuestIds=[], completedQuestIds=[], completedQuestDoIds=[]):
+        self.sendUpdateToAvatarId(avatarId, 'setQuestsCompleted', [menuFlag, completedContainerIds, completedChainedQuestIds, completedQuestIds, completedQuestDoIds])
+
     def dialogMovieComplete(self):
         messenger.send('dialog-complete-%d' % self.doId)
