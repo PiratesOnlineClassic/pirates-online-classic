@@ -1,6 +1,6 @@
 from pandac.PandaModules import *
 from otp.otpbase import OTPRender
-from pirates.seapatch.SeaPatchNode import SeaPatchNode
+from libpirates import SeaPatchNode
 
 class WaterShadow(NodePath):
 

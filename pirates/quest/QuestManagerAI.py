@@ -227,7 +227,7 @@ class QuestManagerAI(DirectObject):
                 return
 
             channel = avatar.getDISLid() << 32 | avatar.doId
-            self.air.setOwner(quest.doId, channel)
+            #self.air.setOwner(quest.doId, channel)
 
             # store the new quest object to the dictionary of quest objects
             # so we can keep track of it for later use...
@@ -362,7 +362,10 @@ class QuestManagerAI(DirectObject):
         self.__giveRewards(avatar, quest.getRewards())
 
         questStub = avatar.questStatus.getQuestStub(quest.getQuestId())
-        questStub.handleQuestComplete(quest, questStub.getContainer(quest.getQuestId()))
+        if questStub:
+            questStub.handleQuestComplete(quest, questStub.getContainer(quest.getQuestId()))
+        else:
+            self.notify.warning('Failed to call handleQuestComplete; %s does not have a questStub' % quest.getQuestId())
 
     def __completeTaskState(self, avatar, questEvent, callback=None):
         activeQuest = self.getQuest(avatar, questId=avatar.getActiveQuest())
@@ -419,6 +422,10 @@ class QuestManagerAI(DirectObject):
     def finalizeCutscene(self, avatar, quest, finalizeIndex=0, npc=None):
         taskStates = quest.getTaskStates()
         finalizeInfo = quest.questDNA.getFinalizeInfo()
+
+        # if an npc is present send the quest completed information
+        if npc:
+            npc.d_setQuestsCompleted(avatar.doId, completedQuestIds=[quest.getQuestId()], completedQuestDoIds=[quest.doId])
 
         def finalize(finalizeIndex):
             quest.setFinalizeStateIndex(finalizeIndex)

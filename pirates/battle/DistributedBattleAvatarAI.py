@@ -413,25 +413,20 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.d_setSkillEffects(self.skillEffects)
 
     def removeSkillEffect(self, effectId):
-        killList = []
-        for index in range(len(self.skillEffects)):
-            effect = self.skillEffects[index]
-            if effect[0] == effectId:
-                self.skillEffects.remove(index)
-                killList.append(effect)
+        for skillEffect in list(self.skillEffects):
+            if skillEffect[0] == effectId:
+                self.skillEffects.remove(skillEffect)
                 break
 
-        self.d_setSkillEffects(killList)
-        self.setSkillEffects(self.skillEffects)
+        self.d_setSkillEffects(self.skillEffects)
 
     def getSkillEffectCount(self, effectId):
-        found = 0
-        for index in range(len(self.skillEffects)):
-            effect = self.skillEffects[index]
-            if effect[0] == effectId:
-                found += 1
+        numSkillEffects = 0
+        for skillEffect in list(self.skillEffects):
+            if skillEffect[0] == effectId:
+                numSkillEffects += 1
 
-        return found
+        return numSkillEffects
 
     def getSkillEffects(self):
         return self.skillEffects

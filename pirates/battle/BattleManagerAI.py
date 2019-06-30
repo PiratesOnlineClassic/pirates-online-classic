@@ -17,6 +17,7 @@ from pirates.piratesbase import Freebooter
 from pirates.pirate import AvatarTypes
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
 from pirates.piratesbase import Freebooter
+from pirates.interact.DistributedInteractivePropAI import DistributedInteractivePropAI
 
 
 class BattleManagerAI(BattleManagerBase):
@@ -39,7 +40,6 @@ class BattleManagerAI(BattleManagerBase):
 
     def getRelativePosition(self, attacker, target):
         targetParent = target.getParentObj()
-
         if not targetParent:
             return 0
 
@@ -107,10 +107,9 @@ class BattleManagerAI(BattleManagerBase):
                 self.notify.warning('Freebooter (%d) attempted to use paid weapon (%d)' % (avatar.doId, currentWeaponId))
                 return None
 
-        obeysPirateCode = self.obeysPirateCode(avatar, target)
-
         # ensure the avatar that has sent this skill request obeys
         # the pirate code and can use the weapon on the target...
+        obeysPirateCode = self.obeysPirateCode(avatar, target)
         if not obeysPirateCode:
             self.notify.debug('Cannot get skill result for avatar %d, '
                 'does not obey pirate code!' % (avatar.doId))
@@ -160,13 +159,12 @@ class BattleManagerAI(BattleManagerBase):
                 return None
 
             # only update the experience for avatar's, enemies do not need experience...
-            experience = 0
             if isinstance(avatar, DistributedPlayerPirateAI):
                 experience = self.getModifiedAttackReputation(avatar, target, skillId, ammoSkillId)
                 if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEXPHOLIDAY) or avatar.hasTempDoubleXPReward():
                     experience *= 2
 
-            skillData[2] += experience
+                skillData[2] += experience
 
             # check to see if the avatar knows of any skills that are valid combos,
             # recent attacks are measured within a certain time frame...
@@ -181,9 +179,7 @@ class BattleManagerAI(BattleManagerBase):
             # made by avatars attacking the avatar's current target is a combo...
             for attackerDoId in self.air.targetMgr.getAttackers(target.doId):
                 attacker = self.air.doId2do.get(attackerDoId)
-                if not attacker:
-                    continue
-
+                assert(attacker is not None)
                 attacker.comboDiary.recordAttack(avatar.doId, skillId, targetEffects[0])
 
             # when the skill result is parry, this means that we've reversed the
@@ -214,7 +210,7 @@ class BattleManagerAI(BattleManagerBase):
                 target.addSkillEffect(WeaponGlobals.C_ATTUNE, 0, avatar.doId)
 
             # handle interactive props
-            if hasattr(target, 'd_propSlashed'):
+            if isinstance(target, DistributedInteractivePropAI):
                 target.d_propSlashed()
         else:
             self.notify.debug('Cannot get skill result for avatar %d, '
@@ -265,6 +261,7 @@ class BattleManagerAI(BattleManagerBase):
         if not target.getDamagable():
             return
 
+        # cannot damage the money
         if target.getAvatarType() == AvatarTypes.Monkey:
             return
 
@@ -277,6 +274,10 @@ class BattleManagerAI(BattleManagerBase):
     def applySkillEffect(self, target, targetEffects, attacker, skillId, ammoSkillId):
         targetEffectId = targetEffects[2]
         if not targetEffectId:
+            return
+
+        # cannot apply a skill effect to the money
+        if target.getAvatarType() == AvatarTypes.Monkey:
             return
 
         targetEffectDuration = WeaponGlobals.getAttackDuration(skillId, ammoSkillId)
@@ -345,14 +346,10 @@ class BattleManagerAI(BattleManagerBase):
         if not skillId:
             return
 
-        ammoSkillId, timestamp, reputation = attacker.battleSkillDiary.getSkill(skillId)
-
         # now that we have the avatar's current skill, check the range of,
         # that specific weapon...
+        ammoSkillId, timestamp, reputation = attacker.battleSkillDiary.getSkill(skillId)
         if not self.getTargetInRange(attacker, target, skillId, ammoSkillId):
-            self.notify.debug('Attacker %d has gone out of range of target %d with skill %d!' % (
-                attacker.doId, target.doId, skillId))
-
             self.air.targetMgr.removeAttacker(target, attacker)
 
     def clearAttacker(self, target, attacker):
@@ -397,15 +394,6 @@ class BattleManagerAI(BattleManagerBase):
             # adding onto the overall reputation rewarded
             overallReputation += reputation
             inventory.setReputation(reputationCategoryId, inventory.getReputation(reputationCategoryId) + reputation)
-
-        # clear the avatar's skill diary since they've been given their
-        # reward in full...
-        attacker.battleSkillDiary.clear()
-        attacker.comboDiary.clear()
-
-        # clear the avatars sticky target if present
-        if attacker.hasStickyTarget(target.doId):
-            attacker.requestRemoveStickyTargets([target.doId])
 
         # update the avatar's overall reputation based on all the skills they
         # used to kill the target
