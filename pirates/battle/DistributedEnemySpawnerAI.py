@@ -213,8 +213,8 @@ class SpawnNodeBase:
             try:
                 npc.loadBossData(bossId, avatarType)
             except Exception as e:
-                self.notify.warning('Failed to load boss data for boss: %s' % self.objKey)
                 npc.setAvatarType(avatarType.getNonBossType())
+                self.notify.warning('Failed to load boss data for boss (%s): %s' % (str(npc.getAvatarType()), self.objKey))
                 bossId = ''
 
         avType = self.objectData.get('Type', '')
