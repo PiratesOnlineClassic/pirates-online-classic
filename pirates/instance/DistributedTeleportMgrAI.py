@@ -111,6 +111,17 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
         return None
 
+    def getWorldNames(self, instanceType):
+        names = []
+        for object in self.air.doId2do.values():
+            if not object or not isinstance(object, DistributedInstanceBaseAI):
+                continue
+
+            if object.getType() == instanceType:
+                names.append(object.getFileName())
+
+        return names
+
     def d_initiateTeleport(self, avatar, instanceType=None, instanceName=None, locationUid=None, spawnPt=None):
         if avatar.doId in self.avatar2fsm:
             self.notify.warning('Cannot initiate teleport for avatar %d, '
@@ -144,12 +155,18 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
             return
 
-        gameArea = self.air.uidMgr.justGetMeMeObject(locationUid)
+        gameArea = world.builder.getObject(uniqueId=locationUid)
         if not gameArea:
-            self.notify.warning('Cannot initiate teleport for unknown '
-                'gameArea: locationUid=%r' % locationUid)
 
-            return
+            # Attempt to select a default island if no area was supplied
+            islands = world.builder.getIslands()
+            if not len(islands):
+                self.notify.warning('Cannot initiate teleport for unknown '
+                    'gameArea: locationUid=%r' % locationUid)
+
+                return
+
+            gameArea = islands[0]
 
         if not spawnPt:
             # TODO FIXME!
@@ -221,6 +238,19 @@ def areaTeleport(areaUid):
     simbase.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
     return 'Teleporting avatar %d to area: %s...' % (avatar.doId, locationUid)
 
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, str, str])
+def world(instanceType, worldName, locationUid=None):
+    """
+    Teleport command for traveling to different worlds
+    """
+
+    names = simbase.air.teleportMgr.getWorldNames(instanceType)
+    if worldName not in names:
+        return 'Invalid world location: %s' % worldName
+
+    avatar = spellbook.getTarget()
+    simbase.air.teleportMgr.d_initiateTeleport(avatar, instanceType=instanceType, instanceName=worldName, locationUid=locationUid)
+    return 'Teleporting avatar %d to world: %s...' % (avatar.doId, worldName)
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def tp(locationName):

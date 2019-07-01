@@ -18,6 +18,18 @@ class ClientAreaBuilderAI(DirectObject):
         self.parent = parent
         self.objectList = {}
 
+    def getIslands(self):
+        from pirates.world.DistributedIslandAI import DistributedIslandAI
+        return self.findObjectsOfClass(DistributedIslandAI)
+
+    def findObjectsOfClass(self, objectClass):
+        objects = []
+        for object in self.objectList.values():
+            if isinstance(object, objectClass):
+                objects.append(object)
+
+        return objects
+
     def addObject(self, object, uniqueId=None):
         self.air.uidMgr.addUid(uniqueId or object.getUniqueId(), object.doId)
         self.objectList[object.doId] = object
@@ -27,7 +39,7 @@ class ClientAreaBuilderAI(DirectObject):
         del self.objectList[object.doId]
 
     def getObject(self, doId=None, uniqueId=None):
-        for object in self.objectList:
+        for object in self.objectList.values():
             if object.doId == doId or object.getUniqueId() == uniqueId:
                 return object
 
@@ -158,7 +170,6 @@ class ClientAreaBuilderAI(DirectObject):
 
     def createIsland(self, objectData, parent, parentUid, objKey, dynamic):
         from pirates.world.DistributedIslandAI import DistributedIslandAI
-
         islandWorldData = self.air.worldCreator.getIslandWorldDataByUid(objKey)
 
         (x, y, z) = islandWorldData.get('Pos', (0, 0, 0))
@@ -180,6 +191,7 @@ class ClientAreaBuilderAI(DirectObject):
                     island.setZoneSphereSize(*obj['Radi'])
                     island.setZoneSphereCenter(sphereCenter[0], sphereCenter[1])
 
+        self.notify.debug('Generated island %s (%s)' % (island.getName(), objKey))
         self.parent.generateChildWithRequired(island, PiratesGlobals.IslandAvailableZoneStart)
         self.addObject(island)
         self.air.worldCreator.linkManager.registerLinkData(objKey)

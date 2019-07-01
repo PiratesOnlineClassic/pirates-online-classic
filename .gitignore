@@ -139,3 +139,10 @@ cf2.txt
 
 # LibOTP
 libotp/
+
+# Compiled modules
+*.pyd
+
+# Documentation
+docs/
+*.csv

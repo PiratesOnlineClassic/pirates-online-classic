@@ -43,3 +43,22 @@ class MagicWordManagerAI(DistributedObjectAI):
 
         self.air.writeServerEvent('magic-word', invokerId=invokerId, invokerName=invoker.getName(), invokerAccess=invoker.getAdminAccess(), targetId=targetId,
                                   targetName=target.getName(), targetAccess=target.getAdminAccess(), command=word, response=response)
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def docs():
+    """
+    Generates helpful documentation regarding available server commands in a CSV file
+    """
+
+    import csv
+    rows = [['Name', 'Documentation', 'Types', 'Access']]
+    for magicwordKey in spellbook.words:
+        magicword = spellbook.words[magicwordKey]
+        access = magicword.access if magicword.access else '0'
+        rows.append([magicword.name, magicword.doc, magicword.types, access])
+
+    with open('serverdocs.csv', 'w') as docsFile:
+        writer = csv.writer(docsFile, delimiter=',', lineterminator='\n')
+        writer.writerows(rows)
+
+    return 'Command documentation generated'

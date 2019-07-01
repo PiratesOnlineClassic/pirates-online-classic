@@ -2730,6 +2730,8 @@ BossNames = {
             9: {
                 0: 'Stench'}}},
     1: {
+        0: {
+            1: 'Swordsman'},
         1: {
             0: {
                 0: 'Geoffrey Pain'},

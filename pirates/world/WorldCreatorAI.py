@@ -292,6 +292,7 @@ class OceanAreaManager(object):
 
 class WorldCreatorAI(WorldCreatorBase, DirectObject):
     notify = directNotify.newCategory('WorldCreatorAI')
+    notify.setInfo(True)
 
     def __init__(self, air):
         self.air = air
@@ -400,20 +401,20 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
             self.world = DistributedPiratesTutorialWorldAI(self.air)
         elif worldFileName == 'BlackpearlWorld':
             self.world = TreasureMapBlackPearlAI(self.air)
+        elif worldFileName == WorldGlobals.PiratesWorldSceneFileBase:
+            self.world = DistributedMainWorldAI(self.air)
+        elif 'Parlor' in worldFileName:
+            self.world = DistributedInstanceWorldAI(self.air)
+            self.world.setType(PiratesGlobals.INSTANCE_PG)
         else:
-            if worldName == '':
-                self.world = DistributedInstanceWorldAI(self.air)
-                self.world.setType(PiratesGlobals.INSTANCE_MAINSUB)
-            elif worldName == 'default':
-                self.world = DistributedMainWorldAI(self.air)
-            else:
-                self.notify.warning('Failed to generate world instance with '
-                    'unknown world name: %s!' % worldName)
+            self.world = DistributedInstanceWorldAI(self.air)
 
-                return
-
+        if not parent:
+            self.notify.info('Creating World Instance %s (%s) (%d)' % (worldFileName, self.world.__class__.__name__, self.world.getType()))
+        
         self.world.setUniqueId(objKey)
         self.world.setName(worldName)
+        self.world.setFileName(worldFileName)
         self.world.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
         if parent is None:
             self.worldDict = objectData

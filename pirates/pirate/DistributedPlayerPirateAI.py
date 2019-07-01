@@ -66,10 +66,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         DistributedPlayerAI.generate(self)
         DistributedBattleAvatarAI.generate(self)
 
-        self.accept('HolidayStarted', self.processHolidayStart)
-        self.accept('HolidayEnded', self.processHolidayEnd)
-        self.accept('todHalloweenStateChange', self.attemptToSetCursedZombie)
-
         taskMgr.doMethodLater(0.05, self.__processGroggy, self.uniqueName('process-groggy'))
         taskMgr.doMethodLater(10, self.__processDoubleXP, self.uniqueName('process-double-xp'))
 
@@ -101,12 +97,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.b_setTempDoubleXPReward(self.tempDoubleXPReward)
 
         return task.again
-
-    def processHolidayStart(self, holidayId):
-        self.attemptToSetCursedZombie()
-
-    def processHolidayEnd(self, holidayId):
-        self.attemptToSetCursedZombie()
 
     def setLocation(self, parentId, zoneId):
         from pirates.world.DistributedIslandAI import DistributedIslandAI
@@ -584,26 +574,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getDefaultZone(self):
         return self.defaultZone
 
-    def attemptToSetCursedZombie(self):
-        newState = False
-
-        parentObj = self.getParentObj()
-        if self.forcedZombie:
-            newState = True
-        else:
-            # Sanity check for weird conditions
-            if not self.air:
-                self.notify.warning('Failed to process attemptToSetcursedZombie; Air is NoneType')
-                return
-
-            # We are not in PVP. Lets check if its a Cursed Moon
-            isOutside = not isinstance(parentObj, DistributedGAInteriorAI)
-            isHalloween = self.air.timeOfDayMgr.isHalloweenMoon()
-            newState = (isOutside and isHalloween and parentObj)
-
-        if newState != self.getZombie():
-            self.b_setZombie(bool(newState))
-
     def setZombie(self, zombie, cursed=False):
         self.zombie = zombie
 
@@ -743,10 +713,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         if inventory:
             self.air.questMgr.deactivateQuests(self)
             self.air.inventoryManager.removeInventory(inventory)
-
-        self.ignore('HolidayStarted')
-        self.ignore('HolidayEnded')
-        self.ignore('timeOfDayChange')
 
         taskMgr.remove(self.uniqueName('process-groggy'))
         taskMgr.remove(self.uniqueName('process-double-xp'))
