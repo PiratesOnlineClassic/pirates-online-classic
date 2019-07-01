@@ -87,16 +87,16 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
             return
 
-        exteriorUid = objectData.get('ExtUid')
-        if not exteriorUid:
-            self.notify.warning('Cannot create building exterior %s, no exterior uid found!' % (
+        interiorFile = objectData.get('File')
+        if not interiorFile:
+            self.notify.debug('Cannot create building exterior %s, no interior file found!' % (
                 objKey))
 
             return
 
-        interiorFile = objectData.get('File')
-        if not interiorFile:
-            self.notify.debug('Cannot create building exterior %s, no interior file found!' % (
+        exteriorUid = objectData.get('ExtUid')
+        if not exteriorUid:
+            self.notify.warning('Cannot create building exterior %s, no exterior uid found!' % (
                 objKey))
 
             return
@@ -334,6 +334,10 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
     def createObjectSpawnNode(self, parent, parentUid, objKey, objectData):
         if objectData['Spawnables'] == 'Surface Treasure':
+
+            self.notify.warning('Unsupported Object Spawn Node: %s' % objectData['Spawnables'])
+            return
+
             spawnNode = DistributedSurfaceTreasureAI(self.air)
         else:
             spawnNode = DistributedBuriedTreasureAI(self.air)
