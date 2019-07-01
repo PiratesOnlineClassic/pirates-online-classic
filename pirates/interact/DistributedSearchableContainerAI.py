@@ -22,6 +22,8 @@ class DistributedSearchableContainerAI(DistributedInteractiveAI):
 
     def questProgressionCallback(self, currentTask, currentTaskState):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
 
         def finalizeContainerSearch(task):
             self.d_stopSearching(avatar.doId, currentTaskState.getProgress())
