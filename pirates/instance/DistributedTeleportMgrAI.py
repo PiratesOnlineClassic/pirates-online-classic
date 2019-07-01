@@ -231,9 +231,6 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def areaTeleport(areaUid):
-    simbase.air.teleportMgr.d_initiateTeleport(spellbook.getTarget(),
-        locationUid=areaUid)
-
     avatar = spellbook.getTarget()
     simbase.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
     return 'Teleporting avatar %d to area: %s...' % (avatar.doId, locationUid)
