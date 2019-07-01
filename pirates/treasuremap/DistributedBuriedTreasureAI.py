@@ -18,65 +18,52 @@ class DistributedBuriedTreasureAI(DistributedInteractiveAI):
         DistributedInteractiveAI.delete(self)
 
     def handleRequestInteraction(self, avatar, interactType, instant):
-        if self.treasureAvailable == None:
-            self.treasureAvailable = config.GetBool('always-allow-digging', False) #TODO: input from questing
-        if self.treasureAvailable and self.currentUser is None:
-            self.currentUser = avatar
-            taskMgr.doMethodLater(1, self.__digTask, '%s-avatarDigTask-%s' % (self.doId, avatar.doId))
-
-            self.sendUpdateToAvatarId(avatar.doId, 'startDigging', [])
-            return self.ACCEPT
-
-        return self.DENY
-
-    def handleRequestExit(self, avatar):
-        if not self.currentUser:
-            # We'll log this if the config variable is true. This will help clear up clutter.
-            if config.GetBool('want-treasurechest-inactive-log', False):
-                self.notify.debug("Failed to request handle exist; Currently \"Digging\" Avatar is not present or was deleted..?")
-                self.air.logPotentialHacker(
-                    message='Received handleRequestExist from a avatar while buried treasure was inactive!',
-                    currentAvatarId=0,
-                    requestedAvatarId=avatar.doId
-                )
-            return
-        elif avatar != self.currentUser:
-            self.notify.warning('Failed to request handle exist; Avatar is not current interactor')
-            
-            self.air.logPotentialHacker(
-                message='Received handleRequestExist from a different avatar then is currently digging!',
-                currentAvatarId=self.currentUser.doId,
-                requestedAvatarId=avatar.doId
-            )
-            return
-
-        self.currentUser = None
-
-    def __digTask(self, task):
-        self.b_setCurrentDepth(max(self.getCurrentDepth() - 1, 0))
-
-        if not self.currentUser:
-            return task.done
-
-        if self.currentDepth <= 0:
-
-            questProgress = 1
-            goldAmount = 0 # Appears to be deprecated code
-
-            avatarId = self.currentUser.doId
-            self.sendUpdateToAvatarId(avatarId, 'stopDigging', [questProgress])
-            self.sendUpdateToAvatarId(avatarId, 'showTreasure', [goldAmount])
-
-            taskMgr.doMethodLater(5, self.__resetTask, '%s-digResetTask' % self.doId)
-            return task.done
-
-        return task.again
-
-    def __resetTask(self, task):
         if self.currentUser:
-            self.currentUser = None
+            return self.DENY
+
+        applicable = self.air.questMgr.treasureChestOpened(avatar, self, self.questProgressionCallback)
+        if applicable:
+            return self.ACCEPT
+        else:
+            return self.DENY
+
+    def questProgressionCallback(self, currentTask, currentTaskState):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        def performChestDig(task):
+            self.b_setCurrentDepth(max(self.getCurrentDepth() - 1, 0))
+
+            if not self.currentUser:
+                return task.done
+
+            if self.currentDepth <= 0:
+
+                self.d_stopDigging(avatar.doId, currentTaskState.getProgress())
+                self.d_showTreasure(avatar.doId)
+                taskMgr.doMethodLater(5, self.resetChest, '%s-digResetTask' % self.doId)
+                
+                return task.done
+
+            return task.again
+
+        self.d_startSearching(avatar.doId)
+        taskMgr.doMethodLater(1, performChestDig, self.uniqueName('avatarDiggingTask-%d' % avatar.doId))
+
+    def resetDigSpot(self, task):
+        self.currentUser = None
         self.b_setCurrentDepth(self.getStartingDepth())
         return task.done
+
+    def d_startDigging(self, avatarId):
+        self.sendUpdateToAvatarId(avatarId, 'startDigging', [])
+
+    def d_stopDigging(self, avatarId, questProgress):
+        self.sendUpdateToAvatarId(avatarId, 'stopDigging', [questProgress])
+
+    def d_showTreasure(self, avatarId, goldAmount=0):
+        self.sendUpdateToAvatarId(avatarId, 'showTreasure', [goldAmount])
 
     def setStartingDepth(self, depth):
         self.startingDepth = depth
@@ -103,9 +90,3 @@ class DistributedBuriedTreasureAI(DistributedInteractiveAI):
 
     def getCurrentDepth(self):
         return self.currentDepth
-
-    def d_startDigging(self):
-        self.sendUpdate('startDigging', [])
-
-    def d_stopDigging(self, questProgress):
-        self.sendUpdate('stopDigging', [questProgress])

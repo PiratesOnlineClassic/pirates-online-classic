@@ -410,6 +410,18 @@ class QuestManagerAI(DirectObject):
 
         return True
 
+    def treasureChestOpened(self, avatar, treasureChest, callback=None):
+        parentObj = avatar.getParentObj()
+        if not parentObj:
+            return
+
+        questEvent = QuestEvent.TreasureChestOpened()
+        questEvent.setLocation(parentObj.getUniqueId())
+        questEvent.setTreasureId(treasureChest.getUniqueId())
+        questEvent.setTreasureType(0) #Unused value
+
+        return self.__completeTaskState(avatar, questEvent, callback=callback)
+
     def containerSearched(self, avatar, container, callback=None):
         parentObj = avatar.getParentObj()
         if not parentObj:
