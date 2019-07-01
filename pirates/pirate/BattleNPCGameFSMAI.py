@@ -36,7 +36,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.avatar.d_setGameState(self.getCurrentOrNextState())
 
     def getPatrolRadius(self):
-        return float(self.avatar.spawnNode.objectData.get('Patrol Radius', 0.0))
+        return float(self.avatar.spawnNode.objectData.get('Patrol Radius', 1.0))
 
     def getPauseChance(self):
         return float(self.avatar.spawnNode.objectData.get('Pause Chance', 50.0))
