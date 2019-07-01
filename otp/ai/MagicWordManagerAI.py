@@ -51,11 +51,11 @@ def docs():
     """
 
     import csv
-    rows = [['Name', 'Types', 'Access']]
+    rows = [['Name', 'Documentation', 'Types', 'Access']]
     for magicwordKey in spellbook.words:
         magicword = spellbook.words[magicwordKey]
         access = magicword.access if magicword.access else '0'
-        rows.append([magicword.name, magicword.types, access])
+        rows.append([magicword.name, magicword.doc, magicword.types, access])
 
     with open('serverdocs.csv', 'w') as docsFile:
         writer = csv.writer(docsFile, delimiter=',', lineterminator='\n')
