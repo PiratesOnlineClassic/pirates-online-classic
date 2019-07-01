@@ -162,3 +162,6 @@ class PiratesAIRepository(PiratesInternalRepository):
 
         self.worldCreator = WorldCreatorAI(self)
         self.worldCreator.loadObjectsFromFile(WorldGlobals.PiratesWorldSceneFile)
+        worldFiles = ConfigVariableList('world-file')
+        for worldFile in worldFiles:
+            self.worldCreator.loadObjectsFromFile('%s.py' % worldFile)
