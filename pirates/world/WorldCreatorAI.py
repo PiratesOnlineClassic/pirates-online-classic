@@ -401,14 +401,16 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
             self.world = DistributedPiratesTutorialWorldAI(self.air)
         elif worldFileName == 'BlackpearlWorld':
             self.world = TreasureMapBlackPearlAI(self.air)
+        elif worldFileName == WorldGlobals.PiratesWorldSceneFileBase:
+            self.world = DistributedMainWorldAI(self.air)
+        elif 'Parlor' in worldFileName:
+            self.world = DistributedInstanceWorldAI(self.air)
+            self.world.setType(PiratesGlobals.INSTANCE_PG)
         else:
-            if worldName == 'default':
-                self.world = DistributedMainWorldAI(self.air)
-            else:
-                self.world = DistributedInstanceWorldAI(self.air)
+            self.world = DistributedInstanceWorldAI(self.air)
 
         if not parent:
-            self.notify.info('Creating World Instance %s (%s)' % (worldFileName, self.world.__class__.__name__))
+            self.notify.info('Creating World Instance %s (%s) (%d)' % (worldFileName, self.world.__class__.__name__, self.world.getType()))
         
         self.world.setUniqueId(objKey)
         self.world.setName(worldName)
