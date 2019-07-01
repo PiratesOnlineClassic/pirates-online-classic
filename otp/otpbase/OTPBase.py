@@ -30,42 +30,6 @@ class OTPBase(ShowBase):
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def oobe():
-    """
-    Toggle "out of body experience" view.
-    """
-
-    base.oobe()
-    return 'Toggled oobe.'
-
-@magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def oobeCull():
-    """
-    Toggle "out of body experience" view, with culling debugging.
-    """
-
-    base.oobeCull()
-    return 'Toggled oobe culling.'
-
-@magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def wire():
-    """
-    Toggle wireframe view.
-    """
-
-    base.toggleWireframe()
-    return 'Toggled wireframe.'
-
-@magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def textures():
-    """
-    Toggle textures on and off.
-    """
-
-    base.toggleTexture()
-    return 'Toggled textures.'
-
-@magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def fps():
     """
     Toggle frame rate meter on or off.
