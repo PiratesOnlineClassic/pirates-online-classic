@@ -10,6 +10,13 @@ from pirates.ai import HolidayGlobals
 from pirates.ai.HolidayDates import HolidayDates
 from pirates.piratesbase import PiratesGlobals, TODGlobals
 
+JollyCurseMessages = {
+    PiratesGlobals.TOD_HALLOWEEN: 0,
+    PiratesGlobals.TOD_HALF2FULLMOON: 1,
+    PiratesGlobals.TOD_FULLMOON: 3,
+    PiratesGlobals.TOD_FULL2HALFMOON: 7
+}
+
 class NewsManagerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('NewsManagerAI')
     notify.setInfo(True)
@@ -23,6 +30,11 @@ class NewsManagerAI(DistributedObjectAI):
     def announceGenerate(self):
         DistributedObjectAI.announceGenerate(self)
 
+        self.air.timeOfDayMgr.addTimeOfDayStateMethod(PiratesGlobals.TOD_HALF2FULLMOON, 'JollyCurse-Half2FullMoon', self.processTimeChange)
+        self.air.timeOfDayMgr.addTimeOfDayStateMethod(PiratesGlobals.TOD_FULLMOON, 'JollyCurse-FullMoon', self.processTimeChange)
+        self.air.timeOfDayMgr.addTimeOfDayStateMethod(PiratesGlobals.TOD_FULL2HALFMOON, 'JollyCurse-Full2HalfMoon', self.processTimeChange)
+
+        # Register holiday tasks
         self.__checkHolidays()
         taskMgr.doMethodLater(15, self.__checkHolidays, 'checkHolidays')
         taskMgr.doMethodLater(15, self.__runHolidayTimer, 'holidayTimerTask')
@@ -127,6 +139,22 @@ class NewsManagerAI(DistributedObjectAI):
 
         self.sendUpdate('setHolidayIdList', [holidayList])
 
+    def d_displayMessage(self, messageId):
+        print('Displaying messageId: %s' % messageId)
+        self.sendUpdate('displayMessage', [messageId])
+
+    def d_displayMessageToAvatar(self, avatarId, messageId):
+        self.sendUpdateToAvatar(avatarId, 'displayMessage', [messageId])
+
+    def processTimeChange(self, cycleType, todState, stateTime):
+        
+        # Check if Jolly Rogers's curse is active
+        #curseActive = self.isHolidayActive(PiratesGlobals.CURSEDNIGHT)
+        #if curseActive and cycleType == PiratesGlobals.TOD_JOLLYCURSE_CYCLE:
+        messageId = JollyCurseMessages.get(todState, None)
+        if messageId:
+            self.d_displayMessage(messageId)
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def stopHoliday(holidayId):
     simbase.air.newsManager.endHoliday(holidayId)
@@ -136,3 +164,8 @@ def stopHoliday(holidayId):
 def startHoliday(holidayId, time):
     simbase.air.newsManager.startHoliday(holidayId, time, True)
     return 'Started Holiday %d' % holidayId
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, int])
+def displayMessage(messageId):
+    simbase.air.newsManager.d_displayMessage(messageId)
+    return 'Sent message: %d' % messageId

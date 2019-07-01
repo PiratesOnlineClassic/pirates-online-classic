@@ -15,6 +15,7 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
         self.cycleDuration = config.GetFloat('tod-cycle-duration', PiratesGlobals.TOD_CYCLE_DURATION)
         self.stateTime = 0
         self.nextProcessStateChange = None
+        self.timeOfDayStateMethodList = []
 
     def announceGenerate(self):
         DistributedObjectAI.announceGenerate(self)
@@ -33,6 +34,17 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
         self.ignore('HolidayStarted')
         self.ignore('HolidayEnded')
 
+    def addTimeOfDayStateMethod(self, state, uniqueName, method, extraArgs=None):
+        methodTuple = (state, uniqueName, method, extraArgs)
+        for entry in self.timeOfDayStateMethodList:
+            if entry[1] == uniqueName:
+                self.notify.warning('Double registered TOD method: %s' % uniqueName)
+
+        self.timeOfDayStateMethodList.append(methodTuple)
+        self.notify.debug('Registered TOD method: %s' % uniqueName)
+
+    
+
     def _computeCurrentState(self):
         if self.cycleDuration == 0:
             return (self.startingState, 0.0)
@@ -50,23 +62,34 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
     def _waitForNextState(self):
         if self.nextProcessStateChange:
             taskMgr.remove(self.nextProcessStateChange)
+        
         if self.cycleDuration == 0:
             return 0
+
         nextStateId = TODGlobals.getNextStateId(self.cycleType, self.startingState)
         nextStateName = TODGlobals.getStateName(nextStateId)
         stateDuration = self.cycleDuration * TODGlobals.getStateDuration(self.cycleType, self.startingState)
         delayTime = stateDuration - self.stateTime
+
         self.notify.debug('Delay until next state: %s' % delayTime)
         self.nextProcessStateChange = taskMgr.doMethodLater(delayTime, self._processStateChange, 'tod-wait-task-%s' % self.doId, extraArgs=[])
+
         return stateDuration
+
+    def _handleTimeOfDayStateMethods(self, state, stateTime):
+        for entry in self.timeOfDayStateMethodList:
+            if entry[0] == state:
+                entry[2](self.cycleType, state, stateTime)
 
     def _processStateChange(self):
         lastState = self.startingState
-        self.startingState, self.stateTime = self._computeCurrentState()
-        self._waitForNextState()
+        newState, stateTime = self._computeCurrentState()
+        self.notify.debug('New State (%s) with remaining time: %s' % (newState, stateTime))
+        self._handleTimeOfDayStateMethods(newState, stateTime)
 
-        if self.isHalloweenMoon() or (lastState != self.startingState and lastState == PiratesGlobals.TOD_HALLOWEEN):
-            messenger.send('todHalloweenStateChange')
+        self.startingState = newState
+        self.stateTime = stateTime
+        self._waitForNextState()
 
         return Task.done
 
