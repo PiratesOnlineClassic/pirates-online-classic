@@ -210,7 +210,12 @@ class SpawnNodeBase:
             bossId = self.objKey if self.objType != 'Spawn Node' else npc.getUniqueId()
             if not bossId in BossNPCList.BOSS_NPC_LIST:
                 bossId = ''
-            npc.loadBossData(bossId, avatarType)
+            try:
+                npc.loadBossData(bossId, avatarType)
+            except Exception as e:
+                self.notify.warning('Failed to load boss data for boss: %s' % self.objKey)
+                npc.setAvatarType(avatarType.getNonBossType())
+                bossId = ''
 
         avType = self.objectData.get('Type', '')
 
@@ -275,7 +280,7 @@ class SpawnNodeBase:
 
         if hasattr(npc, 'bossData'):
             name = npc.bossData.get('Name', PLocalizer.Unknown)
-        elif avatarType.getBoss():
+        elif avatarType.getBoss() and bossID != '':
             name = PLocalizer.BossNames[avatarType.faction][avatarType.track][avatarType.id][avatarType.boss]
 
         npc.setName(name)
@@ -428,8 +433,8 @@ class AnimalSpawnNode(SpawnNodeBase):
 
     def getNPCClass(self, avatarType):
         animalClass = DistributedAnimalAI
-        if avatarType == AvatarTypes.Seagull:
-            animalClass = DistributedSeagullAI
+        #if avatarType == AvatarTypes.Seagull:
+        #    animalClass = DistributedSeagullAI
         return animalClass
 
 class BossEnemySpawnNode(EnemySpawnNode):
