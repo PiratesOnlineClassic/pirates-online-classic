@@ -14,6 +14,11 @@ class DistributedTimeOfDayManager(DistributedObject, TimeOfDayManager):
         DistributedObject.__init__(self, cr)
         TimeOfDayManager.__init__(self)
 
+        self.rainDrops = None
+        self.rainMist = None
+        self.rainSplashes = None
+        self.rainSplashes2 = None
+
     def generate(self):
         self.cr.timeOfDayManager = self
         DistributedObject.generate(self)
@@ -37,12 +42,12 @@ class DistributedTimeOfDayManager(DistributedObject, TimeOfDayManager):
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
-def setClouds(level):
+def clouds(level):
     """
     Locally sets the timeOfDayManager cloud state
     """
 
-    base.cr.timeOfDayManager.skyGroup.setCloudLevel(level)
+    base.cr.timeOfDayManager.skyGroup.transitionClouds(level).start()
     return 'Transitioning clouds to %d.' % level
 
 
@@ -60,3 +65,42 @@ def fireworks(showType=FireworkShowType.FourthOfJuly):
             base.cr.activeWorld.disableFireworkShow()
 
     return "Toggled fireworks show with type: %d" % showType
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def rain():
+    """
+    Toggles local rain state
+    """
+
+    if base.cr.timeOfDayManager.rainDrops:
+        base.cr.timeOfDayManager.rainDrops.stopLoop()
+        base.cr.timeOfDayManager.rainDrops = None
+        if base.cr.timeOfDayManager.rainMist:
+            base.cr.timeOfDayManager.rainMist.stopLoop()
+            base.cr.timeOfDayManager.rainMist = None
+
+        if base.cr.timeOfDayManager.rainSplashes:
+            base.cr.timeOfDayManager.rainSplashes.stopLoop()
+            base.cr.timeOfDayManager.rainSplashes = None
+
+        if base.cr.timeOfDayManager.rainSplashes2:
+            base.cr.timeOfDayManager.rainSplashes2.stopLoop()
+            base.cr.timeOfDayManager.rainSplashes2 = None
+
+    else:
+        from pirates.effects.RainDrops import RainDrops
+        base.cr.timeOfDayManager.rainDrops = RainDrops(base.camera)
+        base.cr.timeOfDayManager.rainDrops.reparentTo(render)
+        base.cr.timeOfDayManager.rainDrops.startLoop()
+        from pirates.effects.RainMist import RainMist
+        base.cr.timeOfDayManager.rainMist = RainMist(base.camera)
+        base.cr.timeOfDayManager.rainMist.reparentTo(render)
+        base.cr.timeOfDayManager.rainMist.startLoop()
+        from pirates.effects.RainSplashes import RainSplashes
+        base.cr.timeOfDayManager.rainSplashes = RainSplashes(base.camera)
+        base.cr.timeOfDayManager.rainSplashes.reparentTo(render)
+        base.cr.timeOfDayManager.rainSplashes.startLoop()
+        from pirates.effects.RainSplashes2 import RainSplashes2
+        base.cr.timeOfDayManager.rainSplashes2 = RainSplashes2(base.camera)
+        base.cr.timeOfDayManager.rainSplashes2.reparentTo(render)
+        base.cr.timeOfDayManager.rainSplashes2.startLoop()
