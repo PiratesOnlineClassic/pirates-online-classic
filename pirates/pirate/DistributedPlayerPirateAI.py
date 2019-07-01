@@ -120,8 +120,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
                 self.b_setCurrentIsland(parentObj.getUniqueId())
 
-            self.attemptToSetCursedZombie()
-
     def getInventory(self):
         return self.air.inventoryManager.getInventory(self.doId)
 
