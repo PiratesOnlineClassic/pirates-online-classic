@@ -208,6 +208,8 @@ class SpawnNodeBase:
         # Load boss data if applicable
         if avatarType.getBoss() and hasattr(npc, 'loadBossData'):
             bossId = self.objKey if self.objType != 'Spawn Node' else npc.getUniqueId()
+            if not bossId in BossNPCList.BOSS_NPC_LIST:
+                bossId = ''
             npc.loadBossData(bossId, avatarType)
 
         avType = self.objectData.get('Type', '')
@@ -315,6 +317,8 @@ class SpawnNodeBase:
             npc.zoneId, locationName, npc.getPos(), npc.doId))
 
         if avatarType.getBoss():
+            if not locationName or locationName == '':
+                locationName = self.parent.getUniqueId()
             self.notify.info('Spawning boss %s (%s) on %s!' % (npc.getName(), self.objKey, locationName))
 
         return Task.done
