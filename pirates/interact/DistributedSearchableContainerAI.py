@@ -11,43 +11,35 @@ class DistributedSearchableContainerAI(DistributedInteractiveAI):
         self.color = [1.0, 1.0, 1.0, 1.0]
         self.scale = [1, 1, 1]
         self.searchTime = 0.0
-        self.currentUser = None
 
     def handleRequestInteraction(self, avatar, interactType, instant):
-        # TODO: input from questing...
-        searchAvailable = config.GetBool('always-allow-searching', False)
-        if searchAvailable and self.currentUser is None:
-            self.currentUser = avatar
-            taskMgr.doMethodLater(self.searchTime, self.__searchTask,
-                self.uniqueName('avatarSearchTask-%d' % avatar.doId))
+        applicable = self.air.questMgr.containerSearched(avatar, self, self.questProgressionCallback)
 
-            self.sendUpdateToAvatarId(avatar.doId, 'startSearching', [])
+        if applicable:
             return self.ACCEPT
+        else:
+            return self.DENY
 
-        return self.DENY
-
-    def handleRequestExit(self, avatar):
-        if avatar != self.currentUser:
-            self.notify.warning('Failed to request handle exist; Avatar is not current interactor')
-            self.air.logPotentialHacker(
-                message='Received handleRequestExist from a different avatar then is currently digging!',
-                currentAvatarId=self.currentUser.doId,
-                requestedAvatarId=avatar.doId)
-
+    def questProgressionCallback(self, currentTask, currentTaskState):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
             return
 
-        self.currentUser = None
-
-    def __searchTask(self, task):
-        if not self.currentUser:
+        def finalizeContainerSearch(task):
+            self.d_stopSearching(avatar.doId, currentTaskState.getProgress())
             return task.done
 
-        questProgress = 1 #TODO: add proper quest value
+        self.d_startSearching(avatar.doId)
+        taskMgr.doMethodLater(
+            self.searchTime, 
+            finalizeContainerSearch,
+            self.uniqueName('avatarSearchTask-%d' % avatar.doId))
 
-        self.sendUpdateToAvatarId(self.currentUser.doId, 'stopSearching', [questProgress])
-        self.currentUser = None
+    def d_startSearching(self, avatarId):
+        self.sendUpdateToAvatarId(avatarId, 'startSearching', [])
 
-        return task.done
+    def d_stopSearching(self, avatarId, questProgress):
+        self.sendUpdateToAvatarId(avatarId, 'stopSearching', [questProgress])
 
     def setSearchTime(self, searchTime):
         self.searchTime = searchTime

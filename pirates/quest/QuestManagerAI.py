@@ -373,7 +373,7 @@ class QuestManagerAI(DirectObject):
             self.notify.debug('Failed to complete task state for avatar %d, '
                 'avatar has no active quest!' % avatar.doId)
 
-            return
+            return False
 
         tasks = activeQuest.getTasks()
         taskStates = activeQuest.getTaskStates()
@@ -395,7 +395,7 @@ class QuestManagerAI(DirectObject):
                 break
 
         if not currentTask and not currentTaskState:
-            return
+            return False
 
         # check to see if the task state event has been completed.
         if activeQuest.isComplete():
@@ -404,7 +404,35 @@ class QuestManagerAI(DirectObject):
             else:
                 self.completeQuest(avatar, activeQuest)
         else:
+            if callback is not None:
+                callback(currentTask, currentTaskState)
             activeQuest.b_setTaskStates(taskStates)
+
+        return True
+
+    def treasureChestOpened(self, avatar, treasureChest, callback=None):
+        parentObj = avatar.getParentObj()
+        if not parentObj:
+            return
+
+        questEvent = QuestEvent.TreasureChestOpened()
+        questEvent.setLocation(parentObj.getUniqueId())
+        questEvent.setTreasureId(treasureChest.getUniqueId())
+        questEvent.setTreasureType(0) #Unused value
+
+        return self.__completeTaskState(avatar, questEvent, callback=callback)
+
+    def containerSearched(self, avatar, container, callback=None):
+        parentObj = avatar.getParentObj()
+        if not parentObj:
+            return
+
+        questEvent = QuestEvent.ContainerSearched()
+        questEvent.setLocation(parentObj.getUniqueId())
+        questEvent.setContainerId(container.getUniqueId())
+        questEvent.setContainerType(container.getType())
+
+        return self.__completeTaskState(avatar, questEvent, callback=callback)
 
     def enemyDefeated(self, avatar, enemy):
         parentObj = avatar.getParentObj()
@@ -417,7 +445,7 @@ class QuestManagerAI(DirectObject):
         questEvent.setLevel(enemy.getLevel())
         questEvent.setWeaponType(enemy.getCurrentWeapon()[0])
 
-        self.__completeTaskState(avatar, questEvent)
+        return self.__completeTaskState(avatar, questEvent)
 
     def finalizeCutscene(self, avatar, quest, finalizeIndex=0, npc=None):
         taskStates = quest.getTaskStates()
@@ -515,7 +543,7 @@ class QuestManagerAI(DirectObject):
         def interactCallback(taskDNA, taskState):
             self.finalizeCutscene(avatar, activeQuest, npc=npc)
 
-        self.__completeTaskState(avatar, questEvent, callback=interactCallback)
+        return self.__completeTaskState(avatar, questEvent, callback=interactCallback)
 
     def attemptBribeNPC(self, avatar, npc):
         activeQuest = self.getQuest(avatar, questId=avatar.getActiveQuest())
@@ -559,7 +587,7 @@ class QuestManagerAI(DirectObject):
             inventory.setGoldInPocket(inventory.getGoldInPocket() - goldAmount)
             self.completeQuest(avatar, activeQuest)
 
-        self.__completeTaskState(avatar, questEvent, callback=bribeCallback)
+        return self.__completeTaskState(avatar, questEvent, callback=bribeCallback)
 
     def getQuestStepType(self, goalObject):
         if isinstance(goalObject, DistributedNPCTownfolkAI):
