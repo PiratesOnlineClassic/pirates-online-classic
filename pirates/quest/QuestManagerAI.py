@@ -434,6 +434,16 @@ class QuestManagerAI(DirectObject):
 
         return self.__completeTaskState(avatar, questEvent, callback=callback)
 
+    def deployedShip(self, avatar):
+        parentObj = avatar.getParentObj()
+        if not parentObj:
+            return
+
+        questEvent = QuestEvent.DeployedShip()
+        questEvent.setLocation(parentObj.getUniqueId())
+
+        return self.__completeTaskState(avatar, questEvent)
+
     def enemyDefeated(self, avatar, enemy):
         parentObj = avatar.getParentObj()
         if not parentObj:

@@ -174,6 +174,7 @@ class DistributedDinghyAI(DistributedInteractiveAI):
 
             self.sendAvatarToShip(avatar, ship)
 
+        self.air.questMgr.deployedShip(avatar)
         parentObj.shipDeployer.deployShip(avatar, shipId, deployShipCallback)
 
     def sendAvatarToShip(self, avatar, ship):
