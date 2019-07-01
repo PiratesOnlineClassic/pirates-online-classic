@@ -144,4 +144,5 @@ libotp/
 *.pyd
 
 # Documentation
+docs/
 *.csv
