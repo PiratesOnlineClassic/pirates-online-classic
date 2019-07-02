@@ -195,12 +195,13 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return not (self.teleportFlags & flag).isZero()
 
     def d_relayTeleportLoc(self, shardId, zoneId, teleportMgrDoId):
-        self.sendUpdateToAvatarId(self.doId, 'relayTeleportLoc', [shardId, zoneId,
-            teleportMgrDoId])
+        self.sendUpdateToAvatarId(self.doId, 'relayTeleportLoc', [shardId, zoneId, teleportMgrDoId])
 
     def d_forceTeleportStart(self, instanceName, tzDoId, thDoId, worldGridDoId, tzParent, tzZone):
-        self.sendUpdateToAvatarId(self.doId, 'forceTeleportStart', [instanceName, tzDoId, thDoId,
-            worldGridDoId, tzParent, tzZone])
+        self.sendUpdateToAvatarId(self.doId, 'forceTeleportStart', [instanceName, tzDoId, thDoId, worldGridDoId, tzParent, tzZone])
+
+    def d_setTutorialHandlerZone(self, handlerZoneId):
+        self.sendUpdateToAvatarId(self.doId, 'setTutorialHandlerZone', [handlerZoneId])
 
     def giveDefaultQuest(self):
         if config.GetBool('want-alpha-blockers', False):
