@@ -18,6 +18,8 @@ class DistributedTimeOfDayManager(DistributedObject, TimeOfDayManager):
         self.rainMist = None
         self.rainSplashes = None
         self.rainSplashes2 = None
+        self.stormEye = None
+        self.stormRing = None
 
     def generate(self):
         self.cr.timeOfDayManager = self
@@ -49,22 +51,6 @@ def clouds(level):
 
     base.cr.timeOfDayManager.skyGroup.transitionClouds(level).start()
     return 'Transitioning clouds to %d.' % level
-
-
-@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
-def fireworks(showType=FireworkShowType.FourthOfJuly):
-    """
-    Locally enables or disables Fourth of July fireworks
-    """
-
-    timestamp = globalClockDelta.localElapsedTime(base.cr.timeOfDayManager.startingTime, bits=32)
-    if base.cr.activeWorld:
-        if not base.cr.activeWorld.fireworkShowMgr:
-            base.cr.activeWorld.enableFireworkShow(timestamp, showType)
-        else:
-            base.cr.activeWorld.disableFireworkShow()
-
-    return "Toggled fireworks show with type: %d" % showType
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def rain():
@@ -104,3 +90,81 @@ def rain():
         base.cr.timeOfDayManager.rainSplashes2 = RainSplashes2(base.camera)
         base.cr.timeOfDayManager.rainSplashes2.reparentTo(render)
         base.cr.timeOfDayManager.rainSplashes2.startLoop()
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def storm(grid,):
+    """
+    Toggles the local storm state
+    """
+
+    if base.cr.timeOfDayManager.stormEye:
+        base.cr.timeOfDayManager.stormEye.stopLoop()
+        base.cr.timeOfDayManager.stormEye = None
+        if base.cr.timeOfDayManager.stormRing:
+            base.cr.timeOfDayManager.stormRing.stopLoop()
+            base.cr.timeOfDayManager.stormRing = None
+
+    else:
+        pos = Vec3(base.cr.doId2do[201100017].getZoneCellOrigin(grid)[0], base.cr.doId2do[201100017].getZoneCellOrigin(grid)[1], base.cr.doId2do[201100017].getZoneCellOrigin(grid)[2])
+        from pirates.effects.StormEye import StormEye
+        base.cr.timeOfDayManager.stormEye = StormEye()
+        base.cr.timeOfDayManager.stormEye.reparentTo(render)
+        base.cr.timeOfDayManager.stormEye.startLoop()
+        from pirates.effects.StormRing import StormRing
+        base.cr.timeOfDayManager.stormRing = StormRing()
+        base.cr.timeOfDayManager.stormRing.reparentTo(render)
+        base.cr.timeOfDayManager.stormRing.setZ(100)
+        base.cr.timeOfDayManager.stormRing.startLoop()
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[float, float, float])
+def alight(red, green, blue):
+    """
+    Sets the alight value of the scene
+    """
+
+    color = Vec4(red, green, blue, 1)
+    base.cr.timeOfDayManager.alight.node().setColor(color)
+
+    return 'Alight set to (%s, %s, %s, 1)' % (red, green, blue)
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[float, float, float])
+def dlight(red, green, blue):
+    """
+    Sets the dlight value of the scene
+    """
+
+    color = Vec4(red, green, blue, 1)
+    base.cr.timeOfDayManager.dlight.node().setColor(color)
+
+    return 'Dlight set to (%s, %s, %s, 1)' % (red, green, blue)
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def todpanel():
+    """
+    Loads the client Time of Day editor panel
+    """
+
+    tod = base.cr.timeOfDayManager
+    from pirates.leveleditor import TimeOfDayPanel
+    p = TimeOfDayPanel.TimeOfDayPanel(tod)
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def fogColor(red, green, blue):
+    """
+    Sets the local fog's color
+    """
+
+    color = Vec4(red, green, blue, 1)
+    base.cr.timeOfDayManager.fog.setColor(color)
+
+    return 'Local fog color set to (%s, %s, %s, 1)' % (red, green, blue)
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def fogDensity(density):
+    """
+    Sets the local fog's density
+    """
+
+    base.cr.timeOfDayManager.fog.setExpDensity(density)
+
+    return 'Local fog density set to %s' % density

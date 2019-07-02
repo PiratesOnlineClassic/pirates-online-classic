@@ -36,7 +36,7 @@ class MagicWordManagerAI(DistributedObjectAI):
                 ['missing target'])
             return
 
-        response = spellbook.process(invoker, target, word)
+        response = spellbook.process(self, invoker, target, word)
         if response:
             self.sendUpdateToAvatarId(
                 invokerId, 'sendMagicWordResponse', [response])

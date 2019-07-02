@@ -23,7 +23,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         Teamable.__init__(self)
 
         self.islandTransform = [0, 0, 0, 0]
-        self.sphereRadii = [0, 0, 0]
+        self.sphereRadii = [1000, 2000, 4000]
         self.sphereCenter = [0, 0]
         self.islandModel = ''
         self.undockable = False

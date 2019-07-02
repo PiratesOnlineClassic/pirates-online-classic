@@ -29,7 +29,8 @@ class Spellbook:
     def addWord(self, word):
         self.words[word.name.lower()] = word
 
-    def process(self, invoker, target, incantation):
+    def process(self, manager, invoker, target, incantation):
+        self.currentManager = manager
         self.currentInvoker = invoker
         self.currentTarget = target
         word, args = (incantation.split(' ', 1) + [''])[:2]
@@ -58,6 +59,9 @@ class Spellbook:
         result = word.run(args)
         if result is not None:
             return str(result)
+
+    def getManager(self):
+        return self.currentManager
 
     def getInvoker(self):
         return self.currentInvoker

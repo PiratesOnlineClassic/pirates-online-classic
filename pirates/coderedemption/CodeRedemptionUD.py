@@ -74,5 +74,5 @@ class CodeRedemptionUD(DistributedObjectGlobalUD):
             self.d_notifyClientCodeRedeemStatus(avatarId, 0)
         return response
 
-    def d_notifyClientCodeRedeemStatus(self, avatar, status):
-        self.sendUpdateToAvatarId(avatar, 'notifyClientCodeRedeemStatus', [status])
+    def d_notifyClientCodeRedeemStatus(self, avatarId, status):
+        self.sendUpdateToAvatarId(avatarId, 'notifyClientCodeRedeemStatus', [status])

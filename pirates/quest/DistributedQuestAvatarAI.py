@@ -4,7 +4,7 @@ from pirates.quest.QuestAvatarBase import QuestAvatarBase
 from pirates.quest import QuestTaskDNA
 from pirates.quest.QuestHolder import QuestHolder
 from pirates.uberdog.UberDogGlobals import InventoryCategory
-
+from pirates.piratesbase import Freebooter
 
 class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedQuestAvatarAI')
@@ -154,8 +154,20 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
         messenger.send(activeQuest.getCompleteEventString())
         self.air.questMgr.dropQuest(self, activeQuest)
 
-        # give them the new quest appropriate to their current quest path...
-        self._acceptQuest(nextQuestId, giverId, rewards)
+        # Determine if the quest should be blocked
+        questDNA = activeQuest.questDNA
+        questBlocked = False
+        if questDNA.getProgressBlock():
+            questBlocked = True
+        elif questDNA.getVelvetRoped() and Frebbooter.getPaidStatusAI(activeQuest.ownerId):
+            questBlocked = True
+
+        if not questBlocked:
+            # give them the new quest appropriate to their current quest path...
+            self._acceptQuest(nextQuestId, giverId, rewards)
+        else:
+            # quest should be blocked. Display the popup progress blocker
+            self.d_popupProgressBlocker(activeQuest.ownerId, activeQuest.getQuestId())
 
     def _acceptQuest(self, nextQuestId, giverId, rewards):
         inventory = self.getInventory()
@@ -170,3 +182,6 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
                 self, inventory.getQuestList()])
 
         self.air.questMgr.createQuest(self, nextQuestId, questCreatedCallback)
+
+    def d_popupProgressBlocker(self, avatarId, questId):
+        self.sendUpdateToAvatarId(avatarId, 'popupProgressBlocker', [questId])

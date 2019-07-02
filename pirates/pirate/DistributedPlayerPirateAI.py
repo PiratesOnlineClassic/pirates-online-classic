@@ -57,6 +57,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.constructedShipDoId = 0
         self.activeShipId = 0
         self.crewShipId = 0
+        self.questRewardFlags = 0
 
     def announceGenerate(self):
         DistributedPlayerAI.announceGenerate(self)
@@ -398,6 +399,26 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def d_spentSkillPoint(self, category):
         self.sendUpdateToAvatarId(self.doId, 'spentSkillPoint', [category])
+
+    def assignQuestRewardFlag(self, flag):
+        flags = self.getQuestRewardFlags() << flag
+        self.b_setQuestRewardFlags(flags)
+
+    def checkQuestRewardFlag(self, flag):
+        return not (self.questRewardFlags & flag).isZero()
+
+    def setQuestRewardFlags(self, flags):
+        self.questRewardFlags = BitMask32(flags)
+
+    def d_setQuestRewardFlags(self, flags):
+        self.sendUpdateToAvatarId(self.doId, 'setQuestRewardFlags', [flags])
+
+    def b_setQuestRewardFlags(self, flags):
+        self.setQuestRewardFlags(flags)
+        self.d_setQuestRewardFlags(flags)
+
+    def getQuestRewardFlags(self):
+        return self.questRewardFlags
 
     def getHighestTonic(self):
         inventory = simbase.air.inventoryManager.getInventory(self.doId)

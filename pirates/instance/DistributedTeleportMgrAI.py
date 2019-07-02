@@ -166,7 +166,18 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
                 return
 
-            gameArea = islands[0]
+            # Locate the first explorable island in the requested world
+            for island in islands:
+                if not island.getUndockable():
+                    gameArea = island
+                    break
+
+            # Verify we have a game area
+            if not gameArea:
+                self.notify.warning('Cannot initiate teleport for unknown '
+                    'gameArea: locationUid=%r' % locationUid)
+
+                return
 
         if not spawnPt:
             # TODO FIXME!
