@@ -57,7 +57,7 @@ goto :READCONFIG
     echo    #4 - Production Server
     echo    #5 - Custom
 
-    set INPUT=-1
+    set INPUT=1
     set /P INPUT=Selection: 
 
     set POC_GAMESERVER=%LOCALHOST_SERVER%
