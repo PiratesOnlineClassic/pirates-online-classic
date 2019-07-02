@@ -6,10 +6,10 @@ from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
 from otp.distributed.OtpDoGlobals import *
-from otp.ai.MagicWordManagerAI import MagicWordManagerAI
 from otp.ai.TimeManagerAI import TimeManagerAI
 from otp.friends.FriendManagerAI import FriendManagerAI
 
+from pirates.ai.PiratesMagicWordManagerAI import PiratesMagicWordManagerAI
 from pirates.distributed.PiratesInternalRepository import PiratesInternalRepository
 from pirates.piratesbase import PiratesGlobals
 from pirates.distributed.PiratesDistrictAI import PiratesDistrictAI
@@ -132,7 +132,7 @@ class PiratesAIRepository(PiratesInternalRepository):
 
         self.inventoryManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_INVENTORY_MANAGER, 'DistributedInventoryManager')
 
-        self.magicWords = MagicWordManagerAI(self)
+        self.magicWords = PiratesMagicWordManagerAI(self)
         self.magicWords.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
         self.tradeMgr = TradeManagerAI(self)
