@@ -1,12 +1,15 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
-from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
-from pirates.piratesbase import PiratesGlobals
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.fsm.FSM import FSM
+
+from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
+from pirates.piratesbase import PiratesGlobals
+
 from pirates.piratesbase import PiratesGlobals
 from pirates.quest.QuestConstants import LocationIds
 from pirates.piratesbase import Freebooter
+
 
 class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedDoorBaseAI')
@@ -32,15 +35,14 @@ class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
         if self.buildingUid == LocationIds.KINGSHEAD_DOOR and not Freebooter.getPaidStatusAI(avatar.doId):
             self.notify.warning('Freebooter (%s) attempted to force open KINGSHEAD_DOOR' % avatar.doId)
             return self.DENY
-        
+
         if not self.avatarId:
             self.request('Opened', avatar.doId)
 
         avatarParentObj = avatar.getParentObj()
-
         if not avatarParentObj:
-            self.notify.warning('Cannot handle interaction for avatar %d, doesn\'t have an valid parent object!' % (
-                avatar.doId))
+            self.notify.warning('Cannot handle interaction for avatar %d, '
+                'doesn\'t have an valid parent object!' % (avatar.doId))
 
             return self.DENY
 
