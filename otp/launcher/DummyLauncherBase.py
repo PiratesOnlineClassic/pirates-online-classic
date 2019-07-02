@@ -145,7 +145,7 @@ class DummyLauncherBase:
         taskMgr.remove('downloadSequence')
         taskMgr.add(downloadSequence, 'downloadSequence')
     
-    def loaderPhaseChecker(self, path):
+    def loaderPhaseChecker(self, path, loaderOptions):
         file = Filename(path)
         if not file.getExtension():
             file.setExtension('bam')

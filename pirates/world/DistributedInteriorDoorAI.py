@@ -20,22 +20,20 @@ class DistributedInteriorDoorAI(DistributedDoorBaseAI):
         self.buildingDoorId = 0
 
     def handleRequestInteraction(self, avatar, interactType, instant):
-        result = DistributedDoorBaseAI.handleRequestInteraction(self, avatar,
-            interactType, instant)
-
+        result = DistributedDoorBaseAI.handleRequestInteraction(self, avatar, interactType, instant)
         if not result:
             return self.DENY
 
         exterior = self.air.doId2do.get(self.exteriorDoId)
         if not exterior:
-            self.notify.warning('Cannot handle avatar %d interact for door %d, exterior %d not found!' % (
-                avatar.doId, self.doId, self.exteriorDoId))
+            self.notify.warning('Cannot handle avatar %d interact for door %d, '
+                'exterior %d not found!' % (avatar.doId, self.doId, self.exteriorDoId))
 
             return self.DENY
 
         if not self.otherDoor:
-            self.notify.warning('Cannot handle avatar %d interact for door %d, exterior door not found!' % (
-                avatar.doId, self.doId))
+            self.notify.warning('Cannot handle avatar %d interact for door %d, '
+                'exterior door not found!' % (avatar.doId, self.doId))
 
             return self.DENY
 

@@ -12,7 +12,7 @@ objectStruct = {
                     'Hpr': VBase3(0.0, 0.0, 0.0),
                     'Pos': Point3(3.2, 36.198, -2.048),
                     'Visual': {
-                        'Model': 'models/islands/Small_island_A'
+                        'Model': 'models/islands/wild_island_a_zero'
                     }
                 },
                 '1121231173.75jubutler': {

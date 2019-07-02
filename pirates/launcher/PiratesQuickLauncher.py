@@ -34,16 +34,15 @@ class PiratesQuickLauncher(LauncherBase):
     ForegroundSleepTime = 0.001
     Localizer = PLocalizer
     DecompressMultifiles = True
-    launcherFileDbFilename = '%s?%s' % (os.environ.get('GAME_PATCHER_FILE_OPTIONS', 'patcher.ver'), random.randint(1, 1000000000))
+    launcherFileDbFilename = os.environ.get('GAME_PATCHER_FILE_OPTIONS', 'patcher.ver')
     CompressionExt = 'bz2'
     PatchExt = 'pch'
     
     def __init__(self):
-        print 'Running: PiratesQuickLauncher'
         self.heavyDownloadServerList = []
         self.heavyDownloadServer = None
         LauncherBase.__init__(self)
-        self.contentDir = '/'
+        self.contentDir = ''
         self.serverDbFileHash = HashVal()
         self.launcherFileDbHash = HashVal()
         self.DECREASE_BANDWIDTH = 0
@@ -66,7 +65,8 @@ class PiratesQuickLauncher(LauncherBase):
 
     def downloadLauncherFileDbDone(self):
         settings = {}
-        for line in self.ramfile.readlines():
+        lines = self.ramfile.getData().splitlines()
+        for line in lines:
             line = line.strip()
             equalIndex = line.find('=')
             if equalIndex >= 0:
@@ -75,6 +75,8 @@ class PiratesQuickLauncher(LauncherBase):
                 settings[key] = value
         
         self.requiredInstallFiles = []
+        self.notify.debug('SETTINGS: %s' % settings)
+
         if sys.platform == 'win32':
             fileList = settings['REQUIRED_INSTALL_FILES']
         elif sys.platform == 'darwin':
@@ -84,15 +86,20 @@ class PiratesQuickLauncher(LauncherBase):
         else:
             self.notify.warning('Unknown sys.platform: %s' % sys.platform)
             fileList = settings['REQUIRED_INSTALL_FILES']
-        for fileDesc in fileList.split():
-            (fileName, flag) = fileDesc.split(':')
-            directions = BitMask32(flag)
-            extract = directions.getBit(0)
-            requiredByLauncher = directions.getBit(1)
-            optionalDownload = directions.getBit(2)
-            self.notify.info('fileName: %s, flag:=%s directions=%s, extract=%s required=%s optDownload=%s' % (fileName, flag, directions, extract, requiredByLauncher, optionalDownload))
-            if not optionalDownload:
-                self.requiredInstallFiles.append(fileName)
+        if len(fileList):
+            for fileDesc in fileList.split():
+                (fileName, flag) = fileDesc.split(':')
+                print(flag)
+                directions = BitMask32(int(flag))
+                extract = directions.getBit(0)
+                requiredByLauncher = directions.getBit(1)
+                optionalDownload = directions.getBit(2)
+
+                self.notify.info('fileName: %s, flag:=%s directions=%s, extract=%s required=%s optDownload=%s' % (fileName, flag, directions, extract, requiredByLauncher, optionalDownload))
+                if not optionalDownload:
+                    self.requiredInstallFiles.append(fileName)
+        else:
+            self.notify.warning('No required files to install for platform: %s' % sys.platform)
         
         self.notify.info('requiredInstallFiles: %s' % self.requiredInstallFiles)
         self.mfDetails = {}
@@ -120,7 +127,6 @@ class PiratesQuickLauncher(LauncherBase):
     def getNextHeavyDownloadServer(self):
         if not self.heavyDownloadServerList:
             self.notify.warning('No more heavy download servers')
-            self.heavyDownloadServer = None
             return 0
         
         self.heavyDownloadServer = self.heavyDownloadServerList.pop(0)

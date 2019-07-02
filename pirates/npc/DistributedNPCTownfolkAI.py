@@ -7,6 +7,10 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.distributed import InteractGlobals
 from pirates.economy import EconomyGlobals
 
+NPC_TOWNFOLK_MOVIE_START = 'start'
+NPC_TOWNFOLK_MOVIE_STOP = 'stop'
+NPC_TOWNFOLK_MOVIE_CLEAR = 'clear'
+
 
 class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCTownfolkAI')
@@ -30,6 +34,9 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
 
     def getDNAId(self):
         return self.dnaId
+
+    def d_setMovie(self, avatarId, mode):
+        self.sendUpdateToAvatarId(avatarId, 'setMovie', [mode, avatarId])
 
     def setShopId(self, shopId):
         self.shopId = shopId

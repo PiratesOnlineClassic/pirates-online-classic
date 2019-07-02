@@ -1,8 +1,10 @@
 from direct.distributed.DistributedCartesianGridAI import DistributedCartesianGridAI
 from direct.directnotify import DirectNotifyGlobal
+
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world import WorldGlobals
 from pirates.world.InteriorAreaBuilderAI import InteriorAreaBuilderAI
+
 
 class DistributedGAInteriorAI(DistributedCartesianGridAI, DistributedGameAreaAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGAInteriorAI')

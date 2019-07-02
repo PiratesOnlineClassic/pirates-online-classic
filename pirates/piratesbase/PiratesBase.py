@@ -38,6 +38,8 @@ from pirates.piratesbase import UserFunnel
 
 class PiratesBase(OTPBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesBase')
+    notify.setInfo(True)
+
     lowMemoryStreamAudio = ConfigVariableBool('low-memory-stream-audio', 1)
     resolution_table = [(800, 600), (1024, 768), (1280, 1024), (1600, 1200)]
     widescreen_resolution_table = [(1280, 720), (1920, 1080)]
@@ -54,7 +56,8 @@ class PiratesBase(OTPBase):
             self.inAdFrame = embedded.isMainWindowVisible()
         else:
             self.inAdFrame = False
-        base.makeDefaultPipe()
+        if not self.pipe:
+            base.makeDefaultPipe()
         base.effectsRoot = render.attachNewNode('Effects Root')
         bits_per_pixel = 32
         if self.inAdFrame:

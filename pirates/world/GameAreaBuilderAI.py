@@ -334,19 +334,15 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
     def createObjectSpawnNode(self, parent, parentUid, objKey, objectData):
         if objectData['Spawnables'] == 'Surface Treasure':
-
-            self.notify.warning('Unsupported Object Spawn Node: %s' % objectData['Spawnables'])
-            return
-
             spawnNode = DistributedSurfaceTreasureAI(self.air)
         else:
             spawnNode = DistributedBuriedTreasureAI(self.air)
+            spawnNode.setStartingDepth(int(objectData.get('startingDepth', 10)))
+            spawnNode.setCurrentDepth(spawnNode.getStartingDepth())
 
         spawnNode.setPos(objectData.get('GridPos', objectData.get('Pos', (0, 0, 0))))
         spawnNode.setHpr(objectData.get('Hpr', (0, 0, 0)))
         spawnNode.setScale(objectData.get('Scale', (1, 1, 1)))
-        spawnNode.setStartingDepth(int(objectData.get('startingDepth', 10)))
-        spawnNode.setCurrentDepth(spawnNode.getStartingDepth())
 
         zoneId = self.parent.getZoneFromXYZ(spawnNode.getPos())
         parent.generateChildWithRequired(spawnNode, zoneId)

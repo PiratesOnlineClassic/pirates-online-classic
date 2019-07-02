@@ -3,6 +3,7 @@ import random
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedCellDoorAI(DistributedInteractiveAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedCellDoorAI')
 
@@ -60,7 +61,6 @@ class DistributedCellDoorAI(DistributedInteractiveAI):
 
     def doorKicked(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             return
 

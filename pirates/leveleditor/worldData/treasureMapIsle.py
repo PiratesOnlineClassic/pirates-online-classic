@@ -87,7 +87,7 @@ objectStruct = {
                 }
             },
             'Visual': {
-                'Model': 'models/islands/Small_island_A'
+                'Model': 'models/islands/wild_island_a_zero'
             }
         }
     },
