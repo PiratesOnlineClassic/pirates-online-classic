@@ -104,3 +104,13 @@ def rain():
         base.cr.timeOfDayManager.rainSplashes2 = RainSplashes2(base.camera)
         base.cr.timeOfDayManager.rainSplashes2.reparentTo(render)
         base.cr.timeOfDayManager.rainSplashes2.startLoop()
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def todpanel():
+    """
+    Loads the client Time of Day editor panel
+    """
+
+    tod = base.cr.timeOfDayManager
+    from pirates.leveleditor import TimeOfDayPanel
+    p = TimeOfDayPanel.TimeOfDayPanel(tod)

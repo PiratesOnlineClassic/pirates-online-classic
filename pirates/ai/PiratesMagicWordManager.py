@@ -46,23 +46,10 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
 
     def generate(self):
         MagicWordManager.MagicWordManager.generate(self)
-        self.accept('magicWord', self.b_setMagicWord)
         self.accept('requestServerTime', self.d_requestServerTime)
-
-    def doLoginMagicWords(self):
-        MagicWordManager.MagicWordManager.doLoginMagicWords(self)
-        if base.config.GetBool('want-chat', 0):
-            self.d_setMagicWord('~chat', localAvatar.doId, 0)
-
-        if base.config.GetBool('want-run', 0) or base.config.GetBool('want-pirates-run', 0):
-            self.toggleRun()
-
-        if base.config.GetBool('immortal-mode', 0):
-            self.d_setMagicWord('~immortal', localAvatar.doId, 0)
 
     def disable(self):
         taskMgr.remove('setGMNameTag')
-        self.ignore('magicWord')
         self.ignore('requestServerTime')
         MagicWordManager.MagicWordManager.disable(self)
         if self.pendingCameraReparent:
@@ -501,10 +488,6 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                     self.radarUtil.destroy()
                 else:
                     self.radarUtil = RadarUtil()
-            elif __dev__ and wordIs('~todpanel'):
-                tod = base.cr.timeOfDayManager
-                from pirates.leveleditor import TimeOfDayPanel
-                p = TimeOfDayPanel.TimeOfDayPanel(tod)
             elif __dev__ and wordIs('~kraken'):
                 args = word.split()[1:]
                 if args and args[0]:
