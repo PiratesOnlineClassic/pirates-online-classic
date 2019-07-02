@@ -42,7 +42,7 @@ class MagicWordManager(DistributedObject.DistributedObject):
 
         targetId = target.doId
         if target == base.localAvatar:
-            response = spellbook.process(base.localAvatar, target, magicWord)
+            response = spellbook.process(self, base.localAvatar, target, magicWord)
             if response:
                 self.sendMagicWordResponse(response)
 
