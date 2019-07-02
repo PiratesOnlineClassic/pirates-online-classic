@@ -29,7 +29,7 @@ import time
 
 class DistributedGameArea(DistributedNode.DistributedNode):
     notify = directNotify.newCategory('DistributedGameArea')
-    
+
     def __init__(self, cr):
         DistributedNode.DistributedNode.__init__(self, cr)
         NodePath.__init__(self, 'GameArea')
@@ -397,6 +397,10 @@ class DistributedGameArea(DistributedNode.DistributedNode):
 
     def _getTunnelSpawnPos(self, index = 0):
         connectorNodes = self.findAllMatches('**/portal_exterior*') + self.findAllMatches('**/portal_interior*')
+        if not connectorNodes:
+            self.notify.warning('Game area: %s does not have any connector nodes!' % self.uniqueId)
+            return Point3(40, 0, 0)
+
         return self.getRelativePoint(connectorNodes[index % len(connectorNodes)], Point3(40, 0, 0))
 
     def initializeIslandWaterParameters(self):
@@ -603,6 +607,3 @@ class DistributedGameArea(DistributedNode.DistributedNode):
 
     def getLevel(self):
         return 1
-
-
-
