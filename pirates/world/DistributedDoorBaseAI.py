@@ -5,8 +5,6 @@ from direct.fsm.FSM import FSM
 
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 from pirates.piratesbase import PiratesGlobals
-
-from pirates.piratesbase import PiratesGlobals
 from pirates.quest.QuestConstants import LocationIds
 from pirates.piratesbase import Freebooter
 
