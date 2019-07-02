@@ -14,17 +14,29 @@ from direct.directnotify.DirectNotifyGlobal import *
 
 class LogAndOutput:
 
-    def __init__(self, orig, log):
-        self.orig = orig
-        self.log = log
-        self.console = False
+    def __init__(self, out, file):
+        self.out = out
+        self.file = file
+        self.__buffer = ''
 
-    def write(self, str):
-        self.log.write(str)
-        self.log.flush()
-        if self.console:
-            self.orig.write(str)
-            self.orig.flush()
+    def write(self, string):
+        # Write the log data
+        self.out.write(string)
+
+        asctime = time.asctime()
+        self.__buffer += string
+        while '\n' in self.__buffer:
+            data, self.__buffer = self.__buffer.split('\n', 1)
+            data = data.rstrip()
+            if data:
+                formatted = '%s: %s\n' % (asctime, data)
+                self.file.write(formatted)
+        # Were done
+        self.flush()
+
+    def flush(self):
+        self.file.flush()
+        self.out.flush()
 
 
 class LauncherBase(DirectObject):
@@ -172,6 +184,7 @@ class LauncherBase(DirectObject):
             sys.stderr.console = True
 
         self.notify = directNotify.newCategory('Launcher')
+        self.notify.setInfo(True)
         self.clock = TrueClock.getGlobalPtr()
         self.logPrefix = logPrefix
         self.testServerFlag = self.getTestServerFlag()
@@ -322,7 +335,6 @@ class LauncherBase(DirectObject):
 
     def getNextDownloadServer(self):
         if self.nextDownloadServerIndex >= len(self.downloadServerList):
-            self.downloadServer = None
             return 0
 
         self.downloadServer = self.downloadServerList[self.nextDownloadServerIndex]
@@ -476,6 +488,7 @@ class LauncherBase(DirectObject):
         task.downloadRam = 1
         task.serverFilePath = serverFilePath
         task.serverFileURL = self.addDownloadVersion(serverFilePath)
+        self.notify.info(task.serverFileURL)
         self.notify.info('Download request: %s' % task.serverFileURL.cStr())
         task.callback = callback
         task.callbackProgress = None
@@ -496,6 +509,7 @@ class LauncherBase(DirectObject):
 
                 bytesWritten = self.httpChannel.getBytesDownloaded()
                 totalBytes = self.httpChannel.getFileSize()
+
                 if totalBytes:
                     pct = int(round((bytesWritten / float(totalBytes)) * 100))
                     self.launcherMessage(self.Localizer.LauncherDownloadFilePercent % {
@@ -568,6 +582,7 @@ class LauncherBase(DirectObject):
             'total': self.numPhases})
         task = Task(self.downloadMultifileTask)
         mfURL = self.addDownloadVersion(serverFilename)
+        print(mfURL)
         task.mfURL = mfURL
         self.notify.info('downloadMultifile: %s ' % task.mfURL.cStr())
         task.callback = callback
