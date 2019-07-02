@@ -60,6 +60,9 @@ class Spellbook:
         if result is not None:
             return str(result)
 
+    def getManager(self):
+        return self.currentManager
+
     def getInvoker(self):
         return self.currentInvoker
 

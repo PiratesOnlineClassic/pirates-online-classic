@@ -171,7 +171,7 @@ def swamp():
     Toggles swamp particle effects
     """
 
-    magicMgr = self.currentManager
+    magicMgr = spellbook.getManager()
     if magicMgr.fireflies:
         magicMgr.fireflies.destroy()
         magicMgr.fireflies = None
@@ -196,7 +196,7 @@ def darkfog():
     Toggles the dark fog particle effects
     """
 
-    magicMgr = self.currentManager
+    magicMgr = spellbook.getManager()
     if magicMgr.groundFog:
         magicMgr.groundFog.destroy()
         magicMgr.groundFog = None
@@ -358,7 +358,7 @@ def battleRandom(command):
         counter = localAvatar.battleRandom.counter
         message = 'Client Battle random counter=%s' % counter
 
-    self.currentManager.notify.info(message)
+    spellbook.getManager().notify.info(message)
     return message
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
@@ -447,10 +447,10 @@ def ru():
     Toggles the local radar utility
     """
 
-    if hasattr(self.currentManager, 'radarUtil') and self.currentManager.radarUtil and not self.currentManager.radarUtil.isDestroyed():
-        self.currentManager.radarUtil.destroy()
+    if hasattr(spellbook.getManager(), 'radarUtil') and spellbook.getManager().radarUtil and not spellbook.getManager().radarUtil.isDestroyed():
+        spellbook.getManager().radarUtil.destroy()
     else:
-        self.currentManager.radarUtil = RadarUtil()
+        spellbook.getManager().radarUtil = RadarUtil()
 
 @magicWord(name='pvpinfamy', category=CATEGORY_SYSTEM_ADMIN)
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
