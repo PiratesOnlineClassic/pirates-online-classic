@@ -519,9 +519,6 @@ class QuestManagerAI(DirectObject):
                     self.completeQuest(avatar, quest)
 
                 return True
-            else:
-                # the quest was not completed yet, but it did change...
-                quest.handleQuestChanged()
 
         return False
 
