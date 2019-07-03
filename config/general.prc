@@ -127,7 +127,7 @@ discord-development-message #f
 allow-teleport-from-discord #f
 
 # Alpha:
-want-alpha-blockers #t
+want-alpha-blockers #f
 
 # Quests:
 disable-blockers #f
