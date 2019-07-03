@@ -677,8 +677,11 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getConstructedShipDoId(self):
         return self.constructedShipDoId
 
-    def getAccess(self):
+    def isPaid(self):
         return Freebooter.getPaidStatusAI(self.doId)
+
+    def getAccess(self):
+        return self.gameAccess
 
     def setAccess(self, access):
         self.setGameAccess(access)
@@ -877,24 +880,24 @@ def location():
         invoker.parentId, invoker.zoneId)
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def setGuildName(name):
+def guildname(name):
     spellbook.getInvoker().b_setGuildName(name)
     return "Set Guild Name to %s" % name
 
-@magicWord(category=CATEGORY_SYSTEM_ADMIN)
-def getAccess():
-    access = spellbook.getInvoker().getGameAccess()
-    if access == Freebooter.NONE:
-        return 'Unpaid'
-    elif access == Freebooter.VELVET_ROPE:
-        return 'Velvet Rope'
-    elif access == Freebooter.FULL:
-        return 'Full'
-
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
-def setAccess(access):
-    if access < 0 or access > 2:
-        return 'Invalid access level 0-2'
+def access(access=-1):
+    if access != -1:
+        if access < 0 or access > 2:
+            return 'Invalid access level 0-2'
 
-    spellbook.getInvoker().b_setAccess(access)
-    return 'Access level changed: %d' % access
+        spellbook.getInvoker().b_setAccess(access)
+        return 'Access level changed: %d' % access
+    else:    
+        access = spellbook.getInvoker().getAccess()
+        if access == Freebooter.NONE:
+            msg = 'Unpaid'
+        elif access == Freebooter.VELVET_ROPE:
+            msg = 'Velvet Rope'
+        elif access == Freebooter.FULL:
+            msg = 'Full'
+        return '%s (%s)' % (msg, int(access))
