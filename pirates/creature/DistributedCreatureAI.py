@@ -7,6 +7,3 @@ class DistributedCreatureAI(DistributedBattleNPCAI):
 
     def __init__(self, air):
         DistributedBattleNPCAI.__init__(self, air)
-
-    def handleClientAggro(self, avatar):
-        pass

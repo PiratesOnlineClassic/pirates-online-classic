@@ -183,6 +183,12 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         if self.gameFSM.state == 'Ambush':
             self.handleClientAggro(avatar)
 
+        # check if we should auto aggro to the avatar that entered
+        # our aggro sphere
+        experienceGrade = self.air.battleMgr.getModifiedExperienceGrade(avatar, self)
+        if experienceGrade >= EnemyGlobals.GREEN:
+            self.handleClientAggro(avatar)
+
     def handleClientAggro(self, avatar):
         self.b_setCurrentTarget(avatar.doId)
         self.b_setGameState('Battle')

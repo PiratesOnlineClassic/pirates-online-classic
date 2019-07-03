@@ -11,4 +11,5 @@ class DistributedNPCSkeletonAI(DistributedBattleNPCAI):
         DistributedBattleNPCAI.__init__(self, air)
 
     def handleClientAggro(self, avatar):
+        DistributedBattleNPCAI.handleClientAggro(self, avatar)
         self.d_setChat(PLocalizerEnglish.getUndeadAggroPhrase())
