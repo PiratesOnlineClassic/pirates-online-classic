@@ -1424,7 +1424,7 @@ for (questId, questDNA) in QuestDict.items():
 if __dev__:
     for questDNA in QuestDict.values():
         questDNA.check()
-    
+
 
 questIntDict = { }
 for (questId, questDNA) in QuestDict.items():
@@ -1433,4 +1433,3 @@ for (questId, questDNA) in QuestDict.items():
 
 def getQuestIdFromQuestInt(questInt):
     return questIntDict[questInt]
-
