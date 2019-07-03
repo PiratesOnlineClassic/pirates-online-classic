@@ -504,9 +504,9 @@ class QuestManagerAI(DirectObject):
 
             # if the task dna does not have a location,
             # then force the location to be that of the event's location...
-            for taskDNA in questDNA.getTaskDNAs():
-                if taskDNA.getLocation() == None:
-                    taskDNA.setLocation(questEvent.getLocation())
+            #for taskDNA in questDNA.getTaskDNAs():
+            #    if taskDNA.getLocation() == None:
+            #        taskDNA.setLocation(questEvent.getLocation())
 
             quest.handleEvent(avatar, questEvent)
 
