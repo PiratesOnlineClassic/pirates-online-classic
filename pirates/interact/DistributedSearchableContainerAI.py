@@ -20,18 +20,18 @@ class DistributedSearchableContainerAI(DistributedInteractiveAI):
         else:
             return self.DENY
 
-    def questProgressionCallback(self, currentTask, currentTaskState):
+    def questProgressionCallback(self, quest):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
             return
 
         def finalizeContainerSearch(task):
-            self.d_stopSearching(avatar.doId, currentTaskState.getProgress())
+            self.d_stopSearching(avatar.doId, quest.getProgress())
             return task.done
 
         self.d_startSearching(avatar.doId)
         taskMgr.doMethodLater(
-            self.searchTime, 
+            self.searchTime,
             finalizeContainerSearch,
             self.uniqueName('avatarSearchTask-%d' % avatar.doId))
 

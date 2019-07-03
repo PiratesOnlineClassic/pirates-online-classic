@@ -11,7 +11,7 @@ class DistributedBuriedTreasureAI(DistributedInteractiveAI):
         self.currentDepth = 0
         self.currentUser = None
         self.treasureAvailable = None
-        
+
     def delete(self):
         self.treasureAvailable = False
         self.currentUser = None
@@ -27,23 +27,20 @@ class DistributedBuriedTreasureAI(DistributedInteractiveAI):
         else:
             return self.DENY
 
-    def questProgressionCallback(self, currentTask, currentTaskState):
+    def questProgressionCallback(self, quest):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
             return
 
         def performChestDig(task):
             self.b_setCurrentDepth(max(self.getCurrentDepth() - 1, 0))
-
             if not self.currentUser:
                 return task.done
 
             if self.currentDepth <= 0:
-
-                self.d_stopDigging(avatar.doId, currentTaskState.getProgress())
+                self.d_stopDigging(avatar.doId, quest.getProgress())
                 self.d_showTreasure(avatar.doId)
                 taskMgr.doMethodLater(5, self.resetChest, '%s-digResetTask' % self.doId)
-                
                 return task.done
 
             return task.again
