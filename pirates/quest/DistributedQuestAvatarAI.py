@@ -159,7 +159,7 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
         questBlocked = False
         if questDNA.getProgressBlock():
             questBlocked = True
-        elif questDNA.getVelvetRoped() and Frebbooter.getPaidStatusAI(activeQuest.ownerId):
+        elif questDNA.getVelvetRoped() and Freebooter.getPaidStatusAI(activeQuest.ownerId):
             questBlocked = True
 
         if not questBlocked:
