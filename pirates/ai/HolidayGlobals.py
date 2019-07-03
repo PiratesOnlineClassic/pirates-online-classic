@@ -9,6 +9,8 @@ holidayNames = {
     PiratesGlobals.DOUBLEXPHOLIDAY: 'DoubleXPHolidayAll',
     PiratesGlobals.DOUBLEXPHOLIDAYPAID: 'DoubleXPHolidayPaid',
     PiratesGlobals.FREEHATWEEK: 'FreeHatWeek',
+    PiratesGlobals.FLIRTEMOTE: 'FlirtEmote',
+    PiratesGlobals.BLACKJACKFRIDAY: 'BlackjackFriday',
     PiratesGlobals.SAINTPATRICKSDAY: 'SaintPatricksDay',
     PiratesGlobals.MOTHERSDAY: 'MothersDay',
     PiratesGlobals.FATHERSDAY: 'FathersDay',
@@ -42,6 +44,9 @@ holidays = {
     PiratesGlobals.FREEHATWEEK: HolidayDates(HolidayDates.TYPE_CUSTOM, [
         (2008, Month.FEBRUARY, 25, 0, 0, 0),
         (2008, Month.MARCH, 2, 0, 0, 0)]),
+    PiratesGlobals.BLACKJACKFRIDAY: HolidayDates(HolidayDates.TYPE_WEEKLY, [
+        (Day.FRIDAY, 0, 0, 0),
+        (Day.FRIDAY, 23, 0, 0)]),
     PiratesGlobals.FLIRTEMOTE: HolidayDates(HolidayDates.TYPE_YEARLY, [
         (Month.FEBRUARY, 14, 0, 0, 0),
         (Month.FEBRUARY, 18, 0, 0, 0)]),

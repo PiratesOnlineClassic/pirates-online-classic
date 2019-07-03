@@ -79,7 +79,6 @@ class NewsManagerAI(DistributedObjectAI):
             for index in range(len(date.startDates)):
                 start = date.getStartTime(index)
                 end = date.getEndTime(index)
-
                 if currentTime >= start and currentTime <= end:
                     remaining = end - currentTime
                     self.startHoliday(holidayId, time=remaining)
@@ -102,7 +101,7 @@ class NewsManagerAI(DistributedObjectAI):
 
         if holidayId not in self.holidayList:
             self.holidayList[holidayId] = time
-            self.notify.info('Holiday %s is starting!' % holidayId)
+            self.notify.info('Holiday "%s" (%d) is starting!' % (HolidayGlobals.getHolidayName(holidayId), holidayId))
             messenger.send('HolidayStarted', [holidayId])
 
         self.processHolidayChange()
