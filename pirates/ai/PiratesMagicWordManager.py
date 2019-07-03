@@ -92,6 +92,10 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
     def recvServerTime(self, sinceEpoch):
         base.chatAssistant.receiveGameMessage(PLocalizer.getServerTimeString(sinceEpoch))
 
+    def sendMagicWordResponse(self, response):
+        MagicWordManager.MagicWordManager.sendMagicWordResponse(self, response)
+        base.chatAssistant.receiveGameMessage('Spellbook: %s' % response)
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def walk():
     """
@@ -706,3 +710,11 @@ def dropBlockers():
     ga = localAvatar.getParentObj()
     blockers = ga.findAllMatches('**/blocker_*')
     blockers.stash()
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
+def stayTuned(questId=0):
+    """
+    Displays the Stay Tuned popup dialog
+    """
+
+    localAvatar.guiMgr.showStayTuned(quest = questId, focus = 0)
