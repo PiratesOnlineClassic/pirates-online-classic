@@ -178,6 +178,11 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         if not avatar:
             return
 
+        # verify we are not in a death state prior to processing
+        # any aggro logic
+        if self.gameFSM.state == 'Death':
+            return
+
         # if we are in ambush mode and an avatar just entered our aggro
         # sphere, ambush them and try to kill them.
         if self.gameFSM.state == 'Ambush':
