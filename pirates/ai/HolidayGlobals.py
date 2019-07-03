@@ -42,6 +42,9 @@ holidays = {
     PiratesGlobals.FREEHATWEEK: HolidayDates(HolidayDates.TYPE_CUSTOM, [
         (2008, Month.FEBRUARY, 25, 0, 0, 0),
         (2008, Month.MARCH, 2, 0, 0, 0)]),
+    PiratesGlobals.FLIRTEMOTE: HolidayDates(HolidayDates.TYPE_YEARLY, [
+        (Month.FEBRUARY, 14, 0, 0, 0),
+        (Month.FEBRUARY, 18, 0, 0, 0)]),
     PiratesGlobals.SAINTPATRICKSDAY: HolidayDates(HolidayDates.TYPE_YEARLY, [
         (Month.MARCH, 14, 0, 0, 0),
         (Month.MARCH, 18, 0, 0, 0)]),
@@ -142,6 +145,10 @@ holidayMessages = {
         MSG_START_UNLIMITED: (PLocalizer.FreeHatStartUnlimited, PLocalizer.FreeHatStartUnlimitedChat),
         MSG_START_BASIC: (PLocalizer.FreeHatStartUnlimited, PLocalizer.FreeHatStartUnlimitedChat),
         MSG_ICON: 'hat'},
+    PiratesGlobals.FLIRTEMOTE: {
+        MSG_START_UNLIMITED: (PLocalizer.FlirtEmoteStart, PLocalizer.FlirtEmoteStart),
+        MSG_START_BASIC: (PLocalizer.FlirtEmoteStart, PLocalizer.FlirtEmoteStart),
+        MSG_ICON: 'friends'},
     PiratesGlobals.SAINTPATRICKSDAY: {
         MSG_START_ALL: (PLocalizer.StPatricksStartUnlimited, PLocalizer.StPatricksStartUnlimitedChat),
         MSG_ICON: 'admin'},
