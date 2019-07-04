@@ -6,6 +6,7 @@ from otp.distributed.DistributedDirectoryAI import DistributedDirectoryAI
 from otp.distributed.OtpDoGlobals import *
 from pirates.uberdog.PiratesRPCServerUD import PiratesRPCServerUD
 from pirates.ai.NewsManagerUD import NewsManagerUD
+from pirates.web.PiratesHTTPRestUD import PiratesHTTPRestUD
 
 class PiratesUberRepository(PiratesInternalRepository):
     notify = directNotify.newCategory('PiratesUberRepository')
@@ -14,6 +15,7 @@ class PiratesUberRepository(PiratesInternalRepository):
         PiratesInternalRepository.__init__(self, baseChannel, serverId, dcSuffix='UD')
         self.rpc = None
         self.districtTracker = None
+        self.http = None
 
     def handleConnected(self):
         rootObj = DistributedDirectoryAI(self)
@@ -34,6 +36,7 @@ class PiratesUberRepository(PiratesInternalRepository):
 
         self.districtTracker = DistrictTrackerUD(self)
         self.newsManager = NewsManagerUD(self)
+        self.http = PiratesHTTPRestUD(self)
 
         self.centralLogger = self.generateGlobalObject(OTP_DO_ID_CENTRAL_LOGGER, 'CentralLogger')
         self.csm = self.generateGlobalObject(OTP_DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
