@@ -460,6 +460,9 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
     def getLevel(self):
         return self.level
 
+    def isBoss(self):
+        return self.avatarType.isA(AvatarTypes.BossType)
+
     def delete(self):
         if self.skillTask:
             taskMgr.remove(self.skillTask)

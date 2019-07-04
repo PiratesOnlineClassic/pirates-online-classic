@@ -40,7 +40,7 @@ QUEST_TYPE_TM = 1
 
 class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase, Quest.Quest):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedQuest')
-    
+
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
         Quest.Quest.__init__(self)
@@ -53,20 +53,20 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
         self.preloadedCutscenes = []
         self.prevLocalAvState = None
         self.viewedInGUI = True
-    
+
     def announceGenerate(self):
         DistributedObject.DistributedObject.announceGenerate(self)
         self.setActive()
         if self.playStinger():
             messenger.send('localAvatarQuestAdded', [self])
-        
+
         popupDialogText = QuestPopupDict.get(self.getQuestId())
         if popupDialogText:
             if base.localAvatar.showQuest:
                 base.localAvatar.resetQuestShow()
                 self.popupDialog = NewTutorialPanel.NewTutorialPanel(popupDialogText)
                 self.popupDialog.activate()
-                
+
                 def closeTutorialWindow():
                     messenger.send(self.popupDialog.closeMessage)
 
@@ -80,7 +80,7 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
         self.__cleanupDialog()
         for currPreload in self.preloadedCutscenes:
             base.cr.cleanupPreloadedCutscene(currPreload)
-        
+
         self.preloadedCutscenes = []
 
     def __cleanupDialog(self, value = None):
@@ -88,7 +88,7 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
             self.popupDialog.destroy()
             del self.popupDialog
             self.popupDialog = None
-    
+
     def setTaskStates(self, taskStates):
         oldTaskStates = getattr(self, 'taskStates', None)
         lookingForItems = {}
@@ -96,7 +96,7 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
             for (task, taskState) in zip(self.questDNA.tasks, oldTaskStates):
                 if task.__class__ in QuestTaskDNA.RecoverItemClasses:
                     lookingForItems[task.item] = (taskState.getAttempts(), taskState.getProgress(), taskState.getGoal())
-        
+
         Quest.Quest.setTaskStates(self, taskStates)
         if self.isGenerated():
             for (task, taskState) in zip(self.questDNA.tasks, self.taskStates):
@@ -118,14 +118,14 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
                         note = QuestConstants.QuestItemNotification.InvalidAttempt
                     messenger.send('localAvatarQuestItemUpdate', [self, task.item, note])
                     return None
-        
+
         if self.isGenerated():
             if self.isComplete():
                 messenger.send('localAvatarQuestComplete', [self])
                 self.__cleanupDialog()
             else:
                 messenger.send('localAvatarQuestUpdate', [self])
-    
+
     def announceNewQuest(self):
         base.localAvatar.guiMgr.showQuestAddedText(self)
 
@@ -153,14 +153,14 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
             npc.playDialogMovie(dialogId, self.doneFinalizeScene, self.prevLocalAvState)
             if self.prevLocalAvState == None:
                 self.prevLocalAvState = npc.currentDialogMovie.oldGameState
-            
+
         elif sceneToPlay.get('type') == 'cutscene':
             name = sceneToPlay.get('sceneId')
             preloadInfo = sceneToPlay.get('preloadInfo', [])
             for currPreload in preloadInfo:
                 base.cr.preloadCutscene(currPreload)
                 self.preloadedCutscenes.append(currPreload)
-            
+
             plCutscene = base.cr.getPreloadedCutsceneInfo(name)
             if plCutscene == None:
                 self.sceneObj = Cutscene.Cutscene(self.cr, name, self.doneFinalizeScene, giverId)
@@ -170,7 +170,7 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
                 plCutscene.initialize(self.doneFinalizeScene, giverId, True)
                 plCutscene.play()
             if self.prevLocalAvState == None:
-                
+
                 def cutsceneStarted():
                     localCutActor = self.sceneObj.getActor(CutsceneActor.CutLocalPirate.getActorKey())
                     self.prevLocalAvState = localCutActor.oldParams.gameState
@@ -183,7 +183,7 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
         if self.sceneObj:
             self.sceneObj.destroy()
             self.sceneObj = None
-        
+
         self.sendUpdate('doneFinalizeScene')
         if self.endEvent != '':
             messenger.send(self.endEvent)
@@ -197,13 +197,13 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
             if not hasattr(base, 'localAvatar'):
                 self.notify.warning('Uh oh, tried to delete active questdoId %s when localAvatar was not present' % self.doId)
                 return
-            
+
             for currObj in self.targetObjIds:
                 localAvatar.guiMgr.radarGui.convertRadarObject(RadarGui.RADAR_OBJ_TYPE_DEFAULT, currObj)
-            
+
             self.targetObjIds = []
             self.setAsActive = False
-    
+
     def updateTargetLoc(self, pos, worldZone, targetObjId):
         gridPos = base.cr.activeWorld.worldGrid.getZoneCellOrigin(worldZone)
         worldPos = Point3(*pos) + Point3(*gridPos)
@@ -216,7 +216,5 @@ class DistributedQuest(DistributedObject.DistributedObject, QuestBase.QuestBase,
         checkPoint = self.questDNA.getCheckPoint()
         if checkPoint != -1:
             base.localAvatar.b_setTutorial(checkPoint)
-        
+
         base.localAvatar.resetStoryQuest()
-
-

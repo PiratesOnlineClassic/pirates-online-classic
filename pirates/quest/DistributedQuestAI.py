@@ -22,7 +22,11 @@ class DistributedQuestAI(DistributedObjectAI, QuestBase, Quest):
     def generate(self):
         DistributedObjectAI.generate(self)
 
+        self.accept(self.getChangeEvent(), self.handleQuestChanged)
         self.d_announceNewQuest()
+
+    def handleQuestChanged(self):
+        self.d_setTaskStates(self.getTaskStates())
 
     def setOwnerId(self, ownerId):
         self.ownerId = ownerId
@@ -123,6 +127,23 @@ class DistributedQuestAI(DistributedObjectAI, QuestBase, Quest):
         Quest.setFinalized(self)
         self.sendUpdateToAvatarId(self.ownerId, 'amFinalized', [])
 
+    def handleEvent(self, holder, questEvent):
+        modified = 0
+        for (taskState, taskDNA) in zip(self.taskStates, self.questDNA.getTasks()):
+            if questEvent.applyTo(taskState, taskDNA):
+                taskState.resetModified()
+                if holder.getAccess() != 2 and self.questDNA.getVelvetRoped():
+                    holder.d_popupProgressBlocker(self.getQuestId())
+                else:
+                    questEvent.complete(taskState, taskDNA)
+
+            modified += taskState.isModified()
+
+        if modified:
+            self.sendTaskStates(self.taskStates)
+
     def delete(self):
+        self.ignore(self.getChangeEvent())
+
         QuestBase.delete(self)
         DistributedObjectAI.delete(self)

@@ -4,7 +4,7 @@ from pirates.piratesgui.BorderFrame import BorderFrame
 from pirates.piratesbase import PLocalizer
 
 class Tab(BorderFrame):
-    
+
     def __init__(self, tabBar, name, **kw):
         optiondefs = (('state', DGG.DISABLED, None), ('command', None, self.setCommand), ('extraArgs', [], self.setExtraArgs), ('name', name, None), ('mouseEntered', None, None), ('mouseLeft', None, None), ('selected', False, self.setSelected), ('textMayChange', 1, None))
         self.defineoptions(kw, optiondefs)
@@ -20,17 +20,17 @@ class Tab(BorderFrame):
         self.tabBar = None
         self.invisibleButton = None
         BorderFrame.destroy(self)
-    
+
     def setTabBar(self, tabBar):
         self.tabBar = tabBar
-    
+
     def setCommand(self):
         if hasattr(self, 'invisibleButton'):
-            
+
             def command(*args, **kwargs):
                 if self.tabBar:
                     self.tabBar.selectTab(self['name'])
-                
+
                 if self['command']:
                     self['command'](*args, **kwargs)
 
@@ -39,27 +39,27 @@ class Tab(BorderFrame):
     def setExtraArgs(self):
         if hasattr(self, 'invisibleButton'):
             self.invisibleButton['extraArgs'] = self['extraArgs']
-    
+
     def __resetButton(self):
         if hasattr(self, 'invisibleButton'):
             self.invisibleButton['frameSize'] = self.getInnerFrameSize()
 
     def setPos(self, *args, **kwargs):
         BorderFrame.setPos(self, *args, **kwargs)
-        self._Tab__resetButton()
+        self.__resetButton()
 
     def setScale(self, *args, **kwargs):
         BorderFrame.setScale(self, *args, **kwargs)
-        self._Tab__resetButton()
+        self.__resetButton()
 
     def setFrameSize(self, *args, **kwargs):
         BorderFrame.setFrameSize(self, *args, **kwargs)
-        self._Tab__resetButton()
+        self.__resetButton()
 
     def mouseEntered(self, pt):
         if self['mouseEntered']:
             self['mouseEntered']()
-    
+
     def mouseLeft(self, pt):
         if self['mouseLeft']:
             self['mouseLeft']()
@@ -73,7 +73,7 @@ class Tab(BorderFrame):
 
 
 class LeftTab(Tab):
-    
+
     def __init__(self, tabBar, name, **kw):
         Tab.__init__(self, tabBar, name, **kw)
         self.initialiseoptions(LeftTab)
@@ -86,7 +86,7 @@ class LeftTab(Tab):
 
 
 class TopTab(Tab):
-    
+
     def __init__(self, tabBar, name, **kw):
         Tab.__init__(self, tabBar, name, **kw)
         self.initialiseoptions(TopTab)
@@ -99,7 +99,7 @@ class TopTab(Tab):
 
 
 class TabBar(DirectFrame):
-    
+
     def __init__(self, backParent, frontParent, parent = None, offset = 0, **kw):
         optiondefs = (('relief', None, None), ('state', DGG.DISABLED, None))
         self.defineoptions(kw, optiondefs)
@@ -120,15 +120,15 @@ class TabBar(DirectFrame):
     def destroy(self):
         for tab in self.tabs.itervalues():
             tab.destroy()
-        
+
         self.bParent = None
         self.fParent = None
-    
+
     def addTab(self, name, pos = -1, **kw):
         self.removeTab(name, False)
         if pos < 0:
             pos = len(self.tabOrder)
-        
+
         self.tabs[name] = self.makeTab(name, **kw)
         self.tabs[name].setTabBar(self)
         self.tabOrder.insert(pos, name)
@@ -137,18 +137,18 @@ class TabBar(DirectFrame):
 
     def refreshTabs(self):
         pass
-    
+
     def makeTab(self, name, **kw):
         pass
-    
+
     def selectTab(self, name):
-        
+
         try:
             self.activeIndex = self.tabOrder.index(name)
             self.refreshTabs()
             for tab in self.tabs.itervalues():
                 tab['selected'] = False
-            
+
             activeName = self.tabOrder[self.activeIndex]
             activeTab = self.tabs.get(activeName)
             if activeTab:
@@ -170,12 +170,12 @@ class TabBar(DirectFrame):
         if name in self.tabOrder:
             self.tabOrder.remove(name)
             needRefresh = True
-        
+
         tab = self.tabs.pop(name, None)
         if tab:
             tab.destroy()
             needRefresh = True
-        
+
         if refresh and needRefresh:
             self.refreshTabs()
 
@@ -188,6 +188,3 @@ class TabBar(DirectFrame):
         DirectFrame.unstash(self)
         for tab in self.tabs.itervalues():
             tab.unstash()
-        
-
-

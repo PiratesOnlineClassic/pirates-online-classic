@@ -22,7 +22,7 @@ class QuestTaskDNA(POD):
         'location': LocationIds.ANY_LOCATION,
         'autoTriggerInfo': tuple(),
         'goalLocation': None}
-    
+
     def getNPCName(self, npcId):
         return PLocalizer.NPCNames.get(npcId, PLocalizer.DefaultTownfolkName)
 
@@ -35,34 +35,34 @@ class QuestTaskDNA(POD):
     def locationMatches(self, questEvent):
         if self.getLocation() == LocationIds.ANY_LOCATION:
             return True
-        
+
         if questEvent.location is None:
             return False
-        
+
         locationList = getLocationList(self.getLocation())
         if locationList:
             for location in locationList:
                 if location == questEvent.getLocation():
                     return True
-            
+
         else:
             self.notify.warning('No location list for: %s' % self.getLocation())
             return False
         return False
-    
+
     def getGoalUid(self):
         if self.getGoalLocation():
             return self.getGoalLocation()
-        
+
         locationList = getLocationList(self.getLocation())
         if locationList:
             return locationList[0]
         else:
             return None
-    
+
     def getGoalNum(self):
         return 1
-    
+
     def handleEnemyDefeat(self, questEvent, taskState):
         pass
 
@@ -162,17 +162,17 @@ class QuestTaskDNA(POD):
 class VisitTaskDNA(QuestTaskDNA):
     DataSet = {
         'npcId': None}
-    
+
     def handleNPCVisit(self, questEvent, taskState):
         if questEvent.npcId == self.npcId:
             return True
-        
+
         return False
-    
+
     def handleObjectVisit(self, questEvent, taskState):
         if questEvent.objectId == self.npcId:
             return True
-        
+
         return False
 
     def getDescriptionText(self, state):
@@ -186,13 +186,13 @@ class VisitTaskDNA(QuestTaskDNA):
     def getSCWhereIsText(self, state):
         return PLocalizer.QuestSCWhereIsNPC % {
             'npcName': self.getNPCName(self.npcId)}
-    
+
     def getSCHowToText(self, state):
         return ''
-    
+
     def getTitle(self):
         return PLocalizer.VisitTaskTitle % self.getNPCName(self.npcId)
-    
+
     def getDialogAfter(self):
         return random.choice(PLocalizer.VisitTaskDefaultDialogAfter)
 
@@ -203,20 +203,20 @@ class VisitTaskDNA(QuestTaskDNA):
         targetInfo = world.uid2doSearch(self.npcId)
         if targetInfo == None:
             return None
-        
+
         npcDoId = targetInfo[0]
         npcInstance = targetInfo[1]
         if npcDoId == None:
             return None
-        
+
         targetNpc = simbase.air.doId2do.get(npcDoId)
         if targetNpc == None:
             return None
-        
+
         location = targetNpc.getPos(npcInstance.worldGrid)
         object = targetNpc
         return (location, object.getUniqueId(), npcInstance)
-    
+
     def getGoalUid(self):
         return self.getGoalLocation() or self.getNpcId()
 
@@ -233,7 +233,7 @@ class RecoverAvatarItemTaskDNA(QuestTaskDNA):
         'probability': 0.75,
         'enemyType': AvatarTypes.AnyAvatar,
         'level': 0}
-    
+
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
         state.setGoal(self.getNum())
@@ -242,10 +242,10 @@ class RecoverAvatarItemTaskDNA(QuestTaskDNA):
     def handleEnemyDefeat(self, questEvent, taskState):
         if not questEvent.enemyType.isA(self.enemyType):
             return False
-        
+
         if questEvent.level < self.level:
             return False
-        
+
         if self.getLocation():
             if not self.locationMatches(questEvent):
                 return False
@@ -255,22 +255,22 @@ class RecoverAvatarItemTaskDNA(QuestTaskDNA):
         if attempts < self.maxAttempts:
             attempts += 1
             taskState.setAttempts(attempts)
-        
+
         if attempts == self.maxAttempts:
             found = True
         elif attempts > self.maxAttempts:
             found = True
         elif questEvent.getRng(self.item).random() <= self.probability:
             found = True
-        
+
         return found
-    
+
     def complete(self, questEvent, taskState):
         attempts = taskState.getAttempts()
         if attempts < self.maxAttempts:
             attempts += 1
             taskState.setAttempts(attempts)
-        
+
         taskState.handleProgress()
 
     def getSCSummaryText(self, state):
@@ -299,7 +299,7 @@ class RecoverAvatarItemTaskDNA(QuestTaskDNA):
     def getSCWhereIsText(self, state):
         return PLocalizer.QuestSCWhereIsEnemy % {
             'enemyName': self.enemyType.getStrings()[0]}
-    
+
     def getSCHowToText(self, state):
         return PLocalizer.QuestSCHowDoIRecover % {
             'itemName': PLocalizer.QuestItemNames[self.item][0],
@@ -330,13 +330,13 @@ class RecoverAvatarItemTaskDNA(QuestTaskDNA):
 
     def getTitle(self):
         return PLocalizer.RecoverAvatarItemTaskTitle
-    
+
     def compileStats(self, questStatData):
         questStatData.incrementTasks('recoverAvatarItemTasks')
         count = self.num * int((1.0 - self.probability) * self.maxAttempts)
         if count < self.num:
             count = self.num
-        
+
         questStatData.incrementEnemies(self.enemyType.getName(), count)
         questStatData.incrementMisc('totalEnemies', count)
 
@@ -346,7 +346,7 @@ class RecoverAvatarItemTaskDNA(QuestTaskDNA):
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        
+
         itemName = PLocalizer.QuestItemNames[self.item][2]
         progressMsg = PLocalizer.RecoverItemProgress % (taskState.progress, taskState.goal, itemName)
         if taskState.progress == taskState.goal:
@@ -359,7 +359,7 @@ class RecoverAvatarItemTaskDNA(QuestTaskDNA):
         result = QuestTaskDNA.getGoalUid(self)
         if result:
             return result
-        
+
         level = max(0, self.getLevel())
         typeInfo = [
             level,
@@ -378,7 +378,7 @@ class RecoverAvatarGroupItemTaskDNA(QuestTaskDNA):
         'level': 0,
         'enemyList': (AvatarTypes.AnyAvatar,),
         'enemyNames': ('', '')}
-    
+
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
         state.setGoal(self.getNum())
@@ -389,13 +389,13 @@ class RecoverAvatarGroupItemTaskDNA(QuestTaskDNA):
         for enemy in self.enemyList:
             if questEvent.enemyType.isA(enemy):
                 matchFound = True
-        
+
         if not matchFound:
             return False
-        
+
         if questEvent.level < self.level:
             return False
-        
+
         if self.getLocation():
             if not self.locationMatches(questEvent):
                 return False
@@ -405,14 +405,14 @@ class RecoverAvatarGroupItemTaskDNA(QuestTaskDNA):
         if attempts < self.maxAttempts:
             attempts += 1
             taskState.setAttempts(attempts)
-        
+
         if attempts == self.maxAttempts:
             found = True
         elif attempts > self.maxAttempts:
             found = True
         elif questEvent.getRng(self.item).random() <= self.probability:
             found = True
-        
+
         return found
 
     def complete(self, questEvent, taskState):
@@ -420,7 +420,7 @@ class RecoverAvatarGroupItemTaskDNA(QuestTaskDNA):
         if attempts < self.maxAttempts:
             attempts += 1
             taskState.setAttempts(attempts)
-        
+
         taskState.handleProgress()
 
     def getSCSummaryText(self, state):
@@ -445,16 +445,16 @@ class RecoverAvatarGroupItemTaskDNA(QuestTaskDNA):
                 'itemName': PLocalizer.QuestItemNames[self.item][1],
                 'level': self.level,
                 'enemyName': self.enemyNames[1]}
-    
+
     def getSCWhereIsText(self, state):
         return PLocalizer.QuestSCWhereIsEnemy % {
             'enemyName': self.enemyNames[0]}
-    
+
     def getSCHowToText(self, state):
         return PLocalizer.QuestSCHowDoIRecover % {
             'itemName': PLocalizer.QuestItemNames[self.item][0],
             'enemyName': self.enemyNames[0]}
-    
+
     def getDescriptionText(self, state):
         if self.num == 1:
             if self.level == 0:
@@ -480,23 +480,23 @@ class RecoverAvatarGroupItemTaskDNA(QuestTaskDNA):
 
     def getTitle(self):
         return PLocalizer.RecoverAvatarItemTaskTitle
-    
+
     def compileStats(self, questStatData):
         questStatData.incrementTasks('recoverAvatarGroupItemTasks')
         count = self.num * int((1.0 - self.probability) * self.maxAttempts)
         if count < self.num:
             count = self.num
-        
+
         questStatData.incrementEnemies(self.enemyNames[0], count)
         questStatData.incrementMisc('totalEnemies', count)
-    
+
     def getGoalNum(self):
         return self.num
-    
+
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        
+
         itemName = PLocalizer.QuestItemNames[self.item][2]
         progressMsg = PLocalizer.RecoverItemProgress % (taskState.progress, taskState.goal, itemName)
         if taskState.progress == taskState.goal:
@@ -509,7 +509,7 @@ class RecoverAvatarGroupItemTaskDNA(QuestTaskDNA):
         result = QuestTaskDNA.getGoalUid(self)
         if result:
             return result
-        
+
         level = max(0, self.getLevel())
         typeInfo = [
             level,
@@ -529,12 +529,12 @@ class RecoverShipItemTaskDNA(QuestTaskDNA):
         'level': 0,
         'isFlagship': False,
         'level': 0}
-    
+
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
         state.setGoal(self.getNum())
         return state
-    
+
     def handleShipDefeat(self, questEvent, taskState):
         if self.faction is not None:
             if not questEvent.faction.isA(self.faction):
@@ -552,24 +552,24 @@ class RecoverShipItemTaskDNA(QuestTaskDNA):
 
         if self.isFlagship == True and questEvent.isFlagship == False:
             return False
-        
+
         if self.getLocation():
             if not self.locationMatches(questEvent):
                 return False
-        
+
         found = False
         attempts = taskState.getAttempts()
         if attempts < self.maxAttempts:
             attempts += 1
             taskState.setAttempts(attempts)
-        
+
         if attempts == self.maxAttempts:
             found = True
         elif attempts > self.maxAttempts:
             found = True
         elif questEvent.getRng(self.item).random() <= self.probability:
             found = True
-        
+
         return found
 
     def complete(self, questEvent, taskState):
@@ -577,7 +577,7 @@ class RecoverShipItemTaskDNA(QuestTaskDNA):
         if attempts < self.maxAttempts:
             attempts += 1
             taskState.setAttempts(attempts)
-        
+
         taskState.handleProgress()
 
     def getSCSummaryText(self, state):
@@ -763,19 +763,19 @@ class RecoverShipItemTaskDNA(QuestTaskDNA):
         count = self.num * int((1.0 - self.probability) * self.maxAttempts)
         if count < self.num:
             count = self.num
-        
+
         if self.faction:
             questStatData.incrementEnemies(self.faction.getName() + '-ship', count)
-        
+
         questStatData.incrementMisc('totalShips', count)
 
     def getGoalNum(self):
         return self.num
-    
+
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        
+
         itemName = PLocalizer.QuestItemNames[self.item][2]
         progressMsg = PLocalizer.RecoverItemProgress % (taskState.progress, taskState.goal, itemName)
         if taskState.progress == taskState.goal:
@@ -783,12 +783,12 @@ class RecoverShipItemTaskDNA(QuestTaskDNA):
         else:
             color = PiratesGuiGlobals.TextFG8
         return (progressMsg, color)
-    
+
     def getGoalUid(self):
         result = QuestTaskDNA.getGoalUid(self)
         if result:
             return result
-        
+
         level = max(0, self.getLevel())
         typeInfo = [
             level,
@@ -807,21 +807,21 @@ class RecoverContainerItemTaskDNA(QuestTaskDNA):
         'num': 1,
         'maxAttempts': 4,
         'probability': 0.75}
-    
+
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
         state.setGoal(self.getNum())
         return state
-    
+
     def handleContainerSearched(self, questEvent, taskState):
         if self.getLocation():
             if not self.locationMatches(questEvent):
                 return False
-        
+
         allowedToSearch = taskState.searchedContainer(questEvent.containerId)
         if not allowedToSearch:
             return False
-        
+
         containerMatches = False
         if self.containerId != PropIds.ANY_PROP:
             propList = getPropList(self.containerId)
@@ -829,28 +829,28 @@ class RecoverContainerItemTaskDNA(QuestTaskDNA):
                 for prop in propList:
                     if prop == questEvent.containerId:
                         containerMatches = True
-                
+
             elif self.containerId == questEvent.containerId:
                 containerMatches = True
-            
+
         else:
             containerMatches = True
         if not containerMatches:
             return False
-        
+
         found = False
         attempts = taskState.getAttempts()
         if attempts < self.maxAttempts:
             attempts += 1
             taskState.setAttempts(attempts)
-        
+
         if attempts == self.maxAttempts:
             found = True
         elif attempts > self.maxAttempts:
             found = True
         elif questEvent.getRng(self.item).random() <= self.probability:
             found = True
-        
+
         return found
 
     def complete(self, questEvent, taskState):
@@ -858,9 +858,9 @@ class RecoverContainerItemTaskDNA(QuestTaskDNA):
         if attempts < self.maxAttempts:
             attempts += 1
             taskState.setAttempts(attempts)
-        
+
         taskState.handleProgress()
-    
+
     def getSCSummaryText(self, state):
         if self.num == 1:
             return PLocalizer.QuestSCContainerItem % {
@@ -898,16 +898,16 @@ class RecoverContainerItemTaskDNA(QuestTaskDNA):
         count = self.num * int((1.0 - self.probability) * self.maxAttempts)
         if count < self.num:
             count = self.num
-        
+
         questStatData.incrementMisc('treasures', count)
-    
+
     def getGoalNum(self):
         return self.num
-    
+
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        
+
         itemName = PLocalizer.QuestItemNames[self.item][2]
         progressMsg = PLocalizer.RecoverItemProgress % (taskState.progress, taskState.goal, itemName)
         if taskState.progress == taskState.goal:
@@ -923,17 +923,17 @@ class DeliverItemTaskDNA(QuestTaskDNA):
         'num': 1,
         'npcId': None,
         'location': None}
-    
+
     def handleNPCVisit(self, questEvent, taskState):
         if questEvent.npcId == self.npcId:
             return True
-        
+
         return False
-    
+
     def handleObjectVisit(self, questEvent, taskState):
         if questEvent.objectId == self.npcId:
             return True
-        
+
         return False
 
     def handleDockedAtPort(self, questEvent, taskState):
@@ -942,7 +942,7 @@ class DeliverItemTaskDNA(QuestTaskDNA):
                 return True
 
         return False
-    
+
     def getSCSummaryText(self, state):
         if self.npcId:
             locationName = self.getNPCName(self.npcId)
@@ -950,7 +950,7 @@ class DeliverItemTaskDNA(QuestTaskDNA):
             locationName = PLocalizer.LocationNames.get(self.location)
             if locationName == None:
                 return ''
-            
+
         else:
             locationName = 'ErrorLocation'
         if self.num == 1:
@@ -962,7 +962,7 @@ class DeliverItemTaskDNA(QuestTaskDNA):
                 'num': self.num,
                 'itemName': PLocalizer.QuestItemNames[self.item][1],
                 'location': locationName}
-    
+
     def getSCWhereIsText(self, state):
         if self.npcId:
             locationName = self.getNPCName(self.npcId)
@@ -970,7 +970,7 @@ class DeliverItemTaskDNA(QuestTaskDNA):
             locationName = PLocalizer.LocationNames.get(self.location)
             if locationName == None:
                 locationName = 'Unknown Location'
-            
+
         else:
             return ''
         return PLocalizer.QuestSCWhereIsNPC % {
@@ -978,7 +978,7 @@ class DeliverItemTaskDNA(QuestTaskDNA):
 
     def getSCHowToText(self, state):
         return ''
-    
+
     def getDescriptionText(self, state):
         if self.npcId:
             locationName = self.getNPCName(self.npcId)
@@ -986,7 +986,7 @@ class DeliverItemTaskDNA(QuestTaskDNA):
             locationName = PLocalizer.LocationNames.get(self.location)
             if locationName == None:
                 locationName = 'Unknown Location'
-            
+
         else:
             locationName = 'ErrorLocation'
         if self.num == 1:
@@ -1001,18 +1001,18 @@ class DeliverItemTaskDNA(QuestTaskDNA):
 
     def getTitle(self):
         return PLocalizer.DeliverItemTaskTitle
-    
+
     def getGoalUid(self):
         return self.getNpcId()
-    
+
     def compileStats(self, questStatData):
         questStatData.incrementTasks('deliverItemTasks')
         questStatData.incrementMisc('visits')
-    
+
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        
+
         itemName = PLocalizer.QuestItemNames[self.item][2]
         progressMsg = PLocalizer.DeliverItemProgress % (self.num, self.num, itemName)
         if taskState.progress == taskState.goal:
@@ -1023,7 +1023,7 @@ class DeliverItemTaskDNA(QuestTaskDNA):
 
 
 class SmuggleItemTaskDNA(DeliverItemTaskDNA):
-    
+
     def getSCSummaryText(self, state):
         if self.npcId:
             locationName = self.getNPCName(self.npcId)
@@ -1031,7 +1031,7 @@ class SmuggleItemTaskDNA(DeliverItemTaskDNA):
             locationName = PLocalizer.LocationNames.get(self.location)
             if locationName == None:
                 locationName = 'Unknown Location'
-            
+
         else:
             return ''
         if self.num == 1:
@@ -1051,15 +1051,15 @@ class SmuggleItemTaskDNA(DeliverItemTaskDNA):
             locationName = PLocalizer.LocationNames.get(self.location)
             if locationName == None:
                 locationName = 'Unknown Location'
-            
+
         else:
             return ''
         return PLocalizer.QuestSCWhereIsNPC % {
             'npcName': locationName}
-    
+
     def getSCHowToText(self, state):
         return ''
-    
+
     def getDescriptionText(self, state):
         if self.npcId:
             locationName = self.getNPCName(self.npcId)
@@ -1067,7 +1067,7 @@ class SmuggleItemTaskDNA(DeliverItemTaskDNA):
             locationName = PLocalizer.LocationNames.get(self.location)
             if locationName == None:
                 locationName = 'Unknown Location'
-            
+
         else:
             locationName = 'ErrorLocation'
         if self.num == 1:
@@ -1085,11 +1085,11 @@ class SmuggleItemTaskDNA(DeliverItemTaskDNA):
 
     def compileStats(self, questStatData):
         questStatData.incrementTasks('smuggleItemTasks')
-    
+
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        
+
         itemName = PLocalizer.QuestItemNames[self.item][2]
         progressMsg = PLocalizer.SmuggleItemProgress % (taskState.progress, taskState.goal, itemName)
         if taskState.progress == taskState.goal:
@@ -1102,7 +1102,7 @@ class SmuggleItemTaskDNA(DeliverItemTaskDNA):
 class MaroonNPCTaskDNA(QuestTaskDNA):
     DataSet = {
         'npcId': None}
-    
+
     def handleDockedAtPort(self, questEvent, taskState):
         if self.getLocation():
             if self.locationMatches(questEvent):
@@ -1115,19 +1115,19 @@ class MaroonNPCTaskDNA(QuestTaskDNA):
         locationName = PLocalizer.LocationNames.get(self.location)
         if locationName == None:
             locationName = 'Unknown Location'
-        
+
         return PLocalizer.QuestSCMaroonNPC % {
             'npcName': npcName,
             'location': locationName}
-    
+
     def getSCWhereIsText(self, state):
         locationName = PLocalizer.LocationNames.get(self.location)
         if locationName == None:
             locationName = 'Unknown Location'
-        
+
         return PLocalizer.QuestSCWhereIsLocation % {
             'location': locationName}
-    
+
     def getSCHowToText(self, state):
         return PLocalizer.QuestSCHowDoIMaroon
 
@@ -1136,11 +1136,11 @@ class MaroonNPCTaskDNA(QuestTaskDNA):
         locationName = PLocalizer.LocationNames.get(self.location)
         if locationName == None:
             locationName = 'Unknown Location'
-        
+
         return PLocalizer.MaroonNPCTaskDesc % {
             'npcName': npcName,
             'location': locationName}
-    
+
     def getTitle(self):
         return PLocalizer.MaroonNPCTaskTitle
 
@@ -1153,11 +1153,11 @@ class BribeNPCTaskDNA(QuestTaskDNA):
         'npcId': None,
         'gold': 1,
         'bribeType': 0}
-    
+
     def handleNPCBribe(self, questEvent, taskState):
         if questEvent.npcId == self.npcId and questEvent.gold >= self.gold:
             return True
-        
+
         return False
 
     def getSCSummaryText(self, state):
@@ -1167,7 +1167,7 @@ class BribeNPCTaskDNA(QuestTaskDNA):
     def getSCWhereIsText(self, state):
         return PLocalizer.QuestSCWhereIsNPC % {
             'npcName': self.getNPCName(self.npcId)}
-    
+
     def getSCHowToText(self, state):
         return PLocalizer.QuestSCHowToBribe
 
@@ -1186,7 +1186,7 @@ class BribeNPCTaskDNA(QuestTaskDNA):
 
     def getDialogAfter(self):
         return random.choice(PLocalizer.BribeTaskDefaultDialogAfter)
-    
+
     def getReturnGiverIds(self):
         return makeTuple(self.npcId)
 
@@ -1194,23 +1194,23 @@ class BribeNPCTaskDNA(QuestTaskDNA):
         targetInfo = world.uid2doSearch(self.npcId)
         if targetInfo == None:
             return None
-        
+
         npcDoId = targetInfo[0]
         npcInstance = targetInfo[1]
         if npcDoId == None:
             return None
-        
+
         targetNpc = simbase.air.doId2do.get(npcDoId)
         if targetNpc == None:
             return None
-        
+
         location = targetNpc.getPos(npcInstance.worldGrid)
         object = targetNpc
         return (location, object.getUniqueId(), npcInstance)
-    
+
     def getGoalUid(self):
         return self.getNpcId()
-    
+
     def compileStats(self, questStatData):
         questStatData.incrementTasks('bribeNPCTasks')
         questStatData.incrementMisc('gold', self.gold)
@@ -1223,15 +1223,15 @@ class PurchaseItemTaskDNA(QuestTaskDNA):
 class PokerTaskDNA(QuestTaskDNA):
     DataSet = {
         'gold': 1}
-    
+
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
         state.setGoal(self.getGold())
         return state
-    
+
     def handlePokerHandWon(self, questEvent, taskState):
         return True
-    
+
     def complete(self, questEvent, taskState):
         taskState.handleProgress(questEvent.gold)
 
@@ -1245,10 +1245,10 @@ class PokerTaskDNA(QuestTaskDNA):
 
     def getSCWhereIsText(self, state):
         return ''
-    
+
     def getSCHowToText(self, state):
         return PLocalizer.QuestSCWinPoker
-    
+
     def getDescriptionText(self, state):
         if self.gold == 1:
             return PLocalizer.PokerTaskDescS % {
@@ -1256,18 +1256,18 @@ class PokerTaskDNA(QuestTaskDNA):
         else:
             return PLocalizer.PokerTaskDescP % {
                 'gold': self.gold}
-    
+
     def getTitle(self):
         return PLocalizer.PokerTaskTitle
-    
+
     def compileStats(self, questStatData):
         questStatData.incrementTasks('pokerTasks')
         questStatData.incrementMisc('poker-gold', self.gold)
-    
+
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        
+
         progressMsg = PLocalizer.PokerProgress % (taskState.progress, taskState.goal)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
@@ -1279,7 +1279,7 @@ class PokerTaskDNA(QuestTaskDNA):
 class BlackjackTaskDNA(QuestTaskDNA):
     DataSet = {
         'gold': 1}
-    
+
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
         state.setGoal(self.getGold())
@@ -1287,10 +1287,10 @@ class BlackjackTaskDNA(QuestTaskDNA):
 
     def handleBlackjackHandWon(self, questEvent, taskState):
         return True
-    
+
     def complete(self, questEvent, taskState):
         taskState.handleProgress(questEvent.gold)
-    
+
     def getSCSummaryText(self, state):
         if self.gold == 1:
             return PLocalizer.QuestSCBlackjackWinGold % {
@@ -1298,13 +1298,13 @@ class BlackjackTaskDNA(QuestTaskDNA):
         else:
             return PLocalizer.QuestSCBlackjackWinGold % {
                 'gold': self.gold}
-    
+
     def getSCWhereIsText(self, state):
         return ''
-    
+
     def getSCHowToText(self, state):
         return PLocalizer.QuestSCWinBlackjack
-    
+
     def getDescriptionText(self, state):
         if self.gold == 1:
             return PLocalizer.BlackjackTaskDescS % {
@@ -1323,7 +1323,7 @@ class BlackjackTaskDNA(QuestTaskDNA):
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        
+
         progressMsg = PLocalizer.BlackjackProgress % (taskState.progress, taskState.goal)
         if taskState.progress == taskState.goal:
             color = PiratesGuiGlobals.TextFG10
@@ -1339,7 +1339,7 @@ class RecoverTreasureItemTaskDNA(QuestTaskDNA):
         'num': 1,
         'maxAttempts': 4,
         'probability': 0.75}
-    
+
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
         state.setGoal(self.getNum())
@@ -1357,7 +1357,7 @@ class RecoverTreasureItemTaskDNA(QuestTaskDNA):
                 for treasure in treasureList:
                     if treasure == questEvent.treasureId:
                         treasureMatches = True
-                
+
             else:
                 self.notify.warning('No treasure list for: %s' % self.treasureId)
                 return False
@@ -1365,20 +1365,20 @@ class RecoverTreasureItemTaskDNA(QuestTaskDNA):
             treasureMatches = True
         if not treasureMatches:
             return False
-        
+
         found = False
         attempts = taskState.getAttempts()
         if attempts < self.maxAttempts:
             attempts += 1
             taskState.setAttempts(attempts)
-        
+
         if attempts == self.maxAttempts:
             found = True
         elif attempts > self.maxAttempts:
             found = True
         elif questEvent.getRng(self.item).random() <= self.probability:
             found = True
-        
+
         return found
 
     def complete(self, questEvent, taskState):
@@ -1386,7 +1386,7 @@ class RecoverTreasureItemTaskDNA(QuestTaskDNA):
         if attempts < self.maxAttempts:
             attempts += 1
             taskState.setAttempts(attempts)
-        
+
         taskState.handleProgress()
 
     def getSCSummaryText(self, state):
@@ -1400,7 +1400,7 @@ class RecoverTreasureItemTaskDNA(QuestTaskDNA):
 
     def getSCWhereIsText(self, state):
         return ''
-    
+
     def getSCHowToText(self, state):
         return PLocalizer.QuestSCFindTreasure
 
@@ -1415,11 +1415,11 @@ class RecoverTreasureItemTaskDNA(QuestTaskDNA):
 
     def getTitle(self):
         return PLocalizer.RecoverTreasureItemTaskTitle
-    
+
     def getGoalUid(self):
         if self.getGoalLocation():
             return self.getGoalLocation()
-        
+
         return self.getTreasureId()
 
     def compileStats(self, questStatData):
@@ -1427,16 +1427,16 @@ class RecoverTreasureItemTaskDNA(QuestTaskDNA):
         count = self.num * int((1.0 - self.probability) * self.maxAttempts)
         if count < self.num:
             count = self.num
-        
+
         questStatData.incrementMisc('treasures', count)
-    
+
     def getGoalNum(self):
         return self.num
-    
+
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        
+
         itemName = PLocalizer.QuestItemNames[self.item][2]
         progressMsg = PLocalizer.TreasureItemProgress % (taskState.progress, taskState.goal, itemName)
         if taskState.progress == taskState.goal:
@@ -1452,7 +1452,7 @@ class DefeatTaskDNA(QuestTaskDNA):
         'num': 1,
         'level': 0,
         'weaponType': None}
-    
+
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
         state.setGoal(self.getNum())
@@ -1460,20 +1460,20 @@ class DefeatTaskDNA(QuestTaskDNA):
 
     def _getEnemyType(self, taskState):
         return self.getEnemyType()
-    
+
     def _getNum(self, taskState):
         return self.getNum()
 
     def _getLevel(self, taskState):
         return self.getLevel()
-    
+
     def handleEnemyDefeat(self, questEvent, taskState):
         if not questEvent.enemyType.isA(self._getEnemyType(taskState)):
             return False
-        
+
         if questEvent.level < self._getLevel(taskState):
             return False
-        
+
         if self.getLocation():
             if not self.locationMatches(questEvent):
                 return False
@@ -1484,9 +1484,9 @@ class DefeatTaskDNA(QuestTaskDNA):
                 return True
             else:
                 return False
-        
+
         return True
-    
+
     def getSCSummaryText(self, state):
         strings = self.enemyType.getStrings()
         weaponName = PLocalizer.InventoryTypeNames.get(self.weaponType)
@@ -1529,12 +1529,12 @@ class DefeatTaskDNA(QuestTaskDNA):
                 'num': self.num,
                 'level': self.level,
                 'enemyName': strings[1]}
-    
+
     def getSCWhereIsText(self, state):
         strings = self.enemyType.getStrings()
         return PLocalizer.QuestSCWhereIsEnemy % {
             'enemyName': strings[0]}
-    
+
     def getSCSummaryText_Dynamic(self, state):
         strings = self._getEnemyType(state).getStrings()
         weaponName = PLocalizer.InventoryTypeNames.get(self.weaponType)
@@ -1582,10 +1582,10 @@ class DefeatTaskDNA(QuestTaskDNA):
         strings = self._getEnemyType(state).getStrings()
         return PLocalizer.QuestSCWhereIsEnemy % {
             'enemyName': strings[0]}
-    
+
     def getSCHowToText(self, state):
         return ''
-    
+
     def getDescriptionText(self, state):
         strings = self._getEnemyType(state).getStrings()
         weaponName = PLocalizer.InventoryTypeNames.get(self.weaponType)
@@ -1628,7 +1628,7 @@ class DefeatTaskDNA(QuestTaskDNA):
                 'num': self._getNum(state),
                 'level': self._getLevel(state),
                 'enemyName': strings[1]}
-    
+
     def getTitle(self):
         if self.weaponType is not None:
             weaponName = PLocalizer.InventoryTypeNames.get(self.weaponType)
@@ -1641,14 +1641,14 @@ class DefeatTaskDNA(QuestTaskDNA):
         questStatData.incrementTasks('recoverAvatarItemTasks')
         questStatData.incrementEnemies(self.enemyType.getName(), self.num)
         questStatData.incrementMisc('totalEnemies', self.num)
-    
+
     def getGoalNum(self):
         return self.num
 
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        
+
         enemyTypeName = self.enemyType.getStrings()[1]
         weaponName = PLocalizer.InventoryTypeNames.get(self.weaponType)
         if weaponName is not None:
@@ -1660,12 +1660,12 @@ class DefeatTaskDNA(QuestTaskDNA):
         else:
             color = PiratesGuiGlobals.TextFG8
         return (progressMsg, color)
-    
+
     def getGoalUid(self):
         result = QuestTaskDNA.getGoalUid(self)
         if result:
             return result
-        
+
         level = max(0, self.getLevel())
         typeInfo = [
             level,
@@ -1681,37 +1681,37 @@ class DefeatGroupTaskDNA(QuestTaskDNA):
         'level': 0,
         'weaponType': None,
         'enemyNames': ('', '')}
-    
+
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
         state.setGoal(self.getNum())
         return state
-    
+
     def handleEnemyDefeat(self, questEvent, taskState):
         matchFound = False
         for enemy in self.enemyList:
             if questEvent.enemyType.isA(enemy):
                 matchFound = True
-        
+
         if not matchFound:
             return False
-        
+
         if questEvent.level < self.level:
             return False
-        
+
         if self.getLocation():
             if not self.locationMatches(questEvent):
                 return False
-        
+
         desiredWeapon = self.weaponType
         if desiredWeapon is not None:
             if questEvent.weaponType == desiredWeapon:
                 return True
             else:
                 return False
-        
+
         return True
-    
+
     def getDescriptionText(self, state):
         weaponName = PLocalizer.InventoryTypeNames.get(self.weaponType)
         if self.getNum() == 1:
@@ -1753,7 +1753,7 @@ class DefeatGroupTaskDNA(QuestTaskDNA):
                 'num': self.getNum(),
                 'level': self.getLevel(),
                 'enemyName': self.enemyNames[1]}
-    
+
     def getSCSummaryText(self, state):
         weaponName = PLocalizer.InventoryTypeNames.get(self.weaponType)
         if self.num == 1:
@@ -1799,33 +1799,33 @@ class DefeatGroupTaskDNA(QuestTaskDNA):
     def getSCWhereIsText(self, state):
         return PLocalizer.QuestSCWhereIsEnemy % {
             'enemyName': self.enemyNames[0]}
-    
+
     def getSCSummaryText_Dynamic(self, state):
         return ''
 
     def getSCWhereIsText_Dynamic(self, state):
         return ''
-    
+
     def getTitle(self):
         if self.weaponType is not None:
             weaponName = PLocalizer.InventoryTypeNames.get(self.weaponType)
             if weaponName is not None:
                 return PLocalizer.DefeatWithWeaponTaskTitle % (self.enemyNames[1], weaponName)
-        
+
         return PLocalizer.DefeatTaskTitle % self.enemyNames[1]
-    
+
     def compileStats(self, questStatData):
         questStatData.incrementTasks('defeatgroupTasks')
         questStatData.incrementEnemies(self.enemyNames[0], self.num)
         questStatData.incrementMisc('totalEnemies', self.num)
-    
+
     def getGoalNum(self):
         return self.num
 
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        
+
         enemyTypeName = self.enemyNames[1]
         weaponName = PLocalizer.InventoryTypeNames.get(self.weaponType)
         if weaponName is not None:
@@ -1837,12 +1837,12 @@ class DefeatGroupTaskDNA(QuestTaskDNA):
         else:
             color = PiratesGuiGlobals.TextFG8
         return (progressMsg, color)
-    
+
     def getGoalUid(self):
         result = QuestTaskDNA.getGoalUid(self)
         if result:
             return result
-        
+
         level = max(0, self.getLevel())
         typeInfo = [
             level,
@@ -1861,7 +1861,7 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
         'killWeapon': None,
         'damageWeapon': None,
         'withoutSink': False}
-    
+
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
         if self.getNum() is not None:
@@ -1869,11 +1869,11 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
         else:
             state.setGoal(self.getDamage())
         return state
-    
+
     def handleShipPVPPlayerDamage(self, questEvent, taskState):
         if self.getNum() is not None:
             return None
-        
+
         if self.enemyClass is not None:
             if self.enemyClass != questEvent.enemyClass:
                 return False
@@ -1885,7 +1885,7 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
         if self.killWeapon is not None:
             if self.killWeapon != questEvent.damageWeapon:
                 return False
-        
+
         if self.damageWeapon is not None:
             if self.damageWeapon != questEvent.damageWeapon:
                 return False
@@ -1893,18 +1893,18 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
         if self.killType is not None:
             if self.killType != PiratesGlobals.ShipPVPPirate:
                 return False
-        
+
         if questEvent.damage > 0:
             if questEvent.damage + taskState.progress > taskState.goal:
                 taskState.progress = taskState.goal
             else:
                 taskState.progress += questEvent.damage
             taskState.modified = True
-    
+
     def handleShipPVPShipDamage(self, questEvent, taskState):
         if self.getNum() is not None:
             return None
-        
+
         if self.enemyClass is not None:
             if self.enemyClass != questEvent.enemyClass:
                 return False
@@ -1912,7 +1912,7 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
         if self.gameType is not None:
             if self.gameType != questEvent.gameType:
                 return False
-        
+
         if self.killWeapon is not None:
             if self.killWeapon != questEvent.damageWeapon:
                 return False
@@ -1920,32 +1920,32 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
         if self.damageWeapon is not None:
             if self.damageWeapon != questEvent.damageWeapon:
                 return False
-        
+
         if self.killType is not None:
             if self.killType != PiratesGlobals.ShipPVPShip:
                 return False
-        
+
         if questEvent.damage > 0:
             if questEvent.damage + taskState.progress > taskState.goal:
                 taskState.progress = taskState.goal
             else:
                 taskState.progress += questEvent.damage
             taskState.modified = True
-    
+
     def handleShipPVPSpawn(self, questEvent, taskState):
         if self.withoutSink is True:
             taskState.progress = 0
             taskState.modified = True
-        
+
         return False
-    
+
     def handleShipPVPSink(self, questEvent, taskState):
         if self.withoutSink is True:
             taskState.progress = 0
             taskState.modified = True
-        
+
         return False
-    
+
     def handleShipPVPEnemyDefeat(self, questEvent, taskState):
         if self.enemyClass is not None:
             if self.enemyClass != questEvent.enemyClass:
@@ -1954,20 +1954,20 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
         if self.gameType is not None:
             if self.gameType != questEvent.gameType:
                 return False
-        
+
         if self.killType is not None:
             if self.killType != questEvent.killType:
                 return False
-        
+
         if self.killWeapon is not None:
             if self.killWeapon != questEvent.killWeapon:
                 return False
-        
+
         if self.getDamage() is not None:
             return False
-        
+
         return True
-    
+
     def getSCSummaryText(self, state):
         return self.getDescriptionText(state)
 
@@ -1981,20 +1981,20 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
             enemyText = PLocalizer.ShipPVPQuestFrench
         elif self.enemyClass == PiratesGlobals.ShipPVPSpanish:
             enemyText = PLocalizer.ShipPVPQuestSpanish
-        
+
         if self.killType == PiratesGlobals.ShipPVPShip:
             killTypeText = PLocalizer.ShipPVPQuestKillShip
         elif self.killType == PiratesGlobals.ShipPVPPirate:
             killTypeText = PLocalizer.ShipPVPQuestKillPirate
-        
+
         if self.killWeapon == PiratesGlobals.ShipPVPKillCannon:
             weaponText = PLocalizer.ShipPVPQuestUseCannon
         elif self.killWeapon == PiratesGlobals.ShipPVPKillShip:
             weaponText = PLocalizer.ShipPVPQuestUseShip
-        
+
         if self.gameType == PiratesGlobals.ShipPVPSiege:
             gameTypeText = PLocalizer.ShipPVPQuestGameName
-        
+
         if self.num is not None:
             if self.num == 1:
                 if enemyText is not None:
@@ -2008,10 +2008,10 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
                     summaryText = PLocalizer.ShipPVPQuestSingleAnyNumB % gameTypeText
                 if weaponText is not None:
                     summaryText += PLocalizer.ShipPVPQuestUsingA % weaponText
-                
+
                 if self.withoutSink is True:
                     summaryText += PLocalizer.ShipPVPQuestWithoutSinking
-                
+
             else:
                 numString = str(self.num)
                 if enemyText is not None:
@@ -2025,10 +2025,10 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
                     summaryText = PLocalizer.ShipPVPQuestMultAnyB % (numString, gameTypeText)
                 if weaponText is not None:
                     summaryText += PLocalizer.ShipPVPQuestUsingA % weaponText
-                
+
                 if self.withoutSink is True:
                     summaryText += PLocalizer.ShipPVPQuestWithoutSinking
-                
+
         else:
             numString = str(self.damage)
             if enemyText is not None:
@@ -2045,25 +2045,25 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
                 summaryText = PLocalizer.ShipPVPQuestDamageAnyC % (numString, gameTypeText)
             if weaponText is not None:
                 summaryText += PLocalizer.ShipPVPQuestUsingA % weaponText
-            
+
             if self.withoutSink is True:
                 summaryText += PLocalizer.ShipPVPQuestWithoutSinking
-            
+
         return summaryText
-    
+
     def compileStats(self, questStatData):
         if self.getNum() is not None:
             questStatData.incrementEnemies(str(self.enemyClass), self.num)
             questStatData.incrementMisc('totalEnemies', self.num)
         else:
             questStatData.incrementMisc('totalDamage', self.damage)
-    
+
     def getGoalNum(self):
         if self.getNum() is not None:
             return self.num
         else:
             return self.damage
-    
+
     def getProgressMessage(self, taskState):
         enemyText = None
         gameTypeText = None
@@ -2074,20 +2074,20 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
             enemyText = PLocalizer.ShipPVPQuestFrench
         elif self.enemyClass == PiratesGlobals.ShipPVPSpanish:
             enemyText = PLocalizer.ShipPVPQuestSpanish
-        
+
         if self.gameType == PiratesGlobals.ShipPVPSiege:
             gameTypeText = PLocalizer.ShipPVPQuestGameName
-        
+
         if self.killType == PiratesGlobals.ShipPVPShip:
             killTypeText = PLocalizer.ShipPVPQuestKillShipCap
         elif self.killType == PiratesGlobals.ShipPVPPirate:
             killTypeText = PLocalizer.ShipPVPQuestKillPirateCap
-        
+
         if self.killWeapon == PiratesGlobals.ShipPVPKillCannon:
             weaponText = PLocalizer.ShipPVPQuestUseCannonCap
         elif self.killWeapon == PiratesGlobals.ShipPVPKillShip:
             weaponText = PLocalizer.ShipPVPQuestKillShipCap
-        
+
         if self.num is not None:
             if self.num == 1:
                 if enemyText is not None:
@@ -2109,23 +2109,23 @@ class ShipPVPDefeatTaskDNA(QuestTaskDNA):
             text = PLocalizer.ShipPVPQuestProgDamD % (taskState.progress, taskState.goal, gameTypeText)
         if weaponText is not None:
             text += PLocalizer.ShipPVPQuestUsingACap % weaponText
-        
+
         if self.withoutSink is True:
             text += PLocalizer.ShipPVPQuestWithoutSinkingCap
-        
+
         return (text, PiratesGuiGlobals.TextFG10)
 
 
 class DefeatNPCTaskDNA(QuestTaskDNA):
     DataSet = {
         'npcId': None}
-    
+
     def handleNPCDefeat(self, questEvent, taskState):
         if questEvent.npcId == self.npcId:
             return True
-        
+
         return False
-    
+
     def getSCSummaryText(self, state):
         return PLocalizer.QuestSCDefeatEnemy % {
             'enemyName': self.getNPCName(self.npcId)}
@@ -2140,7 +2140,7 @@ class DefeatNPCTaskDNA(QuestTaskDNA):
     def getDescriptionText(self, state):
         return PLocalizer.DefeatNPCTaskDesc % {
             'npcName': self.getNPCName(self.npcId)}
-    
+
     def getTitle(self):
         return PLocalizer.DefeatNPCTaskTitle % self.getNPCName(self.npcId)
 
@@ -2150,7 +2150,7 @@ class DefeatNPCTaskDNA(QuestTaskDNA):
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        
+
         npcName = self.getNPCName(self.npcId)
         progressMsg = PLocalizer.DefeatNPCProgress % npcName
         color = PiratesGuiGlobals.TextFG10
@@ -2165,7 +2165,7 @@ class DefeatShipTaskDNA(QuestTaskDNA):
         'isFlagship': False,
         'num': 1,
         'level': 0}
-    
+
     def getInitialTaskState(self, holder):
         state = QuestTaskDNA.getInitialTaskState(self, holder)
         state.setGoal(self.getNum())
@@ -2176,13 +2176,13 @@ class DefeatShipTaskDNA(QuestTaskDNA):
 
     def _getHull(self, taskState):
         return self.getHull()
-    
+
     def _getIsFlagship(self, taskState):
         return self.getIsFlagship()
 
     def _getNum(self, taskState):
         return self.getNum()
-    
+
     def handleShipDefeat(self, questEvent, taskState):
         if self._getFaction(taskState) is not None:
             if not questEvent.faction.isA(self._getFaction(taskState)):
@@ -2200,18 +2200,18 @@ class DefeatShipTaskDNA(QuestTaskDNA):
 
         if self._getIsFlagship(taskState) == True and questEvent.isFlagship == False:
             return False
-        
+
         if self.getLocation():
             if not self.locationMatches(questEvent):
                 return False
-        
+
         return True
 
     def getSCSummaryText(self, state):
         shipType = None
         if self.hull is not None:
             shipType = PLocalizer.ShipClassNames.get(self.hull)
-        
+
         if self.num == 1:
             if self.faction is None or self.faction == AvatarTypes.AnyShip:
                 if shipType:
@@ -2252,7 +2252,7 @@ class DefeatShipTaskDNA(QuestTaskDNA):
         shipType = None
         if self.hull is not None:
             shipType = PLocalizer.ShipClassNames.get(self.hull)
-        
+
         if self.faction is None or self.faction == AvatarTypes.AnyShip:
             if shipType:
                 return PLocalizer.QuestSCWhereIsShip % {
@@ -2273,7 +2273,7 @@ class DefeatShipTaskDNA(QuestTaskDNA):
         shipType = None
         if self.hull is not None:
             shipType = PLocalizer.ShipClassNames.get(self.hull)
-        
+
         if state.goal == 1:
             if self.faction is None or self.faction == AvatarTypes.AnyShip:
                 if shipType:
@@ -2314,7 +2314,7 @@ class DefeatShipTaskDNA(QuestTaskDNA):
         shipType = None
         if self.hull is not None:
             shipType = PLocalizer.ShipClassNames.get(self.hull)
-        
+
         if self.faction is None or self.faction == AvatarTypes.AnyShip:
             if shipType:
                 return PLocalizer.QuestSCWhereIsShip % {
@@ -2330,15 +2330,15 @@ class DefeatShipTaskDNA(QuestTaskDNA):
             faction = PLocalizer.FactionShipTypeNames[self.faction.getFaction()][1][1]
             return PLocalizer.QuestSCWhereIsFaction % {
                 'faction': faction}
-    
+
     def getSCHowToText(self, state):
         return ''
-    
+
     def getDescriptionText(self, state):
         shipType = None
         if self.hull is not None:
             shipType = PLocalizer.ShipClassNames.get(self.hull)
-        
+
         if state.goal == 1:
             if self.faction is None or self.faction == AvatarTypes.AnyShip:
                 if shipType:
@@ -2377,12 +2377,12 @@ class DefeatShipTaskDNA(QuestTaskDNA):
 
     def getTitle(self):
         return PLocalizer.DefeatShipTaskTitle
-    
+
     def compileStats(self, questStatData):
         questStatData.incrementTasks('defeatShipTasks')
         if self.faction:
             questStatData.incrementEnemies(self.faction.getName() + '-ship', self.num)
-        
+
         questStatData.incrementMisc('totalShips', self.num)
 
     def getGoalNum(self):
@@ -2391,11 +2391,11 @@ class DefeatShipTaskDNA(QuestTaskDNA):
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        
+
         shipType = None
         if self.hull is not None:
             shipType = PLocalizer.ShipClassNames.get(self.hull)
-        
+
         if self.faction is None or self.faction == AvatarTypes.AnyShip:
             if shipType:
                 progressMsg = PLocalizer.DefeatShipTypeProgress % (taskState.progress, taskState.goal, shipType)
@@ -2417,7 +2417,7 @@ class DefeatShipTaskDNA(QuestTaskDNA):
         result = QuestTaskDNA.getGoalUid(self)
         if result:
             return result
-        
+
         level = max(0, self.getLevel())
         typeInfo = [
             level,
@@ -2430,7 +2430,7 @@ class DefeatShipTaskDNA(QuestTaskDNA):
 
 
 class RandomizedDefeatTaskDNA(DefeatTaskDNA):
-    
+
     def getInitialTaskState(self, holder):
         state = DefeatTaskDNA.getInitialTaskState(self, holder)
         (enemyType, num) = EnemyGlobals.getRandomEncounter(holder.getLevel())
@@ -2443,14 +2443,14 @@ class RandomizedDefeatTaskDNA(DefeatTaskDNA):
 
     def _getNum(self, taskState):
         return taskState.goal
-    
+
     def computeRewards(self, initialTaskState, holder):
         return QuestReward.GoldReward(holder.getLevel())
 
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        
+
         enemyTypeName = taskState.enemyType.getStrings()[1]
         progressMsg = PLocalizer.DefeatProgress % (taskState.progress, taskState.goal, enemyTypeName)
         if taskState.progress == taskState.goal:
@@ -2461,7 +2461,7 @@ class RandomizedDefeatTaskDNA(DefeatTaskDNA):
 
 
 class RandomizedDefeatShipTaskDNA(DefeatShipTaskDNA):
-    
+
     def getInitialTaskState(self, holder):
         state = DefeatShipTaskDNA.getInitialTaskState(self, holder)
         faction = random.choice([
@@ -2474,27 +2474,27 @@ class RandomizedDefeatShipTaskDNA(DefeatShipTaskDNA):
         state.setHull(hull)
         state.setGoal(num)
         return state
-    
+
     def _getFaction(self, taskState):
         return taskState.faction
 
     def _getHull(self, taskState):
         return taskState.hull
-    
+
     def _getNum(self, taskState):
         return taskState.goal
 
     def computeRewards(self, initialTaskState, holder):
         return QuestReward.GoldReward(holder.getLevel())
-    
+
     def getProgressMessage(self, taskState):
         if not taskState.progress:
             return (None, None)
-        
+
         shipType = None
         if self.hull is not None:
             shipType = PLocalizer.ShipClassNames.get(self.hull)
-        
+
         if taskState.faction is None or taskState.faction == AvatarTypes.AnyShip:
             if shipType:
                 progressMsg = PLocalizer.DefeatShipTypeProgress % (taskState.progress, taskState.goal, shipType)
@@ -2519,7 +2519,7 @@ class ViewCutsceneTaskDNA(QuestTaskDNA):
         'cutsceneId': None,
         'dialogId': None,
         'waitEvent': None}
-    
+
     def handleStart(self, avId):
         self.avId = avId
         if self.waitEvent:
@@ -2537,7 +2537,7 @@ class ViewCutsceneTaskDNA(QuestTaskDNA):
             npc.playDialogMovie(self.avId, self.dialogId)
         elif self.cutsceneId:
             pass
-    
+
     def handleNPCVisit(self, questEvent, taskState):
         if questEvent.npcId == self.npcId:
             playerAv = simbase.air.doId2do[self.avId]
@@ -2549,15 +2549,15 @@ class ViewCutsceneTaskDNA(QuestTaskDNA):
                 npc.playDialogMovie(questEvent.avId, self.dialogId)
             elif self.cutsceneId:
                 pass
-            
+
             return True
-        
+
         return False
-    
+
     def cutsceneWatched(self, questEvent, taskState):
         if questEvent.npcId == self.npcId:
             return True
-        
+
         return False
 
     def getDescriptionText(self, state):
@@ -2572,21 +2572,21 @@ class ViewCutsceneTaskDNA(QuestTaskDNA):
 
     def getReturnGiverIds(self):
         return makeTuple(self.npcId)
-    
+
     def getTargetInfo(self, world):
         targetInfo = world.uid2doSearch(self.npcId)
         if targetInfo == None:
             return None
-        
+
         npcDoId = targetInfo[0]
         npcInstance = targetInfo[1]
         if npcDoId == None:
             return None
-        
+
         targetNpc = simbase.air.doId2do.get(npcDoId)
         if targetNpc == None:
             return None
-        
+
         location = targetNpc.getPos(npcInstance.worldGrid)
         object = targetNpc
         return (location, object.getUniqueId(), npcInstance)
@@ -2602,12 +2602,12 @@ class CaptureShipNPCTaskDNA(QuestTaskDNA):
         'level': 0,
         'isFlagship': False,
         'level': 0}
-    
+
     def handleShipDefeat(self, questEvent, taskState):
         if self.faction is not None:
             if not questEvent.faction.isA(self.faction):
                 return False
-        
+
         if self.hull is not None:
             shipClassList = getShipList(self.hull)
             if shipClassList:
@@ -2617,42 +2617,42 @@ class CaptureShipNPCTaskDNA(QuestTaskDNA):
         if self.level > 0:
             if questEvent.level < self.level:
                 return False
-        
+
         if self.isFlagship == True and questEvent.isFlagship == False:
             return False
-        
+
         if self.getLocation():
             if not self.locationMatches(questEvent):
                 return False
-        
+
         found = False
         attempts = taskState.getAttempts()
         if attempts < self.maxAttempts:
             attempts += 1
             taskState.setAttempts(attempts)
-        
+
         if attempts == self.maxAttempts:
             found = True
         elif attempts > self.maxAttempts:
             found = True
         elif questEvent.getRng(hash(self.npcId)).random() <= self.probability:
             found = True
-        
+
         return found
-    
+
     def complete(self, questEvent, taskState):
         attempts = taskState.getAttempts()
         if attempts < self.maxAttempts:
             attempts += 1
             taskState.setAttempts(attempts)
-        
+
         taskState.handleProgress()
 
     def getSCSummaryText(self, state):
         shipType = None
         if self.hull is not None:
             shipType = PLocalizer.ShipClassNames.get(self.hull)
-        
+
         if self.faction is None or self.faction == AvatarTypes.AnyShip:
             if shipType:
                 return PLocalizer.QuestSCCaptureNPCShip % {
@@ -2672,12 +2672,12 @@ class CaptureShipNPCTaskDNA(QuestTaskDNA):
                 return PLocalizer.QuestSCCaptureNPCFaction % {
                     'npcName': self.getNPCName(self.npcId),
                     'faction': faction}
-    
+
     def getSCWhereIsText(self, state):
         shipType = None
         if self.hull is not None:
             shipType = PLocalizer.ShipClassNames.get(self.hull)
-        
+
         if self.faction is None or self.faction == AvatarTypes.AnyShip:
             if shipType:
                 return ''
@@ -2700,7 +2700,7 @@ class CaptureShipNPCTaskDNA(QuestTaskDNA):
         shipType = None
         if self.hull is not None:
             shipType = PLocalizer.ShipClassNames.get(self.hull)
-        
+
         if self.faction is None or self.faction == AvatarTypes.AnyShip:
             if shipType:
                 return PLocalizer.CaptureShipNPCTaskDescSN % {
@@ -2720,7 +2720,7 @@ class CaptureShipNPCTaskDNA(QuestTaskDNA):
                 return PLocalizer.CaptureShipFactionNPCTaskDescS % {
                     'npcName': self.getNPCName(self.npcId),
                     'faction': faction}
-    
+
     def getTitle(self):
         return PLocalizer.CaptureShipNPCTaskTitle
 
@@ -2731,7 +2731,7 @@ class CaptureShipNPCTaskDNA(QuestTaskDNA):
         result = QuestTaskDNA.getGoalUid(self)
         if result:
             return result
-        
+
         level = max(0, self.getLevel())
         typeInfo = [
             level,
@@ -2747,7 +2747,7 @@ class CaptureNPCTaskDNA(QuestTaskDNA):
     DataSet = {
         'npcId': None,
         'itemId': None}
-    
+
     def getSCSummaryText(self, state):
         return PLocalizer.QuestSCCaptureNPC % {
             'npcName': self.getNPCName(self.npcId)}
@@ -2755,10 +2755,10 @@ class CaptureNPCTaskDNA(QuestTaskDNA):
     def getSCWhereIsText(self, state):
         return PLocalizer.QuestSCWhereIsNPC % {
             'npcName': self.getNPCName(self.npcId)}
-    
+
     def getSCHowToText(self, state):
         return ''
-    
+
     def getDescriptionText(self, state):
         return PLocalizer.CaptureNPCTaskDesc % {
             'npcName': self.getNPCName(self.npcId)}
@@ -2770,11 +2770,11 @@ class CaptureNPCTaskDNA(QuestTaskDNA):
 class BossBattleTaskDNA(QuestTaskDNA):
     DataSet = {
         'treasureMapId': None}
-    
+
     def handleBossBattleCompleted(self, questEvent, taskState):
         if questEvent.treasureMapId == self.treasureMapId:
             return True
-        
+
         return False
 
     def getSCSummaryText(self, state):
@@ -2784,15 +2784,15 @@ class BossBattleTaskDNA(QuestTaskDNA):
 
     def getSCWhereIsText(self, state):
         return ''
-    
+
     def getSCHowToText(self, state):
         return ''
-    
+
     def getDescriptionText(self, state):
         tmName = PiratesGlobals.DYNAMIC_GAME_STYLE_PROPS[PiratesGlobals.GAME_TYPE_TM][self.treasureMapId]['Name']
         return PLocalizer.BossBattleTaskDesc % {
             'treasureMapId': tmName}
-    
+
     def getTitle(self):
         tmName = PiratesGlobals.DYNAMIC_GAME_STYLE_PROPS[PiratesGlobals.GAME_TYPE_TM][self.treasureMapId]['Name']
         return PLocalizer.BossBattleTaskTitle % tmName
@@ -2801,16 +2801,16 @@ class BossBattleTaskDNA(QuestTaskDNA):
 class DeployShipTaskDNA(QuestTaskDNA):
     DataSet = {
         'location': None}
-    
+
     def handleDeployedShip(self, questEvent, taskState):
         if self.getLocation():
             if self.locationMatches(questEvent):
                 return True
             else:
                 return False
-        
+
         return True
-    
+
     def getSCSummaryText(self, state):
         return PLocalizer.QuestSCDeployShip
 
@@ -2822,10 +2822,10 @@ class DeployShipTaskDNA(QuestTaskDNA):
 
     def getDescriptionText(self, state):
         return PLocalizer.DeployShipTaskDesc
-    
+
     def getTitle(self):
         return PLocalizer.DeployShipTaskTitle
-    
+
     def compileStats(self, questStatData):
         questStatData.incrementTasks('deployShipTasks')
 

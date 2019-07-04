@@ -32,20 +32,14 @@ class TutorialFSM(FSM):
 
     def __worldArrived(self, instanceDoId):
         self.island = self.air.doId2do.get(instanceDoId)
-
         if not self.island:
-            self.notify.warning('Failed to create tutorial island for avatar %d!' % (
-                self.avatar.doId))
-
+            self.notify.warning('Failed to create tutorial island for avatar %d!' % (self.avatar.doId))
             self.cleanup()
             return
 
         self.instance = self.island.getParentObj()
-
         if not self.instance:
-            self.notify.warning('Failed to create tutorial world for avatar %d!' % (
-                self.avatar.doId))
-
+            self.notify.warning('Failed to create tutorial world for avatar %d!' % (self.avatar.doId))
             self.cleanup()
             return
 
@@ -53,26 +47,22 @@ class TutorialFSM(FSM):
 
     def __interiorArrived(self, interiorDoId):
         self.interior = self.air.doId2do.get(interiorDoId)
-
         if not self.interior:
-            self.notify.warning('Failed to create tutorial interior for avatar %d!' % (
-                self.avatar.doId))
-
+            self.notify.warning('Failed to create tutorial interior for avatar %d!' % (self.avatar.doId))
             self.cleanup()
             return
 
         tutorialHandlerDoId = self.air.allocateChannel()
         self.acceptOnce('generate-%d' % tutorialHandlerDoId, self.__handlerArrived)
 
+        self.tutorialHandlerZoneId = self.air.allocateZone()
+
         self.tutorialHandler = DistributedPiratesTutorialAI(self.air)
-        self.tutorialHandler.generateWithRequiredAndId(tutorialHandlerDoId,
-            self.instance.doId, self.island.zoneId)
+        self.tutorialHandler.generateWithRequiredAndId(tutorialHandlerDoId, self.air.districtId, self.tutorialHandlerZoneId)
 
     def __handlerArrived(self, tutorialHandler):
         if not tutorialHandler:
-            self.notify.warning('Failed to create tutorial handler for avatar %d!' % (
-                self.avatar.doId))
-
+            self.notify.warning('Failed to create tutorial handler for avatar %d!' % (self.avatar.doId))
             self.cleanup()
             return
 
@@ -83,6 +73,7 @@ class TutorialFSM(FSM):
 
     def __avatarArrived(self):
         self.instance.d_setTutorialHandlerId(self.tutorialHandler.doId)
+        self.avatar.d_setTutorialHandlerZone(self.tutorialHandlerZoneId)
         self.air.tutorialManager.d_enterTutorial(self.avatar.doId, self.island.zoneId)
 
     def enterStop(self):
@@ -96,6 +87,7 @@ class TutorialFSM(FSM):
             self.interior.requestDelete()
 
         if self.tutorialHandler:
+            self.air.deallocateZone(self.tutorialHandlerZoneId)
             self.tutorialHandler.requestDelete()
 
         self.island = None
@@ -112,6 +104,7 @@ class TutorialFSM(FSM):
     def cleanup(self):
         self.demand('Stop')
 
+
 class PiratesTutorialManagerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('PiratesTutorialManagerAI')
 
@@ -125,7 +118,6 @@ class PiratesTutorialManagerAI(DistributedObjectAI):
 
     def requestTutorial(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             return
 
@@ -143,7 +135,6 @@ class PiratesTutorialManagerAI(DistributedObjectAI):
 
     def allDone(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             return
 

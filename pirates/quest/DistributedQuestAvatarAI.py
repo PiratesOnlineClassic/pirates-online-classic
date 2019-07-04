@@ -6,6 +6,7 @@ from pirates.quest.QuestHolder import QuestHolder
 from pirates.uberdog.UberDogGlobals import InventoryCategory
 from pirates.piratesbase import Freebooter
 
+
 class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedQuestAvatarAI')
 
@@ -141,33 +142,25 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
         self.sendUpdate('setQuestStep', [[self.doId, goalObject.doId, stepType, [x, y, z, h], goalUid]])
 
     def _swapQuest(self, oldQuests=[], giverId=None, questIds=None, rewards=None):
-        activeQuest = self.air.questMgr.getQuest(self, questId=self.getActiveQuest())
-        if not activeQuest:
-            self.notify.debug('Failed to swap quest for avatar %d, '
-                'avatar has no active quest!' % self.doId)
+        inventory = self.getInventory()
+        if not inventory:
+            self.notify.debug('Failed to accept quest %d for avatar %d, '
+                'no inventory found!' % (nextQuestId, self.doId))
 
             return
 
-        nextQuestId = self.questStatus.getNextQuestId(activeQuest.getQuestId())
+        # drop all of our old quests
+        for quest in oldQuests:
+            assert(quest is not None)
+            messenger.send(quest.getCompleteEventString())
+            self.air.questMgr.dropQuest(self, quest)
 
-        # drop the avatar's previous quest.
-        messenger.send(activeQuest.getCompleteEventString())
-        self.air.questMgr.dropQuest(self, activeQuest)
+        def _questsCreatedCallback():
+            pass
 
-        # Determine if the quest should be blocked
-        questDNA = activeQuest.questDNA
-        questBlocked = False
-        if questDNA.getProgressBlock():
-            questBlocked = True
-        elif questDNA.getVelvetRoped() and Frebbooter.getPaidStatusAI(activeQuest.ownerId):
-            questBlocked = True
-
-        if not questBlocked:
-            # give them the new quest appropriate to their current quest path...
-            self._acceptQuest(nextQuestId, giverId, rewards)
-        else:
-            # quest should be blocked. Display the popup progress blocker
-            self.d_popupProgressBlocker(activeQuest.ownerId, activeQuest.getQuestId())
+        # give the avatar all of it's new quests that come after the
+        # previous quests they've just completed
+        self.air.questMgr.createQuests(self, questIds, _questsCreatedCallback)
 
     def _acceptQuest(self, nextQuestId, giverId, rewards):
         inventory = self.getInventory()
@@ -178,10 +171,9 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
             return
 
         def questCreatedCallback():
-            messenger.send('quest-available-%s-%d' % (nextQuestId, self.doId), [
-                self, inventory.getQuestList()])
+            messenger.send('quest-available-%s-%d' % (nextQuestId, self.doId), [self, inventory.getQuestList()])
 
         self.air.questMgr.createQuest(self, nextQuestId, questCreatedCallback)
 
-    def d_popupProgressBlocker(self, avatarId, questId):
-        self.sendUpdateToAvatarId(avatarId, 'popupProgressBlocker', [questId])
+    def d_popupProgressBlocker(self, questId):
+        self.sendUpdateToAvatarId(self.doId, 'popupProgressBlocker', [questId])

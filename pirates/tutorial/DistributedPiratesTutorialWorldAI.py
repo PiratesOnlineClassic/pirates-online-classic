@@ -1,7 +1,9 @@
-from pirates.instance.DistributedInstanceWorldAI import DistributedInstanceWorldAI
 from direct.directnotify import DirectNotifyGlobal
+
+from pirates.instance.DistributedInstanceWorldAI import DistributedInstanceWorldAI
 from pirates.world import WorldGlobals
 from pirates.piratesbase import PiratesGlobals
+
 
 class DistributedPiratesTutorialWorldAI(DistributedInstanceWorldAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPiratesTutorialWorldAI')

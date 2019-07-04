@@ -178,9 +178,20 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         if not avatar:
             return
 
+        # verify we are not in a death state prior to processing
+        # any aggro logic
+        if self.gameFSM.state == 'Death':
+            return
+
         # if we are in ambush mode and an avatar just entered our aggro
         # sphere, ambush them and try to kill them.
         if self.gameFSM.state == 'Ambush':
+            self.handleClientAggro(avatar)
+
+        # check if we should auto aggro to the avatar that entered
+        # our aggro sphere
+        experienceGrade = self.air.battleMgr.getModifiedExperienceGrade(avatar, self)
+        if experienceGrade >= EnemyGlobals.GREEN:
             self.handleClientAggro(avatar)
 
     def handleClientAggro(self, avatar):
