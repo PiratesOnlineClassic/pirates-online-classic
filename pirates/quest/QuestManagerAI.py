@@ -554,7 +554,7 @@ class QuestManagerAI(DirectObject):
         questEvent = QuestEvent.DeployedShip()
         questEvent.setLocation(parentObj.getUniqueId())
 
-        return self.__completeTaskState(avatar, questEvent)
+        return self.completeTaskState(avatar, questEvent)
 
     def enemyDefeated(self, avatar, enemy):
         parentObj = avatar.getParentObj()
