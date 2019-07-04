@@ -142,6 +142,7 @@ libotp/
 
 # Compiled modules
 *.pyd
+*.dll
 
 # Documentation
 docs/
