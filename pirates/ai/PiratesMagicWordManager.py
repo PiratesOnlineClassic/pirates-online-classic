@@ -40,6 +40,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
         self.originalLocation = None
         self.groundFog = None
         self.fireflies = None
+        self.crewTutorial = None
 
     def generate(self):
         MagicWordManager.MagicWordManager.generate(self)
@@ -718,3 +719,12 @@ def stayTuned(questId=0):
     """
 
     localAvatar.guiMgr.showStayTuned(quest = questId, focus = 0)
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def crewtut():
+    """
+    Displays the unused original crew tutorial
+    """
+
+    from pirates.tutorial.CrewTutorial import CrewTutorial
+    spellbook.getManager().crewTutorial = CrewTutorial()
