@@ -1,5 +1,8 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
+from pirates.web.RPCGlobals import rpcservice, ResponseCodes
+from pirates.web.RPCServiceUD import RPCServiceUD
+
 class DistrictTrackerUD:
     notify = directNotify.newCategory('DistrictTrackerUD')
 
@@ -19,3 +22,20 @@ class DistrictTrackerUD:
 
     def requestStatus(self):
         self.air.netMessenger.send('queryDistrictStatus')
+
+@rpcservice()
+class DistrictTrackerRPCService(RPCServiceUD):
+    """
+    Handles all district tracker related handlers for the RPC
+    """
+
+    def getDistricts(self):
+        """
+        Summary:
+            Retrieves the last reported status of all the districts in the server cluster
+        Returns:
+            districts: List containing all districts
+        """
+
+        districts = self.air.districtTracker.getShards()
+        return self._formatResults(districts=districts)
