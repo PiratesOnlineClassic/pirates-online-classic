@@ -22,10 +22,10 @@ class DistributedQuestAI(DistributedObjectAI, QuestBase, Quest):
     def generate(self):
         DistributedObjectAI.generate(self)
 
-        self.accept(self.getChangeEvent(), self._questChanged)
+        self.accept(self.getChangeEvent(), self.handleQuestChanged)
         self.d_announceNewQuest()
 
-    def _questChanged(self):
+    def handleQuestChanged(self):
         self.d_setTaskStates(self.getTaskStates())
 
     def setOwnerId(self, ownerId):

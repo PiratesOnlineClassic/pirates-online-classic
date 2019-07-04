@@ -319,6 +319,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
     def enterAttackChase(self, *args, **kwargs):
         assert(self.avatar.currentTarget is not None)
         self.avatar.startLookAt()
+        self.avatar.d_setChat(self.avatar.getTauntPhrase())
 
         # start attacking our target
         self.beginAttackingTarget()
@@ -348,6 +349,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
     def enterBreakCombat(self):
         self.avatar.b_setCurrentTarget(0)
+        self.avatar.d_setChat(self.avatar.getBreakCombatPhrase())
 
         # put away our weapon
         self._putAwayWeapon()

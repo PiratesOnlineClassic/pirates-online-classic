@@ -452,13 +452,26 @@ class QuestManagerAI(DirectObject):
             reward.applyTo(trade, avatar)
 
     def completeQuest(self, avatar, quest):
+        assert(avatar is not None)
+        assert(quest is not None)
+
         if not quest.isComplete():
             self.notify.warning('Failed to handle complete quest for avatar %d, '
                 'quest %s was never completed!' % (avatar.doId, quest.getQuestId()))
 
             return
 
+        questDNA = quest.getQuestDNA()
+        assert(questDNA is not None)
+
+        # check to see if we've already completed this quest
         questHistory = avatar.getQuestHistory()
+        if questDNA.getQuestInt() in questHistory:
+            self.notify.warning('Failed to handle complete quest for avatar %d, '
+                'quest %s was already completed!' % (avatar.doId, quest.getQuestId()))
+
+            return
+
         questStub = avatar.questStatus.getQuestStub(quest.getQuestId())
         if not questStub:
             self.notify.warning('Failed to handle complete quest for avatar %d, '
@@ -491,9 +504,9 @@ class QuestManagerAI(DirectObject):
 
             # if the task dna does not have a location,
             # then force the location to be that of the event's location...
-            for taskDNA in questDNA.getTaskDNAs():
-                if taskDNA.getLocation() == None:
-                    taskDNA.setLocation(questEvent.getLocation())
+            #for taskDNA in questDNA.getTaskDNAs():
+            #    if taskDNA.getLocation() == None:
+            #        taskDNA.setLocation(questEvent.getLocation())
 
             quest.handleEvent(avatar, questEvent)
 
