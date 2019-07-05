@@ -2,7 +2,6 @@
 from direct.directnotify.DirectNotifyGlobal import *
 
 from pirates.discord.DiscordWebHooksUD import *
-from pirates.discord.DiscordGlobalsUD import DiscordWebhooks
 
 import traceback
 
@@ -13,6 +12,7 @@ class DiscordNotificationsBase:
     def __init__(self, air):
         self.air = air
         self.exceptionBacklog = config.GetInt('discord-exception-backlog', 10)
+        self.exceptionPingAll = config.GetBool('discord-exception-ping', False)
         self.notify.info('%s going online' % self.__class__.__name__)
 
     def getServerTypeName(self):
@@ -41,6 +41,7 @@ class DiscordNotificationsBase:
         for stack in discordStack:
             discordStacktrace += '%s\n' % stack
 
+        discordStacktrace = discordStacktrace if discordStacktrace else 'N/A'
         return discordStacktrace
 
     def reportServerException(self, exception, avatarId=0, accountId=0):
@@ -50,6 +51,14 @@ class DiscordNotificationsBase:
 
         self.notify.info('Reporting exception to Discord: %s' % str(exception))
         try:
-            pass #TODO
+            message = '@everyone' if self.exceptionPingAll else ''
+            header = self.getExceptionHeader()
+            
+            fields = {}
+            fields['Traceback'] = self.getExceptionTraceback(exception)
+            fields['Dev Server'] = self.air.isDevServer()
+
+            self.publishServerException(message, header, fields)
         except:
             self.notify.warning('Failed to report exception: %s' % str(exception))
+            print(traceback.format_exc())

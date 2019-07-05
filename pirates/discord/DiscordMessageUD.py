@@ -2,25 +2,62 @@ from direct.directnotify.DirectNotifyGlobal import *
 
 from pirates.discord import DiscordGlobalsUD
 
+import json
+
 class DiscordEmbeded:
     """
     Represents the embedded field of a bot message
     """
+
+    def __init__(self):
+        self.title = ''
+        self.type = 'rich'
+        self.description = ''
+        self.url = ''
+        self.timestamp = None
+        self.color = 0
+        self.fields = {}
+
+    def setField(self, name, value=None, inline=True):
+
+        if value == None and name in self.fields:
+            del self.fields[name]
+
+        field = {
+            'name': name,
+            'value': value,
+            'inline': inline
+        }
+        self.fields[name] = field
+
+    def build(self):
+        data = {
+            'title': self.title,
+            'type': self.type,
+            'description': self.description,
+            'url': self.url,
+            'color': self.color,
+            'fields': self.fields.values()
+        }
+
+        if self.timestamp:
+            data['timestamp'] = self.timestamp
+
+        return data
 
 class DiscordMessageUD:
     """
     Represents a sendable bot message
     """
 
-    notify = DirectNotifyGlobal.directNotify.newCategory('DiscordMessageUD')
+    notify = directNotify.newCategory('DiscordMessageUD')
+    notify.setInfo(True)
 
     def __init__(self, air):
         self.air = air
         self.content = ''
-        self.nonce = 0
         self.tts = False
-        self.file = None
-        self.embeded = None
+        self.embedded = None
 
     def send(self, channel):
         """
@@ -32,4 +69,25 @@ class DiscordMessageUD:
             'Authorization': DiscordGlobalsUD.BotAuthorization
         }
 
+        messageBody = {
+            'content': self.content,
+            'tts': self.tts
+        }
         
+        if self.embedded:
+            messageBody['embed'] = self.embedded.build()
+
+        def processResults(results):
+            self.notify.info(results)
+            results = json.loads(results)
+            if 'code' in results and results.get('code', 0) != 200:
+                self.notify.warning('Failed to send Discord message. %s' % results.get('message', 'Undefined'))
+
+        self.notify.info('Sending Discord Message to channel: %s' % channel)
+        print(messageBody)
+        self.air.http.performPostRequest(
+            url='https://discordapp.com/api/channels/%s/messages' % channel,
+            headers=headers,
+            content_type='application/json',
+            post_body=messageBody,
+            callback=processResults)

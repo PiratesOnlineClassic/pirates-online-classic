@@ -97,6 +97,7 @@ class PiratesInternalRepository(OTPInternalRepository):
                 senderName = 'UberDOG'
 
         self.centralLogger.reportException(senderName, trace, False)
+        self.discordNotifications.reportServerException(e, avatarId, accountId)
         self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
         print(trace)
 

@@ -1,12 +1,4 @@
 
-class DiscordWebhooks:
-    """
-    Contains all Discord webhook urls
-    """
-
-    DiscordPlayground = 'https://discordapp.com/api/webhooks/309745988401102849/i2Xhy-qTeCgTKOL4DkPKoIZarAIVsYtcY8UyGPnlqo-lwnAd4qUJcgO9QsI7ckWvkCir'
-    ServerIssues = 'https://discordapp.com/api/webhooks/436732182396928000/8sQtnSPEl7sck9Q3UR4FbyF2MemNkEGSvQETo_Bnvv4Z4vc2N619XWA-0k0F8ZfXSQnj'
-    
 class DiscordChannels:
     """
     Contains all Discord channels the game has access too
