@@ -12,5 +12,5 @@ want-rpc-server #t
 
 # Discord:
 discord-log-hacks #t
-discord-log-exceptions #t
+discord-log-exceptions #f
 discord-bot-token NDQyNDEzNzAyNDI4MjI5NjMy.XR6vOw.rzLOxSsIFHkikH7J328rf7nSDUY

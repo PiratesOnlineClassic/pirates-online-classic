@@ -49,6 +49,6 @@ class DiscordNotificationsUD(DiscordNotificationsBase):
             fieldValue = fields[fieldKey]
             discordMessage.embedded.setField(fieldKey, fieldValue)
 
-        discordMessage.send(DiscordChannels.SandboxWebhooks)
+        discordMessage.send(DiscordChannels.StaffServerIssues)
         
         
