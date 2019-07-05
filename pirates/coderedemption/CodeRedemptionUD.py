@@ -49,8 +49,7 @@ class CodeRedemptionUD(DistributedObjectGlobalUD):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
 
         if not avatar:
-            self.notify.warning('Failed to request interact for non-existant avatar!')
-
+            self.notify.warning('Failed to redeem code for non-existant avatar!')
             self.air.logPotentialHacker(
                 message='Received sendCodeForRedemption from non-existant avatar',
                 targetAvId=avatar.doId,
