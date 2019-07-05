@@ -51,10 +51,10 @@ class NewsManagerUD:
         self.notify.info('Telling all AIs to stop holiday %s!' % holidayId)
         self.air.netMessenger.send('stopHoliday', [holidayId])
 
-@rpcservice()
-class HolidayService(RPCServiceUD):
+@rpcservice(serviceName='newsManager')
+class NewsService(RPCServiceUD):
     """
-    Handles all holiday related handlers for the RPC
+    Handles all news related handlers for the RPC
     """
 
     def getHolidays(self):
@@ -66,12 +66,16 @@ class HolidayService(RPCServiceUD):
         """
 
         districts = self.air.districtTracker.getShards()
-        holidays = []
-        for district in districts:
-            holidays += district['holidays']
+        clusterHolidays = []
+        for districtId in districts:
+            district = districts[districtId]
+            holidays = district.get('holidays', [])
+            for holiday in holidays:
+                if holiday not in clusterHolidays:
+                    clusterHolidays.append(holiday)
 
         results = self._formatResults(
-            holidays=holidays)
+            holidays=clusterHolidays)
 
         return results
 

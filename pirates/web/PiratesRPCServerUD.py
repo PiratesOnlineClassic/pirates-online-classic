@@ -21,18 +21,4 @@ class PiratesRPCServerUD(SimpleXMLRPCServer):
 
     def _dispatch(self, method, params):
         self.notify.debug('Received request. Method (%s) Params (%s)' % (method, params))
-        try:
-            return SimpleXMLRPCServer._dispatch(self, method, params)
-        except Exception as e:
-            return self.errorResponse(e)
-
-    def errorResponse(self, exception):
-        self.notify.warning('Internal error has occured: %s' % exception)
-        print(traceback.format_exc())
-
-        return {
-            'code': RPCGlobals.ResponseCodes.INTERNAL_ERROR,
-            'message': 'An internal error has occured',
-            'exception': str(exception),
-            'trace': traceback.format_exc()
-        }
+        return SimpleXMLRPCServer._dispatch(self, method, params)

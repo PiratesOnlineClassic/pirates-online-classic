@@ -19,14 +19,14 @@ class InstanceBook:
     notify = directNotify.newCategory('InstanceBook')
 
     def __init__(self):
-        self.instances = []
+        self.instances = {}
 
-    def addInstance(self, instanceCls):
-        if instanceCls in self.instances:
+    def addInstance(self, serviceName, instanceCls):
+        if serviceName in self.instances:
             self.notify.warning('Attempted to double register instance handler: %s' % instanceCls.__name__)
             return
         
-        self.instances.append(instanceCls)
+        self.instances[serviceName] = instanceCls
 
     def __repr__(self):
         r = ''
@@ -43,8 +43,12 @@ class RPCInstanceDecorator:
     Registers RPC instance handlers with the instance book
     """
 
+    def __init__(self, serviceName=None):
+        self.serviceName = serviceName
+
     def __call__(self, instance):
-        instancebook.addInstance(instance)
+        serviceName = self.serviceName if self.serviceName else instance.__name__
+        instancebook.addInstance(serviceName, instance)
         return instance
 
 rpcservice = RPCInstanceDecorator
