@@ -52,6 +52,11 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         distance = self.avatar.getDistance(attackTarget)
         return distance > EnemyGlobals.INSTANT_AGGRO_RADIUS_DEFAULT / 2
 
+    def getPointInRadius(self, cx, cy, radius):
+        x = random.uniform(cx - radius, cx + radius)
+        y = random.uniform(cy - radius, cy + radius)
+        return Point3(x, y, 0)
+
     def getPatrolPoint(self):
         parentObj = self.avatar.getParentObj()
         if not parentObj:
@@ -62,9 +67,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             return None
 
         sx, sy, sz = self.avatar.getSpawnPos()
-        x = random.uniform(sx - patrolRadius, sx + patrolRadius)
-        y = random.uniform(sy - patrolRadius, sy + patrolRadius)
-        return Point3(x, y, sz)
+        return self.getPointInRadius(sx, sy, patrolRadius)
 
     def getWalkToPointDoneName(self):
         return self.avatar.uniqueName('walkToPoint-done')
@@ -148,6 +151,11 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
     def beginAttackingTarget(self):
         self.__nextAttackTask = taskMgr.doMethodLater(WeaponGlobals.SHORT_DELAY, self._chooseNextAttack, self.getNextAttackTaskName())
+
+    def stopAttackingTarget(self):
+        if self.__nextAttackTask:
+            taskMgr.remove(self.__nextAttackTask)
+            self.__nextAttackTask = None
 
     def _chaseTarget(self, task):
         self.findNextWalkToPoint()
@@ -329,9 +337,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             taskMgr.remove(self.__updateBattleStateTask)
             self.__updateBattleStateTask = None
 
-        if self.__nextAttackTask:
-            taskMgr.remove(self.__nextAttackTask)
-            self.__nextAttackTask = None
+        self.stopAttackingTarget()
 
         if self.__mojoRegenTask:
             taskMgr.remove(self.__mojoRegenTask)
@@ -380,6 +386,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             taskMgr.remove(self.__mojoRegenTask)
             self.__mojoRegenTask = None
 
+        self.stopAttackingTarget()
         self.avatar.stopLookAt()
 
     def enterBreakCombat(self):
