@@ -292,6 +292,7 @@ class SpawnNodeBase:
             startState = 'Idle'
 
         npc.setStartState(startState)
+        npc.setAmbush(startState == 'Ambush')
 
         # Generate npc
         zoneId = self.parent.getZoneFromXYZ(npc.getPos())

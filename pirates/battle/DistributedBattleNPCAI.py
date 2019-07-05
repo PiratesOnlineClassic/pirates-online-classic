@@ -22,6 +22,7 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         self.animSet = ''
         self.collisionMode = 0
         self.initZ = 0
+        self.ambush = False
 
         self.spawnNode = None
 
@@ -60,6 +61,16 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def d_setSpawnIn(self):
         self.sendUpdate('setSpawnIn', [globalClockDelta.getRealNetworkTime(bits=32)])
+
+    def setAmbush(self, ambush):
+        self.ambush = ambush
+
+    def d_setAmbush(self, ambush):
+        self.ambush = ambush
+
+    def b_setAmbush(self, ambush):
+        self.setAmbush(ambush)
+        self.d_setAmbush(ambush)
 
     def d_setChat(self, chatString, chatFlags=0):
         self.sendUpdate('setChat', [chatString, chatFlags])
