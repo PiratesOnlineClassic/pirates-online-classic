@@ -1,7 +1,7 @@
 from direct.directnotify.DirectNotifyGlobal import *
 
 from pirates.ai import HolidayGlobals
-from pirates.discord.DiscordNotifcationsBase import DiscordNotificationsBase
+from pirates.discord.DiscordNotificationsBase import DiscordNotificationsBase
 from pirates.discord.DiscordMessageUD import DiscordMessageUD, DiscordEmbeded
 from pirates.discord.DiscordGlobalsUD import DiscordChannels, DiscordColorCode
 from pirates.piratesbase import PLocalizer

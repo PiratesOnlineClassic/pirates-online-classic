@@ -1,6 +1,6 @@
 from direct.directnotify.DirectNotifyGlobal import *
 
-from pirates.discord.DiscordNotifcationsBase import DiscordNotificationsBase
+from pirates.discord.DiscordNotificationsBase import DiscordNotificationsBase
 
 class DiscordNotificationsAI(DiscordNotificationsBase):
     """
