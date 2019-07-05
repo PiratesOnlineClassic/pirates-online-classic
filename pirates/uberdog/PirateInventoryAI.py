@@ -4,6 +4,7 @@ from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, Inventory
 from pirates.reputation import RepChart
 from pirates.reputation import ReputationGlobals
 from pirates.battle import WeaponGlobals
+from pirates.piratesbase import PiratesGlobals
 
 class PirateInventoryAI(DistributedInventoryAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('PirateInventoryAI')
@@ -87,6 +88,13 @@ class PirateInventoryAI(DistributedInventoryAI):
 
     def setGoldInPocket(self, quantity):
         self.b_setStackQuantity(InventoryType.GoldInPocket, min(quantity, 65000))
+
+    def addGoldInPocket(self, quanity):
+        if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEGOLDHOLIDAY):
+            quantity *= 2
+
+        quanity += self.getGoldInPocket() 
+        self.setGoldInPocket(quanity)
 
     def setVitaeLevel(self, quantity):
         self.b_setStackQuantity(InventoryType.Vitae_Level, quantity)
