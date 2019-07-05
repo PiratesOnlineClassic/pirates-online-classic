@@ -53,9 +53,9 @@ class NewsService(RPCServiceUD):
 
         holidays = {}
         for holidayId in HolidayGlobals.holidays:
-            dates = HolidayGlobals.getHolidayDates(holidayId)
+            date = HolidayGlobals.getHolidayDates(holidayId)
             scheduledDates = {}
-            if isinstance(dates, dict):
+            if isinstance(date, dict):
                 continue
 
             for index in range(len(date.startDates)):
