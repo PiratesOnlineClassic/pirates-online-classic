@@ -30,8 +30,8 @@ class DiscordNotificationsUD(DiscordNotificationsBase):
         Called on holiday start
         """
     
-        #if self.getHolidayState(holidayId):
-        #   return
+        if self.getHolidayState(holidayId):
+           return
 
         self.storeHolidayState(holidayId, True)
         if not quietly:
