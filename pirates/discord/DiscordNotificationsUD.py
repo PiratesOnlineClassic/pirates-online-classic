@@ -4,6 +4,7 @@ from pirates.ai import HolidayGlobals
 from pirates.discord.DiscordNotifcationsBase import DiscordNotificationsBase
 from pirates.discord.DiscordMessageUD import DiscordMessageUD, DiscordEmbeded
 from pirates.discord.DiscordGlobalsUD import DiscordChannels
+from pirates.piratesbase import PLocalizer
 
 import datetime
 import semidbm
@@ -95,7 +96,7 @@ class DiscordNotificationsUD(DiscordNotificationsBase):
         endtime = holidayDate.getReadableEndDate(0)
 
         discordMessage = DiscordMessageUD(self.air)
-        discordMessage.content = 'Ahoy @everyone! A new event has started in the Caribbean!'
+        discordMessage.content = PLocalizer.DISCORD_NEW_EVENT
         discordMessage.embedded = DiscordEmbeded()
         discordMessage.embedded.title = holidayTitle
         discordMessage.embedded.color = 7601920

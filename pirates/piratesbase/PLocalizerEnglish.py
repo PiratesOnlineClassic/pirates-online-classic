@@ -6136,6 +6136,7 @@ CHAT_STATUS_FOURTHOFJULY = 'Fourth Of July Holiday:\nTime Remaining: %s Hours, %
 CHAT_STATUS_HALLOWEEN = 'Halloween Holiday:\nTime Remaining: %s Hours, %s Minutes'
 CHAT_STATUS_JOLLYROGERCURSE = 'Jolly Roger Curse Event:\nTime Remaining: %s Hours, %s Minutes'
 CHAT_STATUS_FOUNDERSFEAST = 'Founders Feast Holiday:\nTime Remaining: %s Hours, %s Minutes'
+DISCORD_NEW_EVENT = 'Ahoy @everyone! A new event has started in the Caribbean!'
 DISCORD_DOUBLE_GOLD_HOLIDAY = 'Double Gold'
 DISCORD_DOUBLE_EXP_HOLIDAY = 'Double Experience'
 DISCORD_FREE_HAT_WEEK = 'Free Hat Week'
