@@ -84,7 +84,6 @@ class DiscordMessageUD:
                 self.notify.warning('Failed to send Discord message. %s' % results.get('message', 'Undefined'))
 
         self.notify.info('Sending Discord Message to channel: %s' % channel)
-        print(messageBody)
         self.air.http.performPostRequest(
             url='https://discordapp.com/api/channels/%s/messages' % channel,
             headers=headers,

@@ -47,7 +47,7 @@ class DiscordNotificationsUD(DiscordNotificationsBase):
 
         for fieldKey in fields:
             fieldValue = fields[fieldKey]
-            discordMessage.embedded.setField(fieldKey, fieldValue)
+            discordMessage.embedded.setField(fieldKey, fieldValue, inline=False)
 
         discordMessage.send(DiscordChannels.StaffServerIssues)
         

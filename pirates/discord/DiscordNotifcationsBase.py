@@ -39,6 +39,8 @@ class DiscordNotificationsBase:
         discordStack = discordStack[-exceptionBacklog:]
         discordStacktrace = '%s\n' % str(exception)
         for stack in discordStack:
+            if not stack:
+                continue
             discordStacktrace += '%s\n' % stack
 
         discordStacktrace = discordStacktrace if discordStacktrace else 'N/A'

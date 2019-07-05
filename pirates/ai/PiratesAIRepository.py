@@ -166,5 +166,3 @@ class PiratesAIRepository(PiratesInternalRepository):
         worldFiles = ConfigVariableList('world-file')
         for worldFile in worldFiles:
             self.worldCreator.loadObjectsFromFile('%s.py' % worldFile)
-
-        self.logException(Exception('Testing Fuckery'))
