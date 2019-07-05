@@ -1,5 +1,5 @@
 import time
-
+from datetime import datetime
 class HolidayDates:
     TYPE_CUSTOM = 0
     TYPE_YEARLY = 1
@@ -79,5 +79,10 @@ class HolidayDates:
         if self.holidayType == HolidayDates.TYPE_DAILY:
             return time.mktime((date[0], date[1], date[2] + 1, t[0], t[1], t[2], 0, 0, -1))
         
+    def getReadableStartDate(self, index):
+        timestamp = self.getStartTime(index)
+        return datetime.utcfromtimestamp(timestamp).strftime('%m/%d/%Y')
 
-
+    def getReadableEndDate(self, index):
+        timestamp = self.getEndTime(index)
+        return datetime.utcfromtimestamp(timestamp).strftime('%m/%d/%Y')

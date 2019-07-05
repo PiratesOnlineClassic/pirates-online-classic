@@ -150,3 +150,6 @@ libotp/
 # Documentation
 docs/
 *.csv
+
+# Local databases
+local/

@@ -30,7 +30,7 @@ from pirates.band.DistributedCrewMatchAI import DistributedCrewMatchAI
 from pirates.band.DistributedPirateBandManagerAI import DistributedPirateBandManagerAI
 from pirates.tutorial.PiratesTutorialManagerAI import PiratesTutorialManagerAI
 from pirates.world.WorldGridManagerAI import WorldGridManagerAI
-
+from pirates.discord.DiscordNotificationsAI import DiscordNotificationsAI
 
 class PiratesAIRepository(PiratesInternalRepository):
     notify = directNotify.newCategory('PiratesAIRepository')
@@ -78,6 +78,10 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.createWorlds()
 
         self.distributedDistrict.b_setAvailable(1)
+        self.serverSetupFinished()
+
+    def serverSetupFinished(self):
+        PiratesInternalRepository.serverSetupFinished(self)
         self.notify.info('District (%s) is now ready.' % self.districtName)
         messenger.send('district-ready')
 
@@ -154,6 +158,7 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.tutorialManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
         self.worldGridManager = WorldGridManagerAI(self)
+        self.discordNotifications = DiscordNotificationsAI(self)
 
     def createWorlds(self):
         """

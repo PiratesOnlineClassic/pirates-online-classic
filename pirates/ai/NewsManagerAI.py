@@ -35,7 +35,6 @@ class NewsManagerAI(DistributedObjectAI):
         self.air.timeOfDayMgr.addTimeOfDayStateMethod(PiratesGlobals.TOD_FULL2HALFMOON, 'JollyCurse-Full2HalfMoon', self.processTimeChange)
 
         # Register holiday tasks
-        self.__checkHolidays()
         taskMgr.doMethodLater(15, self.__checkHolidays, 'checkHolidays')
         taskMgr.doMethodLater(15, self.__runHolidayTimer, 'holidayTimerTask')
 
@@ -102,12 +101,10 @@ class NewsManagerAI(DistributedObjectAI):
         if holidayId not in self.holidayList:
             self.holidayList[holidayId] = time
             self.notify.info('Holiday "%s" (%d) is starting!' % (HolidayGlobals.getHolidayName(holidayId), holidayId))
+            self.air.netMessenger.send('uberDOGHolidayStarted', [holidayId, quietly])
             messenger.send('HolidayStarted', [holidayId])
 
         self.processHolidayChange()
-
-        if not quietly:
-            self.air.netMessenger.send('uberDOGHolidayStarted', [holidayId, quietly])
 
     def endHoliday(self, holidayId):
         if not self.isHolidayActive(holidayId):
@@ -120,6 +117,7 @@ class NewsManagerAI(DistributedObjectAI):
             messenger.send('HolidayEnded', [holidayId])
 
         self.processHolidayChange()
+        self.air.netMessenger.send('uberDOGHolidayEnded', [holidayId])
 
     def processHolidayChange(self):
         self.sendHolidayList()
@@ -139,7 +137,6 @@ class NewsManagerAI(DistributedObjectAI):
         self.sendUpdate('setHolidayIdList', [holidayList])
 
     def d_displayMessage(self, messageId):
-        print('Displaying messageId: %s' % messageId)
         self.sendUpdate('displayMessage', [messageId])
 
     def d_displayMessageToAvatar(self, avatarId, messageId):

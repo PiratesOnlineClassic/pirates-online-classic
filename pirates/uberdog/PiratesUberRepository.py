@@ -7,6 +7,7 @@ from otp.distributed.OtpDoGlobals import *
 from pirates.distributed.PiratesInternalRepository import PiratesInternalRepository
 from pirates.distributed.DistrictTrackerUD import DistrictTrackerUD
 from pirates.ai.NewsManagerUD import NewsManagerUD
+from pirates.discord.DiscordNotificationsUD import DiscordNotificationsUD
 from pirates.web.PiratesRPCServiceUD import PiratesRPCServiceUD
 from pirates.web.PiratesHTTPRestUD import PiratesHTTPRestUD
 from pirates.web.RPCGlobals import rpcservice, ResponseCodes
@@ -14,6 +15,7 @@ from pirates.web.RPCServiceUD import RPCServiceUD
 
 class PiratesUberRepository(PiratesInternalRepository):
     notify = directNotify.newCategory('PiratesUberRepository')
+    notify.setInfo(True)
 
     def __init__(self, baseChannel, serverId):
         PiratesInternalRepository.__init__(self, baseChannel, serverId, dcSuffix='UD')
@@ -22,6 +24,8 @@ class PiratesUberRepository(PiratesInternalRepository):
         self.http = None
 
     def handleConnected(self):
+        PiratesInternalRepository.handleConnected(self)
+
         rootObj = DistributedDirectoryAI(self)
         rootObj.generateWithRequiredAndId(self.getGameDoId(), 0, 0)
 
@@ -31,6 +35,10 @@ class PiratesUberRepository(PiratesInternalRepository):
             self.rpc.start()
 
         self.createGlobals()
+        self.serverSetupFinished()
+
+    def serverSetupFinished(self):
+        PiratesInternalRepository.serverSetupFinished(self)
         self.notify.info('UberDOG ready!')
 
     def createGlobals(self):
@@ -38,9 +46,10 @@ class PiratesUberRepository(PiratesInternalRepository):
         Create "global" objects.
         """
 
+        self.rest = PiratesHTTPRestUD(self)
+        self.discordNotifications = DiscordNotificationsUD(self)
         self.districtTracker = DistrictTrackerUD(self)
         self.newsManager = NewsManagerUD(self)
-        self.http = PiratesHTTPRestUD(self)
 
         self.centralLogger = self.generateGlobalObject(OTP_DO_ID_CENTRAL_LOGGER, 'CentralLogger')
         self.csm = self.generateGlobalObject(OTP_DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
