@@ -301,6 +301,10 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         # draw our weapon
         self._drawWeapon()
 
+        # attune if we have a voodoo weapon
+        if WeaponGlobals.isVoodooWeapon(self.avatar.currentWeaponId):
+            self.avatar.currentTarget.addSkillEffect(WeaponGlobals.C_ATTUNE, 0, self.avatar.doId)
+
         # start attacking our target
         self.beginAttackingTarget()
         self.__updateBattleStateTask = taskMgr.add(self.__updateBattleState, self.getUpdateBattleStateTaskName())
@@ -313,6 +317,10 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         if self.__nextAttackTask:
             taskMgr.remove(self.__nextAttackTask)
             self.__nextAttackTask = None
+
+        # remove attune if we have a voodoo weapon
+        if WeaponGlobals.isVoodooWeapon(self.avatar.currentWeaponId):
+            self.avatar.currentTarget.removeSkillEffect(self.avatar.doId)
 
         self.avatar.stopLookAt()
 
