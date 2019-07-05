@@ -71,7 +71,8 @@ class NewsService(RPCServiceUD):
             district = districts[districtId]
             holidays = district.get('holidays', [])
             for holiday in holidays:
-                clusterHolidays.append(holiday)
+                if holiday not in clusterHolidays:
+                    clusterHolidays.append(holiday)
 
         results = self._formatResults(
             holidays=clusterHolidays)
