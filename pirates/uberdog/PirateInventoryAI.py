@@ -90,11 +90,17 @@ class PirateInventoryAI(DistributedInventoryAI):
         self.b_setStackQuantity(InventoryType.GoldInPocket, min(quantity, 65000))
 
     def addGoldInPocket(self, quantity):
-        if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEGOLDHOLIDAY):
+        newsManager = self.air.newsManager
+        if newsManager.isHolidayActive(PiratesGlobals.DOUBLEGOLDHOLIDAY):
             quantity *= 2
+        
+        avatar = self.air.doId2do.get(self.ownerId)
+        if avatar:
+            if newsManager.isHolidayActive(PiratesGlobals.DOUBLEGOLDHOLIDAYPAID) and avatar.isPaid():
+                quantity *= 2
 
         quantity += self.getGoldInPocket() 
-        self.setGoldInPocket(quanity)
+        self.setGoldInPocket(quantity)
 
     def setVitaeLevel(self, quantity):
         self.b_setStackQuantity(InventoryType.Vitae_Level, quantity)
