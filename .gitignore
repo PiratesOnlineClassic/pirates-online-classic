@@ -120,6 +120,9 @@ cache/
 # Tools
 tools/
 
+# Resources
+resources/
+
 # logs/screens
 logs/
 screenshots/
@@ -142,6 +145,7 @@ libotp/
 
 # Compiled modules
 *.pyd
+*.dll
 
 # Documentation
 docs/

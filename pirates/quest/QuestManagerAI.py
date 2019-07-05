@@ -406,7 +406,7 @@ class QuestManagerAI(DirectObject):
         assert(taskDNAClass is not None)
         questList = self.quests.get(avatar.doId)
         if not questList:
-            return
+            return []
 
         quests = []
         for quest in list(questList.values()):
