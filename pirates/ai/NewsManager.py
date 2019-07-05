@@ -68,8 +68,8 @@ class NewsManager(DistributedObject.DistributedObject):
 
         timeRemaining = self.getTimeRemaining(holidayId)
         formatting = {
-            'hours': min(timeRemaining[0], 0),
-            'minutes': min(timeRemaining[1], 0)
+            'hours': max(timeRemaining[0], 0),
+            'minutes': max(timeRemaining[1], 0)
         }
         
         message = message % formatting
