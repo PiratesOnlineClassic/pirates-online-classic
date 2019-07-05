@@ -8,7 +8,7 @@ from pirates.distributed.PiratesInternalRepository import PiratesInternalReposit
 from pirates.distributed.DistrictTrackerUD import DistrictTrackerUD
 from pirates.ai.NewsManagerUD import NewsManagerUD
 from pirates.discord.DiscordNotificationsUD import DiscordNotificationsUD
-from pirates.web.PiratesRPCServerUD import PiratesRPCServerUD
+from pirates.web.PiratesRPCServiceUD import PiratesRPCServiceUD
 from pirates.web.PiratesHTTPRestUD import PiratesHTTPRestUD
 from pirates.web.RPCGlobals import rpcservice, ResponseCodes
 from pirates.web.RPCServiceUD import RPCServiceUD
@@ -28,7 +28,7 @@ class PiratesUberRepository(PiratesInternalRepository):
         rootObj.generateWithRequiredAndId(self.getGameDoId(), 0, 0)
 
         if config.GetBool('want-rpc-server', True):
-            self.rpc = PiratesRPCServerUD(self)
+            self.rpc = PiratesRPCServiceUD(self)
             self.rpc.daemon = True
             self.rpc.start()
 
