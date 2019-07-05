@@ -62,5 +62,5 @@ class PiratesRPCServerUD(Thread):
                     continue
                 
                 rpcName = '%s.%s' % (serviceName, methodName)
-                self.notify.info(' - %s' % rpcName)
+                self.notify.debug(' - %s' % rpcName)
                 self.server.register_function(methodFunc, rpcName)
