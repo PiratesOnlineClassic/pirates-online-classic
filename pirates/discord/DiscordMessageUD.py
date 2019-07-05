@@ -96,7 +96,6 @@ class DiscordMessageUD:
 
         def processResults(results):
             self.notify.debug('Results: %s' % results)
-            results = json.loads(results)
             if 'code' in results and results.get('code', 0) != 200:
                 self.notify.warning('Failed to send Discord message. %s' % results.get('message', 'Undefined'))
             else:
@@ -107,7 +106,7 @@ class DiscordMessageUD:
                     messageBody=messageBody)
 
         self.notify.info('Sending Discord message to channel: %s' % channel)
-        self.air.rest.performPostRequest(
+        self.air.rest.performJsonPostRequest(
             url=DiscordGlobalsUD.getChannelMessageUrl(channel),
             headers=headers,
             content_type='application/json',
