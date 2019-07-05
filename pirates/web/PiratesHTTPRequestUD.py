@@ -48,4 +48,4 @@ class PiratesHTTPRequestUD(object):
                     self.notify.warning('Exception occured processing callback')
                     self.notify.warning(traceback.format_exc())
 
-            self._rest.remove_request(self._request_id)
+            self._rest.removeRequest(self._request_id)
