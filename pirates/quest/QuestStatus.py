@@ -200,7 +200,7 @@ class QuestStatus:
         completedContainer.getDownstreamContainers(downstreamContainers)
         for container in downstreamContainers:
             questInt = container.getQuestInt()
-            print 'QuestInt in question: %s' % questInt
+            self.notify.debug('QuestInt in question: %s' % questInt)
             if questInt in ladderHistory:
                 self.notify.warning('For avatar: %s; Purging child questInt: %s' % (self.av.doId, questInt))
                 ladderHistory.remove(questInt)

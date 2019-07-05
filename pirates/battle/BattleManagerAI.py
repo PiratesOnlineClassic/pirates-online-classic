@@ -261,7 +261,7 @@ class BattleManagerAI(BattleManagerBase):
         if not target.getDamagable():
             return
 
-        # cannot damage the money
+        # cannot damage the monkey
         if target.getAvatarType() == AvatarTypes.Monkey:
             return
 

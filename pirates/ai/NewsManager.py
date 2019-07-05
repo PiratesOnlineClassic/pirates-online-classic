@@ -65,6 +65,15 @@ class NewsManager(DistributedObject.DistributedObject):
         elif msgType == 0:
             message = HolidayGlobals.getHolidayEndMsg(holidayId, base.cr.isPaid())
             chatMessage = HolidayGlobals.getHolidayEndChatMsg(holidayId, base.cr.isPaid())
+
+        timeRemaining = self.getTimeRemaining(holidayId)
+        formatting = {
+            'hours': max(timeRemaining[0], 0),
+            'minutes': max(timeRemaining[1], 0)
+        }
+        
+        message = message % formatting
+        chatMessage = chatMessage % formatting
         
         if self.inNewsWorld() and not self.inTutorial(level = PiratesGlobals.TUT_GOT_COMPASS):
             if message:

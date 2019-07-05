@@ -910,6 +910,12 @@ def guildname(name):
     spellbook.getInvoker().b_setGuildName(name)
     return "Set Guild Name to %s" % name
 
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def immortal():
+    avatar = spellbook.getInvoker()
+    avatar.setImmortal(not avatar.getImmortal())
+    return 'Immortal state set to: %s' % avatar.getImmortal()
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def access(access=-1):
     """

@@ -34,6 +34,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.shipId = 0
         self.maxHp = 0
         self.hp = 0
+        self.immortal = False
         self.quietly = False
         self.luck = 0
         self.maxLuck = 0
@@ -211,6 +212,9 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         return self.maxHp
 
     def setHp(self, hp, quietly=False):
+        if self.getImmortal():
+            return
+
         if hp <= 0 and self.hp > 0:
             self.b_setGameState('Death')
 
@@ -218,6 +222,8 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.quietly = quietly
 
     def d_setHp(self, hp, quietly=False):
+        if self.getImmortal():
+            return
         self.sendUpdate('setHp', [hp, quietly])
 
     def b_setHp(self, hp, quietly=False):
@@ -226,6 +232,12 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
     def getHp(self):
         return [self.hp, self.quietly]
+
+    def setImmortal(self, immortal):
+        self.immortal = immortal
+
+    def getImmortal(self):
+        return self.immortal
 
     def setLuck(self, luck):
         self.luck = luck

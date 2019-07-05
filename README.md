@@ -1,5 +1,4 @@
-<img src="https://i.gyazo.com/1880be542494c5b84f3c95b2bce626c0.png" align="center">
-
+<img src=".github/logo.png" align="center">
 
 # Pirates Online Classic
 This is the game development repository for Pirates Online Classic, a fan-made recreation of Disney's now-defunct MMORPG; Pirates of the Caribbean Online.

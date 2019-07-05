@@ -2,6 +2,7 @@ import datetime
 
 from direct.directnotify import DirectNotifyGlobal
 
+from pirates.ai import HolidayGlobals
 from pirates.web.RPCGlobals import rpcservice, ResponseCodes
 from pirates.web.RPCServiceUD import RPCServiceUD
 
@@ -26,7 +27,7 @@ class NewsManagerUD:
 
     def handleHolidayEnded(self, holidayId):
         self.notify.info('Holiday (%s) ended' % holidayId)
-        self.discordNotifications.serverHolidayEnd(holidayId)
+        self.air.discordNotifications.serverHolidayEnd(holidayId)
 
     def startHoliday(self, holidayId, time, quietly=False):
         self.notify.info('Starting Holiday %s across the network for %s seconds' % (holidayId, time))
@@ -41,6 +42,33 @@ class NewsService(RPCServiceUD):
     """
     Handles all news related handlers for the RPC
     """
+
+    def getHolidayDates(self):
+        """
+        Summary:
+            Returns the start and end date of all holidays in the source
+        Returns:
+            dates: List of all holiday start and end dates
+        """
+
+        holidays = {}
+        for holidayId in HolidayGlobals.holidays:
+            date = HolidayGlobals.getHolidayDates(holidayId)
+            scheduledDates = {}
+            if isinstance(date, dict):
+                continue
+
+            for index in range(len(date.startDates)):
+                start = date.getStartTime(index)
+                end = date.getEndTime(index)
+                scheduledDates[index] = [start, end]
+
+            holidays[holidayId] = scheduledDates
+
+        results = self._formatResults(
+            dates=holidays)
+        
+        return results
 
     def getHolidays(self):
         """

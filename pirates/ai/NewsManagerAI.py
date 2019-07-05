@@ -121,6 +121,7 @@ class NewsManagerAI(DistributedObjectAI):
 
     def processHolidayChange(self):
         self.sendHolidayList()
+        self.d_holidayNotify()
 
         # Tell the UberDOG about the change
         if self.air.districtTracker:
@@ -138,6 +139,9 @@ class NewsManagerAI(DistributedObjectAI):
 
     def d_displayMessage(self, messageId):
         self.sendUpdate('displayMessage', [messageId])
+
+    def d_holidayNotify(self):
+        self.sendUpdate('holidayNotify', [])
 
     def d_displayMessageToAvatar(self, avatarId, messageId):
         self.sendUpdateToAvatar(avatarId, 'displayMessage', [messageId])
