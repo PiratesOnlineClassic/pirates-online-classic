@@ -27,3 +27,4 @@ class PiratesMagicWordManagerAI(MagicWordManagerAI):
 
     def d_recvServerTime(self, avatarId, sinceEpoch):
         self.sendUpdateToAvatarId(avatarId, 'recvServerTime', [sinceEpoch])
+

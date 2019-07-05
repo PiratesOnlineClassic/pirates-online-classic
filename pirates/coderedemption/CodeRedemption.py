@@ -12,7 +12,7 @@ class CodeRedemption(DistributedObjectGlobal):
 
     def redeemCode(self, code):
         if code:
-            userName = ''
+            userName = '' #TODO: add this
             self.sendUpdate('sendCodeForRedemption', [code, userName])
 
     def notifyClientCodeRedeemStatus(self, status):

@@ -39,6 +39,8 @@ class PiratesHTTPRestUD(object):
             request = self._requests[request_id]
             request.update()
 
+        return task.again
+
     def destroy(self):
         """
         Performs destruction operations on the PandaHTTP instance

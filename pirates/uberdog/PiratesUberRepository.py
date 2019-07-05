@@ -7,13 +7,15 @@ from otp.distributed.OtpDoGlobals import *
 from pirates.distributed.PiratesInternalRepository import PiratesInternalRepository
 from pirates.distributed.DistrictTrackerUD import DistrictTrackerUD
 from pirates.ai.NewsManagerUD import NewsManagerUD
-from pirates.web.PiratesRPCServerUD import PiratesRPCServerUD
+from pirates.discord.DiscordNotificationsUD import DiscordNotificationsUD
+from pirates.web.PiratesRPCServiceUD import PiratesRPCServiceUD
 from pirates.web.PiratesHTTPRestUD import PiratesHTTPRestUD
 from pirates.web.RPCGlobals import rpcservice, ResponseCodes
 from pirates.web.RPCServiceUD import RPCServiceUD
 
 class PiratesUberRepository(PiratesInternalRepository):
     notify = directNotify.newCategory('PiratesUberRepository')
+    notify.setInfo(True)
 
     def __init__(self, baseChannel, serverId):
         PiratesInternalRepository.__init__(self, baseChannel, serverId, dcSuffix='UD')
@@ -22,15 +24,21 @@ class PiratesUberRepository(PiratesInternalRepository):
         self.http = None
 
     def handleConnected(self):
+        PiratesInternalRepository.handleConnected(self)
+
         rootObj = DistributedDirectoryAI(self)
         rootObj.generateWithRequiredAndId(self.getGameDoId(), 0, 0)
 
         if config.GetBool('want-rpc-server', True):
-            self.rpc = PiratesRPCServerUD(self)
+            self.rpc = PiratesRPCServiceUD(self)
             self.rpc.daemon = True
             self.rpc.start()
 
         self.createGlobals()
+        self.serverSetupFinished()
+
+    def serverSetupFinished(self):
+        PiratesInternalRepository.serverSetupFinished(self)
         self.notify.info('UberDOG ready!')
 
     def createGlobals(self):
@@ -38,9 +46,10 @@ class PiratesUberRepository(PiratesInternalRepository):
         Create "global" objects.
         """
 
+        self.rest = PiratesHTTPRestUD(self)
+        self.discordNotifications = DiscordNotificationsUD(self)
         self.districtTracker = DistrictTrackerUD(self)
         self.newsManager = NewsManagerUD(self)
-        self.http = PiratesHTTPRestUD(self)
 
         self.centralLogger = self.generateGlobalObject(OTP_DO_ID_CENTRAL_LOGGER, 'CentralLogger')
         self.csm = self.generateGlobalObject(OTP_DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
@@ -50,10 +59,10 @@ class PiratesUberRepository(PiratesInternalRepository):
         self.shipLoader = self.generateGlobalObject(OTP_DO_ID_PIRATES_SHIP_MANAGER, 'DistributedShipLoader')
         self.avatarFriendsManager = self.generateGlobalObject(OTP_DO_ID_AVATAR_FRIENDS_MANAGER, 'PCAvatarFriendsManager')
 
-@rpcservice()
-class RepositoryService(RPCServiceUD):
+@rpcservice(serviceName='cluster')
+class ClusterService(RPCServiceUD):
     """
-    Handles all system related handlers for the RPC
+    Handles all cluster related handlers for the RPC
     """
 
     def ping(self, response):

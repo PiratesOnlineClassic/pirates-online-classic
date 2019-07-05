@@ -383,8 +383,6 @@ class BattleManagerAI(BattleManagerBase):
 
         overallReputation = 0
         goldReward = EnemyGlobals.getGoldDrop(target.getAvatarType(), target.getLevel())
-        if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEGOLDHOLIDAY):
-            goldReward *= 2
 
         for skillId in attacker.battleSkillDiary.getSkills():
             ammoSkillId, timestamp, reputation = attacker.battleSkillDiary.getSkill(skillId)
@@ -398,7 +396,7 @@ class BattleManagerAI(BattleManagerBase):
         # update the avatar's overall reputation based on all the skills they
         # used to kill the target
         inventory.setOverallRep(inventory.getOverallRep() + overallReputation)
-        inventory.setGoldInPocket(inventory.getGoldInPocket() + goldReward)
+        inventory.addGoldInPocket(goldReward)
 
         if random.random() >= 0.8:
             cardId = random.randint(InventoryType.begin_Cards, InventoryType.end_Cards - 1)

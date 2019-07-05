@@ -23,13 +23,13 @@ class DistrictTrackerUD:
     def requestStatus(self):
         self.air.netMessenger.send('queryDistrictStatus')
 
-@rpcservice()
-class DistrictService(RPCServiceUD):
+@rpcservice(serviceName='districtTracker')
+class DistrictTrackerService(RPCServiceUD):
     """
     Handles all district tracker related handlers for the RPC
     """
 
-    def getDistricts(self):
+    def getShards(self):
         """
         Summary:
             Retrieves the last reported status of all the districts in the server cluster
@@ -39,3 +39,14 @@ class DistrictService(RPCServiceUD):
 
         districts = self.air.districtTracker.getShards()
         return self._formatResults(districts=districts)
+
+    def requestStatus(self):
+        """
+        Summary: 
+            Requests the latest district status from the cluster on the UD
+        Return:
+            None
+        """
+
+        self.air.districtTracker.requestStatus()
+        return self._formatResults()

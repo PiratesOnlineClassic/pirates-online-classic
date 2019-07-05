@@ -17,31 +17,16 @@ class NewsManagerUD:
     def __init__(self, air):
         self.air = air
         self.air.netMessenger.accept('uberDOGHolidayStarted', self, self.handleHolidayStarted)
-        self.pastBroadcastCacheDelay = config.GetInt('news-manager-past-broadcast-cache', 5)
-        
-        self.__broadcastedHolidays = {}
-        self.__lastBroadcast = None
+        self.air.netMessenger.accept('uberDOGHolidayEnded', self, self.handleHolidayEnded)
+        self.notify.info('%s is online' % self.__class__.__name__)
 
     def handleHolidayStarted(self, holidayId, quietly):
-        if not quietly:
-            # Clear old broadcast checks
-            now = datetime.datetime.now()
-            for broadcast in self.__broadcastedHolidays:
-                expireTime = self.__broadcastedHolidays[broadcast]
-                if expireTime <= now:
-                    self.__broadcastedHolidays.pop(broadcast)
-                    continue
+        self.notify.info('Holiday (%s) started' % holidayId)
+        self.air.discordNotifications.serverHolidayStart(holidayId, quietly)
 
-            # Verify we should broadcast
-            if holidayId in self.__broadcastedHolidays or self.__lastBroadcast == holidayId:
-                return
-
-            success = self.air.webhookManager.logHolidayMessage(holidayId)
-            if success:
-                self.notify.info('Broadcasted holiday message to Discord')
-                expireTime = datetime.datetime.now() + datetime.timedelta(minutes=self.pastBroadcastCacheDelay)
-                self.__broadcastedHolidays[holidayId] = expireTime
-                self.__lastBroadcast = holidayId
+    def handleHolidayEnded(self, holidayId):
+        self.notify.info('Holiday (%s) ended' % holidayId)
+        self.discordNotifications.serverHolidayEnd(holidayId)
 
     def startHoliday(self, holidayId, time, quietly=False):
         self.notify.info('Starting Holiday %s across the network for %s seconds' % (holidayId, time))
@@ -51,10 +36,10 @@ class NewsManagerUD:
         self.notify.info('Telling all AIs to stop holiday %s!' % holidayId)
         self.air.netMessenger.send('stopHoliday', [holidayId])
 
-@rpcservice()
-class HolidayService(RPCServiceUD):
+@rpcservice(serviceName='newsManager')
+class NewsService(RPCServiceUD):
     """
-    Handles all holiday related handlers for the RPC
+    Handles all news related handlers for the RPC
     """
 
     def getHolidays(self):
@@ -66,12 +51,16 @@ class HolidayService(RPCServiceUD):
         """
 
         districts = self.air.districtTracker.getShards()
-        holidays = []
-        for district in districts:
-            holidays += district['holidays']
+        clusterHolidays = []
+        for districtId in districts:
+            district = districts[districtId]
+            holidays = district.get('holidays', [])
+            for holiday in holidays:
+                if holiday not in clusterHolidays:
+                    clusterHolidays.append(holiday)
 
         results = self._formatResults(
-            holidays=holidays)
+            holidays=clusterHolidays)
 
         return results
 
