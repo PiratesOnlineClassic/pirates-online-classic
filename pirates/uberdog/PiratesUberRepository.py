@@ -11,6 +11,7 @@ from pirates.discord.DiscordNotificationsUD import DiscordNotificationsUD
 
 class PiratesUberRepository(PiratesInternalRepository):
     notify = directNotify.newCategory('PiratesUberRepository')
+    notify.setInfo(True)
 
     def __init__(self, baseChannel, serverId):
         PiratesInternalRepository.__init__(self, baseChannel, serverId, dcSuffix='UD')
@@ -35,10 +36,10 @@ class PiratesUberRepository(PiratesInternalRepository):
         Create "global" objects.
         """
 
+        self.rest = PiratesHTTPRestUD(self)
+        self.discordNotifications = DiscordNotificationsUD(self)
         self.districtTracker = DistrictTrackerUD(self)
         self.newsManager = NewsManagerUD(self)
-        self.http = PiratesHTTPRestUD(self)
-        self.discordNotifications = DiscordNotificationsUD(self)
 
         self.centralLogger = self.generateGlobalObject(OTP_DO_ID_CENTRAL_LOGGER, 'CentralLogger')
         self.csm = self.generateGlobalObject(OTP_DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')

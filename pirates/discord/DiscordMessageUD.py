@@ -17,6 +17,20 @@ class DiscordEmbeded:
         self.timestamp = None
         self.color = 0
         self.fields = {}
+        self.image = None
+
+    def setImage(self, url, proxyUrl=None, width=None, height=None):
+        self.image = {}
+        self.image['url'] = url
+
+        if proxyUrl:
+            self.image['proxyUrl'] = proxyUrl
+    
+        if width:
+            self.image['width'] = width
+
+        if height:
+            self.image['height'] = height
 
     def setField(self, name, value=None, inline=True):
 
@@ -42,6 +56,9 @@ class DiscordEmbeded:
 
         if self.timestamp:
             data['timestamp'] = self.timestamp
+
+        if self.image:
+            data['image'] = self.image
 
         return data
 
@@ -78,13 +95,13 @@ class DiscordMessageUD:
             messageBody['embed'] = self.embedded.build()
 
         def processResults(results):
-            self.notify.info(results)
+            self.notify.debug('Results: %s' % results)
             results = json.loads(results)
             if 'code' in results and results.get('code', 0) != 200:
                 self.notify.warning('Failed to send Discord message. %s' % results.get('message', 'Undefined'))
 
         self.notify.info('Sending Discord Message to channel: %s' % channel)
-        self.air.http.performPostRequest(
+        self.air.rest.performPostRequest(
             url='https://discordapp.com/api/channels/%s/messages' % channel,
             headers=headers,
             content_type='application/json',

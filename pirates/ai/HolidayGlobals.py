@@ -120,27 +120,37 @@ MSG_END_UNLIMITED = 4
 MSG_END_BASIC = 5
 MSG_CHAT_STATUS = 6
 MSG_ICON = 7
+MSG_DISCORD_TITLE = 8
+MSG_DISCORD_DESC = 9
 holidayMessages = {
     PiratesGlobals.DOUBLEGOLDHOLIDAY: {
         MSG_START_ALL: (PLocalizer.DoubleGoldStart, PLocalizer.DoubleGoldStartChat),
         MSG_END_ALL: (PLocalizer.DoubleGoldEnd, PLocalizer.DoubleGoldEnd),
         MSG_CHAT_STATUS: PLocalizer.CHAT_STATUS_DOUBLEGOLD,
-        MSG_ICON: 'admin'},
+        MSG_ICON: 'admin',
+        MSG_DISCORD_TITLE: PLocalizer.DISCORD_DOUBLE_GOLD_HOLIDAY,
+        MSG_DISCORD_DESC: PLocalizer.DISCORD_MESSAGE_DOUBLEGOLD},
     PiratesGlobals.DOUBLEGOLDHOLIDAYPAID: {
         MSG_START_ALL: (PLocalizer.DoubleGoldFullStart, PLocalizer.DoubleGoldFullStartChat),
         MSG_END_ALL: (PLocalizer.DoubleGoldFullEnd, PLocalizer.DoubleGoldFullEnd),
         MSG_CHAT_STATUS: PLocalizer.CHAT_STATUS_DOUBLEGOLD_PAID,
-        MSG_ICON: 'admin'},
+        MSG_ICON: 'admin',
+        MSG_DISCORD_TITLE: PLocalizer.DISCORD_DOUBLE_GOLD_HOLIDAY,
+        MSG_DISCORD_DESC: PLocalizer.DISCORD_MESSAGE_DOUBLEGOLD},
     PiratesGlobals.DOUBLEXPHOLIDAY: {
         MSG_START_ALL: (PLocalizer.DoubleXPStart, PLocalizer.DoubleXPStartChat),
         MSG_END_ALL: (PLocalizer.DoubleXPEnd, PLocalizer.DoubleXPEnd),
         MSG_CHAT_STATUS: PLocalizer.CHAT_STATUS_DOUBLEXP,
-        MSG_ICON: 'admin'},
+        MSG_ICON: 'admin',
+        MSG_DISCORD_TITLE: PLocalizer.DISCORD_DOUBLE_EXP_HOLIDAY,
+        MSG_DISCORD_DESC: PLocalizer.DISCORD_MESSAGE_DOUBLEXP},
     PiratesGlobals.DOUBLEXPHOLIDAYPAID: {
         MSG_START_ALL: (PLocalizer.DoubleXPFullStart, PLocalizer.DoubleXPFullStartChat),
         MSG_END_ALL: (PLocalizer.DoubleXPFullEnd, PLocalizer.DoubleXPFullEnd),
         MSG_CHAT_STATUS: PLocalizer.CHAT_STATUS_DOUBLEXP_PAID,
-        MSG_ICON: 'admin'},
+        MSG_ICON: 'admin',
+        MSG_DISCORD_TITLE: PLocalizer.DISCORD_DOUBLE_EXP_HOLIDAY,
+        MSG_DISCORD_DESC: PLocalizer.DISCORD_MESSAGE_DOUBLEXP},
     PiratesGlobals.BLACKJACKFRIDAY: {
         MSG_START_ALL: (PLocalizer.BlackJackFridayStart, PLocalizer.BlackJackFridayStartChat),
         MSG_END_ALL: (PLocalizer.BlackJackFridayEnd, PLocalizer.BlackJackFridayEndChat),
@@ -149,27 +159,39 @@ holidayMessages = {
     PiratesGlobals.FREEHATWEEK: {
         MSG_START_UNLIMITED: (PLocalizer.FreeHatStartUnlimited, PLocalizer.FreeHatStartUnlimitedChat),
         MSG_START_BASIC: (PLocalizer.FreeHatStartUnlimited, PLocalizer.FreeHatStartUnlimitedChat),
-        MSG_ICON: 'hat'},
+        MSG_ICON: 'hat',
+        MSG_DISCORD_TITLE: PLocalizer.DISCORD_FREE_HAT_WEEK,
+        MSG_DISCORD_DESC: PLocalizer.FreeHatStartUnlimitedChat},
     PiratesGlobals.FLIRTEMOTE: {
         MSG_START_UNLIMITED: (PLocalizer.FlirtEmoteStart, PLocalizer.FlirtEmoteStart),
         MSG_START_BASIC: (PLocalizer.FlirtEmoteStart, PLocalizer.FlirtEmoteStart),
-        MSG_ICON: 'friends'},
+        MSG_ICON: 'friends',
+        MSG_DISCORD_TITLE: PLocalizer.DISCORD_FLIRT_EMOTE,
+        MSG_DISCORD_DESC: PLocalizer.FlirtEmoteStart},
     PiratesGlobals.SAINTPATRICKSDAY: {
         MSG_START_ALL: (PLocalizer.StPatricksStartUnlimited, PLocalizer.StPatricksStartUnlimitedChat),
-        MSG_ICON: 'admin'},
+        MSG_ICON: 'admin',
+        MSG_DISCORD_TITLE: PLocalizer.DISCORD_SAINT_PATRICKS_DAY,
+        MSG_DISCORD_DESC: PLocalizer.StPatricksStartUnlimitedChat},
     PiratesGlobals.MOTHERSDAY: {
         MSG_START_UNLIMITED: (PLocalizer.MothersDayStartUnlimited, PLocalizer.MothersDayStartUnlimitedChat),
         MSG_START_BASIC: (PLocalizer.MothersDayStartBasic, PLocalizer.MothersDayStartBasicChat),
         MSG_CHAT_STATUS: PLocalizer.CHAT_STATUS_MOTHERS_DAY_PAID,
-        MSG_ICON: 'tattoo'},
+        MSG_ICON: 'tattoo',
+        MSG_DISCORD_TITLE: PLocalizer.DISCORD_MOTHERS_DAY,
+        MSG_DISCORD_DESC: PLocalizer.MothersDayStartUnlimitedChat},
     PiratesGlobals.FATHERSDAY: {
         MSG_START_ALL: (PLocalizer.FathersDayStart, PLocalizer.FathersDayStartChat),
         MSG_CHAT_STATUS: PLocalizer.CHAT_STATUS_FATHERS_DAY,
-        MSG_ICON: 'admin'},
+        MSG_ICON: 'admin',
+        MSG_DISCORD_TITLE: PLocalizer.DISCORD_FATHERS_DAY,
+        MSG_DISCORD_DESC: PLocalizer.FathersDayStartChat},
     PiratesGlobals.FOURTHOFJULY: {
         MSG_START_ALL: (PLocalizer.FourthOfJulyStart, PLocalizer.FourthOfJulyStartChat),
         MSG_CHAT_STATUS: PLocalizer.CHAT_STATUS_FOURTHOFJULY,
-        MSG_ICON: 'admin'},
+        MSG_ICON: 'admin',
+        MSG_DISCORD_TITLE: PLocalizer.DISCORD_FOURTH_OF_JULY,
+        MSG_DISCORD_DESC: PLocalizer.FourthOfJulyStartChat},
     PiratesGlobals.HALFOFFCUSTOMIZATION: {
         MSG_START_ALL: (PLocalizer.HalfOffCustomizationUnlimited, PLocalizer.HalfOffCustomizationUnlimited),
         MSG_END_ALL: (PLocalizer.HalfOffCustomizationEnd, PLocalizer.HalfOffCustomizationEnd),
@@ -211,7 +233,6 @@ def getHolidayStartMsg(holidayId, paidStatus):
         return holidayMessages.get(holidayId).get(MSG_START_BASIC)[0]
     return None
 
-
 def getHolidayStartChatMsg(holidayId, paidStatus):
     if holidayMessages.get(holidayId).has_key(MSG_START_ALL):
         return holidayMessages.get(holidayId).get(MSG_START_ALL)[1]
@@ -249,3 +270,12 @@ def getHolidayIcon(holidayId):
         return holidayMessages.get(holidayId).get(MSG_ICON)
     return None
 
+def getHolidayDiscordTitle(holidayId):
+    if holidayMessages.get(holidayId).has_key(MSG_DISCORD_TITLE):
+        return holidayMessages.get(holidayId).get(MSG_DISCORD_TITLE)
+    return None
+
+def getHolidayDiscordDescription(holidayId):
+    if holidayMessages.get(holidayId).has_key(MSG_DISCORD_DESC):
+        return holidayMessages.get(holidayId).get(MSG_DISCORD_DESC)
+    return None

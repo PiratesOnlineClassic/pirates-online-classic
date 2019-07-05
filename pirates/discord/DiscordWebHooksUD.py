@@ -52,7 +52,7 @@ class WebhookBase(object):
                     url=url,
                     data=formatted)
 
-        self.air.http.performPostRequest(
+        self.air.rest.performPostRequest(
             url=url,
             content_type='application/x-www-form-urlencoded',
             post_body=formatted,

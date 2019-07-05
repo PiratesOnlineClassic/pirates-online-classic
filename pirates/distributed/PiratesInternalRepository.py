@@ -31,6 +31,7 @@ class PiratesInternalRepository(OTPInternalRepository):
         self._registerInternalNetMessage('startHoliday')
         self._registerInternalNetMessage('stopHoliday')
         self._registerInternalNetMessage('uberDOGHolidayStarted')
+        self._registerInternalNetMessage('uberDOGHolidayEnded')
 
         # Discord Notifications
         self._registerInternalNetMessage('publishException')
