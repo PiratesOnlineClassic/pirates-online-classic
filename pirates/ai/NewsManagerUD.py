@@ -34,12 +34,13 @@ class NewsManagerUD:
             if holidayId in self.__broadcastedHolidays or self.__lastBroadcast == holidayId:
                 return
 
-            success = self.air.webhookManager.logHolidayMessage(holidayId)
-            if success:
-                self.notify.info('Broadcasted holiday message to Discord')
-                expireTime = datetime.datetime.now() + datetime.timedelta(minutes=self.pastBroadcastCacheDelay)
-                self.__broadcastedHolidays[holidayId] = expireTime
-                self.__lastBroadcast = holidayId
+            self.notify.info('Holiday (%s) started' % holidayId)
+            #success = self.air.webhookManager.logHolidayMessage(holidayId)
+            #if success:
+            #    self.notify.info('Broadcasted holiday message to Discord')
+            #    expireTime = datetime.datetime.now() + datetime.timedelta(minutes=self.pastBroadcastCacheDelay)
+            #    self.__broadcastedHolidays[holidayId] = expireTime
+            #    self.__lastBroadcast = holidayId
 
     def startHoliday(self, holidayId, time, quietly=False):
         self.notify.info('Starting Holiday %s across the network for %s seconds' % (holidayId, time))

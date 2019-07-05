@@ -6,7 +6,6 @@ from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from otp.distributed.OtpDoGlobals import *
 from otp.distributed.OTPInternalRepository import OTPInternalRepository
-from pirates.uberdog.WebhooksUD import PiratesWebhookManager
 
 class PiratesInternalRepository(OTPInternalRepository):
     GameGlobalsId = OTP_DO_ID_PIRATES
@@ -18,7 +17,6 @@ class PiratesInternalRepository(OTPInternalRepository):
         OTPInternalRepository.__init__(self, baseChannel, serverId, dcFileNames,
             dcSuffix, connectMethod, threadedNet)
 
-        self.webhookManager = PiratesWebhookManager(self)
         self._registerNetMessages()
 
     def _registerNetMessages(self):
@@ -33,6 +31,9 @@ class PiratesInternalRepository(OTPInternalRepository):
         self._registerInternalNetMessage('startHoliday')
         self._registerInternalNetMessage('stopHoliday')
         self._registerInternalNetMessage('uberDOGHolidayStarted')
+
+        # Discord Notifications
+        self._registerInternalNetMessage('publishException')
 
         # Remote Inventory Manager Control
         #AI
@@ -79,9 +80,6 @@ class PiratesInternalRepository(OTPInternalRepository):
             accountId=accountId,
             **kwargs)
 
-        # Log message to Discord
-        self.webhookManager.logPotentialHacker(avatarId, accountId, message, **kwargs)
-
         if kickChannel:
             self.kickChannel(kickChannel)
 
@@ -101,8 +99,6 @@ class PiratesInternalRepository(OTPInternalRepository):
         self.centralLogger.reportException(senderName, trace, False)
         self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
         print(trace)
-
-        self.webhookManager.logServerException(e, avatarId, accountId)
 
         # Python 2 Vs 3 compatibility
         if not sys.version_info >= (3, 0):

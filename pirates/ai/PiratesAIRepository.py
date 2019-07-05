@@ -30,7 +30,7 @@ from pirates.band.DistributedCrewMatchAI import DistributedCrewMatchAI
 from pirates.band.DistributedPirateBandManagerAI import DistributedPirateBandManagerAI
 from pirates.tutorial.PiratesTutorialManagerAI import PiratesTutorialManagerAI
 from pirates.world.WorldGridManagerAI import WorldGridManagerAI
-
+from pirates.discord.DiscordNotificationsAI import DiscordNotificationsAI
 
 class PiratesAIRepository(PiratesInternalRepository):
     notify = directNotify.newCategory('PiratesAIRepository')
@@ -154,6 +154,7 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.tutorialManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
         self.worldGridManager = WorldGridManagerAI(self)
+        self.discordNotifications = DiscordNotificationsAI(self)
 
     def createWorlds(self):
         """
