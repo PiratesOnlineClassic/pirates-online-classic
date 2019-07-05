@@ -51,6 +51,7 @@ class PiratesUberRepository(PiratesInternalRepository):
         self.districtTracker = DistrictTrackerUD(self)
         self.newsManager = NewsManagerUD(self)
 
+        self.settingsMgr = self.generateGlobalObject(OTP_DO_ID_PIRATES_SETTINGS_MANAGER, 'PiratesSettingsMgr')
         self.centralLogger = self.generateGlobalObject(OTP_DO_ID_CENTRAL_LOGGER, 'CentralLogger')
         self.csm = self.generateGlobalObject(OTP_DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
         self.travelAgent = self.generateGlobalObject(OTP_DO_ID_PIRATES_TRAVEL_AGENT, 'DistributedTravelAgent')

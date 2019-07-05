@@ -25,6 +25,8 @@ class SettingsMgrBase:
 
     def _addSetting(self, setting):
         name = setting.getName()
+        self.notify.debug('Added Setting %s: %s' % (name, str(setting.getValue())))
+
         if name in self._settings:
             self.notify.error('duplicate setting "%s"' % name)
         
@@ -66,4 +68,5 @@ class SettingsMgrBase:
         setting.setValue(val)
         self._currentValueReprs[settingName] = valueStr
 
-
+    def getSettings(self):
+        return self._settings

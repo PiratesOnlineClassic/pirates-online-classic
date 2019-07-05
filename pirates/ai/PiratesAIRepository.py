@@ -105,6 +105,7 @@ class PiratesAIRepository(PiratesInternalRepository):
             self.getGameDoId(), OTP_ZONE_ID_DISTRICTS_STATS)
 
         self.centralLogger = self.generateGlobalObject(OTP_DO_ID_CENTRAL_LOGGER, 'CentralLogger')
+        self.settingsMgr = self.generateGlobalObject(OTP_DO_ID_PIRATES_SETTINGS_MANAGER, 'PiratesSettingsMgr')
 
         self.timeManager = TimeManagerAI(self)
         self.timeManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)

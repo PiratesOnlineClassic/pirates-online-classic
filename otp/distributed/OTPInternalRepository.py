@@ -28,6 +28,8 @@ class OTPInternalRepository(AstronInternalRepository):
     def _registerNetMessages(self):
         self.notify.info('Registering NetMessages')
 
+        self._registerInternalNetMessage('UberDOGSettingsRequest')
+
     def getAvatarIdFromSender(self):
         return self.getMsgSender() & 0xFFFFFFFF
 
