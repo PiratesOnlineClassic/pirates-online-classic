@@ -23,27 +23,30 @@ class CodeRedemptionUD(DistributedObjectGlobalUD):
     def announceGenerate(self):
         DistributedObjectGlobalUD.announceGenerate(self)
 
-    def handleVerifyCallback(self, data):
-        data = json.loads(data)
-
-        #TODO: write this
-
     def requestCodeVerification(self, code, username, avatar):
         headers = {
             'User-Agent':' UberDOG UserAgent',
         }
 
         body = {
-            'code': code
+            'code': code,
             'username': username
         }
+
+        def handleVerifyCallback(self, data):
+            data = json.loads(data)
+            success = False
+
+            #TODO: write this
+
+            self.d_notifyClientCodeRedeemStatus(avatar.doId, success)
 
         self.air.rest.performPostRequest(
             url=self.verifyEndpoint,
             headers=headers,
             content_type='application/json',
             post_body=body,
-            callback=self.handleVerifyCallback)
+            callback=handleVerifyCallback)
 
     def sendCodeForRedemption(self, code, username):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
@@ -62,4 +65,5 @@ class CodeRedemptionUD(DistributedObjectGlobalUD):
         self.requestCodeVerification(code, username)
 
     def d_notifyClientCodeRedeemStatus(self, avatarId, status):
+        self.notify.debug('Sending redeemp notify status (%s) to avatar (%s)' % (status, avatarId))
         self.sendUpdateToAvatarId(avatarId, 'notifyClientCodeRedeemStatus', [status])
