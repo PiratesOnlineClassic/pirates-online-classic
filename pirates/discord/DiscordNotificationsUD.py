@@ -7,6 +7,7 @@ from pirates.discord.DiscordGlobalsUD import DiscordChannels
 
 import datetime
 import semidbm
+import traceback
 
 class DiscordNotificationsUD(DiscordNotificationsBase):
     """
@@ -35,7 +36,11 @@ class DiscordNotificationsUD(DiscordNotificationsBase):
 
         self.storeHolidayState(holidayId, True)
         if not quietly:
-            self.publishServerHoliday(holidayId)
+            try:
+                self.publishServerHoliday(holidayId)
+            except:
+                self.notify.warning('Failed to publish holiday Discord notification (%s)' % holidayId)
+                print(traceback.format_exc())
 
     def serverHolidayEnd(self, holidayId):
         """
@@ -93,11 +98,12 @@ class DiscordNotificationsUD(DiscordNotificationsBase):
         discordMessage.content = 'Ahoy @everyone! A new event has started in the Caribbean!'
         discordMessage.embedded = DiscordEmbeded()
         discordMessage.embedded.title = holidayTitle
+        discordMessage.embedded.color = 7601920
         discordMessage.timestamp = datetime.datetime.now().isoformat()
         discordMessage.embedded.description = holidayDesc
         discordMessage.embedded.setField('Starts', startTime)
         discordMessage.embedded.setField('Ends', endtime)
-        discordMessage.send(DiscordChannels.SandboxGeneral)
+        discordMessage.send(DiscordChannels.StaffDiscordSandbox)
 
     def publishServerException(self, message, header, fields={}):
         """
