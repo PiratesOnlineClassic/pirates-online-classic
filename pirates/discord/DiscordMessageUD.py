@@ -82,7 +82,7 @@ class DiscordMessageUD:
         """
 
         headers = {
-            'User-Agent': 'PiratesClassic UserAgent',
+            'User-Agent': 'UberDOG UserAgent',
             'Authorization': DiscordGlobalsUD.BotAuthorization
         }
 
@@ -99,10 +99,16 @@ class DiscordMessageUD:
             results = json.loads(results)
             if 'code' in results and results.get('code', 0) != 200:
                 self.notify.warning('Failed to send Discord message. %s' % results.get('message', 'Undefined'))
+            else:
+                self.notify.info('Discord message sent.')
+                self.air.writeServerEvent('discord-message-sent',
+                    resdults=results,
+                    channel=channel,
+                    messageBody=messageBody)
 
-        self.notify.info('Sending Discord Message to channel: %s' % channel)
+        self.notify.info('Sending Discord message to channel: %s' % channel)
         self.air.rest.performPostRequest(
-            url='https://discordapp.com/api/channels/%s/messages' % channel,
+            url=DiscordGlobalsUD.getChannelMessageUrl(channel),
             headers=headers,
             content_type='application/json',
             post_body=messageBody,

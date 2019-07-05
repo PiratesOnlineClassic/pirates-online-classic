@@ -51,3 +51,7 @@ class DiscordChannels:
     PublicTheGallows = 432306465420607490
 
 BotAuthorization = 'Bot %s' % config.GetString('discord-bot-token', '')
+MessageUrl = 'https://discordapp.com/api/channels/%s/messages'
+
+def getChannelMessageUrl(channel):
+    return MessageUrl % channel
