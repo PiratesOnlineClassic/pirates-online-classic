@@ -49,7 +49,8 @@ class PiratesRPCServerUD(Thread):
             self.notify.warning('No RPC handlers to register.')
             return
 
-        for instance in instancebook.instances:
+        for serviceName in instancebook.instances:
+            instance = instancebook.instances[serviceName]
             newInstance = instance(self.air)
             self.instances.append(newInstance)
 
@@ -60,6 +61,6 @@ class PiratesRPCServerUD(Thread):
                 if methodName.startswith('_'):
                     continue
                 
-                rpcName = '%s.%s' % (instance.__name__, methodName)
+                rpcName = '%s.%s' % (serviceName, methodName)
                 self.notify.debug(' - %s' % rpcName)
                 self.server.register_function(methodFunc, rpcName)

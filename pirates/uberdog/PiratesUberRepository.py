@@ -50,10 +50,10 @@ class PiratesUberRepository(PiratesInternalRepository):
         self.shipLoader = self.generateGlobalObject(OTP_DO_ID_PIRATES_SHIP_MANAGER, 'DistributedShipLoader')
         self.avatarFriendsManager = self.generateGlobalObject(OTP_DO_ID_AVATAR_FRIENDS_MANAGER, 'PCAvatarFriendsManager')
 
-@rpcservice()
-class RepositoryService(RPCServiceUD):
+@rpcservice(serviceName='cluster')
+class ClusterService(RPCServiceUD):
     """
-    Handles all system related handlers for the RPC
+    Handles all cluster related handlers for the RPC
     """
 
     def ping(self, response):
