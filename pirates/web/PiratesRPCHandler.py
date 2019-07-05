@@ -25,7 +25,6 @@ class PiratesRPCHandler(SimpleXMLRPCRequestHandler):
             return
 
         data = SimpleXMLRPCRequestHandler.decode_request_content(self, data)
-        self.notify.debug('Received request: %s' % data)
         return data
 
     def log_request(self, code='-', size='-'):
