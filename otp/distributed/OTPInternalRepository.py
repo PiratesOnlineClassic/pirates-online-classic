@@ -21,11 +21,12 @@ class OTPInternalRepository(AstronInternalRepository):
         self._netMessageCounter = 0
 
     def _registerInternalNetMessage(self, message):
+        self.notify.debug('Registering netMessage (%s) (%d)' % (message, self._netMessageCounter))
         self.netMessenger.register(self._netMessageCounter, message)
         self._netMessageCounter += 1
 
     def _registerNetMessages(self):
-        pass # Override me!
+        self.notify.info('Registering NetMessages')
 
     def getAvatarIdFromSender(self):
         return self.getMsgSender() & 0xFFFFFFFF
@@ -111,6 +112,9 @@ class OTPInternalRepository(AstronInternalRepository):
             pass
         else:
             AstronInternalRepository.handleDatagram(self, di)
+
+    def logException(self, e):
+        pass
 
     def readerPollOnce(self):
         try:
