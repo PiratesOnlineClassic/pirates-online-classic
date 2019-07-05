@@ -106,7 +106,9 @@ class RepositoryService(RPCServiceUD):
         try:
             self.air.kickChannel(channel, reason, message)
         except Exception as e:
-            return self._formatResults(code=100, message='Failed to kick channel, '
-                'An unexpected error occured', error=repr(e))
+            return self._formatResults(
+                code=ResponseCodes.INTERNAL_ERROR,
+                 message='Failed to kick channel, An unexpected error occured',
+                 error=repr(e))
 
         return self._formatResults()
