@@ -9,8 +9,9 @@ from direct.distributed.ClockDelta import *
 from otp.ai.MagicWordGlobal import *
 from libotp import *
 
-lastClickedNametag = None
+import os
 
+lastClickedNametag = None
 
 class MagicWordManager(DistributedObject.DistributedObject):
     notify = DirectNotifyGlobal.directNotify.newCategory('MagicWordManager')
@@ -66,14 +67,18 @@ def docs():
     Generates helpful documentation regarding available client commands in a CSV file
     """
 
+    if not os.path.exists('docs'):
+        os.mkdir('docs')
+
     import csv
     rows = [['Name', 'Documentation', 'Types', 'Access']]
     for magicwordKey in spellbook.words:
         magicword = spellbook.words[magicwordKey]
         access = magicword.access if magicword.access else '0'
-        rows.append([magicword.name, magicword.doc, magicword.types, access])
+        doc = magicword.doc.strip() if magicword.doc else 'N\A'
+        rows.append([magicword.name, doc, magicword.types, access])
 
-    with open('clientdocs.csv', 'w') as docsFile:
+    with open('docs/clientdocs.csv', 'w') as docsFile:
         writer = csv.writer(docsFile, delimiter=',', lineterminator='\n')
         writer.writerows(rows)
 
