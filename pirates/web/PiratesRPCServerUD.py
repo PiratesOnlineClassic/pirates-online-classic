@@ -1,4 +1,5 @@
 import traceback
+import inspect
 import json
 import sys
 
@@ -28,8 +29,9 @@ class PiratesRPCServerUD(Thread):
         self.server = SimpleXMLRPCServer((self.hostname, self.port),
             logRequests=logRequests, requestHandler=PiratesRPCHandler)
         self.server.register_introspection_functions()
-        self.registerInstances()
         self.server.register_multicall_functions()
+        self.instances = []
+        self.registerInstances()
 
     def registerFunction(self, function, name=None):
         self.server.register_function(function, name)
@@ -49,5 +51,15 @@ class PiratesRPCServerUD(Thread):
 
         for instance in instancebook.instances:
             newInstance = instance(self.air)
+            self.instances.append(newInstance)
+
             self.notify.info('Registering RPC handler: %s' % instance.__name__)
-            self.server.register_instance(newInstance)
+            methods = inspect.getmembers(newInstance, predicate=inspect.ismethod)
+            for method in methods:
+                methodName, methodFunc = method
+                if methodName.startswith('_'):
+                    continue
+                
+                rpcName = '%s.%s' % (instance.__name__, methodName)
+                self.notify.debug(' - %s' % rpcName)
+                self.server.register_function(methodFunc, rpcName)

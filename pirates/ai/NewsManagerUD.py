@@ -52,7 +52,7 @@ class NewsManagerUD:
         self.air.netMessenger.send('stopHoliday', [holidayId])
 
 @rpcservice()
-class HolidayRPCSerivce(RPCServiceUD):
+class HolidayService(RPCServiceUD):
     """
     Handles all holiday related handlers for the RPC
     """

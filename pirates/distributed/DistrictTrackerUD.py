@@ -24,7 +24,7 @@ class DistrictTrackerUD:
         self.air.netMessenger.send('queryDistrictStatus')
 
 @rpcservice()
-class DistrictTrackerRPCService(RPCServiceUD):
+class DistrictService(RPCServiceUD):
     """
     Handles all district tracker related handlers for the RPC
     """
