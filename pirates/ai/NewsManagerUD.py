@@ -66,12 +66,15 @@ class NewsService(RPCServiceUD):
         """
 
         districts = self.air.districtTracker.getShards()
-        holidays = []
-        for district in districts:
-            holidays += district['holidays']
+        clusterHolidays = []
+        for districtId in districts:
+            district = districts[districtId]
+            holidays = district.get('holidays', [])
+            for holiday in holidays:
+                clusterHolidays.append(holiday)
 
         results = self._formatResults(
-            holidays=holidays)
+            holidays=clusterHolidays)
 
         return results
 
