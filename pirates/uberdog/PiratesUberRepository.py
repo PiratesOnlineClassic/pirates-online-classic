@@ -24,6 +24,8 @@ class PiratesUberRepository(PiratesInternalRepository):
         self.http = None
 
     def handleConnected(self):
+        PiratesInternalRepository.handleConnected(self)
+
         rootObj = DistributedDirectoryAI(self)
         rootObj.generateWithRequiredAndId(self.getGameDoId(), 0, 0)
 
@@ -33,6 +35,10 @@ class PiratesUberRepository(PiratesInternalRepository):
             self.rpc.start()
 
         self.createGlobals()
+        self.serverSetupFinished()
+
+    def serverSetupFinished(self):
+        PiratesInternalRepository.serverSetupFinished(self)
         self.notify.info('UberDOG ready!')
 
     def createGlobals(self):

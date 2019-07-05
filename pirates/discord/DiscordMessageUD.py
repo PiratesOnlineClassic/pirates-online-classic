@@ -18,6 +18,17 @@ class DiscordEmbeded:
         self.color = 0
         self.fields = {}
         self.image = None
+        self.footer = None
+
+    def setFooter(self, text, icon_url=None, proxy_icon_url=None):
+        self.footer = {}
+        self.footer['text'] = text
+
+        if icon_url:
+            self.footer['icon_url'] = icon_url
+
+        if proxy_icon_url:
+            self.footer['proxy_icon_url'] = proxy_icon_url
 
     def setImage(self, url, proxyUrl=None, width=None, height=None):
         self.image = {}
@@ -33,7 +44,6 @@ class DiscordEmbeded:
             self.image['height'] = height
 
     def setField(self, name, value=None, inline=True):
-
         if value == None and name in self.fields:
             del self.fields[name]
 
@@ -59,6 +69,9 @@ class DiscordEmbeded:
 
         if self.image:
             data['image'] = self.image
+
+        if self.footer:
+            data['footer'] = self.footer
 
         return data
 
@@ -99,7 +112,7 @@ class DiscordMessageUD:
             if 'code' in results and results.get('code', 0) != 200:
                 self.notify.warning('Failed to send Discord message. %s' % results.get('message', 'Undefined'))
             else:
-                self.notify.info('Discord message sent.')
+                self.notify.debug('Discord message sent.')
                 self.air.writeServerEvent('discord-message-sent',
                     resdults=results,
                     channel=channel,
@@ -109,6 +122,5 @@ class DiscordMessageUD:
         self.air.rest.performJsonPostRequest(
             url=DiscordGlobalsUD.getChannelMessageUrl(channel),
             headers=headers,
-            content_type='application/json',
             post_body=messageBody,
             callback=processResults)

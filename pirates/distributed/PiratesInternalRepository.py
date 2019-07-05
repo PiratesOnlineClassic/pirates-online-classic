@@ -20,6 +20,12 @@ class PiratesInternalRepository(OTPInternalRepository):
 
         self._registerNetMessages()
 
+    def handleConnected(self):
+        OTPInternalRepository.handleConnected(self)
+
+    def serverSetupFinished(self):
+        messenger.send('server-ready')
+
     def _registerNetMessages(self):
         OTPInternalRepository._registerNetMessages(self)
         for netMessage in PiratesMsgTypes.netMessages:
@@ -37,6 +43,12 @@ class PiratesInternalRepository(OTPInternalRepository):
             avatarId=avatarId,
             accountId=accountId,
             **kwargs)
+
+        # Log message to Discord for GameMasters
+        self.discordNotifications.reportServerHacker(
+            message=message, 
+            avatarId=avatarId, 
+            accountId=accountId)
 
         if kickChannel:
             self.kickChannel(kickChannel)

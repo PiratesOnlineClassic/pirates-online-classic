@@ -3,7 +3,7 @@ from direct.directnotify.DirectNotifyGlobal import *
 from pirates.ai import HolidayGlobals
 from pirates.discord.DiscordNotifcationsBase import DiscordNotificationsBase
 from pirates.discord.DiscordMessageUD import DiscordMessageUD, DiscordEmbeded
-from pirates.discord.DiscordGlobalsUD import DiscordChannels
+from pirates.discord.DiscordGlobalsUD import DiscordChannels, DiscordColorCode
 from pirates.piratesbase import PLocalizer
 from pirates.web.RPCGlobals import rpcservice, ResponseCodes
 from pirates.web.RPCServiceUD import RPCServiceUD
@@ -25,8 +25,10 @@ class DiscordNotificationsUD(DiscordNotificationsBase):
 
         self.logExceptions = config.GetBool('discord-log-exceptions', True)
         self.logHolidays = config.GetBool('discord-log-holidays', True)
+        self.logHackers = config.GetBool('discord-log-hackers', True)
 
         self.air.netMessenger.accept('publishException', self, self.publishServerException)
+        self.air.netMessenger.accept('publishHacker', self, self.publishServerHacker)
         self.holidayDb = semidbm.open(config.GetString('holiday-state-filename', 'local/holiday-state'), 'c')
 
     def serverHolidayStart(self, holidayId, quietly):
@@ -101,11 +103,13 @@ class DiscordNotificationsUD(DiscordNotificationsBase):
         discordMessage.content = PLocalizer.DISCORD_NEW_EVENT
         discordMessage.embedded = DiscordEmbeded()
         discordMessage.embedded.title = holidayTitle
-        discordMessage.embedded.color = 7601920
+        discordMessage.embedded.color = DiscordColorCode.Green
         discordMessage.timestamp = datetime.datetime.now().isoformat()
         discordMessage.embedded.description = holidayDesc
         discordMessage.embedded.setField('Starts', startTime)
         discordMessage.embedded.setField('Ends', endtime)
+        discordMessage.embedded.setFooter('Pirates Online Classic')
+
         discordMessage.send(DiscordChannels.StaffDiscordSandbox)
 
     def publishServerException(self, message, header, fields={}):
@@ -128,15 +132,47 @@ class DiscordNotificationsUD(DiscordNotificationsBase):
         discordMessage.content = message
         discordMessage.embedded = DiscordEmbeded()
         discordMessage.embedded.title = header
-        discordMessage.embedded.color = 16711680
+        discordMessage.embedded.color = DiscordColorCode.Red
         discordMessage.timestamp = datetime.datetime.now().isoformat()
         discordMessage.embedded.description = message
+        discordMessage.embedded.setFooter('Pirates Online Classic')
 
         for fieldKey in fields:
             fieldValue = fields[fieldKey]
             discordMessage.embedded.setField(fieldKey, fieldValue, inline=False)
 
         discordMessage.send(DiscordChannels.StaffServerIssues)
+
+    def publishServerHacker(self, message, header, fields={}):
+        """
+        Publishes a server hacker message to Discord
+        """
+
+        self.notify.warning('Hacker: %s' % message)
+
+        # Verify we want to publish potential hacker messages
+        if not self.logHackers:
+            self.notify.warning('Discord publishing disabled; Ignoring request')
+            return
+
+        self.notify.debug('Message: %s' % message)
+        self.notify.debug('Header: %s' % header)
+        self.notify.debug('Fields: %s' % fields)
+
+        discordMessage = DiscordMessageUD(self.air)
+        discordMessage.content = message
+        discordMessage.embedded = DiscordEmbeded()
+        discordMessage.embedded.title = header
+        discordMessage.embedded.color = DiscordColorCode.Red
+        discordMessage.timestamp = datetime.datetime.now().isoformat()
+        discordMessage.embedded.description = message
+        discordMessage.embedded.setFooter('Pirates Online Classic')
+
+        for fieldKey in fields:
+            fieldValue = fields[fieldKey]
+            discordMessage.embedded.setField(fieldKey, fieldValue)
+
+        discordMessage.send(DiscordChannels.StaffDiscordSandbox)
         
 @rpcservice(serviceName='discordNotifications')
 class DiscordNotificationService(RPCServiceUD):

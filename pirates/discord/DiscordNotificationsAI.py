@@ -20,3 +20,11 @@ class DiscordNotificationsAI(DiscordNotificationsBase):
 
         self.notify.info('Publishing exception to Discord through the UberDOG')
         self.air.netMessenger.send('publishException', [message, header, fields])
+
+    def publishServerHacker(self, message, header, fields={}):
+        """
+        Publishes a server hacker to Discord
+        """
+
+        self.notify.info('Publishing potential hacker to Discord through the UberDOG')
+        self.air.netMessenger.send('publishHacker', [message, header, fields])

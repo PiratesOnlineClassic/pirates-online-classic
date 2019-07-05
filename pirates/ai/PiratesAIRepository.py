@@ -78,6 +78,10 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.createWorlds()
 
         self.distributedDistrict.b_setAvailable(1)
+        self.serverSetupFinished()
+
+    def serverSetupFinished(self):
+        PiratesInternalRepository.serverSetupFinished(self)
         self.notify.info('District (%s) is now ready.' % self.districtName)
         messenger.send('district-ready')
 

@@ -12,7 +12,7 @@ want-rpc-server #t
 rpc-whitelist-ip 127.0.0.1
 
 # Discord:
-discord-log-hacks #t
+discord-log-hackers #t
 discord-log-exceptions #f
-discord-log-holidays #t
+discord-log-holidays #f
 discord-bot-token NDQyNDEzNzAyNDI4MjI5NjMy.XR6vOw.rzLOxSsIFHkikH7J328rf7nSDUY

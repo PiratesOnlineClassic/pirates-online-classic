@@ -1,4 +1,11 @@
 
+class DiscordMentions:
+    """
+    Contains all possible Discord mentions the game has access too
+    """
+
+    Everyone = '@everyone'
+
 class DiscordChannels:
     """
     Contains all Discord channels the game has access too
@@ -49,6 +56,10 @@ class DiscordChannels:
     PublicModChat = 432002631179829258
     PublicLogs = 431914144770424856
     PublicTheGallows = 432306465420607490
+
+class DiscordColorCode:
+    Green = 7601920
+    Red = 16711680
 
 BotAuthorization = 'Bot %s' % config.GetString('discord-bot-token', '')
 MessageUrl = 'https://discordapp.com/api/channels/%s/messages'
