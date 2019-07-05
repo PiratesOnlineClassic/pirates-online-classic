@@ -5,6 +5,8 @@ from pirates.discord.DiscordNotifcationsBase import DiscordNotificationsBase
 from pirates.discord.DiscordMessageUD import DiscordMessageUD, DiscordEmbeded
 from pirates.discord.DiscordGlobalsUD import DiscordChannels
 from pirates.piratesbase import PLocalizer
+from pirates.web.RPCGlobals import rpcservice, ResponseCodes
+from pirates.web.RPCServiceUD import RPCServiceUD
 
 import datetime
 import semidbm
@@ -136,4 +138,21 @@ class DiscordNotificationsUD(DiscordNotificationsBase):
 
         discordMessage.send(DiscordChannels.StaffServerIssues)
         
-        
+@rpcservice(serviceName='discordNotifications')
+class DiscordNotificationService(RPCServiceUD):
+    """
+    Handles all Discord notification related handlers for the RPC
+    """
+
+    def publishServerHoliday(self, holidayId):
+        """
+        Summary:
+            Manually publishes a holiday to Discord through the Discord notification object.
+        Parameters:
+            [int] = The holiday id to publish
+        Response:
+            None
+        """
+
+        self.air.discordNotifications.publishServerHoliday(holidayId)
+        return self._formatResults()
