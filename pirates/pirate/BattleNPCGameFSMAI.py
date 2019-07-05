@@ -27,6 +27,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.__nextAttackTask = None
         self.__chaseTargetTask = None
         self.__returnToSpawnTask = None
+        self.__mojoRegenTask = None
 
         # update our game state as we change it
         self.setBroadcastStateChanges(True)
@@ -83,6 +84,9 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
     def getReturnToSpawnTaskName(self):
         return self.avatar.taskName('return-to-spawn')
 
+    def getMojoRegenTaskName(self):
+        return self.avatar.taskName('mojo-regen')
+
     def getAttackDelayModdifier(self):
         delayInfo = [
             WeaponGlobals.NO_DELAY,
@@ -110,6 +114,16 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
     def _putAwayWeapon(self):
         self.avatar.b_setCurrentWeapon(self.avatar.currentWeaponId, 0)
+
+    def __mojoRegen(self, task):
+        currentMojo = self.avatar.getMojo()
+        maxMojo = self.avatar.getMaxMojo()
+        if currentMojo >= maxMojo:
+            return task.again
+
+        mojoRegen = 2 #TODO: constant?
+        self.avatar.b_setMojo(min(currentMojo + mojoRegen, maxMojo))
+        return task.again
 
     def _chooseNextAttack(self, task):
         # choose a random skill to attack the player with
@@ -301,9 +315,10 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         # draw our weapon
         self._drawWeapon()
 
-        # attune if we have a voodoo weapon
+        # attune if we have a voodoo weapon and start our regen task
         if WeaponGlobals.isVoodooWeapon(self.avatar.currentWeaponId):
             self.avatar.currentTarget.addSkillEffect(WeaponGlobals.C_ATTUNE, 0, self.avatar.doId)
+            self.__mojoRegenTask = taskMgr.doMethodLater(2, self.__mojoRegen, self.getMojoRegenTaskName())
 
         # start attacking our target
         self.beginAttackingTarget()
@@ -318,6 +333,10 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             taskMgr.remove(self.__nextAttackTask)
             self.__nextAttackTask = None
 
+        if self.__mojoRegenTask:
+            taskMgr.remove(self.__mojoRegenTask)
+            self.__mojoRegenTask = None
+
         # remove attune if we have a voodoo weapon
         if WeaponGlobals.isVoodooWeapon(self.avatar.currentWeaponId):
             self.avatar.currentTarget.removeSkillEffect(self.avatar.doId)
@@ -331,6 +350,10 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
         # start attacking our target
         self.beginAttackingTarget()
+
+        # start our regen task if we have a voodoo weapon
+        if WeaponGlobals.isVoodooWeapon(self.avatar.currentWeaponId):
+            self.__mojoRegenTask = taskMgr.doMethodLater(2, self.__mojoRegen, self.getMojoRegenTaskName())
 
         # begin following our target
         self.beginChasingTarget()
@@ -352,6 +375,10 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         if self.__nextAttackTask:
             taskMgr.remove(self.__nextAttackTask)
             self.__nextAttackTask = None
+
+        if self.__mojoRegenTask:
+            taskMgr.remove(self.__mojoRegenTask)
+            self.__mojoRegenTask = None
 
         self.avatar.stopLookAt()
 
@@ -388,6 +415,10 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
         # set the rotation of the avatar to be that of it's initial spawn constants
         self.avatar.setHpr(spawnNode.objectData.get('Hpr', (0, 0, 0)))
+
+        # reset the avatar's mojo and health
+        self.avatar.b_setHp(self.avatar.getMaxHp())
+        self.avatar.b_setMojo(self.avatar.getMaxMojo())
 
     def enterDeath(self, *args, **kwargs):
         self.air.battleMgr.rewardAttackers(self.avatar)
