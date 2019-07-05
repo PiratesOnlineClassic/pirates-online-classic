@@ -5,7 +5,6 @@ class ResponseCodes:
     Standardized response codes
     """
 
-    ACTION_FAILED = 100
     SUCCESS = 200
     INVALID_FUNCTION = 300
     INTERNAL_ERROR = 400
