@@ -163,6 +163,8 @@ class BattleManagerAI(BattleManagerBase):
                 experience = self.getModifiedAttackReputation(avatar, target, skillId, ammoSkillId)
                 if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEXPHOLIDAY) or avatar.hasTempDoubleXPReward():
                     experience *= 2
+                elif self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEXPHOLIDAYPAID) and avatar.isPaid():
+                    experience *= 2
 
                 skillData[2] += experience
 
