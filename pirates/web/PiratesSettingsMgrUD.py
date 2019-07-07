@@ -1,6 +1,7 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
 from otp.web.SettingsMgrUD import SettingsMgrUD
+from otp.web.Setting import Setting
 
 from pirates.web.PiratesSettingsMgrBase import PiratesSettingsMgrBase
 from pirates.web.RPCGlobals import rpcservice, ResponseCodes
@@ -20,6 +21,17 @@ class SettingsService(RPCServiceUD):
     Handles all cluster web settings for the RPC
     """
 
+    def restoreDefaults(self):
+        """
+        Summary:
+            Restores the original default values on the UberDOG
+        """
+
+        settingsMgr = self.air.settingsMgr
+        settingsMgr.restoreDefaults()
+
+        return self._formatResults()
+
     def getSettings(self):
         """
         Summary:
@@ -33,7 +45,10 @@ class SettingsService(RPCServiceUD):
         settings = settingsMgr.getSettings()
         for settingKey in settings:
             setting = settings[settingKey]
-            settingValue = settings.getValue()
+            if isinstance(setting, Setting):
+                settingValue = setting.getValue()
+            else:
+                settingValue = setting
             results[settingKey] = settingValue
 
         return self._formatResults(settings=results)
@@ -44,10 +59,17 @@ class SettingsService(RPCServiceUD):
             Changes a currently configured setting on the cluster
         Parameters:
             [str settingName] = The settings key to change
-            [valueStr] = The value to assign to the settings key
+            [str valueStr] = The value to assign to the settings key
+        Example response:
+            original=5000, new=5001
         """
 
         settingsMgr = self.air.settingsMgr
-        settingsMgr.settingchange(settingName, valueStr)
-
-        return self._formatResults()
+        original = settingsMgr.getSettingFromName(settingName)
+        if not original:
+            return self._formatResults(
+                code=ResponseCodes.INVALID_ARGUMENT,
+                message='Invalid setting name')
+        
+        settingsMgr.settingChange(settingName, str(valueStr))
+        return self._formatResults(original=original.getValue(), new=valueStr)

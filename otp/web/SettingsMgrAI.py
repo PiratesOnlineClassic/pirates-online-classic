@@ -40,3 +40,13 @@ class SettingsMgrAI(DistributedObjectGlobalAI, SettingsMgrBase):
 
     def d_settingChange(self, settingName, valueStr):
         self.sendUpdate('settingChange', [settingName, valueStr])
+
+    def getSettingValueFromName(self, settingName):
+        setting = self._settings.get(settingName)
+        if not setting:
+            return None
+        return setting.getValue()
+
+    def getSettingFromInstance(self, settingInstance):
+        settingName = settingInstance.getName()
+        return self.getSettingValueFromName(settingName)

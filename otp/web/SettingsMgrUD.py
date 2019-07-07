@@ -36,3 +36,17 @@ class SettingsMgrUD(DistributedObjectGlobalUD, SettingsMgrBase):
 
     def d_settingChangeToChannel(self, channel, settingName, valueStr):
         self.sendUpdateToChannel(channel, 'settingChange', [settingName, valueStr])
+
+    def getSettingFromName(self, settingName):
+        return self._settings.get(settingName)
+
+    def getSettingFromInstance(self, settingInstance):
+        settingName = settingInstance.getName()
+        return self.getSettingFromName(settingName)
+
+    def restoreDefaults(self):
+        settings = self.getSettings()
+        self.notify.info('Restoring original default settings.')
+        for settingName in settings:
+            original = self._getOriginalValueRepr(settingName)
+            self.settingChange(settingName, original)
