@@ -66,12 +66,17 @@ class Spellbook:
     def getInvoker(self):
         return self.currentInvoker
 
+    def isRemote(self):
+        return self.currentInvoker != None
+
     def getTarget(self, required=0):
-        if self.getInvokerAccess < required:
+        if self.getInvokerAccess() < required:
             return self.getInvoker()
         return self.currentTarget
 
     def getInvokerAccess(self):
+        if self.isRemote:
+            return CATEGORY_SYSTEM_ADMIN
         if not self.currentInvoker:
             return 0
         return self.currentInvoker.getAdminAccess()

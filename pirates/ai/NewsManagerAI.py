@@ -1,11 +1,14 @@
 import datetime
 import time
 
+from panda3d.core import ConfigVariableList
+
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
-from panda3d.core import ConfigVariableList
+
 from otp.ai.MagicWordGlobal import *
+
 from pirates.ai import HolidayGlobals
 from pirates.ai.HolidayDates import HolidayDates
 from pirates.piratesbase import PiratesGlobals, TODGlobals
@@ -16,6 +19,7 @@ JollyCurseMessages = {
     PiratesGlobals.TOD_FULLMOON: 3,
     PiratesGlobals.TOD_FULL2HALFMOON: 7
 }
+
 
 class NewsManagerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('NewsManagerAI')
@@ -35,8 +39,8 @@ class NewsManagerAI(DistributedObjectAI):
         self.air.timeOfDayMgr.addTimeOfDayStateMethod(PiratesGlobals.TOD_FULL2HALFMOON, 'JollyCurse-Full2HalfMoon', self.processTimeChange)
 
         # Register holiday tasks
-        taskMgr.doMethodLater(15, self.__checkHolidays, 'checkHolidays')
-        taskMgr.doMethodLater(15, self.__runHolidayTimer, 'holidayTimerTask')
+        taskMgr.doMethodLater(15, self.__checkHolidays, self.taskName('checkHolidays'))
+        taskMgr.doMethodLater(15, self.__runHolidayTimer, self.taskName('holidayTimerTask'))
 
         # Accept remote networked start and stop of holidays from the UberDOG
         self.air.netMessenger.accept('startHoliday', self, self.startHoliday)
@@ -54,10 +58,10 @@ class NewsManagerAI(DistributedObjectAI):
                 self.startHoliday(holidayId, time=endTime)
 
     def delete(self):
-        DistributedObjectAI.delete(self)
+        taskMgr.remove(self.taskName('checkHolidays'))
+        taskMgr.remove(self.taskName('holidayTimerTask'))
 
-        taskMgr.remove('checkHolidays')
-        taskMgr.remove('holidayTimerTask')
+        DistributedObjectAI.delete(self)
 
     def isHolidayActive(self, holidayId):
         return holidayId in self.holidayList
@@ -147,7 +151,6 @@ class NewsManagerAI(DistributedObjectAI):
         self.sendUpdateToAvatar(avatarId, 'displayMessage', [messageId])
 
     def processTimeChange(self, cycleType, todState, stateTime):
-        
         # Check if Jolly Rogers's curse is active
         #curseActive = self.isHolidayActive(PiratesGlobals.CURSEDNIGHT)
         #if curseActive and cycleType == PiratesGlobals.TOD_JOLLYCURSE_CYCLE:

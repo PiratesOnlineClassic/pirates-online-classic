@@ -115,8 +115,8 @@ class WeaponBaseAI(WeaponBaseBase):
     def useProjectileSkill(self, avatar, target, skillId, ammoSkillId, result, targetId, areaIdList, pos, normal, codes, timestamp):
         targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId, result, areaIdList, timestamp, pos)
         if not targetResult:
-            self.notify.debug('Cannot get projectile targeted skill, no valid result was given; '
-                'avatarId=%d, skillId=%d!' % (avatar.doId, skillId))
+            self.notify.debug('Cannot get projectile targeted skill, '
+                'no valid result was given; avatarId=%d, skillId=%d!' % (avatar.doId, skillId))
 
             return
 
