@@ -113,6 +113,9 @@ class GridInterestHandler(object):
 
         self.interestHandles = []
 
+        self.pendingCallback = None
+        self.pendingCallbackContexts = []
+
     def destroy(self):
         self.lastInterestId = 0
         self.interestHandles = []
