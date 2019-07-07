@@ -567,8 +567,7 @@ class QuestManagerAI(DirectObject):
             self.completeQuest(avatar, quest)
 
         def finalize(finalizeIndex):
-            finalizeStateInfo = finalizeInfo.get(finalizeIndex)
-            if not finalizeStateInfo:
+            if finalizeIndex not in finalizeInfo:
                 # if an npc is present send the quest completed information
                 if not npc:
                     # didn't have an NPC, just go ahead and complete the quest anyways...
@@ -579,6 +578,7 @@ class QuestManagerAI(DirectObject):
 
                 return
             else:
+                finalizeStateInfo = finalizeInfo[finalizeIndex]
                 quest.setFinalizeStateIndex(finalizeIndex)
 
             def finalizeCompleteCallback():
