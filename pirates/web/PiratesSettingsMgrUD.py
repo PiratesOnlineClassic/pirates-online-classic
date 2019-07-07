@@ -49,9 +49,16 @@ class SettingsService(RPCServiceUD):
         Parameters:
             [str settingName] = The settings key to change
             [str valueStr] = The value to assign to the settings key
+        Example response:
+            original=5000, new=5001
         """
 
         settingsMgr = self.air.settingsMgr
+        original = settingsMgr.getSettingFromName(settingName)
+        if not original:
+            return self._formatResults(
+                code=ResponseCodes.INVALID_ARGUMENT,
+                message='Invalid setting name')
+        
         settingsMgr.settingChange(settingName, str(valueStr))
-
-        return self._formatResults()
+        return self._formatResults(original=original.getValue(), new=valueStr)

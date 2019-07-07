@@ -10,6 +10,7 @@ class ResponseCodes:
     INTERNAL_ERROR = 400
     ENCODING_NOT_SUPPORTED = 501
     UNAUTHORIZED = 502
+    INVALID_ARGUMENT = 503
 
 class InstanceBook:
     """

@@ -37,12 +37,9 @@ class SettingsMgrUD(DistributedObjectGlobalUD, SettingsMgrBase):
     def d_settingChangeToChannel(self, channel, settingName, valueStr):
         self.sendUpdateToChannel(channel, 'settingChange', [settingName, valueStr])
 
-    def getSettingValueFromName(self, settingName):
-        setting = self._settings.get(settingName)
-        if not setting:
-            return None
-        return setting.getValue()
+    def getSettingFromName(self, settingName):
+        return self._settings.get(settingName)
 
     def getSettingFromInstance(self, settingInstance):
         settingName = settingInstance.getName()
-        return self.getSettingValueFromName(settingName)
+        return self.getSettingFromName(settingName)
