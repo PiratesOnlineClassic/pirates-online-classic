@@ -24,7 +24,7 @@ class MagicWordManagerAI(DistributedObjectAI):
                 invokerId,
                 'Attempted to issue magic word: %s' %
                 word)
-            return
+            return 'access denied'
 
         if not remote:
             if not invoker:
