@@ -165,3 +165,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def getFeastFireEnabled(self):
         return self.feastFireEnabled
+
+    def delete(self):
+        DistributedCartesianGridAI.delete(self)
+        DistributedGameAreaAI.delete(self)
