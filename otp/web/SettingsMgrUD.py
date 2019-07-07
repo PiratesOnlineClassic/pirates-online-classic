@@ -43,3 +43,10 @@ class SettingsMgrUD(DistributedObjectGlobalUD, SettingsMgrBase):
     def getSettingFromInstance(self, settingInstance):
         settingName = settingInstance.getName()
         return self.getSettingFromName(settingName)
+
+    def restoreDefaults(self):
+        settings = self.getSettings()
+        self.notify.info('Restoring original default settings.')
+        for settingName in settings:
+            original = self._getOriginalValueRepr(settingName)
+            self.settingChange(settingName, original)

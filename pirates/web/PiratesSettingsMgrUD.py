@@ -21,6 +21,17 @@ class SettingsService(RPCServiceUD):
     Handles all cluster web settings for the RPC
     """
 
+    def restoreDefaults(self):
+        """
+        Summary:
+            Restores the original default values on the UberDOG
+        """
+
+        settingsMgr = self.air.settingsMgr
+        settingsMgr.restoreDefaults()
+
+        return self._formatResults()
+
     def getSettings(self):
         """
         Summary:
