@@ -29,6 +29,10 @@ class GridInterestHandler(object):
         self.oldZoneId = 0
 
     def getInterestHandleFromZoneId(self, zoneId):
+        """
+        Gets an interest handle by it's zoneId from the list
+        """
+
         for interestHandle in list(self.interestHandles):
             if interestHandle.zoneId == zoneId:
                 return interestHandle
@@ -36,9 +40,18 @@ class GridInterestHandler(object):
         return None
 
     def hasInterestHandleByZoneId(self, zoneId):
+        """
+        Returns True if there is an interest handle by zoneId in the list otherwise False
+        """
+
         return self.getInterestHandleFromZoneId(zoneId) is not None
 
     def addInterestHandle(self, newZoneId):
+        """
+        Adds a client agent specific interest handle via the CLIENTAGENT_ADD_INTEREST message,
+        this event does not exist on the client and the client does not know about this interest handle...
+        """
+
         if self.hasInterestHandleByZoneId(newZoneId):
             return
 
@@ -49,6 +62,10 @@ class GridInterestHandler(object):
         self.air.clientAddInterest(clientChannel, interestHandle.context, self.parentObj.doId, interestHandle.zoneId, False)
 
     def removeInterestHandle(self, interestHandle):
+        """
+        Removes a client agent specific interest handle via the CLIENTAGENT_REMOVE_INTEREST message
+        """
+
         if interestHandle not in self.interestHandles:
             return
 
@@ -57,9 +74,18 @@ class GridInterestHandler(object):
         self.interestHandles.remove(interestHandle)
 
     def hasPendingContext(self, context):
+        """
+        Returns True if there is a pending interest handle callback by context else False
+        """
+
         return context in self.pendingCallbackContexts
 
     def _callbackInterestContext(self):
+        """
+        Calls back the interest handle(s) callback when the client agent has told us
+        that all of our interest handles have been added and the objects sent for generate on the client
+        """
+
         assert(len(self.pendingCallbackContexts) == 0)
         assert(self.pendingCallback is not None)
         self.pendingCallback()
@@ -68,6 +94,10 @@ class GridInterestHandler(object):
         self.pendingCallback = None
 
     def handleInterestContextDone(self, context):
+        """
+        Handles the interest context done event for an interest handle via the CLIENTAGENT_DONE_INTEREST_RESP message
+        """
+
         if context not in self.pendingCallbackContexts:
             return
 
@@ -76,6 +106,12 @@ class GridInterestHandler(object):
             self._callbackInterestContext()
 
     def handleLocationChanged(self, zoneId, callback):
+        """
+        Adds interest to a new set of concentric zones based on the zoneId provided which would be
+        the center of the circle and the radius being the cartesian grid parent's radius value.
+        We add interest only to cells we didn't see before and only remove interest from cells we cannot see now...
+        """
+
         previousZones = set([interestHandle.zoneId for interestHandle in self.interestHandles])
         newZones = set([zoneId])
 
@@ -108,6 +144,11 @@ class GridInterestHandler(object):
         newConcentricZones.clear()
 
     def clearInterestZones(self):
+        """
+        Clears all of our interest handles that we currently have opened, this will
+        also clear any pending interest callbacks...
+        """
+
         for interestHandle in list(self.interestHandles):
             self.removeInterestHandle(interestHandle)
 
@@ -117,6 +158,10 @@ class GridInterestHandler(object):
         self.pendingCallbackContexts = []
 
     def destroy(self):
+        """
+        Destroys the interest handle and it's values
+        """
+
         self.lastInterestId = 0
         self.interestHandles = []
         self.oldZoneId = 0
