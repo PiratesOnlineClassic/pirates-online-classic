@@ -15,7 +15,7 @@ class RPCServiceUD:
     def _formatResults(self, code=200, message='Success', **kwargs):
         results = {
             'code': code,
-            'message': 'message',
+            'message': message,
         }
 
         for kwarg in kwargs:
