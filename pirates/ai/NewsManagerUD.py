@@ -6,12 +6,13 @@ from pirates.ai import HolidayGlobals
 from pirates.web.RPCGlobals import rpcservice, ResponseCodes
 from pirates.web.RPCServiceUD import RPCServiceUD
 
+
 class NewsManagerUD:
     """
-    Simple UD class to communicate globally with all AI newsManagers through the 
+    Simple UD class to communicate globally with all AI newsManagers through the
     NetMessenger interface
     """
-    
+
     notify = DirectNotifyGlobal.directNotify.newCategory('NewsManagerUD')
     notify.setInfo(True)
 
@@ -67,7 +68,7 @@ class NewsService(RPCServiceUD):
 
         results = self._formatResults(
             dates=holidays)
-        
+
         return results
 
     def getHolidays(self):
@@ -104,7 +105,7 @@ class NewsService(RPCServiceUD):
         """
 
         self.air.newsManager.startHoliday(int(holidayId), int(time), quietly=not announce)
-        
+
         results = self._formatResults(
             code=ResponseCodes.SUCCESS,
             message='Holiday Started',
