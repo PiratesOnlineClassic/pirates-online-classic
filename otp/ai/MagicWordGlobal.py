@@ -99,6 +99,9 @@ class MagicWordCategory:
         self.name = name
         self.access = access
 
+    def __cmp__(self, access):
+        return self.access > access
+
 
 CATEGORY_ANY = MagicWordCategory('Unrestricted commands', 0)
 CATEGORY_TESTER = MagicWordCategory('Tester commands', 200)
