@@ -15,20 +15,17 @@ class DistributedInteractiveAI(DistributedNodeAI):
 
     def requestInteraction(self, doId, interactType, instant):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
-            self.notify.warning('Failed to request interact for non-existant avatar!')
-
             self.air.logPotentialHacker(
                 message='Received requestInteraction from non-existant avatar',
                 targetAvId=avatar.doId,
                 doId=doId,
                 interactType=interactType,
                 instant=instant)
+
             return
 
         handle = self.handleRequestInteraction(avatar, interactType, instant)
-
         if not handle:
             self.d_rejectInteraction(avatar.doId)
             return
@@ -39,29 +36,31 @@ class DistributedInteractiveAI(DistributedNodeAI):
             self.sendUpdateToAvatarId(avatar.doId, 'setUserId', [avatar.doId])
 
         self.sendUpdateToAvatarId(avatar.doId, 'acceptInteraction', [])
+        self.handlePostRequestInteraction(avatar)
+        messenger.send(avatar.uniqueName('interact-accepted'))
 
     def handleRequestInteraction(self, avatar, interactType, instant):
-        self.notify.debug('handleRequestInteraction not overriden by %s; Defaulting to DENY' % \
-            self.__class__.__name__)
+        self.notify.debug('handleRequestInteraction not overriden by %s, '
+            'defaulting to DENY' % self.__class__.__name__)
 
         return self.DENY
 
+    def handlePostRequestInteraction(self, avatar):
+        pass
+
     def requestExit(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
-            self.notify.warning('Failed to request exit for non-existant avatar!')
-
             self.air.logPotentialHacker(
                 message='Received requestExit from non-existant avatar',
                 targetAvId=avatar.doId,
                 doId=doId,
                 interactType=interactType,
                 instant=instant)
+
             return
 
         handle = self.handleRequestExit(avatar)
-
         if not handle:
             self.d_rejectExit(avatar.doId)
             return
@@ -71,9 +70,11 @@ class DistributedInteractiveAI(DistributedNodeAI):
         else:
             self.sendUpdateToAvatarId(avatar.doId, 'setUserId', [0])
 
+        self.handlePostRequestExit(avatar)
+        messenger.send(avatar.uniqueName('interact-canceled'))
+
     def demandExit(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             self.notify.warning('Failed to demand exit for non-existant avatar!')
             return
@@ -82,6 +83,9 @@ class DistributedInteractiveAI(DistributedNodeAI):
 
     def handleRequestExit(self, avatar):
         return self.DENY
+
+    def handlePostRequestExit(self, avatar):
+        pass
 
     def d_rejectInteraction(self, avatarId):
         self.sendUpdateToAvatarId(avatarId, 'rejectInteraction', [])

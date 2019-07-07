@@ -563,20 +563,23 @@ class QuestManagerAI(DirectObject):
         taskStates = quest.getTaskStates()
         finalizeInfo = quest.questDNA.getFinalizeInfo()
 
-        # if an npc is present send the quest completed information
-        if npc:
-            npc.d_setQuestsCompleted(avatar.doId, completedQuestIds=[quest.getQuestId()], completedQuestDoIds=[quest.doId])
+        def finalizeInteract():
+            self.completeQuest(avatar, quest)
 
         def finalize(finalizeIndex):
-            quest.setFinalizeStateIndex(finalizeIndex)
+            finalizeStateInfo = finalizeInfo.get(finalizeIndex)
+            if not finalizeStateInfo:
+                # if an npc is present send the quest completed information
+                if not npc:
+                    # didn't have an NPC, just go ahead and complete the quest anyways...
+                    self.completeQuest(avatar, quest)
+                else:
+                    self.acceptOnce(avatar.uniqueName('interact-canceled'), finalizeInteract)
+                    npc.d_setQuestsCompleted(avatar.doId, completedQuestIds=[quest.getQuestId()], completedQuestDoIds=[quest.doId])
 
-            try:
-                finalizeStateInfo = finalizeInfo[finalizeIndex]
-            except IndexError:
-                # looks like this quest has no finalize info, let's just
-                # give the avatar their next quest...
-                self.completeQuest(avatar, quest)
                 return
+            else:
+                quest.setFinalizeStateIndex(finalizeIndex)
 
             def finalizeCompleteCallback():
                 quest.d_amFinalized()
