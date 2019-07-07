@@ -156,7 +156,6 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
         gameArea = world.builder.getObject(uniqueId=locationUid)
         if not gameArea:
-
             # Attempt to select a default island if no area was supplied
             islands = world.builder.getIslands()
             if not len(islands):
@@ -178,6 +177,11 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
                 return
 
+        # check for paid status when trying to teleport to kingshead
+        if gameArea.getUniqueId() == LocationIds.KINGSHEAD_ISLAND and not avatar.isPaid():
+            gameArea.d_deniedEntryToIsland(avatar.doId)
+            return
+
         if not spawnPt:
             # TODO FIXME!
             # if we have no spawn point for this world and we need to retrieve one,
@@ -192,9 +196,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
             return
 
-        self.avatar2fsm[avatar.doId] = TeleportFSM(self.air,
-            avatar, world, gameArea, spawnPt)
-
+        self.avatar2fsm[avatar.doId] = TeleportFSM(self.air, avatar, world, gameArea, spawnPt)
         self.avatar2fsm[avatar.doId].request('Teleporting')
 
     def initiateTeleport(self, instanceType, fromInstanceType, shardId, locationUid, instanceDoId, instanceName, gameType, friendDoId, friendAreaDoId):
@@ -240,7 +242,7 @@ def world(instanceType, worldName, locationUid=None):
     """
     Teleport command for traveling to different worlds
     """
-    
+
     names = simbase.air.teleportMgr.getWorldNames(instanceType)
     if worldName not in names:
         return 'Invalid world location: %s' % worldName
