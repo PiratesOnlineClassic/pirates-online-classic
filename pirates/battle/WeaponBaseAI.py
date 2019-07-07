@@ -50,8 +50,8 @@ class WeaponBaseAI(WeaponBaseBase):
             return
 
         if self.air.targetMgr.hasProjectile(avatar.doId, skillId, ammoSkillId):
-            self.notify.debug('Avatar %d tried to request projectile skill for already used skill; skillId=%d ammoSkillId=%d!' % (
-                avatar.doId, skillId, ammoSkillId))
+            self.notify.debug('Avatar %d tried to request projectile skill for already used skill; '
+                'skillId=%d ammoSkillId=%d!' % (avatar.doId, skillId, ammoSkillId))
 
             return
 
@@ -105,20 +105,18 @@ class WeaponBaseAI(WeaponBaseBase):
     def useTargetedSkill(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge):
         targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
         if not targetResult:
-            self.notify.debug('Cannot get targeted skill, no valid result was given; avatarId=%d, skillId=%d!' % (
-                avatar.doId, skillId))
+            self.notify.debug('Cannot get targeted skill, no valid result was given; '
+                'avatarId=%d, skillId=%d!' % (avatar.doId, skillId))
 
             return
 
         self.sendUpdate('useTargetedSkill', targetResult)
 
     def useProjectileSkill(self, avatar, target, skillId, ammoSkillId, result, targetId, areaIdList, pos, normal, codes, timestamp):
-        targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId,
-            result, areaIdList, timestamp, pos)
-
+        targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId, result, areaIdList, timestamp, pos)
         if not targetResult:
-            self.notify.debug('Cannot get projectile targeted skill, no valid result was given; avatarId=%d, skillId=%d!' % (
-                avatar.doId, skillId))
+            self.notify.debug('Cannot get projectile targeted skill, '
+                'no valid result was given; avatarId=%d, skillId=%d!' % (avatar.doId, skillId))
 
             return
 

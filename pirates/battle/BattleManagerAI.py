@@ -70,6 +70,26 @@ class BattleManagerAI(BattleManagerBase):
         if not avatar:
             return None
 
+        currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
+        if not isWeaponDrawn:
+            self.notify.debug('Cannot get skill result for avatar %d, '
+                'weapon %d was never drawn!' % (avatar.doId, currentWeaponId))
+
+            return None
+
+        repId = WeaponGlobals.getRepId(currentWeaponId)
+        if not WeaponGlobals.isValidSkill(skillId, currentWeaponId, repId):
+            self.notify.debug('Cannot get skill result for avatar %d, '
+                'invalid skill %d used for weapon %d!' % (avatar.doId, skillId, currentWeaponId))
+
+            return None
+
+        if not WeaponGlobals.isValidAttack(skillId, ammoSkillId, currentWeaponId, repId):
+            self.notify.debug('Cannot get skill result for avatar %d, '
+                'invalid attack skill %d, ammo skill: %d used for weapon %d!' % (avatar.doId, skillId, ammoSkillId, currentWeaponId))
+
+            return None
+
         # Subtract ammo
         if isinstance(avatar, DistributedPlayerPirateAI):
             inventory = avatar.getInventory()
@@ -85,13 +105,13 @@ class BattleManagerAI(BattleManagerBase):
         # this is just the client requesting an action for the skill used,
         # they are not actually attacking any kind of target...
         if not target:
-            return self.__otherSkillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
+            return self._otherSkillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
 
         # the client requested a valid skill result, attempt to calculate
         # the result for the client and send the result back...
-        return self.__skillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
+        return self._skillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
 
-    def __skillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge):
+    def _skillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge):
         currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
         if not isWeaponDrawn:
             self.notify.debug('Cannot get skill result for avatar %d, '
@@ -223,7 +243,7 @@ class BattleManagerAI(BattleManagerBase):
         return [skillId, ammoSkillId, skillResult, target.doId, areaIdList, attackerEffects, targetEffects,
             areaIdEffects, timestamp, pos, charge]
 
-    def __otherSkillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge):
+    def _otherSkillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge):
         # since this skill doesn't have a target we cannot set an effect for it,
         # just send some "place holder" data to satisfy the dc field...
         attackerEffects = [
