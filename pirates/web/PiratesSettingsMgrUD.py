@@ -1,6 +1,7 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
 from otp.web.SettingsMgrUD import SettingsMgrUD
+from otp.web.Setting import Setting
 
 from pirates.web.PiratesSettingsMgrBase import PiratesSettingsMgrBase
 from pirates.web.RPCGlobals import rpcservice, ResponseCodes
@@ -33,7 +34,10 @@ class SettingsService(RPCServiceUD):
         settings = settingsMgr.getSettings()
         for settingKey in settings:
             setting = settings[settingKey]
-            settingValue = settings.getValue()
+            if isinstance(setting, Setting):
+                settingValue = setting.getValue()
+            else:
+                settingValue = setting
             results[settingKey] = settingValue
 
         return self._formatResults(settings=results)
@@ -44,10 +48,10 @@ class SettingsService(RPCServiceUD):
             Changes a currently configured setting on the cluster
         Parameters:
             [str settingName] = The settings key to change
-            [valueStr] = The value to assign to the settings key
+            [str valueStr] = The value to assign to the settings key
         """
 
         settingsMgr = self.air.settingsMgr
-        settingsMgr.settingchange(settingName, valueStr)
+        settingsMgr.settingChange(settingName, str(valueStr))
 
         return self._formatResults()
