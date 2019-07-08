@@ -80,6 +80,7 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         doorLocatorNode.setBuildingUid(exteriorDoor.getBuildingUid())
         doorLocatorNode.setOtherDoor(exteriorDoor)
         doorLocatorNode.setExteriorId(exterior.doId, exteriorWorld.doId, exterior.zoneId)
+        doorLocatorNode.setBuildingDoorId(exteriorDoor.doId)
 
         zoneId = self.parent.getZoneFromXYZ(doorLocatorNode.getPos())
         self.parent.generateChildWithRequired(doorLocatorNode, zoneId)
