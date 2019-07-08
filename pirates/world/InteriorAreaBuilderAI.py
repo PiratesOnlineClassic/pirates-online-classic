@@ -47,8 +47,7 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         doorLocatorNode.setPos(objectData.get('Pos', (0, 0, 0)))
         doorLocatorNode.setHpr(objectData.get('Hpr', (0, 0, 0)))
         doorLocatorNode.setScale(objectData.get('Scale', (1, 1, 1)))
-        doorLocatorNode.setInteriorId(self.parent.doId, self.parent.parentId,
-            self.parent.zoneId)
+        doorLocatorNode.setInteriorId(self.parent.doId, self.parent.parentId, self.parent.zoneId)
 
         if not self.parent.getInteriorFrontDoor():
             self.parent.setInteriorFrontDoor(doorLocatorNode)
@@ -59,22 +58,22 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
             exteriorDoor = self.parent.getExteriorBackDoor()
 
         if not exteriorDoor:
-            self.notify.debug('Cannot generate interior door %s, cant find other exterior door!' % (
-                objKey))
+            self.notify.debug('Cannot generate interior door %s, '
+                'cant find other exterior door!' % objKey)
 
             return
 
         exteriorWorld = self.parent.getParentObj()
         if not exteriorWorld:
-            self.notify.debug('Cannot create interior door %s, for exterior with no parent!' % (
-                objKey))
+            self.notify.debug('Cannot create interior door %s, '
+                'for exterior with no parent!' % objKey)
 
             return
 
         exterior = exteriorDoor.getParentObj()
         if not exterior:
-            self.notify.debug('Cannot create interior door %s, no exterior found!' % (
-                objKey))
+            self.notify.debug('Cannot create interior door %s, '
+                'no exterior found!' % objKey)
 
             return
 
@@ -93,7 +92,6 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
             exteriorWorld.parentId, exteriorWorld.zoneId])
 
         self.parent.b_setLinks(links)
-
         return doorLocatorNode
 
     def createConnectorLocatorNode(self, parent, parentUid, objKey, objectData):
@@ -101,8 +99,7 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         if 'interior' not in locatorName:
             return
 
-        self.air.worldCreator.locatorManager.addLocator(
-            parentUid, objKey, objectData)
+        self.air.worldCreator.locatorManager.addLocator(parentUid, objKey, objectData)
 
     def createCellDoor(self, parent, parentUid, objKey, objectData):
         cellDoor = DistributedCellDoorAI(self.air)
@@ -118,13 +115,11 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
 
         self.addObject(cellDoor)
         self.parent.addCellDoor(cellDoor)
-
         return cellDoor
 
     def createParlorTable(self, objectData, parent, parentUid, objKey):
         tableCls = None
         gameType = objectData.get('Category', 'Unknown')
-
         if gameType == 'Holdem':
             tableCls = DistributedHoldemTableAI
         elif gameType == 'Blackjack':
@@ -156,5 +151,4 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         self.parent.generateChildWithRequired(gameTable, zoneId)
         self.parentObjectToCell(gameTable, zoneId)
         self.addObject(gameTable)
-
         return gameTable
