@@ -12,6 +12,7 @@ from pirates.treasuremap.DistributedSurfaceTreasureAI import DistributedSurfaceT
 from pirates.holiday.DistributedHolidayBonfireAI import DistributedHolidayBonfireAI
 from pirates.holiday.DistributedHolidayPigAI import DistributedHolidayPigAI
 
+
 class GameAreaBuilderAI(ClientAreaBuilderAI):
     notify = directNotify.newCategory('GameAreaBuilderAI')
 
@@ -82,37 +83,35 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
         parent = parent.getParentObj()
         if not parent:
-            self.notify.warning('Cannot create building exterior %s, current parent %s, has no parent object!' % (
-                objKey, parentUid))
+            self.notify.warning('Cannot create building exterior %s, '
+                'current parent %s, has no parent object!' % (objKey, parentUid))
 
             return
 
         interiorFile = objectData.get('File')
         if not interiorFile:
-            self.notify.debug('Cannot create building exterior %s, no interior file found!' % (
-                objKey))
+            self.notify.debug('Cannot create building exterior %s, '
+                'no interior file found!' % objKey)
 
             return
 
         exteriorUid = objectData.get('ExtUid')
         if not exteriorUid:
-            self.notify.warning('Cannot create building exterior %s, no exterior uid found!' % (
-                objKey))
+            self.notify.warning('Cannot create building exterior %s, '
+                'no exterior uid found!' % objKey)
 
             return
 
         modelPath = self.air.worldCreator.getModelPathFromFile(interiorFile)
         if not modelPath:
-            self.notify.warning('Cannot create building exterior %s, no model path found for file %s!' % (
-                objKey, interiorFile))
+            self.notify.warning('Cannot create building exterior %s, '
+                'no model path found for file %s!' % (objKey, interiorFile))
 
             return
 
         # create a new instance object that lays under the main world instance
         # this allows us to load the interior file data and set the correct values...
-        parent = self.air.worldCreator.createWorldInstance({},
-            self.air.worldCreator.world, '', objKey, False)
-
+        parent = self.air.worldCreator.createWorldInstance({}, self.air.worldCreator.world, '', objKey, False)
         if 'jail' in objectData['Visual']['Model']:
             interior = DistributedJailInteriorAI(self.air)
             self.parent.setJailInterior(interior)
@@ -133,11 +132,8 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
         objectList = objectData.get('Objects', {})
         if not objectList:
-            exteriorLocatorNode = self.createDoorLocatorNode(self.parent, objKey,
-                exteriorUid, objectData, wantTruePosHpr=False)
-
-            interiorLocatorNode = interior.builder.createDoorLocatorNode(
-                self.parent, objKey, objKey, objectData)
+            exteriorLocatorNode = self.createDoorLocatorNode(self.parent, objKey, exteriorUid, objectData, wantTruePosHpr=False)
+            interiorLocatorNode = interior.builder.createDoorLocatorNode(self.parent, objKey, objKey, objectData)
         else:
             self.air.worldCreator.loadObjectDict(objectList, self.parent, objKey, True)
 
@@ -148,18 +144,16 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         from pirates.world.DistributedBuildingDoorAI import DistributedBuildingDoorAI
 
         parent = parent.getParentObj()
-
         if not parent:
-            self.notify.warning('Cannot create door locator node %s, current parent %s, has no parent object!' % (
-                objKey, parentUid))
+            self.notify.warning('Cannot create door locator node %s, '
+                'current parent %s, has no parent object!' % (objKey, parentUid))
 
             return
 
         interior = self.air.uidMgr.justGetMeMeObject(parentUid)
-
         if not interior or parentUid == self.parent.getUniqueId():
-            self.notify.debug('Cannot create door locator node %s, interior not found!' % (
-                objKey))
+            self.notify.debug('Cannot create door locator node %s, '
+                'interior not found!' % objKey)
 
             return
 
@@ -169,8 +163,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         doorLocatorNode.setHpr(objectData.get('Hpr', (0, 0, 0)))
         doorLocatorNode.setScale(objectData.get('Scale', (1, 1, 1)))
         doorLocatorNode.setBuildingUid(parentUid)
-        doorLocatorNode.setInteriorId(interior.doId, interior.getUniqueId(),
-            interior.parentId, interior.zoneId)
+        doorLocatorNode.setInteriorId(interior.doId, interior.getUniqueId(), interior.parentId, interior.zoneId)
 
         if not interior.getExteriorFrontDoor():
             doorLocatorNode.setDoorIndex(0)
@@ -185,7 +178,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         zoneId = self.parent.getZoneFromXYZ(doorLocatorNode.getPos())
         self.parent.generateChildWithRequired(doorLocatorNode, zoneId)
         self.addObject(doorLocatorNode)
-
         return doorLocatorNode
 
     def createConnectorLocatorNode(self, parent, parentUid, objKey, objectData):
@@ -193,8 +185,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         if 'exterior' not in locatorName:
             return
 
-        self.air.worldCreator.locatorManager.addLocator(
-            parentUid, objKey, objectData)
+        self.air.worldCreator.locatorManager.addLocator(parentUid, objKey, objectData)
 
     def createConnectorTunnel(self, parent, parentUid, objKey, objectData):
         from pirates.world.DistributedGATunnelAI import DistributedGATunnelAI
@@ -329,7 +320,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         parent.generateChildWithRequired(container, zoneId)
         self.parentObjectToCell(container, zoneId)
         self.addObject(container)
-
         return container
 
     def createObjectSpawnNode(self, parent, parentUid, objKey, objectData):
@@ -348,7 +338,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         parent.generateChildWithRequired(spawnNode, zoneId)
         self.parentObjectToCell(spawnNode, zoneId)
         self.addObject(spawnNode)
-
         return spawnNode
 
     def createInteractiveProp(self, parent, parentUid, objKey, objectData):
@@ -367,18 +356,16 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         parent.generateChildWithRequired(prop, zoneId)
         self.parentObjectToCell(prop, zoneId)
         self.addObject(prop)
-
         return prop
 
     def createHolidayProp(self, parent, parentUid, objKey, objectData):
-
         propCls = None
         subType = objectData.get('SubType', 'Unknown')
         if subType == 'Roast Pig':
             propCls = DistributedHolidayPigAI
         elif subType == 'Bonfire':
             propCls = DistributedHolidayBonfireAI
-        
+
         if not propCls:
             self.notify.warning('Unknown holiday prop type: %s' % subType)
             return None
@@ -396,6 +383,4 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         parent.generateChildWithRequired(prop, zoneId)
         self.parentObjectToCell(prop, zoneId)
         self.addObject(prop)
-
         return prop
-        

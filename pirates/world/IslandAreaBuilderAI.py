@@ -62,8 +62,7 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
             if 'interior' not in locatorName:
                 return
 
-            self.air.worldCreator.locatorManager.addLocator(
-                gameArea.getUniqueId(), objKey, objectData)
+            self.air.worldCreator.locatorManager.addLocator(gameArea.getUniqueId(), objKey, objectData)
 
         for objKey, objectData in objectData.get('Objects', {}).iteritems():
             if objectData['Type'] == ObjectList.LOCATOR_NODE:
@@ -82,5 +81,4 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
         parent.generateChildWithRequired(dinghy, zoneId)
         self.parentObjectToCell(dinghy, zoneId)
         self.addObject(dinghy)
-
         return dinghy
