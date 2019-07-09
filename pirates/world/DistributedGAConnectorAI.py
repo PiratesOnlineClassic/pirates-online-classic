@@ -100,4 +100,18 @@ class DistributedGAConnectorAI(DistributedNodeAI):
         if not isinstance(areaWorld, DistributedInstanceBaseAI):
             return
 
-        self.sendUpdateToAvatarId(avatar.doId, 'setPrivateArea', [areaWorld.doId, area.zoneId, area.doId, True])
+        otherConnector = self.air.uidMgr.justGetMeMeObject(self.otherLinkUid)
+        if not otherConnector:
+            self.notify.warning('Cannot handle request private area for avatar: %d, '
+                'unknown other side connector with uid: %s' % (avatar.doId, self.otherLinkUid))
+
+            return
+
+        def _connectorInterestCallback():
+            self.d_setPrivateArea(avatar.doId, areaWorld.doId, area.zoneId, area.doId, True)
+
+        self.air.worldGridManager.handleLocationChanged(otherConnector.getParentObj(), avatar,
+            otherConnector.zoneId, _connectorInterestCallback)
+
+    def d_setPrivateArea(self, avatarId, worldId, worldZoneId, areaDoId, autoFadeIn):
+        self.sendUpdateToAvatarId(avatarId, 'setPrivateArea', [worldId, worldZoneId, areaDoId, autoFadeIn])

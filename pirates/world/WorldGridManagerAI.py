@@ -73,6 +73,20 @@ class GridInterestHandler(object):
         self.air.clientRemoveInterest(clientChannel, interestHandle.context, False)
         self.interestHandles.remove(interestHandle)
 
+    def removeInterestHandleByZoneId(self, zoneId):
+        """
+        Removes an interest handle using it's zoneId which it's indexed as
+        """
+
+        interestHandle = self.getInterestHandleFromZoneId(zoneId)
+        if not interestHandle:
+            self.notify.warning('Cannot remove interest handle by zoneId: %d, '
+                'interest handle does not exist!' % zoneId)
+
+            return
+
+        self.removeInterestHandle(interestHandle)
+
     def hasPendingContext(self, context):
         """
         Returns True if there is a pending interest handle callback by context else False
@@ -105,6 +119,13 @@ class GridInterestHandler(object):
         if len(self.pendingCallbackContexts) == 0:
             self._callbackInterestContext()
 
+    def _setInterestContextDoneCallback(self, contexts, callback):
+        assert(len(contexts) > 0)
+        assert(callback is not None)
+
+        self.pendingCallbackContexts = contexts
+        self.pendingCallback = PythonUtil.DelayedFunctor(callback, 'interest-context-callback-%d' % self.avatar.doId, 0.2)
+
     def handleLocationChanged(self, zoneId, callback):
         """
         Adds interest to a new set of concentric zones based on the zoneId provided which would be
@@ -131,8 +152,7 @@ class GridInterestHandler(object):
 
         newConcentricZones = newZones.difference(previousZones)
         if callback is not None:
-            self.pendingCallbackContexts = list(newConcentricZones)
-            self.pendingCallback = PythonUtil.DelayedFunctor(callback, 'interest-context-callback-%d' % self.avatar.doId, 0.2)
+            self._setInterestContextDoneCallback(list(newConcentricZones), callback)
 
         for newZoneId in newConcentricZones:
             self.addInterestHandle(newZoneId)
@@ -198,6 +218,81 @@ class WorldGridManagerAI(object):
                 gridInterestHandler.handleInterestContextDone(context)
                 break
 
+    def hasInterestHandleByZoneId(self, parentObj, avatar, zoneId):
+        """
+        Returns True if we have a set of interests for the avatar under the parentObj otherwise False
+        """
+
+        assert(parentObj is not None)
+        assert(avatar is not None)
+
+        gridInterests = self.gridInterestHandlers.get(avatar.doId)
+        if not gridInterests:
+            return False
+
+        gridInterestHandler = gridInterests.get(parentObj.doId)
+        if not gridInterestHandler:
+            return False
+
+        return gridInterestHandler.hasInterestHandleByZoneId(zoneId)
+
+    def addInterestHandle(self, parentObj, avatar, newZoneId):
+        """
+        Explicitly calls addInterestHandle function on the grid interest handler
+        """
+
+        assert(parentObj is not None)
+        assert(avatar is not None)
+
+        gridInterests = self.gridInterestHandlers.get(avatar.doId)
+        if not gridInterests:
+            return
+
+        gridInterestHandler = gridInterests.get(parentObj.doId)
+        if not gridInterestHandler:
+            return
+
+        gridInterestHandler.addInterestHandle(newZones)
+
+    def removeInterestHandle(self, parentObj, avatar, interestHandle):
+        """
+        Explicitly calls removeInterestHandle function on the grid interest handler
+        associated with the provided cartesian grid parentObj
+        """
+
+        assert(parentObj is not None)
+        assert(avatar is not None)
+        assert(interestHandle is not None)
+
+        gridInterests = self.gridInterestHandlers.get(avatar.doId)
+        if not gridInterests:
+            return
+
+        gridInterestHandler = gridInterests.get(parentObj.doId)
+        if not gridInterestHandler:
+            return
+
+        gridInterestHandler.removeInterestHandle(interestHandle)
+
+    def removeInterestHandleByZoneId(self, parentObj, avatar, zoneId):
+        """
+        Explicitly calls removeInterestHandle function on the grid interest handler
+        associated with the provided cartesian grid parentObj
+        """
+
+        assert(parentObj is not None)
+        assert(avatar is not None)
+
+        gridInterests = self.gridInterestHandlers.get(avatar.doId)
+        if not gridInterests:
+            return
+
+        gridInterestHandler = gridInterests.get(parentObj.doId)
+        if not gridInterestHandler:
+            return
+
+        gridInterestHandler.removeInterestHandleByZoneId(zoneId)
+
     def handleLocationChanged(self, parentObj, avatar, zoneId, callback=None):
         """
         Updates the avatar's interest sets for a particular parent cartesian object
@@ -252,7 +347,7 @@ class WorldGridManagerAI(object):
 
         assert(avatar is not None)
 
-        gridInterests = self.gridInterestHandlers.pop(avatar.doId, None)
+        gridInterests = self.gridInterestHandlers.get(avatar.doId)
         if not gridInterests:
             return
 
@@ -260,3 +355,6 @@ class WorldGridManagerAI(object):
             parentObj = self.air.doId2do.get(parentId)
             assert(parentObj is not None)
             self.clearAvatarInterest(parentObj, avatar)
+
+        assert(avatar.doId in self.gridInterestHandlers)
+        del self.gridInterestHandlers[avatar.doId]
