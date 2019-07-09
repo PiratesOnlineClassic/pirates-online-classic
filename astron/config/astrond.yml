@@ -58,6 +58,8 @@ roles:
       channels:
         min: 1000000000
         max: 1009999999
+      tuning:
+        interest_timeout: 500
 
     - type: stateserver
       control: 10000

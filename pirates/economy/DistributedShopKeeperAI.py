@@ -3,7 +3,7 @@ from direct.directnotify import DirectNotifyGlobal
 from otp.uberdog.RejectCode import RejectCode
 from pirates.economy import EconomyGlobals
 from pirates.makeapirate import BarberGlobals
-from pirates.uberdog import UberDogGlobals
+from pirates.uberdog.UberDogGlobals import InventoryType, InventoryCategory
 
 class DistributedShopKeeperAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShopKeeperAI')
@@ -32,11 +32,13 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         # TODO FIXME: properly check to see what inventory type this
         # item they are trying to buy fits under...
         currentStack = inventory.getStackQuantity(itemId)
-        stackLimit = inventory.getStackLimit(itemId)
+        stackLimit = inventory.getStackLimit(itemId) if not itemId in EconomyGlobals.SHIP_SHELF else inventory.getCategoryLimit(InventoryCategory.SHIPS)
         if not currentStack:
             currentStack = 0
 
         if itemId in EconomyGlobals.SHIP_SHELF:
+            currentStack = len(inventory.getShipDoIdList())
+
             self.air.shipLoader.createShip(avatar, itemId)
 
         if currentStack >= stackLimit:

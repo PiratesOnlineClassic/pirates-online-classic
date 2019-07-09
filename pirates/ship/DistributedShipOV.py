@@ -6,7 +6,7 @@ from pirates.ship import ShipGlobals
 
 class DistributedShipOV(DistributedObjectOV.DistributedObjectOV):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipOV')
-    
+
     def __init__(self, cr):
         DistributedObjectOV.DistributedObjectOV.__init__(self, cr)
         self.shipClass = 0
@@ -30,7 +30,7 @@ class DistributedShipOV(DistributedObjectOV.DistributedObjectOV):
         messenger.send('DistributedShipOV-announceGenerate', sentArgs = [self.doId])
         if self.state not in ('Off', 'Sunk'):
             localAvatar.b_setActiveShipId(self.doId)
-    
+
     def delete(self):
         DistributedObjectOV.DistributedObjectOV.delete(self)
         messenger.send('DistributedShipOV-delete', sentArgs = [self.doId])
@@ -50,7 +50,7 @@ class DistributedShipOV(DistributedObjectOV.DistributedObjectOV):
 
     def setInventoryId(self, inventoryId):
         self.inventoryId = inventoryId
-    
+
     def setName(self, name):
         self.name = name
         messenger.send('setName-%s' % self.getDoId(), [
@@ -61,12 +61,12 @@ class DistributedShipOV(DistributedObjectOV.DistributedObjectOV):
         self.wishName = name
         messenger.send('setWishName-%s' % self.getDoId(), [
             self.wishName])
-    
+
     def setWishNameState(self, state):
         self.wishNameState = state
         messenger.send('setWishNameState-%s' % self.getDoId(), [
             self.wishNameState])
-    
+
     def setNPCship(self, val):
         self.npcShip = val
 
@@ -74,13 +74,13 @@ class DistributedShipOV(DistributedObjectOV.DistributedObjectOV):
         self.charterTimestamp = timestamp
         messenger.send('setCharterTimestamp-%s' % self.getDoId(), [
             self.charterTimestamp])
-    
+
     def setBaseTeam(self, teamId):
         self.baseTeam = teamId
         messenger.send('setName-%s' % self.getDoId(), [
             self.name,
             self.baseTeam])
-    
+
     def setMaxHp(self, val):
         self.maxHp = val
         messenger.send('setShipHp-%s' % self.getDoId(), [
@@ -106,7 +106,7 @@ class DistributedShipOV(DistributedObjectOV.DistributedObjectOV):
         messenger.send('setShipSp-%s' % self.getDoId(), [
             self.Sp,
             self.maxSp])
-    
+
     def setShipClass(self, shipClass):
         self.shipClass = shipClass
         messenger.send('setShipClass-%s' % self.getDoId(), [
@@ -122,10 +122,10 @@ class DistributedShipOV(DistributedObjectOV.DistributedObjectOV):
             messenger.send('setShipCrew-%s' % self.getDoId(), [
                 crewArray,
                 self.maxCrew])
-        
+
         self.crew = crewArray
         self.crewCount = len(self.crew)
-    
+
     def setMaxCargo(self, maxCargo):
         if self.maxCargo != maxCargo:
             self.maxCargo = maxCargo
@@ -138,12 +138,12 @@ class DistributedShipOV(DistributedObjectOV.DistributedObjectOV):
         messenger.send('setShipCargo-%s' % self.getDoId(), [
             self.cargo,
             self.maxCargo])
-    
+
     def setCrewId(self, crewId):
         self.crewId = crewId
         messenger.send('setCrewId-%s' % self.getDoId(), [
             self.crewId])
-    
+
     def setHullCondition(self, condition):
         overhaulBit = 1 << 7
         self.isInOverhaul = bool(condition & overhaulBit)
@@ -152,7 +152,7 @@ class DistributedShipOV(DistributedObjectOV.DistributedObjectOV):
             self.hullCondition])
         messenger.send('setShipIsInOverhaul-%s' % self.getDoId(), [
             self.isInOverhaul])
-    
+
     def setGameState(self, stateName, avId, timeStamp):
         self.state = stateName
         messenger.send('setState-%s' % self.getDoId(), [
@@ -162,19 +162,19 @@ class DistributedShipOV(DistributedObjectOV.DistributedObjectOV):
 
     def getShipInfoId(self):
         return self.shipInfoId
-    
+
     def setShipInfoId(self, shipInfoId):
         self.shipInfoId = shipInfoId
 
     def getCargoCrate(self):
         return self.cargo.count(ItemId.CARGO_CRATE)
-    
+
     def getCargoChest(self):
         return self.cargo.count(ItemId.CARGO_CHEST)
-    
+
     def getCargoSkeletonChest(self):
         return self.cargo.count(ItemId.CARGO_SKCHEST)
-    
+
     def setTimer(self, time, timestamp):
         elapsedTime = globalClockDelta.localElapsedTime(timestamp)
         localTime = globalClock.getFrameTime()
@@ -182,12 +182,10 @@ class DistributedShipOV(DistributedObjectOV.DistributedObjectOV):
         self.timerTime = time
         messenger.send('setShipTimer-%s' % self.getDoId(), [
             self.getTimeLeft()])
-    
+
     def getTimeLeft(self):
         timePassed = globalClock.getFrameTime() - self.timerTimestamp
         return max(0, self.timerTime - timePassed)
-    
+
     def sendTeleportInfo(self, shardId, instanceDoId):
         self.cr.teleportMgr.requestTeleportToShip(shardId, instanceDoId, self.doId)
-
-

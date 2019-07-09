@@ -11,6 +11,7 @@ from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.instance.DistributedTeleportZoneAI import DistributedTeleportZoneAI
 from pirates.instance.DistributedTeleportHandlerAI import DistributedTeleportHandlerAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
+from pirates.ship.DistributedShipAI import DistributedShipAI
 
 
 class TeleportOperationFSM(FSM):
@@ -223,16 +224,26 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         self.sendUpdateToAvatarId(avatarId, 'teleportHasBegun', [instanceType, fromInstanceType,
             instanceName, gameType])
 
+    def requestTargetsLocation(self, locationId):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        target = self.air.doId2do.get(locationId)
+        if not target:
+            self.notify.debug('Cannot send target location for avatar %d, '
+                'unknown target object %d!' % (avatar.doId, locationId))
+
+            return
+
+        self.d_localTeleportToIdResponse(avatar.doId, target.parentId, target.zoneId)
+
     def d_localTeleportToIdResponse(self, avatarId, parentId, zoneId):
         self.sendUpdateToAvatarId(avatarId, '_localTeleportToIdResponse', [parentId, zoneId])
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
-def uidtp(locationUid):
-    """
-    Teleport command for teleporting to an object by it's UID
-    """
-
+def areaTeleport(areaUid):
     avatar = spellbook.getTarget()
     simbase.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
     return 'Teleporting avatar %d to area: %s...' % (avatar.doId, locationUid)

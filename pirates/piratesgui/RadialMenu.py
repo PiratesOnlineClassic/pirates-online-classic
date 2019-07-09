@@ -69,10 +69,10 @@ def isComboSkill(skillId):
     inv = base.localAvatar.getInventory()
     if inv == None:
         return 0
-    
+
     if skillId == InventoryType.DollAttune or skillId == InventoryType.DollPoke:
         return 0
-    
+
     if WeaponGlobals.getSkillTrack(skillId) == 1:
         if inv.getStackQuantity(skillId):
             return 1
@@ -109,7 +109,7 @@ def FindSkills(repId, skilltrack, minlvl):
     if inv == None:
         print 'WARNING - FindSkills came up with no inventory for ', repId
         return []
-    
+
     choices = []
     if repId == InventoryType.CutlassRep:
         skillId = InventoryType.begin_WeaponSkillCutlass
@@ -117,7 +117,7 @@ def FindSkills(repId, skilltrack, minlvl):
             if WeaponGlobals.getSkillTrack(skillId) == skilltrack:
                 if inv.getStackQuantity(skillId) >= minlvl:
                     choices.append(skillId)
-            
+
             skillId += 1
     elif repId == InventoryType.MeleeRep:
         skillId = InventoryType.begin_WeaponSkillMelee
@@ -191,7 +191,7 @@ def FindSkills(repId, skilltrack, minlvl):
                     choices.append(skillId)
 
             skillId += 1
-    
+
     return choices
 
 
@@ -200,7 +200,7 @@ def getAllSkills(repId, skilltrack):
     if inv == None:
         print 'WARNING - getAllSkills came up with no inventory for ', repId
         return []
-    
+
     minlvl = 2
     choices = []
     if repId == InventoryType.CutlassRep:
@@ -210,13 +210,13 @@ def getAllSkills(repId, skilltrack):
                 locked = False
                 if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                     locked = not WeaponGlobals.canFreeUse(skillId)
-                
+
                 if inv.getStackQuantity(skillId) >= minlvl:
                     skill = (skillId, True, locked)
                 else:
                     skill = (skillId, False, locked)
                 choices.append(skill)
-            
+
             skillId += 1
     elif repId == InventoryType.MeleeRep:
         skillId = InventoryType.begin_WeaponSkillMelee
@@ -225,13 +225,13 @@ def getAllSkills(repId, skilltrack):
                 locked = False
                 if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                     locked = not WeaponGlobals.canFreeUse(skillId)
-                
+
                 if inv.getStackQuantity(skillId) >= minlvl:
                     skill = (skillId, True, locked)
                 else:
                     skill = (skillId, False, locked)
                 choices.append(skill)
-            
+
             skillId += 1
     elif repId == InventoryType.DaggerRep:
         skillId = InventoryType.begin_WeaponSkillDagger
@@ -240,13 +240,13 @@ def getAllSkills(repId, skilltrack):
                 locked = False
                 if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                     locked = not WeaponGlobals.canFreeUse(skillId)
-                
+
                 if inv.getStackQuantity(skillId) >= minlvl:
                     skill = (skillId, True, locked)
                 else:
                     skill = (skillId, False, locked)
                 choices.append(skill)
-            
+
             skillId += 1
     elif repId == InventoryType.GrenadeRep:
         skillId = InventoryType.begin_WeaponSkillGrenade
@@ -255,13 +255,13 @@ def getAllSkills(repId, skilltrack):
                 locked = False
                 if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                     locked = not WeaponGlobals.canFreeUse(skillId)
-                
+
                 if inv.getStackQuantity(skillId) >= minlvl:
                     skill = (skillId, True, locked)
                 else:
                     skill = (skillId, False, locked)
                 choices.append(skill)
-            
+
             skillId += 1
     elif repId == InventoryType.DollRep:
         skillId = InventoryType.begin_WeaponSkillDoll
@@ -270,13 +270,13 @@ def getAllSkills(repId, skilltrack):
                 locked = False
                 if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                     locked = not WeaponGlobals.canFreeUse(skillId)
-                
+
                 if inv.getStackQuantity(skillId) >= minlvl:
                     skill = (skillId, True, locked)
                 else:
                     skill = (skillId, False, locked)
                 choices.append(skill)
-            
+
             skillId += 1
     elif repId == InventoryType.WandRep:
         skillId = InventoryType.begin_WeaponSkillWand
@@ -285,13 +285,13 @@ def getAllSkills(repId, skilltrack):
                 locked = False
                 if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                     locked = not WeaponGlobals.canFreeUse(skillId)
-                
+
                 if inv.getStackQuantity(skillId) >= minlvl:
                     skill = (skillId, True, locked)
                 else:
                     skill = (skillId, False, locked)
                 choices.append(skill)
-            
+
             skillId += 1
     elif repId == InventoryType.KettleRep:
         skillId = InventoryType.begin_WeaponSkillKettle
@@ -300,13 +300,13 @@ def getAllSkills(repId, skilltrack):
                 locked = False
                 if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                     locked = not WeaponGlobals.canFreeUse(skillId)
-                
+
                 if inv.getStackQuantity(skillId) >= minlvl:
                     skill = (skillId, True, locked)
                 else:
                     skill = (skillId, False, locked)
                 choices.append(skill)
-            
+
             skillId += 1
     elif repId == InventoryType.PistolRep:
         skillId = InventoryType.begin_WeaponSkillPistol
@@ -315,13 +315,13 @@ def getAllSkills(repId, skilltrack):
                 locked = False
                 if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                     locked = not WeaponGlobals.canFreeUse(skillId)
-                
+
                 if inv.getStackQuantity(skillId) >= minlvl:
                     skill = (skillId, True, locked)
                 else:
                     skill = (skillId, False, locked)
                 choices.append(skill)
-            
+
             skillId += 1
     elif repId == InventoryType.CannonRep:
         skillId = InventoryType.begin_WeaponSkillCannon
@@ -330,13 +330,13 @@ def getAllSkills(repId, skilltrack):
                 locked = False
                 if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                     locked = not WeaponGlobals.canFreeUse(skillId)
-                
+
                 if inv.getStackQuantity(skillId) >= minlvl:
                     skill = (skillId, True, locked)
                 else:
                     skill = (skillId, False, locked)
                 choices.append(skill)
-            
+
             skillId += 1
     elif repId == InventoryType.SailingRep:
         skillId = InventoryType.begin_SkillSailing
@@ -345,13 +345,13 @@ def getAllSkills(repId, skilltrack):
                 locked = False
                 if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                     locked = not WeaponGlobals.canFreeUse(skillId)
-                
+
                 shouldBeVisible = inv.getStackQuantity(skillId) >= minlvl
                 skill = (skillId, shouldBeVisible, locked)
                 choices.append(skill)
-            
+
             skillId += 1
-    
+
     return choices
 
 
@@ -372,20 +372,20 @@ def InnerRingOffset(num):
         return (-0.175, -0.175)
     elif num == 8:
         return (-0.25, 0.0)
-    
+
 
 
 def RingMatch(maxSlot, xc, yc):
     if xc * xc + yc * yc < 2 * Tolerance * Tolerance:
         return 0
-    
+
     degOff = rad2Deg(math.atan2(xc, yc))
     degOff += 180
     degOff = 360 - degOff
     degOff += 67.5
     if degOff > 360:
         degOff -= 360
-    
+
     slot = degOff / 45
     if slot > maxSlot:
         return -1
@@ -411,7 +411,7 @@ def ExactRingMatch(maxSlot, xc, yc):
 
 class RadialMenu:
     SkillIcons = None
-    
+
     def __init__(self, rep, weaponMode):
         self.rep = rep
         self.weaponMode = weaponMode
@@ -434,7 +434,7 @@ class RadialMenu:
         skillRing.setPos(0.01, 0, 0.01)
         if not self.SkillIcons:
             self.SkillIcons = loader.loadModel('models/textureCards/skillIcons')
-        
+
         if self.rep == InventoryType.DollRep and localAvatar.hasStickyTargets():
             asset = getSkillIconName(self.rep, 1)
         else:
@@ -466,7 +466,7 @@ class RadialMenu:
                     ammoMax = inv.getStackLimit(ammoInvId)
                     amtstr = '%d' % ammoAmt
                 self.ammoAmt[i + 1] = DirectLabel(parent = aspect2d, relief = None, text = amtstr, text_align = TextNode.ACenter, text_scale = 0.03, text_fg = (0.7, 1.0, 1.0, 1), text_font = PiratesGlobals.getPirateBoldOutlineFont(), pos = (x + 0.06, 0, y + 0.04), textMayChange = 1)
-        
+
         self.mouseBasePosX = base.win.getXSize() / 2
         self.mouseBasePosY = base.win.getYSize() / 2
         self.radialHelp = DirectLabel(parent = aspect2d, relief = None, text = '', text_align = TextNode.ACenter, text_scale = 0.04, text_fg = (0.95, 1.0, 1.0, 1), text_shadow = PiratesGuiGlobals.TextShadow, pos = (0, 0, 0), textMayChange = 1)
@@ -496,7 +496,7 @@ class RadialMenu:
                 self.radialHelp.show()
             if self.hiLiteItem != -1:
                 self.rframe[self.hiLiteItem].rollover(False)
-            
+
             self.hiLiteItem = hLItem
             if self.hiLiteItem > 0:
                 self.rframe[self.hiLiteItem].rollover(True)
@@ -518,10 +518,11 @@ class RadialMenu:
 
             if localAvatar.mojo < -1 * WeaponGlobals.getMojoCost(skillId):
                 greyOut = 1
-            
+
             if skillId == InventoryType.SailBroadsideLeft or skillId == InventoryType.SailBroadsideRight:
-                if not localAvatar.ship.broadside:
-                    greyOut = 1
+                if localAvatar.ship:
+                    if not localAvatar.ship.broadside:
+                        greyOut = 1
 
             range = localAvatar.cr.battleMgr.getModifiedRechargeTime(localAvatar, skillId)
             value = localAvatar.skillDiary.getTimeSpentRecharging(skillId)
@@ -537,14 +538,14 @@ class RadialMenu:
             self.rframe[count].update(value, range)
             if value < range:
                 greyOut = 3
-            
+
             if self.rep == InventoryType.DollRep:
                 haveFriendly = localAvatar.getFriendlyStickyTargets()
                 haveHostile = localAvatar.getHostileStickyTargets()
                 if haveFriendly and not haveHostile:
                     if not WeaponGlobals.isFriendlyFire(self.radialSkillMap[count - 1]):
                         greyOut = 1
-                    
+
                 elif not haveFriendly and haveHostile:
                     if WeaponGlobals.isFriendlyFire(self.radialSkillMap[count - 1]):
                         greyOut = 1
@@ -570,15 +571,15 @@ class RadialMenu:
     def destroy(self):
         if self.numberOfItems < 0:
             return
-        
+
         taskMgr.remove('radialMenuHeartBeat')
         for i in range(self.numberOfItems + 1):
             if i != 0 and len(self.ammoAmt):
                 self.ammoAmt[i].destroy()
-            
+
             self.radial[i].destroy()
             self.rframe[i].destroy()
-        
+
         del self.radial
         del self.rframe
         del self.ammoAmt
@@ -588,7 +589,7 @@ class RadialMenu:
         self.numberOfItems = -1
         localAvatar.endTrackTarget()
         localAvatar.guiMgr.setSeaChestAllowed(True)
-    
+
     def radialMenuRelease(self):
         localAvatar.cr.targetMgr.reticle.show()
         if base.mouseWatcherNode.hasMouse():
@@ -608,12 +609,12 @@ class RadialMenu:
 class SkillTray:
     SkillIcons = None
     MeterFrame = None
-    
+
     def __init__(self):
         if not self.SkillIcons:
             self.SkillIcons = loader.loadModel('models/textureCards/skillIcons')
             self.MeterFrame = loader.loadModel('models/gui/ship_battle')
-        
+
         self.tray = {}
         self.origMap = {}
         self.traySkillMap = None
@@ -635,7 +636,7 @@ class SkillTray:
 
     def show(self):
         self.skillTray.show()
-    
+
     def hide(self):
         self.skillTray.hide()
 
@@ -650,10 +651,10 @@ class SkillTray:
             self.skillTrayState = True
         if self.showSkillTrayIval.isPlaying():
             self.showSkillTrayIval.pause()
-        
+
         if self.hideSkillTrayIval.isPlaying():
             self.hideSkillTrayIval.pause()
-        
+
         self.showSkillTrayIval.start()
 
     def hideSkillTray(self):
@@ -663,16 +664,16 @@ class SkillTray:
             self.skillTrayState = False
         if self.showSkillTrayIval.isPlaying():
             self.showSkillTrayIval.pause()
-        
+
         if self.hideSkillTrayIval.isPlaying():
             self.hideSkillTrayIval.pause()
-        
+
         self.hideSkillTrayIval.start()
 
     def updateSkillTrayMeter(self):
         if not self.traySkillMap:
             return
-        
+
         inv = base.localAvatar.getInventory()
         reputation = inv.getReputation(self.rep)
         self.repMeter.setCategory(self.rep)
@@ -681,28 +682,28 @@ class SkillTray:
     def rebuildSkillTray(self, rep = None, weaponMode = None, callback = None):
         if not rep:
             rep = self.rep
-        
+
         if not weaponMode:
             weaponMode = self.weaponMode
-        
+
         if not callback:
             callback = self.callback
-        
+
         if rep is None:
             return
-        
+
         self.updateSkillTray(rep, weaponMode, callback, hideFirst = False)
-    
+
     def updateSkillTray(self, rep, weaponMode, callback = None, hideFirst = True):
         if rep == InventoryType.MeleeRep:
             return
-        
+
         if not callback:
             callback = localAvatar.guiMgr.combatTray.triggerSkillTraySkill
-        
+
         if taskMgr.hasTaskNamed('updateSkillTray'):
             taskMgr.remove('updateSkillTray')
-        
+
         if self.skillTrayState and hideFirst:
             self.hideSkillTray()
             taskMgr.doMethodLater(0.75, self.updateSkillTray, 'updateSkillTray', extraArgs = [
@@ -710,12 +711,12 @@ class SkillTray:
                 weaponMode,
                 callback])
             return
-        
+
         text = PLocalizer.InventoryTypeNames.get(rep, 'Unknown')
         for i in range(self.numberOfItems):
             self.tray[i + 1].destroy()
             self.repMeter.destroy()
-        
+
         self.rep = rep
         self.weaponMode = weaponMode
         self.callback = callback
@@ -723,7 +724,7 @@ class SkillTray:
         self.origMap = getAllSkills(self.rep, 2)
         for i in range(len(self.origMap)):
             skillMap.append(self.origMap[i][0])
-        
+
         self.traySkillMap = skillMap
         self.numberOfItems = len(self.traySkillMap)
         self.skillTray.setX(0)
@@ -734,7 +735,7 @@ class SkillTray:
         inv = base.localAvatar.getInventory()
         if inv is None:
             return
-        
+
         self.repMeter.update(inv.getReputation(self.rep))
         x = 0.0
         offset = 0.0
@@ -758,7 +759,7 @@ class SkillTray:
                     button['extraArgs'] = [
                         'Restricted_Radial_Menu',
                         5]
-                
+
                 self.tray[i + 1] = button
                 x = x + 0.16
                 if i < self.numberOfItems - 1:
@@ -773,7 +774,7 @@ class SkillTray:
                 timeSpentRecharging = localAvatar.skillDiary.getTimeSpentRecharging(skillId)
                 if not timeSpentRecharging:
                     timeSpentRecharging = 0
-                
+
                 if weaponMode not in (WeaponGlobals.CANNON, WeaponGlobals.FIREARM, WeaponGlobals.GRENADE, WeaponGlobals.STAFF):
                     showRing = True
                 else:
@@ -786,11 +787,11 @@ class SkillTray:
                     button.skillButton['extraArgs'] = [
                         'Restricted_Radial_Menu',
                         5]
-                
+
                 if showRing:
                     button.skillRing.meterFaceHalf1.setScale(0.96)
                     button.skillRing.meterFaceHalf2.setScale(0.96)
-                
+
                 button.reparentTo(self.skillTray)
                 button.setPos(x, 0, 0.035)
                 self.tray[i + 1] = button
@@ -799,7 +800,7 @@ class SkillTray:
                     if lastAmmo is not None:
                         if lastAmmo == skillId:
                             button.toggleButton(True)
-                        
+
                     elif self.tray[1].skillStatus is True:
                         self.tray[1].toggleButton(True)
 
@@ -814,7 +815,7 @@ class SkillTray:
                         ammoMax = inv.getStackLimit(ammoInvId)
                         button.showQuantity = True
                         button.updateQuantity(ammoAmt)
-                
+
                 x = x + 0.18
                 if i < self.numberOfItems - 1:
                     self.skillTray.setX(self.skillTray.getX() - 0.09)
@@ -828,21 +829,21 @@ class SkillTray:
     def updateSkillTrayStates(self):
         if not self.traySkillMap:
             return
-        
+
         if not hasattr(base, 'localAvatar'):
             return
-        
+
         inv = localAvatar.getInventory()
         if not inv:
             return
-        
+
         self.numberOfItems = len(self.traySkillMap)
         for i in range(self.numberOfItems):
             skillId = self.traySkillMap[i]
             greyOut = 0
             if self.tray[i + 1].greyOut == -1:
                 continue
-            
+
             if self.tray[i + 1].showQuantity:
                 maxQuant = WeaponGlobals.getSkillMaxQuantity(skillId)
                 if maxQuant == WeaponGlobals.INF_QUANT:
@@ -855,11 +856,9 @@ class SkillTray:
 
             if localAvatar.mojo < -1 * WeaponGlobals.getMojoCost(skillId):
                 greyOut = 1
-            
-            if localAvatar.ship:
-                pass
-            else:
-                if skillId == InventoryType.SailBroadsideLeft or skillId == InventoryType.SailBroadsideRight:
+
+            if skillId == InventoryType.SailBroadsideLeft or skillId == InventoryType.SailBroadsideRight:
+                if localAvatar.ship:
                     if not localAvatar.ship.broadside:
                         greyOut = 1
 
@@ -870,7 +869,7 @@ class SkillTray:
                 if haveFriendly and not haveHostile:
                     if not WeaponGlobals.isFriendlyFire(skillId):
                         greyOut = 1
-                    
+
                 elif not haveFriendly and haveHostile:
                     if WeaponGlobals.isFriendlyFire(skillId):
                         greyOut = 1
@@ -883,7 +882,7 @@ class SkillTray:
                         if self.tray[i + 1].showRing:
                             self.tray[i + 1].skillRing.meterFaceHalf1.setColorScale(0.4, 0.4, 0.4, 1.0)
                             self.tray[i + 1].skillRing.meterFaceHalf2.setColorScale(0.4, 0.4, 0.4, 1.0)
-                        
+
                     elif greyOut == 2:
                         self.tray[i + 1].setGeomColor(0.5, 0.5, 0.5, 1.0)
                     elif greyOut == 3:
@@ -900,18 +899,18 @@ class SkillTray:
     def decrementSkillTrayAmount(self, skillId, amt = 1):
         if not self.traySkillMap:
             return
-        
+
         if self.weaponMode not in (WeaponGlobals.FIREARM, WeaponGlobals.THROWING, WeaponGlobals.CANNON, WeaponGlobals.GRENADE):
             return
-        
+
         if not hasattr(base, 'localAvatar'):
             return
-        
+
         self.numberOfItems = len(self.traySkillMap)
         for i in range(self.numberOfItems):
             if self.tray[i + 1].greyOut == -1:
                 continue
-            
+
             if self.tray[i + 1].showQuantity:
                 if skillId == self.traySkillMap[i]:
                     currentAmt = self.tray[i + 1].quantity
@@ -929,22 +928,22 @@ class SkillTray:
     def updateSkillTrayAmounts(self):
         if not self.traySkillMap:
             return
-        
+
         if self.weaponMode not in (WeaponGlobals.FIREARM, WeaponGlobals.THROWING, WeaponGlobals.CANNON, WeaponGlobals.GRENADE):
             return
-        
+
         if not hasattr(base, 'localAvatar'):
             return
-        
+
         inv = localAvatar.getInventory()
         if not inv:
             return
-        
+
         self.numberOfItems = len(self.traySkillMap)
         for i in range(self.numberOfItems):
             if self.tray[i + 1].greyOut == -1:
                 continue
-            
+
             skillId = self.traySkillMap[i]
             maxQuant = WeaponGlobals.getSkillMaxQuantity(skillId)
             if maxQuant == WeaponGlobals.INF_QUANT:
@@ -981,25 +980,22 @@ class SkillTray:
                 if not self.tray[button].isEmpty() and (WeaponGlobals.getIsShipSkill(self.tray[button].skillId) or WeaponGlobals.getIsCannonSkill(self.tray[button].skillId)) and self.tray[button].skillId != InventoryType.SailPowerRecharge:
                     self.tray[button].stopPowerImpulse()
                     self.tray[button].updateSkillRingIval()
-    
+
     def destroy(self):
         self.hideSkillTray()
         self.skillTray.destroy()
         if self.repMeter:
             self.repMeter.destroy()
-        
+
         for i in range(self.numberOfItems):
             self.tray[i + 1].destroy()
-        
+
         del self.tray
         del self.callback
         if self.showSkillTrayIval:
             self.showSkillTrayIval.pause()
             self.showSkillTrayIval = None
-        
+
         if self.hideSkillTrayIval:
             self.hideSkillTrayIval.pause()
             self.hideSkillTrayIval = None
-        
-
-

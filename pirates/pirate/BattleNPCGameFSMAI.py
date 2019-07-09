@@ -52,10 +52,10 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         distance = self.avatar.getDistance(attackTarget)
         return distance > EnemyGlobals.INSTANT_AGGRO_RADIUS_DEFAULT / 2
 
-    def getPointInRadius(self, cx, cy, radius):
+    def getPointInRadius(self, cx, cy, cz, radius):
         x = random.uniform(cx - radius, cx + radius)
         y = random.uniform(cy - radius, cy + radius)
-        return Point3(x, y, 0)
+        return Point3(x, y, cz)
 
     def getPatrolPoint(self):
         parentObj = self.avatar.getParentObj()
@@ -67,7 +67,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             return None
 
         sx, sy, sz = self.avatar.getSpawnPos()
-        return self.getPointInRadius(sx, sy, patrolRadius)
+        return self.getPointInRadius(sx, sy, sz, patrolRadius)
 
     def getWalkToPointDoneName(self):
         return self.avatar.uniqueName('walkToPoint-done')

@@ -1944,4 +1944,3 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
     def teleportResponse(self, avId, available, shardId, instanceDoId, areaDoId):
         if self.isGenerated():
             self.cr.teleportMgr.handleAvatarTeleportResponse(avId, available, shardId, instanceDoId, areaDoId)
-

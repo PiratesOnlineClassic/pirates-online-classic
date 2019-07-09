@@ -44,7 +44,7 @@ class WeaponBaseAI(WeaponBaseBase):
 
             self.useTargetedSkill(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
 
-    def requestProjectileSkill(self, skillId, ammoSkillId, posHpr, power, timestamp):
+    def requestProjectileSkill(self, skillId, ammoSkillId, posHpr, timestamp, power):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
             return

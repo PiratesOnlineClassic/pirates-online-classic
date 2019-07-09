@@ -15,7 +15,7 @@ class DistributedDinghy(DistributedInteractive):
     notify = directNotify.newCategory('DistributedDinghy')
     camPos = Point3(227.48, 222.273, 71.208)
     camHpr = VBase3(172.233, -15.2738, -0.376993)
-    
+
     def __init__(self, cr):
         NodePath.__init__(self, 'DistributedDinghy')
         DistributedInteractive.__init__(self, cr)
@@ -35,29 +35,29 @@ class DistributedDinghy(DistributedInteractive):
     def generate(self):
         DistributedInteractive.generate(self)
         self.setInteractOptions(proximityText = PLocalizer.DeployShipInstructions, sphereScale = self.interactRadius, diskRadius = self.diskRadius)
-    
+
     def disable(self):
         DistributedInteractive.disable(self)
         if self.invReq:
             DistributedInventoryBase.cancelGetInventory(localAvatar.getInventoryId())
             self.invReq = None
-        
+
         self.get_children().detach()
-    
+
     def delete(self):
         if self.camIval:
             self.camIval.pause()
             self.camIval = None
-        
+
         if self.camTask:
             taskMgr.remove(self.camTask)
             self.camTask = None
-        
+
         DistributedInteractive.delete(self)
-    
+
     def setInteractRadius(self, radius):
         self.interactRadius = radius
-    
+
     def setLocationId(self, locationId):
         self.locationId = locationId
         if self.locationId == 0:
@@ -88,12 +88,12 @@ class DistributedDinghy(DistributedInteractive):
         if not base.launcher.getPhaseComplete(5):
             self.showDownloadAcknowledge()
             return None
-        
+
         self.cleanupDinghyDisabledDialog()
         if localAvatar.zombie and avId == localAvatar.doId:
             localAvatar.guiMgr.createWarning(PLocalizer.ZombieNoBoats, PiratesGuiGlobals.TextFG6)
             return None
-        
+
         DistributedInteractive.requestInteraction(self, avId, interactType, instant)
 
     def showDownloadAcknowledge(self):
@@ -116,7 +116,7 @@ class DistributedDinghy(DistributedInteractive):
     def handleTeamFullAcknowledge(self, value):
         if value == 1:
             base.localAvatar.guiMgr.crewPage.b_activateAvatarLookoutPVP()
-        
+
         self.cleanupTeamFullDialog()
 
     def handleSingleTeamFullConfirmation(self, value):
@@ -140,9 +140,9 @@ class DistributedDinghy(DistributedInteractive):
         self.avGameState = localAvatar.getGameState()
         if self.avGameState == 'Battle':
             self.avGameState = 'LandRoam'
-        
+
         localAvatar.b_setGameState('DinghyInteract', [self])
-    
+
     def exitWaiting(self):
         DistributedInteractive.exitWaiting(self)
         if self.newState != 'Use' and self.avGameState:
@@ -153,7 +153,7 @@ class DistributedDinghy(DistributedInteractive):
                     base.cr.interactionMgr.start()
 
             self.avGameState = None
-        
+
         if self.invReq:
             DistributedInventoryBase.cancelGetInventory(localAvatar.getInventoryId())
             self.invReq = None
@@ -169,7 +169,7 @@ class DistributedDinghy(DistributedInteractive):
 
     def offerOptions(self):
         self.invReq = DistributedInventoryBase.getInventory(localAvatar.getInventoryId(), self.invArrived, 10)
-    
+
     def invArrived(self, inv):
         self.invReq = None
         if inv:
@@ -181,7 +181,7 @@ class DistributedDinghy(DistributedInteractive):
         DistributedInteractive.enterUse(self)
         if self.shipSelection:
             self.shipSelection.destroy()
-        
+
         self.shipSelection = ShipDeployPanel(PLocalizer.ChooseShipTitle, self.requestExit, siegeTeam = self._siegeTeam)
         self.shipSelection.hide()
         self.selectionSent = False
@@ -196,17 +196,17 @@ class DistributedDinghy(DistributedInteractive):
                 if self.avGameState in ['WaterRoam', 'BattleWaterRoam']:
                     localAvatar.motionFSM.setWaterState(True, True)
                     base.cr.interactionMgr.start()
-            
+
             self.avGameState = None
-        
+
         if self.camIval:
             self.camIval.pause()
             self.camIval = None
-        
+
         if self.camTask:
             taskMgr.remove(self.camTask)
             self.camTask = None
-        
+
         if self.shipSelection:
             self.shipSelection.destroy()
             self.shipSelection = None
@@ -245,37 +245,37 @@ class DistributedDinghy(DistributedInteractive):
             base.cr.teleportMgr.initiateCrossShardDeploy(0, localAvatar.getParentObj().uniqueId, shipId, doEffect = False)
             self.selectionMade()
             return
-        
+
         if shipId >= 0:
             self.b_selectOwnShip(shipId, teamSpec)
             self.ownShipSelection = shipId
-        
+
         self.selectionMade()
 
     def friendShipSelected(self, friendId):
         if friendId >= 0:
             self.b_selectFriendShip(friendId)
-        
+
         self.selectionMade()
-    
+
     def bandShipSelected(self, shipId):
         if shipId >= 0:
             self.b_selectBandShip(shipId)
-        
+
         self.selectionMade()
 
     def guildShipSelected(self, shipId):
         if shipId >= 0:
             self.b_selectGuildShip(shipId)
-        
+
         self.selectionMade()
-    
+
     def publicShipSelected(self, shipId):
         if shipId >= 0:
             self.b_selectPublicShip(shipId)
-        
+
         self.selectionMade()
-    
+
     def b_selectOwnShip(self, shipId, teamSpec = 0):
         if not self.selectionSent:
             self.selectionSent = True
@@ -294,12 +294,12 @@ class DistributedDinghy(DistributedInteractive):
     def d_selectFriendShip(self, friendId):
         self.sendUpdate('selectFriendShip', [
             friendId])
-    
+
     def b_selectBandShip(self, shipId):
         if not self.selectionSent:
             self.selectionSent = True
             self.d_selectBandShip(shipId)
-    
+
     @report(types=['frameCount', 'args'], dConfigParam='want-shipboard-report')
     def d_selectBandShip(self, shipId):
         self.sendUpdate('selectBandShip', [shipId])
@@ -321,7 +321,7 @@ class DistributedDinghy(DistributedInteractive):
     @report(types=['frameCount', 'args'], dConfigParam='want-shipboard-report')
     def d_selectPublicShip(self, shipId):
         self.sendUpdate('selectPublicShip', [shipId])
-    
+
     def selectionMade(self):
         self.requestExit()
 
@@ -330,11 +330,11 @@ class DistributedDinghy(DistributedInteractive):
         camera.wrtReparentTo(self.getParentObj())
         if self.camIval:
             self.camIval.pause()
-        
+
         hpr = VBase3(self.camHpr)
         if hpr[0] - camera.getH() > 180:
             hpr.setX(hpr[0] - 360)
-        
+
         self.camIval = Sequence()
         self.camIval.append(Func(self.shipSelection.show))
         self.camIval.start()
@@ -350,5 +350,3 @@ class DistributedDinghy(DistributedInteractive):
             self.ownShipSelection = None
         else:
             localAvatar.guiMgr.createWarning('Ship was not available')
-
-

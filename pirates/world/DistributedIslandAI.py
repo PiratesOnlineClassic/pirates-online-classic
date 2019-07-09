@@ -7,6 +7,7 @@ from pirates.world import WorldGlobals
 from pirates.world.IslandAreaBuilderAI import IslandAreaBuilderAI
 from pirates.piratesbase import PiratesGlobals
 from pirates.treasuremap.DistributedTreasureMapInstanceAI import DistributedTreasureMapInstanceAI
+from pirates.world.DistributedShipDeployerAI import DistributedShipDeployerAI
 
 
 class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Teamable):
@@ -21,7 +22,6 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         DistributedGameAreaAI.__init__(self, air)
         Teamable.__init__(self)
 
-
         self.islandTransform = [0, 0, 0, 0]
         self.sphereRadii = [1000, 2000, 4000]
         self.sphereCenter = [0, 0]
@@ -30,15 +30,44 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         self.collisionSpheres = []
         self.feastFireEnabled = False
 
+        self.shipDeployer = None
         self.builder = IslandAreaBuilderAI(self.air, self)
-
-    def announceGenerate(self):
-        DistributedCartesianGridAI.announceGenerate(self)
-        DistributedGameAreaAI.announceGenerate(self)
 
     def generate(self):
         DistributedCartesianGridAI.generate(self)
         DistributedGameAreaAI.generate(self)
+
+        self.accept('HolidayStarted', self.holidayStart)
+        self.accept('HolidayEnded', self.holidayEnded)
+
+        # Process startup holidays
+        for holidayId in self.air.newsManager.holidayList:
+            self.holidayStart(holidayId)
+
+        self.shipDeployer = DistributedShipDeployerAI(self.air)
+        maxRadius = self.sphereRadii[2]
+        minRadius = self.sphereRadii[1]
+        spacing = maxRadius - minRadius
+
+        self.shipDeployer.setMaxRadius(maxRadius)
+        self.shipDeployer.setMinRadius(minRadius)
+        self.shipDeployer.setSpacing(spacing)
+
+        self.generateChildWithRequired(self.shipDeployer, PiratesGlobals.IslandShipDeployerZone)
+
+    def holidayStart(self, holidayId):
+        if self.uniqueId == '1156207188.95dzlu' and holidayId == PiratesGlobals.FOUNDERSFEAST:
+            if self.getFeastFireEnabled():
+                return
+
+            self.b_setFeastFireEnabled(True)
+
+    def holidayEnded(self, holidayId):
+        if self.uniqueId == '1156207188.95dzlu' and holidayId == PiratesGlobals.FOUNDERSFEAST:
+            if not self.getFeastFireEnabled():
+                return
+
+            self.b_setFeastFireEnabled(False)
 
     def setIslandTransform(self, x, y, z, h):
         self.islandTransform = [x, y, z, h]

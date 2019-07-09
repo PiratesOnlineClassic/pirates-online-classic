@@ -12,7 +12,7 @@ from otp.otpgui import OTPDialog
 
 class DistributedTeleportMgr(DistributedObject.DistributedObject):
     notify = directNotify.newCategory('DistributedTeleportMgr')
-    
+
     def __init__(self, cr):
         DistributedObject.DistributedObject.__init__(self, cr)
         self.instanceType = None
@@ -52,7 +52,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             localAvatar.guiMgr.radarGui.showLocation(locationUid)
             base.cr.loadingScreen.showTarget(locationUid)
             base.cr.loadingScreen.showHint(locationUid)
-        
+
         self.requestData = None
 
     @report(types=['deltaStamp'], prefix='------', dConfigParam='want-teleport-report')
@@ -71,10 +71,10 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         currParent = localAvatar.getParentObj()
         if isinstance(currParent, ZoneLOD.ZoneLOD):
             localAvatar.leaveZoneLOD(currParent)
-        
+
         if parent == None:
             parent = self.cr.activeWorld.worldGrid
-        
+
         messenger.send('islandPlayerBarrier', [
             0])
         teleportZone = parent.getZoneFromXYZ(teleportPosHpr[:3])
@@ -86,7 +86,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         currParent = localAvatar.getParentObj()
         if isinstance(currParent, ZoneLOD.ZoneLOD):
             localAvatar.enterZoneLOD(currParent)
-        
+
         parent.processVisibility(None)
         if base.cr._completeEventCount.num > 0:
             self.acceptOnce(base.cr.getAllInterestsCompleteEvent(), localAvatar.b_setGameState, extraArgs = ['TeleportIn'])
@@ -127,10 +127,10 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
     def localTeleportToId(self, locationId, teleportingObj = None, destPos = None, callback = None, objectLocation = None, showLoadingScreen = True):
         if showLoadingScreen:
             self.cr.loadingScreen.show(waitForLocation = True)
-        
+
         if locationId in base.cr.doId2do and base.cr.doId2do[locationId].dclass.getName() == 'DistributedOceanGrid':
             logBlock(1, 'localTeleportToId(%s,%s,%s,%s,%s,%s) to ocean grid\n\n' % (locationId, teleportingObj, destPos, callback, objectLocation, showLoadingScreen) + str(StackTrace()))
-        
+
         self.localTeleportId = locationId
         self.localTeleportingObj = teleportingObj
         self.localTeleportCallback = callback
@@ -157,7 +157,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
                 self.notify.warning('parent %s of destination object not found, teleport failure' % parentId)
         else:
             self.failTeleport(parentId, zoneId)
-    
+
     def failTeleport(self, parentId = None, zoneId = None, message = PLocalizer.TeleportToPlayerFailMessage):
         fallbackAreaId = localAvatar.getReturnLocation()
         if fallbackAreaId != '':
@@ -186,7 +186,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             popupDialogText = message
             if self.popupDialog:
                 self.__cleanupDialog()
-            
+
             self.popupDialog = PDialog.PDialog(text = popupDialogText, style = OTPDialog.Acknowledge, command = self.__cleanupDialog)
 
     @report(types=['deltaStamp'], prefix='------', dConfigParam=['want-teleport-report', 'want-shipboardreport'])
@@ -195,12 +195,12 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         if not teleportToObj:
             self.sendUpdate('requestTargetsLocation', [self.localTeleportId])
             return
-        
+
         curParent = localAvatar.getParentObj()
         parentIsZoneLOD = isinstance(curParent, ZoneLOD.ZoneLOD)
         if parentIsZoneLOD:
             localAvatar.leaveZoneLOD(curParent)
-        
+
         if isinstance(teleportToObj, DistributedShip.DistributedShip):
             if teleportToObj.gameFSM.getCurrentOrNextState() in ('PutAway', 'Sunk', 'Sinking', 'Off'):
                 self.failTeleport(0, 0, PLocalizer.TeleportToGoneShipFailMessage)
@@ -208,17 +208,17 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             elif teleportToObj.gameFSM.getCurrentOrNextState() in ('InBoardingPosition', 'OtherShipBoarded'):
                 self.failTeleport(0, 0, PLocalizer.TeleportToBoardingShipFailMessage)
                 return
-            
+
             teleportToObj.setZoneLevel(3)
+            self.acceptOnce(teleportToObj.getParentObj().uniqueName('visibility'), self._localTeleportToIdDone)
             teleportToObj.registerMainBuiltFunction(localAvatar.placeOnShip, [teleportToObj])
             teleportToObj.registerBuildCompleteFunction(teleportToObj.enableOnDeckInteractions)
-            self.acceptOnce(teleportToObj.getParentObj().uniqueName('visibility'), self._localTeleportToIdDone)
             base.setLocationCode('Ship')
         else:
             self.notify.debug('teleporting obj position is %s' % self.localTeleportingObj.getPos())
             if not self.localTeleportDestPos or self.localTeleportDestPos == (0, 0, 0, 0, 0, 0):
                 self.localTeleportDestPos = teleportToObj.getTeleportDestPosH()
-            
+
             self.localTeleportingObj.setPosHpr(self.localTeleportDestPos[0], self.localTeleportDestPos[1], self.localTeleportDestPos[2], self.localTeleportDestPos[3], 0, 0)
             try:
                 self.localTeleportingObj.reparentTo(teleportToObj)
@@ -236,16 +236,16 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         curParent = localAvatar.getParentObj()
         if isinstance(curParent, ZoneLOD.ZoneLOD):
             localAvatar.enterZoneLOD(curParent)
-        
+
         if self.localTeleportCallback:
             self.localTeleportCallback()
-        
+
         self.localTeleportId = None
         self.localTeleportingObj = None
         self.localTeleportCallback = None
         self.localTeleportDestPos = None
         localAvatar.guiMgr.socialPanel.updateAll()
-    
+
     def disable(self):
         DistributedObject.DistributedObject.disable(self)
         messenger.send('destroyCrewMatchInvite')
@@ -257,7 +257,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         self.ignoreAll()
         if base.cr.teleportMgr == self:
             base.cr.teleportMgr = None
-        
+
         requestData = self.requestData
         self.requestData = None
         if self.teleportQueueProcess:
@@ -276,7 +276,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             'friendAreaDoId': friendAreaDoId,
             'doEffect': doEffect})
         localAvatar.confirmTeleport(self.teleportConfirmation, feedback = True)
-    
+
     def teleportConfirmation(self, confirmed):
         if confirmed:
             requestData = self.requestData
@@ -285,19 +285,19 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             localAvatar.guiMgr.radarGui.showLocation(locationUid)
             base.cr.loadingScreen.showTarget(locationUid)
             base.cr.loadingScreen.showHint(locationUid)
-        
+
         self.requestData = None
 
     @report(types=['deltaStamp', 'args'], prefix='------', dConfigParam=['want-teleport-report'])
     def requestTeleportToAvatar(self, shardId, instanceDoId, avatarId, avatarParentId):
         self.requestTeleport(PiratesGlobals.INSTANCE_MAIN, '', shardId, '', instanceDoId, friendDoId = avatarId, friendAreaDoId = avatarParentId)
-    
+
     def requestTeleportToShip(self, shardId, instanceDoId, shipId):
         self.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, '', shardId, '', instanceDoId, friendDoId = 0, friendAreaDoId = shipId)
 
     @report(types=['deltaStamp'], prefix='------', dConfigParam=['want-teleport-report'])
     def requestTeleportToIsland(self, islandUid):
-        
+
         def teleportConfirmation(confirmed, islandUid = islandUid):
             self.islandTeleportConfirmation(confirmed, islandUid)
 
@@ -321,7 +321,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
     def teleportToIslandResponse(self, instanceDoId, islandDoId):
         if instanceDoId and islandDoId:
             self.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, '', self.cr.distributedDistrict.doId, '', instanceDoId, friendAreaDoId = islandDoId)
-    
+
     @report(types=['deltaStamp', 'args'], dConfigParam=['want-teleport-report'])
     def queryAvatarForTeleport(self, avId):
         self.setTeleportQueryId(avId)
@@ -366,7 +366,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             return None
 
         localAvatar.confirmTeleportTo(confirmed, requesterId, requesterBandMgrId, requesterBandId, requesterGuildId)
-    
+
     @report(types=['deltaStamp', 'args'], dConfigParam=['want-teleport-report'])
     def handleAvatarTeleportResponse(self, avId, available, shardId, instanceDoId, areaDoId):
         if not avId == self.teleportQueryId:
@@ -398,7 +398,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         currInteractive = base.cr.interactionMgr.getCurrentInteractive()
         if currInteractive:
             currInteractive.requestExit()
-        
+
         if self.cr.activeWorld:
             fromInstanceType = self.cr.activeWorld.getType()
         else:
@@ -413,13 +413,13 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             if queue:
                 self.queueInitiateTeleport(instanceType, instanceName, shardId, locationUid, instanceDoId, doneCallback, startedCallback, gameType, friendDoId, friendAreaDoId, doEffect)
                 return
-            
+
             return
-        
+
         self.setAmInTeleport()
         if instanceType == PiratesGlobals.INSTANCE_MAIN and not locationUid:
             locationUid = localAvatar.returnLocation
-        
+
         localAvatar.teleportFriendDoId = friendDoId
         self.doEffect = doEffect
         self.sendUpdate('initiateTeleport', [
@@ -435,7 +435,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         self.doneCallback = doneCallback
         self.startedCallback = startedCallback
         self.teleportInit(instanceType, fromInstanceType, instanceName)
-    
+
     def queueInitiateTeleport(self, instanceType, instanceName, shardId = 0, locationUid = '', instanceDoId = 0, doneCallback = None, startedCallback = None, gameType = -1, friendDoId = 0, friendAreaDoId = 0, doEffect = True):
         teleInfo = [
             instanceType,
@@ -450,30 +450,30 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             friendAreaDoId,
             doEffect]
         self.teleportQueue.append(teleInfo)
-        
+
         def processTeleportQueue(task = None):
             if self.amInTeleport():
                 return Task.again
-            
+
             if not self.teleportQueue:
                 return Task.done
-            
+
             teleportInfo = self.teleportQueue.pop(0)
             self.initiateTeleport(*teleportInfo)
             if self.teleportQueue:
                 return Task.again
-            
+
             return Task.done
 
         self.teleportQueueProcess = taskMgr.doMethodLater(1, processTeleportQueue, 'processTeleportQueue')
-    
+
     def amInTeleport(self):
         return localAvatar.testTeleportFlag(PiratesGlobals.TFInTeleport)
-    
+
     def setAmInTeleport(self):
         localAvatar.b_setTeleportFlag(PiratesGlobals.TFInTeleport)
         localAvatar.b_clearTeleportFlag(PiratesGlobals.TFLookoutJoined)
-    
+
     def clearAmInTeleport(self):
         localAvatar.clearTeleportFlag(PiratesGlobals.TFInInitTeleport)
         localAvatar.b_clearTeleportFlag(PiratesGlobals.TFInTeleport)
@@ -505,15 +505,15 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
     def teleportHasBegun(self, instanceType, fromInstanceType, instanceName, gameType):
         if not self.miniLog:
             self.miniLog = MiniLog('TeleportLog')
-        
+
         s = MiniLogSentry(self.miniLog, 'teleportHasBegun', instanceType, fromInstanceType, instanceName, gameType)
         if self.startedCallback:
             self.startedCallback()
             self.startedCallback = None
-        
+
         if self.oldWorld == None or self.oldWorld.isEmpty():
             self.teleportInit(instanceType, fromInstanceType, instanceName, gameType)
-    
+
     def getRemoveInterestEventName(self):
         return self.uniqueName('teleportRemoveInterest')
 
@@ -526,7 +526,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         self.setAmInTeleport()
         if not base.transitions.fadeOutActive():
             base.transitions.fadeOut()
-        
+
         if self.fromInstanceType == PiratesGlobals.INSTANCE_MAIN:
             self.inInstanceType = PiratesGlobals.INSTANCE_MAIN
         else:
@@ -543,7 +543,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             if parentIsZoneLOD:
                 localAvatar.leaveZoneLOD(curParent)
                 curParent.turnOff()
-            
+
             if self.cr.doId2do.get(tzParent) == None:
                 self.failTeleport(None, None, PLocalizer.TeleportGenericFailMessage)
             else:
@@ -551,7 +551,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
 
         taskMgr.removeTasksMatching(self.uniqueName('fadeDone'))
         taskMgr.doMethodLater(1, fadeDone, self.uniqueName('fadeDone'), extraArgs = [])
-    
+
     def teleportAddInterestTZ(self, instanceName, tzDoId, thDoId, worldGridDoId, tzParent, tzZone):
         s = MiniLogSentry(self.miniLog, 'teleportAddInterestTZ', instanceName, tzDoId, thDoId, worldGridDoId, tzParent, tzZone)
         addEvent = self.getAddInterestEventName()
@@ -615,22 +615,22 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
                 parentId = parents[0]
                 self.notify.warning(('createSpawnInterests: parent %s of parent %s in zone %s ' + 'does not exist locally, aborting teleport') % (parentParentId, parentId, parentParentZone))
                 self.failTeleport(None, None, PLocalizer.TeleportGenericFailMessage)
-    
+
     def initiateCrossShardDeploy(self, shardId = 0, islandUid = '', shipId = 0, doneCallback = None, startedCallback = None, doEffect = True):
         if not islandUid or not shipId:
             return
-        
+
         currInteractive = base.cr.interactionMgr.getCurrentInteractive()
         if currInteractive:
             currInteractive.requestExit()
-        
+
         if self.cr.activeWorld:
             fromInstanceType = self.cr.activeWorld.getType()
         else:
             fromInstanceType = PiratesGlobals.INSTANCE_NONE
         if self.amInTeleport():
             return
-        
+
         self.setAmInTeleport()
         self.doEffect = doEffect
         self.sendUpdate('requestCrossShardDeploy', [
@@ -640,4 +640,3 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
         self.doneCallback = doneCallback
         self.startedCallback = startedCallback
         self.teleportInit(PiratesGlobals.INSTANCE_MAIN, fromInstanceType, 'Main World')
-

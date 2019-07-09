@@ -30,6 +30,7 @@ from pirates.band.DistributedCrewMatchAI import DistributedCrewMatchAI
 from pirates.band.DistributedPirateBandManagerAI import DistributedPirateBandManagerAI
 from pirates.tutorial.PiratesTutorialManagerAI import PiratesTutorialManagerAI
 from pirates.world.WorldGridManagerAI import WorldGridManagerAI
+from pirates.ship.ShipManagerAI import ShipManagerAI
 from pirates.discord.DiscordNotificationsAI import DiscordNotificationsAI
 
 class PiratesAIRepository(PiratesInternalRepository):
@@ -160,6 +161,8 @@ class PiratesAIRepository(PiratesInternalRepository):
 
         self.worldGridManager = WorldGridManagerAI(self)
         self.discordNotifications = DiscordNotificationsAI(self)
+
+        self.shipManager = ShipManagerAI(self)
 
     def createWorlds(self):
         """

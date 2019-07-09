@@ -12,6 +12,8 @@ from direct.task import Task
 from direct.distributed.ClockDelta import *
 from direct.showutil import Rope
 from direct.distributed.CachedDOData import CachedDOData
+from libotp.NametagGroup import NametagGroup
+from libotp import Nametag
 from pirates.movement.DistributedMovingObject import DistributedMovingObject
 from pirates.ship.GameFSMShip import GameFSMShip
 from pirates.distributed.DistributedCharterableObject import DistributedCharterableObject
@@ -959,6 +961,9 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     @report(types=['frameCount', 'deltaStamp', 'args'], dConfigParam=['want-shipboard-report', 'want-shipsink-report'])
     def setGameState(self, stateName, avId, timeStamp):
+        if not stateName:
+            return
+
         if stateName == 'ClientSteering':
             s = MiniLogSentry(self.miniLog, 'setGameState', stateName, avId, timeStamp)
             self.requestGameState(stateName, avId)
@@ -1034,7 +1039,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     def optimizeShip(self):
         if not self.hull or self.optimized:
-            self.notify.warning('ship not in a state for optimizing (may allready be optimized)')
+            self.notify.warning('ship not in a state for optimizing (may already be optimized)')
             return
 
         self.hull[0].cutState()
@@ -1084,7 +1089,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             if entry[0]:
                 entry[0].prop.postFlatten()
 
-        for floor in self.modelCollisions.findAllMatches('**/*floors*').asList():
+        for floor in self.modelCollisions.findAllMatches('**/*floors*'):
             floor.node().setIntoCollideMask(floor.node().getIntoCollideMask() | PiratesGlobals.TargetBitmask)
             floor.setTag('shipId', str(self.doId))
 
@@ -1234,7 +1239,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
         if self.isGenerated() and self.cr.activeWorld and self.cr.activeWorld.getType() == PiratesGlobals.INSTANCE_PVP and self.modelClass >= ShipGlobals.INTERCEPTORL1 and self.modelClass <= ShipGlobals.INTERCEPTORL4:
             mastCollisions = self.findAllMatches('**/*collision_mast*')
-            for currColl in mastCollisions.asList():
+            for currColl in mastCollisions:
                 currColl.unstash()
 
         if self.oldZoom:
@@ -1346,7 +1351,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                 if shipRelX < 0:
                     grappleStr = '**/grapple_left*'
 
-                anchorNode = random.choice(self.locators.findAllMatches(grappleStr).asList())
+                anchorNode = random.choice(self.locators.findAllMatches(grappleStr))
                 anchorPos = anchorNode.getPos(self.root) + anchorOffset
                 targetRelX = self.getX(ship)
                 targetStr = '**/grapple_right_'
@@ -1357,7 +1362,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
                     targetStr += str(targetId)
                     locator = ship.locators.find(targetStr)
                 else:
-                    locator = random.choice(ship.locators.findAllMatches(targetStr + '*').asList())
+                    locator = random.choice(ship.locators.findAllMatches(targetStr + '*'))
                 rope = self.getRope(thickness = 0.5)
                 targetPos = locator.getPos(self.root)
                 sagNode = self.root.attachNewNode('sagNode')
@@ -1470,7 +1475,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.accept(self.exitWorldEvent, self.handleOutOfRange)
             self.enableShipControls()
             self.setupRammingCollisions()
-            collNPs = self.findAllMatches('**/+CollisionNode').asList()
+            collNPs = self.findAllMatches('**/+CollisionNode')
             self.disabledCollisionBits = {}
             for np in collNPs:
                 cMask = np.node().getIntoCollideMask()
@@ -3687,7 +3692,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def getRandomBoardingPos(self):
-        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s').asList()
+        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s')
         if not allBoardingSpots:
             return None
 
@@ -3695,7 +3700,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def getClosestBoardingPos(self):
-        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s').asList()
+        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s')
         if not allBoardingSpots:
             return None
 
@@ -3710,7 +3715,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def getClosestBoardingPosH(self):
-        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s').asList()
+        allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s')
         if not allBoardingSpots:
             return None
 
@@ -4337,6 +4342,3 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def clearedFlagship(self):
         if self.isInCrew(localAvatar.doId):
             localAvatar.b_clearTeleportFlag(PiratesGlobals.TFFlagshipBattle)
-
-
-

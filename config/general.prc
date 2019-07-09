@@ -19,7 +19,7 @@ audio-library-name p3fmod_audio
 audio-output-rate 44100
 
 # Models:
-want-disk-cache #t
+want-disk-cache #f
 default-model-extension .bam
 
 # Exclude:
@@ -103,11 +103,12 @@ want-membership #t
 # Islands:
 want-island-barriers #t
 object-load-delay #f
+remove-island-barriers #f
 
 # Motion:
-motionfsm-lag #t
-avatar-physics-freq 2.0
-npc-sidestep #f
+motionfsm-lag #f
+avatar-physics-freq 60.0
+npc-sidestep #t
 
 # Smoothing:
 smooth-lag 1
@@ -125,9 +126,6 @@ want-discord-rich-presence #t
 discord-want-elapsed #t
 discord-development-message #f
 allow-teleport-from-discord #f
-
-# Alpha:
-want-alpha-blockers #f
 
 # Quests:
 disable-blockers #f
@@ -193,7 +191,7 @@ want-privateering 1
 want-infamy 0
 
 # Options:
-ocean-visibility 1
+ocean-visibility #t
 
 # Other:
 test-saint-patricks-day #f

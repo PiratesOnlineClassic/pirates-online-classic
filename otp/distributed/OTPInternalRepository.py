@@ -83,6 +83,13 @@ class OTPInternalRepository(AstronInternalRepository):
         dg.addBool(sendInterestDone)
         self.send(dg)
 
+    def sendSetObjectLocation(self, doId, parentId, zoneId):
+        dg = PyDatagram()
+        dg.addServerHeader(doId, self.ourChannel, STATESERVER_OBJECT_SET_LOCATION)
+        dg.addUint32(parentId)
+        dg.addUint32(zoneId)
+        self.send(dg)
+
     def _isValidPlayerLocation(self, parentId, zoneId):
         return True
 
@@ -107,13 +114,6 @@ class OTPInternalRepository(AstronInternalRepository):
         dg.addUint16(reason)
         dg.addString(message)
         self.send(dg)
-
-    def handleDatagram(self, di):
-        msgType = self.getMsgType()
-        if msgType == CLIENTAGENT_DONE_INTEREST_RESP:
-            pass
-        else:
-            AstronInternalRepository.handleDatagram(self, di)
 
     def logException(self, e):
         pass

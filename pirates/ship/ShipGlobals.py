@@ -376,7 +376,7 @@ def getCabinType(shipClass):
     cabinId = __baseShipConfigs[shipClass]['setCabinType']
     if cabinId:
         return _cabinToType[cabinId]
-    
+
     return -1
 
 
@@ -410,19 +410,19 @@ def getMastInfo(shipClass):
     mastA = shipInfo['setAftmastConfig']
     if mast1 > 0:
         mastInfo[0] = __mastClassification[mast1][2]
-    
+
     if mast2 > 0:
         mastInfo[1] = __mastClassification[mast2][2]
-    
+
     if mast3 > 0:
         mastInfo[2] = __mastClassification[mast3][2]
-    
+
     if mastF > 0:
         mastInfo[3] = 1
-    
+
     if mastA > 0:
         mastInfo[4] = 1
-    
+
     return mastInfo
 
 
@@ -1734,7 +1734,7 @@ def getShipExp(level):
     modifiers = __shipLevelStatMultiplier.get(level)
     if modifiers:
         return modifiers[2]
-    
+
     return modifiers
 
 
@@ -6581,7 +6581,7 @@ def getModelClass(shipClass):
     shipData = getBaseShipConfig(shipClass)
     if shipData:
         return shipData['setModelClass']
-    
+
     return 0
 
 
@@ -6594,19 +6594,19 @@ def getShipConfig(shipClass):
     shipData = getBaseShipConfig(shipClass)
     if shipData is None:
         return None
-    
+
     newData = {}
     for i in range(len(__shipAttributes)):
         if shipData.has_key(__shipAttributes[i]):
             newData[__shipDNAdata[i]] = shipData[__shipAttributes[i]]
-    
+
     partStats = getHullStats(shipClass)
     newData['setMaxHp'] = partStats['maxHp']
     newData['setHp'] = partStats['maxHp']
     newData['setMaxCrew'] = partStats['maxCrew']
     for i in newData:
         newData[i] = [newData[i]]
-    
+
     return newData
 
 
@@ -6616,7 +6616,7 @@ def getHullConfig(shipClass):
     for i in range(len(__hullAttributes)):
         if shipData.has_key(__hullAttributes[i]):
             newData[__hullDNAdata[i]] = shipData[__hullAttributes[i]]
-    
+
     partStats = getHullStats(shipClass)
     newData['setMaxArrayHp'] = partStats['maxArrayHp']
     newData['setArrayHp'] = partStats['maxArrayHp']
@@ -6626,7 +6626,7 @@ def getHullConfig(shipClass):
     for i in newData:
         newData[i] = [
             newData[i]]
-    
+
     return newData
 
 
@@ -6636,7 +6636,7 @@ def getCabinConfig(shipClass):
     for i in range(len(__cabinAttributes)):
         if shipData.has_key(__cabinAttributes[i]):
             newData[__cabinDNAdata[i]] = shipData[__cabinAttributes[i]]
-    
+
     partStats = getCabinStats(newData['setCabinType'])
     newData['setMaxHp'] = partStats['maxHp']
     newData['setHp'] = partStats['maxHp']
@@ -6644,7 +6644,7 @@ def getCabinConfig(shipClass):
     for i in newData:
         newData[i] = [
             newData[i]]
-    
+
     return newData
 
 
@@ -6655,7 +6655,7 @@ def getMastConfig(shipClass, index):
     for i in range(len(mastAttrib)):
         if shipData.has_key(mastAttrib[i]):
             newData[__mastDNAdata[i]] = shipData[mastAttrib[i]]
-    
+
     newData['setPosIndex'] = index
     partStats = getMastStats(newData['setMastType'])
     newData['setMaxArrayHp'] = partStats['maxArrayHp']
@@ -6663,7 +6663,7 @@ def getMastConfig(shipClass, index):
     for i in newData:
         newData[i] = [
             newData[i]]
-    
+
     return newData
 
 
@@ -6677,7 +6677,7 @@ def getSailConfig(shipClass, mastIndex, sailIndex):
                 newData[__sailDNAdata[i]] = shipData[sailAttrib[i]][sailIndex]
             else:
                 newData[__sailDNAdata[i]] = shipData[sailAttrib[i]]
-    
+
     newData['setMastPosIndex'] = mastIndex
     newData['setPosIndex'] = sailIndex
     partStats = getSailStats(newData['setSailType'])
@@ -6688,7 +6688,7 @@ def getSailConfig(shipClass, mastIndex, sailIndex):
     for i in newData:
         newData[i] = [
             newData[i]]
-    
+
     return newData
 
 
@@ -6698,14 +6698,14 @@ def getProwConfig(shipClass):
     for i in range(len(__prowAttributes)):
         if shipData.has_key(__prowAttributes[i]):
             newData[__prowDNAdata[i]] = shipData[__prowAttributes[i]]
-    
+
     partStats = getProwStats(newData['setProwType'])
     newData['setMaxHp'] = partStats['maxHp']
     newData['setHp'] = partStats['maxHp']
     for i in newData:
         newData[i] = [
             newData[i]]
-    
+
     return newData
 
 
@@ -6715,14 +6715,14 @@ def getRamConfig(shipClass):
     for i in range(len(__ramAttributes)):
         if shipData.has_key(__ramAttributes[i]):
             newData[__prowDNAdata[i]] = shipData[__ramAttributes[i]]
-    
+
     partStats = getProwStats(newData['setProwType'])
     newData['setMaxHp'] = partStats['maxHp']
     newData['setHp'] = partStats['maxHp']
     for i in newData:
         newData[i] = [
             newData[i]]
-    
+
     return newData
 
 
@@ -6739,7 +6739,7 @@ def getDecorConfig(shipClass, placement, decorIndex):
                 newData[__decorDNAdata[i]] = shipData[decorAttrib[i]][decorIndex]
             else:
                 newData[__decorDNAdata[i]] = shipData[decorAttrib[i]]
-    
+
     newData['setPosIndex'] = decorIndex
     partStats = getDecorStats(newData['setDecorType'])
     newData['setMaxHp'] = partStats['maxHp']
@@ -6747,7 +6747,7 @@ def getDecorConfig(shipClass, placement, decorIndex):
     for i in newData:
         newData[i] = [
             newData[i]]
-    
+
     return newData
 
 
@@ -6783,11 +6783,11 @@ def calcRepairCost(maxHp, Hp, maxSp, Sp, modelClass):
     totalCost += (maxHp - Hp) + (maxSp - Sp) / 2
     if Hp <= 0:
         totalCost = totalCost * SUNK_REPAIR_COST_MULTIPLIER
-    
+
     mult = getRepairCostMult(modelClass)
     if mult:
         totalCost *= mult
-    
+
     totalCost = totalCost / 100.0
     return int(math.ceil(totalCost))
 
@@ -6989,7 +6989,7 @@ def preprocessHull(name):
 
         panel.reparentTo(geom)
         panel.stash()
-    
+
     for mn in geom.findAllMatches('**/+ModelNode'):
         if mn.getNumChildren() < 2 and mn.getNumChildren() > 0:
             if not mn.find('+GeomNode').isEmpty():
@@ -7002,14 +7002,14 @@ def preprocessHull(name):
     geom.getChild(0).reparentTo(geomStatic)
     for panel in allPanels:
         panel.unstash()
-    
+
     highGeom = geom.copyTo(hidden)
     highGeom.detachNode()
     highPanels = highGeom.findAllMatches('**/panel_High_*')
     flashPanelsHigh = []
     for panel in highPanels:
         panel.reparentTo(highGeom)
-    
+
     medGeom = geom.copyTo(hidden)
     medGeom.detachNode()
     medPanels = medGeom.findAllMatches('**/panel_High_*')
@@ -7020,7 +7020,7 @@ def preprocessHull(name):
         ps.setTexcoordName('uvHole')
         psnp = medGeom.attachNewNode(ps)
         panel.reparentTo(psnp)
-    
+
     lowGeom = geom.copyTo(hidden)
     lowGeom.detachNode()
     geomStatic.copyTo(lowGeom)
@@ -7049,7 +7049,7 @@ def preprocessHullMed(name):
 
         panel.reparentTo(geom)
         panel.stash()
-    
+
     for mn in geom.findAllMatches('**/+ModelNode'):
         if mn.getNumChildren() < 2 and mn.getNumChildren() > 0:
             if not mn.find('+GeomNode').isEmpty():
@@ -7062,7 +7062,7 @@ def preprocessHullMed(name):
     geom.getChild(0).reparentTo(geomStatic)
     for panel in allPanels:
         panel.unstash()
-    
+
     mediumGeom = geom.copyTo(hidden)
     mediumGeom.detachNode()
     medPanels = mediumGeom.findAllMatches('**/panel_High_*')
@@ -7073,7 +7073,7 @@ def preprocessHullMed(name):
         ps.setTexcoordName('uvHole')
         psnp = mediumGeom.attachNewNode(ps)
         panel.reparentTo(psnp)
-    
+
     shipGeoms['models/shipparts/%s-geometry_Medium' % name] = [
         mediumGeom,
         geomStatic]
@@ -7155,7 +7155,7 @@ def preprocessPhase5Ships(task = 0):
     preprocessHullLow('skeletonInterceptorL3', isSkelShip = True)
     for i in xrange(5):
         preprocessMast('models/char/mainmastA_tri_ghost', 2, i)
-    
+
     return Task.done
 
 
@@ -7192,7 +7192,7 @@ def preprocessBroadside(name):
     anims = {}
     for anim in BroadsideAnimDict:
         anims[anim[0]] = name + anim[1]
-    
+
     cannon = Actor.Actor()
     cannon.setLODNode()
     cannon.addLOD('hi', 100, 0)
@@ -7251,7 +7251,7 @@ def preprocessMast(name, maxHeight, index):
     anims = {}
     for animName in animNames:
         anims[animName] = '%s_%s_new' % (name, animName)
-    
+
     anims['Idle'] = '%s_idle_new' % name
     anims['Hidden'] = '%s_hidden_new' % name
     mast.loadModel('%s_h' % name, 'modelRoot', 'high')
@@ -7283,7 +7283,7 @@ def preprocessMast(name, maxHeight, index):
             excludedJoint = []
         mast.makeSubpart('mast_%d_%d' % (j, index), [
             'def_mast_' + str(j)], excludedJoint)
-    
+
     mast.setSubpartsComplete(True)
     mast.findAllMatches('**/+ModelNode').detach()
     locators = loader.loadModel('%s_zero_locators' % name)
@@ -7296,7 +7296,7 @@ def preprocessMast(name, maxHeight, index):
         height = maxHeight - i
         if height < 3:
             mast.freezeJoint('mast_%d_%d' % (height, index), 'def_mast_%s' % height, scale = Vec3(0.001, 0.001, 0.001))
-        
+
         newMast = Actor.Actor()
         newMast.copyActor(mast, 1)
         shipGeoms['%s_%s_%s' % (name, height, index)] = [
@@ -7323,7 +7323,7 @@ def preprocessMasts():
         preprocessMast('models/char/mainmastB_ghost', 4, i)
         preprocessMast('models/char/aftmastA_ghost', 2, i)
         preprocessMast('models/char/foremastA_ghost', 1, i)
-    
+
     preprocessRigging('models/char/interceptorL1-rigging', [
         0])
     preprocessRigging('models/char/interceptorL2-rigging', [
@@ -7377,7 +7377,7 @@ def getActor(filename):
 
 
 def getMast(filename):
-    
+
     try:
         (mast, locators) = shipGeoms.get(filename)
     except:
@@ -7829,4 +7829,3 @@ def getShipBreakMast(shipClass):
         return hasMast[1]
     else:
         return -1
-

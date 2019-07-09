@@ -5,7 +5,6 @@ from libpirates import SeaPatchNode
 class WaterShadow(NodePath):
 
     def __init__(self, name, shadow_model, parent, use_water_bin = True, bin_number = 7):
-        self.name = name
         self.use_water_bin = use_water_bin
         self.bin_number = bin_number
         self.shadow_model = shadow_model
@@ -19,6 +18,7 @@ class WaterShadow(NodePath):
             shadow_spn.setWantNormal(0)
             shadow_spn.setWantReflect(0)
             NodePath.__init__(self, shadow_spn)
+            self.name = name
             self.shadow_model.reparentTo(self)
             shadow_spn.collectGeometry()
             if self.use_water_bin:

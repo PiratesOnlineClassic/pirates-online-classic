@@ -55,6 +55,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.tempDoubleXPReward = 0
         self.toonUpTask = None
         self.constructedShipDoId = 0
+        self.activeShipId = 0
+        self.crewShipId = 0
         self.questRewardFlags = 0
 
     def announceGenerate(self):
@@ -118,8 +120,6 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                         self.b_setReturnLocation(self.currentIsland)
 
                 self.b_setCurrentIsland(parentObj.getUniqueId())
-
-            self.air.worldGridManager.handleLocationChanged(parentObj, self, zoneId)
 
     def getInventory(self):
         return self.air.inventoryManager.getInventory(self.doId)
@@ -671,6 +671,32 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             taskMgr.remove(self.toonUpTask)
             self.toonUpTask = None
 
+    def setActiveShipId(self, activeShipId):
+        self.activeShipId = activeShipId
+
+    def d_setActiveShipId(self, activeShipId):
+        self.sendUpdate('setActiveShipId', [activeShipId])
+
+    def b_setActiveShipId(self, activeShipId):
+        self.setActiveShipId(activeShipId)
+        self.d_setActiveShipId(activeShipId)
+
+    def getActiveShipId(self):
+        return self.activeShipId
+
+    def setCrewShipId(self, crewShipId):
+        self.crewShipId = crewShipId
+
+    def d_setCrewShipId(self, crewShipId):
+        self.sendUpdate('setCrewShipId', [crewShipId])
+
+    def b_setCrewShipId(self, crewShipId):
+        self.setCrewShipId(crewShipId)
+        self.d_setCrewShipId(crewShipId)
+
+    def getCrewShipId(self):
+        return self.crewShipId
+
     def setConstructedShipDoId(self, constructedShipDoId):
         self.constructedShipDoId = constructedShipDoId
 
@@ -902,7 +928,7 @@ def access(access=-1):
 
         spellbook.getInvoker().b_setAccess(access)
         return 'Access level changed: %d' % access
-    else:    
+    else:
         access = spellbook.getInvoker().getAccess()
         if access == Freebooter.NONE:
             msg = 'Unpaid'

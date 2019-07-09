@@ -20,6 +20,17 @@ class PiratesInternalRepository(OTPInternalRepository):
 
         self._registerNetMessages()
 
+    def handleDatagram(self, di):
+        msgType = self.getMsgType()
+        if msgType == CLIENTAGENT_DONE_INTEREST_RESP:
+            channel = di.getUint64()
+            context = di.getUint16()
+
+            avatarId = channel & 0xffffffff
+            self.worldGridManager.handleInterestContextDone(avatarId, context)
+        else:
+            OTPInternalRepository.handleDatagram(self, di)
+
     def handleConnected(self):
         OTPInternalRepository.handleConnected(self)
 
@@ -31,11 +42,23 @@ class PiratesInternalRepository(OTPInternalRepository):
         for netMessage in PiratesMsgTypes.netMessages:
             self._registerInternalNetMessage(netMessage)
 
+        # DistributedShipLoader
+        self._registerInternalNetMessage('createShip')
+        self._registerInternalNetMessage('createShipResponse')
+
+        self._registerInternalNetMessage('activateShip')
+        self._registerInternalNetMessage('activateShipResponse')
+
     def logPotentialHacker(self, message, kickChannel=False, **kwargs):
         self.notify.warning(message)
 
-        avatarId = self.getAvatarIdFromSender() or 0
-        accountId = self.getAccountIdFromSender() or 0
+        accountId = self.getAccountIdFromSender()
+        if not accountId:
+            return
+
+        avatarId = self.getAvatarIdFromSender()
+        if not avatarId:
+            return
 
         # Log to event logger
         self.writeServerEvent('suspicious-event',
@@ -46,8 +69,8 @@ class PiratesInternalRepository(OTPInternalRepository):
 
         # Log message to Discord for GameMasters
         self.discordNotifications.reportServerHacker(
-            message=message, 
-            avatarId=avatarId, 
+            message=message,
+            avatarId=avatarId,
             accountId=accountId)
 
         if kickChannel:
@@ -71,8 +94,13 @@ class PiratesInternalRepository(OTPInternalRepository):
     def logException(self, e):
         trace = traceback.format_exc()
 
-        avatarId = self.getAvatarIdFromSender() or 0
-        accountId = self.getAccountIdFromSender() or 0
+        accountId = self.getAccountIdFromSender()
+        if not accountId:
+            return
+
+        avatarId = self.getAvatarIdFromSender()
+        if not avatarId:
+            return
 
         senderName = self.getServerName()
         self.centralLogger.reportException(senderName, trace, False)

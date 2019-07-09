@@ -122,7 +122,7 @@ class PirateInventoryAI(DistributedInventoryAI):
         avatar.giveCardMessage(cardId)
         self.b_setStackQuantity(cardId, amount)
 
-    def setShipList(self, shipList):
+    def setShipDoIdList(self, shipList):
         return self.b_setDoIdListCategory(InventoryCategory.SHIPS, shipList)
 
     def setQuestList(self, questList):
@@ -140,8 +140,8 @@ class PirateInventoryAI(DistributedInventoryAI):
         self.air.questMgr.activateQuests(avatar)
 
         # populate the avatar's ship doId list
-        #shipDoIdList = self.getShipDoIdList()
-        #for shipId in shipDoIdList:
-        #    self.air.shipLoader.activateShip(avatar, shipId)
+        shipDoIdList = self.getShipDoIdList()
+        for shipId in shipDoIdList:
+            self.air.shipLoader.activateShip(avatar, shipId)
 
         DistributedInventoryAI.populateInventory(self)

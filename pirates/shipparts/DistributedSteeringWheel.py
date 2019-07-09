@@ -10,7 +10,7 @@ from direct.showbase.PythonUtil import report, quickProfile
 
 class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, DistributedShippart.DistributedShippart):
     notify = directNotify.newCategory('DistributedSteeringWheel')
-    
+
     def __init__(self, cr):
         NodePath.__init__(self, 'steeringWheel')
         DistributedInteractive.DistributedInteractive.__init__(self, cr)
@@ -28,7 +28,7 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
         DistributedShippart.DistributedShippart.announceGenerate(self)
         if self.proximityCollisionNodePath:
             self.proximityCollisionNodePath.reparentTo(self.prop.propCollisions)
-        
+
         locator = self.ship.locators.find('**/location_wheel;+s')
         if not locator.isEmpty():
             if self.ship.shipClass == ShipGlobals.DINGHY:
@@ -58,15 +58,15 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
         self.notify.debug('Disable ' + str(self.doId))
         DistributedInteractive.DistributedInteractive.disable(self)
         DistributedShippart.DistributedShippart.disable(self)
-    
+
     def delete(self):
         self.notify.debug('Delete ' + str(self.doId))
         if self.ship.wheel[1]:
             if self.ship.steeringAvId == base.localAvatar.doId:
                 self.ship.clientSteeringEnd()
-            
+
             self.ship.wheel[1] = None
-        
+
         del self.ship
         del self.dna
         DistributedInteractive.DistributedInteractive.delete(self)
@@ -75,10 +75,10 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
     def setupParent(self, parent):
         if not self.prop:
             return
-        
+
         if not self.prop.propCollisions:
             return
-    
+
     def requestInteraction(self, avId, interactType = 0):
         av = base.cr.doId2do.get(avId)
         if self.isInteractionAllowed(av):
@@ -94,7 +94,7 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
     def rejectInteraction(self):
         base.localAvatar.motionFSM.on()
         DistributedInteractive.DistributedInteractive.rejectInteraction(self)
-    
+
     def requestExit(self):
         DistributedInteractive.DistributedInteractive.requestExit(self)
         if base.localAvatar:
@@ -155,7 +155,7 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
         self.prop.propCollisions.setPos(self.locator.getPos(self.ship.root))
         self.prop.propCollisions.setHpr(self.locator.getHpr(self.ship.root))
         self.prop.propCollisions.setScale(self.locator.getScale(self.ship.root))
-    
+
     def setUserId(self, avId):
         DistributedInteractive.DistributedInteractive.setUserId(self, avId)
         self.ship.setWheelInUse(self.userId != 0)
@@ -176,4 +176,3 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
         if not allow and forceOff:
             if self.ship.steeringAvId == base.localAvatar.doId:
                 self.requestExit()
-

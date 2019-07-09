@@ -9,6 +9,13 @@ model-path ../resources/phase_3
 model-path ../resources/phase_4
 model-path ../resources/phase_5
 
+want-cache #f
+want-disk-cache #f
+state-cache #f
+transform-cache #t
+model-cache-textures #f
+cache-quest-step #t
+
 # Npc:
 want-townfolk #t
 want-enemies #t
@@ -20,9 +27,6 @@ want-dev-hotkeys #f
 
 # Physics:
 want-avatar-physics-indicator #f
-
-# Alpha:
-want-alpha-blockers #f
 
 # Tutorial:
 skip-tutorial #t
