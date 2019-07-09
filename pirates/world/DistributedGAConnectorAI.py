@@ -1,5 +1,6 @@
 from direct.distributed.DistributedNodeAI import DistributedNodeAI
 from direct.directnotify import DirectNotifyGlobal
+
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 
@@ -84,6 +85,9 @@ class DistributedGAConnectorAI(DistributedNodeAI):
 
         area = self.air.doId2do.get(areaDoId)
         if not area:
+            self.notify.warning('Cannot handle request private area for avatar: %d, '
+                'unknown area with doId: %d!' % (avatar.doId, areaDoId))
+
             return
 
         if not isinstance(area, DistributedGameAreaAI):
@@ -96,5 +100,4 @@ class DistributedGAConnectorAI(DistributedNodeAI):
         if not isinstance(areaWorld, DistributedInstanceBaseAI):
             return
 
-        self.sendUpdateToAvatarId(avatar.doId, 'setPrivateArea', [areaWorld.doId,
-            area.zoneId, area.doId, True])
+        self.sendUpdateToAvatarId(avatar.doId, 'setPrivateArea', [areaWorld.doId, area.zoneId, area.doId, True])
