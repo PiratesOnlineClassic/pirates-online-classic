@@ -31,7 +31,7 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
             newObj = self.createConnectorLocatorNode(parent, parentUid, objKey, objectData)
         elif objType == 'Jail Cell Door' and self.wantJailCellDoors:
             newObj = self.createCellDoor(parent, parentUid, objKey, objectData)
-        elif objType == 'Parlor Game' and self.wantParlorGames and not config.GetBool('want-alpha-blockers', False):
+        elif objType == 'Parlor Game' and self.wantParlorGames:
             newObj = self.createParlorTable(objectData, parent, parentUid, objKey)
         else:
             newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid, objKey,

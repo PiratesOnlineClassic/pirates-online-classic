@@ -21,9 +21,6 @@ want-dev-hotkeys #f
 # Physics:
 want-avatar-physics-indicator #f
 
-# Alpha:
-want-alpha-blockers #f
-
 # Tutorial:
 skip-tutorial #t
 force-tutorial #f
