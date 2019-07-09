@@ -11,7 +11,7 @@ from pirates.piratesbase import PLocalizer
 
 class DistributedGAConnector(DistributedNode.DistributedNode):
     notify = directNotify.newCategory('DistributedGAConnector')
-    
+
     def __init__(self, cr, name = 'DistributedGAConnector'):
         DistributedNode.DistributedNode.__init__(self, cr)
         NodePath.__init__(self, name)
@@ -44,7 +44,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         self.pendingAreaUnload = False
         self.pendingArea = None
         self.fakeZoneId = None
-    
+
     def announceGenerate(self):
         self.notify.debug('%s announceGenerate' % self.doId)
         DistributedNode.DistributedNode.announceGenerate(self)
@@ -67,13 +67,13 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
     def setUniqueId(self, uid):
         if self.uniqueId != '':
             self.cr.uidMgr.removeUid(self.uniqueId)
-        
+
         self.uniqueId = uid
         self.cr.uidMgr.addUid(self.uniqueId, self.getDoId())
-    
+
     def getUniqueId(self):
         return self.uniqueId
-    
+
     def reparentConnector(self):
         side0 = self.getAreaObject(0)
         side1 = self.getAreaObject(1)
@@ -82,9 +82,9 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
                 self.reparentConnectorToArea(side1)
             elif side1.isStashed() and not side0.isStashed():
                 self.reparentConnectorToArea(side0)
-            
+
             return
-        
+
         if side0:
             self.notify.debug('reparentConnector to side 0')
             self.reparentConnectorToArea(side0)
@@ -96,16 +96,16 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         if self.pendingArea:
             self.cr.relatedObjectMgr.abortRequest(self.pendingArea)
             self.pendingArea = None
-        
+
         self.notify.debug('delete %s' % self.doId)
         DistributedNode.DistributedNode.delete(self)
         self.stopCustomEffects()
         if self.fakeZoneId != None:
             for node in self.GridLOD.values():
                 node.cleanup()
-            
+
             del self.GridLOD
-        
+
         self.removeNode()
         self.__loadedArea = None
         self.visContext = None
@@ -113,7 +113,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         del self.interior
         del self.areaLookupDict
         del self.fakeZoneId
-    
+
     def setModelPath(self, modelPath):
         self.notify.debug('setModelPath %s' % modelPath)
         self.modelPath = modelPath
@@ -132,23 +132,23 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         pierModel = loader.loadModelCopy(modelBaseName + '_pier', loaderOptions)
         if pierModel:
             pierModel.getChild(0).reparentTo(self.geom)
-        
+
         vegeWallModel = loader.loadModelCopy(modelBaseName + '_nat_wall', loaderOptions)
         if vegeWallModel:
             vegeWallModel.getChild(0).reparentTo(self.geom)
-        
+
         vegModel = loader.loadModelCopy(modelBaseName + '_veg', loaderOptions)
         if vegModel:
             vegModel.getChild(0).reparentTo(self.geom)
-        
+
         rockModel = loader.loadModelCopy(modelBaseName + '_rocks', loaderOptions)
         if rockModel:
             rockModel.getChild(0).reparentTo(self.geom)
-        
+
         logModel = loader.loadModelCopy(modelBaseName + '_logs', loaderOptions)
         if logModel:
             logModel.getChild(0).reparentTo(self.geom)
-        
+
         miscModel = loader.loadModelCopy(modelBaseName + '_misc', loaderOptions)
         if miscModel:
             miscModel.getChild(0).reparentTo(self.geom)
@@ -158,7 +158,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
             self.loadModelParts()
             self.geom.flattenStrong()
             self.geom.reparentTo(self)
-    
+
     def setLinks(self, isExterior, exteriorUid, links):
         self.notify.debug('%s(%s) setLinks %s %s' % (self, self.doId, isExterior, links))
         self.isExterior = isExterior
@@ -172,7 +172,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
             self.areaWorldZone[aInd] = [
                 areaWorldId,
                 areaWorldZone]
-        
+
         self.reparentConnector()
         self.__connectorLoaded = 1
         messenger.send('tunnelSetLinks', [self])
@@ -198,7 +198,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         areaLookupDict = self.areaLookupDict[index]
         area = areaLookupDict.get(base.cr.uidMgr.getDoId(areaUid))
         return area
-    
+
     def setupConnectorNodes(self):
         for locator in self.connectorNodes:
             locatorNode = self.find('**/' + locator)
@@ -211,7 +211,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
     def getConnectorNodePosHpr(self, index):
         if index < len(self.connectorNodePosHpr):
             return self.connectorNodePosHpr[index]
-        
+
         return (Point3(0), Vec3(0))
 
     def setupEntranceNodes(self):
@@ -224,7 +224,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
     def getEntranceNode(self, index):
         if index < len(self.entranceNodes):
             return self.entranceNodes[index]
-    
+
     def setupCollisions(self):
         pass
 
@@ -268,7 +268,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
     def loadArea(self, areaIndex, showLoadingScreen = False):
         if showLoadingScreen:
             base.cr.loadingScreen.show(waitForLocation = True)
-        
+
         locationUid = self.areaUid[areaIndex]
         base.cr.loadingScreen.showTarget(locationUid)
         base.cr.loadingScreen.showHint(locationUid)
@@ -290,7 +290,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
                 aDoId = base.cr.uidMgr.getDoId(areaUid)
                 if aDoId:
                     area = base.cr.doId2do.get(aDoId)
-                
+
                 if not area and not self.pendingAreaLoad:
                     self.areaIndexLoading = areaIndex
                     self.requestPrivateArea(areaDoId)
@@ -314,7 +314,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         self.notify.debug('setPrivateArea: worldId %s worldZoneId %s' % (worldId, worldZoneId))
         if worldId == 0 and worldZoneId == 0:
             (worldId, worldZoneId) = self.areaWorldZone[areaIndex]
-        
+
         self.setArea(worldId, worldZoneId, areaDoId, autoFadeIn)
 
     @report(types=['frameCount', 'args'], dConfigParam='want-connector-report')
@@ -329,7 +329,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
 
         if self.pendingArea:
             self.cr.relatedObjectMgr.abortRequest(self.pendingArea)
-        
+
         self.pendingArea = self.cr.relatedObjectMgr.requestObjects([
             areaDoId], eachCallback = areaFinishedCallback)
 
@@ -344,7 +344,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         world = area.getParentObj()
         world.addWorldInterest(area)
         messenger.send('loadAreaFinished')
-    
+
     def isExteriorIndex(self, index):
         if index != None:
             areaLocatorName = self.areaNode[index]
@@ -361,7 +361,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         entryLocator = area.find('**/' + entranceNode + '*')
         if entryLocator.isEmpty():
             return
-        
+
         entryLocator.setScale(1)
         entryLocator.setP(0)
         entryLocator.setR(0)
@@ -371,12 +371,12 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         self.setHpr(hpr[0], 0, 0)
         self.wrtReparentTo(area)
         self.setLoadedArea(area)
-    
+
     def startCustomEffects(self):
         if self.envEffects:
             self.envEffects.delete()
             self.envEffects = None
-        
+
         self.envEffects = EnvironmentEffects.EnvironmentEffects(self.geom, self.modelPath)
 
     def stopCustomEffects(self):
@@ -395,5 +395,3 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
 
     def turnOff(self):
         pass
-
-
