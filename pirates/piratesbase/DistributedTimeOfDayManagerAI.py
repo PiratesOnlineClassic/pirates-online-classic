@@ -2,7 +2,9 @@ from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
 from direct.distributed.ClockDelta import globalClockDelta
+
 from pirates.piratesbase import TODGlobals, PiratesGlobals
+
 
 class DistributedTimeOfDayManagerAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTimeOfDayManagerAI')
@@ -43,11 +45,10 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
         self.timeOfDayStateMethodList.append(methodTuple)
         self.notify.debug('Registered TOD method: %s' % uniqueName)
 
-    
-
     def _computeCurrentState(self):
         if self.cycleDuration == 0:
             return (self.startingState, 0.0)
+
         elapsedTime = globalClockDelta.localElapsedTime(self.startingTime, bits=32)
         remTime = elapsedTime % self.cycleDuration
         stateId = self.startingState
@@ -62,7 +63,7 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
     def _waitForNextState(self):
         if self.nextProcessStateChange:
             taskMgr.remove(self.nextProcessStateChange)
-        
+
         if self.cycleDuration == 0:
             return 0
 
@@ -126,6 +127,7 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
             PiratesGlobals.TOD_STARS,
             PiratesGlobals.TOD_STARS2DAWN
         ]
+
         return self.startingState in nightStates
 
     def isDay(self):
