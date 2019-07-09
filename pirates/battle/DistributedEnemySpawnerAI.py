@@ -554,12 +554,6 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
 
         spawnClass = spawnClasses[objType]
         spawnNode = spawnClass(self.air, objType, objectData, parent, objKey)
-
-        # check to see if we want enemies or not since alpha will
-        # not introduce killable enemies yet...
-        if isinstance(spawnNode, EnemySpawnNode) and config.GetBool('want-alpha-blockers', False):
-            return
-
         spawnNode.setup()
         self.__registerSpawnNode(objType, spawnNode)
         return newObj

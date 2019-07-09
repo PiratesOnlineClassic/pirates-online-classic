@@ -127,9 +127,6 @@ discord-want-elapsed #t
 discord-development-message #f
 allow-teleport-from-discord #f
 
-# Alpha:
-want-alpha-blockers #f
-
 # Quests:
 disable-blockers #f
 
