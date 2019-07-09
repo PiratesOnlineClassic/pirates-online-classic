@@ -4,8 +4,6 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.showbase import PythonUtil
 from direct.distributed.DistributedCartesianGridAI import DistributedCartesianGridAI
 
-from pirates.ship.DistributedShipAI import DistributedShipAI
-
 
 class GridInterestHandle(object):
 
