@@ -85,16 +85,19 @@ goto :READCONFIG
     SET GAME_ENVIRONMENT=LIVE
     if %POC_GAMESERVER%==%LOCALHOST_SERVER% (
         set GAME_ENVIRONMENT=DEV
+        set IS_TEST_SERVER=1
     ) else if %POC_GAMESERVER%==%DEVELOPMENT_SERVER% (
         set GAME_ENVIRONMENT=DEV
+        set IS_TEST_SERVER=1
     ) else if %POC_GAMESERVER%==%TEST_SERVER% (
         set GAME_ENVIRONMENT=TEST
+        set IS_TEST_SERVER=1
     ) else if %POC_GAMESERVER%==%PRODUCTION_SERVER% (
         set GAME_ENVIRONMENT=LIVE
+    set IS_TEST_SERVER=0
     )
 
     goto :SETENVIRONEMNT
-
 :SETENVIRONEMNT
     title Pirates Online Classic - Client (Server: %POC_GAMESERVER%) (Environment: %GAME_ENVIRONMENT%) (Trial Ended: %TRIAL_ENDED%)
     goto :PLAYTOKEN
