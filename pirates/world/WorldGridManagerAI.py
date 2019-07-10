@@ -206,7 +206,7 @@ class WorldGridManagerAI(object):
         if not gridInterests:
             return
 
-        for parentId in list(gridInterests):
+        for parentId in dict(gridInterests):
             gridInterestHandler = gridInterests.get(parentId)
             assert(gridInterestHandler is not None)
 
@@ -349,7 +349,7 @@ class WorldGridManagerAI(object):
         if not gridInterests:
             return
 
-        for parentId in list(gridInterests):
+        for parentId in dict(gridInterests):
             parentObj = self.air.doId2do.get(parentId)
             assert(parentObj is not None)
             self.clearAvatarInterest(parentObj, avatar)
