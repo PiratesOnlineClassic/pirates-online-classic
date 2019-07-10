@@ -15,7 +15,7 @@ set GAME_INGAME_MANAGE_ACCT=https://www.piratesclassic.com/account
 
 rem Constants
 SET LOCALHOST_SERVER=127.0.0.1
-SET SETTINGS_FILE=../config/default.env
+SET SETTINGS_FILE=../config/environ/default.env
 
 rem Start launch operation and questioning
 goto :READCONFIG
@@ -82,45 +82,37 @@ goto :READCONFIG
 :ENVIRONMENTTYPE
 
     rem Find default environment
-    SET DEFAULT_ENV=LIVE
+    SET GAME_ENVIRONMENT=LIVE
     if %POC_GAMESERVER%==%LOCALHOST_SERVER% (
-        set DEFAULT_ENV=DEV
+        set GAME_ENVIRONMENT=DEV
     ) else if %POC_GAMESERVER%==%DEVELOPMENT_SERVER% (
-        set DEFAULT_ENV=DEV
+        set GAME_ENVIRONMENT=DEV
     ) else if %POC_GAMESERVER%==%TEST_SERVER% (
-        set DEFAULT_ENV=TEST
+        set GAME_ENVIRONMENT=TEST
     ) else if %POC_GAMESERVER%==%PRODUCTION_SERVER% (
-        set DEFAULT_ENV=LIVE
+        set GAME_ENVIRONMENT=LIVE
     )
 
-    rem Environment input
-    set INPUT=%DEFAULT_ENV%
-    set /P INPUT=Environment (LIVE, QA, TEST, DEV) (Default: %INPUT%): 
-
-    for %%G in (LIVE QA TEST DEV) do (
-        if "%INPUT%"=="%%G" (
-            set GAME_ENVIRONMENT=%INPUT%
-            goto :SETENVIRONEMNT
-        )
-    )
-    goto :INVALIDENVIRONMENT
-
-:INVALIDENVIRONMENT
-    echo %GAME_ENVIRONMENT% is not a valid environment; Default to DEV
-    set GAME_ENVIRONMENT=DEV
     goto :SETENVIRONEMNT
 
 :SETENVIRONEMNT
-    echo Client environment set to: %GAME_ENVIRONMENT%
     title Pirates Online Classic - Client (Server: %POC_GAMESERVER%) (Environment: %GAME_ENVIRONMENT%) (Trial Ended: %TRIAL_ENDED%)
     goto :PLAYTOKEN
 
 :PLAYTOKEN
     rem PlayToken input
     set POC_TOKEN=dev
-    echo Set Account Token (Default: %POC_TOKEN%)
-    set /P POC_TOKEN=Token:
-    
+    if %POC_GAMESERVER%==%LOCALHOST_SERVER% (
+        echo Set Username [Default: %POC_TOKEN%]
+        set /P POC_TOKEN=Username:
+    ) else if %POC_GAMESERVER%==%DEVELOPMENT_SERVER% (
+        echo Set Username [Default: %POC_TOKEN%]
+        set /P POC_TOKEN=Username:
+    ) else (
+        echo Set Account Token [Default: %POC_TOKEN%]
+        set /P POC_TOKEN=Token:
+    )    
+
     goto :FINDPYTHON
 
 :FINDPYTHON
@@ -133,14 +125,13 @@ goto :READCONFIG
 
     rem Verify Panda3D install
     %PYTHON_CMD% -h >nul 2>&1 && (
-        echo Panda3D Python located under command: %PYTHON_CMD%
+        rem Launch client
+        goto :LAUNCH
     ) || (
         echo Failed to locate Panda3D python
         pause
         goto :EOF
     )
-    rem Launch client
-    goto :LAUNCH
 
 :LAUNCH
     echo =============================================
