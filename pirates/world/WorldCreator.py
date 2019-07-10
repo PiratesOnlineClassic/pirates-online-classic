@@ -193,7 +193,7 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
                 node.setPosHprScale(pos, hpr, scale)
                 newObj = node
             
-        if not objParent:
+        if not objParent and (objType == 'Dinghy' or objType == 'Holiday Object'):
             self.notify.warning('No object parent located!')
             return (None, None)
 
