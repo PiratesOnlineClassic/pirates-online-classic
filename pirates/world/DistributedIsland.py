@@ -508,13 +508,19 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             if not meshes.isEmpty():
                 mesh = meshes[0]
                 joint = self.islandShoreWave.findAllMatches('**/uvj_WakeWhiteTide1')[0]
-                mesh.setTexProjector(mesh.findTextureStage('default'), joint, parent)
+                try:
+                    mesh.setTexProjector(mesh.findTextureStage('default'), joint, parent)
+                except:
+                    self.notify.warning('Failed to set wave texture stage')
 
             meshes = self.islandShoreWave.findAllMatches('**/mesh_tide2')
             if not meshes.isEmpty():
                 mesh = meshes[0]
                 joint = self.islandShoreWave.findAllMatches('**/uvj_WakeWhiteTide2')[0]
-                mesh.setTexProjector(mesh.findTextureStage('default'), joint, parent)
+                try:
+                    mesh.setTexProjector(mesh.findTextureStage('default'), joint, parent)
+                except:
+                    self.notify.warning('Failed to set wave texture stage')
 
             self.islandShoreWave.setPlayRate(0.8, 'idle')
             OTPRender.renderReflection(False, self.islandShoreWave, 'p_island_shore', None)

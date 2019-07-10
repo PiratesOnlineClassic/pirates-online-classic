@@ -172,6 +172,10 @@ class ClientAreaBuilderAI(DirectObject):
         from pirates.world.DistributedIslandAI import DistributedIslandAI
         islandWorldData = self.air.worldCreator.getIslandWorldDataByUid(objKey)
 
+        if not islandWorldData:
+            self.notify.warning('Failed to generate island: %s' % objKey)
+            return
+
         (x, y, z) = islandWorldData.get('Pos', (0, 0, 0))
         (h, p, r) = islandWorldData.get('Hpr', (0, 0, 0))
 
