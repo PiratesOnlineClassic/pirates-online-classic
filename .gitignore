@@ -154,3 +154,7 @@ docs/
 
 # Local databases
 local/
+
+# Models
+*.bam
+*.egg
