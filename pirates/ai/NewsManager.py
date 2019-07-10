@@ -72,8 +72,11 @@ class NewsManager(DistributedObject.DistributedObject):
             'minutes': max(timeRemaining[1], 0)
         }
         
-        message = message % formatting
-        chatMessage = chatMessage % formatting
+        if message:
+            message = message % formatting
+        
+        if chatMessage:
+            chatMessage = chatMessage % formatting
         
         if self.inNewsWorld() and not self.inTutorial(level = PiratesGlobals.TUT_GOT_COMPASS):
             if message:
