@@ -139,6 +139,7 @@ nirai/
 
 # Misc
 cf2.txt
+errorcode
 
 # LibOTP
 libotp/
@@ -157,4 +158,4 @@ local/
 
 # Models
 *.bam
-*.egg
+*.eg
