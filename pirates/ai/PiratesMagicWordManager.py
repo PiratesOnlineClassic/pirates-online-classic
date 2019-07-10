@@ -728,3 +728,15 @@ def crewtut():
 
     from pirates.tutorial.CrewTutorial import CrewTutorial
     spellbook.getManager().crewTutorial = CrewTutorial()
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def dumpinstance():
+    """
+    Dumps the current instance object to a BAM file
+    """
+
+    parent = localAvatar.getParent()
+    parent = parent.getParent()
+    parent.writeBamFile('dump.bam')
+
+    return 'Instance Dumped'
