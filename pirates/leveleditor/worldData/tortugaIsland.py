@@ -8109,7 +8109,7 @@ objectStruct = {
                 },
                 '1225133532.62caoconno': {
                     'Type': 'Holiday Object',
-                    'Aggro Radius': '25.0000',
+                    'Aggro Radius': '30',
                     'Holiday': 'FoundersFeast',
                     'Hpr': Point3(0.0, 0.0, 0.0),
                     'Interact Mode': 'GM',

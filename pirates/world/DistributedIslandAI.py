@@ -37,9 +37,6 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         DistributedCartesianGridAI.generate(self)
         DistributedGameAreaAI.generate(self)
 
-        self.accept('HolidayStarted', self.holidayStart)
-        self.accept('HolidayEnded', self.holidayEnded)
-
         # Process startup holidays
         for holidayId in self.air.newsManager.holidayList:
             self.holidayStart(holidayId)
@@ -54,20 +51,6 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         self.shipDeployer.setSpacing(spacing)
 
         self.generateChildWithRequired(self.shipDeployer, PiratesGlobals.IslandShipDeployerZone)
-
-    def holidayStart(self, holidayId):
-        if self.uniqueId == '1156207188.95dzlu' and holidayId == PiratesGlobals.FOUNDERSFEAST:
-            if self.getFeastFireEnabled():
-                return
-
-            self.b_setFeastFireEnabled(True)
-
-    def holidayEnded(self, holidayId):
-        if self.uniqueId == '1156207188.95dzlu' and holidayId == PiratesGlobals.FOUNDERSFEAST:
-            if not self.getFeastFireEnabled():
-                return
-
-            self.b_setFeastFireEnabled(False)
 
     def setIslandTransform(self, x, y, z, h):
         self.islandTransform = [x, y, z, h]

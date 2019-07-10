@@ -370,6 +370,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             self.notify.warning('Unknown holiday prop type: %s' % subType)
             return None
 
+        self.notify.debug('Spawning holiday object: %s' % propCls.__name__)
         prop = propCls(self.air)
         prop.setUniqueId(objKey)
         prop.setPos(objectData.get('GridPos', objectData.get('Pos', (0, 0, 0))))
