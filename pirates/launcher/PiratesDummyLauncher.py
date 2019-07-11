@@ -17,6 +17,9 @@ class PiratesDummyLauncher(DummyLauncherBase, PiratesQuickLauncher):
     def getPlayToken(self):
         return os.environ.get('POC_TOKEN', None)
 
+    def isTestServer(self):
+        return self.getValue('IS_TEST_SERVER', 0)
+
     def getGameServer(self):
         return os.environ.get('POC_GAMESERVER', None)
 

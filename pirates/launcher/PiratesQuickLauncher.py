@@ -288,8 +288,11 @@ class PiratesQuickLauncher(LauncherBase):
         return self.getValue('IS_TEST_SERVER', 0)
 
     def getGameServer(self):
-        return self.getValue('GAME_SERVER', '')
-    
+        return self.getValue('POC_GAMESERVER', '')
+
+    def getPlayToken(self):
+        return os.environ.get('POC_TOKEN', None)
+
     def getLogFileName(self):
         return 'pirates'
     
