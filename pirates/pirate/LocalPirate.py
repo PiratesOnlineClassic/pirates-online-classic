@@ -660,7 +660,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         return self.__turboOn
 
     def toggleMario(self):
-        if __dev__:
+        if __debug__:
             if self.__marioOn:
                 self.__marioOn = 0
                 self.setSwiftness(1.0)
