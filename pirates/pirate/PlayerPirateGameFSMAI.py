@@ -22,6 +22,14 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
 
     def enterDeath(self):
         inventory = self.avatar.getInventory()
+
+        parentObj = self.avatar.getParentObj()
+        interior = parentObj.getJailInterior()
+
+        if not interior:
+            island = self.air.uidMgr.justGetMeMeObject(self.avatar.getReturnLocation())
+            interior = island.getJailInterior()
+
         if not inventory:
             self.notify.warning('Cannot teleport avatar %d, no inventory was found!' %
                 self.avatar.doId)
@@ -34,20 +42,12 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
 
             return
 
-        parentObj = self.avatar.getParentObj()
-        if not parentObj:
-            self.notify.warning('Cannot teleport avatar %d to jail, '
-                'no parent object found!' % self.avatar.doId)
-
-            return
-
         if not isinstance(parentObj, DistributedGameAreaAI):
             self.notify.warning('Cannot teleport avatar %d to jail, '
                 'parent object has invalid type: %r!' % (self.avatar.doId, parentObj))
 
             return
 
-        interior = parentObj.getJailInterior()
         if not interior:
             self.notify.warning('Cannot teleport avatar %d to jail, '
                 'parent object %d has unknown interior object!' % (self.avatar.doId, parentObj.doId))

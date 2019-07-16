@@ -20,10 +20,10 @@ class GridInterestHandler(object):
         self.parentObj = parentObj
         self.avatar = avatar
 
-        self.pendingCallbackContexts = []
+        self.pendingCallbackContexts = set()
         self.pendingCallback = None
 
-        self.interestHandles = []
+        self.interestHandles = set()
         self.oldZoneId = 0
 
     def getInterestHandleFromZoneId(self, zoneId):
@@ -54,7 +54,7 @@ class GridInterestHandler(object):
             return
 
         interestHandle = GridInterestHandle(newZoneId, newZoneId)
-        self.interestHandles.append(interestHandle)
+        self.interestHandles.add(interestHandle)
 
         clientChannel = self.avatar.GetPuppetConnectionChannel(self.avatar.doId)
         self.air.clientAddInterest(clientChannel, interestHandle.context, self.parentObj.doId, interestHandle.zoneId, False)
@@ -102,7 +102,7 @@ class GridInterestHandler(object):
         assert(self.pendingCallback is not None)
         self.pendingCallback()
 
-        self.pendingCallbackContexts = []
+        self.pendingCallbackContexts = set()
         self.pendingCallback = None
 
     def handleInterestContextDone(self, context):
@@ -121,7 +121,7 @@ class GridInterestHandler(object):
         assert(len(contexts) > 0)
         assert(callback is not None)
 
-        self.pendingCallbackContexts = contexts
+        self.pendingCallbackContexts.update(contexts)
         self.pendingCallback = PythonUtil.DelayedFunctor(callback, 'interest-context-callback-%d' % self.avatar.doId, 0.2)
 
     def handleLocationChanged(self, zoneId, callback):
@@ -150,7 +150,7 @@ class GridInterestHandler(object):
 
         newConcentricZones = newZones.difference(previousZones)
         if callback is not None:
-            self._setInterestContextDoneCallback(list(newConcentricZones), callback)
+            self._setInterestContextDoneCallback(newConcentricZones, callback)
 
         for newZoneId in newConcentricZones:
             self.addInterestHandle(newZoneId)
@@ -170,10 +170,10 @@ class GridInterestHandler(object):
         for interestHandle in list(self.interestHandles):
             self.removeInterestHandle(interestHandle)
 
-        self.interestHandles = []
+        self.interestHandles.clear()
 
         self.pendingCallback = None
-        self.pendingCallbackContexts = []
+        self.pendingCallbackContexts.clear()
 
     def destroy(self):
         """
@@ -181,11 +181,11 @@ class GridInterestHandler(object):
         """
 
         self.lastInterestId = 0
-        self.interestHandles = []
+        self.interestHandles.clear()
         self.oldZoneId = 0
 
         self.pendingCallback = None
-        self.pendingCallbackContexts = []
+        self.pendingCallbackContexts.clear()
 
 
 class WorldGridManagerAI(object):

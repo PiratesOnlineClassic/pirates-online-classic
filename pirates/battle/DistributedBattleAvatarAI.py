@@ -185,19 +185,6 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
     def getCurrentAmmo(self):
         return self.currentAmmo
 
-    def setShipId(self, shipId):
-        self.shipId = shipId
-
-    def d_setShipId(self, shipId):
-        self.sendUpdate('setShipId', [shipId])
-
-    def b_setShipId(self, shipId):
-        self.setShipId(shipId)
-        self.d_setShipId(shipId)
-
-    def getShipId(self):
-        return self.shipId
-
     def setMaxHp(self, maxHp):
         self.maxHp = maxHp
 
