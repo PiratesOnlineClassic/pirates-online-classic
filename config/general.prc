@@ -4,8 +4,12 @@ icon-filename phase_3/etc/Pirates_Adds.ico
 win-size 800 600
 fullscreen #f
 
-# Dev:
+# Development:
 want-dev #f
+gl-check-errors #f
+test-saint-patricks-day #f
+test-fourth-of-july #f
+want-enviro-dr #f
 
 # Display:
 load-display pandagl
@@ -15,6 +19,7 @@ aux-display p3tinydisplay
 
 # Audio:
 audio-music-active #t
+low-memory-stream-audio #t
 audio-library-name p3fmod_audio
 audio-output-rate 44100
 
@@ -62,17 +67,41 @@ notify-level-DisplayOptions debug
 notify-level-express error
 notify-timestamp 1
 
-# Buffer:
+# Frame Buffer:
 framebuffer-hardware #t
 framebuffer-software #f
+framebuffer-multisample 1
 framebuffer-alpha 1
 alpha-bits 8
-prefer-parasite-buffer 1
-force-parasite-buffer 1
-hardware-animated-vertices #t
-textures-auto-power-2 #t
 framebuffer-multisample 1
 multisamples 2
+
+# Parasite Buffer:
+prefer-parasite-buffer 1
+force-parasite-buffer 1
+retransform-sprites #t
+
+# Chat:
+chat-history-size 10
+exec-chat #t
+want-chat #t
+want-chat-history #t
+want-emotes 1
+want-sliding-chat #t
+want-whitelist #f
+want-slash-commands #t
+white-list-check-before-send #f
+whitelist-chat-enabled #f
+
+# Compass/Map:
+map-islands-debug #f
+
+# SRGB:
+framebuffer-srgb #f
+
+# Animation:
+anim-blend-type normalized_linear
+hardware-animated-vertices #f
 
 # Performance:
 lock-to-one-cpu #f
@@ -83,18 +112,19 @@ skip-tutorial #f
 force-tutorial #t
 force-tutorial-complete #f
 
-# Seapatch:
+# Water:
 want-seapatch #t
+want-low-end-water #t
 
-# Special Effects:
+# Effects:
 want-special-effects #t
-
-# Make A Pirate:
-want-make-a-pirate #t
-want-new-avatars #t
+want-grass #t
+want-shaders #t
 want-avatar-shadows #t
-want-new-avatar #t
-want-npc-viewer #f
+want-special-effects #t
+want-particles #t
+support-threads #t
+empty-node-path future
 
 # Membership:
 want-membership #t
@@ -112,11 +142,6 @@ npc-sidestep #t
 # Smoothing:
 smooth-lag 1
 smooth-prediction-lag 1
-
-# Analytics:
-analytics-game-key 5de6a7ce0decbe613cf1cd172b319faf
-analytics-secret-key eb6753270d979378bb301d4b82f27a36d1bcc3bb
-want-analytics #t
 
 # Discord:
 discord-client-id 442413702428229632
@@ -142,6 +167,8 @@ async-request-break-on-timeout 0
 clock-mode limited
 clock-frame-rate 120
 paranoid-clock 1
+
+# IME:
 ime-aware 1
 ime-hide 1
 
@@ -150,13 +177,14 @@ collect-tcp 1
 collect-tcp-interval 0.1
 verify-ssl 0
 
-# Lod:
+# LOD:
 default-lod-type fade
 lod-fade-time 2
 make-grid-lod 1
 verify-lods 0
 
 # Texture:
+textures-auto-power-2 #t
 dx-management 0
 dx-texture-management 0
 retransform-sprites 1
@@ -180,6 +208,7 @@ game-phase 1
 want-game-options-hdr 0
 want-game-options-ship-visibility 1
 want-cpu-frequency-warning #f
+disable-pirates-options #f
 
 # Cache:
 model-cache-max-kbytes 262144
@@ -192,7 +221,20 @@ want-infamy 0
 # Options:
 ocean-visibility #t
 
-# Other:
-test-saint-patricks-day #f
-test-fourth-of-july #f
-want-enviro-dr #f
+# GUI
+hide-gui #f
+
+# Make-A-Pirate:
+want-new-avatars #t
+want-npc-viewer #f
+want-marketing-viewer #f
+want-jewelry #t
+want-gen-pics-buttons #f
+want-socks #f
+want-map-flavor-anims #t
+want-map-coats #f
+want-avatar-shadows #t
+want-new-avatar #t
+
+# Shards:
+show-total-population #t
