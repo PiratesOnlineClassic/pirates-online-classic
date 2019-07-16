@@ -98,6 +98,7 @@ goto :READCONFIG
     )
 
     goto :SETENVIRONEMNT
+
 :SETENVIRONEMNT
     title Pirates Online Classic - Client (Server: %POC_GAMESERVER%) (Environment: %GAME_ENVIRONMENT%) (Trial Ended: %TRIAL_ENDED%)
     goto :PLAYTOKEN
@@ -151,7 +152,7 @@ goto :READCONFIG
 
 :RUN
     rem Start the game using the PYTHON_CMD variable
-    %PYTHON_CMD% -m pirates.launcher.StartPiratesLauncher
+    %PYTHON_CMD% -m pirates.piratesbase.PiratesStart
     pause
 
     rem Reload Client

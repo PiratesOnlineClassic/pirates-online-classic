@@ -15,16 +15,13 @@ set GAME_INGAME_MANAGE_ACCT=https://www.piratesclassic.com/account
 
 rem Constants
 SET LOCALHOST_SERVER=127.0.0.1
-SET SETTINGS_FILE=../config/environ/default.env
+SET SETTINGS_FILE=../config/environ/blackbox.env
 
 rem Start launch operation and questioning
 goto :READCONFIG
 
 :READCONFIG
     set CONFIG_FILE=%SETTINGS_FILE%
-    set /P CONFIG_FILE=Environment File (Default: %CONFIG_FILE%): 
-
-    echo Reading environment file: %CONFIG_FILE%
     if exist %CONFIG_FILE% (
         for /F "tokens=*" %%A in (%CONFIG_FILE%) do call SET %%A
         goto :SETUPENVIRONMENT
@@ -50,14 +47,14 @@ goto :READCONFIG
 
 :CHOOSESERVER
     rem Server address input selection
-    echo Choose your server (Default: Localhost)
+    echo Choose your server (Default: Development)
     echo    #1 - Localhost
     echo    #2 - Development
     echo    #3 - Public Test Server
     echo    #4 - Production Server
     echo    #5 - Custom
 
-    set INPUT=1
+    set INPUT=2
     set /P INPUT=Selection: 
 
     set POC_GAMESERVER=%LOCALHOST_SERVER%
@@ -98,6 +95,7 @@ goto :READCONFIG
     )
 
     goto :SETENVIRONEMNT
+
 :SETENVIRONEMNT
     title Pirates Online Classic - Client (Server: %POC_GAMESERVER%) (Environment: %GAME_ENVIRONMENT%) (Trial Ended: %TRIAL_ENDED%)
     goto :PLAYTOKEN
@@ -151,7 +149,7 @@ goto :READCONFIG
 
 :RUN
     rem Start the game using the PYTHON_CMD variable
-    %PYTHON_CMD% -m pirates.launcher.StartPiratesLauncher
+    %PYTHON_CMD% -m pirates.piratesbase.PiratesStart
     pause
 
     rem Reload Client

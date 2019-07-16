@@ -22,9 +22,6 @@ goto :READCONFIG
 
 :READCONFIG
     set CONFIG_FILE=%SETTINGS_FILE%
-    set /P CONFIG_FILE=Environment File (Default: %CONFIG_FILE%): 
-
-    echo Reading environment file: %CONFIG_FILE%
     if exist %CONFIG_FILE% (
         for /F "tokens=*" %%A in (%CONFIG_FILE%) do call SET %%A
         goto :SETUPENVIRONMENT
@@ -94,7 +91,7 @@ goto :READCONFIG
         set IS_TEST_SERVER=1
     ) else if %POC_GAMESERVER%==%PRODUCTION_SERVER% (
         set GAME_ENVIRONMENT=LIVE
-    set IS_TEST_SERVER=0
+        set IS_TEST_SERVER=0
     )
 
     goto :SETENVIRONEMNT
