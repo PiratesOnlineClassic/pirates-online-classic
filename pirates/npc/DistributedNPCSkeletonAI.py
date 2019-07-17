@@ -9,7 +9,3 @@ class DistributedNPCSkeletonAI(DistributedBattleNPCAI):
 
     def __init__(self, air):
         DistributedBattleNPCAI.__init__(self, air)
-
-    def handleClientAggro(self, avatar):
-        DistributedBattleNPCAI.handleClientAggro(self, avatar)
-        self.d_setChat(PLocalizerEnglish.getUndeadAggroPhrase())
