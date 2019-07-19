@@ -22,12 +22,13 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
 
     def enterDeath(self):
         inventory = self.avatar.getInventory()
+        assert(inventory is not None)
 
         parentObj = self.avatar.getParentObj()
         interior = parentObj.getJailInterior()
-
         if not interior:
             island = self.air.uidMgr.justGetMeMeObject(self.avatar.getReturnLocation())
+            assert(island is not None)
             interior = island.getJailInterior()
 
         if not inventory:
