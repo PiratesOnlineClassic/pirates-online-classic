@@ -114,7 +114,6 @@ force-tutorial-complete #f
 
 # Water:
 want-seapatch #t
-want-low-end-water #t
 
 # Effects:
 want-special-effects #t
