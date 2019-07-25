@@ -100,7 +100,7 @@ class GridInterestHandler(object):
 
         assert(len(self.pendingCallbackContexts) == 0)
         assert(self.pendingCallback is not None)
-        self.pendingCallback()
+        self.pendingCallback.finish()
 
         self.pendingCallbackContexts = set()
         self.pendingCallback = None
@@ -122,7 +122,7 @@ class GridInterestHandler(object):
         assert(callback is not None)
 
         self.pendingCallbackContexts.update(contexts)
-        self.pendingCallback = PythonUtil.DelayedFunctor(callback, 'interest-context-callback-%d' % self.avatar.doId, 0.2)
+        self.pendingCallback = PythonUtil.FrameDelayedCall('interest-context-callback-%d' % self.avatar.doId, callback)
 
     def handleLocationChanged(self, zoneId, callback):
         """
