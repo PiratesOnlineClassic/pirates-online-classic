@@ -1,8 +1,9 @@
+import json
+
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 from pirates.uberdog.UberDogGlobals import InventoryType
 
-import json
 
 class ItemTypes:
     STACK = 1
@@ -13,15 +14,13 @@ class ItemTypes:
     JEWELRY = 6
     GOLD = 7
 
+
 class CodeRedemptionUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('CodeRedemptionUD')
 
     def __init__(self, air):
         DistributedObjectGlobalUD.__init__(self, air)
         self.verifyEndpoint = config.GetString('code-redeem-verify-url', 'https://api.piratesclassic.com/code/redeem')
-
-    def announceGenerate(self):
-        DistributedObjectGlobalUD.announceGenerate(self)
 
     def requestCodeVerification(self, code, username, avatar):
         headers = {
@@ -50,15 +49,7 @@ class CodeRedemptionUD(DistributedObjectGlobalUD):
 
     def sendCodeForRedemption(self, code, username):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
-            self.notify.warning('Failed to redeem code for non-existant avatar!')
-            self.air.logPotentialHacker(
-                message='Received sendCodeForRedemption from non-existant avatar',
-                targetAvId=avatar.doId,
-                doId=doId,
-                interactType=interactType,
-                instant=instant)
             return
 
         code = code.lower()
