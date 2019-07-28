@@ -548,9 +548,9 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
                 objType = 'Spawn Node'
 
         # Verify private status of object
-        isPrivate = objectData.get('Private Status', 'All') != 'All'
-        if isPrivate:
-            return
+        #isPrivate = objectData.get('Private Status', 'All') != 'All'
+        #if isPrivate:
+        #    return
 
         spawnClass = spawnClasses[objType]
         spawnNode = spawnClass(self.air, objType, objectData, parent, objKey)
