@@ -119,38 +119,6 @@ class ClientAreaBuilderAI(DirectObject):
 
         return objectData.get('Pos'), NodePath('')
 
-    def getIslandGridSize(self, objKey):
-        if objKey == LocationIds.PORT_ROYAL_ISLAND:
-            gridSize = WorldGlobals.LARGE_ISLAND_GRID_SIZE
-        elif objKey == LocationIds.TORTUGA_ISLAND:
-            gridSize = WorldGlobals.MED_ISLAND_GRID_SIZE
-        elif objKey == LocationIds.DEL_FUEGO_ISLAND:
-            gridSize = WorldGlobals.LARGE_ISLAND_GRID_SIZE
-        elif objKey == LocationIds.ANVIL_ISLAND:
-            gridSize = WorldGlobals.ISLAND_GRID_SIZE
-        elif objKey == LocationIds.DRIFTWOOD_ISLAND:
-            gridSize = WorldGlobals.MED_ISLAND_GRID_SIZE
-        elif objKey == LocationIds.RUMRUNNER_ISLE:
-            gridSize = WorldGlobals.MED_ISLAND_GRID_SIZE
-        elif objKey == LocationIds.PERDIDA_PORT:
-            gridSize = WorldGlobals.ISLAND_GRID_SIZE
-        elif objKey == LocationIds.CUBA_ISLAND:
-            gridSize = WorldGlobals.MED_ISLAND_GRID_SIZE
-        elif objKey == LocationIds.KINGSHEAD_ISLAND:
-            gridSize = WorldGlobals.LARGE_ISLAND_GRID_SIZE
-        elif objKey == LocationIds.ISLA_CANGREJOS:
-            gridSize = WorldGlobals.MED_ISLAND_GRID_SIZE
-        elif objKey == LocationIds.CUTTHROAT_ISLAND:
-            gridSize = WorldGlobals.MED_ISLAND_GRID_SIZE
-        elif objKey == LocationIds.OUTCAST_ISLE:
-            gridSize = WorldGlobals.ISLAND_GRID_SIZE
-        elif objKey == LocationIds.ISLA_TORMENTA:
-            gridSize = WorldGlobals.ISLAND_GRID_SIZE
-        else:
-            gridSize = WorldGlobals.ISLAND_GRID_SIZE
-
-        return gridSize
-
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         newObj = None
 
@@ -179,7 +147,7 @@ class ClientAreaBuilderAI(DirectObject):
         (x, y, z) = islandWorldData.get('Pos', (0, 0, 0))
         (h, p, r) = islandWorldData.get('Hpr', (0, 0, 0))
 
-        island = DistributedIslandAI(self.air, self.getIslandGridSize(objKey))
+        island = DistributedIslandAI(self.air)
         island.setUniqueId(objKey)
         island.setName(PLocalizer.LocationNames.get(objKey, ''))
         island.setFileName(islandWorldData.get('File', ''))

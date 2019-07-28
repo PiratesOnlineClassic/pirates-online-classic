@@ -13,9 +13,10 @@ from pirates.world.DistributedShipDeployerAI import DistributedShipDeployerAI
 class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedIslandAI')
 
-    def __init__(self, air, gridSize):
+    def __init__(self, air):
         startingZone = WorldGlobals.ISLAND_GRID_STARTING_ZONE
         cellWidth = WorldGlobals.ISLAND_CELL_SIZE
+        gridSize = WorldGlobals.ISLAND_GRID_SIZE
         gridRadius = WorldGlobals.ISLAND_GRID_RADIUS
 
         DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize, gridRadius, cellWidth, style='CartesianStated')
@@ -67,6 +68,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def setZoneSphereSize(self, rad0, rad1, rad2):
         self.sphereRadii = [rad0, rad1, rad2]
+        self.gridSize = self.getGridSizeFromSphereRadius(self.sphereRadii[2] / 2, self.cellWidth, self.gridRadius)
 
     def d_setZoneSphereSize(self, rad0, rad1, rad2):
         self.sendUpdate('setZoneSphereSize', [rad0, rad1, rad2])
@@ -80,6 +82,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
     def setZoneSphereCenter(self, x, y):
         self.sphereCenter = [x, y]
+        self.gridSize = self.getGridSizeFromSphere(self.sphereRadii[2] / 2, self.sphereCenter, self.cellWidth, self.gridRadius)
 
     def d_setZoneSphereCenter(self, x, y):
         self.sendUpdate('setZoneSphereCenter', [x, y])
