@@ -26,7 +26,7 @@ class DistributedShippartAI(DistributedObjectAI):
         return self.ownerId
 
     def getOwner(self):
-        return self.air.doId2do.get(self.shipId)
+        return self.air.doId2do.get(self.ownerId)
 
     def setShipId(self, shipId):
         self.shipId = shipId
