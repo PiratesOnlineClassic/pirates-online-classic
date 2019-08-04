@@ -3,6 +3,7 @@ import random
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedTravelAgentUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTravelAgentUD')
 
@@ -49,15 +50,15 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
 
         shardId = shardId or self.getRandomShard()
         if not shardId:
-            self.notify.warning('Cannot initialize loc teleport for avatar %d, no shards are available!' % (
-                avatarId))
+            self.notify.warning('Cannot initialize loc teleport for avatar %d, '
+                'no shards are available!' % avatarId)
 
             return
 
         channel = self.getShard(shardId)
         if not channel:
-            self.notify.warning('Cannot initialize loc teleport for avatar %d, unknown shard %d!' % (
-                avatarId, shardId))
+            self.notify.warning('Cannot initialize loc teleport for avatar %d, '
+                'unknown shard %d!' % (avatarId, shardId))
 
             return
 
@@ -68,15 +69,15 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
             return
 
         if not shardId:
-            self.notify.warning('Cannot initialize teleport to shard for avatar %d, invalid shard!' % (
-                avatarId))
+            self.notify.warning('Cannot initialize teleport to shard for avatar %d, '
+                'invalid shard!' % avatarId)
 
             return
 
         channel = self.getShard(shardId)
         if not channel:
-            self.notify.warning('Cannot initialize teleport to shard %d for avatar %d, unknown channel!' % (
-                shardId, avatarId))
+            self.notify.warning('Cannot initialize teleport to shard %d for avatar %d, '
+                'unknown channel!' % (shardId, avatarId))
 
             return
 
