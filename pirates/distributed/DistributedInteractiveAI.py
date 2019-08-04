@@ -1,6 +1,7 @@
 from direct.distributed.DistributedNodeAI import DistributedNodeAI
 from direct.directnotify import DirectNotifyGlobal
 
+
 class DistributedInteractiveAI(DistributedNodeAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInteractiveAI')
 

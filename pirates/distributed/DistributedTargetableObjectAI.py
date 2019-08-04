@@ -1,7 +1,9 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
+
 from pirates.battle.ComboDiaryAI import ComboDiaryAI
 from pirates.piratesbase import PiratesGlobals
+
 
 class DistributedTargetableObjectAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTargetableObjectAI')
