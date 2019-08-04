@@ -2,11 +2,14 @@ import traceback
 import sys
 
 from panda3d.core import *
-from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.distributed.AstronInternalRepository import AstronInternalRepository
-from otp.distributed.OtpDoGlobals import *
+
 from direct.distributed.PyDatagram import PyDatagram
 from direct.distributed.MsgTypes import *
+from direct.directnotify.DirectNotifyGlobal import directNotify
+from direct.distributed.AstronInternalRepository import AstronInternalRepository
+
+from otp.distributed.OtpDoGlobals import *
+
 
 class OTPInternalRepository(AstronInternalRepository):
     notify = directNotify.newCategory('OTPInternalRepository')

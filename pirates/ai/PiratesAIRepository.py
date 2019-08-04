@@ -33,6 +33,7 @@ from pirates.world.WorldGridManagerAI import WorldGridManagerAI
 from pirates.ship.ShipManagerAI import ShipManagerAI
 from pirates.discord.DiscordNotificationsAI import DiscordNotificationsAI
 
+
 class PiratesAIRepository(PiratesInternalRepository):
     notify = directNotify.newCategory('PiratesAIRepository')
 
