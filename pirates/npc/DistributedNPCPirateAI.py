@@ -1,6 +1,6 @@
 from direct.directnotify import DirectNotifyGlobal
 
-from pirates.pirate.DistributedBattleNPCAI import DistributedBattleNPCAI
+from pirates.battle.DistributedBattleNPCAI import DistributedBattleNPCAI
 
 
 class DistributedNPCPirateAI(DistributedBattleNPCAI):
