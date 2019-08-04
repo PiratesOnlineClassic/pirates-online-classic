@@ -13,16 +13,14 @@ class DistributedJailInteriorAI(DistributedGAInteriorAI):
     def __init__(self, air):
         DistributedGAInteriorAI.__init__(self, air, True)
 
-        self.__cellDoors = {}
+        self.cellDoors = {}
 
     def handleChildLeave(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerPirateAI) and not childObj.isNpc:
             if childObj.getJailCellIndex() < 100:
                 cellDoor = self.getCellDoor(avatarId=childObj.doId)
                 if not cellDoor:
-                    self.notify.warning('Cannot reset cell door for avatar %d, '
-                        'no cell door found!' % avatar.doId)
-
+                    self.notify.warning('Cannot reset cell door for avatar %d, no cell door found!' % avatar.doId)
                     return
 
                 childObj.b_setJailCellIndex(100)
@@ -31,30 +29,30 @@ class DistributedJailInteriorAI(DistributedGAInteriorAI):
         DistributedGAInteriorAI.handleChildLeave(self, childObj, zoneId)
 
     def hasCellDoor(self, cellDoorId):
-        return cellDoorId in self.__cellDoors
+        return cellDoorId in self.cellDoors
 
     def addCellDoor(self, cellDoor):
-        if cellDoor.doId in self.__cellDoors:
+        if cellDoor.doId in self.cellDoors:
             return
 
-        self.__cellDoors[cellDoor.doId] = cellDoor
+        self.cellDoors[cellDoor.doId] = cellDoor
 
     def removeCellDoor(self, cellDoor):
-        if cellDoor.doId not in self.__cellDoors:
+        if cellDoor.doId not in self.cellDoors:
             return
 
-        del self.__cellDoors[cellDoor.doId]
+        del self.cellDoors[cellDoor.doId]
 
     def getCellDoor(self, cellDoorId=None, avatarId=None):
         if avatarId is not None:
-            for cellDoor in self.__cellDoors.values():
+            for cellDoor in self.cellDoors.values():
                 if cellDoor.getAvatarId() == avatarId:
                     return cellDoor
 
-        if len(self.__cellDoors) == 0:
+        if len(self.cellDoors) == 0:
             return None
 
-        return random.choice(self.__cellDoors.values())
+        return random.choice(self.cellDoors.values())
 
     def avatarAlreadyInJail(self):
         pass

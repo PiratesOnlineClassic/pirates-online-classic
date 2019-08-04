@@ -410,8 +410,9 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
             self.world = DistributedInstanceWorldAI(self.air)
 
         if not parent:
-            self.notify.info('Creating World Instance %s (%s) (%d)' % (worldFileName, self.world.__class__.__name__, self.world.getType()))
-        
+            self.notify.info('Creating World Instance %s (%s) (%d)' % (worldFileName,
+                self.world.__class__.__name__, self.world.getType()))
+
         self.world.setUniqueId(objKey)
         self.world.setName(worldName)
         self.world.setFileName(worldFileName)

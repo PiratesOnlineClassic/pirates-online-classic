@@ -82,7 +82,6 @@ class ClientAreaBuilderAI(DirectObject):
     def setObjectTruePosHpr(self, object, objKey, parentUid, objectData):
         objectPos = objectData.get('Pos', Point3(0, 0, 0))
         objectHpr = objectData.get('Hpr', Point3(0, 0, 0))
-
         if not self.isChildObject(objKey, parentUid):
             object.setPos(objectPos)
             object.setHpr(objectHpr)
@@ -100,7 +99,6 @@ class ClientAreaBuilderAI(DirectObject):
 
         object.setPos(parentObject, objectPos)
         object.setHpr(parentObject, objectHpr)
-
         return object
 
     def getObjectTruePosAndParent(self, objKey, parentUid, objectData):
@@ -121,25 +119,21 @@ class ClientAreaBuilderAI(DirectObject):
 
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         newObj = None
-
         if objType == ObjectList.AREA_TYPE_ISLAND:
             newObj = self.createIsland(objectData, parent, parentUid, objKey, dynamic)
         else:
             if not parent or not hasattr(parent, 'builder'):
                 parent = self.air.uidMgr.justGetMeMeObject(parentUid)
-
                 if not parent or parent == self.parent:
                     return newObj
 
-            newObj = parent.builder.createObject(objType, objectData, parent,
-                parentUid, objKey, dynamic)
+            newObj = parent.builder.createObject(objType, objectData, parent, parentUid, objKey, dynamic)
 
         return newObj
 
     def createIsland(self, objectData, parent, parentUid, objKey, dynamic):
         from pirates.world.DistributedIslandAI import DistributedIslandAI
         islandWorldData = self.air.worldCreator.getIslandWorldDataByUid(objKey)
-
         if not islandWorldData:
             self.notify.warning('Failed to generate island: %s' % objKey)
             return

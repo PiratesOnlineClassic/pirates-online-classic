@@ -24,7 +24,6 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
 
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         newObj = None
-
         if objType == ObjectList.DOOR_LOCATOR_NODE and self.wantDoorLocatorNodes:
             newObj = self.createDoorLocatorNode(parent, parentUid, objKey, objectData)
         elif objType == ObjectList.LOCATOR_NODE and self.wantConnectorLocatorNodes:
@@ -34,8 +33,8 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
         elif objType == 'Parlor Game' and self.wantParlorGames:
             newObj = self.createParlorTable(objectData, parent, parentUid, objKey)
         else:
-            newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid, objKey,
-                dynamic, parentIsObj, fileName, actualParentObj)
+            newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid,
+                objKey, dynamic, parentIsObj, fileName, actualParentObj)
 
         return newObj
 

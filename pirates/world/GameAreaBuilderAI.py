@@ -29,7 +29,6 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         newObj = None
-
         if objType == 'Player Spawn Node':
             newObj = self.createPlayerSpawnNode(parent, parentUid, objKey, objectData)
         elif objType == 'Building Exterior' and self.wantBuildingExteriors:
@@ -65,10 +64,9 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             self.notify.warning('Cannot setup player spawn point for %r!' % parent)
             return None
 
-        index = objectData.get('Index')
-
         # the index value is a string by default for some reason,
         # so we'll have to change the value type...
+        index = objectData.get('Index')
         if index:
             index = int(index)
 

@@ -1,7 +1,9 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
+
 from pirates.world.DistributedDoorBaseAI import DistributedDoorBaseAI
 from pirates.piratesbase import PiratesGlobals
+
 
 class DistributedInteriorDoorAI(DistributedDoorBaseAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInteriorDoorAI')

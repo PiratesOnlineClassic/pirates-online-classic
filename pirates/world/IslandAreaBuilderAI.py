@@ -24,8 +24,8 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
         elif objType == 'Dinghy' and self.wantDinghys:
             newObj = self.createDinghy(parent, parentUid, objKey, objectData)
         else:
-            newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid, objKey,
-                dynamic, parentIsObj, fileName, actualParentObj)
+            newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid,
+                objKey, dynamic, parentIsObj, fileName, actualParentObj)
 
         return newObj
 

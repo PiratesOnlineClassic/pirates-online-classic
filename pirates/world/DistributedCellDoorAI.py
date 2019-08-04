@@ -1,7 +1,8 @@
 import random
 
-from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 from direct.directnotify import DirectNotifyGlobal
+
+from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 
 
 class DistributedCellDoorAI(DistributedInteractiveAI):
