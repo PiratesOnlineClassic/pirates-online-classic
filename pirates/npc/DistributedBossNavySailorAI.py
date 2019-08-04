@@ -1,6 +1,8 @@
-from pirates.npc.BossAI import BossAI
 from direct.directnotify import DirectNotifyGlobal
+
+from pirates.npc.BossAI import BossAI
 from pirates.npc.DistributedNPCNavySailorAI import DistributedNPCNavySailorAI
+
 
 class DistributedBossNavySailorAI(DistributedNPCNavySailorAI, BossAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBossNavySailorAI')
