@@ -298,7 +298,11 @@ class BattleManagerAI(BattleManagerBase):
         if not targetEffectId:
             return
 
-        # cannot apply a skill effect to the money
+        if isinstance(target, DistributedInteractivePropAI):
+            # Dont apply skill effects for props
+            return
+
+        # cannot apply a skill effect to the monkey
         if target.getAvatarType() == AvatarTypes.Monkey:
             return
 
