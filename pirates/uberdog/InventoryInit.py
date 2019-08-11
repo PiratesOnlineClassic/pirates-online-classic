@@ -429,7 +429,7 @@ for i in range(InventoryType.begin_Songs, InventoryType.end_Songs):
 
 StartingStacks = {
     # Weapons
-    InventoryType.CutlassWeaponL1: 1,
+    InventoryType.CutlassWeaponL1: 1, # This should be modified once tutorial work is being done. It is given during the will turner cutscene
     InventoryType.PistolWeaponL1: 0,
     InventoryType.MusketWeaponL1: 0,
     InventoryType.BayonetWeaponL1: 0,
@@ -439,18 +439,25 @@ StartingStacks = {
     InventoryType.WandWeaponL1: 0,
 
     # Skills
-    InventoryType.CannonShoot: 2,
-    InventoryType.CannonRoundShot: 2,
+    InventoryType.CutlassHack: 2,
+    InventoryType.CutlassSlash: 2,
     InventoryType.SailBroadsideLeft: 2,
     InventoryType.SailBroadsideRight: 2,
-    InventoryType.CutlassSlash: 2,
-    InventoryType.CutlassHack: 2,
-
-    # Skill Points
-    InventoryType.UnspentCutlass: 1,
+    InventoryType.DaggerCut: 2,
+    InventoryType.DaggerSwipe: 2,
+    InventoryType.StaffBlast: 2,
+    InventoryType.StaffSoulFlay: 2,
+    InventoryType.GrenadeThrow: 2,
+    InventoryType.GrenadeExplosion: 2,
+    InventoryType.PistolShoot: 2,
+    InventoryType.PistolLeadShot: 2,
+    InventoryType.DollAttune: 2,
+    InventoryType.DollPoke: 2,
+    InventoryType.CannonShoot: 2,
+    InventoryType.CannonRoundShot: 2,
 
     # Weapon Tokens
-    InventoryType.CutlassToken: 1,
+    InventoryType.CutlassToken: 1, # This should be modified once tutorial work is being done. It is given during the will turner cutscene
     InventoryType.FirstDeathToken: 1,
 
     # Teleport Tokens
