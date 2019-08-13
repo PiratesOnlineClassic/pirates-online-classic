@@ -386,15 +386,6 @@ class BattleManagerAI(BattleManagerBase):
         return True
 
     def _updateSkillEffects(self, task):
-        pendingSkillEffects = collections.deque()
-        for _ in xrange(len(self._pendingSkillEffects)):
-            pendingSkillEffect = self._pendingSkillEffects.popleft()
-            assert(pendingSkillEffect is not None)
-
-            if self._updateSkillEffect(pendingSkillEffect):
-                self._pendingSkillEffects.append(pendingSkillEffect)
-
-        # now clear any of the removed pending skill effects
         for _ in xrange(len(self._removedPendingSkillEffects)):
             effectId = self._removedPendingSkillEffects.popleft()
             assert(effectId != WeaponGlobals.C_ATTUNE)
@@ -406,6 +397,13 @@ class BattleManagerAI(BattleManagerBase):
 
                 self._pendingSkillEffects.remove(pendingSkillEffect)
                 avatar.removeSkillEffect(pendingSkillEffect.effectId)
+
+        for _ in xrange(len(self._pendingSkillEffects)):
+            pendingSkillEffect = self._pendingSkillEffects.popleft()
+            assert(pendingSkillEffect is not None)
+
+            if self._updateSkillEffect(pendingSkillEffect):
+                self._pendingSkillEffects.append(pendingSkillEffect)
 
         return task.again
 
