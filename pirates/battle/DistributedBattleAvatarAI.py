@@ -211,6 +211,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
     def d_setHp(self, hp, quietly=False):
         if self.getImmortal():
             return
+
         self.sendUpdate('setHp', [hp, quietly])
 
     def b_setHp(self, hp, quietly=False):
@@ -400,6 +401,13 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.setSkillEffects(skillEffects)
         self.d_setSkillEffects(skillEffects)
 
+    def hasSkillEffect(self, effectId):
+        for skillEffect in list(self.skillEffects):
+            if skillEffect[0] == effectId:
+                return True
+
+        return False
+
     def addSkillEffect(self, effectId, duration, attackerId):
         timestamp = globalClockDelta.getRealNetworkTime(bits=16)
         skillEffect = [
@@ -412,9 +420,16 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.d_setSkillEffects(self.skillEffects)
 
     def removeSkillEffect(self, effectId):
+        if not self.hasSkillEffect(effectId):
+            return
+
         for skillEffect in list(self.skillEffects):
             if skillEffect[0] == effectId:
                 self.skillEffects.remove(skillEffect)
+
+                # attempt to remove the skill effect from the battle manager's
+                # deque of pending skill effects:
+                self.air.battleMgr.removePendingSkillEffect(effectId)
                 break
 
         self.d_setSkillEffects(self.skillEffects)

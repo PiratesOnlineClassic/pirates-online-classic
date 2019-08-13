@@ -1,4 +1,5 @@
 import random
+import collections
 
 from panda3d.core import *
 
@@ -20,11 +21,28 @@ from pirates.piratesbase import Freebooter
 from pirates.interact.DistributedInteractivePropAI import DistributedInteractivePropAI
 
 
+class PendingSkillEffect(object):
+
+    def __init__(self, effectId, skillId, ammoSkillId, duration, timestamp, avatar):
+        self.effectId = effectId
+        self.skillId = skillId
+        self.ammoSkillId = ammoSkillId
+        self.duration = duration
+        self.timestamp = timestamp
+        self.avatar = avatar
+
+
 class BattleManagerAI(BattleManagerBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManagerAI')
 
     def __init__(self, air):
         self.air = air
+
+        self._pendingSkillEffects = collections.deque()
+        self._removedPendingSkillEffects = collections.deque()
+
+        self.__updateSkillEffectsTask = taskMgr.doMethodLater(1.0, self._updateSkillEffects,
+            'BattleManagerAI-updateSkillEffects')
 
     def getTargetInRange(self, attacker, target, skillId, ammoSkillId):
         tolerance = 0
@@ -293,9 +311,31 @@ class BattleManagerAI(BattleManagerBase):
         target.b_setMojo(max(0, min(target.getMojo() + targetEffects[3], target.getMaxMojo())))
         target.b_setSwiftness(max(0, min(target.getSwiftness() + targetEffects[4], target.getMaxSwiftness())))
 
+    def appendSkillEffect(self, pendingSkillEffect):
+        if pendingSkillEffect in self._pendingSkillEffects:
+            return
+
+        self._pendingSkillEffects.append(pendingSkillEffect)
+
+    def removePendingSkillEffect(self, effectId):
+        if effectId in self._removedPendingSkillEffects:
+            return
+
+        if effectId == WeaponGlobals.C_ATTUNE:
+            return
+
+        self._removedPendingSkillEffects.append(effectId)
+
+    def getPendingSkillEffect(self, effectId):
+        for pendingSkillEffect in list(self._pendingSkillEffects):
+            if pendingSkillEffect.effectId == effectId:
+                return pendingSkillEffect
+
+        return None
+
     def applySkillEffect(self, target, targetEffects, attacker, skillId, ammoSkillId):
         targetEffectId = targetEffects[2]
-        if not targetEffectId:
+        if not targetEffectId or targetEffectId == WeaponGlobals.C_ATTUNE:
             return
 
         if isinstance(target, DistributedInteractivePropAI):
@@ -306,50 +346,77 @@ class BattleManagerAI(BattleManagerBase):
         if target.getAvatarType() == AvatarTypes.Monkey:
             return
 
-        targetEffectDuration = WeaponGlobals.getAttackDuration(skillId, ammoSkillId)
+        effectAttackDuration = WeaponGlobals.getAttackDuration(skillId, ammoSkillId)
         maxEffectStack = WeaponGlobals.getBuffStackNumber(targetEffectId)
-
         if not target.getDamagable():
             return
 
-        if target.getSkillEffectCount(targetEffectId) <= maxEffectStack:
-            target.addSkillEffect(targetEffectId, targetEffectDuration, attacker.doId)
+        # make sure the avatar does not already have too many of these skill effects applied
+        if target.getSkillEffectCount(targetEffectId) >= maxEffectStack:
+            return
 
-    def updateSkillEffects(self, avatar):
-        # process the targets current skill effects and damage
-        # associated with them
-        skillEffects = avatar.getSkillEffects()
-        if len(skillEffects) > 0:
-            # process an avatar's skill effects here
-            currentTime = globalClockDelta.getFrameNetworkTime()
-            for index in range(len(skillEffects)):
-                # verify skill effect index
-                if index >= len(skillEffects):
-                    continue
+        # add the skill effect to the avatar's list of skill effects which will be sent to the client
+        target.addSkillEffect(targetEffectId, effectAttackDuration, attacker.doId)
 
-                skillEffect = skillEffects[index]
-                duration = (skillEffect[1] * 100) + 16
-                expireTime = skillEffect[2] + duration
+        # store a pending skill effect so we can apply it's effects to the target,
+        # and remove the skill effect from the target when it expires:
+        timestamp = globalClockDelta.getRealNetworkTime(bits=16)
+        pendingSkillEffect = PendingSkillEffect(targetEffectId, skillId, ammoSkillId, effectAttackDuration, timestamp, target)
+        self.appendSkillEffect(pendingSkillEffect)
 
-                # check to see if the skill effect has expired and remove it,
-                # if the skill effect is an doll attune effect; we don't remove
-                # it because it does not have a duration...
-                if currentTime > expireTime and skillEffect[0] != WeaponGlobals.C_ATTUNE:
-                    del skillEffects[index]
+    def _updateSkillEffect(self, pendingSkillEffect):
+        assert(pendingSkillEffect is not None)
 
-            # update the active skill effects
-            avatar.b_setSkillEffects(skillEffects)
+        avatar = pendingSkillEffect.avatar
+        assert(avatar is not None)
+
+        duration = (pendingSkillEffect.duration * 100) + 16
+        expireTime = pendingSkillEffect.timestamp + duration
+
+        # check to see if the skill effect has expired
+        currentTime = globalClockDelta.getFrameNetworkTime()
+        if currentTime >= expireTime:
+            avatar.removeSkillEffect(pendingSkillEffect.effectId)
+            return False
+
+        attackEffects = WeaponGlobals.getAttackEffects(pendingSkillEffect.skillId, pendingSkillEffect.ammoSkillId)
+        if attackEffects is not None:
+            self.applyTargetEffects(avatar, attackEffects[1])
+
+        return True
+
+    def _updateSkillEffects(self, task):
+        pendingSkillEffects = collections.deque()
+        for _ in xrange(len(self._pendingSkillEffects)):
+            pendingSkillEffect = self._pendingSkillEffects.popleft()
+            assert(pendingSkillEffect is not None)
+
+            if self._updateSkillEffect(pendingSkillEffect):
+                self._pendingSkillEffects.append(pendingSkillEffect)
+
+        # now clear any of the removed pending skill effects
+        for _ in xrange(len(self._removedPendingSkillEffects)):
+            effectId = self._removedPendingSkillEffects.popleft()
+            assert(effectId != WeaponGlobals.C_ATTUNE)
+
+            pendingSkillEffect = self.getPendingSkillEffect(effectId)
+            if pendingSkillEffect is not None:
+                avatar = pendingSkillEffect.avatar
+                assert(avatar is not None)
+
+                self._pendingSkillEffects.remove(pendingSkillEffect)
+                avatar.removeSkillEffect(pendingSkillEffect.effectId)
+
+        return task.again
 
     def updateTarget(self, targetId, attackers):
         target = self.air.doId2do.get(targetId)
         if not target:
             return
 
-        self.updateSkillEffects(target)
         for attackerId in attackers:
             attacker = self.air.doId2do.get(attackerId)
             assert(attacker is not None)
-            self.updateSkillEffects(attacker)
             self.__checkAttacker(attacker, target)
 
     def __checkAttacker(self, attacker, target):
