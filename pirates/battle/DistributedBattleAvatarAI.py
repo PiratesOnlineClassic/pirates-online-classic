@@ -59,7 +59,6 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.level = 0
 
         self.currentTarget = None
-        self.skillTask = None
         self.weapon = None
 
     def announceGenerate(self):
@@ -442,6 +441,10 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
         return numSkillEffects
 
+    def clearSkillEffects(self):
+        for skillEffect in list(self.skillEffects):
+            self.removeSkillEffect(skillEffect[0])
+
     def getSkillEffects(self):
         return self.skillEffects
 
@@ -478,9 +481,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         return self.avatarType.isA(AvatarTypes.BossType)
 
     def delete(self):
-        if self.skillTask:
-            taskMgr.remove(self.skillTask)
-
+        self.clearSkillEffects()
         if self.battleRandom:
             self.battleRandom.delete()
             self.battleRandom = None
@@ -491,5 +492,4 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
         self.gameFSM.destroy()
         self.gameFSM = None
-
         DistributedReputationAvatarAI.delete(self)

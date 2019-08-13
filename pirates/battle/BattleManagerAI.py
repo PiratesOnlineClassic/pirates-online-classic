@@ -379,9 +379,9 @@ class BattleManagerAI(BattleManagerBase):
             avatar.removeSkillEffect(pendingSkillEffect.effectId)
             return False
 
-        attackEffects = WeaponGlobals.getAttackEffects(pendingSkillEffect.skillId, pendingSkillEffect.ammoSkillId)
+        attackEffects = self.getModifiedSkillEffects(avatar, None, pendingSkillEffect.skillId, pendingSkillEffect.ammoSkillId)
         if attackEffects is not None:
-            self.applyTargetEffects(avatar, attackEffects[1])
+            self.applyTargetEffects(avatar, attackEffects[0])
 
         return True
 

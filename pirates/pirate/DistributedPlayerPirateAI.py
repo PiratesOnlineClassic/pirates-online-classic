@@ -921,7 +921,7 @@ def access(access=-1):
     """
     Interface for manually verifying or changing your ingame access level
     """
-    
+
     if access != -1:
         if access < 0 or access > 2:
             return 'Invalid access level 0-2'
