@@ -1,4 +1,5 @@
 import random
+import time
 import collections
 
 from panda3d.core import *
@@ -23,12 +24,12 @@ from pirates.interact.DistributedInteractivePropAI import DistributedInteractive
 
 class PendingSkillEffect(object):
 
-    def __init__(self, effectId, skillId, ammoSkillId, duration, timestamp, avatar):
+    def __init__(self, effectId, skillId, ammoSkillId, duration, avatar):
         self.effectId = effectId
         self.skillId = skillId
         self.ammoSkillId = ammoSkillId
         self.duration = duration
-        self.timestamp = timestamp
+        self.timestamp = time.time()
         self.avatar = avatar
 
 
@@ -360,8 +361,7 @@ class BattleManagerAI(BattleManagerBase):
 
         # store a pending skill effect so we can apply it's effects to the target,
         # and remove the skill effect from the target when it expires:
-        timestamp = globalClockDelta.getRealNetworkTime(bits=16)
-        pendingSkillEffect = PendingSkillEffect(targetEffectId, skillId, ammoSkillId, effectAttackDuration, timestamp, target)
+        pendingSkillEffect = PendingSkillEffect(targetEffectId, skillId, ammoSkillId, effectAttackDuration, target)
         self.appendSkillEffect(pendingSkillEffect)
 
     def _updateSkillEffect(self, pendingSkillEffect):
@@ -370,12 +370,9 @@ class BattleManagerAI(BattleManagerBase):
         avatar = pendingSkillEffect.avatar
         assert(avatar is not None)
 
-        duration = (pendingSkillEffect.duration * 100) + 16
-        expireTime = pendingSkillEffect.timestamp + duration
-
         # check to see if the skill effect has expired
         currentTime = globalClockDelta.getFrameNetworkTime()
-        if currentTime >= expireTime:
+        if time.time() - pendingSkillEffect.timestamp >= pendingSkillEffect.duration:
             avatar.removeSkillEffect(pendingSkillEffect.effectId)
             return False
 
@@ -395,8 +392,9 @@ class BattleManagerAI(BattleManagerBase):
                 avatar = pendingSkillEffect.avatar
                 assert(avatar is not None)
 
-                self._pendingSkillEffects.remove(pendingSkillEffect)
-                avatar.removeSkillEffect(pendingSkillEffect.effectId)
+                if pendingSkillEffect in self._pendingSkillEffects:
+                    self._pendingSkillEffects.remove(pendingSkillEffect)
+                    avatar.removeSkillEffect(pendingSkillEffect.effectId)
 
         for _ in xrange(len(self._pendingSkillEffects)):
             pendingSkillEffect = self._pendingSkillEffects.popleft()
