@@ -50,7 +50,7 @@ class GameOptionsGui(DirectFrame):
         texture_medium,
         texture_high,
         texture_maximum]
-    
+
     def __init__(self, gameOptions, title, x, y, width, height, options = None, file_path = None, pipe = None, access = 0, chooser = 0, keyMappings = None):
         self.width = width
         self.height = height
@@ -66,13 +66,13 @@ class GameOptionsGui(DirectFrame):
         self.setupDisplayFrame()
         if self.gameOptions is not None:
             self.gameOptions.display_identifier = -1
-        
+
         self.set_options(False)
         self.updateUI('graphics')
         self.updateUI()
         self.defaultDialog = None
         self.restoreDialog = None
-    
+
     def setupUpperFrame(self):
         gui_main = loader.loadModel('models/gui/gui_main')
         topImage = gui_main.find('**/game_options_panel/top')
@@ -116,7 +116,7 @@ class GameOptionsGui(DirectFrame):
         button = GuiButton(parent = parent, text = text, pos = (x, 0, y), command = command)
         if self.gameOptions is not None and self.gameOptions.play == False:
             self.disableButton(button)
-        
+
         toplevel_gui = loader.loadModel('models/gui/toplevel_gui')
         generic_x = toplevel_gui.find('**/generic_x')
         generic_question = toplevel_gui.find('**/generic_question*')
@@ -158,11 +158,11 @@ class GameOptionsGui(DirectFrame):
         text = PLocalizer.GameOptionsVolume
         self.create_label(x, y, text, parent)
         x += 0.43
-        
+
         def sound_volume_update_function(value):
             if self.gameOptions is not None:
                 self.gameOptions.options.sound_volume = value
-            
+
             if base.sfxManagerList:
                 index = 0
                 length = len(base.sfxManagerList)
@@ -189,11 +189,11 @@ class GameOptionsGui(DirectFrame):
         text = PLocalizer.GameOptionsVolume
         self.create_label(x, y, text, parent)
         x += 0.43
-        
+
         def music_volume_update_function(value):
             if self.gameOptions is not None:
                 self.gameOptions.options.music_volume = value
-            
+
             if base.musicManager:
                 base.musicManager.setVolume(value)
 
@@ -311,12 +311,13 @@ class GameOptionsGui(DirectFrame):
         y += oy
         self.create_label(x, y, text, parent, 0.9, color = (0.7, 0.7, 0.7, 1))
 
-        x2 = x + 0.55
-        text = PLocalizer.GameOptionsAntialiasing + ' *'
-        self.create_label(x2, y2, text, parent, sl)
-        self.antialiasingCheck = CheckButton(parent = parent, relief = None, scale = sc, pos = (x2 + 0.28, 0, y2), command = self.antiliasingCheckCB)
+        if config.GetBool('want-anti-aliasing-opt', False):
+            x2 = x + 0.55
+            text = PLocalizer.GameOptionsAntialiasing + ' *'
+            self.create_label(x2, y2, text, parent, sl)
+            self.antialiasingCheck = CheckButton(parent = parent, relief = None, scale = sc, pos = (x2 + 0.28, 0, y2), command = self.antiliasingCheckCB)
 
-    
+
     def setupDisplayFrame(self):
         self.displayFrame = DirectFrame(parent = self.customFrame, relief = None)
         x = 0.07
@@ -335,7 +336,7 @@ class GameOptionsGui(DirectFrame):
             appendMe = DirectFrame(parent = self.fullScreenCheck, relief = None, state = DGG.DISABLED, geom = subCard.find('**/subscribers_lock'), geom_scale = 0.3, geom_pos = (0.06, 0, 0.06))
             appendMe.setAlphaScale(1.0, 2)
             subCard.removeNode()
-        
+
         y += oy
         text = PLocalizer.GameOptionsWindowedResolutions
         self.create_label(x, y, text, parent, sl)
@@ -346,7 +347,7 @@ class GameOptionsGui(DirectFrame):
             resolution_table = self.resolution_table
         for windowed_resolution in resolution_table:
             self.windowed_resolutions.append(windowed_resolution[0].__repr__() + 'x' + windowed_resolution[1].__repr__())
-        
+
         self.windowedResolutionMenu = OptionMenu(parent = parent, scale = 0.05, pos = (x + 0.64, 0, y), items = self.windowed_resolutions, command = self.windowedResolutionMenuCB)
         y += oy
         text = PLocalizer.GameOptionsFullscreenResolutions
@@ -358,7 +359,7 @@ class GameOptionsGui(DirectFrame):
             resolution_table = self.resolution_table
         for fullscreen_resolution in resolution_table:
             fullscreen_resolutions.append(fullscreen_resolution[0].__repr__() + 'x' + fullscreen_resolution[1].__repr__())
-        
+
         self.fullscreenResolutionMenu = OptionMenu(parent = parent, scale = 0.05, pos = (x + 0.64, 0, y), items = fullscreen_resolutions, command = self.fullscreenResolutionMenuCB)
         y += oy
         text = PLocalizer.GameOptionsInvertMouseLook
@@ -367,12 +368,12 @@ class GameOptionsGui(DirectFrame):
         y += oy
         text = PLocalizer.GameOptionsGUIScale
         self.create_label(x, y, text, parent, sl)
-        
+
         def gui_scale_update_function(value):
             if self.gameOptions is not None:
                 self.gameOptions.options.gui_scale = value
-            
-            
+
+
             try:
                 gui_manager = localAvatar.guiMgr
             except:
@@ -393,11 +394,11 @@ class GameOptionsGui(DirectFrame):
         y += oy * 0.8
         text = PLocalizer.GameOptionsIntensity
         self.create_label(x + 0.2, y, text, parent, sl * 0.8)
-        
+
         def gamma_update_function(value):
             if self.gameOptions is not None:
                 self.gameOptions.options.gamma = value
-            
+
             if base.win and base.win.getGsg():
                 if self.gameOptions is not None and self.gameOptions.options.gamma_enable:
                     base.win.getGsg().setGamma(self.gameOptions.options.optionsGammaToGamma(self.gameOptions.options.gamma))
@@ -415,11 +416,11 @@ class GameOptionsGui(DirectFrame):
             y += oy * 0.8
             text = PLocalizer.GameOptionsIntensity
             self.create_label(x + 0.2, y, text, parent, sl * 0.8)
-            
+
             def hdr_update_function(value):
                 if self.gameOptions is not None:
                     self.gameOptions.options.hdr_factor = value
-                
+
                 if hasattr(base, 'hdr') and base.hdr:
                     if self.gameOptions is not None and self.gameOptions.options.hdr:
                         base.hdr.updateHdrFactor(value)
@@ -429,7 +430,7 @@ class GameOptionsGui(DirectFrame):
                 self.hdr_factor_slider = self.create_slider(hdr_update_function, self.gameOptions.options.hdr_factor, x + ox, y, resolution, text, parent)
             else:
                 self.hdr_factor_slider = self.create_slider(hdr_update_function, 1.0, x + ox, y, resolution, text, parent)
-        
+
         if base.config.GetBool('want-cpu-frequency-warning', 0):
             y += oy
             text = PLocalizer.GameOptionsCpuFrequencyWarning
@@ -451,7 +452,7 @@ class GameOptionsGui(DirectFrame):
         text = PLocalizer.GameOptionsRestartRequired
         y += oy
         self.create_label(x, y, text, parent, 0.9, color = (0.7, 0.7, 0.7, 1))
-    
+
     def createRadioButtonGroup(self, parent, x, y, sx, oy, variable, scale, labels, textScale, cmd = None):
         i = 0
         radioButtons = []
@@ -460,23 +461,23 @@ class GameOptionsGui(DirectFrame):
                 i], scale = scale, relief = None, pos = (x + i * sx, 0, y), command = cmd)
             radioButtons.append(radioButton)
             i += 1
-        
+
         for radio in radioButtons:
             radio.setOthers(radioButtons)
-        
+
         y += oy
         i = 0
         for label in labels:
             self.create_label(x + i * sx, y, label, parent, textScale, TextNode.ACenter)
             i += 1
-        
+
         return radioButtons
-    
+
     def create_label(self, x, y, title, parent, scale = 1, text_align = TextNode.ALeft, color = PiratesGuiGlobals.TextFG1):
         label = DirectLabel(parent = parent, relief = None, text = title, text_align = text_align, text_scale = PiratesGuiGlobals.TextScaleLarge * scale, text_pos = (x, y), text_fg = color, text_shadow = PiratesGuiGlobals.TextShadow, text_font = PiratesGlobals.getInterfaceOutlineFont(), textMayChange = 1)
-    
+
     def create_slider(self, update_function, default_value, x, y, resolution, label, parent):
-        
+
         def update_slider(slider, update_function):
             update_function(slider['value'])
 
@@ -488,7 +489,7 @@ class GameOptionsGui(DirectFrame):
             slider,
             update_function]
         return slider
-    
+
     def updateUI(self, name = 'video'):
         if name == 'video':
             self.videoButton.setBin('gui-fixed', 20)
@@ -538,7 +539,7 @@ class GameOptionsGui(DirectFrame):
         if button:
             button['text_fg'] = (0.2, 0.8, 0.6, 1.0)
             button['selected'] = True
-    
+
     def close(self):
         if self.gameOptions is not None:
             self.gameOptions.hide()
@@ -554,20 +555,20 @@ class GameOptionsGui(DirectFrame):
     def initResolutionSettings(self):
         if self.gameOptions is None:
             return None
-        
+
         if base.inAdFrame:
             self.fullscreenResolutionMenu.updateState(DGG.DISABLED)
             if len(self.windowed_resolutions) > 2:
                 self.windowedResolutionMenu['items'] = self.windowed_resolutions[:2]
                 self.windowedResolutionMenu.setItems()
-            
+
             total_modes = embedded.getCountWindowModes()
             current_mode = embedded.getCurrentWindowModeDef()
             for button_index in range(total_modes):
                 m = embedded.getAtWindowModeDef(button_index)
                 if current_mode['want_size_x'] == m['want_size_x'] and current_mode['want_size_y'] == m['want_size_y']:
                     self.windowedResolutionMenu.set(button_index, False)
-            
+
         else:
             self.fullscreenResolutionMenu.updateState(DGG.NORMAL)
             self.windowedResolutionMenu['items'] = self.windowed_resolutions
@@ -579,36 +580,39 @@ class GameOptionsGui(DirectFrame):
     def update(self):
         if self.gameOptions is None:
             return None
-        
+
         self.gameOptions.options.options_to_config()
-    
+
     def set_options(self, change_display):
         if self.gameOptions is None:
             return None
-        
+
         if change_display:
             self.gameOptions.set_display(self.gameOptions.options, base.pipe, self.gameOptions.options.getWidth(), self.gameOptions.options.getHeight())
-        
+
         self.fullScreenCheck.setQuiet(self.gameOptions.options.fullscreen)
         self.initResolutionSettings()
         self.reflectionRadios[self.gameOptions.options.reflection].check()
         if self.shaderLevelCheck:
             self.shaderLevelCheck['value'] = self.gameOptions.options.shader
-        
+
         self.renderedShadowsCheck['value'] = self.gameOptions.options.shadow
         self.specialEffectsRadios[self.gameOptions.options.special_effects].check()
         if self.gameOptions.options.texture_scale_mode:
             if self.gameOptions.options.texture_scale in self.textureScaleOptionList:
                 self.textureDetailRadios[self.textureScaleOptionList.index(self.gameOptions.options.texture_scale)].check()
-            
+
         elif self.gameOptions.options.texture in self.textureOptionList:
             self.textureDetailRadios[self.textureOptionList.index(self.gameOptions.options.texture)].check()
-        
+
         self.compressedTextureCheck.setQuiet(self.gameOptions.options.textureCompression)
         self.characterDetailRadios[self.gameOptions.options.reflection].check()
         self.terrainDetailRadios[self.gameOptions.options.terrain_detail_level].check()
         self.aggressiveMemoryCheck['value'] = self.gameOptions.options.memory
-        self.antialiasingCheck['value'] = self.gameOptions.options.antialiasing
+
+        if config.GetBool('want-anti-aliasing-opt', False):
+            self.antialiasingCheck['value'] = self.gameOptions.options.antialiasing
+
         self.soundEffectCheck['value'] = self.gameOptions.options.sound
         self.sound_volume_slider['value'] = self.gameOptions.options.sound_volume
         self.musicCheck['value'] = self.gameOptions.options.music
@@ -617,12 +621,12 @@ class GameOptionsGui(DirectFrame):
         self.gui_scale_slider['value'] = self.gameOptions.options.gui_scale
         if self.cpuFrequencyWarningCheck:
             self.cpuFrequencyWarningCheck['value'] = self.gameOptions.options.cpu_frequency_warning
-        
+
         self.hardwareGammaCheck['value'] = self.gameOptions.options.gamma_enable
         self.gamma_slider['value'] = self.gameOptions.options.gamma
         if self.gameOptions.enable_hdr:
             self.hdrCheck['value'] = self.gameOptions.options.hdr
-        
+
         self.vSyncCheck['value'] = self.gameOptions.options.vsync
         self.frameRateCheck['value'] = self.gameOptions.options.frameRate
         self.update()
@@ -634,7 +638,7 @@ class GameOptionsGui(DirectFrame):
     def fullScreenCheckCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         if self.gameOptions.velvet:
             self.gameOptions.options.fullscreen = 0
             self.fullScreenCheck.setQuiet(False)
@@ -650,7 +654,7 @@ class GameOptionsGui(DirectFrame):
     def windowedResolutionMenuCB(self, val, index):
         if self.gameOptions is None:
             return None
-        
+
         if base.inAdFrame:
             self.gameOptions.display_identifier = index
             self.gameOptions.set_display(self.gameOptions.options, base.pipe, base.windowed_resolution_table[index][0], base.windowed_resolution_table[index][1])
@@ -666,7 +670,7 @@ class GameOptionsGui(DirectFrame):
     def fullscreenResolutionMenuCB(self, val, index):
         if self.gameOptions is None:
             return None
-        
+
         if base.inAdFrame:
             pass
         else:
@@ -679,7 +683,7 @@ class GameOptionsGui(DirectFrame):
     def shaderLevelCheckCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         self.gameOptions.options.shader = val
         if self.gameOptions.options.shader != val:
             self.gameOptions.display_restart_dialog()
@@ -687,9 +691,9 @@ class GameOptionsGui(DirectFrame):
     def renderedShadowsCheckCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         self.gameOptions.options.shadow = val
-        
+
         try:
             time_of_day_manager = base.cr.timeOfDayManager
         except:
@@ -704,7 +708,7 @@ class GameOptionsGui(DirectFrame):
     def reflectionRadiosCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         self.gameOptions.options.reflection = val[0]
         funcList = [
             Water.all_reflections_off,
@@ -716,68 +720,68 @@ class GameOptionsGui(DirectFrame):
     def specialEffectsRadiosCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         self.gameOptions.options.special_effects = val[0]
         self.gameOptions.options.setRuntimeSpecialEffects()
 
     def textureDetailRadiosCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         if self.gameOptions.options.texture_scale_mode:
             if self.gameOptions.options.texture_scale != self.textureScaleOptionList[val[0]]:
                 self.gameOptions.display_restart_dialog()
-            
+
             self.gameOptions.options.texture_scale = self.textureScaleOptionList[val[0]]
         else:
             self.gameOptions.options.texture = self.textureOptionList[val]
-    
+
     def compressedTextureCheckCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         if self.gameOptions.options.textureCompression != val:
             self.gameOptions.display_restart_dialog()
-        
+
         self.gameOptions.options.textureCompression = val
-    
+
     def characterDetailRadiosCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         self.gameOptions.options.character_detail_level = val[0]
         self.gameOptions.options.setRuntimeAvatarDetailLevel(val[0])
 
     def terrainDetailRadiosCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         self.gameOptions.options.terrain_detail_level = val[0]
         self.gameOptions.options.setRuntimeGridDetailLevel(val[0])
 
     def aggressiveMemoryCheckCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         self.gameOptions.options.memory = val
-        
+
         try:
             base.setLowMemory(self.gameOptions.options.memory)
         except:
             pass
-    
+
     def soundEffectCheckCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         self.gameOptions.options.sound = val
         base.enableSoundEffects(val)
         self.update()
-    
+
     def musicCheckCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         self.gameOptions.options.music = val
         base.enableMusic(val)
         self.update()
@@ -785,6 +789,9 @@ class GameOptionsGui(DirectFrame):
     def antiliasingCheckCB(self, val):
         if self.gameOptions is None:
             return None
+
+        if not config.GetBool('want-anti-aliasing-opt', False):
+            return
 
         if self.gameOptions.options.antialiasing != val:
             self.gameOptions.display_restart_dialog()
@@ -795,14 +802,14 @@ class GameOptionsGui(DirectFrame):
     def invertMouseCheckCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         self.gameOptions.options.mouse_look = val
         self.update()
-    
+
     def cpuFrequencyWarningCheckCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         self.gameOptions.options.cpu_frequency_warning = val
         self.update()
 
@@ -827,33 +834,33 @@ class GameOptionsGui(DirectFrame):
     def hardwareGammaCheckCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         self.gameOptions.options.gamma_enable = val
         if base.win and base.win.getGsg():
             if self.gameOptions.options.gamma_enable:
                 base.win.getGsg().setGamma(self.gameOptions.options.optionsGammaToGamma(self.gameOptions.options.gamma))
             else:
                 base.win.getGsg().restoreGamma()
-        
+
         self.update()
-    
+
     def hdrCheckCB(self, val):
         if self.gameOptions is None:
             return None
-        
+
         if self.gameOptions.options.hdr != val:
             self.gameOptions.display_restart_dialog()
-        
+
         self.gameOptions.options.hdr = val
         self.update()
 
     def defaultButtonCB(self):
         if self.gameOptions is None:
             return None
-        
+
         if self.defaultDialog:
             self.defaultDialog.destroy()
-        
+
         self.defaultDialog = PDialog.PDialog(text = PLocalizer.GameOptionsDefaultConfirm, style = OTPDialog.YesNo, giveMouse = False, command = self.defaultDialogCB)
         self.defaultDialog.setBin('gui-fixed', 20, 20)
 
@@ -868,10 +875,10 @@ class GameOptionsGui(DirectFrame):
     def restoreButtonCB(self):
         if self.gameOptions is None:
             return None
-        
+
         if self.restoreDialog:
             self.restoreDialog.destroy()
-        
+
         self.restoreDialog = PDialog.PDialog(text = PLocalizer.GameOptionsRestoreConfirm, style = OTPDialog.YesNo, giveMouse = False, command = self.restoreDialogCB)
         self.restoreDialog.setBin('gui-fixed', 20, 20)
 
@@ -887,7 +894,7 @@ class GameOptionsGui(DirectFrame):
         self.updateUI()
         if self.gameOptions is None:
             return None
-        
+
         def handleAggressiveMemoryCheck():
             block_size = 1024 * 1024 * 256
             physical_memory = self.gameOptions.options.getPhysicalMemory(base.pipe)
@@ -907,11 +914,14 @@ class GameOptionsGui(DirectFrame):
             self.reflectionRadios[0].check()
             self.specialEffectsRadios[0].check()
             self.textureDetailRadios[0].check()
-            self.antialiasingCheck['value'] = False
+
+            if config.GetBool('want-anti-aliasing-opt', False):
+                self.antialiasingCheck['value'] = False
+
             self.compressedTextureCheck['value'] = True
             if self.shaderLevelCheck:
                 self.shaderLevelCheck['value'] = False
-            
+
             self.renderedShadowsCheck['value'] = False
             handleAggressiveMemoryCheck()
         elif self.videoVar[0] == 1:
@@ -920,11 +930,14 @@ class GameOptionsGui(DirectFrame):
             self.reflectionRadios[1].check()
             self.specialEffectsRadios[1].check()
             self.textureDetailRadios[1].check()
-            self.antialiasingCheck['value'] = True
+
+            if config.GetBool('want-anti-aliasing-opt', False):
+                self.antialiasingCheck['value'] = True
+
             self.compressedTextureCheck['value'] = True
             if self.shaderLevelCheck:
                 self.shaderLevelCheck['value'] = True
-            
+
             self.renderedShadowsCheck['value'] = False
             handleAggressiveMemoryCheck()
         elif self.videoVar[0] == 2:
@@ -933,13 +946,13 @@ class GameOptionsGui(DirectFrame):
             self.reflectionRadios[2].check()
             self.specialEffectsRadios[2].check()
             self.textureDetailRadios[2].check()
-            self.antialiasingCheck['value'] = True
+
+            if config.GetBool('want-anti-aliasing-opt', False):
+                self.antialiasingCheck['value'] = True
+
             self.compressedTextureCheck['value'] = True
             if self.shaderLevelCheck:
                 self.shaderLevelCheck['value'] = True
-            
+
             self.renderedShadowsCheck['value'] = True
             handleAggressiveMemoryCheck()
-        
-
-

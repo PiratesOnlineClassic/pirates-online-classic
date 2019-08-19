@@ -70,11 +70,8 @@ notify-timestamp 1
 # Frame Buffer:
 framebuffer-hardware #t
 framebuffer-software #f
-framebuffer-multisample 1
 framebuffer-alpha 1
 alpha-bits 8
-framebuffer-multisample 1
-multisamples 2
 
 # Parasite Buffer:
 prefer-parasite-buffer 1
@@ -136,7 +133,7 @@ remove-island-barriers #f
 # Motion:
 motionfsm-lag #f
 avatar-physics-freq 60.0
-npc-sidestep #t
+npc-sidestep #f
 
 # Smoothing:
 smooth-lag 1
@@ -208,6 +205,7 @@ want-game-options-hdr 0
 want-game-options-ship-visibility 1
 want-cpu-frequency-warning #f
 disable-pirates-options #f
+want-anti-aliasing-opt #f
 
 # Cache:
 model-cache-max-kbytes 262144

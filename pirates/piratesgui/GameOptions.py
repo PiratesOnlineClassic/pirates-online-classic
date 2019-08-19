@@ -30,7 +30,7 @@ except:
 
 class OptionSpace:
     notify = DirectNotifyGlobal.directNotify.newCategory('OptionSpace')
-    
+
     def __init__(self):
         pass
 
@@ -38,16 +38,16 @@ class OptionSpace:
         s = string.strip(input_file.readline())
         if self.debug:
             print s
-        
+
         return string.atoi(s)
 
     def read_float(self, input_file):
         s = string.strip(input_file.readline())
         if self.debug:
             print s
-        
+
         return string.atof(s)
-    
+
     def read_string(self, input_file):
         return string.strip(input_file.readline())
 
@@ -55,7 +55,7 @@ class OptionSpace:
         if output_file:
             output_file.write(value.__repr__())
             output_file.write('\n')
-    
+
     def write_float(self, output_file, value):
         if output_file:
             output_file.write(value.__repr__())
@@ -69,7 +69,7 @@ class OptionSpace:
         if output_file:
             output_file.write(string)
             output_file.write('\n')
-        
+
 
 
 class Options(OptionSpace):
@@ -104,15 +104,15 @@ class Options(OptionSpace):
     SpecialEffectsMedium = 1
     SpecialEffectsLow = 0
     desiredApi = 'default'
-    
+
     def __init__(self):
         self.default()
         self.texture_scale_mode = True
         self.recommendOptionsBasedOnData = base.config.GetBool('use-statistical-gameoptions-recommendation', 1)
-    
+
     def save(self, file_path, state_string = None):
         state = False
-        
+
         try:
             output_file = open(file_path, 'w')
             if output_file:
@@ -168,7 +168,7 @@ class Options(OptionSpace):
                 self.write_string(output_file, 'texture_scale ')
                 if self.texture_scale <= 0.0:
                     self.texture_scale = 1.0
-                
+
                 self.write_float(output_file, self.texture_scale)
                 self.write_string(output_file, 'character_detail_level ')
                 self.write_integer(output_file, self.character_detail_level)
@@ -196,8 +196,11 @@ class Options(OptionSpace):
                 self.write_integer(output_file, self.ocean_visibility)
                 self.write_string(output_file, 'simple_display_option ')
                 self.write_integer(output_file, self.simple_display_option)
-                self.write_string(output_file, 'antialiasing')
-                self.write_integer(output_file, self.antialiasing)
+
+                if config.GetBool('want-anti-aliasing-opt', False):
+                    self.write_string(output_file, 'antialiasing')
+                    self.write_integer(output_file, self.antialiasing)
+
                 self.write_string(output_file, 'vsync')
                 self.write_integer(output_file, self.vsync)
                 self.write_string(output_file, 'frameRate')
@@ -208,13 +211,13 @@ class Options(OptionSpace):
             pass
 
         return state
-    
+
     def saveWorking(self):
         options = Options()
         options_loaded = options.load(Options.POSSIBLE_WORKING_FILE_PATH)
         if options_loaded:
             options.save(Options.WORKING_FILE_PATH, Options.WORKING_STATE)
-        
+
         options = Options()
         options_loaded = options.load(Options.DEFAULT_FILE_PATH)
         if options_loaded:
@@ -222,14 +225,14 @@ class Options(OptionSpace):
 
     def savePossibleWorking(self, options):
         options.save(Options.POSSIBLE_WORKING_FILE_PATH, Options.WORKING_STATE)
-    
+
     def validate(self, dataType, dataName, default, acceptableValues = []):
-        
+
         try:
             data = self.tokenDict.get(dataName, default)
             if data == default:
                 return default
-            
+
             if isinstance(dataType, type):
                 castValue = dataType(data)
                 if acceptableValues:
@@ -237,7 +240,7 @@ class Options(OptionSpace):
                         return castValue
                     else:
                         return default
-                
+
                 return castValue
             else:
                 return default
@@ -283,7 +286,10 @@ class Options(OptionSpace):
             self.sound_volume = self.validate(float, 'sound_volume', 1.0)
             self.music = self.validate(int, 'music', 1)
             self.music_volume = self.validate(float, 'music_volume', 1.0)
-            self.antialiasing = self.validate(int, 'antialiasing', 0)
+
+            if config.GetBool('want-anti-aliasing-opt', False):
+                self.antialiasing = self.validate(int, 'antialiasing', 0)
+
             self.gui_scale = self.validate(float, 'gui_scale', 0.5)
             self.special_effects = self.validate(int, 'special_effects', 2)
             self.texture_scale = self.validate(float, 'texture_scale', 1.0)
@@ -318,7 +324,7 @@ class Options(OptionSpace):
 
         self.runtime()
         return state
-    
+
     def config_resolution(self):
         self.resolution = base.width_to_resolution_id(base.config.GetInt('win-size', 800))
         horizontal_resolution = win_size.getIntWord(0)
@@ -327,11 +333,11 @@ class Options(OptionSpace):
         if horizontal_resolution == 1280 and vertical_resolution == 720:
             self.widescreen = 1
             self.widescreen_resolution = 0
-        
+
         if horizontal_resolution == 1920 and vertical_resolution == 1080:
             self.widescreen = 1
             self.widescreen_resolution = 1
-        
+
         self.window_width = horizontal_resolution
         self.window_height = vertical_resolution
         self.fullscreen_width = horizontal_resolution
@@ -347,22 +353,22 @@ class Options(OptionSpace):
         if horizontal_resolution == 1280 and vertical_resolution == 720:
             self.widescreen = 1
             self.widescreen_resolution = 0
-        
+
         if horizontal_resolution == 1920 and vertical_resolution == 1080:
             self.widescreen = 1
             self.widescreen_resolution = 1
-        
+
         self.fullscreen = base.config.GetBool('fullscreen', 1)
         if base.config.GetBool('want-water-reflection', 1):
             self.reflection = 2
             if base.config.GetBool('want-water-reflection-show-through-only', 1):
                 self.reflection = 1
-            
+
         else:
             self.reflection = 0
         if base.config.GetBool('want-water-reflect-all', 0):
             self.reflection = 3
-        
+
         self.window_width = horizontal_resolution
         self.window_height = vertical_resolution
         self.fullscreen_width = horizontal_resolution
@@ -377,7 +383,10 @@ class Options(OptionSpace):
         self.music = base.config.GetBool('audio-music-active', 1)
         self.music_volume = base.config.GetFloat('audio-music-volume', 1.0)
         self.ocean_visibility = base.config.GetInt('ocean-visibility', 0)
-        self.antialiasing = base.config.GetBool('antialiasing', 0)
+
+        if config.GetBool('want-anti-aliasing-opt', False):
+            self.antialiasing = base.config.GetBool('antialiasing', 0)
+
         self.vsync = base.config.GetBool('vsync', 1)
         self.frameRate = base.config.GetBool('frame-rate', 0)
         self.runtime()
@@ -393,13 +402,13 @@ class Options(OptionSpace):
         config_variable = ConfigVariableBool('want-water-reflection-show-through-only', 1)
         if self.reflection == 1:
             config_variable.setValue(1)
-        
+
         if self.reflection == 2:
             config_variable.setValue(0)
-        
+
         if self.reflection == 3:
             config_variable.setValue(0)
-        
+
         config_variable = ConfigVariableBool('want-water-reflect-all', 0)
         if self.reflection == 3:
             config_variable.setValue(1)
@@ -433,9 +442,9 @@ class Options(OptionSpace):
             string = '*********************'
             string = string + 'load-display ' + self.api + string
             print string
-        
+
         return string
-    
+
     def optionsToPrcData(self):
         string = ''
         string = string + 'win-size ' + self.getWidth().__repr__() + ' ' + self.getHeight().__repr__() + '\n'
@@ -446,7 +455,7 @@ class Options(OptionSpace):
             string = string + 'compressed-textures 0\n'
         if self.debug:
             print string
-        
+
         return string
 
     def setPipeOptions(self):
@@ -462,23 +471,24 @@ class Options(OptionSpace):
                 sfx_manager = base.sfxManagerList[index]
                 sfx_manager.setVolume(self.sound_volume)
                 index += 1
-        
+
         if base.musicManager:
             base.musicManager.setVolume(self.music_volume)
-        
+
         self.setRuntimeSpecialEffects()
         self.setRuntimeGridDetailLevel(self.terrain_detail_level)
         self.setRuntimeAvatarDetailLevel(self.character_detail_level)
-        
+
         try:
             base.setLowMemory(self.memory)
         except:
             pass
 
-        if self.antialiasing:
-            base.render.setAntialias(AntialiasAttrib.MAuto)
-        else:
-            base.render.setAntialias(AntialiasAttrib.MNone)
+        if config.GetBool('want-anti-aliasing-opt', False):
+            if self.antialiasing:
+                base.render.setAntialias(AntialiasAttrib.MAuto)
+            else:
+                base.render.setAntialias(AntialiasAttrib.MNone)
 
         base.setFrameRateMeter(self.frameRate)
 
@@ -493,13 +503,13 @@ class Options(OptionSpace):
         value = self.texture_scale
         if value <= 0.0:
             value = 1.0
-        
+
         if value >= 1.0:
             value = 1.0
-        
+
         config_variable.setValue(value)
 
-    
+
     def getGUIScale(self):
         return self.gui_scale * 0.6 + 0.7
 
@@ -525,7 +535,10 @@ class Options(OptionSpace):
         self.sound_volume = 1.0
         self.music = 1
         self.music_volume = 1.0
-        self.antialiasing = 0
+
+        if config.GetBool('want-anti-aliasing-opt', False):
+            self.antialiasing = 0
+
         self.gui_scale = 0.5
         self.special_effects = self.SpecialEffectsHigh
         self.texture_scale = 0.0
@@ -557,7 +570,7 @@ class Options(OptionSpace):
         if pipe:
             di = pipe.getDisplayInformation()
             total = di.getTotalDisplayModes()
-        
+
         return total
 
     def findResolution(self, width, height, bits_per_pixel, pipe):
@@ -573,9 +586,9 @@ class Options(OptionSpace):
                         break
 
                 index += 1
-        
+
         return found
-    
+
     def verifyOptions(self, pipe, overwrite = False):
         state = False
         bits_per_pixel = 32
@@ -590,7 +603,7 @@ class Options(OptionSpace):
                     if overwrite:
                         self.window_width = di.getMaximumWindowWidth()
                         self.window_height = di.getMaximumWindowHeight()
-                    
+
                 else:
                     index = 0
                     total_display_modes = di.getTotalDisplayModes()
@@ -600,7 +613,7 @@ class Options(OptionSpace):
                                 if overwrite:
                                     self.window_width = di.getDisplayModeWidth(index)
                                     self.window_height = di.getDisplayModeHeight(index)
-                                
+
                                 break
 
                         index += 1
@@ -612,7 +625,7 @@ class Options(OptionSpace):
                     if overwrite:
                         self.fullscreen_width = di.getMaximumWindowWidth()
                         self.fullscreen_height = di.getMaximumWindowHeight()
-                    
+
                 else:
                     index = 0
                     total_display_modes = di.getTotalDisplayModes()
@@ -622,7 +635,7 @@ class Options(OptionSpace):
                                 if overwrite:
                                     self.fullscreen_width = di.getDisplayModeWidth(index)
                                     self.fullscreen_height = di.getDisplayModeHeight(index)
-                                
+
                                 break
 
                         index += 1
@@ -672,9 +685,9 @@ class Options(OptionSpace):
             string = 'medium'
         elif level == Options.texture_scale_high:
             string = 'high'
-        
+
         return string
-    
+
     def getGameOptionString(self, level):
         if level == Options.option_low:
             string = 'low'
@@ -687,7 +700,7 @@ class Options(OptionSpace):
     def setRuntimeGridDetailLevel(self, level):
         string = 'grid-detail %s\n' % self.getGameOptionString(level)
         self.setPrc(string)
-        
+
         try:
             base.positionFarCull()
         except:
@@ -717,7 +730,7 @@ class Options(OptionSpace):
                 string = 'geom-cache-size ' + size.__repr__() + '\n'
                 if self.debug:
                     print string
-                
+
                 self.setPrc(string)
 
     def getPhysicalMemory(self, pipe):
@@ -725,12 +738,12 @@ class Options(OptionSpace):
         di = pipe.getDisplayInformation()
         if di.getDisplayState() == DisplayInformation.DSSuccess:
             physical_memory = di.getPhysicalMemory()
-        
+
         return physical_memory
 
     def optionsGammaToGamma(self, gamma):
         return gamma * 2.0 + 0.5
-    
+
     def automaticGrapghicsApiSelection(self, pipe):
         di = pipe.getDisplayInformation()
         if di.getDisplayState() == DisplayInformation.DSSuccess and base.config.GetBool('use-graphics-api-auto-select', 1):
@@ -746,11 +759,11 @@ class Options(OptionSpace):
                     entry = sis_device_list[i]
                     if entry[0] == device_id:
                         pass
-                
+
                 api = 'pandadx9'
                 api2 = 'pandadx8'
                 state = True
-            
+
             if state:
                 print 'self.api =', self.api, 'api =', api
                 if self.api == api or self.api == api2:
@@ -761,7 +774,7 @@ class Options(OptionSpace):
                         if api == 'pandadx9' and pipe.getInterfaceName() == 'DirectX9':
                             base.pipe = pipe
                             break
-                        
+
                         if api2 == 'pandadx8' and pipe.getInterfaceName() == 'DirectX8':
                             base.pipe = pipe
                             break
@@ -782,14 +795,14 @@ class Options(OptionSpace):
             if driver_year > 0 and driver_month > 0 and driver_day > 0:
                 today = datetime.date.today()
                 days = self.compareDates(today.year, today.month, today.day, driver_year, driver_month, driver_day)
-            
+
             if driver_product or driver_version or driver_sub_version or driver_build:
                 product = 0
                 version = 0
                 sub_version = 0
                 build = 0
                 state = self.compareNumbers(product, version, sub_version, build, driver_product, driver_version, driver_sub_version, driver_build)
-            
+
             low_end_card = 0
             self.shader = 0
             self.output('vendor_id ', vendor_id)
@@ -2083,19 +2096,19 @@ class Options(OptionSpace):
                             self.shader = 1
                             self.output('device_name* ', entry[1])
                             break
-                        
+
                     elif entry[0] == 0:
                         if device_id == entry[2]:
                             low_end_card = 1
                             self.output('device_name* ', entry[1])
                             break
-                        
+
                     elif device_id == entry[1]:
                         self.output('device_name ', entry[0])
                         break
-                    
-                
-            
+
+
+
             if vendor_id == 4318:
                 nvidia_device_list = [
                     [
@@ -2842,13 +2855,13 @@ class Options(OptionSpace):
                             self.shader = 1
                             self.output('device_name* ', entry[2])
                             break
-                        
+
                     elif entry[0] == 0:
                         if device_id == entry[1]:
                             low_end_card = 1
                             self.output('device_name* ', entry[2])
                             break
-                        
+
                     elif device_id == entry[1]:
                         self.output('device_name ', entry[1])
                         break
@@ -2937,28 +2950,28 @@ class Options(OptionSpace):
                     pass
 
                 low_end_card = 1
-            
+
             if vendor_id == 21299:
                 low_end_card = 1
-            
+
             if vendor_id == 4153:
                 low_end_card = 1
-            
+
             if vendor_id == 4358:
                 low_end_card = 1
-            
+
             size = di.getVideoMemory()
             if size == 0:
                 size = di.getTextureMemory()
-            
+
             mb = 1024 * 1024
             if self.debug:
                 size = 32 * mb
-            
+
             test_size = base.config.GetInt('test-video-memory', 0)
             if test_size > 0:
                 size = test_size * mb
-            
+
             self.textureCompression = 1
             self.texture = Options.texture_maximum
             if size <= 0:
@@ -2981,7 +2994,7 @@ class Options(OptionSpace):
                 pass
             elif size > 1024 * mb:
                 pass
-            
+
             scale = Options.texture_scale_low
             block_size = 1024 * 1024 * 256
             physical_memory = di.getPhysicalMemory()
@@ -3036,7 +3049,7 @@ class Options(OptionSpace):
                     self.special_effects = Options.SpecialEffectsMedium
                     self.character_detail_level = Options.option_medium
                     self.terrain_detail_level = Options.option_medium
-            
+
             low_end_card = base.config.GetInt('low-end-card', low_end_card)
             if low_end_card:
                 self.output('info ', 'test-low-end card')
@@ -3045,7 +3058,7 @@ class Options(OptionSpace):
                 self.character_detail_level = Options.option_low
                 self.terrain_detail_level = Options.option_low
                 self.memory = 1
-            
+
             self.texture_scale = scale
             high_end_card = base.config.GetInt('test-high-end-card', self.shader)
             if high_end_card:
@@ -3063,71 +3076,71 @@ class Options(OptionSpace):
                                 break
 
                         index += 1
-                
+
                 if supported:
                     if width <= di.getMaximumWindowWidth() and height <= di.getMaximumWindowHeight():
                         self.window_width = width
                         self.window_height = height
-                    
+
                     self.fullscreen_width = width
                     self.fullscreen_height = height
 
             if self.recommendOptionsBasedOnData:
-                
+
                 def validate_gameOptions(options):
                     if len(options) != 18:
                         return False
-                    
+
                     if int(options[1:2]) not in [
                         0,
                         1,
                         2]:
                         return False
-                    
+
                     if int(options[3:4]) not in [
                         0,
                         1]:
                         return False
-                    
+
                     if int(options[5:6]) not in [
                         0,
                         1]:
                         return False
-                    
+
                     if int(options[7:8]) not in [
                         1,
                         2,
                         4]:
                         return False
-                    
+
                     if int(options[9:10]) not in [
                         0,
                         1]:
                         return False
-                    
+
                     if int(options[11:12]) not in [
                         0,
                         1,
                         2]:
                         return False
-                    
+
                     if int(options[13:14]) not in [
                         0,
                         1,
                         2]:
                         return False
-                    
+
                     if int(options[15:16]) not in [
                         0,
                         1,
                         2]:
                         return False
-                    
+
                     if int(options[17:18]) not in [
                         0,
                         1]:
                         return False
-                    
+
                     return True
 
                 system_key = ('0x%04x' % di.getVendorId(), '0x%04x' % di.getDeviceId(), '%s.%d.%d.%d' % (os.name, di.getOsPlatformId(), di.getOsVersionMajor(), di.getOsVersionMinor()))
@@ -3149,7 +3162,7 @@ class Options(OptionSpace):
             self.texture = Options.texture_medium
         if not realtime:
             self.runtime()
-        
+
         return
 
     def getSpecialEffectsSetting(self):
@@ -3165,10 +3178,10 @@ class Options(OptionSpace):
 
         if self.special_effects == Options.SpecialEffectsLow:
             MotionTrail.setGlobalEnable(False)
-        
+
         if self.special_effects == Options.SpecialEffectsMedium:
             MotionTrail.setGlobalEnable(True)
-        
+
         if self.special_effects == Options.SpecialEffectsHigh:
             MotionTrail.setGlobalEnable(True)
 
@@ -3178,7 +3191,7 @@ class Options(OptionSpace):
     def log(self, message = None):
         if message:
             self.notify.info(message)
-        
+
         self.output('version ', self.version)
         self.output('state ', self.state)
         self.output('api ', self.api)
@@ -3217,11 +3230,11 @@ class Options(OptionSpace):
         scale = self.texture_scale
         if scale <= 0.0:
             scale = 1.0
-        
+
         scale = 1.0 / scale
         gameOptionsCode = 'r%ds%ds%dt%dc%de%dc%dt%dm%d' % (self.reflection, self.shader, self.shadow, scale, self.textureCompression, self.special_effects, self.character_detail_level, self.terrain_detail_level, self.memory)
         base.gameOptionsCode = gameOptionsCode
-    
+
     def compareNumbers(self, x1, y1, z1, w1, x2, y2, z2, w2):
         axis = 0
         delta = 0
@@ -3254,7 +3267,7 @@ class Options(OptionSpace):
             dy,
             dz,
             dw]
-    
+
     def compareDates(self, year1, month1, day1, year2, month2, day2):
         delta_days = 0.0
         state = self.compareNumbers(year1, month1, day1, 0, year2, month2, day2, 0)
@@ -3268,14 +3281,14 @@ class Options(OptionSpace):
 
 class KeyMappings(OptionSpace):
     notify = DirectNotifyGlobal.directNotify.newCategory('KeyMappings')
-    
+
     def __init__(self):
         self.startWatcher()
 
     def startWatcher(self):
         self.notify.debug('Starting key watcher')
         base.buttonThrowers[0].node().setButtonDownEvent('GameOptions-buttonWatcher')
-    
+
     def destroy(self):
         self.notify.debug('Stopping key watcher')
         base.buttonThrowers[0].node().setButtonDownEvent('')
@@ -3295,7 +3308,7 @@ class GameOptions(BorderFrame):
         (1920, 1080)]
     MinimumHorizontalResolution = 800
     MinimumVerticalResolution = 600
-    
+
     def __init__(self, title, x, y, width, height, options = None, file_path = None, pipe = None, access = 0, chooser = 0, keyMappings = None):
         self.inAdFrame = False
         self.width = width
@@ -3316,7 +3329,7 @@ class GameOptions(BorderFrame):
             self.velvet = False
         if os.getenv('GAME_SHOW_ADDS') == 'NO' or sys.platform == 'darwin' or sys.platform == 'linux2':
             self.velvet = False
-        
+
         self.restartDialog = None
         self.savedDialog = None
         self.logoutDialog = None
@@ -3347,7 +3360,7 @@ class GameOptions(BorderFrame):
                 self.shader_support = True
 
         self.play = False
-        
+
         try:
             if base.cr.gameFSM.getCurrentState().getName() == 'playGame':
                 self.play = True
@@ -3363,7 +3376,7 @@ class GameOptions(BorderFrame):
         elif hasattr(base, 'localAvatar'):
             if not Freebooter.getPaidStatus(base.localAvatar.getDoId()):
                 self.freeLock = True
-        
+
         if base.config.GetBool('use-simple-gameoptions-gui', 1):
             self.gui = GameOptionsGui(self, title, x, y, width, height, options, file_path, pipe, access, chooser, keyMappings)
             return
@@ -3429,7 +3442,7 @@ class GameOptions(BorderFrame):
             x += x_increment
             y += y_increment
             self.keys_button = button
-        
+
         label_x_offset = -0.07
         label_y_offset = -0.05
         increment1 = 0
@@ -3454,7 +3467,7 @@ class GameOptions(BorderFrame):
             appendMe = DirectFrame(parent = button, relief = None, pos = (-0.165, 0, -0.058), state = DGG.DISABLED, geom = subCard.find('**/subscribers_lock'), geom_scale = 0.15, geom_pos = (0.06, 0, 0.06))
             appendMe.setAlphaScale(1.0, 2)
             subCard.removeNode()
-        
+
         self.fullscreen_button2 = button
         increment1 += 1
         x = start_x
@@ -3470,7 +3483,7 @@ class GameOptions(BorderFrame):
         total_windowed_resolutions = len(base.windowed_resolution_table)
         if total_windowed_resolutions > maximum_buttons:
             base.windowed_resolution_table[0:total_windowed_resolutions - maximum_buttons] = []
-        
+
         self.windowed_resolutions_button_array = []
         total_windowed_resolutions = len(base.windowed_resolution_table)
         if total_windowed_resolutions > 0:
@@ -3488,11 +3501,11 @@ class GameOptions(BorderFrame):
                     next_row_y_increment = 0.0575
                     x = start_x
                     y += next_row_y_increment
-                
+
                 self.windowed_resolutions_button_array = self.windowed_resolutions_button_array + [
                     button]
                 index += 1
-        
+
         increment1 += 2
         x = start_x
         y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset - 0.07
@@ -3503,7 +3516,7 @@ class GameOptions(BorderFrame):
         total_fullscreen_resolutions = len(base.fullscreen_resolution_table)
         if total_fullscreen_resolutions > maximum_buttons:
             base.fullscreen_resolution_table[0:total_fullscreen_resolutions - maximum_buttons] = []
-        
+
         self.fullscreen_resolutions_button_array = []
         total_fullscreen_resolutions = len(base.fullscreen_resolution_table)
         if total_fullscreen_resolutions > 0:
@@ -3521,11 +3534,11 @@ class GameOptions(BorderFrame):
                     next_row_y_increment = 0.0575
                     x = start_x
                     y += next_row_y_increment
-                
+
                 self.fullscreen_resolutions_button_array = self.fullscreen_resolutions_button_array + [
                     button]
                 index += 1
-        
+
         increment1 = 0
         increment2 = 0
         self.graphics_page = DirectFrame(parent = self)
@@ -3563,7 +3576,7 @@ class GameOptions(BorderFrame):
         self.reflection_all_button = button
         if True:
             self.reflection_all_button.hide()
-        
+
         increment2 += 1
         x = 0.1
         y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
@@ -3589,7 +3602,7 @@ class GameOptions(BorderFrame):
             x += x_increment
             y += y_increment
             self.shader_on_button = button
-        
+
         increment2 += 1
         x = 0.1
         y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
@@ -3667,7 +3680,7 @@ class GameOptions(BorderFrame):
             x += x_increment
             y += y_increment
             self.texture_maximum_button = button
-        
+
         text = PLocalizer.GameOptionsCompressed
         button = GuiButton(parent = parent, command = self.texture_compression_button_function)
         self.set_button_settings(button, x, y, text)
@@ -3777,7 +3790,7 @@ class GameOptions(BorderFrame):
             x += x_increment
             y += y_increment
             self.high_ship_vis_button = button
-        
+
         increment2 += 1
         increment1 = 0
         increment2 = 0
@@ -3802,7 +3815,7 @@ class GameOptions(BorderFrame):
         x += x_increment
         y += y_increment
         self.sound_on_button = button
-        
+
         def sound_volume_update_function(value):
             self.options.sound_volume = value
             if base.sfxManagerList:
@@ -3836,7 +3849,7 @@ class GameOptions(BorderFrame):
         x += x_increment
         y += y_increment
         self.music_on_button = button
-        
+
         def music_volume_update_function(value):
             self.options.music_volume = value
             if base.musicManager:
@@ -3872,10 +3885,10 @@ class GameOptions(BorderFrame):
         increment2 += 1.5
         x = 0.1
         y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-        
+
         def gui_scale_update_function(value):
             self.options.gui_scale = value
-            
+
             try:
                 gui_manager = localAvatar.guiMgr
             except:
@@ -3909,7 +3922,7 @@ class GameOptions(BorderFrame):
             y += y_increment
             self.cpu_frequency_warning_on_button = button
             increment2 += 1.5
-        
+
         increment1 = 0
         increment2 = 0
         delta_y = 1.0
@@ -3936,7 +3949,7 @@ class GameOptions(BorderFrame):
         increment2 += delta_y
         x = 0.1
         y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-        
+
         def gamma_update_function(value):
             self.options.gamma = value
             if base.win and base.win.getGsg():
@@ -3973,7 +3986,7 @@ class GameOptions(BorderFrame):
             increment2 += delta_y
             x = 0.1
             y = y_section_increment * increment1 + y_section_increment2 * increment2 + y_section_offset
-            
+
             def hdr_update_function(value):
                 self.options.hdr_factor = value
                 if base.hdr:
@@ -3987,7 +4000,7 @@ class GameOptions(BorderFrame):
             resolution = 0.02
             self.hdr_factor_slider = self.create_slider(hdr_update_function, self.options.hdr_factor, x, y, resolution, text, parent)
             increment2 += delta_y
-        
+
         x = 0.1
         y = y_section_increment * 1 + y_section_increment2 * 4 + y_section_offset - 0.0
         text = PLocalizer.GameOptionsRestartRequired
@@ -3997,7 +4010,7 @@ class GameOptions(BorderFrame):
             increment2 = 0
             self.keys_page = DirectFrame(parent = self)
             parent = self.keys_page
-        
+
         parent = self
         x = 0.1
         y = 0.95
@@ -4008,7 +4021,7 @@ class GameOptions(BorderFrame):
         self.set_button_settings(button, x, y, text)
         if self.play == False:
             self.disableButton(button)
-        
+
         x += x_increment
         y += y_increment
         x += x_increment
@@ -4055,20 +4068,20 @@ class GameOptions(BorderFrame):
 
     def get_pipe(self):
         return base.pipe
-    
+
     def set_button_settings(self, button, x, y, text):
         button_x = self.x_to_gui_coordinate(x)
         button_y = self.y_to_gui_coordinate(y)
         button.configure(text = text, text_fg = (1.0, 1.0, 1.0, 1.0), text_scale = PiratesGuiGlobals.TextScaleLarge, text_wordwrap = 0)
         button.setPos(button_x, 0, button_y)
         button.resetFrameSize()
-    
+
     def create_label(self, x, y, title, parent, color = PiratesGuiGlobals.TextFG1):
         label_x = self.x_to_gui_coordinate(x)
         label_y = self.y_to_gui_coordinate(y)
         label = DirectLabel(parent = parent, relief = None, text = title, text_align = TextNode.ALeft, text_scale = PiratesGuiGlobals.TextScaleLarge, text_pos = (label_x, label_y), text_fg = color, text_shadow = PiratesGuiGlobals.TextShadow, text_font = PiratesGlobals.getInterfaceOutlineFont(), textMayChange = 1)
         return label
-    
+
     def create_slider(self, update_function, default_value, x, y, resolution, label, parent):
         slider_x = self.x_to_gui_coordinate(x)
         slider_y = self.y_to_gui_coordinate(y)
@@ -4086,11 +4099,11 @@ class GameOptions(BorderFrame):
             slider,
             update_function]
         return slider
-    
+
     def create_slider2(self, update_function, default_value, x, y, resolution, label, parent):
         slider_x = self.x_to_gui_coordinate(x)
         slider_y = self.y_to_gui_coordinate(y)
-        
+
         def update_slider(slider, update_function):
             string = slider.label + '  (%.2f)' % (slider['value'] * 2.0 + 0.5)
             slider['text'] = string
@@ -4138,19 +4151,19 @@ class GameOptions(BorderFrame):
     def show_graphics_interface(self):
         self.highlight_button(self.graphics_button)
         self.graphics_page.show()
-    
+
     def hide_graphics_interface(self):
         self.fade_button(self.graphics_button)
         self.graphics_page.hide()
-    
+
     def show_geometry_interface(self):
         self.highlight_button(self.geometry_button)
         self.geometry_page.show()
-    
+
     def hide_geometry_interface(self):
         self.fade_button(self.geometry_button)
         self.geometry_page.hide()
-    
+
     def show_audio_interface(self):
         self.highlight_button(self.audio_button)
         self.audio_page.show()
@@ -4178,7 +4191,7 @@ class GameOptions(BorderFrame):
     def show_keys_interface(self):
         self.highlight_button(self.keys_button)
         self.keys_page.show()
-    
+
     def hide_keys_interface(self):
         self.fade_button(self.keys_button)
         self.keys_page.hide()
@@ -4192,7 +4205,7 @@ class GameOptions(BorderFrame):
         self.hide_gamma_interface()
         if base.config.GetBool('want-custom-keys', 0):
             self.hide_keys_interface()
-    
+
     def graphics_button_function(self):
         self.hide_display_interface()
         self.show_graphics_interface()
@@ -4255,7 +4268,7 @@ class GameOptions(BorderFrame):
     def logout_dialog_command(self, value):
         self.delete_dialogs()
         if value == 1:
-            
+
             try:
                 if base.cr.tutorialObject and base.cr.tutorialObject.map:
                     base.cr.tutorialObject.map.handleCancel()
@@ -4269,7 +4282,7 @@ class GameOptions(BorderFrame):
     def logout_button_function(self):
         if self.logoutDialog:
             self.logoutDialog.destroy()
-        
+
         self.logoutDialog = PDialog.PDialog(text = PLocalizer.GameOptionsLogoutConfirm, style = OTPDialog.YesNo, giveMouse = False, command = self.logout_dialog_command)
         self.logoutDialog.setBin('gui-popup', -5)
 
@@ -4277,7 +4290,7 @@ class GameOptions(BorderFrame):
         self.options = Options()
         self.options.recommendedOptions(self.get_pipe(), True)
         self.set_options(True)
-    
+
     def restore_button_function(self):
         if self.restore_options:
             self.options = copy.copy(self.restore_options)
@@ -4288,12 +4301,12 @@ class GameOptions(BorderFrame):
             self.restartDialog.destroy()
             del self.restartDialog
             self.restartDialog = None
-        
+
         if self.savedDialog:
             self.savedDialog.destroy()
             del self.savedDialog
             self.savedDialog = None
-        
+
         if self.logoutDialog:
             self.logoutDialog.destroy()
             del self.logoutDialog
@@ -4315,7 +4328,7 @@ class GameOptions(BorderFrame):
 
     def default_dialog_command(self, value):
         self.delete_dialogs()
-    
+
     def showUpsell(self):
         if self.chooser:
             self.chooser.popupFeatureBrowser(0, 0)
@@ -4344,21 +4357,21 @@ class GameOptions(BorderFrame):
         if base.pipe != pipe:
             self.apiChanged = 1
             gsg = None
-        
+
         if gsg == None or currentProperties.getFullscreen() != newProperties.getFullscreen():
             if self.debug:
                 print 'window properties', properties, 'gsg', gsg
-            
+
             base.pipe = pipe
             if not base.openMainWindow(props = properties, gsg = gsg, keepCamera = True):
                 if self.debug:
                     print 'OPEN MAIN WINDOW FAILED'
-                
+
                 return 0
-            
+
             if self.debug:
                 print 'OPEN MAIN WINDOW PASSED'
-            
+
             NametagGlobals.setCamera(base.cam)
             NametagGlobals.setMouseWatcher(base.mouseWatcherNode)
             base.graphicsEngine.openWindows()
@@ -4423,7 +4436,7 @@ class GameOptions(BorderFrame):
         self.fade_button(self.reflection_default_button)
         self.fade_button(self.reflection_all_button)
         self.update()
-    
+
     def reflection_sky_button_function(self):
         self.options.reflection = 1
         Water.all_reflecttions_show_through_only()
@@ -4432,7 +4445,7 @@ class GameOptions(BorderFrame):
         self.fade_button(self.reflection_default_button)
         self.fade_button(self.reflection_all_button)
         self.update()
-    
+
     def reflection_default_button_function(self):
         self.options.reflection = 2
         Water.all_reflections_on()
@@ -4441,7 +4454,7 @@ class GameOptions(BorderFrame):
         self.highlight_button(self.reflection_default_button)
         self.fade_button(self.reflection_all_button)
         self.update()
-    
+
     def reflection_all_button_function(self):
         self.options.reflection = 3
         Water.all_reflections_on()
@@ -4454,7 +4467,7 @@ class GameOptions(BorderFrame):
     def shader_off_button_function(self):
         if self.options.shader != 0:
             self.display_restart_dialog()
-        
+
         self.options.shader = 0
         self.fade_button(self.shader_on_button)
         self.highlight_button(self.shader_off_button)
@@ -4463,14 +4476,14 @@ class GameOptions(BorderFrame):
     def shader_on_button_function(self):
         if self.options.shader != 1:
             self.display_restart_dialog()
-        
+
         self.options.shader = 1
         self.fade_button(self.shader_off_button)
         self.highlight_button(self.shader_on_button)
         self.update()
-    
+
     def simple_shadow_button_function(self):
-        
+
         try:
             time_of_day_manager = base.cr.timeOfDayManager
         except:
@@ -4478,14 +4491,14 @@ class GameOptions(BorderFrame):
 
         if time_of_day_manager:
             time_of_day_manager.disableAvatarShadows()
-        
+
         self.options.shadow = 0
         self.highlight_button(self.simple_shadow_button)
         self.fade_button(self.shadow_button)
         self.update()
 
     def shadow_button_function(self):
-        
+
         try:
             time_of_day_manager = base.cr.timeOfDayManager
         except:
@@ -4493,7 +4506,7 @@ class GameOptions(BorderFrame):
 
         if time_of_day_manager:
             time_of_day_manager.enableAvatarShadows()
-        
+
         self.options.shadow = 1
         self.fade_button(self.simple_shadow_button)
         self.highlight_button(self.shadow_button)
@@ -4505,7 +4518,7 @@ class GameOptions(BorderFrame):
         self.fade_button(self.special_effects_high_button)
         self.options.special_effects = Options.SpecialEffectsLow
         self.options.setRuntimeSpecialEffects()
-    
+
     def special_effects_medium_button_function(self):
         self.fade_button(self.special_effects_low_button)
         self.highlight_button(self.special_effects_medium_button)
@@ -4528,7 +4541,7 @@ class GameOptions(BorderFrame):
         if self.options.texture_scale_mode:
             if self.options.texture_scale != Options.texture_scale_low:
                 self.display_restart_dialog()
-            
+
             self.options.texture_scale = Options.texture_scale_low
             self.setTextureScale()
         else:
@@ -4542,7 +4555,7 @@ class GameOptions(BorderFrame):
         if self.options.texture_scale_mode:
             if self.options.texture_scale != Options.texture_scale_medium:
                 self.display_restart_dialog()
-            
+
             self.options.texture_scale = Options.texture_scale_medium
             self.setTextureScale()
         else:
@@ -4556,12 +4569,12 @@ class GameOptions(BorderFrame):
         if self.options.texture_scale_mode:
             if self.options.texture_scale != Options.texture_scale_high:
                 self.display_restart_dialog()
-            
+
             self.options.texture_scale = Options.texture_scale_high
             self.setTextureScale()
         else:
             self.options.texture = Options.texture_high
-    
+
     def texture_maximum_button_function(self):
         self.fade_button(self.texture_low_button)
         self.fade_button(self.texture_medium_button)
@@ -4570,12 +4583,12 @@ class GameOptions(BorderFrame):
         if self.options.texture_scale_mode:
             if self.options.texture_scale != Options.texture_scale_maximum:
                 self.display_restart_dialog()
-            
+
             self.options.texture_scale = Options.texture_scale_maximum
             self.setTextureScale()
         else:
             self.options.texture = Options.texture_scale_maximum
-    
+
     def texture_compression_button_function(self):
         self.display_restart_dialog()
         if self.options.textureCompression:
@@ -4586,7 +4599,7 @@ class GameOptions(BorderFrame):
             self.highlight_button(self.texture_compression_button)
         else:
             self.fade_button(self.texture_compression_button)
-    
+
     def texture_compression_button_display(self):
         if self.options.textureCompression:
             self.highlight_button(self.texture_compression_button)
@@ -4641,7 +4654,7 @@ class GameOptions(BorderFrame):
         level = Options.option_high
         self.options.terrain_detail_level = level
         self.options.setRuntimeGridDetailLevel(level)
-    
+
     def aggressive_memory_button_function(self):
         self.highlight_button(self.aggressive_memory_button)
         self.fade_button(self.default_memory_button)
@@ -4655,7 +4668,7 @@ class GameOptions(BorderFrame):
         self.setLowMemory()
 
     def setLowMemory(self):
-        
+
         try:
             base.setLowMemory(self.options.memory)
         except:
@@ -4733,7 +4746,7 @@ class GameOptions(BorderFrame):
         self.fade_button(self.cpu_frequency_warning_on_button)
         self.highlight_button(self.cpu_frequency_warning_off_button)
         self.update()
-    
+
     def cpu_frequency_warning_on_button_function(self):
         self.options.cpu_frequency_warning = 1
         self.highlight_button(self.cpu_frequency_warning_on_button)
@@ -4749,9 +4762,9 @@ class GameOptions(BorderFrame):
         self.highlight_button(self.gamma_off_button)
         if base.win and base.win.getGsg():
             base.win.getGsg().restoreGamma()
-        
+
         self.update()
-    
+
     def gamma_on_button_function(self):
         self.options.gamma_enable = 1
         self.highlight_button(self.gamma_on_button)
@@ -4765,7 +4778,7 @@ class GameOptions(BorderFrame):
     def hdr_off_button_function(self):
         if self.options.hdr != 0:
             self.display_restart_dialog()
-        
+
         self.options.hdr = 0
         self.fade_button(self.hdr_on_button)
         self.highlight_button(self.hdr_off_button)
@@ -4774,12 +4787,12 @@ class GameOptions(BorderFrame):
     def hdr_on_button_function(self):
         if self.options.hdr != 1:
             self.display_restart_dialog()
-        
+
         self.options.hdr = 1
         self.highlight_button(self.hdr_on_button)
         self.fade_button(self.hdr_off_button)
         self.update()
-    
+
     def delete(self):
         pass
 
@@ -4787,28 +4800,28 @@ class GameOptions(BorderFrame):
         if self.gui:
             self.gui.set_options(change_display)
             return
-        
+
         if change_display:
             self.set_display(self.options, base.pipe, self.options.getWidth(), self.options.getHeight())
-        
+
         self.set_fullscreen_button2(self.options.fullscreen)
         if base.inAdFrame:
             self.windowed_resolution_button_function(None, restore)
             self.fullscreen_resolution_button_function(None, restore)
-        
+
         self.initDisplayButtons()
         if self.options.reflection == 0:
             self.reflection_off_button_function()
-        
+
         if self.options.reflection == 1:
             self.reflection_sky_button_function()
-        
+
         if self.options.reflection == 2:
             self.reflection_default_button_function()
-        
+
         if self.options.reflection == 3:
             self.reflection_all_button_function()
-        
+
         if self.options.shader:
             self.shader_on_button_function()
         else:
@@ -4819,13 +4832,13 @@ class GameOptions(BorderFrame):
             self.simple_shadow_button_function()
         if self.options.special_effects == Options.SpecialEffectsLow:
             self.special_effects_low_button_function()
-        
+
         if self.options.special_effects == Options.SpecialEffectsMedium:
             self.special_effects_medium_button_function()
-        
+
         if self.options.special_effects == Options.SpecialEffectsHigh:
             self.special_effects_high_button_function()
-        
+
         if self.options.texture_scale_mode:
             if self.options.texture_scale == Options.texture_scale_low:
                 self.texture_low_button_function()
@@ -4850,32 +4863,32 @@ class GameOptions(BorderFrame):
 
             if self.options.texture == Options.texture_maximum or self.options.texture > Options.texture_high:
                 self.texture_maximum_button_function()
-        
+
         self.texture_compression_button_display()
         if self.options.character_detail_level == Options.option_low:
             self.character_low_button_function()
-        
+
         if self.options.character_detail_level == Options.option_medium:
             self.character_medium_button_function()
-        
+
         if self.options.character_detail_level == Options.option_high:
             self.character_high_button_function()
-        
+
         if self.options.terrain_detail_level == Options.option_low:
             self.terrain_low_button_function()
-        
+
         if self.options.terrain_detail_level == Options.option_medium:
             self.terrain_medium_button_function()
-        
+
         if self.options.terrain_detail_level == Options.option_high:
             self.terrain_high_button_function()
-        
+
         if self.options.memory == 1:
             self.aggressive_memory_button_function()
-        
+
         if self.options.memory == 0:
             self.default_memory_button_function()
-        
+
         if self.enable_ship_visibility:
             if self.options.ocean_visibility == 0:
                 self.off_ship_vis_button_function()
@@ -4904,7 +4917,7 @@ class GameOptions(BorderFrame):
                 self.cpu_frequency_warning_on_button_function()
             else:
                 self.cpu_frequency_warning_off_button_function()
-        
+
         if self.options.gamma_enable == 1:
             self.gamma_on_button_function()
         else:
@@ -4915,7 +4928,7 @@ class GameOptions(BorderFrame):
                 self.hdr_on_button_function()
             else:
                 self.hdr_off_button_function()
-        
+
         self.update()
 
     def update(self):
@@ -4943,7 +4956,7 @@ class GameOptions(BorderFrame):
             BorderFrame.hide(self)
         if log:
             self.options.log('User Closed Options')
-        
+
         messenger.send('GameOptionsHidden')
 
     @classmethod
@@ -4955,10 +4968,10 @@ class GameOptions(BorderFrame):
             if width == base.resolution_table[index][0]:
                 id = index
                 break
-            
+
             index += 1
         return id
-    
+
     def system_information_to_settings(self):
         debug = False
         pipe = base.pipe
@@ -4970,13 +4983,13 @@ class GameOptions(BorderFrame):
                 print 'maximum window height', di.getMaximumWindowHeight()
                 print 'bits per pixel', di.getWindowBitsPerPixel()
                 print 'total_display_modes', total_display_modes
-            
+
             index = 0
             widscreen = 0
             while index < total_display_modes:
                 if debug:
                     print 'W', di.getDisplayModeWidth(index), 'H', di.getDisplayModeHeight(index), 'BPP', di.getDisplayModeBitsPerPixel(index), 'RR', di.getDisplayModeRefreshRate(index), 'FS', di.getDisplayModeFullscreenOnly(index)
-                
+
                 aspect_ratio = di.getDisplayModeHeight(index) * 10000 / di.getDisplayModeWidth(index)
                 if aspect_ratio == 7500:
                     pass
@@ -4988,12 +5001,12 @@ class GameOptions(BorderFrame):
             size = di.getVideoMemory()
             if size == 0:
                 size = di.getTextureMemory()
-            
+
             if debug:
                 print 'shader_model', di.getShaderModel()
                 print 'video_memory', di.getVideoMemory()
                 print 'texture_memory', di.getTextureMemory()
-            
+
             mb = 1024 * 1024
             if size <= 0:
                 pass
@@ -5015,16 +5028,16 @@ class GameOptions(BorderFrame):
                 pass
             elif size > 1024 * mb:
                 pass
-        
+
         if debug:
             print 'physical_memory', di.getPhysicalMemory()
             print 'available_physical_memory', di.getAvailablePhysicalMemory()
-    
+
     def set_display(self, options, pipe, width, height):
         state = False
         if self.debug:
             print 'SET DISPLAY'
-        
+
         if base.inAdFrame:
             if self.display_identifier >= 0:
                 embedded.setWindowMode(self.display_identifier)
@@ -5052,11 +5065,11 @@ class GameOptions(BorderFrame):
                 print 'CURRENT X SIZE', self.current_properties.getXSize()
                 print 'CURRENT Y SIZE', self.current_properties.getYSize()
                 print 'CURRENT FULLSCREEN', self.current_properties.getFullscreen()
-            
+
             if self.current_properties.getFullscreen() == fullscreen and self.current_properties.getXSize() == width and self.current_properties.getYSize() == height:
                 if self.debug:
                     print 'NO DISPLAY CHANGE REQUIRED'
-                
+
                 state = True
             else:
                 properties = WindowProperties()
@@ -5065,17 +5078,17 @@ class GameOptions(BorderFrame):
                 if self.resetDisplayProperties(pipe, properties):
                     if self.debug:
                         print 'DISPLAY CHANGE SET'
-                    
+
                     properties = base.win.getProperties()
                     if self.debug:
                         print 'X SIZE', properties.getXSize()
                         print 'Y SIZE', properties.getYSize()
                         print 'FULLSCREEN', properties.getFullscreen()
-                    
+
                     if properties.getFullscreen() == fullscreen and properties.getXSize() == width and properties.getYSize() == height:
                         if self.debug:
                             print 'DISPLAY CHANGE VERIFIED'
-                        
+
                         state = True
                     else:
                         if self.debug:
@@ -5090,25 +5103,25 @@ class GameOptions(BorderFrame):
                     self.restore_display_properties()
                     if self.debug:
                         print 'AFTER RESTORE'
-                
+
                 base.graphicsEngine.renderFrame()
                 base.graphicsEngine.renderFrame()
         if state:
             self.current_options = copy.copy(self.options)
-        
+
         return state
 
     def setNonPaid(self):
         for button in self.windowed_resolutions_button_array[2:]:
             button.hide()
-        
+
         for button in self.fullscreen_resolutions_button_array:
             button.hide()
 
     def setPaid(self):
         for button in self.windowed_resolutions_button_array[2:]:
             button.show()
-        
+
         for button in self.fullscreen_resolutions_button_array:
             button.show()
 
@@ -5126,7 +5139,7 @@ class GameOptions(BorderFrame):
                 self.highlight_button(self.windowed_resolutions_button_array[i])
             else:
                 self.fade_button(self.windowed_resolutions_button_array[i])
-        
+
         for i in xrange(len(self.fullscreen_resolutions_button_array)):
             if base.inAdFrame:
                 self.inactive_button(self.fullscreen_resolutions_button_array[i])
@@ -5147,7 +5160,7 @@ class GameOptions(BorderFrame):
             if self.debug:
                 print 'windowed_resolution_button_function', button.identifier
                 print base.windowed_resolution_table[button.identifier]
-            
+
             index = 0
             while index < total_resolutions:
                 b = self.windowed_resolutions_button_array[index]
@@ -5155,7 +5168,7 @@ class GameOptions(BorderFrame):
                     if base.inAdFrame:
                         if index > 1:
                             index = 0
-                        
+
                         if self.options.fullscreen_runtime:
                             self.inactive_highlight_button(b)
                         else:
@@ -5163,7 +5176,7 @@ class GameOptions(BorderFrame):
                             self.display_identifier = button.identifier
                             if restore == False:
                                 self.set_display(self.options, base.pipe, base.windowed_resolution_table[button.identifier][0], base.windowed_resolution_table[button.identifier][1])
-                            
+
                         if base.hasEmbedded:
                             self.options.resolution = index
                     else:
@@ -5187,7 +5200,7 @@ class GameOptions(BorderFrame):
                 if current_mode['want_size_x'] == m['want_size_x'] and current_mode['want_size_y'] == m['want_size_y']:
                     b = self.windowed_resolutions_button_array[button_index]
                     self.highlight_button(b)
-    
+
     def fullscreen_resolution_button_function(self, button, restore = False):
         index = 0
         total_resolutions = len(self.fullscreen_resolutions_button_array)
@@ -5235,9 +5248,9 @@ class GameOptions(BorderFrame):
                 if width == resolution_table[index][0] and height == resolution_table[index][1]:
                     resolution_index = index
                     break
-                
+
                 index += 1
-        
+
         return resolution_index
 
     def disableButton(self, button):
@@ -5251,10 +5264,10 @@ class GameOptions(BorderFrame):
             value = self.options.texture_scale
             if value <= 0.0:
                 value = 1.0
-            
+
             if value >= 1.0:
                 value = 1.0
-            
+
             config_variable.setValue(value)
 
     def updateShipVisibility(self):
@@ -5270,5 +5283,3 @@ class GameOptions(BorderFrame):
         from pirates.piratesgui import FeedbackPanel
         self.close_button_function()
         FeedbackPanel.FeedbackPanel()
-
-

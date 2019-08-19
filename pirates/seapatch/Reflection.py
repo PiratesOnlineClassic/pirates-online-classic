@@ -11,7 +11,7 @@ class Reflection(DirectObject):
 
     @classmethod
     def getSkyOnly(self):
-        
+
         try:
             return base.options.reflection == 1
         except:
@@ -31,9 +31,9 @@ class Reflection(DirectObject):
         if reflection:
             reflection.lock = False
             reflection.delete()
-        
+
         Reflection.global_reflection = None
-    
+
     def __init__(self, name, width, height, parent, plane = Plane(Vec3(0, 0, 1), Point3(0, 0, 0))):
         DirectObject.__init__(self)
         self.lock = False
@@ -51,7 +51,7 @@ class Reflection(DirectObject):
         if self.reflection_texture:
             self.reflection_texture.setWrapU(Texture.WMClamp)
             self.reflection_texture.setWrapV(Texture.WMClamp)
-        
+
         p = PNMImage(1, 1, 4)
         p.fill(0, 0, 0)
         p.alphaFill(0)
@@ -86,12 +86,12 @@ class Reflection(DirectObject):
         self.__destroyBuffer()
 
         buffer_properties = FrameBufferProperties()
-        if base.options.antialiasing:
+        if hasattr(base.options, 'antialiasing') and base.options.antialiasing:
             buffer_properties.setMultisamples(base.config.GetInt('multisamples', 2))
-        buffer_properties.setRgbColor(1)
-        buffer_properties.setColorBits(1)
-        buffer_properties.setAlphaBits(1)
-        buffer_properties.setDepthBits(1)
+            buffer_properties.setRgbColor(1)
+            buffer_properties.setColorBits(1)
+            buffer_properties.setAlphaBits(1)
+            buffer_properties.setDepthBits(1)
 
         self.reflection_buffer = base.win.makeTextureBuffer('reflection_buffer' + self.name, self.width, self.height, tex = self.reflection_texture, fbp = buffer_properties)
         if self.reflection_buffer:
@@ -102,7 +102,7 @@ class Reflection(DirectObject):
             if base.main_rtt:
                 base.graphicsEngine.openWindows()
                 self.reflection_buffer.setInverted(0)
-            
+
             self.enable(self.reflection_state)
         else:
             self.display_region = None
@@ -172,7 +172,7 @@ class Reflection(DirectObject):
                     geom_node.addGeom(geometry)
                     geometry_node = geom_node
                     reflection_card.setSourceGeometry(geometry_node, Vec4(-1.0, 1.0, -1.0, 1.0))
-                
+
                 reflection_card_node_path = NodePath(reflection_card.generate())
                 reflection_card_node_path.setTexture(self.reflection_texture, 1)
                 reflection_card_node_path.setAttrib(ColorBlendAttrib.make(ColorBlendAttrib.MAdd))
@@ -192,16 +192,16 @@ class Reflection(DirectObject):
                     reflection_card_node_path.reparentTo(render2d)
                 self.reflection_card_node_path = reflection_card_node_path
                 self.card_created = True
-    
+
     def setCardReflectionFactor(self, scale):
         pass
-    
+
     def setLens(self, lens):
         self.lens = lens
-    
+
     def setClearColor(self, clear_color):
         self.clear_color = clear_color
-    
+
     def setPlanes(self, plane, clip_plane):
         self.plane = plane
         self.clip_plane = clip_plane
@@ -212,10 +212,10 @@ class Reflection(DirectObject):
         if enable:
             if self.reflection_buffer != None:
                 self.reflection_buffer.setActive(True)
-            
+
             if self.reflection_card_node_path:
                 self.reflection_card_node_path.show()
-            
+
             self.reflection_state = True
         else:
             if self.reflection_buffer != None:
@@ -225,7 +225,7 @@ class Reflection(DirectObject):
                 self.reflection_card_node_path.hide()
 
             self.reflection_state = False
-    
+
     def update_reflection(self, lens, reference_node, supports_sky_only = True, sky_only = False):
         if True:
             self.reflection_camera_node_path.node().setLens(lens)
@@ -242,11 +242,11 @@ class Reflection(DirectObject):
                 self.reflection_buffer.setClearColor(self.clear_color)
             else:
                 self.reflection_buffer.setClearColor(self.black_clear_color)
-        
+
         state = self.reflection_state
         if supports_sky_only == False:
             self.enable(state)
-        
+
         self.reflection_state = state
         reference_matrix = reference_node.getMat(self.reflection_plane_node_path)
         reflection_matrix = self.plane.getReflectionMat()
@@ -264,7 +264,7 @@ class Reflection(DirectObject):
         if self.lock == False:
             if self.reflection_card_node_path:
                 self.reflection_card_node_path.removeNode()
-            
+
             self.reflection_camera_node_path.removeNode()
             self.clip_plane_node_path.removeNode()
             self.reflection_plane_node_path.removeNode()
@@ -284,5 +284,3 @@ class Reflection(DirectObject):
             self.reflection_camera.setCameraMask(OTPRender.ReflectionCameraBitmask)
             render.show(OTPRender.ReflectionCameraBitmask | OTPRender.SkyReflectionCameraBitmask)
         self.reflect_show_through_only = reflect_show_through_only
-
-
