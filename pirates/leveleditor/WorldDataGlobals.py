@@ -1,0 +1,8 @@
+LINK_TYPE_AI_NODE = 'Node Links'
+LINK_TYPE_LOC_NODE = 'Locator Links'
+LINK_TYPE_INT_OBJ = 'Interact Links'
+LINK_TYPES = [
+    LINK_TYPE_AI_NODE,
+    LINK_TYPE_LOC_NODE,
+    LINK_TYPE_INT_OBJ]
+OCEAN_AREAS = 'Ocean Areas'

@@ -1,0 +1,3 @@
+class AvatarAccessories:
+    pass
+

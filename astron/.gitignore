@@ -1,0 +1,4 @@
+*.dll
+*.lib
+astrond
+astrond.exe
