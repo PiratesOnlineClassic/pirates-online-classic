@@ -443,7 +443,10 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
     def clearSkillEffects(self):
         for skillEffect in list(self.skillEffects):
-            self.removeSkillEffect(skillEffect[0])
+            self.air.battleMgr.removePendingSkillEffect(skillEffect[0])
+
+        self.skillEffects = []
+        self.d_setSkillEffects(self.skillEffects)
 
     def getSkillEffects(self):
         return self.skillEffects
