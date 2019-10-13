@@ -202,17 +202,29 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
         return masts
 
+    def _playerBoarded(self, avatar):
+        assert(isinstance(avatar, DistributedPlayerPirateAI))
+        self.addCrewMember(avatar)
+        avatar.b_setShipId(self.doId)
+        avatar.b_setActiveShipId(self.doId)
+        avatar.b_setCrewShipId(self.doId)
+        avatar.b_setCurrentIsland('')
+
+    def _playerDeparted(self, avatar):
+        assert(isinstance(avatar, DistributedPlayerPirateAI))
+        self.ignore(avatar.getDeleteEvent())
+        self.removeCrewMember(avatar)
+        avatar.b_setShipId(0)
+        avatar.b_setActiveShipId(0)
+        avatar.b_setCrewShipId(0)
+
     def handleChildArrive(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerPirateAI):
-            self.addCrewMember(childObj)
-            childObj.b_setShipId(self.doId)
-            childObj.b_setActiveShipId(self.doId)
-            childObj.b_setCrewShipId(self.doId)
-            childObj.b_setCurrentIsland('')
+            self._playerBoarded(childObj)
 
             # this will parent the avatar object to the ship so that
             # other avatars can see them, and our position data will be
-            # broadcasted relative to the ship parent object...
+            # broadcasted relative to the ship parent object:
             self.sendUpdateToAvatarId(childObj.doId, 'setMovie', [0, childObj.doId, 0, 1, 0])
 
         DistributedMovingObjectAI.handleChildArrive(self, childObj, zoneId)
@@ -220,10 +232,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
     def handleChildLeave(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerPirateAI):
-            self.removeCrewMember(childObj)
-            childObj.b_setShipId(0)
-            childObj.b_setActiveShipId(0)
-            childObj.b_setCrewShipId(0)
+            self._playerDeparted(childObj)
 
         DistributedMovingObjectAI.handleChildLeave(self, childObj, zoneId)
         DistributedCharterableObjectAI.handleChildLeave(self, childObj, zoneId)
@@ -711,6 +720,8 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
             return
+
+        self.acceptOnce(avatar.getDeleteEvent(), self._playerDeparted, extraArgs=[avatar])
 
     def d_setMovie(self, mode, avatarId, fromShipId, instant, timestamp=0):
         if not timestamp:
