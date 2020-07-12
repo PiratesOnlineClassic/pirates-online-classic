@@ -118,22 +118,22 @@ class OTPInternalRepository(AstronInternalRepository):
         dg.addString(message)
         self.send(dg)
 
-    def logException(self, e):
-        pass
+    #def logException(self, e):
+    #    pass
 
-    def readerPollOnce(self):
-        try:
-            return AstronInternalRepository.readerPollOnce(self)
-        except SystemExit, KeyboardInterrupt:
-            raise
-        except Exception as e:
-
-            if config.GetBool('boot-on-error', True):
-                avatar = self.doId2do.get(self.getAvatarIdFromSender(), None)
-
-                if avatar:
-                    self.kickChannel(self.getMsgSender(), reason=153)
-
-            self.logException(e)
-
-        return 1
+    #def readerPollOnce(self):
+    #    try:
+    #        return AstronInternalRepository.readerPollOnce(self)
+    #    except SystemExit, KeyboardInterrupt:
+    #        raise
+    #    except Exception as e:
+    #
+    #        if config.GetBool('boot-on-error', True):
+    #            avatar = self.doId2do.get(self.getAvatarIdFromSender(), None)
+    #
+    #            if avatar:
+    #                self.kickChannel(self.getMsgSender(), reason=153)
+    #
+    #        self.logException(e)
+    #
+    #    return 1
