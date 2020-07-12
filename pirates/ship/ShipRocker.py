@@ -73,13 +73,13 @@ class ShipRockerRollState:
 
 
 class ShipRocker:
-    
+
     DefMaxRoll = 15.0
     DefFakeMass = 1.0
 
     def __init__(self, maxRoll=None, fakeMass=None):
-        self._maxRoll = notNone(maxRoll, ShipRocker.DefMaxRoll)
-        self._fakeMass = notNone(fakeMass, ShipRocker.DefFakeMass)
+        self._maxRoll = maxRoll or ShipRocker.DefMaxRoll
+        self._fakeMass = fakeMass or ShipRocker.DefFakeMass
         self._off = ShipRockerOffState()
         self._impact = ShipRockerImpactState()
         self._roll = ShipRockerRollState()

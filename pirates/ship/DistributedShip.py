@@ -5,7 +5,7 @@ from direct.gui.DirectGui import *
 from pandac.PandaModules import *
 from direct.gui.OnscreenText import OnscreenText
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.showbase.PythonUtil import Functor, ScratchPad, report, lerp, quickProfile, safeRepr
+from direct.showbase.PythonUtil import Functor, ScratchPad, report, lerp, quickProfile, safeRepr, clampScalar
 from direct.controls import ControlManager
 from direct.controls.ShipPilot import ShipPilot
 from direct.task import Task
