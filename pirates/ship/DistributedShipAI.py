@@ -217,6 +217,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         avatar.b_setShipId(0)
         avatar.b_setActiveShipId(0)
         avatar.b_setCrewShipId(0)
+        self.air.worldGridManager.clearAvatarInterest(self.getParentObj(), avatar)
 
     def handleChildArrive(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerPirateAI):
@@ -247,13 +248,6 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
         DistributedMovingObjectAI.setLocation(self, parentId, zoneId)
         DistributedCharterableObjectAI.setLocation(self, parentId, zoneId)
-
-    def handleChildLeave(self, childObj, zoneId):
-        if isinstance(childObj, DistributedPlayerPirateAI):
-            self.air.worldGridManager.clearAvatarInterest(self.getParentObj(), childObj)
-
-        DistributedMovingObjectAI.handleChildLeave(self, childObj, zoneId)
-        DistributedCharterableObjectAI.handleChildLeave(self, childObj, zoneId)
 
     def delete(self):
         self.air.shipManager.removeActiveShip(self)

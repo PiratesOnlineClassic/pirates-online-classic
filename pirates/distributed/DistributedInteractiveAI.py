@@ -12,6 +12,7 @@ class DistributedInteractiveAI(DistributedNodeAI):
     def __init__(self, air):
         DistributedNodeAI.__init__(self, air)
 
+        self.userId = 0
         self.uniqueId = ''
 
     def requestInteraction(self, doId, interactType, instant):
@@ -32,7 +33,7 @@ class DistributedInteractiveAI(DistributedNodeAI):
             return
 
         if not self.MULTIUSE:
-            self.d_setUserId(avatar.doId)
+            self.b_setUserId(avatar.doId)
         else:
             self.sendUpdateToAvatarId(avatar.doId, 'setUserId', [avatar.doId])
 
@@ -67,7 +68,7 @@ class DistributedInteractiveAI(DistributedNodeAI):
             return
 
         if not self.MULTIUSE:
-            self.d_setUserId(0)
+            self.b_setUserId(0)
         else:
             self.sendUpdateToAvatarId(avatar.doId, 'setUserId', [0])
 
@@ -80,7 +81,7 @@ class DistributedInteractiveAI(DistributedNodeAI):
             self.notify.warning('Failed to demand exit for non-existant avatar!')
             return
 
-        self.d_setUserId(0)
+        self.b_setUserId(0)
 
     def handleRequestExit(self, avatar):
         return self.DENY
@@ -100,8 +101,15 @@ class DistributedInteractiveAI(DistributedNodeAI):
     def selectOption(self, optionId):
         pass
 
+    def setUserId(self, userId):
+        self.userId = userId
+
     def d_setUserId(self, userId):
         self.sendUpdate('setUserId', [userId])
+
+    def b_setUserId(self, userId):
+        self.setUserId(userId)
+        self.d_setUserId(userId)
 
     def setUniqueId(self, uniqueId):
         self.uniqueId = uniqueId
