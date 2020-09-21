@@ -451,6 +451,9 @@ class QuestManagerAI(DirectObject):
         for reward in rewards:
             reward.applyTo(trade, avatar)
 
+        # we're done, cleanup our trade object.
+        self.air.tradeMgr.removeTrade(trade.doId)
+
     def completeQuest(self, avatar, quest):
         assert(avatar is not None)
         assert(quest is not None)
