@@ -472,7 +472,6 @@ class BattleManagerAI(BattleManagerBase):
 
         overallReputation = 0
         goldReward = EnemyGlobals.getGoldDrop(target.getAvatarType(), target.getLevel())
-
         for skillId in attacker.battleSkillDiary.getSkills():
             ammoSkillId, timestamp, reputation = attacker.battleSkillDiary.getSkill(skillId)
             reputationCategoryId = WeaponGlobals.getSkillReputationCategoryId(skillId)
@@ -486,10 +485,9 @@ class BattleManagerAI(BattleManagerBase):
         # used to kill the target
         inventory.setOverallRep(inventory.getOverallRep() + overallReputation)
         inventory.addGoldInPocket(goldReward)
-
         if random.random() >= 0.8:
             cardId = random.randint(InventoryType.begin_Cards, InventoryType.end_Cards - 1)
             inventory.giveCards(cardId, 1)
 
         # attempt to update the avatar's active task progress...
-        self.air.questMgr.enemyDefeated(attacker, target)
+        self.air.questMgr.enemyDefeated(attacker, target, overallReputation)

@@ -559,7 +559,7 @@ class QuestManagerAI(DirectObject):
 
         return self.completeTaskState(avatar, questEvent)
 
-    def enemyDefeated(self, avatar, enemy):
+    def enemyDefeated(self, avatar, enemy, totalReputationAmount):
         parentObj = avatar.getParentObj()
         if not parentObj:
             return
@@ -570,6 +570,7 @@ class QuestManagerAI(DirectObject):
         questEvent.setLevel(enemy.getLevel())
         questEvent.setWeaponType(enemy.getCurrentWeapon()[0])
 
+        self._giveRewards(avatar, [ReputationReward(amount=totalReputationAmount)])
         return self.completeTaskState(avatar, questEvent)
 
     def finalizeCutscene(self, avatar, quest, finalizeIndex=0, npc=None):
