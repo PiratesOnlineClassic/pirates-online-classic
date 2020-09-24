@@ -24,13 +24,15 @@ from pirates.interact.DistributedInteractivePropAI import DistributedInteractive
 
 class PendingSkillEffect(object):
 
-    def __init__(self, effectId, skillId, ammoSkillId, duration, avatar):
+    def __init__(self, effectId, skillId, ammoSkillId, duration, attacker, target):
         self.effectId = effectId
         self.skillId = skillId
         self.ammoSkillId = ammoSkillId
         self.duration = duration
         self.timestamp = time.time()
-        self.avatar = avatar
+
+        self.attacker = attacker
+        self.target = target
 
 
 class BattleManagerAI(BattleManagerBase):
@@ -302,7 +304,7 @@ class BattleManagerAI(BattleManagerBase):
         if not target.getDamagable():
             return
 
-        # cannot damage the monkey
+        # Jack is immortal, cannot kill an already dead monkey D:
         if target.getAvatarType() == AvatarTypes.Monkey:
             return
 
@@ -361,24 +363,45 @@ class BattleManagerAI(BattleManagerBase):
 
         # store a pending skill effect so we can apply it's effects to the target,
         # and remove the skill effect from the target when it expires:
-        pendingSkillEffect = PendingSkillEffect(targetEffectId, skillId, ammoSkillId, effectAttackDuration, target)
+        pendingSkillEffect = PendingSkillEffect(targetEffectId, skillId, ammoSkillId, effectAttackDuration, attacker, target)
         self.appendSkillEffect(pendingSkillEffect)
 
     def _updateSkillEffect(self, pendingSkillEffect):
         assert(pendingSkillEffect is not None)
 
-        avatar = pendingSkillEffect.avatar
-        assert(avatar is not None)
+        attacker = pendingSkillEffect.attacker
+        assert(attacker is not None)
+
+        target = pendingSkillEffect.target
+        assert(target is not None)
 
         # check to see if the skill effect has expired
         currentTime = globalClockDelta.getFrameNetworkTime()
         if time.time() - pendingSkillEffect.timestamp >= pendingSkillEffect.duration:
-            avatar.removeSkillEffect(pendingSkillEffect.effectId)
+            target.removeSkillEffect(pendingSkillEffect.effectId)
             return False
 
-        attackEffects = self.getModifiedSkillEffects(avatar, None, pendingSkillEffect.skillId, pendingSkillEffect.ammoSkillId)
-        if attackEffects is not None:
-            self.applyTargetEffects(avatar, attackEffects[0])
+        if pendingSkillEffect.effectId in [WeaponConstants.C_FLAMING,
+                                           WeaponConstants.C_ON_FIRE,
+                                           WeaponConstants.C_WOUND,
+                                           WeaponConstants.C_ACID,
+                                           WeaponConstants.C_POISON,
+                                           WeaponConstants.C_REGEN,
+                                           WeaponConstants.C_STUN,
+                                           WeaponConstants.C_HOLD]:
+
+            skillEffects = WeaponGlobals.getEffects(pendingSkillEffect.effectId)
+            self.applyTargetEffects(target, skillEffects)
+        else:
+            # TODO: Remove the skill effects from the array when the entity dies,
+            # to prevent skill effects from continuing to update:
+            try:
+                skillEffects = self.getModifiedSkillEffects(attacker, target, pendingSkillEffect.skillId, pendingSkillEffect.ammoSkillId)
+            except:
+                return False
+
+            if skillEffects is not None:
+                self.applyTargetEffects(target, skillEffects[0])
 
         return True
 
@@ -389,12 +412,12 @@ class BattleManagerAI(BattleManagerBase):
 
             pendingSkillEffect = self.getPendingSkillEffect(effectId)
             if pendingSkillEffect is not None:
-                avatar = pendingSkillEffect.avatar
-                assert(avatar is not None)
+                target = pendingSkillEffect.target
+                assert(target is not None)
 
                 if pendingSkillEffect in self._pendingSkillEffects:
                     self._pendingSkillEffects.remove(pendingSkillEffect)
-                    avatar.removeSkillEffect(pendingSkillEffect.effectId)
+                    target.removeSkillEffect(pendingSkillEffect.effectId)
 
         for _ in xrange(len(self._pendingSkillEffects)):
             pendingSkillEffect = self._pendingSkillEffects.popleft()
