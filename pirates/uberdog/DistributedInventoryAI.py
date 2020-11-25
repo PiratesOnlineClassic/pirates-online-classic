@@ -18,9 +18,6 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
     def announceGenerate(self):
         DistributedObjectAI.announceGenerate(self)
 
-    def setCategoryLimits(self, categoriesAndLimits):
-        self.categoryLimits = {category: limit for category, limit in categoriesAndLimits}
-
     def d_setCategoryLimits(self, categoriesAndLimits):
         self.sendUpdate('setCategoryLimits', [categoriesAndLimits])
 
@@ -29,14 +26,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setCategoryLimits(self.getCategoryLimits())
 
     def getCategoryLimits(self):
-        return [[category, limit] for category, limit in self.categoryLimits.items()]
-
-    def setDoIds(self, categoriesAndDoIds):
-        self.doIds = {doId: category for category, doId in categoriesAndDoIds}
-
-        for category, doId in categoriesAndDoIds:
-            category = self.doIdsInCategory.setdefault(category, [])
-            category.append(doId)
+        return [[category, limit] for category, limit in list(self.categoryLimits.items())]
 
     def d_setDoIds(self, categoriesAndDoIds):
         self.sendUpdate('setDoIds', [categoriesAndDoIds])
@@ -46,11 +36,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setDoIds(self.getDoIds())
 
     def getDoIds(self):
-        return [[category, doId] for doId, category in self.doIds.items()]
-
-    def setAccumulators(self, accumulatorTypesAndQuantities):
-        for accumulatorType, quantity in accumulatorTypesAndQuantities:
-            self.accumulators[accumulatorType] = quantity
+        return [[category, doId] for doId, category in list(self.doIds.items())]
 
     def d_setAccumulators(self, accumulatorTypesAndQuantities):
         self.sendUpdate('setAccumulators', [accumulatorTypesAndQuantities])
@@ -60,10 +46,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setAccumulators(self.getAccumulators())
 
     def getAccumulators(self):
-        return [[accumulatorType, quantity] for accumulatorType, quantity in self.accumulators.items()]
-
-    def setStackLimits(self, stackTypesAndLimits):
-        self.stackLimits = {stackType: limit for stackType, limit in stackTypesAndLimits}
+        return [[accumulatorType, quantity] for accumulatorType, quantity in list(self.accumulators.items())]
 
     def d_setStackLimits(self, stackTypesAndLimits):
         self.sendUpdate('setStackLimits', [stackTypesAndLimits])
@@ -75,14 +58,6 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
     def getStackLimits(self):
         return [[stackType, limit] for stackType, limit in self.stackLimits.items()]
 
-    def setStacks(self, stackTypesAndQuantities):
-        self.stacks = {stackType: quantity for stackType, quantity in stackTypesAndQuantities}
-
-        for stackType, quantity in stackTypesAndQuantities:
-            category = InventoryId.getCategory(stackType)
-            categoryList = self.stacksInCategory.setdefault(category, {})
-            categoryList[stackType] = quantity
-
     def d_setStacks(self, stackTypesAndQuantities):
         self.sendUpdate('setStacks', [stackTypesAndQuantities])
 
@@ -91,7 +66,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setStacks(self.getStacks())
 
     def getStacks(self):
-        return [[stackType, quantity] for stackType, quantity in self.stacks.items()]
+        return [[stackType, quantity] for stackType, quantity in list(self.stacks.items())]
 
     def setAccumulator(self, accumulatorType, quantity):
         self.accumulators[accumulatorType] = quantity
@@ -139,8 +114,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setStacksInCategory(stackType, quantity)
 
     def setDoIdListCategory(self, category, doIdList):
-        self.doIdsInCategory[category] = doIdList
-
+        self.doIdsInCategory[category] = list(doIdList)
         for doId in doIdList:
             self.doIds[doId] = category
 
