@@ -7,6 +7,7 @@ from pirates.ship.PlayerShipAI import PlayerShipAI
 from pirates.ship.NPCShipAI import NPCShipAI
 from pirates.ship import ShipGlobals
 from pirates.world import OceanZone
+from pirates.piratesbase.PLocalizerEnglish import *
 
 
 class ShipManagerAI(object):
@@ -55,7 +56,7 @@ class ShipManagerAI(object):
         ship.setBaseTeam(ShipGlobals.getShipTeam(shipClass))
         ship.setLevel(1)
         ship.setShipClass(shipConfig['setShipClass'][0])
-        ship.setName("Test Ship - Navy Ferret")
+        ship.setName(ShipClassNames[shipClass])
         ship.setNPCship(1)
         ship.setIsBoardable(1)
 
@@ -80,4 +81,4 @@ class ShipManagerAI(object):
 
     def startSpawnEnemyShips(self):
         for x in xrange(64):
-            self._spawnEnemyShip(ShipGlobals.NAVY_MAN_O_WAR)
+            self._spawnEnemyShip(ShipGlobals.NAVY_KINGFISHER)
