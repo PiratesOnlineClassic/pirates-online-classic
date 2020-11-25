@@ -422,4 +422,5 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
 
         self.air.uidMgr.addUid(self.world.getUniqueId(), self.world.doId)
         self.oceanAreaManager.registerOceanAreaData(objKey, worldFileName)
+        self.air.shipManager.startSpawnEnemyShips()
         return self.world

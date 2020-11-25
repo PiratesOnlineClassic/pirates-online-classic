@@ -57,7 +57,7 @@ class CreateShipFSM(ShipLoaderOperationFSM):
         self.hullConfig = ShipGlobals.getHullConfig(self.modelClass)
 
         fields = {
-            'setBaseTeam': (0,),
+            'setBaseTeam': (ShipGlobals.PLAYER_SHIP,),
             'setShipClass': (self.shipConfig['setShipClass'][0],),
             'setName': ('Unnamed Ship',),
             'setInventoryId': (0,),
@@ -100,7 +100,7 @@ class CreateShipFSM(ShipLoaderOperationFSM):
             return
 
         fields = {
-            # DistributedShippart
+            # DistributedShippart:
             'setOwnerId': (self.avatarId,),
             'setShipId': (self.shipId,),
             'setGeomParentId': (0,),

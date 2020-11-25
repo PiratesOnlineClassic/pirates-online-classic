@@ -29,7 +29,8 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         Teamable.__init__(self)
 
         self.uniqueId = ''
-        self.baseTeam = 0
+        self.baseTeam = ShipGlobals.INVALID_TEAM
+        self.level = 0
         self.shipClass = 0
         self.name = ''
         self.inventoryId = 0
@@ -59,6 +60,8 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
         self.cabin = None
         self.bowSprit = None
+        self.hull = None
+        self.masts = []
         self.sails = []
         self.cannons = []
         self.broadside = None
@@ -83,7 +86,8 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         taskMgr.doMethodLater(0.2, _broadcast, self.uniqueName('broadcast-pos'))
 
     def generate(self):
-        self.air.inventoryManager.initiateShipInventory(self)
+        if not self.npcShip:
+            self.air.inventoryManager.initiateShipInventory(self)
 
         DistributedMovingObjectAI.generate(self)
         DistributedCharterableObjectAI.generate(self)
@@ -92,11 +96,84 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         DistributedMovingObjectAI.announceGenerate(self)
         DistributedCharterableObjectAI.announceGenerate(self)
 
+        # we have to manually generate a hull and a mast for NPC ships,
+        # this is normally handled by the ShipLoaderUD class on the UberDOG
+        # which activates the object (therefor generating it):
+        modelClass = ShipGlobals.getModelClass(self.shipClass)
+        shipConfigAll = ShipGlobals.getShipConfigAll(modelClass)
+        shipConfig = ShipGlobals.getShipConfig(modelClass)
+        hullConfig = ShipGlobals.getHullConfig(modelClass)
+        shipTeam = ShipGlobals.getShipTeam(self.shipClass)
+        if self.npcShip:
+            # Create the ship hull object:
+            self.hull = DistributedHullAI(self.air)
+
+            # DistributedShippart:
+            self.hull.setOwnerId(0)
+            self.hull.setShipId(self.doId)
+            self.hull.setGeomParentId(0)
+
+            # DistributedDestructibleArray:
+            self.hull.setMaxArrayHp(hullConfig['setMaxArrayHp'][0])
+            self.hull.setArrayHp(hullConfig['setArrayHp'][0])
+
+            self.hull.setShipClass(self.shipClass)
+            self.hull.setBaseTeam(shipTeam)
+            for key, value in hullConfig.items():
+                if not hasattr(self.hull, key):
+                    continue
+
+                getattr(self.hull, key)(*value)
+
+            self.generateChildWithRequired(self.hull, PiratesGlobals.ShipZoneSilhouette)
+
+            # Create the mast objects:
+            mastIndex = -1
+            for mastConfigType in [shipConfigAll.get('setMastConfig1', 0),
+                                   shipConfigAll.get('setMastConfig2', 0),
+                                   shipConfigAll.get('setMastConfig3', 0)]:
+
+                mastIndex += 1
+                if mastConfigType == 0:
+                    continue
+
+                mastConfig = ShipGlobals.getMastConfig(self.shipClass, mastIndex)
+                mast = DistributedMastAI(self.air)
+
+                # DistributedShippart:
+                mast.setOwnerId(0)
+                mast.setShipId(self.doId)
+                mast.setGeomParentId(0)
+
+                # DistributedDestructibleArray:
+                mast.setMaxArrayHp(mastConfig['setMaxArrayHp'][0])
+                mast.setArrayHp(mastConfig['setArrayHp'][0])
+
+                mast.setShipClass(modelClass)
+                mast.setBaseTeam(shipTeam)
+                mast.setMastType(mastConfigType)
+                for key, value in mastConfig.items():
+                    if not hasattr(mast, key):
+                        continue
+
+                    getattr(mast, key)(*value)
+
+                self.generateChildWithRequired(mast, PiratesGlobals.ShipZoneSilhouette)
+                self.masts.append(mast)
+
         cabinType = ShipGlobals.getCabinType(self.shipClass)
         if cabinType != -1:
             cabinConfig = ShipGlobals.getCabinConfig(self.shipClass)
             self.cabin = DistributedCabinAI(self.air)
+
+            # DistributedShippart:
+            self.cabin.setOwnerId(0)
             self.cabin.setShipId(self.doId)
+            self.cabin.setGeomParentId(0)
+
+            self.cabin.setShipClass(self.shipClass)
+            self.cabin.setCabinType(cabinType)
+            self.cabin.setBaseTeam(shipTeam)
             for key, value in cabinConfig.items():
                 if not hasattr(self.cabin, key):
                     continue
@@ -106,6 +183,9 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
                 getattr(self.cabin, key)(value)
 
+            self.cabin.setMaxHp(cabinConfig['setMaxHp'][0])
+            self.cabin.setMaxHp(cabinConfig['setHp'][0])
+            self.cabin.setMaxHp(cabinConfig['setMaxCargo'][0])
             self.generateChildWithRequired(self.cabin, PiratesGlobals.ShipZoneSilhouette)
 
         #self.bowSprit = DistributedBowSpritAI(self.air)
@@ -123,15 +203,33 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         #
         #self.generateChildWithRequired(self.bowSprit, PiratesGlobals.ShipZoneSilhouette)
 
-        mastInfo = ShipGlobals.getMastInfo(self.shipClass)
-        for mastType, x, sailTypes in mastInfo:
-            sailIndex = 0
-            for sailType in sailTypes:
-                sailConfig = ShipGlobals.getSailConfig(self.shipClass, x, sailIndex)
-                sail = DistributedSailAI(self.air)
-                sail.setShipId(self.doId)
-                sail.setAnimState('TiedUp')
+        mastIndex = -1
+        for configSailTypeList in [shipConfigAll.get('setSailConfig1', []),
+                                   shipConfigAll.get('setSailConfig2', []),
+                                   shipConfigAll.get('setSailConfig3', [])]:
 
+            mastIndex += 1
+            if len(configSailTypeList) == 0:
+                continue
+
+            sailIndex = -1
+            for configSailType in configSailTypeList:
+                sailIndex += 1
+                sailConfig = ShipGlobals.getSailConfig(self.shipClass, mastIndex, sailIndex)
+
+                sail = DistributedSailAI(self.air)
+
+                # DistributedShippart:
+                sail.setOwnerId(0)
+                sail.setShipId(self.doId)
+                sail.setGeomParentId(0)
+
+                # DistributedDestructibleArray:
+                #sail.setMaxArrayHp(sailConfig['setMaxArrayHp'][0])
+                #sail.setArrayHp(sailConfig['setArrayHp'][0])
+
+                sail.setBaseTeam(shipTeam)
+                sail.setMastType(configSailType)
                 for key, value in sailConfig.items():
                     if not hasattr(sail, key):
                         continue
@@ -141,20 +239,32 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
                     getattr(sail, key)(value)
 
+                sail.setMaxHp(sailConfig['setMaxHp'][0])
+                sail.setHp(sailConfig['setHp'][0])
+                sail.setMaxSp(sailConfig['setMaxSp'][0])
+                sail.setSp(sailConfig['setSp'][0])
+                sail.setAnimState('TiedUp')
+
                 self.generateChildWithRequired(sail, PiratesGlobals.ShipZoneSilhouette)
                 self.sails.append(sail)
-                sailIndex += 1
 
         shipConfig = ShipGlobals.getShipConfigAll(self.shipClass)
-        cannonIndex = 0
+        cannonIndex = -1
         for cannonType in shipConfig['setCannonConfig']:
+            cannonIndex += 1
             cannon = DistributedShipCannonAI(self.air)
+
+            # DistributedShippart:
+            cannon.setOwnerId(0)
             cannon.setShipId(self.doId)
+            cannon.setGeomParentId(0)
+
+            cannon.setBaseTeam(shipTeam)
             cannon.setCannonType(cannonType)
             cannon.setCannonIndex(cannonIndex)
+
             self.generateChildWithRequired(cannon, PiratesGlobals.ShipZoneSilhouette)
             self.cannons.append(cannon)
-            cannonIndex += 1
 
         self.broadside = DistributedShipBroadsideAI(self.air)
         self.broadside.setShipId(self.doId)
@@ -276,17 +386,18 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             self.cabin.requestDelete()
             self.cabin = None
 
-        masts = self.getShipMasts()
-        for mast in masts:
-            mast.requestDelete()
+        if not self.npcShip:
+            masts = self.getShipMasts()
+            for mast in masts:
+                mast.requestDelete()
 
-        hull = self.getShipHull()
-        if hull:
-            hull.requestDelete()
+            hull = self.getShipHull()
+            if hull:
+                hull.requestDelete()
 
-        inventory = self.getInventory()
-        assert(inventory is not None)
-        self.air.inventoryManager.removeInventory(inventory)
+            inventory = self.getInventory()
+            assert(inventory is not None)
+            self.air.inventoryManager.removeInventory(inventory)
 
         DistributedMovingObjectAI.delete(self)
         DistributedCharterableObjectAI.delete(self)
@@ -303,6 +414,19 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
     def getUniqueId(self):
         return self.uniqueId
+
+    def setBaseTeam(self, baseTeam):
+        self.baseTeam = baseTeam
+
+    def d_setBaseTeam(self, baseTeam):
+        self.sendUpdate('setBaseTeam', [baseTeam])
+
+    def b_setBaseTeam(self, baseTeam):
+        self.setBaseTeam(baseTeam)
+        self.d_setBaseTeam(baseTeam)
+
+    def getBaseTeam(self):
+        return self.baseTeam
 
     def setLevel(self, level):
         self.level = level
@@ -527,6 +651,9 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
     def getMaxCrew(self):
         return self.maxCrew
+
+    def getWorldKey(self):
+        return 0
 
     def setCrew(self, crew):
         self.crew = crew

@@ -75,6 +75,9 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
     def getWalkToPointPausedName(self):
         return self.avatar.uniqueName('walkToPoint-paused')
 
+    def getWalkToPointChaseName(self):
+        return self.avatar.uniqueName('walkToPoint-attack-chase')
+
     def getUpdateBattleStateTaskName(self):
         return self.avatar.taskName('update-battle-state')
 
@@ -210,9 +213,16 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
                 self.request('Battle')
                 return
 
-            self.walkToPoint(currentTarget.getPos(), currentTarget.getParent())
+            self.__attackChaseTask = taskMgr.doMethodLater(0.1, self._walkToPoint,
+                                                                self.getWalkToPointChaseName(),
+                                                                extraArgs=[currentTarget],
+                                                                appendTask=False)
+
         elif state == 'BreakCombat':
             self.request(self.avatar.getStartState())
+
+    def _walkToPoint(self, currentTarget):
+        self.walkToPoint(currentTarget.getPos(), currentTarget.getParent())
 
     def walkToPoint(self, walkPoint, parent=None):
         if not parent or parent.isEmpty():

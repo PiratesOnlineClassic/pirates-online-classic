@@ -1,13 +1,12 @@
-from pirates.shipparts.DistributedShippartAI import DistributedShippartAI
 from direct.directnotify import DirectNotifyGlobal
+
+from pirates.shipparts.DistributedShippartAI import DistributedShippartAI
 from pirates.shipparts.HullDNA import HullDNA
 from pirates.destructibles.DistributedDestructibleArrayAI import DistributedDestructibleArrayAI
 
 
 class DistributedHullDNA(HullDNA):
-
-    def __init__(self):
-        HullDNA.__init__(self)
+    pass
 
 class DistributedHullAI(DistributedShippartAI, DistributedDestructibleArrayAI, DistributedHullDNA):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedHullAI')

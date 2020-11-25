@@ -1,6 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
 
 from pirates.ship.DistributedShipAI import DistributedShipAI
+from pirates.ship import ShipGlobals
 
 
 class PlayerShipAI(DistributedShipAI):
