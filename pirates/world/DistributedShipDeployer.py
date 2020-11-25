@@ -203,7 +203,7 @@ class DistributedShipDeployer(DistributedNode):
 
     @report(types=['frameCount', 'args'], dConfigParam='want-shipboard-report')
     def enableDeploySpheres(self, enable):
-        if base.config.GetBool('want-shipboard-report', 0):
+        if base.config.GetBool('want-shipboard-report', 1):
             self.showSpheres()
 
         if enable:

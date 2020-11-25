@@ -43,9 +43,9 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
             self.holidayStart(holidayId)
 
         self.shipDeployer = DistributedShipDeployerAI(self.air)
-        maxRadius = self.sphereRadii[2]
-        minRadius = self.sphereRadii[1]
-        spacing = maxRadius - minRadius
+        maxRadius = self.sphereRadii[1]
+        minRadius = self.sphereRadii[0]
+        spacing = self.sphereRadii[2]
 
         self.shipDeployer.setMaxRadius(maxRadius)
         self.shipDeployer.setMinRadius(minRadius)
