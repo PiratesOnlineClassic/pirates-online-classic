@@ -131,7 +131,7 @@ class GridInterestHandler(object):
         We add interest only to cells we didn't see before and only remove interest from cells we cannot see now...
         """
 
-        previousZones = set([interestHandle.zoneId for interestHandle in self.interestHandles])
+        previousZones = set([interestHandle.zoneId for interestHandle in list(self.interestHandles)])
         newZones = set([zoneId])
 
         # determine how many zones we want to see ahead of us based on
