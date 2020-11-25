@@ -4,14 +4,16 @@ from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
 from pirates.piratesbase import PiratesGlobals
+from pirates.world.WorldNodeAI import WorldNodeAI
 from pirates.world.ClientAreaBuilderAI import ClientAreaBuilderAI
 
 
-class DistributedInstanceBaseAI(DistributedObjectAI):
+class DistributedInstanceBaseAI(DistributedObjectAI, WorldNodeAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInstanceBaseAI')
 
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
+        WorldNodeAI.__init__(self, air)
 
         self.uniqueId = ''
         self.name = ''

@@ -31,6 +31,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         self.collisionSpheres = []
         self.feastFireEnabled = False
 
+        self.parentWorld = None
         self.shipDeployer = None
         self.builder = IslandAreaBuilderAI(self.air, self)
 
@@ -42,7 +43,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         for holidayId in self.air.newsManager.holidayList:
             self.holidayStart(holidayId)
 
-        self.shipDeployer = DistributedShipDeployerAI(self.air)
+        self.shipDeployer = DistributedShipDeployerAI(self.air, self)
         maxRadius = self.sphereRadii[1]
         minRadius = self.sphereRadii[0]
         spacing = self.sphereRadii[2]
@@ -50,8 +51,14 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         self.shipDeployer.setMaxRadius(maxRadius)
         self.shipDeployer.setMinRadius(minRadius)
         self.shipDeployer.setSpacing(spacing)
-
         self.generateChildWithRequired(self.shipDeployer, PiratesGlobals.IslandShipDeployerZone)
+
+    def setLocation(self, parentId, zoneId):
+        DistributedGameArea.DistributedGameArea.setLocation(self, parentId, zoneId)
+        world = self.air.doId2do.get(parentId)
+        if world:
+            self.reparentTo(world)
+            self.parentWorld = world
 
     def setIslandTransform(self, x, y, z, h):
         self.islandTransform = [x, y, z, h]

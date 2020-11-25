@@ -133,8 +133,10 @@ class DeployShipFSM(ShipDeployerOperationFSM):
 class DistributedShipDeployerAI(DistributedNodeAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipDeployerAI')
 
-    def __init__(self, air):
+    def __init__(self, air, island):
         DistributedNodeAI.__init__(self, air)
+
+        self.island = island
 
         self.minRadius = 0
         self.maxRadius = 0
@@ -213,14 +215,16 @@ class DistributedShipDeployerAI(DistributedNodeAI):
             return pos
 
         for x in xrange(numSpheres):
-            pos = getSpherePos(x)
+            ax, ay, az = getSpherePos(x)
+            bx, by = self.island.sphereCenter
+            cx, cy = bx + ax, by + ay
             #cSphere = CollisionSphere(pos[0], pos[1], 0, self.spacing / 2.0)
             #cSphere.setTangible(0)
             #cSphereNode = CollisionNode(self.uniqueName('ShipDeploySphere'))
             #cSphereNode.addSolid(cSphere)
             #sphere = self.attachNewNode(cSphereNode)
             #sphere.setTag('deploySphereId', `x`)
-            self.deploySpheres.append(pos)
+            self.deploySpheres.append((cx, cy, az))
 
     def getSphere(self, index):
         return self.deploySpheres[index]

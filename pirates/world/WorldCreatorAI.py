@@ -1,3 +1,5 @@
+import random
+
 from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
 
@@ -269,6 +271,9 @@ class OceanAreaManager(object):
         self.air = air
         self.oceanAreas = {}
 
+    def hasOceanArea(self, parentUid):
+        return parentUid in self.oceanAreas
+
     def addOceanArea(self, parentUid, oceanArea):
         oceanAreas = self.oceanAreas.setdefault(parentUid, {})
         assert(parentUid not in oceanAreas)
@@ -288,6 +293,12 @@ class OceanAreaManager(object):
     def unregisterOceanAreaData(self, parentUid):
         assert(parentUid in self.oceanAreas)
         del self.oceanAreas[parentUid]
+
+    def getRandomOceanPos(self, parentUid):
+        oceanArea = random.choice(self.oceanAreas[parentUid].values())
+        sx, sy, sz = oceanArea.startPos
+        ex, ey, ez = oceanArea.endPos
+        return random.uniform(sx, ex), random.uniform(sy, ey)
 
 
 class WorldCreatorAI(WorldCreatorBase, DirectObject):
@@ -422,5 +433,7 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
 
         self.air.uidMgr.addUid(self.world.getUniqueId(), self.world.doId)
         self.oceanAreaManager.registerOceanAreaData(objKey, worldFileName)
-        self.air.shipManager.startSpawnEnemyShips()
+        if self.oceanAreaManager.hasOceanArea(objKey):
+            self.air.shipManager.startSpawnEnemyShips()
+
         return self.world

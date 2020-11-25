@@ -67,13 +67,12 @@ class ShipManagerAI(object):
         ship.setHullCondition(1 << 7)
 
         oceanGrid = self.air.worldCreator.world.oceanGrid
-        oceanZone = random.randrange(OceanZone.UNCHARTED_WATERS, OceanZone.MAX_ZONE)
-        sx, sy = OceanZone.randomZoneCoord(oceanZone)
-        sz = 0
-        zoneId = oceanGrid.getZoneFromXYZ((sx, sy, sz))
+        world = oceanGrid.getParentObj()
+        sx, sy = self.air.worldCreator.oceanAreaManager.getRandomOceanPos(world.getUniqueId())
+        zoneId = oceanGrid.getZoneFromXYZ((sx, sy, 0))
 
         oceanGrid.generateChildWithRequired(ship, zoneId)
-        ship.setPos(oceanGrid, sx, sy, sz)
+        ship.setPos(oceanGrid, sx, sy, 0)
         oceanGrid.addObjectToOceanGrid(ship)
 
         ship.sendCurrentPosition()
@@ -81,4 +80,27 @@ class ShipManagerAI(object):
 
     def startSpawnEnemyShips(self):
         for x in xrange(64):
-            self._spawnEnemyShip(ShipGlobals.NAVY_KINGFISHER)
+            self._spawnEnemyShip(random.choice([ShipGlobals.NAVY_FERRET,
+                                                ShipGlobals.NAVY_GREYHOUND,
+                                                ShipGlobals.NAVY_KINGFISHER,
+                                                ShipGlobals.NAVY_PREDATOR,
+                                                ShipGlobals.NAVY_BULWARK,
+                                                ShipGlobals.NAVY_VANGUARD,
+                                                ShipGlobals.NAVY_MONARCH,
+                                                ShipGlobals.NAVY_COLOSSUS,
+                                                ShipGlobals.NAVY_PANTHER,
+                                                ShipGlobals.NAVY_CENTURION,
+                                                ShipGlobals.NAVY_MAN_O_WAR,
+                                                ShipGlobals.NAVY_DREADNOUGHT,
+                                                ShipGlobals.EITC_SEA_VIPER,
+                                                ShipGlobals.EITC_BLOODHOUND,
+                                                ShipGlobals.EITC_BARRACUDA,
+                                                ShipGlobals.EITC_CORSAIR,
+                                                ShipGlobals.EITC_SENTINEL,
+                                                ShipGlobals.EITC_IRONWALL,
+                                                ShipGlobals.EITC_OGRE,
+                                                ShipGlobals.EITC_BEHEMOTH,
+                                                ShipGlobals.EITC_CORVETTE,
+                                                ShipGlobals.EITC_MARAUDER,
+                                                ShipGlobals.EITC_WARLORD,
+                                                ShipGlobals.EITC_JUGGERNAUT]))
