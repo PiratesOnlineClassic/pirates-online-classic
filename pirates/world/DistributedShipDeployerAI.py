@@ -62,8 +62,13 @@ class DeployShipFSM(ShipDeployerOperationFSM):
         self.spawnPoint = self.getSpawnPointFromSphere(*deployerSphere)
         self.zoneId = self.oceanGrid.getZoneFromXYZ(self.spawnPoint)
 
-        self.acceptOnce('generate-%d' % self.shipId, self.shipArrivedCallback)
-        self.air.sendSetObjectLocation(self.shipId, self.oceanGrid.doId, self.zoneId)
+        ship = self.air.doId2do.get(self.shipId)
+        if ship is None:
+            self.acceptOnce('generate-%d' % self.shipId, self.shipArrivedCallback)
+            self.air.sendSetObjectLocation(self.shipId, self.oceanGrid.doId, self.zoneId)
+        else:
+            ship.b_setLocation(self.oceanGrid.doId, self.zoneId)
+            self.shipArrivedCallback(ship)
 
     def getSpawnPointFromSphere(self, sx, sy, sz):
         radius = self.shipDeployer.getSpacing() / 2.0
@@ -100,7 +105,7 @@ class DeployShipFSM(ShipDeployerOperationFSM):
             self.cleanup(False)
             return
 
-        self.shipMainpartsDoIdList = self.inventory.getShipMainpartsDoIdList()
+        self.shipMainpartsDoIdList = list(self.inventory.getShipMainpartsDoIdList())
         if not self.shipMainpartsDoIdList:
             self.notify.warning('Cannot deploy ship %d for avatar %d, '
                 'ship has no main-shipparts!' % (self.shipId, self.avatar.doId))
@@ -108,9 +113,14 @@ class DeployShipFSM(ShipDeployerOperationFSM):
             self.cleanup(False)
             return
 
-        for shippartDoId in self.shipMainpartsDoIdList:
-            self.acceptOnce('generate-%d' % shippartDoId, self.shippartArrivedCallback)
-            self.air.sendSetObjectLocation(shippartDoId, self.ship.doId, PiratesGlobals.ShipZoneSilhouette)
+        for shippartDoId in list(self.shipMainpartsDoIdList):
+            shippart = self.air.doId2do.get(shippartDoId)
+            if shippart is None:
+                self.acceptOnce('generate-%d' % shippartDoId, self.shippartArrivedCallback)
+                self.air.sendSetObjectLocation(shippartDoId, self.ship.doId, PiratesGlobals.ShipZoneSilhouette)
+            else:
+                shippart.b_setLocation(self.ship.doId, PiratesGlobals.ShipZoneSilhouette)
+                self.shippartArrivedCallback(shippart)
 
     def _finalizeDeploy(self):
         # the ship has been successfully deployed, mark it as deployed,

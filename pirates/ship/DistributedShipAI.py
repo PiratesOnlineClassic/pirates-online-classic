@@ -18,6 +18,7 @@ from pirates.shipparts.DistributedMastAI import DistributedMastAI
 from pirates.battle.DistributedShipBroadsideAI import DistributedShipBroadsideAI
 from pirates.battle.DistributedShipCannonAI import DistributedShipCannonAI
 from pirates.world.DistributedIslandAI import DistributedIslandAI
+from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
 
 
 class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectAI, Teamable):
@@ -160,6 +161,17 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
                 self.generateChildWithRequired(mast, PiratesGlobals.ShipZoneSilhouette)
                 self.masts.append(mast)
+        else:
+            def _gotInventory(inventory):
+                if not inventory:
+                    self.notify.warning("Failed to get inventory for ship: %d!" % self.doId)
+                    return
+
+                self.hull = self.getShipHull()
+                self.masts = self.getShipMasts()
+                self.notify.debug("Successfully retrieved inventory for ship: %d" % self.doId)
+
+            DistributedInventoryBase.getInventory(self.inventoryId, _gotInventory)
 
         cabinType = ShipGlobals.getCabinType(self.shipClass)
         if cabinType != -1:
@@ -329,6 +341,11 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         avatar.b_setCrewShipId(0)
         self.air.worldGridManager.clearAvatarInterest(self.getParentObj(), avatar)
 
+        # properly handle disabling the ship when no players remain on it:
+        if len(self.crew) == 0:
+            self.b_setLocation(0, 0)
+            self.b_setGameState('PutAway', 0)
+
     def handleChildArrive(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerPirateAI):
             self._playerBoarded(childObj)
@@ -372,10 +389,14 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         for sail in self.sails:
             sail.requestDelete()
 
+        for mast in self.masts:
+            mast.requestDelete()
+
         for cannon in self.cannons:
             cannon.requestDelete()
 
         self.sails = []
+        self.masts = []
         self.cannons = []
 
         if self.bowSprit:
@@ -386,17 +407,12 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             self.cabin.requestDelete()
             self.cabin = None
 
-        if not self.npcShip:
-            masts = self.getShipMasts()
-            for mast in masts:
-                mast.requestDelete()
+        if self.hull:
+            self.hull.requestDelete()
+            self.hull = None
 
-            hull = self.getShipHull()
-            if hull:
-                hull.requestDelete()
-
-            inventory = self.getInventory()
-            assert(inventory is not None)
+        inventory = self.getInventory()
+        if inventory is not None:
             self.air.inventoryManager.removeInventory(inventory)
 
         DistributedMovingObjectAI.delete(self)
