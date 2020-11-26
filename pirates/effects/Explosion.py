@@ -9,7 +9,7 @@ import random
 
 class Explosion(PooledEffect, EffectController):
     cardScale = 128.0
-    
+
     def __init__(self):
         PooledEffect.__init__(self)
         EffectController.__init__(self)
@@ -25,7 +25,7 @@ class Explosion(PooledEffect, EffectController):
             Explosion.particleDummy.setFogOff()
             Explosion.particleDummy.setColorScaleOff()
             Explosion.particleDummy.setBin('fixed', 120)
-        
+
         self.f = ParticleEffect.ParticleEffect('Explosion')
         self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
@@ -71,7 +71,7 @@ class Explosion(PooledEffect, EffectController):
         self.p0.emitter.setRadiateOrigin(Point3(0.0, 0.0, 0.0))
 
     def createTrack(self):
-        self.p0.setLitterSize(10 * self.effectScale)
+        self.p0.setLitterSize(int(10 * self.effectScale))
         self.p0.renderer.setUserAlpha(self.effectScale)
         self.p0.renderer.setInitialXScale(0.05 * self.cardScale * self.effectScale)
         self.p0.renderer.setFinalXScale(0.1 * self.cardScale * self.effectScale)
@@ -79,7 +79,7 @@ class Explosion(PooledEffect, EffectController):
         self.p0.renderer.setFinalYScale(0.15 * self.cardScale * self.effectScale)
         self.p0.emitter.setRadius(self.radius)
         self.track = Sequence(Func(self.p0.setBirthRate, 0.02), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self), Wait(0.6), Func(self.p0.setBirthRate, 100), Wait(7.0), Func(self.cleanUpEffect))
-    
+
     def cleanUpEffect(self):
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
@@ -88,5 +88,3 @@ class Explosion(PooledEffect, EffectController):
     def destroy(self):
         EffectController.destroy(self)
         PooledEffect.destroy(self)
-
-

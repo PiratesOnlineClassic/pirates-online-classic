@@ -1,4 +1,5 @@
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed.ClockDelta import *
 
 from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
 
@@ -20,6 +21,22 @@ class DistributedShipBroadsideAI(DistributedWeaponAI):
 
         self.baseTeam = 0
         self.ammoType = 0
+
+    def requestBroadside(self, side, delays, hitPosList, zoneId, flightTime):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        ship = self.air.doId2do.get(self.shipId)
+        if not ship:
+            self.notify.warning('Cannot request broadside for unknown ship with doId: %d' % self.shipId)
+            return
+
+        if avatar.doId != ship.clientControllerDoId:
+            return
+
+        timestamp = globalClockDelta.getRealNetworkTime(bits=16)
+        self.sendUpdate('doBroadside', [side, delays, hitPosList, zoneId, flightTime, timestamp])
 
     def setShipId(self, shipId):
         self.shipId = shipId

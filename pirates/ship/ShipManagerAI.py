@@ -76,7 +76,8 @@ class ShipManagerAI(object):
         oceanGrid.addObjectToOceanGrid(ship)
 
         ship.sendCurrentPosition()
-        ship.b_setGameState('Docked', 0)
+        ship.startPosHprBroadcast()
+        ship.b_setGameState('PathFollow', 0)
 
     def startSpawnEnemyShips(self):
         for x in xrange(64):

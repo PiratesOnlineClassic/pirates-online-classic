@@ -19,6 +19,7 @@ from pirates.battle.DistributedShipBroadsideAI import DistributedShipBroadsideAI
 from pirates.battle.DistributedShipCannonAI import DistributedShipCannonAI
 from pirates.world.DistributedIslandAI import DistributedIslandAI
 from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
+from pirates.ship.GameFSMShipAI import GameFSMShipAI
 
 
 class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectAI, Teamable):
@@ -89,6 +90,8 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
     def generate(self):
         if not self.npcShip:
             self.air.inventoryManager.initiateShipInventory(self)
+
+        self.gameFSM = GameFSMShipAI(self.air, self)
 
         DistributedMovingObjectAI.generate(self)
         DistributedCharterableObjectAI.generate(self)
@@ -296,6 +299,10 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.steeringWheel = DistributedSteeringWheelAI(self.air)
         self.steeringWheel.setShipId(self.doId)
         self.generateChildWithRequired(self.steeringWheel, PiratesGlobals.ShipZoneOnDeck)
+
+    def setSailAnimState(self, animState):
+        for sail in self.sails:
+            sail.b_setAnimState(animState)
 
     def getShipHull(self):
         inventory = self.getInventory()
@@ -579,6 +586,8 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
     def setHp(self, hp):
         self.hp = hp
+        if self.hp <= 0:
+            self.b_setGameState('Sinking', 0)
 
     def d_setHp(self, hp):
         self.sendUpdate('setHp', [hp])
@@ -702,7 +711,11 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.d_setCrew(self.crew)
 
     def setGameState(self, stateName, avId, timeStamp=0):
+        if not stateName:
+            return
+
         self.gameState = [stateName, avId, timeStamp]
+        self.gameFSM.request(stateName)
 
     def d_setGameState(self, stateName, avId, timeStamp=0):
         self.sendUpdate('setGameState', [stateName, avId, timeStamp])
