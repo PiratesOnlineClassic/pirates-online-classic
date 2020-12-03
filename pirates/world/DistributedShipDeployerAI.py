@@ -127,8 +127,9 @@ class DeployShipFSM(ShipDeployerOperationFSM):
         # this will allow anyone who wants to join the ship to be able to do so...
         self.ship.setDeploy(True)
 
-        # add the ship to the ship manager's list of deployed ships
-        self.air.shipManager.addActiveShip(self.ship)
+        # add the ship to the ship manager's list of `deployed` ships,
+        # the ship will be removed by the PlayerShipAI class when delete is called.
+        self.air.shipManager.addPlayerShip(self.ship)
 
     def shippartArrivedCallback(self, shippart):
         self.shipMainpartsDoIdList.remove(shippart.doId)

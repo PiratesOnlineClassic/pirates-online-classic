@@ -384,7 +384,6 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         DistributedCharterableObjectAI.setLocation(self, parentId, zoneId)
 
     def delete(self):
-        self.air.shipManager.removeActiveShip(self)
         if self.steeringWheel:
             self.steeringWheel.requestDelete()
             self.steeringWheel = None

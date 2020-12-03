@@ -66,3 +66,7 @@ class PlayerShipAI(DistributedShipAI):
 
     def getAllowPublicState(self):
         return self.allowPublicState
+
+    def delete(self):
+        self.air.shipManager.removePlayerShip(self)
+        DistributedShipAI.delete(self)

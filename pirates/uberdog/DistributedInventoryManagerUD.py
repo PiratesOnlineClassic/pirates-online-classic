@@ -228,18 +228,22 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
         self.air.netMessenger.send('hasInventory', [inventoryId, callback])
 
     def addInventory(self, inventory):
-        if inventory and inventory.doId:
-            self.air.netMessenger.send('addInventory', [inventory])
+        if inventory == None or inventory.doId == 0:
+            return
+
+        self.air.netMessenger.send('addInventory', [inventory])
 
     def removeInventory(self, inventory):
-        if inventory and inventory.doId:
-            self.air.netMessenger.send('removeInventory', [inventory])
+        if inventory == None or inventory.doId == 0:
+            return
+
+        self.air.netMessenger.send('removeInventory', [inventory])
 
     def getInventory(self, avatarId, callback):
         self.air.netMessenger.send('getInventory', [avatarId, callback])
 
     def runInventoryFSM(self, fsmtype, avatarId, *args, **kwargs):
-        if avatarId in self.avatar2fsm:
+        if avatarId in list(self.avatar2fsm.keys()):
             self.notify.debug('Failed to run inventory FSM for avatar %d, '
                 'an inventory FSM is already running!' % avatarId)
 

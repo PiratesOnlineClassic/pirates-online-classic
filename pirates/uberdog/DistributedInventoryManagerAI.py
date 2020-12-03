@@ -116,7 +116,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         self.air.netMessenger.accept('getInventory', self, self.sendGetInventory)
 
     def hasInventory(self, inventoryId):
-        return inventoryId in self.inventories
+        return inventoryId in list(self.inventories)
 
     def sendHasInventory(self, inventoryId, callback):
         self.air.netMessenger.send('hasInventoryResponse', [callback,
@@ -138,7 +138,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
         del self.inventories[inventory.doId]
 
     def getInventory(self, avatarId):
-        for inventory in self.inventories.values():
+        for inventory in list(self.inventories.values()):
             if inventory.getOwnerId() == avatarId:
                 return inventory
 

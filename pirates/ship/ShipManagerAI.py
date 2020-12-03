@@ -16,36 +16,54 @@ class ShipManagerAI(object):
     def __init__(self, air):
         self.air = air
 
-        self.activeShips = {}
+        self.playerShips = set()
+        self.ships = set()
 
-    def hasActiveShip(self, shipId):
-        return shipId in self.activeShips
+    def hasPlayerShip(self, ship):
+        assert(ship is not None)
+        return ship in self.playerShips
 
-    def addActiveShip(self, ship):
-        if ship.doId in self.activeShips:
+    def addPlayerShip(self, ship):
+        assert(ship is not None)
+        assert(isinstance(ship, PlayerShipAI))
+        if ship in self.playerShips:
             return
 
-        assert(ship.getDeploy())
-        self.activeShips[ship.doId] = ship
+        self.playerShips.add(ship)
 
-    def removeActiveShip(self, ship):
-        if ship.doId not in self.activeShips:
+    def removePlayerShip(self, ship):
+        assert(ship is not None)
+        assert(isinstance(ship, PlayerShipAI))
+        if ship not in self.playerShips:
             return
 
-        del self.activeShips[ship.doId]
+        self.playerShips.remove(ship)
 
-    def getActiveShip(self, shipId):
-        return self.activeShips.get(shipId)
+    def getPlayerShips(self):
+        return list(self.playerShips)
 
-    def getActivePlayerShips(self):
-        activePlayerShips = []
-        for shipId, ship in list(self.activeShips.items()):
-            if not isinstance(ship, PlayerShipAI):
-                continue
+    def hasShip(self, ship):
+        assert(ship is not None)
+        return ship in self.ships
 
-            activePlayerShips.append(ship)
+    def addShip(self, ship):
+        assert(ship is not None)
+        assert(not isinstance(ship, PlayerShipAI))
+        if ship in self.ships:
+            return
 
-        return activePlayerShips
+        self.ships.add(ship)
+
+    def removeShip(self, ship):
+        assert(ship is not None)
+        assert(not isinstance(ship, PlayerShipAI))
+        if ship not in self.ships:
+            return
+
+        self.ships.remove(ship)
+
+    def getShips(self):
+        return list(self.ships)
 
     def _spawnEnemyShip(self, shipClass):
         modelClass = ShipGlobals.getModelClass(shipClass)
