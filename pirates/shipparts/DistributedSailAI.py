@@ -1,7 +1,9 @@
-from pirates.shipparts.DistributedShippartAI import DistributedShippartAI
 from direct.directnotify import DirectNotifyGlobal
+
+from pirates.shipparts.DistributedShippartAI import DistributedShippartAI
 from pirates.shipparts.SailDNA import SailDNA
 from pirates.destructibles.DistributedDestructibleArrayAI import DistributedDestructibleArrayAI
+from pirates.ship import ShipBalance
 
 
 class DistributedSailDNA(SailDNA):
@@ -37,7 +39,8 @@ class DistributedSailAI(DistributedShippartAI, DistributedDestructibleArrayAI, D
         return self.maxHp
 
     def setHp(self, hp):
-        self.hp = hp
+        self.hp = min(hp, self.maxHp)
+        self.hp = max(hp, 0)
 
     def d_setHp(self, hp):
         self.sendUpdate('setHp', [hp])
@@ -77,7 +80,6 @@ class DistributedSailAI(DistributedShippartAI, DistributedDestructibleArrayAI, D
 
     def requestSetAnimState(self, animState):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-
         if not avatar:
             return
 
@@ -95,3 +97,20 @@ class DistributedSailAI(DistributedShippartAI, DistributedDestructibleArrayAI, D
 
     def getAnimState(self):
         return self.animState
+
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
+        cannonCode, hullCode, sailCode = codes
+        if self.hp == 0:
+            return
+
+        sailDamage = self.air.battleMgr.getModifiedSailDamage(attacker, self.ship, skillId, ammoSkillId)
+        self.b_setHp(self.getHp() + sailDamage)
+
+        shipDamage = sailDamage - (ShipBalance.ArmorAbsorb.getValue() * sailDamage)
+        self.ship.b_setHp(self.ship.getHp() + shipDamage)
+
+        # update the sail anim state
+        if self.hp == 0:
+            self.b_setAnimState('Falling')
+        else:
+            self.b_setAnimState('Hit')

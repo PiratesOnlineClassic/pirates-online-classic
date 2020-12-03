@@ -2,6 +2,7 @@ from direct.directnotify import DirectNotifyGlobal
 
 from pirates.ship.DistributedShipAI import DistributedShipAI
 from pirates.ship import ShipGlobals
+from pirates.ship import ShipBalance
 
 
 class NPCShipAI(DistributedShipAI):
@@ -17,3 +18,9 @@ class NPCShipAI(DistributedShipAI):
     def delete(self):
         self.air.shipManager.removeShip(self)
         DistributedShipAI.delete(self)
+
+    def getDamageInputModifier(self):
+        return ShipBalance.NPCDamageIn.getValue()
+
+    def getDamageOutputModifier(self):
+        return ShipBalance.NPCDamageOut.getValue()

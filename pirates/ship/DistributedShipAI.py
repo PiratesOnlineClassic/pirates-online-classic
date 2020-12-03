@@ -20,6 +20,7 @@ from pirates.battle.DistributedShipCannonAI import DistributedShipCannonAI
 from pirates.world.DistributedIslandAI import DistributedIslandAI
 from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
 from pirates.ship.GameFSMShipAI import GameFSMShipAI
+from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 
 
 class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectAI, Teamable):
@@ -584,8 +585,11 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         return self.maxHp
 
     def setHp(self, hp):
-        self.hp = hp
-        if self.hp <= 0:
+        oldHp = self.hp
+        self.hp = min(hp, self.maxHp)
+        self.hp = max(hp, 0)
+        DidChange = oldHp != self.hp
+        if self.hp == 0 and DidChange:
             self.b_setGameState('Sinking', 0)
 
     def d_setHp(self, hp):
@@ -877,6 +881,25 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             timestamp = globalClockDelta.getRealNetworkTime(bits=16)
 
         self.sendUpdate('setMovie', [mode, avatarId, fromShipId, instant, timestamp])
+
+    def getDamageInputModifier(self):
+        return 1.0
+
+    def getDamageOutputModifier(self):
+        return 1.0
+
+    def requestSkillEvent(self, skillId, ammoSkillId):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        if avatar.doId not in self.crew:
+            return
+
+        if avatar.doId != self.clientControllerDoId:
+            return
+
+        self.sendUpdate('recordSkillEvent', [skillId, ammoSkillId])
 
     def generateChildWithRequired(self, do, zoneId, optionalFields=[]):
         self.generateChildWithRequiredAndId(do, self.air.allocateChannel(), self.doId, zoneId, optionalFields)

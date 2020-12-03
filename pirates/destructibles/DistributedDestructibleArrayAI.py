@@ -6,31 +6,34 @@ class DistributedDestructibleArrayAI(DistributedDestructibleObjectAI):
 
     def __init__(self, air):
         DistributedDestructibleObjectAI.__init__(self, air)
-        self.maxHp = [100]
-        self.hp = [100]
+        self.maxArrayHp = [100]
+        self.arrayHp = [100]
 
-    def setMaxArrayHp(self, hp):
-        self.maxHp = hp
+    def setMaxArrayHp(self, maxArrayHp):
+        self.maxArrayHp = maxArrayHp
 
-    def d_setMaxArrayHp(self, hp):
-        self.sendUpdate("setMaxArrayHp", [hp])
+    def d_setMaxArrayHp(self, maxArrayHp):
+        self.sendUpdate("setMaxArrayHp", [maxArrayHp])
 
-    def b_setMaxArrayHp(self, hp):
-        self.setMaxArrayHp(hp)
-        self.d_setMaxArrayHp(hp)
+    def b_setMaxArrayHp(self, maxArrayHp):
+        self.setMaxArrayHp(maxArrayHp)
+        self.d_setMaxArrayHp(maxArrayHp)
 
     def getMaxArrayHp(self):
-        return self.maxHp
+        return self.maxArrayHp
 
-    def setArrayHp(self, hp):
-        self.hp = hp
+    def setArrayHp(self, arrayHp):
+        self.arrayHp = arrayHp
 
-    def d_setArrayHp(self, hp):
-        self.sendUpdate("setArrayHp", [hp])
+    def d_setArrayHp(self, arrayHp):
+        self.sendUpdate("setArrayHp", [arrayHp])
 
-    def b_setArrayHp(self, hp):
-        self.setArrayHp(hp)
-        self.d_setArrayHp(hp)
+    def b_setArrayHp(self, arrayHp):
+        self.setArrayHp(arrayHp)
+        self.d_setArrayHp(arrayHp)
 
     def getArrayHp(self):
-        return self.hp
+        return self.arrayHp
+
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
+        pass

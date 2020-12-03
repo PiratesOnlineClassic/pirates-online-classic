@@ -83,7 +83,7 @@ class GameFSMShipAI(FSM.FSM):
         def _shipSunk():
             self.ship.requestDelete()
 
-        self._sinkingTask = taskMgr.doMethodLater(60, _shipSunk, self.uniqueName('shipSunk'), extraArgs=[])
+        self._sinkingTask = taskMgr.doMethodLater(60, _shipSunk, self.ship.uniqueName('shipSunk'), extraArgs=[])
 
     def exitSinking(self):
         if self._sinkingTask is not None:

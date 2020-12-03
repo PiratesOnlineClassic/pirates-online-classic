@@ -49,6 +49,8 @@ class WeaponBaseAI(WeaponBaseBase):
         if not avatar:
             return
 
+        print ("requestProjectileSkill", skillId, ammoSkillId, posHpr, timestamp, power)
+
         if self.air.targetMgr.hasProjectile(avatar.doId, skillId, ammoSkillId):
             self.notify.debug('Avatar %d tried to request projectile skill for already used skill; '
                 'skillId=%d ammoSkillId=%d!' % (avatar.doId, skillId, ammoSkillId))
@@ -76,24 +78,39 @@ class WeaponBaseAI(WeaponBaseBase):
 
             return
 
-        # this will handle the attackers projectile targeted skill request, however we will not check if the target
-        # specified in this update is valid. because, if their is no target then the client is
-        # just requesting targeted skill for no target...
-        self.useProjectileSkill(avatar, target, skillId, ammoSkillId, result, targetId,
-            areaIdList, pos, normal, codes, timestamp)
+        # handle projectile skill results for non ship objects:
+        from pirates.ship.DistributedShipAI import DistributedShipAI
+        if not isinstance(target, DistributedShipAI):
+            self.useProjectileSkill(avatar, target, skillId, ammoSkillId, result, targetId, areaIdList, pos, normal, codes, timestamp)
+            for targetId in areaIdList:
+                target = self.air.doId2do.get(targetId)
+                if not target:
+                    self.notify.debug('Cannot request projectil skill, unknown areaId target; '
+                        'avatarId=%d skillId=%d!' % (avatar.doId, skillId))
 
-        # this will handle the targeted skill for any targets in the range of the attacker,
-        # for example if an attacker uses a skill that effects enemies around it...
-        for targetId in areaIdList:
-            target = self.air.doId2do.get(targetId)
-            if not target:
-                self.notify.debug('Cannot request projectil skill, unknown areaId target; '
-                    'avatarId=%d skillId=%d!' % (avatar.doId, skillId))
+                    continue
 
-                continue
+                self.useProjectileSkill(avatar, target, skillId, ammoSkillId, result, targetId, areaIdList, pos, normal, codes, timestamp)
+        else:
+            # handle projectile skill results for ships and shipparts:
+            cannonCode, hullCode, sailCode = codes
+            skillResult = self.air.battleMgr.willWeaponHit(avatar, target, skillId, ammoSkillId, 0)
 
-            self.useProjectileSkill(avatar, target, skillId, ammoSkillId, result, targetId,
-                areaIdList, pos, normal, codes, timestamp)
+            attackerEffects = [0, 0, 0, 0, 0]
+            targetEffects = [0, 0, 0, 0, 0]
+            areaIdEffects = [attackerEffects, targetEffects]
+
+            timestamp = globalClockDelta.getRealNetworkTime(bits=32)
+            if skillResult:
+                if hullCode > 0:
+                    target.hull.projectileWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, avatar)
+
+                if sailCode > 0:
+                    for sail in target.sails:
+                        if sail.hp > 0:
+                            sail.projectileWeaponHit(skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, avatar)
+
+            self.sendUpdate('setProjectileSkillResult', [skillId, ammoSkillId, skillResult, target.doId, [], attackerEffects, targetEffects, areaIdEffects, pos, normal, codes, avatar.doId, timestamp])
 
         # the projectile has been successfully used, remove the projectile
         # from the target manager so the avatar can use the skill again...

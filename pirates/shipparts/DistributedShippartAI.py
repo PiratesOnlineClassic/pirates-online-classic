@@ -9,11 +9,16 @@ class DistributedShippartAI(DistributedObjectAI):
         DistributedObjectAI.__init__(self, air)
 
         self.ownerId = 0
+        self.owner = None
+
         self.shipId = 0
+        self.ship = None
+
         self.geomParentId = 0
 
     def setOwnerId(self, ownerId):
         self.ownerId = ownerId
+        self.owner = self.air.doId2do.get(ownerId)
 
     def d_setOwnerId(self, ownerId):
         self.sendUpdate('setOwnerId', [ownerId])
@@ -26,10 +31,11 @@ class DistributedShippartAI(DistributedObjectAI):
         return self.ownerId
 
     def getOwner(self):
-        return self.air.doId2do.get(self.ownerId)
+        return self.owner
 
     def setShipId(self, shipId):
         self.shipId = shipId
+        self.ship = self.air.doId2do.get(shipId)
 
     def d_setShipId(self, shipId):
         self.sendUpdate('setShipId', [shipId])
@@ -42,7 +48,7 @@ class DistributedShippartAI(DistributedObjectAI):
         return self.shipId
 
     def getShip(self):
-        return self.air.doId2do.get(self.shipId)
+        return self.ship
 
     def setGeomParentId(self, geomParentId):
         self.geomParentId = geomParentId

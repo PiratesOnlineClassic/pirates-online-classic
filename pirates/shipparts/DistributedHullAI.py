@@ -3,6 +3,7 @@ from direct.directnotify import DirectNotifyGlobal
 from pirates.shipparts.DistributedShippartAI import DistributedShippartAI
 from pirates.shipparts.HullDNA import HullDNA
 from pirates.destructibles.DistributedDestructibleArrayAI import DistributedDestructibleArrayAI
+from pirates.ship import ShipBalance
 
 
 class DistributedHullDNA(HullDNA):
@@ -58,3 +59,47 @@ class DistributedHullAI(DistributedShippartAI, DistributedDestructibleArrayAI, D
 
     def getMaxCargo(self):
         return self.maxCargo
+
+    def getArmorStatus(self):
+        if len(self.arrayHp) % 2 == 1:
+            left = 1.0 - (self.arrayHp[1] + self.arrayHp[3] + self.arrayHp[5]) / float(self.maxArrayHp[1] + self.maxArrayHp[3] + self.maxArrayHp[5])
+            rear = 1.0 - self.arrayHp[0] / float(self.maxArrayHp[0])
+            right = 1.0 - (self.arrayHp[2] + self.arrayHp[4] + self.arrayHp[6]) / float(self.maxArrayHp[2] + self.maxArrayHp[4] + self.maxArrayHp[6])
+        else:
+            left = 1.0 - (self.arrayHp[1] + self.arrayHp[3] + self.arrayHp[5]) / float(self.maxArrayHp[1] + self.maxArrayHp[3] + self.maxArrayHp[5])
+            rear = 1.0 - self.arrayHp[0] / float(self.maxArrayHp[0])
+            right = 1.0 - (self.arrayHp[2] + self.arrayHp[4]) / float(self.maxArrayHp[2] + self.maxArrayHp[4])
+
+        return (left, rear, right)
+
+    def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
+        cannonCode, hullCode, sailCode = codes
+        hullDamage = self.air.battleMgr.getModifiedHullDamage(attacker, self.ship, skillId, ammoSkillId)
+
+        index = -1
+        if hullCode == 255:
+            for x in xrange(len(self.arrayHp)):
+                if self.arrayHp[x] > 0:
+                    index = x
+                    break
+        else:
+            index = hullCode - 1
+            if index > 0:
+                index = (index - 1) % 2 + 1
+
+        if index == -1:
+            return
+
+        arrayHp = list(self.arrayHp)
+        if index >= len(arrayHp):
+            return
+
+        arrayHp[index] = max(arrayHp[index] + hullDamage, 0)
+        self.b_setArrayHp(arrayHp)
+
+        # now damage the ship, but absorbing some of the damage until our
+        # hull armor is completely gone:
+        left, rear, right = self.getArmorStatus()
+        armorAsorb = (left + rear + right) / 3
+        armorAsorb = min(armorAsorb, ShipBalance.ArmorAbsorb.getValue())
+        self.ship.b_setHp(self.ship.getHp() + (hullDamage - (armorAsorb * hullDamage)))
