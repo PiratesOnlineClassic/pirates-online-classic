@@ -185,7 +185,7 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
         return self.objectDict.get(targetId, [])
 
     def hasProjectile(self, avatarId, skillId, ammoSkillId):
-        assert(WeaponGlobals.isProjectileSkill(skillId, ammoSkillId))
+        #assert(WeaponGlobals.isProjectileSkill(skillId, ammoSkillId))
         projectiles = self.projectiles.get(avatarId)
         if not projectiles:
             return False
@@ -199,7 +199,7 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
         return False
 
     def addProjectile(self, avatarId, skillId, ammoSkillId, timestamp):
-        assert(WeaponGlobals.isProjectileSkill(skillId, ammoSkillId))
+        #assert(WeaponGlobals.isProjectileSkill(skillId, ammoSkillId))
         if self.hasProjectile(avatarId, skillId, ammoSkillId):
             return
 
@@ -207,7 +207,7 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
         projectiles.append([skillId, ammoSkillId, timestamp])
 
     def removeProjectile(self, avatarId, skillId, ammoSkillId):
-        assert(WeaponGlobals.isProjectileSkill(skillId, ammoSkillId))
+        #assert(WeaponGlobals.isProjectileSkill(skillId, ammoSkillId))
         if not self.hasProjectile(avatarId, skillId, ammoSkillId):
             return
 
@@ -222,7 +222,7 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
             break
 
     def getProjectile(self, avatarId, skillId, ammoSkillId):
-        assert(WeaponGlobals.isProjectileSkill(skillId, ammoSkillId))
+        #assert(WeaponGlobals.isProjectileSkill(skillId, ammoSkillId))
         projectiles = self.projectiles.get(avatarId)
         if not projectiles:
             return None

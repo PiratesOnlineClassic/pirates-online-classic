@@ -109,7 +109,7 @@ class GameFSMShipAI(FSM.FSM):
         self._followPath()
 
     def _followPath(self):
-        followSpeed = 500.0
+        followSpeed = 800.0
         dx, dy = self.air.worldCreator.oceanAreaManager.getRandomOceanPos(self.world.getUniqueId())
 
         destNode = NodePath('dest-node-%d' % self.ship.doId)

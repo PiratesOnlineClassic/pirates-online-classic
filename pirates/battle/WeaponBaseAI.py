@@ -72,11 +72,11 @@ class WeaponBaseAI(WeaponBaseBase):
             return
 
         target = self.air.doId2do.get(targetId)
-        if not self.air.targetMgr.hasProjectile(avatar.doId, skillId, ammoSkillId):
-            self.notify.debug('Avatar %d tried to request projectile skill for skill never used; '
-                'skillId=%d ammoSkillId=%d!' % (avatar.doId, skillId, ammoSkillId))
-
-            return
+        #if not self.air.targetMgr.hasProjectile(avatar.doId, skillId, ammoSkillId):
+        #    self.notify.warning('Avatar %d tried to request projectile skill for skill never used; '
+        #        'skillId=%d ammoSkillId=%d!' % (avatar.doId, skillId, ammoSkillId))
+        #
+        #    return
 
         # handle projectile skill results for non ship objects:
         from pirates.ship.DistributedShipAI import DistributedShipAI
