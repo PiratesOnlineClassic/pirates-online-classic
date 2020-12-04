@@ -21,7 +21,7 @@ class ClientServicesManager(DistributedObjectGlobal):
         digest_maker.update(token)
         clientKey = digest_maker.hexdigest()
 
-        address = get('https://api.ipify.org/').text
+        address = ''#get('https://api.ipify.org/').text
 
         self.sendUpdate('login', [token, address, clientKey])
 
