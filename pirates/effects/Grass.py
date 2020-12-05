@@ -25,8 +25,8 @@ class Grass(DirectObject, NodePath):
     
     def __init__(self, parent):
         NodePath.__init__(self, 'grass')
-        self.parent = parent
-        self.__grassDataFile = GrassProfiles.get(self.parent.modelPath)
+        self.reparentTo(parent)
+        self.__grassDataFile = GrassProfiles.get(parent.modelPath)
         self.numClumps = 40
         self.clumps = []
         self.lastAvCell = None

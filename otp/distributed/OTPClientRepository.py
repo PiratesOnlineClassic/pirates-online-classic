@@ -1900,7 +1900,7 @@ class OTPClientRepository(ClientRepositoryBase):
         # This object must be generated when the operation completes:
         pending = self.__pendingGenerates.setdefault(handle, [])
         dgData = di.getDatagram().getMessage()
-        pending.append((doId,parentId, zoneId, classId, Datagram(dgData), other))
+        pending.insert(0, (doId,parentId, zoneId, classId, Datagram(dgData), other))
         self.__doId2pendingInterest[doId] = handle
 
     def __playBackGenerates(self, handle):
@@ -1910,7 +1910,7 @@ class OTPClientRepository(ClientRepositoryBase):
         # This interest has pending generates! Play them.
         generates = self.__pendingGenerates[handle]
         del self.__pendingGenerates[handle]
-        generates.sort(key=lambda x: x[3])  # sort by classId
+        #generates.sort(key=lambda x: x[3])  # sort by classId
         for doId, parentId, zoneId, classId, dg, other in generates:
             di = DatagramIterator(dg)
             # MsgType (2), zoneId, doId, parentId (3x4), classId (2)
@@ -1945,14 +1945,11 @@ class OTPClientRepository(ClientRepositoryBase):
 
         di2 = DatagramIterator(di.getDatagram(), di.getCurrentIndex())
         doId = di2.getUint32()
-
         if doId not in self.__doId2pendingInterest:
             return False
 
-        pending = self.__pendingMessages.setdefault(
-            self.__doId2pendingInterest[doId], [])
-        pending.append(Datagram(di.getDatagram()))
-
+        pending = self.__pendingMessages.setdefault(self.__doId2pendingInterest[doId], [])
+        pending.insert(0, Datagram(di.getDatagram()))
         return True
 
     def __doGenerate(self, doId, parentId, zoneId, classId, di, other):
@@ -1961,11 +1958,10 @@ class OTPClientRepository(ClientRepositoryBase):
         #    return
         dclass.startGenerate()
         if other:
-            distObj = self.generateWithRequiredOtherFields(
-                dclass, doId, di, parentId, zoneId)
+            distObj = self.generateWithRequiredOtherFields(dclass, doId, di, parentId, zoneId)
         else:
-            distObj = self.generateWithRequiredFields(
-                dclass, doId, di, parentId, zoneId)
+            distObj = self.generateWithRequiredFields(dclass, doId, di, parentId, zoneId)
+
         dclass.stopGenerate()
 
     def handleGenerateWithRequiredOwner(self, di, other=False):

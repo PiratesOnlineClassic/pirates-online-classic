@@ -520,6 +520,90 @@ objectStruct = {
                         'Model': 'models/islands/pvp_rock_big_zero'
                     }
                 },
+                '1135280776.06dzlu': {
+                    'Type': 'Island',
+                    'File': 'BilgewaterIsland',
+                    'Name': 'Bilgewater',
+                    'Hpr': VBase3(315.369, 0.0, 0.0),
+                    'Objects': {
+                        '1210981042.57hreister': {
+                            'Type': 'LOD Sphere',
+                            'Hpr': Point3(0.0, 0.0, 0.0),
+                            'Pos': Point3(68.294, 79.498, 0.0),
+                            'Radi': [4377.0, 5000.0, 7573.0],
+                            'Scale': VBase3(1.0, 1.0, 1.0)
+                        }
+                    },
+                    'Pos': Point3(32014.123, 20490.859, 0.0),
+                    'Scale': VBase3(1.0, 1.0, 1.0),
+                    'Undockable': True,
+                    'Visual': {
+                        'Model': 'models/islands/bilgewater_zero'
+                    }
+                },
+                '1264619508.77caoconno': {
+                    'Type': 'Island',
+                    'File': 'mysterious_island_01',
+                    'Name': 'Coldwater Isle',
+                    'Hpr': VBase3(315.369, 0.0, 0.0),
+                    'Objects': {
+                        '1210981042.77caoconno': {
+                            'Type': 'LOD Sphere',
+                            'Hpr': Point3(0.0, 0.0, 0.0),
+                            'Pos': Point3(68.294, 79.498, 0.0),
+                            'Radi': [4377.0, 5000.0, 7573.0],
+                            'Scale': VBase3(1.0, 1.0, 1.0)
+                        }
+                    },
+                    'Pos': Point3(25014.123, 31490.859, 0.0),
+                    'Scale': VBase3(1.0, 1.0, 1.0),
+                    'Undockable': True,
+                    'Visual': {
+                        'Model': 'models/islands/pir_m_are_isl_mysterious_01'
+                    }
+                },
+                '1264623649.38caoconno': {
+                    'Type': 'Island',
+                    'File': 'mysterious_island_02',
+                    'Name': "Raven's Cove",
+                    'Hpr': VBase3(315.369, 0.0, 0.0),
+                    'Objects': {
+                        '1210981042.38caoconno': {
+                            'Type': 'LOD Sphere',
+                            'Hpr': Point3(0.0, 0.0, 0.0),
+                            'Pos': Point3(68.294, 79.498, 0.0),
+                            'Radi': [4377.0, 5000.0, 7573.0],
+                            'Scale': VBase3(1.0, 1.0, 1.0)
+                        }
+                    },
+                    'Pos': Point3(-16199.961, 28180.18, 0.32),
+                    'Scale': VBase3(1.0, 1.0, 1.0),
+                    'Undockable': True,
+                    'Visual': {
+                        'Model': 'models/islands/pir_m_are_isl_mysterious_02'
+                    }
+                },
+                '1264623700.46caoconno': {
+                    'Type': 'Island',
+                    'File': 'mysterious_island_03',
+                    'Name': "Isla de Muerta",
+                    'Hpr': VBase3(315.369, 0.0, 0.0),
+                    'Objects': {
+                        '1210981042.46caoconno': {
+                            'Type': 'LOD Sphere',
+                            'Hpr': Point3(0.0, 0.0, 0.0),
+                            'Pos': Point3(68.294, 79.498, 0.0),
+                            'Radi': [4377.0, 5000.0, 7573.0],
+                            'Scale': VBase3(1.0, 1.0, 1.0)
+                        }
+                    },
+                    'Pos': Point3(28757.1, -20577.305, 0.0),
+                    'Scale': VBase3(1.0, 1.0, 1.0),
+                    'Undockable': True,
+                    'Visual': {
+                        'Model': 'models/islands/pir_m_are_isl_mysterious_03'
+                    }
+                },
                 '1201641372.09kmuller': {
                     'Type': 'Island',
                     'File': 'pvp_rock_med_1',
@@ -996,6 +1080,14 @@ objectStruct = {
         '["Objects"]["1141410776.53sdnaik"]["Objects"]["1196970080.56sdnaik"]["Objects"]["1196970440.66sdnaik"]',
         '1201636857.8kmuller':
         '["Objects"]["1141410776.53sdnaik"]["Objects"]["1201636857.8kmuller"]',
+        '1135280776.06dzlu':
+        '["Objects"]["1141410776.53sdnaik"]["Objects"]["1135280776.06dzlu"]',
+        '1264619508.77caoconno':
+        '["Objects"]["1141410776.53sdnaik"]["Objects"]["1264619508.77caoconno"]',
+        '1264623649.38caoconno':
+        '["Objects"]["1141410776.53sdnaik"]["Objects"]["1264623649.38caoconno"]',
+        '1264623700.46caoconno':
+        '["Objects"]["1141410776.53sdnaik"]["Objects"]["1264623700.46caoconno"]',
         '1201641372.09kmuller':
         '["Objects"]["1141410776.53sdnaik"]["Objects"]["1201641372.09kmuller"]',
         '1201641393.2kmuller':
@@ -1032,6 +1124,12 @@ objectStruct = {
         '["Objects"]["1141410776.53sdnaik"]["Objects"]["1210197888.0WDIG2"]',
         '1210981042.09kmuller':
         '["Objects"]["1141410776.53sdnaik"]["Objects"]["1201636857.8kmuller"]["Objects"]["1210981042.09kmuller"]',
+        '1264619508.77caoconno':
+        '["Objects"]["1141410776.53sdnaik"]["Objects"]["1264619508.77caoconno"]["Objects"]["1210981042.77caoconno"]',
+        '1264623649.38caoconno':
+        '["Objects"]["1141410776.53sdnaik"]["Objects"]["1264623649.38caoconno"]["Objects"]["1210981042.38caoconno"]',
+        '1264623700.46caoconno':
+        '["Objects"]["1141410776.53sdnaik"]["Objects"]["1264623700.46caoconno"]["Objects"]["1210981042.46caoconno"]',
         '1210981113.03kmuller':
         '["Objects"]["1141410776.53sdnaik"]["Objects"]["1201641372.09kmuller"]["Objects"]["1210981113.03kmuller"]',
         '1210981144.78kmuller':

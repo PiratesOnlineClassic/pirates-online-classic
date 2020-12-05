@@ -12,7 +12,7 @@ class DistributedOceanGridAI(DistributedCartesianGridAI, OceanGridBase):
     def __init__(self, air):
         startingZone = WorldGlobals.OCEAN_GRID_STARTING_ZONE
         gridSize = WorldGlobals.OCEAN_GRID_SIZE
-        gridRadius = WorldGlobals.OCEAN_GRID_RADIUS
+        gridRadius = gridSize / WorldGlobals.OCEAN_GRID_RADIUS
         cellWidth = WorldGlobals.OCEAN_CELL_SIZE
 
         DistributedCartesianGridAI.__init__(self, air, startingZone, gridSize, gridRadius, cellWidth)

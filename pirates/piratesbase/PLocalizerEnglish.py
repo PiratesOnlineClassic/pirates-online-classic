@@ -2100,6 +2100,7 @@ CannotBoardShipWarning = 'Cannot board ship at this time!'
 ShipNotInBottleWarning = 'Ship must be put away in bottle first!'
 OtherShipIsBeingDeployed = "%s's ship, the %s, is now being launched at %s!"
 CoralReefWarning = 'You are sailing too close to shore!'
+HeavyFogWarning = 'You cannot dock here, the fog is too dense!'
 AnchorButtonInfo = 'Drop Anchor'
 AnchorButtonHelp = 'Drop anchor and enter port'
 FlagshipButtonInfo = 'Swing Over'
@@ -5517,7 +5518,11 @@ LocationNames = {
     '1196970035.53sdnaik': 'Isla de la Avaricia',
     '1196970080.56sdnaik': "Ile d'Etable de Porc",
     '1202846053.19akelts0': "Porc's Tavern",
-    '1204237124.2akelts0': "Avaricia's Tavern"}
+    '1204237124.2akelts0': "Avaricia's Tavern",
+    '1264619508.77caoconno': 'Coldwater Isle',
+    '1264623649.38caoconno': "Raven's Cove",
+    '1264623700.46caoconno': 'Isla de Muerta',
+    '1135280776.06dzlu': 'Bilgewater'}
 UNDEAD_SPANISH_NAMES = ('Undead Spanish Soldier', 'Undead Spanish Soldiers')
 UNDEAD_FRENCH_NAMES = ('Undead French Soldier', 'Undead French Soldiers')
 LoadingScreen_Jail = 'Jail'

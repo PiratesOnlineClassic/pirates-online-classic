@@ -6082,39 +6082,39 @@ objectStruct = {
                     }
                 },
                 '1138400345.72dxschafe': {
-                    'Type': 'Creature',
+                    'Type': 'Spawn Node',
                     'Hpr': VBase3(-102.243, 0.0, 0.0),
                     'Pos': Point3(-112.27, -313.908, 0.809),
                     'Respawns': True,
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Species': 'Crab',
+                    'Spawnables': 'Crab',
                     'Start State': 'Walk'
                 },
                 '1138400763.67dxschafe': {
-                    'Type': 'Creature',
+                    'Type': 'Spawn Node',
                     'Hpr': Point3(0.0, 0.0, 0.0),
                     'Pos': Point3(-27.049, -297.966, 1.728),
                     'Respawns': True,
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Species': 'Crab',
+                    'Spawnables': 'Crab',
                     'Start State': 'Walk'
                 },
                 '1138400773.91dxschafe': {
-                    'Type': 'Creature',
+                    'Type': 'Spawn Node',
                     'Hpr': VBase3(60.203, 0.0, 0.0),
                     'Pos': Point3(-154.66, -382.735, 0.31),
                     'Respawns': True,
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Species': 'Crab',
+                    'Spawnables': 'Crab',
                     'Start State': 'Walk'
                 },
                 '1138400798.94dxschafe': {
-                    'Type': 'Creature',
+                    'Type': 'Spawn Node',
                     'Hpr': VBase3(-146.112, 0.0, 0.0),
                     'Pos': Point3(-171.326, -282.684, 1.224),
                     'Respawns': True,
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Species': 'Crab',
+                    'Spawnables': 'Crab',
                     'Start State': 'Walk'
                 },
                 '1138402671.14dxschafe': {
@@ -7200,6 +7200,16 @@ objectStruct = {
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
                         'Model': 'models/tunnels/tunnel_cave_left'
+                    }
+                },
+                '1154568338.96jubutler': {
+                    'Type': 'Tunnel Cap',
+                    'Hpr': VBase3(69.555, 0.0, 0.0),
+                    'Pos': Point3(-215.485, -321.146, 0.797),
+                    'Scale': VBase3(1.0, 1.0, 1.0),
+                    'Visual': {
+                        'Color': (0.95, 0.65, 0.36, 1.0),
+                        'Model': 'models/tunnels/tunnelcap_volcano'
                     }
                 },
                 '1144798398.96jubutler': {
@@ -12682,7 +12692,7 @@ objectStruct = {
                         '1136405358.8dzlu': {
                             'Type': 'Building Exterior',
                             'Name': '',
-                            'File': '',
+                            'File': 'bilgewater_guildhall_interior_a',
                             'Hpr': VBase3(141.754, 9.612, 0.799),
                             'Objects': {
                                 '1136405019.87dzlu0': {
@@ -13721,7 +13731,7 @@ objectStruct = {
                     'Pos': Point3(304.701, -15.951, 6.754),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Model': 'models/town/bar_exterior'
+                        'Model': 'models/buildings/spanish_tavern_exterior'
                     }
                 },
                 '1146179053.65dxschafe': {
@@ -13730,7 +13740,7 @@ objectStruct = {
                     'Pos': Point3(303.669, -17.347, 11.157),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Model': 'models/town/bar_exterior'
+                        'Model': 'models/buildings/spanish_tavern_exterior'
                     }
                 },
                 '1146181063.24dxschafe': {
@@ -14050,13 +14060,20 @@ objectStruct = {
                             }
                         },
                         '1146533961.79jubutler': {
-                            'Type': 'Spawn Node',
+                            'Type': 'Player Spawn Node',
                             'Hpr': Point3(0.0, 0.0, 0.0),
-                            'Min Population': '2',
+                            'Min Population': '1',
+                            'Index': -1,
                             'Pos': Point3(453.762, -104.987, 5.313),
                             'Scale': VBase3(1.0, 1.0, 1.0),
-                            'Spawnables': 'EvilNavy',
-                            'Team': '2'
+                            'Spawnables': 'All',
+                            'SpawnDelay': '20',
+                            'Spawnables': 'All',
+                            'Team': '1',
+                            'Visual': {
+                                'Model': 'models/misc/smiley'
+                            },
+                            'startingDepth': '15'
                         },
                         '1146734455.89jubutler': {
                             'Type': 'Movement Node',
@@ -16316,6 +16333,8 @@ objectStruct = {
         '["Objects"]["1135280776.06dzlu"]["Objects"]["1144696205.34sdnaik"]["Objects"]["1144696205.36sdnaik"]',
         '1144696208.66sdnaik':
         '["Objects"]["1135280776.06dzlu"]["Objects"]["1144696205.34sdnaik"]["Objects"]["1144696208.66sdnaik"]',
+        '1154568338.96jubutler':
+        '["Objects"]["1135280776.06dzlu"]["Objects"]["1154568338.96jubutler"]',
         '1144798398.96jubutler':
         '["Objects"]["1135280776.06dzlu"]["Objects"]["1144798398.96jubutler"]',
         '1144798399.79jubutler':

@@ -270,7 +270,8 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
             self.setIslandWaterParameters(True)
             if not self.undockable:
                 localAvatar.setPort(self.doId)
-
+            else:
+                localAvatar.guiMgr.createWarning(PLocalizer.HeavyFogWarning, PiratesGuiGlobals.TextFG6, duration=6.0)
         elif level == 2:
             self.unloadIslandLowLod()
             self.retrieveIslandTerrain()
@@ -453,6 +454,15 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         flatName = self.modelPath.split('_zero')
         if not self.islandLowLod:
             self.islandLowLod = loader.loadModelCopy(flatName[0] + '_low')
+            #self.islandLowLodFog = self.islandLowLod.find('**/fog')
+            #if self.islandLowLodFog:
+            #    self.islandLowLodFog.setLightOff()
+            #    self.islandLowLodFog.setDepthWrite(0)
+            #    todMgr = base.cr.timeOfDayManager
+            #    if todMgr:
+            #        self.islandLowLodFog.setColorScale(todMgr.fog.getColor() / 3.0 + Vec4(0, 0, 0, 1))
+
+            self.islandLowLod.flattenStrong()
 
         if self.islandLowLod and not self.islandLowLod.isEmpty():
             self.islandLowLod.reparentTo(self)

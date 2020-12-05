@@ -98,7 +98,7 @@ class ShipManagerAI(object):
         ship.b_setGameState('PathFollow', 0)
 
     def startSpawnEnemyShips(self):
-        for x in xrange(256):
+        for x in xrange(32):
             self._spawnEnemyShip(random.choice([ShipGlobals.NAVY_FERRET,
                                                 ShipGlobals.NAVY_GREYHOUND,
                                                 ShipGlobals.NAVY_KINGFISHER,

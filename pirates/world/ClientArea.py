@@ -386,6 +386,7 @@ class ClientArea(DirectObject):
                             modelName = objData['Visual']['Model']
                         if modelName.find('bilgewater_town') != -1:
                             objModel = NodePath('bilgewater_town')
+                            flaggedToSkip = True
                         elif objectType == 'Tunnel Cap':
                             altId = objData.get('AltBlockerId')
                             objModel = self.loadPiecesModels(modelName, altId)
@@ -507,6 +508,9 @@ class ClientArea(DirectObject):
                                     lodIdx = objLODNode.getNumChildren() - 1
                                 
                                 for i in range(0, objLODNode.getNumChildren()):
+                                    if len(gldef.children) <= i:
+                                        continue
+
                                     if gldef.children[i] == None:
                                         continue
                                     
@@ -862,7 +866,7 @@ class ClientArea(DirectObject):
                     self.loadSubModelLODs(obj, modelName, animName, name)
                 subObjs = obj.findAllMatches('**/*' + name + '*')
                 if currSubObj['Visual'].has_key('Scale'):
-                    if bAnimatedTree:
+                    if bAnimatedTree and False:
                         transform = TransformState.makeMat(Mat4(obj.getJointTransform('modelRoot', attachInfo[1], '1')))
                         obj.freezeJoint('modelRoot', attachInfo[1], pos = Vec3(transform.getPos()), hpr = Vec3(transform.getHpr()), scale = currSubObj['Visual']['Scale'])
                     else:

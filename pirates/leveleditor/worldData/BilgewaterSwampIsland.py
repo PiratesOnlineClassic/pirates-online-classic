@@ -13510,7 +13510,7 @@ objectStruct = {
                     'Pos': Point3(304.701, -15.951, 6.754),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Model': 'models/town/bar_exterior'
+                        'Model': 'models/buildings/spanish_tavern_exterior'
                     }
                 },
                 '1146179053.65dxschafe': {
@@ -13519,7 +13519,7 @@ objectStruct = {
                     'Pos': Point3(303.669, -17.347, 11.157),
                     'Scale': VBase3(1.0, 1.0, 1.0),
                     'Visual': {
-                        'Model': 'models/town/bar_exterior'
+                        'Model': 'models/buildings/spanish_tavern_exterior'
                     }
                 },
                 '1146181063.24dxschafe': {

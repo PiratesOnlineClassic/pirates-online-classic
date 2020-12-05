@@ -6,7 +6,10 @@ from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from otp.distributed.OtpDoGlobals import *
 from otp.distributed.OTPInternalRepository import OTPInternalRepository
+from direct.distributed.MsgTypes import *
 from pirates.distributed import PiratesMsgTypes
+
+CLIENTAGENT_DONE_INTEREST_RESP = 1025
 
 class PiratesInternalRepository(OTPInternalRepository):
     GameGlobalsId = OTP_DO_ID_PIRATES

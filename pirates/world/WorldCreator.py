@@ -65,9 +65,10 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
         
         objectInfo = self.getObjectDataByUid(parentUid, fileDict)
         if not objectInfo:
-            if len(parent.links):
-                tunnel = base.cr.doId2do.get(parent.links[0][0])
-                self.notify.error('Data file not found for area. connecting tunnel uid = %s' % tunnel.uniqueId)
+            if hasattr(parent, 'links'):
+                if len(parent.links):
+                    tunnel = base.cr.doId2do.get(parent.links[0][0])
+                    self.notify.error('Data file not found for area. connecting tunnel uid = %s' % tunnel.uniqueId)
             
             self.notify.error('Data file not found for area being loaded: %s, make sure worldCreator.loadObjectsFromFile is being called.' % parentUid)
         
@@ -141,6 +142,8 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
                             OTPRender.renderReflection(True, newObj, 'p_pier', None)
 
             elif objType == 'Cell Portal Area':
+                newObj = objParent.addChildObj(object, objKey, zoneLevel = zoneLevel, startTime = startTime)
+            elif objType == 'bilgewater_town':
                 newObj = objParent.addChildObj(object, objKey, zoneLevel = zoneLevel, startTime = startTime)
             elif objType == 'Event Sphere':
                 newObj = self.addEventSphere(object, objParent)

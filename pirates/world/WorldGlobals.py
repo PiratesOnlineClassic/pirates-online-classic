@@ -1,6 +1,6 @@
-OCEAN_GRID_SIZE = 60
+OCEAN_GRID_SIZE = 120
 OCEAN_CELL_SIZE = 2000
-OCEAN_GRID_RADIUS = 3
+OCEAN_GRID_RADIUS = 6
 OCEAN_GRID_STARTING_ZONE = 500
 LARGE_ISLAND_GRID_SIZE = 80
 MED_ISLAND_GRID_SIZE = 40
@@ -88,7 +88,10 @@ __islandNametagHeight = {
     'Isla Perdida': 800,
     'Driftwood Island': 200,
     'Isla Tormenta': 200,
-    'Cutthroat Isle': 500}
+    'Cutthroat Isle': 500,
+    'Isla de Muerta': 1200,
+    "Raven's Cove": 1200
+}
 
 def getNametagHeight(name):
     return __islandNametagHeight.get(name, 200)

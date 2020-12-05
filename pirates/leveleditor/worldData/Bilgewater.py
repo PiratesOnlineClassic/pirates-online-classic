@@ -1782,7 +1782,7 @@ objectStruct = {
                         'Color': (0.699999988079071, 0.699999988079071,
                                   0.699999988079071, 1.0),
                         'Model':
-                        'models/buildings/shanty_tents'
+                        'models/buildings/3shanty_tents'
                     }
                 },
                 '1121302576.05aholdun': {
@@ -1791,7 +1791,7 @@ objectStruct = {
                     'Pos': Point3(538.493, 113.421, 40.261),
                     'Scale': VBase3(1.139, 1.139, 1.139),
                     'Visual': {
-                        'Model': 'models/buildings/shanty_tents'
+                        'Model': 'models/buildings/3shanty_tents'
                     }
                 },
                 '1121303024.45aholdun': {
@@ -1812,7 +1812,7 @@ objectStruct = {
                         'Color': (0.699999988079071, 0.699999988079071,
                                   0.699999988079071, 1.0),
                         'Model':
-                        'models/buildings/shanty_tents'
+                        'models/buildings/3shanty_tents'
                     }
                 },
                 '1121304470.64aholdun': {
@@ -2088,7 +2088,7 @@ objectStruct = {
                     'Pos': Point3(490.42, 118.302, 40.261),
                     'Scale': VBase3(1.031, 1.031, 1.031),
                     'Visual': {
-                        'Model': 'models/buildings/shanty_tents'
+                        'Model': 'models/buildings/3shanty_tents'
                     }
                 },
                 '1121363761.05aholdun': {
@@ -3047,7 +3047,7 @@ objectStruct = {
                         'Color': (0.699999988079071, 0.699999988079071,
                                   0.699999988079071, 1.0),
                         'Model':
-                        'models/buildings/shanty_tents'
+                        'models/buildings/3shanty_tents'
                     }
                 },
                 '1121447951.2aholdun': {

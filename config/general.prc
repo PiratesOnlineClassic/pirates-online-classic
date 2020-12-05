@@ -114,7 +114,7 @@ want-seapatch #t
 
 # Effects:
 want-special-effects #t
-want-grass #t
+want-grass #f
 want-shaders #t
 want-avatar-shadows #t
 want-special-effects #t
@@ -235,3 +235,5 @@ want-new-avatar #t
 
 # Shards:
 show-total-population #t
+
+show-frame-rate-meter #t

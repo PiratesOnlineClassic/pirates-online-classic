@@ -2,7 +2,7 @@
 from pandac.PandaModules import Point3, VBase3
 objectStruct = {
     'Objects': {
-        '1155866758.05sdnaik0': {
+        '1136405358.8dzlu': {
             'Type': 'Building Interior',
             'Name': 'bilgewater_guildhall_interior_a',
             'Objects': {
@@ -86,23 +86,23 @@ objectStruct = {
     'Node Links': [],
     'Layers': {},
     'ObjectIds': {
-        '1155866758.05sdnaik0':
-        '["Objects"]["1155866758.05sdnaik0"]',
+        '1136405358.8dzlu':
+        '["Objects"]["1136405358.8dzlu"]',
         '1156912518.59sdnaik':
-        '["Objects"]["1155866758.05sdnaik0"]["Objects"]["1156912518.59sdnaik"]',
+        '["Objects"]["1136405358.8dzlu"]["Objects"]["1156912518.59sdnaik"]',
         '1156912537.84sdnaik':
-        '["Objects"]["1155866758.05sdnaik0"]["Objects"]["1156912537.84sdnaik"]',
+        '["Objects"]["1136405358.8dzlu"]["Objects"]["1156912537.84sdnaik"]',
         '1156912551.03sdnaik':
-        '["Objects"]["1155866758.05sdnaik0"]["Objects"]["1156912551.03sdnaik"]',
+        '["Objects"]["1136405358.8dzlu"]["Objects"]["1156912551.03sdnaik"]',
         '1156918681.66sdnaik':
-        '["Objects"]["1155866758.05sdnaik0"]["Objects"]["1156918681.66sdnaik"]',
+        '["Objects"]["1136405358.8dzlu"]["Objects"]["1156918681.66sdnaik"]',
         '1156918727.22sdnaik':
-        '["Objects"]["1155866758.05sdnaik0"]["Objects"]["1156918727.22sdnaik"]',
+        '["Objects"]["1136405358.8dzlu"]["Objects"]["1156918727.22sdnaik"]',
         '1156970961.41sdnaik':
-        '["Objects"]["1155866758.05sdnaik0"]["Objects"]["1156970961.41sdnaik"]',
+        '["Objects"]["1136405358.8dzlu"]["Objects"]["1156970961.41sdnaik"]',
         '1156970980.98sdnaik':
-        '["Objects"]["1155866758.05sdnaik0"]["Objects"]["1156970980.98sdnaik"]',
+        '["Objects"]["1136405358.8dzlu"]["Objects"]["1156970980.98sdnaik"]',
         '1156970994.78sdnaik':
-        '["Objects"]["1155866758.05sdnaik0"]["Objects"]["1156970994.78sdnaik"]'
+        '["Objects"]["1136405358.8dzlu"]["Objects"]["1156970994.78sdnaik"]'
     }
 }
