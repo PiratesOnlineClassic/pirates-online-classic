@@ -72,6 +72,10 @@ class WeaponBaseAI(WeaponBaseBase):
             return
 
         target = self.air.doId2do.get(targetId)
+        from pirates.movement.DistributedMovingObjectAI import DistributedMovingObjectAI
+        if not isinstance(target, DistributedMovingObjectAI):
+            target = None
+
         #if not self.air.targetMgr.hasProjectile(avatar.doId, skillId, ammoSkillId):
         #    self.notify.warning('Avatar %d tried to request projectile skill for skill never used; '
         #        'skillId=%d ammoSkillId=%d!' % (avatar.doId, skillId, ammoSkillId))
