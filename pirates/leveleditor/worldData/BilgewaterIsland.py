@@ -71,6 +71,17 @@ objectStruct = {
                         'Model': 'models/buildings/shanty_tavern_exterior'
                     }
                 },
+                '1186784662.83Shochet': {
+                    'Type': 'Dinghy',
+                    'Aggro Radius': '12.0000',
+                    'Hpr': VBase3(90.585, 0.0, 0.0),
+                    'Location': 'Water',
+                    'Pos': Point3(373.406, -138.477, 0.0),
+                    'Scale': VBase3(1.0, 1.0, 1.0),
+                    'Visual': {
+                        'Model': 'models/shipparts/dingy-geometry_High'
+                    }
+                },
                 '1136406042.12dzlu': {
                     'Type': 'Tree',
                     'Hpr': Point3(0.0, 0.0, 0.0),
@@ -6883,6 +6894,7 @@ objectStruct = {
                     'Type': 'Building Exterior',
                     'Name': '',
                     'File': '',
+                    'ExtUid': '',
                     'Hpr': VBase3(6.635, 0.0, 0.0),
                     'Objects': {
                         '1138722751.38dxschafe0': {
@@ -7713,7 +7725,7 @@ objectStruct = {
                                     }
                                 },
                                 '1136338230.04dzlu': {
-                                    'Type': 'Barrel',
+                                    'Type': 'Searchable Container',
                                     'GridPos': Point3(498.132, 119.056,
                                                       41.663),
                                     'Hpr': VBase3(28.818, -0.934, -88.39),
@@ -7721,7 +7733,10 @@ objectStruct = {
                                     'Scale': VBase3(0.794, 0.794, 0.794),
                                     'Visual': {
                                         'Model': 'models/props/barrel'
-                                    }
+                                    },
+                                    'searchTime': '10.0',
+                                    'Aggro Radius': 5.0,
+                                    'type': 'Barrel'
                                 },
                                 '1136338238.24dzlu': {
                                     'Type':
@@ -7760,7 +7775,7 @@ objectStruct = {
                                     }
                                 },
                                 '1136338473.55dzlu': {
-                                    'Type': 'Barrel',
+                                    'Type': 'Searchable Container',
                                     'GridPos': Point3(475.142, 139.879,
                                                       45.291),
                                     'Hpr': VBase3(121.955, -0.53, 0.187),
@@ -7771,7 +7786,10 @@ objectStruct = {
                                                   0.49999999999999956, 1.0),
                                         'Model':
                                         'models/props/barrel'
-                                    }
+                                    },
+                                    'searchTime': '10.0',
+                                    'Aggro Radius': 5.0,
+                                    'type': 'Barrel'
                                 },
                                 '1136338506.65dzlu': {
                                     'Type':
@@ -7796,7 +7814,7 @@ objectStruct = {
                                     }
                                 },
                                 '1136338558.54dzlu': {
-                                    'Type': 'Barrel',
+                                    'Type': 'Searchable Container',
                                     'GridPos': Point3(499.824, 117.179,
                                                       40.061),
                                     'Hpr': VBase3(0.0, 0.122, -0.548),
@@ -7804,7 +7822,10 @@ objectStruct = {
                                     'Scale': VBase3(0.773, 0.773, 0.773),
                                     'Visual': {
                                         'Model': 'models/props/barrel'
-                                    }
+                                    },
+                                    'searchTime': '10.0',
+                                    'Aggro Radius': 5.0,
+                                    'type': 'Barrel'
                                 },
                                 '1136338586.88dzlu': {
                                     'Type': 'Barrel',
@@ -8939,16 +8960,20 @@ objectStruct = {
                         },
                         '1138331085.67dxschafe': {
                             'Type': 'Building Exterior',
-                            'Name': '',
-                            'File': '',
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Objects': {
                                 '1138331085.67dxschafe0': {
                                     'Type': 'Locator Node',
                                     'Name': 'portal_exterior_1',
-                                    'GridPos': Point3(511.483, 119.419, 45.27),
+                                    'GridPos': Point3(-1036.776, 143.736, 87.18),
                                     'Hpr': VBase3(-90.0, 0.0, 0.0),
                                     'Pos': Point3(26.442, -16.638, 0.0),
+                                    'Scale': VBase3(1.0, 1.0, 1.0)
+                                },'1200533376.67dxschafe0': {
+                                    'Type': 'Door Locator Node',
+                                    'Name': 'door_locator',
+                                    'Hpr': VBase3(-180.0, 0.0, 0.0),
+                                    'Pos': Point3(26.732, -16.596, -0.001),
                                     'Scale': VBase3(1.0, 1.0, 1.0)
                                 }
                             },
@@ -8956,12 +8981,11 @@ objectStruct = {
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Name': '',
-                                'Door':
-                                'models/buildings/shanty_guildhall_door',
-                                'Interior':
-                                'models/buildings/interior_shanty_guildhall',
-                                'Model':
-                                'models/buildings/spanish_tavern_exterior'
+                                'Door': 'models/buildings/shanty_guildhall_door',
+                                'Interior': 'models/buildings/interior_shanty_guildhall',
+                                'Model': 'models/buildings/spanish_tavern_exterior',
+                                'SignFrame': 'models/buildings/sign1_spanish_c_frame',
+                                'SignImage': 'models/buildings/sign1_eng_a_icon_tavern'
                             }
                         },
                         '1138333953.2dxschafe': {
@@ -9958,13 +9982,16 @@ objectStruct = {
                             }
                         },
                         '1138396364.92dxschafe': {
-                            'Type': 'Barrel',
+                            'Type': 'Searchable Container',
                             'Hpr': Point3(0.0, 0.0, 0.0),
                             'Pos': Point3(514.161, 298.132, 54.021),
                             'Scale': VBase3(0.486, 0.486, 0.486),
                             'Visual': {
                                 'Model': 'models/props/barrel'
-                            }
+                            },
+                            'searchTime': '10.0',
+                            'Aggro Radius': 5.0,
+                            'type': 'Barrel'
                         },
                         '1138396646.31dxschafe': {
                             'Type':
@@ -13112,14 +13139,17 @@ objectStruct = {
                             }
                         },
                         '1137805871.28dxschafe': {
-                            'Type': 'Well',
+                            'Type': 'Searchable Container',
                             'Hpr': VBase3(53.569, 0.0, 0.0),
                             'Pos': Point3(89.439, 242.903, 71.636),
                             'Scale': VBase3(1.0, 1.0, 1.0),
                             'Visual': {
                                 'Color': (0.7, 0.67, 0.6699999999999998, 1.0),
                                 'Model': 'models/props/wellA'
-                            }
+                            },
+                            'searchTime': '10.0',
+                            'Aggro Radius': 5.0,
+                            'type': 'WellA'
                         },
                         '1137805912.08dxschafe': {
                             'Type': 'Cart',
@@ -13753,22 +13783,29 @@ objectStruct = {
                         'Model': 'models/vegetation/gen_tree_e'
                     }
                 },
-                '1146179043.8dxschafe': {
-                    'Type': 'Spanish Tavern',
-                    'Hpr': Point3(0.0, 0.0, 0.0),
-                    'Pos': Point3(304.701, -15.951, 6.754),
-                    'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Visual': {
-                        'Model': 'models/buildings/spanish_tavern_exterior'
-                    }
-                },
                 '1146179053.65dxschafe': {
-                    'Type': 'Spanish Tavern',
+                    'Type': 'Building Exterior',
+                    'File': 'bilgewater_jail_interior',
+                    'ExtUid': '1146179053.65dxschafe',
                     'Hpr': Point3(0.0, 0.0, 0.0),
-                    'Pos': Point3(303.669, -17.347, 11.157),
+                    'Pos': Point3(303.669, -17.347, 6.157),
                     'Scale': VBase3(1.0, 1.0, 1.0),
+                    'Objects': {
+                        '1200533376.65dxschafe': {
+                            'Type': 'Door Locator Node',
+                            'Name': 'door_locator',
+                            'Hpr': VBase3(-180.0, 0.0, 0.0),
+                            'Pos': Point3(12.899, -22.494, 0.283),
+                            'Scale': VBase3(1.0, 1.0, 1.0)
+                        }
+                    },
                     'Visual': {
-                        'Model': 'models/buildings/spanish_tavern_exterior'
+                        'Name': '',
+                        'Color': (0.75, 0.75, 0.7529411764705882, 1.0),
+                        'Door': 'models/buildings/shanty_guildhall_door',
+                        'Interior': 'models/buildings/navy_jail_interior',
+                        'Model': 'models/buildings/jail_exterior',
+                        'SignImage': 'models/buildings/sign1_eng_a_icon_doctor'
                     }
                 },
                 '1146181063.24dxschafe': {
@@ -14487,6 +14524,8 @@ objectStruct = {
         '["Objects"]["1135280776.06dzlu"]["Objects"]["1144798400.27jubutler"]["Objects"]["1136405787.62dzlu"]',
         '1136406042.12dzlu':
         '["Objects"]["1135280776.06dzlu"]["Objects"]["1136406042.12dzlu"]',
+        '1186784662.83Shochet':
+        '["Objects"]["1135280776.06dzlu"]["Objects"]["1186784662.83Shochet"]',
         '1136406067.58dzlu':
         '["Objects"]["1135280776.06dzlu"]["Objects"]["1136406067.58dzlu"]',
         '1136406102.08dzlu':
@@ -15631,6 +15670,8 @@ objectStruct = {
         '["Objects"]["1135280776.06dzlu"]["Objects"]["1144798398.96jubutler"]["Objects"]["1138331085.67dxschafe"]',
         '1138331085.67dxschafe0':
         '["Objects"]["1135280776.06dzlu"]["Objects"]["1144798398.96jubutler"]["Objects"]["1138331085.67dxschafe"]["Objects"]["1138331085.67dxschafe0"]',
+        '1200533376.67dxschafe0':
+        '["Objects"]["1135280776.06dzlu"]["Objects"]["1144798398.96jubutler"]["Objects"]["1138331085.67dxschafe"]["Objects"]["1200533376.67dxschafe0"]',
         '1138331394.53dxschafe':
         '["Objects"]["1135280776.06dzlu"]["Objects"]["1138331394.53dxschafe"]',
         '1138331701.25dxschafe':
@@ -16403,10 +16444,10 @@ objectStruct = {
         '["Objects"]["1135280776.06dzlu"]["Objects"]["1144798398.96jubutler"]["Objects"]["1146177880.8dxschafe"]',
         '1146177881.41dxschafe':
         '["Objects"]["1135280776.06dzlu"]["Objects"]["1144798398.96jubutler"]["Objects"]["1146177881.41dxschafe"]',
-        '1146179043.8dxschafe':
-        '["Objects"]["1135280776.06dzlu"]["Objects"]["1146179043.8dxschafe"]',
         '1146179053.65dxschafe':
         '["Objects"]["1135280776.06dzlu"]["Objects"]["1146179053.65dxschafe"]',
+        '1200533376.65dxschafe':
+        '["Objects"]["1135280776.06dzlu"]["Objects"]["1146179053.65dxschafe"]["Objects"]["1200533376.65dxschafe"]',
         '1146180968.91dxschafe':
         '["Objects"]["1135280776.06dzlu"]["Objects"]["1144798398.96jubutler"]["Objects"]["1146180968.91dxschafe"]',
         '1146181063.24dxschafe':
