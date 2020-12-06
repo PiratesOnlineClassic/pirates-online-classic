@@ -235,5 +235,3 @@ want-new-avatar #t
 
 # Shards:
 show-total-population #t
-
-show-frame-rate-meter #t
