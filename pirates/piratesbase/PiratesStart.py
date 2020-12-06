@@ -5,12 +5,12 @@ print 'PiratesStart: Starting the game.'
 import __builtin__
 import os
 
-if __debug__:
-    loadPrcFile('config/general.prc')
-    loadPrcFile('config/dev.prc')
+loadPrcFile('config/general.prc')
+loadPrcFile('config/dev.prc')
+loadPrcFile('config/performance.prc')
 
-    if os.path.exists('config/personal.prc'):
-        loadPrcFile('config/personal.prc')
+if os.path.exists('config/personal.prc'):
+    loadPrcFile('config/personal.prc')
 
 class game:
     name = 'pirates'
