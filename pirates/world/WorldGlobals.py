@@ -90,7 +90,8 @@ __islandNametagHeight = {
     'Isla Tormenta': 200,
     'Cutthroat Isle': 500,
     'Isla de Muerta': 1200,
-    "Raven's Cove": 1200
+    "Raven's Cove": 1200,
+    'Bilgewater': 800
 }
 
 def getNametagHeight(name):

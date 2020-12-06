@@ -604,6 +604,27 @@ objectStruct = {
                         'Model': 'models/islands/pir_m_are_isl_mysterious_03'
                     }
                 },
+                '1264623757.79caoconno': {
+                    'Type': 'Island',
+                    'File': 'mysterious_island_04',
+                    'Name': "",
+                    'Hpr': VBase3(315.369, 0.0, 0.0),
+                    'Objects': {
+                        '1210981042.79caoconno': {
+                            'Type': 'LOD Sphere',
+                            'Hpr': Point3(0.0, 0.0, 0.0),
+                            'Pos': Point3(68.294, 79.498, 0.0),
+                            'Radi': [4377.0, 5000.0, 7573.0],
+                            'Scale': VBase3(1.0, 1.0, 1.0)
+                        }
+                    },
+                    'Pos': Point3(20757.1, -35577.305, 0.0),
+                    'Scale': VBase3(1.0, 1.0, 1.0),
+                    'Undockable': True,
+                    'Visual': {
+                        'Model': 'models/islands/pir_m_are_isl_mysterious_04'
+                    }
+                },
                 '1201641372.09kmuller': {
                     'Type': 'Island',
                     'File': 'pvp_rock_med_1',
@@ -883,6 +904,14 @@ objectStruct = {
             Point3(21000, -15000, 0), 'Smugglers_Run', '1180570240.0dxschafe0'
         ],
         [
+            Point3(33000, -23000, 0),
+            Point3(30000, -25000, 0), 'Serpent_Triangle', '1180570368.0dxjrmaxw'
+        ],
+        [
+            Point3(25000, -27000, 0),
+            Point3(30000, -39000, 0), 'Serpent_Triangle', '1180570368.0dxjrmaxw'
+        ],
+        [
             Point3(25000, -13000, 0),
             Point3(23000, -15000, 0), 'The_Hinterseas', '1180570368.0dxschafe'
         ],
@@ -1088,6 +1117,8 @@ objectStruct = {
         '["Objects"]["1141410776.53sdnaik"]["Objects"]["1264623649.38caoconno"]',
         '1264623700.46caoconno':
         '["Objects"]["1141410776.53sdnaik"]["Objects"]["1264623700.46caoconno"]',
+        '1264623757.79caoconno':
+        '["Objects"]["1141410776.53sdnaik"]["Objects"]["1264623757.79caoconno"]',
         '1201641372.09kmuller':
         '["Objects"]["1141410776.53sdnaik"]["Objects"]["1201641372.09kmuller"]',
         '1201641393.2kmuller':
@@ -1130,6 +1161,8 @@ objectStruct = {
         '["Objects"]["1141410776.53sdnaik"]["Objects"]["1264623649.38caoconno"]["Objects"]["1210981042.38caoconno"]',
         '1264623700.46caoconno':
         '["Objects"]["1141410776.53sdnaik"]["Objects"]["1264623700.46caoconno"]["Objects"]["1210981042.46caoconno"]',
+        '1264623757.79caoconno':
+        '["Objects"]["1141410776.53sdnaik"]["Objects"]["1264623757.79caoconno"]["Objects"]["1210981042.79caoconno"]',
         '1210981113.03kmuller':
         '["Objects"]["1141410776.53sdnaik"]["Objects"]["1201641372.09kmuller"]["Objects"]["1210981113.03kmuller"]',
         '1210981144.78kmuller':

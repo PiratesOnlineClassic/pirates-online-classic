@@ -1,6 +1,34 @@
-# Embedded file name: pirates.leveleditor.worldData.BilgewaterIsland
-from pandac.PandaModules import Point3, VBase3
+from pandac.PandaModules import Point3, VBase3, Vec4
+
 objectStruct = {
+    'AmbientColors': {
+        0: Vec4(0.496039, 0.568627, 0.67451, 1),
+        2: Vec4(0.666667, 0.721569, 0.792157, 1),
+        4: Vec4(0.721569, 0.611765, 0.619608, 1),
+        6: Vec4(0.437059, 0.446471, 0.556667, 1),
+        8: Vec4(0.389216, 0.426275, 0.569608, 1)
+    },
+    'DirectionalColors': {
+        0: Vec4(0.960784, 0.913725, 0.894118, 1),
+        2: Vec4(1, 1, 1, 1),
+        4: Vec4(0.439216, 0.176471, 0, 1),
+        6: Vec4(0.513726, 0.482353, 0.643137, 1),
+        8: Vec4(0.447059, 0.439216, 0.541176, 1)
+    },
+    'FogColors': {
+        0: Vec4(0.27451, 0.192157, 0.211765, 0),
+        2: Vec4(0.894118, 0.894118, 1, 1),
+        4: Vec4(0.231373, 0.203922, 0.184314, 0),
+        6: Vec4(0.156863, 0.219608, 0.329412, 0),
+        8: Vec4(0.129412, 0.137255, 0.207843, 0)
+    },
+    'FogRanges': {
+        0: 0.0002,
+        2: 0.00019999999494757503,
+        4: 0.0004,
+        6: 0.0004,
+        8: 0.0002
+    },
     'Locator Links':
     [['1144695643.19sdnaik', '1144695785.47sdnaik', 'Bi-directional'],
      ['1144696042.95sdnaik', '1144695785.52sdnaik', 'Bi-directional'],
@@ -12692,7 +12720,7 @@ objectStruct = {
                         '1136405358.8dzlu': {
                             'Type': 'Building Exterior',
                             'Name': '',
-                            'File': 'bilgewater_guildhall_interior_a',
+                            'File': '',
                             'Hpr': VBase3(141.754, 9.612, 0.799),
                             'Objects': {
                                 '1136405019.87dzlu0': {

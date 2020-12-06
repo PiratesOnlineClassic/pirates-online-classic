@@ -65,7 +65,8 @@ areaType_Caves = {
     '1167862588.52sdnaik': 3,
     '1168057131.73sdnaik': 4,
     '1164929110.98sdnaik': 5,
-    '1172208344.92sdnaik': 6}
+    '1172208344.92sdnaik': 6,
+    '1138313303.97sdnaik': 7}
 screenShot_Dinghy = 'models/gui/loadingScreen_08'
 screenShot_Jail = 'models/gui/loadingScreen_12'
 screenShots_Locations = {

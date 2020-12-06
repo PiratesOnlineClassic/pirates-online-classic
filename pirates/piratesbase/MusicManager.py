@@ -41,6 +41,8 @@ musicDict = {
     'island-cangrejos': 'audio/music_cangrejos.mp3',
     'island-cutthroat': 'audio/music_cutthroat.mp3',
     'island-general': 'audio/music_creepy_c.mp3',
+    'island-bilgewater': 'audio/music_bilgewater.mp3',
+    'bilgewater-mine': 'audio/music_bilgewater_mine.mp3',
     'cave': 'audio/music_creepy_a.mp3',
     'jungle': 'audio/music_creepy_b.mp3',
     'swamp': 'audio/music_creepy_c.mp3',

@@ -5511,6 +5511,7 @@ LocationNames = {
     'Leeward_Passage': 'Leeward Passage',
     'Boiling_Bay': 'Boiling Bay',
     'Mariners_Reef': 'Mariners Reef',
+    'Serpent_Triangle': "Serpent's Triangle",
     'Uncharted_Waters': 'Uncharted Waters',
     '1175562995.67zpavlov': 'Molten Cavern',
     '1170793088.0jubutler': 'Boulder Hill',
@@ -5522,7 +5523,10 @@ LocationNames = {
     '1264619508.77caoconno': 'Coldwater Isle',
     '1264623649.38caoconno': "Raven's Cove",
     '1264623700.46caoconno': 'Isla de Muerta',
-    '1135280776.06dzlu': 'Bilgewater'}
+    '1135280776.06dzlu': 'Bilgewater',
+    '1138313303.97sdnaik': 'Abandoned Mines'
+}
+
 UNDEAD_SPANISH_NAMES = ('Undead Spanish Soldier', 'Undead Spanish Soldiers')
 UNDEAD_FRENCH_NAMES = ('Undead French Soldier', 'Undead French Soldiers')
 LoadingScreen_Jail = 'Jail'

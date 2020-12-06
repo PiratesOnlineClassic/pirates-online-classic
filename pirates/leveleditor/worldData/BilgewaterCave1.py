@@ -96,7 +96,7 @@ objectStruct = {
                     'Pause Duration': 30,
                     'Pos': Point3(286.839, -185.413, 4.222),
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Spawnables': 'Mid Navy',
+                    'Spawnables': 'Skeleton',
                     'Start State': 'Idle',
                     'Team': 'default',
                     'Visual': {
@@ -115,7 +115,7 @@ objectStruct = {
                     'Pause Duration': 30,
                     'Pos': Point3(281.026, -186.473, 4.222),
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Spawnables': 'Mid Navy',
+                    'Spawnables': 'Skeleton',
                     'Start State': 'Idle',
                     'Team': 'default',
                     'Visual': {
@@ -135,7 +135,7 @@ objectStruct = {
                     'Pause Duration': '30',
                     'Pos': Point3(391.392, -212.677, 2.566),
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Spawnables': 'EITC - Thug',
+                    'Spawnables': 'Skeleton',
                     'Start State': 'Patrol',
                     'Team': 'default',
                     'Visual': {
@@ -564,7 +564,7 @@ objectStruct = {
                     'Pause Duration': 30,
                     'Pos': Point3(254.614, -86.706, 3.88),
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Spawnables': 'Low Navy',
+                    'Spawnables': 'Skeleton',
                     'Start State': 'Patrol',
                     'Team': 'default',
                     'Visual': {
@@ -594,7 +594,6 @@ objectStruct = {
                 '1175898624.0dxschafe0': {
                     'Type': 'Spawn Node',
                     'Aggro Radius': '12.0000',
-                    'AnimSet': 'attention',
                     'Hpr': VBase3(-43.498, 0.0, 0.0),
                     'Min Population': '1',
                     'Patrol Radius': '6.8373',
@@ -602,7 +601,7 @@ objectStruct = {
                     'Pause Duration': '30',
                     'Pos': Point3(432.878, -295.055, 2.566),
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Spawnables': 'Low Navy',
+                    'Spawnables': 'Skeleton',
                     'Start State': 'Patrol',
                     'Team': 'default',
                     'Visual': {
@@ -1063,51 +1062,6 @@ objectStruct = {
                         'models/props/prop_group_A'
                     }
                 },
-                '1185831040.0dxschafe': {
-                    'Type': 'Townsperson',
-                    'Category': 'Commoner',
-                    'Aggro Radius': '11.1446',
-                    'AnimSet': 'shovel',
-                    'CustomModel': 'None',
-                    'Hpr': VBase3(-65.875, 0.0, 0.0),
-                    'Patrol Radius': '6.1687',
-                    'Pos': Point3(374.373, -177.471, 2.881),
-                    'Private Status': 'All',
-                    'Respawns': True,
-                    'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Start State': 'Walk',
-                    'Team': 'Villager'
-                },
-                '1185831296.0dxschafe': {
-                    'Type': 'Townsperson',
-                    'Category': 'Commoner',
-                    'Aggro Radius': '12.0000',
-                    'AnimSet': 'shovel',
-                    'CustomModel': 'None',
-                    'Hpr': VBase3(119.005, 0.0, 0.0),
-                    'Patrol Radius': '12.0000',
-                    'Pos': Point3(416.002, -162.14, 2.566),
-                    'Private Status': 'All',
-                    'Respawns': True,
-                    'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Start State': 'Walk',
-                    'Team': 'Villager'
-                },
-                '1185831680.0dxschafe0': {
-                    'Type': 'Townsperson',
-                    'Category': 'Commoner',
-                    'Aggro Radius': '12.0000',
-                    'AnimSet': 'shovel',
-                    'CustomModel': 'None',
-                    'Hpr': VBase3(104.378, 0.0, 0.0),
-                    'Patrol Radius': '12.0000',
-                    'Pos': Point3(417.115, -227.849, 2.566),
-                    'Private Status': 'All',
-                    'Respawns': True,
-                    'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Start State': 'Walk',
-                    'Team': 'Villager'
-                },
                 '1185832064.0dxschafe': {
                     'Type': 'Furniture',
                     'DisableCollision': False,
@@ -1150,36 +1104,6 @@ objectStruct = {
                     'Visual': {
                         'Model': 'models/props/bed_shantyB'
                     }
-                },
-                '1185832192.0dxschafe1': {
-                    'Type': 'Townsperson',
-                    'Category': 'Commoner',
-                    'Aggro Radius': '12.0000',
-                    'AnimSet': 'sit_sleep',
-                    'CustomModel': 'None',
-                    'Hpr': VBase3(-15.208, 0.0, 0.0),
-                    'Patrol Radius': '12.0000',
-                    'Pos': Point3(138.793, -225.279, 3.083),
-                    'Private Status': 'All',
-                    'Respawns': True,
-                    'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Start State': 'Walk',
-                    'Team': 'Villager'
-                },
-                '1185832448.0dxschafe': {
-                    'Type': 'Townsperson',
-                    'Category': 'Commoner',
-                    'Aggro Radius': '12.0000',
-                    'AnimSet': 'sleep_sick',
-                    'CustomModel': 'None',
-                    'Hpr': VBase3(-141.725, 0.0, 0.0),
-                    'Patrol Radius': '12.0000',
-                    'Pos': Point3(134.033, -208.556, 4.431),
-                    'Private Status': 'All',
-                    'Respawns': True,
-                    'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Start State': 'Walk',
-                    'Team': 'Villager'
                 },
                 '1185921536.0dxschafe': {
                     'Type': 'Mining_props',
@@ -1265,7 +1189,7 @@ objectStruct = {
                     'Pause Duration': '30',
                     'Pos': Point3(390.594, -208.577, 3.104),
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Spawnables': 'Mid Navy',
+                    'Spawnables': 'Skeleton',
                     'Start State': 'Idle',
                     'Team': 'default',
                     'Visual': {
@@ -1284,7 +1208,7 @@ objectStruct = {
                     'Pause Duration': '30',
                     'Pos': Point3(395.545, -211.948, 2.903),
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Spawnables': 'Mid Navy',
+                    'Spawnables': 'Skeleton',
                     'Start State': 'Idle',
                     'Team': 'default',
                     'Visual': {
@@ -1393,7 +1317,6 @@ objectStruct = {
                 '1190851200.0dxschafe': {
                     'Type': 'Spawn Node',
                     'Aggro Radius': '12.0000',
-                    'AnimSet': 'attention',
                     'Hpr': VBase3(129.261, 0.0, 0.0),
                     'Min Population': '1',
                     'Patrol Radius': '12.0000',
@@ -1401,7 +1324,7 @@ objectStruct = {
                     'Pause Duration': 30,
                     'Pos': Point3(499.954, -243.075, 2.566),
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Spawnables': 'High Navy',
+                    'Spawnables': 'Skeleton',
                     'Start State': 'Patrol',
                     'Team': 'default',
                     'Visual': {
@@ -1494,7 +1417,7 @@ objectStruct = {
                     'Pause Duration': 30,
                     'Pos': Point3(352.71, -321.958, 3.866),
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Spawnables': 'EITC - Thug',
+                    'Spawnables': 'Skeleton',
                     'Start State': 'Idle',
                     'Team': 'default',
                     'Visual': {
@@ -1514,7 +1437,7 @@ objectStruct = {
                     'Pause Duration': '30',
                     'Pos': Point3(441.267, -318.512, 2.566),
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Spawnables': 'EITC - Thug',
+                    'Spawnables': 'Skeleton',
                     'Start State': 'Idle',
                     'Team': 'default',
                     'Visual': {
@@ -1553,7 +1476,6 @@ objectStruct = {
                 '1192140288.0dxschafe': {
                     'Type': 'Spawn Node',
                     'Aggro Radius': '12.0000',
-                    'AnimSet': 'attention',
                     'Hpr': VBase3(-162.131, 0.0, 0.0),
                     'Min Population': '1',
                     'Patrol Radius': '12.0000',
@@ -1561,7 +1483,7 @@ objectStruct = {
                     'Pause Duration': 30,
                     'Pos': Point3(384.986, -136.759, 14.379),
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Spawnables': 'High Navy',
+                    'Spawnables': 'Skeleton',
                     'Start State': 'Idle',
                     'Team': 'default',
                     'Visual': {
@@ -1572,7 +1494,6 @@ objectStruct = {
                 '1192140416.0dxschafe': {
                     'Type': 'Spawn Node',
                     'Aggro Radius': '12.0000',
-                    'AnimSet': 'attention',
                     'Hpr': VBase3(101.548, 0.0, 0.0),
                     'Min Population': '1',
                     'Patrol Radius': '12.0000',
@@ -1580,7 +1501,7 @@ objectStruct = {
                     'Pause Duration': 30,
                     'Pos': Point3(439.638, -219.553, 15.793),
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Spawnables': 'High Navy',
+                    'Spawnables': 'Skeleton',
                     'Start State': 'Idle',
                     'Team': 'default',
                     'Visual': {
@@ -1742,7 +1663,7 @@ objectStruct = {
                     'Pause Duration': '9',
                     'Pos': Point3(409.983, -154.904, 2.566),
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Spawnables': 'Low Navy',
+                    'Spawnables': 'Skeleton',
                     'Start State': 'Patrol',
                     'Team': 'default',
                     'Visual': {
@@ -1784,7 +1705,7 @@ objectStruct = {
                     'Pause Duration': 30,
                     'Pos': Point3(502.385, -10.561, 54.38),
                     'Scale': VBase3(1.0, 1.0, 1.0),
-                    'Spawnables': 'Mid Navy',
+                    'Spawnables': 'Skeleton',
                     'Start State': 'Idle',
                     'Team': 'default',
                     'Visual': {
@@ -2026,12 +1947,6 @@ objectStruct = {
         '["Objects"]["1138313303.97sdnaik"]["Objects"]["1185830912.0dxschafe2"]',
         '1185830912.0dxschafe3':
         '["Objects"]["1138313303.97sdnaik"]["Objects"]["1185830912.0dxschafe3"]',
-        '1185831040.0dxschafe':
-        '["Objects"]["1138313303.97sdnaik"]["Objects"]["1185831040.0dxschafe"]',
-        '1185831296.0dxschafe':
-        '["Objects"]["1138313303.97sdnaik"]["Objects"]["1185831296.0dxschafe"]',
-        '1185831680.0dxschafe0':
-        '["Objects"]["1138313303.97sdnaik"]["Objects"]["1185831680.0dxschafe0"]',
         '1185832064.0dxschafe':
         '["Objects"]["1138313303.97sdnaik"]["Objects"]["1185832064.0dxschafe"]',
         '1185832064.0dxschafe0':
@@ -2040,10 +1955,6 @@ objectStruct = {
         '["Objects"]["1138313303.97sdnaik"]["Objects"]["1185832192.0dxschafe"]',
         '1185832192.0dxschafe0':
         '["Objects"]["1138313303.97sdnaik"]["Objects"]["1185832192.0dxschafe0"]',
-        '1185832192.0dxschafe1':
-        '["Objects"]["1138313303.97sdnaik"]["Objects"]["1185832192.0dxschafe1"]',
-        '1185832448.0dxschafe':
-        '["Objects"]["1138313303.97sdnaik"]["Objects"]["1185832448.0dxschafe"]',
         '1185921536.0dxschafe':
         '["Objects"]["1138313303.97sdnaik"]["Objects"]["1185921536.0dxschafe"]',
         '1185921536.0dxschafe0':

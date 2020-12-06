@@ -48,7 +48,8 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         "Rumrunner's Isle": 'island-rumrunner',
         'Isla Tormenta': 'island-tormenta',
         'Isla Cangrejos': 'island-cangrejos',
-        'Cutthroat Isle': 'island-cutthroat'}
+        'Cutthroat Isle': 'island-cutthroat',
+        'Bilgewater': 'island-bilgewater'}
 
     MusicDefault = 'island-general'
     SiegeIcon = None
@@ -454,13 +455,12 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         flatName = self.modelPath.split('_zero')
         if not self.islandLowLod:
             self.islandLowLod = loader.loadModelCopy(flatName[0] + '_low')
-            #self.islandLowLodFog = self.islandLowLod.find('**/fog')
-            #if self.islandLowLodFog:
-            #    self.islandLowLodFog.setLightOff()
-            #    self.islandLowLodFog.setDepthWrite(0)
-            #    todMgr = base.cr.timeOfDayManager
-            #    if todMgr:
-            #        self.islandLowLodFog.setColorScale(todMgr.fog.getColor() / 3.0 + Vec4(0, 0, 0, 1))
+            self.islandLowLodFog = self.islandLowLod.find('**/fog')
+            if self.islandLowLodFog:
+                self.islandLowLodFog.setDepthWrite(0)
+                todMgr = base.cr.timeOfDayManager
+                if todMgr:
+                    self.islandLowLodFog.setColorScale(todMgr.fog.getColor() / 3.0 + Vec4(0, 0, 0, 1))
 
             self.islandLowLod.flattenStrong()
 

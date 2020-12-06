@@ -259,7 +259,10 @@ class DistributedGameArea(DistributedNode.DistributedNode):
             base.musicMgr.request('jungle')
         elif 'cave' in self.modelPath:
             self.envEffects = CaveEffects.CaveEffects(self, self.modelPath)
-            base.musicMgr.request('cave')
+            if self.uniqueId == '1138313303.97sdnaik':
+                base.musicMgr.request('bilgewater-mine')
+            else:
+                base.musicMgr.request('cave')
         elif self.uniqueId == '1189479168.0sdnaik0':
             r = Reflection.getGlobalReflection()
             saintPatricksDay = base.saintPatricksDay
@@ -283,7 +286,10 @@ class DistributedGameArea(DistributedNode.DistributedNode):
         elif 'jungle' in self.modelPath:
             base.musicMgr.requestFadeOut('jungle')
         elif 'cave' in self.modelPath:
-            base.musicMgr.requestFadeOut('cave')
+            if self.uniqueId == '1138313303.97sdnaik':
+                base.musicMgr.requestFadeOut('bilgewater-mine')
+            else:
+                base.musicMgr.requestFadeOut('cave')
         elif self.uniqueId == '1189479168.0sdnaik0':
             self.water.delete()
             self.water = None

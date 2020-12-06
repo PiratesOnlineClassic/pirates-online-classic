@@ -26,7 +26,7 @@ class WorldMap(DirectFrame):
         self.radius = 1.0
         self.camY = [-0.3, 0.25]
         self.tiltLimit = [x * math.pi / 180 for x in (26, 34)]
-        self.mapBall = DecoratedMapBall('WorldMapArcBall', self, self.tiltLimit[1], mapSize = 280000, radius = self.radius, scrollFactor = 0.125, camera = b.camera, keepUpright = 1, mouseDownEvent = self.getMouseDownEvent(), mouseUpEvent = self.getMouseUpEvent())
+        self.mapBall = DecoratedMapBall('WorldMapArcBall', self, self.tiltLimit[1], mapSize = 300000, radius = self.radius, scrollFactor = 0.125, camera = b.camera, keepUpright = 1, mouseDownEvent = self.getMouseDownEvent(), mouseUpEvent = self.getMouseUpEvent())
         self.render = b.getSceneRoot()
         self.worldRoot = self.render.attachNewNode('world')
         self.worldRoot.setTransparency(1)
