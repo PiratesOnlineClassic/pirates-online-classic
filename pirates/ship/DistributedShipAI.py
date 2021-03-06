@@ -351,8 +351,8 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
         # properly handle disabling the ship when no players remain on it:
         if len(self.crew) == 0:
-            self.b_setLocation(0, 0)
             self.b_setGameState('PutAway', 0)
+            self.b_setLocation(self.parentId, 0)
 
     def handleChildArrive(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerPirateAI):
