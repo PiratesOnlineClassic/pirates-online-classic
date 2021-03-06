@@ -12,7 +12,7 @@ model-path ../resources/phase_5
 want-cache #f
 want-disk-cache #f
 state-cache #f
-transform-cache #t
+transform-cache #f
 model-cache-textures #f
 cache-quest-step #t
 
