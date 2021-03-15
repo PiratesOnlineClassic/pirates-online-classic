@@ -7,9 +7,10 @@ from direct.distributed.DistributedCartesianGridAI import DistributedCartesianGr
 
 class GridInterestHandle(object):
 
-    def __init__(self, context, zoneId):
+    def __init__(self, context, zoneId, isClientInterestZone=False):
         self.context = context
         self.zoneId = zoneId
+        self.isClientInterestZone = isClientInterestZone
 
 
 class GridInterestHandler(object):
@@ -44,7 +45,7 @@ class GridInterestHandler(object):
 
         return self.getInterestHandleFromZoneId(zoneId) is not None
 
-    def addInterestHandle(self, newZoneId):
+    def addInterestHandle(self, newZoneId, isClientInterestZone):
         """
         Adds a client agent specific interest handle via the CLIENTAGENT_ADD_INTEREST message,
         this event does not exist on the client and the client does not know about this interest handle...
@@ -53,13 +54,13 @@ class GridInterestHandler(object):
         if self.hasInterestHandleByZoneId(newZoneId):
             return
 
-        interestHandle = GridInterestHandle(newZoneId, newZoneId)
+        interestHandle = GridInterestHandle(newZoneId, newZoneId, isClientInterestZone)
         self.interestHandles.add(interestHandle)
 
         clientChannel = self.avatar.GetPuppetConnectionChannel(self.avatar.doId)
         self.air.clientAddInterest(clientChannel, interestHandle.context, self.parentObj.doId, interestHandle.zoneId, False)
 
-    def removeInterestHandle(self, interestHandle):
+    def removeInterestHandle(self, interestHandle, doSendRemoveInterest=True):
         """
         Removes a client agent specific interest handle via the CLIENTAGENT_REMOVE_INTEREST message
         """
@@ -67,8 +68,10 @@ class GridInterestHandler(object):
         if interestHandle not in self.interestHandles:
             return
 
-        clientChannel = self.avatar.GetPuppetConnectionChannel(self.avatar.doId)
-        self.air.clientRemoveInterest(clientChannel, interestHandle.context, False)
+        if doSendRemoveInterest:
+            clientChannel = self.avatar.GetPuppetConnectionChannel(self.avatar.doId)
+            self.air.clientRemoveInterest(clientChannel, interestHandle.context, False)
+
         self.interestHandles.remove(interestHandle)
 
     def removeInterestHandleByZoneId(self, zoneId):
@@ -132,7 +135,7 @@ class GridInterestHandler(object):
         """
 
         previousZones = set([interestHandle.zoneId for interestHandle in list(self.interestHandles)])
-        newZones = set([zoneId])
+        newZones = set([])
 
         # determine how many zones we want to see ahead of us based on
         # the cartesian grid radius set by constants for the parent object
@@ -146,14 +149,14 @@ class GridInterestHandler(object):
             if not interestHandle:
                 continue
 
-            self.removeInterestHandle(interestHandle)
+            self.removeInterestHandle(interestHandle, doSendRemoveInterest=not interestHandle.isClientInterestZone)
 
         newConcentricZones = newZones.difference(previousZones)
         if callback is not None:
             self._setInterestContextDoneCallback(newConcentricZones, callback)
 
         for newZoneId in newConcentricZones:
-            self.addInterestHandle(newZoneId)
+            self.addInterestHandle(newZoneId, newZoneId == zoneId)
 
         previousZones.clear()
         newZones.clear()
@@ -234,7 +237,7 @@ class WorldGridManagerAI(object):
 
         return gridInterestHandler.hasInterestHandleByZoneId(zoneId)
 
-    def addInterestHandle(self, parentObj, avatar, newZoneId):
+    def addInterestHandle(self, parentObj, avatar, newZoneId, isClientInterestZone):
         """
         Explicitly calls addInterestHandle function on the grid interest handler
         """
@@ -250,9 +253,9 @@ class WorldGridManagerAI(object):
         if not gridInterestHandler:
             return
 
-        gridInterestHandler.addInterestHandle(newZones)
+        gridInterestHandler.addInterestHandle(newZoneId, isClientInterestZone)
 
-    def removeInterestHandle(self, parentObj, avatar, interestHandle):
+    def removeInterestHandle(self, parentObj, avatar, interestHandle, doSendRemoveInterest=True):
         """
         Explicitly calls removeInterestHandle function on the grid interest handler
         associated with the provided cartesian grid parentObj
@@ -270,7 +273,7 @@ class WorldGridManagerAI(object):
         if not gridInterestHandler:
             return
 
-        gridInterestHandler.removeInterestHandle(interestHandle)
+        gridInterestHandler.removeInterestHandle(interestHandle, doSendRemoveInterest)
 
     def removeInterestHandleByZoneId(self, parentObj, avatar, zoneId):
         """
