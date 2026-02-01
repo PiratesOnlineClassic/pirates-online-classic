@@ -221,8 +221,8 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
     def announceGenerate(self):
         DistributedObjectGlobalUD.announceGenerate(self)
 
-        self.air.netMessenger.accept('hasInventoryResponse', self, self.proccessCallbackResponse)
-        self.air.netMessenger.accept('getInventoryResponse', self, self.proccessCallbackResponse)
+        self.air.netMessenger.accept('hasInventoryResponse', self, self.processCallbackResponse)
+        self.air.netMessenger.accept('getInventoryResponse', self, self.processCallbackResponse)
 
     def hasInventory(self, inventoryId, callback):
         self.air.netMessenger.send('hasInventory', [inventoryId, callback])
@@ -276,10 +276,20 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
     def activateShipInventory(self, avatarId, shipId, inventoryId, callback=None):
         self.runInventoryFSM(ActivateShipInventoryFSM, shipId, avatarId, inventoryId, callback=callback)
 
-    def proccessCallbackResponse(self, callback, *args, **kwargs):
-        if callback and callable(callback):
-            callback(*args, **kwargs)
+    def processCallbackResponse(self, callback, *args, **kwargs):
+        """Safely invoke callbacks delivered via netMessenger.
+
+        This prevents exceptions in callbacks from bubbling into the
+        messenger task system and logs any errors encountered.
+        """
+        if callable(callback):
+            try:
+                callback(*args, **kwargs)
+            except Exception:
+                try:
+                    self.notify.exception('Exception while running callback')
+                except Exception:
+                    pass
             return
 
-        self.notify.warning('No valid callback for a callback response!'
-            'What was the purpose of that?')
+        self.notify.warning('No valid callback for a callback response! What was the purpose of that?')

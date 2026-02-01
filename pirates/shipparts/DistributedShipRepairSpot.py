@@ -1,6 +1,7 @@
 from panda3d.core import NodePath
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm.StatePush import FunctionCall, StateVar
+from otp.otpbase.OTPUtil import DestructiveScratchPad
 from pirates.distributed.DistributedInteractive import DistributedInteractive
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals

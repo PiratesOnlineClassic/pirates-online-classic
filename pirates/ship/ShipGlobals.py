@@ -1472,7 +1472,23 @@ def getMaxHullStats():
         for shipClass in PLAYER_SHIPS:
             hullInfo = __hullStats[shipClass]
             for key, val in hullInfo.items():
-                __maxHullStats[key] = max(__maxHullStats.get(key, 0), val)
+                existing = __maxHullStats.get(key, None)
+                # If the value is a list/tuple (e.g., per-array HP), compute
+                # an elementwise maximum across all hulls. Otherwise, take
+                # the scalar maximum.
+                if isinstance(val, (list, tuple)):
+                    v_list = list(val)
+                    if isinstance(existing, (list, tuple)):
+                        e_list = list(existing)
+                    else:
+                        e_list = [0] * len(v_list)
+
+                    maxlen = max(len(e_list), len(v_list))
+                    e_list += [0] * (maxlen - len(e_list))
+                    v_list += [0] * (maxlen - len(v_list))
+                    __maxHullStats[key] = [max(e_list[i], v_list[i]) for i in range(maxlen)]
+                else:
+                    __maxHullStats[key] = max(existing if existing is not None else 0, val)
 
     return __maxHullStats
 

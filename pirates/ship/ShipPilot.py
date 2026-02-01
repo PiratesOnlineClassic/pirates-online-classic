@@ -19,6 +19,11 @@ from direct.showbase.ShowBaseGlobal import *
 from direct.directnotify import DirectNotifyGlobal
 from panda3d.physics import PhysicsManager
 import math
+from panda3d.core import Vec3
+from direct.showbase.InputStateGlobal import inputState
+from direct.task.Task import Task
+from direct.controls.ControlManager import CollisionHandlerRayStart
+from pandac.PandaModules import *
 
 from direct.controls import PhysicsWalker
 
@@ -73,6 +78,16 @@ class ShipPilot(PhysicsWalker.PhysicsWalker):
     def getSpeeds(self):
         #assert(self.debugPrint("getSpeeds()"))
         return (self.__speed, self.__rotationSpeed)
+
+    def setShip(self, ship):
+        """Attach or detach a ship to this pilot (compat with DistributedShip)."""
+        if self.ship != None:
+            self.takedownPhysics()
+            self.ship = None
+        
+        base.controlForce.setPhysicsObject(ship.node().getPhysicsObject())
+        self.setupPhysics(ship)
+        self.ship = ship
 
     def setupRay(self, floorBitmask, floorOffset):
         # This is a ray cast from your head down to detect floor polygons
@@ -172,7 +187,7 @@ class ShipPilot(PhysicsWalker.PhysicsWalker):
         physicsActor=NodePath(self.actorNode)
         avatarNodePath.reparentTo(physicsActor)
         avatarNodePath.assign(physicsActor)
-        self.phys=PhysicsManager.PhysicsManager()
+        self.phys=PhysicsManager()
 
         fn=ForceNode("gravity")
         fnp=NodePath(fn)
@@ -215,8 +230,9 @@ class ShipPilot(PhysicsWalker.PhysicsWalker):
         return avatarNodePath
 
     def initializeCollisions(self, collisionTraverser, avatarNodePath, 
-            wallBitmask, floorBitmask, 
-            avatarRadius = 1.4, floorOffset = 1.0, reach = 1.0):
+        wallBitmask, floorBitmask, 
+        avatarRadius = 1.4, floorOffset = 1.0, reach = 1.0):
+        
         """
         Set up the avatar collisions
         """
@@ -224,14 +240,45 @@ class ShipPilot(PhysicsWalker.PhysicsWalker):
         
         assert not avatarNodePath.isEmpty()
         
+
         self.cTrav = collisionTraverser
         self.floorOffset = floorOffset = 7.0
 
+        # Detect two calling conventions and normalize arguments:
+        # - (cTrav, avatarNodePath, wallBitmask, floorBitmask, avatarRadius, floorOffset)
+        # - (cTrav, avatarNodePath, bowNodePath, sternNodePath, starboardNodePath, portNodePath)
+        use_wall_mask = None
+        use_floor_mask = None
+
+        # If the 3rd argument looks like a NodePath, the caller used the ship-NodePath convention.
+        if hasattr(wallBitmask, 'isEmpty'):
+            # Interpret as bow/stern/starboard/port NodePaths; don't treat NodePaths as numeric masks
+            bow = wallBitmask
+            stern = floorBitmask
+            starboard = avatarRadius
+            port = floorOffset
+            # fall back to sensible numeric defaults for radius/offset/reach
+            avatarRadius = 1.4
+            floorOffset = 1.0
+            reach = 1.0
+            use_wall_mask = BitMask32().allOff()
+            use_floor_mask = BitMask32().allOff()
+        else:
+            use_wall_mask = wallBitmask
+            use_floor_mask = floorBitmask
+
         self.avatarNodePath = self.setupPhysics(avatarNodePath)
         if 0 or self.useHeightRay:
-            #self.setupRay(floorBitmask, avatarRadius)
-            self.setupRay(floorBitmask, 0.0)
-        self.setupSphere(wallBitmask|floorBitmask, avatarRadius)
+            #self.setupRay(use_floor_mask, avatarRadius)
+            self.setupRay(use_floor_mask, 0.0)
+
+        # combine masks if possible, otherwise fall back to wall mask or an empty mask
+        try:
+            combined_mask = use_wall_mask | use_floor_mask
+        except Exception:
+            combined_mask = use_wall_mask if use_wall_mask is not None else BitMask32().allOff()
+
+        self.setupSphere(combined_mask, avatarRadius)
 
         self.setCollisionsActive(1)
 
@@ -328,6 +375,12 @@ class ShipPilot(PhysicsWalker.PhysicsWalker):
                 # Now that we have disabled collisions, make one more pass
                 # right now to ensure we aren't standing in a wall.
                 self.oneTimeCollide()
+
+    def setWallBitMask(self, bitMask):
+        self.wallBitmask = bitMask
+
+    def setFloorBitMask(self, bitMask):
+        self.floorBitmask = bitMask
 
     def getCollisionsActive(self):
         assert(self.debugPrint("getCollisionsActive() returning=%s"%(

@@ -366,6 +366,9 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
 
     def fireCannon(self):
         rechargingTime = base.localAvatar.skillDiary.getTimeRemaining(self.skillId)
+        # getTimeRemaining may return None; treat None as 0 (no recharge)
+        if rechargingTime is None:
+            rechargingTime = 0
         if rechargingTime > 0:
             return
 

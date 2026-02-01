@@ -7,11 +7,12 @@ class DistributedInventoryUD(DistributedObjectUD):
     def announceGenerate(self):
         DistributedObjectUD.announceGenerate(self)
 
-        self.air.netMessenger.accept('getAccumulatorsResponse', self, self.proccessCallbackResponse)
-        self.air.netMessenger.accept('getAccumulatorResponse', self, self.proccessCallbackResponse)
-        self.air.netMessenger.accept('getStackLimitResponse', self, self.proccessCallbackResponse)
-        self.air.netMessenger.accept('getStackResponse', self, self.proccessCallbackResponse)
-        self.air.netMessenger.accept('getOwnerIdResponse', self, self.proccessCallbackResponse)
+        # Listen for async callback responses from the manager/AI.
+        self.air.netMessenger.accept('getAccumulatorsResponse', self, self.processCallbackResponse)
+        self.air.netMessenger.accept('getAccumulatorResponse', self, self.processCallbackResponse)
+        self.air.netMessenger.accept('getStackLimitResponse', self, self.processCallbackResponse)
+        self.air.netMessenger.accept('getStackResponse', self, self.processCallbackResponse)
+        self.air.netMessenger.accept('getOwnerIdResponse', self, self.processCallbackResponse)
 
     def b_setAccumulators(self, accumulators):
         self.air.netMessenger.send('b_setAccumulators', [accumulators])
@@ -46,10 +47,20 @@ class DistributedInventoryUD(DistributedObjectUD):
     def getOwnerId(self, callback):
         self.air.netMessenger.send('getOwnerId', [callback])
 
-    def proccessCallbackResponse(self, callback, *args, **kwargs):
-        if callback and callable(callback):
-            callback(*args, **kwargs)
+    def processCallbackResponse(self, callback, *args, **kwargs):
+        """Safely invoke a callback delivered via netMessenger.
+
+        Provides exception handling and logs failures instead of
+        letting them propagate into the netMessenger task.
+        """
+        if callable(callback):
+            try:
+                callback(*args, **kwargs)
+            except Exception:
+                try:
+                    self.notify.exception('Exception while running callback')
+                except Exception:
+                    pass
             return
 
-        self.notify.warning('No valid callback for a callback response! '
-            'What was the purpose of that?')
+        self.notify.warning('No valid callback for a callback response! What was the purpose of that?')

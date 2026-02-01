@@ -12,7 +12,7 @@ from otp.otpbase import OTPRender
 from pirates.ship import ShipGlobals
 from pirates.effects.WaterShadow import WaterShadow
 from pirates.piratesbase import PiratesGlobals
-from libpirates import SeaPatchNode
+from libpirates.SeaPatchNode import SeaPatchNode
 
 class Wake(PooledEffect):
     MinWakeVelocity = 6.0

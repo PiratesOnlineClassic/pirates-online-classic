@@ -1,4 +1,5 @@
 from direct.fsm.StatePush import AttrSetter, FunctionCall, StateVar
+from otp.otpbase.OTPUtil import DestructiveScratchPad
 from pirates.pvp import PVPGlobals
 
 class ShipRepairSpotMgrBase:

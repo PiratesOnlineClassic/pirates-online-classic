@@ -162,13 +162,24 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
     def populateInventory(self):
         self.d_requestInventoryComplete()
 
-    def proccessCallbackResponse(self, callback, *args, **kwargs):
-        if callback and callable(callback):
-            callback(*args, **kwargs)
+    def processCallbackResponse(self, callback, *args, **kwargs):
+        """Safely invoke a callback delivered via netMessenger.
+
+        This wraps the callback invocation with error handling and
+        accepts any callable. If the callback is not callable, a
+        warning is logged.
+        """
+        if callable(callback):
+            try:
+                callback(*args, **kwargs)
+            except Exception:
+                try:
+                    self.notify.exception('Exception while running callback')
+                except Exception:
+                    pass
             return
 
-        self.notify.warning('No valid callback for a callback response!'
-            'What was the purpose of that?')
+        self.notify.warning('No valid callback for a callback response! What was the purpose of that?')
 
     def delete(self):
         self.air.inventoryManager.removeInventory(self)

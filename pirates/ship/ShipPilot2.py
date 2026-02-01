@@ -21,6 +21,7 @@ from direct.showbase.InputStateGlobal import inputState
 from direct.task.Task import Task
 from pandac.PandaModules import *
 import math
+from direct.showbase.ShowBaseGlobal import *
 
 from direct.controls.PhysicsWalker import PhysicsWalker
 
@@ -79,6 +80,10 @@ class ShipPilot2(PhysicsWalker):
     def getSpeeds(self):
         #assert self.debugPrint("getSpeeds()")
         return (self.__speed, self.__rotationSpeed)
+
+    def setShip(self, ship):
+        """Alias for setAvatar to match DistributedShip expectations."""
+        self.setAvatar(ship)
 
     def setAvatar(self, ship):
         if ship is None:
@@ -339,8 +344,9 @@ class ShipPilot2(PhysicsWalker):
         self.floorBitmask = bitMask
 
     def initializeCollisions(self, collisionTraverser,
-            avatarRadius = 1.4, floorOffset = 1.0, reach = 1.0,
-            width = 30.0, length = 105.0, height = 45.0):
+        avatarRadius = 1.4, floorOffset = 1.0, reach = 1.0,
+        width = 30.0, length = 105.0, height = 45.0):
+        
         """
         width is feet from port to starboard.
         length is feet from aft to bow.
@@ -350,9 +356,49 @@ class ShipPilot2(PhysicsWalker):
         """
         assert self.debugPrint("initializeCollisions()")
         self.cTrav = collisionTraverser
-        self.avatarRadius = avatarRadius
-        self.floorOffset = floorOffset
-        self.reach = reach
+
+        # Support calling convention where the caller passes NodePaths:
+        # initializeCollisions(cTrav, avatarNodePath, bowNodePath, sternNodePath, starboardNodePath, portNodePath)
+        if hasattr(avatarRadius, 'isEmpty'):
+            # avatarRadius is actually avatarNodePath in this convention
+            avatarNodePath = avatarRadius
+            bow = floorOffset
+            stern = reach
+            starboard = width
+            port = length
+
+            # Call setupPhysics with the provided avatar node
+            try:
+                self.avatarNodePath = self.setupPhysics(avatarNodePath)
+            except Exception:
+                self.avatarNodePath = avatarNodePath
+
+            # Compute numeric length/width from NodePath positions if possible
+            try:
+                # Compute length as distance between bow and stern in avatarNodePath's space
+                bow_pos = bow.getPos(self.avatarNodePath)
+                stern_pos = stern.getPos(self.avatarNodePath)
+                length = (bow_pos - stern_pos).length()
+            except Exception:
+                length = 105.0
+
+            try:
+                star_pos = starboard.getPos(self.avatarNodePath)
+                port_pos = port.getPos(self.avatarNodePath)
+                width = (star_pos - port_pos).length()
+            except Exception:
+                width = 30.0
+
+            avatarRadius = 1.4
+            floorOffset = 1.0
+            reach = 1.0
+        else:
+            # numeric calling convention
+            self.avatarRadius = avatarRadius
+            self.avatarNodePath = None
+            self.floorOffset = floorOffset
+            self.reach = reach
+
         if self.useBowSternSpheres:
             self.frontSphereOffset = length * 0.3
             self.backSphereOffset = -length * 0.7

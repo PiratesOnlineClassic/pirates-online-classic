@@ -176,13 +176,24 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
     def initiateShipInventory(self, ship, callback=None):
         self.runInventoryFSM(LoadShipInventoryFSM, ship, callback=callback)
 
-    def proccessCallbackResponse(self, callback, *args, **kwargs):
-        if callback and callable(callback):
-            callback(*args, **kwargs)
+    def processCallbackResponse(self, callback, *args, **kwargs):
+        """Safely invoke a callback delivered via netMessenger.
+
+        Wraps the invocation in a try/except and logs any exception
+        instead of allowing it to bubble up through the messenger
+        task system.
+        """
+        if callable(callback):
+            try:
+                callback(*args, **kwargs)
+            except Exception:
+                try:
+                    self.notify.exception('Exception while running callback')
+                except Exception:
+                    pass
             return
 
-        self.notify.warning('No valid callback for a callback response!'
-            'What was the purpose of that?')
+        self.notify.warning('No valid callback for a callback response! What was the purpose of that?')
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)

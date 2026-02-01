@@ -1,6 +1,6 @@
 from panda3d.core import *
 from otp.otpbase import OTPRender
-from libpirates import SeaPatchNode
+from libpirates.SeaPatchNode import SeaPatchNode
 from panda3d.physics import *
 
 class WaterShadow(NodePath):

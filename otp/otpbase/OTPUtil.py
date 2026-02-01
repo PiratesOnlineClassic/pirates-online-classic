@@ -16,7 +16,20 @@ def Enum(*args):
         names = arg
     else:
         names = [name.strip() for part in arg.split(',') for name in part.split() if name.strip()]
-    return PyEnum('Enum', names, start=start)
+    E = PyEnum('Enum', names, start=start)
+
+    # Backwards-compatible helper: return a string name for an enum
+    # value when code expects a getString() function on the enum.
+    def _getString(item):
+        try:
+            return item.name
+        except Exception:
+            return str(item)
+
+    # Attach as a staticmethod on the generated Enum class.
+    setattr(E, 'getString', staticmethod(_getString))
+
+    return E
 
 def getSetterName(valueName, prefix='set'):
     # getSetterName('color') -> 'setColor'
@@ -610,3 +623,39 @@ def recordFunctorCreationStacks():
             Functor = recordCreationStackStr(Functor)
             Functor._functorCreationStacksRecorded = True
             Functor.__call__ = Functor._exceptionLoggedCreationStack__call__
+
+class ScratchPad:
+    """empty class to stick values onto"""
+    def __init__(self, **kArgs):
+        for key, value in kArgs.items():
+            setattr(self, key, value)
+        self._keys = set(kArgs.keys())
+    def add(self, **kArgs):
+        for key, value in kArgs.items():
+            setattr(self, key, value)
+        self._keys.update(kArgs.keys())
+    def destroy(self):
+        for key in self._keys:
+            delattr(self, key)
+
+    # allow dict [] syntax
+    def __getitem__(self, itemName):
+        return getattr(self, itemName)
+    def get(self, itemName, default=None):
+        return getattr(self, itemName, default)
+    # allow 'in'
+    def __contains__(self, itemName):
+        return itemName in self._keys
+
+class DestructiveScratchPad(ScratchPad):
+    # automatically calls destroy() on elements passed to __init__
+    def add(self, **kArgs):
+        for key, value in kArgs.items():
+            if hasattr(self, key):
+                getattr(self, key).destroy()
+            setattr(self, key, value)
+        self._keys.update(kArgs.keys())
+    def destroy(self):
+        for key in self._keys:
+            getattr(self, key).destroy()
+        ScratchPad.destroy(self)

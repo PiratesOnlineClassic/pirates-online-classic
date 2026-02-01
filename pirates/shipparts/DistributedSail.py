@@ -8,6 +8,7 @@ from direct.actor import Actor
 from direct.fsm import FSM
 from direct.fsm import State
 from direct.showbase.PythonUtil import quickProfile
+from panda3d.fx import ProjectionScreen
 from pirates.piratesbase.PiratesGlobals import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer

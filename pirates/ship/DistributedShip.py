@@ -5,6 +5,7 @@ from direct.gui.DirectGui import *
 from panda3d.core import *
 from direct.gui.OnscreenText import OnscreenText
 from direct.directnotify.DirectNotifyGlobal import directNotify
+from panda3d.physics import ActorNode
 from otp.otpbase.OTPUtil import Functor, ScratchPad, lerp, clampScalar
 from direct.showbase.PythonUtil import report, quickProfile, safeRepr
 from direct.controls import ControlManager
@@ -24,6 +25,7 @@ from pirates.piratesgui.ShipStatusDisplay import ShipStatusDisplay
 from pirates.piratesgui import ShipTargetPanel
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui import ShipFrameBoard
+from pirates.ship.ShipPilot2 import ShipPilot2
 from pirates.shipparts import DistributedSteeringWheel
 from pirates.shipparts import HullDNA
 from pirates.shipparts import SailDNA, Sail
@@ -3570,7 +3572,7 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
     def setupControls(self):
         if not self.controlManager:
             self.controlManager = ControlManager.ControlManager(enable = False)
-            controls = ShipPilot()
+            controls = ShipPilot2()
             controls.initializeCollisions(base.cTrav, self.transNode, self.bow, self.stern, self.starboard, self.port)
             wallBitMask = PiratesGlobals.ShipCollideBitmask | PiratesGlobals.GoldBitmask
             if self.respectDeployBarriers:

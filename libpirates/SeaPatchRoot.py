@@ -407,13 +407,13 @@ class SeaPatchRoot:
     def calcHeightForMass(self, x: float, y: float, dist2: float, mass: float, area: float):
         return self.calcHeight(x, y, dist2) * self.m_height_damper - (mass / area)
 
-    def calc_normal(self, height: float, x: float, y: float, dist2: float):
+    def calcNormal(self, height: float, x: float, y: float, dist2: float):
         offset_y1 = y + 0.2
         offset_x1 = x - 0.3
         offset_y2 = y - 0.1
         offset_x2 = x - 0.3
-        height1 = self.calc_height(offset_x1, offset_y1, dist2)
-        height2 = self.calc_height(offset_x2, offset_y2, dist2)
+        height1 = self.calcHeight(offset_x1, offset_y1, dist2)
+        height2 = self.calcHeight(offset_x2, offset_y2, dist2)
         point1 = LVecBase3f(offset_x1, offset_y1, height1)
         point2 = LVecBase3f(offset_x2, offset_y2, height2)
         center_point = LVecBase3f(x, y, height)
