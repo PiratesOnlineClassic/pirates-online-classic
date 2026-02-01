@@ -408,7 +408,7 @@ struct PotentialPirate {
 };
 
 dclass ClientServicesManager : DistributedObjectGlobal {
-  login(blob cookie, string address, char authKey [0-256]) clsend;
+  login(string cookie, string address, char authKey [0-256]) clsend;
   acceptLogin();
   requestAvatars() clsend;
   setAvatars(PotentialPirate avatars[]);
