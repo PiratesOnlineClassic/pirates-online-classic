@@ -2,7 +2,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from direct.task.Task import Task
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.minigame import LockGUI
 from pirates.minigame import LockGlobals
 from pirates.piratesbase import PLocalizer
@@ -15,13 +15,13 @@ class DistributedLock(DistributedInteractive.DistributedInteractive):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLock')
     
     def __init__(self, cr):
-        print 'DistributedLock:__init__'
+        print('DistributedLock:__init__')
         NodePath.__init__(self, 'DistributedLock')
         DistributedInteractive.DistributedInteractive.__init__(self, cr)
         self.isDoor = 0
     
     def generate(self):
-        print 'DistributedLock:generate'
+        print('DistributedLock:generate')
         DistributedInteractive.DistributedInteractive.generate(self)
         self.setName(self.uniqueName('DistributedLock'))
         self.loadModel()
@@ -42,23 +42,23 @@ class DistributedLock(DistributedInteractive.DistributedInteractive):
         DistributedInteractive.DistributedInteractive.rejectInteraction(self)
     
     def disable(self):
-        print 'DistributedLock:disable'
+        print('DistributedLock:disable')
         DistributedInteractive.DistributedInteractive.disable(self)
 
     def delete(self):
-        print 'DistributedLock:delete'
+        print('DistributedLock:delete')
         DistributedInteractive.DistributedInteractive.delete(self)
         del self.table
         self.removeNode()
     
     def getTableModel(self):
-        print 'DistributedLock:getTableModel'
+        print('DistributedLock:getTableModel')
         table = loader.loadModel('models/props/treasureChest')
         table.setScale(0.5, 0.5, 0.5)
         return table
 
     def guiCallback(self, action):
-        print 'DistributedLock:guiCallback'
+        print('DistributedLock:guiCallback')
         if action == LockGlobals.LGUI_EXIT:
             self.d_requestExit()
         elif action == LockGlobals.LGUI_MECHLEFT:
@@ -71,7 +71,7 @@ class DistributedLock(DistributedInteractive.DistributedInteractive):
             self.notify.error('guiCallback: unknown action: %s' % action)
 
     def localAvatarSatDown(self, avId, difficulty):
-        print 'DistributedLock:localAvatarSatDown'
+        print('DistributedLock:localAvatarSatDown')
         self.gui = LockGUI.LockGUI(self, avId, difficulty)
         camera.setPosHpr(self, 0, -5, 4, 0, -30, 0)
         base.camLens.setMinFov(55)
@@ -87,7 +87,7 @@ class DistributedLock(DistributedInteractive.DistributedInteractive):
         self.acceptInteraction()
 
     def localAvatarGotUp(self):
-        print 'DistributedLock:localAvatarGotUp'
+        print('DistributedLock:localAvatarGotUp')
         self.ignore('escape')
         self.ignore('arrow_left')
         self.ignore('arrow_right')
@@ -101,15 +101,15 @@ class DistributedLock(DistributedInteractive.DistributedInteractive):
         return Task.cont
 
     def d_requestExit(self):
-        print 'DistributedLock:d_requestExit'
+        print('DistributedLock:d_requestExit')
         self.sendUpdate('requestExit', [])
 
     def lockSolved(self, name):
-        print 'DistributedLock:lockSolved'
+        print('DistributedLock:lockSolved')
         self.gui.lockOpen(name)
 
     def requestSeatResponse(self, answer):
-        print 'DistributedLock:requestSeatResponse'
+        print('DistributedLock:requestSeatResponse')
         if answer == 1:
             self.localAvatarSatDown()
             localAvatar.b_setGameState('ParlorGame')

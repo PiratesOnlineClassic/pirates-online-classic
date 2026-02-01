@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.gui.DirectGui import *
 from direct.task import Task
 from direct.fsm.FSM import FSM
@@ -7,8 +7,8 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import TeamUtils
 from pirates.piratesbase import PLocalizer
 from pirates.band.DistributedBandMember import DistributedBandMember
-from RadarMap import RadarMap
-from GuiTray import GuiTray
+from .RadarMap import RadarMap
+from .GuiTray import GuiTray
 from pirates.world import OceanZone
 RADAR_OBJ_TYPE_DEFAULT = 0
 RADAR_OBJ_TYPE_LANDMARK = 1
@@ -172,7 +172,7 @@ class RadarGui(GuiTray, FSM):
         self.locationLabel.hide()
 
     def destroy(self):
-        for (currDoLater, ival) in self.flashCleanupTasks.values():
+        for (currDoLater, ival) in list(self.flashCleanupTasks.values()):
             taskMgr.remove(currDoLater)
             ival.finish()
         
@@ -280,7 +280,7 @@ class RadarGui(GuiTray, FSM):
         del self.__cachedRadarObjects[objId]
     
     def restoreStickyCachedObjects(self):
-        cachedKeys = self.__cachedRadarObjects.keys()
+        cachedKeys = list(self.__cachedRadarObjects.keys())
         for currObjKey in cachedKeys:
             if self.__cachedRadarObjects[currObjKey]['type'] != RADAR_OBJ_TYPE_DEFAULT or self.__cachedRadarObjects[currObjKey]['type'] != RADAR_OBJ_TYPE_EXIT:
                 dummyObjNode = self.__cachedRadarObjects[currObjKey]['dummySrcObjNode']
@@ -383,7 +383,7 @@ class RadarGui(GuiTray, FSM):
         self.addRadarObject(targetObjId, None, objType, dummySrcObjNode = desiredRadarNode, teamId = teamId, enableUnconvert = enableUnconvert)
     
     def removeAllObjects(self):
-        objects = self.__radarObjects.keys()
+        objects = list(self.__radarObjects.keys())
         for key in objects:
             self.moveRadarObjToCache(key)
 
@@ -405,7 +405,7 @@ class RadarGui(GuiTray, FSM):
             objInfo['dummySrcObjNode'].removeNode()
     
     def clearCache(self):
-        objects = self.__cachedRadarObjects.keys()
+        objects = list(self.__cachedRadarObjects.keys())
         for key in objects:
             objInfo = self.__cachedRadarObjects[key]
             objInfo['radarObjNode'].removeNode()
@@ -416,7 +416,7 @@ class RadarGui(GuiTray, FSM):
             del self.__cachedRadarObjects[key]
     
     def printRadarObjects(self):
-        print self.__radarObjects
+        print(self.__radarObjects)
 
     def getRadarObjects(self):
         return self.__radarObjects
@@ -654,7 +654,7 @@ class RadarGui(GuiTray, FSM):
         return uItem
     
     def flashRadarObject(self, objId, duration = None, scaleMin = Point3(0.5, 0.5, 0.5), scaleMax = Point3(1.0, 1.0, 1.0)):
-        if duration != None and self.flashCleanupTasks.has_key(objId):
+        if duration != None and objId in self.flashCleanupTasks:
             task = self.flashCleanupTasks[objId][0]
             currentTime = taskMgr._TaskManager__getTime()
             task.delayTime = duration
@@ -719,7 +719,7 @@ class RadarGui(GuiTray, FSM):
         
         offRadar = objectInfo['srcObjNode'] is objectInfo['dummySrcObjNode'] and objectInfo['dummySrcObjNode'] != None
         if objectInfo and not offRadar:
-            if objectInfo.has_key('oldInfo'):
+            if 'oldInfo' in objectInfo:
                 objectInfo['type'] = objectInfo['oldInfo']['type']
                 radarObjNode = objectInfo.get('radarObjNode')
                 if radarObjNode and not radarObjNode.isEmpty():
@@ -746,7 +746,7 @@ class RadarGui(GuiTray, FSM):
                     dummySrcObjNode.removeNode()
                 
                 objectInfo['dummySrcObjNode'] = objectInfo['oldInfo']['dummySrcObjNode']
-                if radarObjNodeShown == False and objectInfo.has_key('dummySrcObjNode') and objectInfo['dummySrcObjNode']:
+                if radarObjNodeShown == False and 'dummySrcObjNode' in objectInfo and objectInfo['dummySrcObjNode']:
                     objectInfo['dummySrcObjNode'].show()
                 
                 del objectInfo['oldInfo']

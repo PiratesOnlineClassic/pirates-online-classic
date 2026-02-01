@@ -1,4 +1,4 @@
-from pandac.PandaModules import Vec3
+from panda3d.core import Vec3
 from direct.task import Task
 from pirates.effects.WaterRipple2 import WaterRipple2
 from pirates.effects.TentacleWaterDrips import TentacleWaterDrips

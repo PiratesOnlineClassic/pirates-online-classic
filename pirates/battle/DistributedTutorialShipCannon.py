@@ -1,7 +1,7 @@
 from direct.task import Task
 from pirates.piratesgui.NewTutorialPanel import NewTutorialPanel
 from pirates.interact import InteractiveBase
-from DistributedShipCannon import DistributedShipCannon
+from .DistributedShipCannon import DistributedShipCannon
 
 class DistributedTutorialShipCannon(DistributedShipCannon):
     

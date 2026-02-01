@@ -1,5 +1,5 @@
 import traceback
-import __builtin__
+import builtins
 import os
 import argparse
 
@@ -20,7 +20,7 @@ args = parser.parse_args()
 
 for prc in args.config:
     if not os.path.exists(prc):
-        print ':ServiceStart(warning): Failed to locate prc %s!' % prc
+        print(':ServiceStart(warning): Failed to locate prc %s!' % prc)
         continue
     loadPrcFile(prc)
 
@@ -40,12 +40,12 @@ class game:
     name = 'pirates'
     process = 'server'
 
-__builtin__.game = game
+builtins.game = game
 
 from otp.ai.AIBaseGlobal import *
 
 from pirates.ai.PiratesAIRepository import PiratesAIRepository
-simbase.air = PiratesAIRepository(config.GetInt('air-base-channel', 401000000),
+base.air = PiratesAIRepository(config.GetInt('air-base-channel', 401000000),
   config.GetInt('air-stateserver', 10000),
   config.GetString('district-name', 'Devhaven'))
 
@@ -55,12 +55,12 @@ if ':' in host:
     host, port = host.split(':', 1)
     port = int(port)
 
-simbase.air.connect(host, port)
+base.air.connect(host, port)
 
 try:
-    simbase.run()
+    base.run()
 except SystemExit:
     raise
 except Exception as e:
-    if simbase.air:
-        simbase.air.logException(e)
+    if base.air:
+        base.air.logException(e)

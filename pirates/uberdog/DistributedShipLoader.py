@@ -1,7 +1,7 @@
 from direct.distributed.ClockDelta import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
-from cPickle import loads, dumps
+from pickle import loads, dumps
 from pirates.uberdog.UberDogGlobals import *
 
 class DistributedShipLoader(DistributedObject.DistributedObject):

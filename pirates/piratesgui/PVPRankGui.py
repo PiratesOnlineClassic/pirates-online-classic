@@ -1,7 +1,7 @@
 import copy
 from direct.gui.DirectGui import *
 from direct.task.Task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
 from pirates.ship import ShipGlobals

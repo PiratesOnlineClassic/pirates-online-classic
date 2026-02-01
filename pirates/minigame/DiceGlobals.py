@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 DICE_FACE_1 = Vec3(90, 0, 90)
 DICE_FACE_2 = Vec3(90, 90, 90)
 DICE_FACE_3 = Vec3(90, -180, 0)

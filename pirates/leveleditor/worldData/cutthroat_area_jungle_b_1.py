@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.cutthroat_area_jungle_b_1
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Interact Links':
     [['1176324864.0dxschafe3', '1176324992.0dxschafe9', 'Bi-directional'],

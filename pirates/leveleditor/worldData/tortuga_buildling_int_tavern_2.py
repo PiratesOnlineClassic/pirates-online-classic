@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.tortuga_buildling_int_tavern_2
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Interact Links':
     [['1169075474.72mike', '1172887424.0mike', 'Bi-directional']],

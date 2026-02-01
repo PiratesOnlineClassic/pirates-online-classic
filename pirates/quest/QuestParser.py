@@ -2,10 +2,11 @@ import sys
 import os
 import tokenize
 import copy
+import io
 from direct.showbase.ShowBaseGlobal import *
 from direct.interval.IntervalGlobal import *
 from libotp.NametagConstants import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.gui.DirectGui import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase import PythonUtil, DirectObject
@@ -47,8 +48,11 @@ def clear():
 def readFile(filename):
     notify.debug('THE PARSED FILE IS %s' % filename)
     lastReadFile = filename
-    scriptFile = StreamReader(vfs.openReadFile(filename, 1), 1)
-    gen = tokenize.generate_tokens(scriptFile.readline)
+    scriptFile = vfs.openReadFile(filename, 1)
+    content = scriptFile.read()
+    if isinstance(content, bytes):
+        content = content.decode('utf-8')
+    gen = tokenize.generate_tokens(io.StringIO(content).readline)
     line = getLineOfTokens(gen)
     while line is not None:
         if line == []:
@@ -73,7 +77,7 @@ def reReadFile():
 def getLineOfTokens(gen):
     tokens = []
     nextNeg = 0
-    token = gen.next()
+    token = next(gen)
     if token[0] == tokenize.ENDMARKER:
         return None
     while token[0] != tokenize.NEWLINE and token[0] != tokenize.NL:
@@ -93,7 +97,7 @@ def getLineOfTokens(gen):
             tokens.append(token[1])
         else:
             notify.warning('Ignored token type: %s on line: %s' % (tokenize.tok_name[token[0]], token[2][0]))
-        token = gen.next()
+        token = next(gen)
 
     return tokens
 
@@ -115,13 +119,13 @@ def parseFuncDef(line):
 
 
 def questDefined(scriptId):
-    return lineDict.has_key(scriptId)
+    return scriptId in lineDict
 
 
 class NPCMoviePlayer(DirectObject.DirectObject):
     
     def __init__(self, scriptId, toon, npc):
-        print 'initializing movie player'
+        print('initializing movie player')
         self.scriptId = scriptId
         self.toon = toon
         self.isLocalToon = self.toon == base.localAvatar
@@ -154,17 +158,17 @@ class NPCMoviePlayer(DirectObject.DirectObject):
         if len(globalVarDict) == 0:
             init()
         
-        if self.privateVarDict.has_key(varName):
+        if varName in self.privateVarDict:
             return self.privateVarDict[varName]
-        elif globalVarDict.has_key(varName):
+        elif varName in globalVarDict:
             return globalVarDict[varName]
         else:
             notify.error('Variable not defined: %s' % varName)
     
     def delVar(self, varName):
-        if self.privateVarDict.has_key(varName):
+        if varName in self.privateVarDict:
             del self.privateVarDict[varName]
-        elif globalVarDict.has_key(varName):
+        elif varName in globalVarDict:
             del globalVarDict[varName]
         else:
             notify.warning('Variable not defined: %s' % varName)
@@ -185,7 +189,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
         
         self.ignoreAll()
         taskMgr.remove(self.uniqueId)
-        for toonHeadFrame in self.toonHeads.values():
+        for toonHeadFrame in list(self.toonHeads.values()):
             toonHeadFrame.destroy()
         
         while self.chars:
@@ -237,7 +241,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
         if self.cleanedUp == True:
             return
         
-        trackList = self.chapterDict.keys()
+        trackList = list(self.chapterDict.keys())
         for currTrack in trackList:
             if self.cleanedUp == False and len(self.chapterDict[currTrack]) > 0:
                 self.currentTrack = self.chapterDict[currTrack].pop(0)
@@ -270,14 +274,14 @@ class NPCMoviePlayer(DirectObject.DirectObject):
         
         chapterList = []
         timeoutList = []
-        print self.npc
-        print self.toon
-        for currEvent in self.events.keys():
+        print(self.npc)
+        print(self.toon)
+        for currEvent in list(self.events.keys()):
             self.ignore(currEvent)
         
         self.events = {}
         for line in lines:
-            print line
+            print(line)
             lineNum += 1
             command = line[0]
             (chapterList, nextEvent) = self.parseLine(command, line, chapterList, timeoutList, lineNum)
@@ -307,7 +311,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
         lineList = []
         timeoutList = []
         for line in lines:
-            print line
+            print(line)
             lineNum += 1
             command = line[0]
             (lineList, nextEvent) = self.parseLine(command, line, lineList, timeoutList, lineNum)
@@ -788,7 +792,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
             
             def _handleYesTutorial():
                 nmp = None
-                if scriptYes in lineDict.keys():
+                if scriptYes in list(lineDict.keys()):
                     nmp = NPCMoviePlayer(scriptYes, self.toon, self.npc)
                 
                 closeTutorialWindow(scriptYes)
@@ -801,7 +805,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
         if scriptNo:
             
             def _handleNoTutorial():
-                if scriptNo in lineDict.keys():
+                if scriptNo in list(lineDict.keys()):
                     nmp = NPCMoviePlayer(scriptNo, self.toon, self.npc)
                     nmp.play()
                 
@@ -1137,11 +1141,11 @@ class NPCMoviePlayer(DirectObject.DirectObject):
         return Wait(waitTime)
 
     def parseChat(self, line):
-        print 'parsing chat line'
+        print('parsing chat line')
         toonId = self.toon.getDoId()
         avatarName = line[1]
         avatar = self.getVar(avatarName)
-        print avatar
+        print(avatar)
         chatString = eval('PLocalizer.' + line[2])
         chatFlags = CFSpeech | CFTimeout
         (quitButton, extraChatFlags, dialogueList) = self.parseExtraChatArgs(line[3:])
@@ -1236,7 +1240,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
         avatar = self.getVar(avatarKey)
         toAvatarKey = line[2]
         toAvatar = self.getVar(toAvatarKey)
-        localizerAvatarName = string.capitalize(toAvatar.getName())
+        localizerAvatarName = toAvatar.getName().capitalize()
         toAvatarName = eval('PLocalizer.' + localizerAvatarName)
         chatString = eval('PLocalizer.' + line[3])
         chatString = chatString.replace('%s', toAvatarName)
@@ -1260,7 +1264,7 @@ class NPCMoviePlayer(DirectObject.DirectObject):
         avatar = self.getVar(avatarKey)
         toAvatarKey = line[2]
         toAvatar = self.getVar(toAvatarKey)
-        localizerAvatarName = string.capitalize(toAvatar.getName())
+        localizerAvatarName = toAvatar.getName().capitalize()
         toAvatarName = eval('PLocalizer.' + localizerAvatarName)
         if self.toon.getStyle().gender == 'm':
             chatString = eval('PLocalizer.' + line[3] % 'Mickey')

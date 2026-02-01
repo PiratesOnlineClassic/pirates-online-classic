@@ -1,4 +1,4 @@
-from direct.showbase.PythonUtil import POD
+from otp.otpbase.OTPUtil import POD
 from direct.task.Task import Task
 import random
 
@@ -8,7 +8,7 @@ class QuestEvent(POD):
         'progressResults': dict}
     
     def applyTo(self, taskState, taskDNA):
-        raise 'derived class must override applyTo()'
+        raise NotImplementedError('derived class must override applyTo()')
 
     def complete(self, taskState, taskDNA):
         taskDNA.complete(self, taskState)
@@ -201,7 +201,7 @@ class BossBattleCompleted(QuestEvent):
         if hasattr(taskDNA, 'handleBossBattleCompleted'):
             return taskDNA.handleBossBattleCompleted(self, taskState)
         else:
-            print 'BossBattleCompleted. Warnning taskDNA %s does not have method handleBossBattleCompleted' % taskDNA
+            print('BossBattleCompleted. Warnning taskDNA %s does not have method handleBossBattleCompleted' % taskDNA)
             return False
 
 

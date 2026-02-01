@@ -1,6 +1,6 @@
 from pirates.piratesbase import PiratesGlobals
-from Human import Human
-import AvatarTypes
+from .Human import Human
+from . import AvatarTypes
 
 class Pirate(Human):
     

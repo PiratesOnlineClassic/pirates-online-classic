@@ -1,6 +1,6 @@
 from otp.launcher.DummyLauncherBase import DummyLauncherBase
 from pirates.launcher.PiratesQuickLauncher import PiratesQuickLauncher
-from pandac.PandaModules import loadPrcFileData
+from panda3d.core import loadPrcFileData
 import os
 
 loadPrcFileData('force-offscreen', 'window-type none')

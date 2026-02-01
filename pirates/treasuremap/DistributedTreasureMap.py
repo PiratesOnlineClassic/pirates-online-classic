@@ -6,11 +6,10 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.world import GameTypeGlobals
 
-class DistributedTreasureMap(DistributedObject.DistributedObject, DistributedInventory, QuestHolder):
+class DistributedTreasureMap(DistributedInventory, QuestHolder):
     notify = DirectNotifyGlobal.directNotify.newCategory('TreasureMapManager')
     
     def __init__(self, cr):
-        DistributedObject.DistributedObject.__init__(self, cr)
         DistributedInventory.__init__(self, cr)
         self.mapId = None
         self.__enabled = 1
@@ -18,13 +17,13 @@ class DistributedTreasureMap(DistributedObject.DistributedObject, DistributedInv
         self.tmName = 'treasureMapCove'
     
     def announceGenerate(self):
-        DistributedObject.DistributedObject.announceGenerate(self)
+        DistributedInventory.announceGenerate(self)
         self.addInterest(2, self.uniqueName('TreasureMap'))
         GameTypeGlobals.GameTypes[PiratesGlobals.GAME_TYPE_TM]['hidden'] = False
         messenger.send(localAvatar.guiMgr.lookoutPage.getItemChangeMsg())
     
     def delete(self):
-        DistributedObject.DistributedObject.delete(self)
+        DistributedInventory.delete(self)
     
     def requestTreasureMapGo(self, quick = True):
         if quick:

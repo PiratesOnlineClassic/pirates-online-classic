@@ -1,6 +1,6 @@
 from direct.interval.IntervalGlobal import *
 from pirates.piratesbase import PLocalizer
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.otpbase import OTPRender
 from pirates.piratesbase import Freebooter
 from pirates.piratesbase import PiratesGlobals
@@ -45,7 +45,7 @@ def genText(value, type, modType = MOD_TYPE_MULTIPLE, modifiers = {}):
     crewBonus = 0
     doubleXPBonus = 0
     holidayBonus = 0
-    modtypes = modifiers.keys()
+    modtypes = list(modifiers.keys())
     if MOD_HOLIDAYBONUS in modtypes:
         holidayBonus = modifiers.get(MOD_HOLIDAYBONUS)
         baseVal -= holidayBonus

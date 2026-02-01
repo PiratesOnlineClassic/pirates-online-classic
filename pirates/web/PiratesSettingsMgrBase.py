@@ -34,6 +34,6 @@ class PiratesSettingsMgrBase:
             ShipBalance.NPCDamageOut, 
             PVPGlobals.SinkStreakPeriod, 
             PVPGlobals.MaxPrivateerShipsPerTeam)
-        self._addSettings(*PVPGlobals.ShipClass2repairLocators.values())
+        self._addSettings(*list(PVPGlobals.ShipClass2repairLocators.values()))
 
 

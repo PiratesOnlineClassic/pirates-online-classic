@@ -1,4 +1,4 @@
-from pandac.PandaModules import Vec3
+from panda3d.core import Vec3
 from pirates.pirate import ShipCamera
 from pirates.ship import ShipGlobals
 CamParams = ShipCamera.ShipCamera.ParamSet

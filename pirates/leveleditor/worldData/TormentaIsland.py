@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.TormentaIsland
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Interact Links':
     [['1182816000.0dxschafe', '1179859981.02Aholdun', 'Bi-directional'],

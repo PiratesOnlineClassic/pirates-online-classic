@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.DirectObject import *
 from pirates.mockup import PythonNodePath
@@ -28,49 +28,49 @@ flickerTracks = []
 
 
 def LightDynamic(objData, parent = render, drawIcon = True):
-    if objData and objData.has_key('Pos'):
+    if objData and 'Pos' in objData:
         objPos = objData['Pos']
     else:
         objPos = Vec3(0, 0, 0)
-    if objData and objData.has_key('Hpr'):
+    if objData and 'Hpr' in objData:
         objHpr = objData['Hpr']
     else:
         objHpr = Vec3(0, 0, 0)
     color = None
-    if objData and objData.has_key('Visual'):
-        if objData['Visual'].has_key('Color'):
+    if objData and 'Visual' in objData:
+        if 'Color' in objData['Visual']:
             color = objData['Visual']['Color']
 
     attenuation = None
-    if objData and objData.has_key('Attenuation'):
+    if objData and 'Attenuation' in objData:
         attenuation = (0, 0, float(objData['Attenuation']))
     
     intensity = None
-    if objData and objData.has_key('Intensity'):
+    if objData and 'Intensity' in objData:
         intensity = float(objData['Intensity'])
     
     coneAngle = None
     dropOff = None
-    if objData and objData.has_key('ConeAngle'):
+    if objData and 'ConeAngle' in objData:
         coneAngle = float(objData['ConeAngle'])
         if coneAngle == 0.0:
             objData['ConeAngle'] = '60.0'
             coneAngle = 60.0
     
-    if objData and objData.has_key('DropOff'):
+    if objData and 'DropOff' in objData:
         dropOff = float(objData['DropOff'])
     
     exponent = None
     flickering = False
-    if objData and objData.has_key('Flickering') and objData['Flickering'] == True:
+    if objData and 'Flickering' in objData and objData['Flickering'] == True:
         flickering = True
     
     flickRate = 1.0
-    if objData and objData.has_key('FlickRate'):
+    if objData and 'FlickRate' in objData:
         flickRate = float(objData['FlickRate'])
     
     lightType = DynamicLight.DYN_LIGHT_POINT
-    if objData and objData.has_key('LightType'):
+    if objData and 'LightType' in objData:
         typeString = objData['LightType']
         if typeString == 'AMBIENT':
             lightType = DynamicLight.DYN_LIGHT_AMBIENT
@@ -102,7 +102,7 @@ def CreateAnimal(species = None):
     if not species:
         species = 'Pig'
     
-    exec 'animal = %s()' % species
+    exec('animal = %s()' % species)
     animal.generateCreature()
     return animal
 
@@ -111,7 +111,7 @@ def CreateCreature(species = None):
     if not species:
         species = 'Crab'
     
-    exec 'creature = %s()' % species
+    exec('creature = %s()' % species)
     creature.show()
     creature.generateCreature()
     return creature

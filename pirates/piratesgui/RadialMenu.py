@@ -1,5 +1,5 @@
 import math
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.gui.DirectGui import *
 from direct.task import Task
 from pirates.battle import WeaponGlobals
@@ -12,7 +12,7 @@ from direct.interval.IntervalGlobal import *
 from pirates.reputation import ReputationGlobals
 from pirates.piratesgui.SkillButton import SkillButton
 from pirates.piratesgui.ReputationMeter import ReputationMeter
-import PiratesGuiGlobals
+from . import PiratesGuiGlobals
 Tolerance = 20
 FrameSize = 0.12
 Center = [
@@ -107,7 +107,7 @@ def AllComboSkills(repId, minlvl):
 def FindSkills(repId, skilltrack, minlvl):
     inv = base.localAvatar.getInventory()
     if inv == None:
-        print 'WARNING - FindSkills came up with no inventory for ', repId
+        print('WARNING - FindSkills came up with no inventory for ', repId)
         return []
 
     choices = []
@@ -198,7 +198,7 @@ def FindSkills(repId, skilltrack, minlvl):
 def getAllSkills(repId, skilltrack):
     inv = base.localAvatar.getInventory()
     if inv == None:
-        print 'WARNING - getAllSkills came up with no inventory for ', repId
+        print('WARNING - getAllSkills came up with no inventory for ', repId)
         return []
 
     minlvl = 2

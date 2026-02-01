@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.PerdidaIsland
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Locator Links':
     [['1172209713.33sdnaik', '1172209670.05sdnaik', 'Bi-directional'],

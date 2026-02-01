@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.port_royal_building_int_blacksmith_2
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1153420647.55dzlu0': {

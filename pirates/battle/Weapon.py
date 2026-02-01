@@ -1,10 +1,10 @@
 from direct.showbase.DirectObject import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.directnotify import DirectNotifyGlobal
 from pirates.effects.SmokeCloud import SmokeCloud
-import WeaponGlobals
+from . import WeaponGlobals
 
 class Weapon(NodePath):
     notify = DirectNotifyGlobal.directNotify.newCategory('Weapon')
@@ -162,7 +162,7 @@ class Weapon(NodePath):
 
     @classmethod
     def setupAssets(cls):
-        for item in cls.modelTypes.keys():
+        for item in list(cls.modelTypes.keys()):
             data = cls.modelTypes[item]
             model = loader.loadModel(data[0])
             

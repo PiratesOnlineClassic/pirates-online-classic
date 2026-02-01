@@ -30,7 +30,7 @@ SOUND_FX_LIST = {
 def getSFXList():
     resultDic = {}
     totalList = []
-    for sfxGroup in SOUND_FX_LIST.keys():
+    for sfxGroup in list(SOUND_FX_LIST.keys()):
         sfxList = [
             [
                 sfxGroup],

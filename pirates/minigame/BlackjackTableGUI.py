@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
@@ -298,7 +298,7 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
         self.playerStatusPanels[guiIndex].actionLabel.hide()
     
     def hideArrow(self):
-        map(lambda panel: panel.arrow.hide(), self.playerStatusPanels)
+        list(map(lambda panel: panel.arrow.hide(), self.playerStatusPanels))
 
     def getGuiIndex(self, seatIndex):
         return ((self.LocalAvatarGuiIndex - self.table.localAvatarSeat) + seatIndex) % (self.table.NumSeats + 1)

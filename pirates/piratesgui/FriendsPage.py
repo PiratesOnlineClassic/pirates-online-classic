@@ -1,6 +1,6 @@
 from direct.showbase.ShowBaseGlobal import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.fsm import StateData
 from otp.friends import FriendSecret
 from otp.otpbase import OTPGlobals
@@ -10,7 +10,7 @@ from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesbase import PiratesGlobals
 from otp.otpbase import OTPGlobals
 from otp.friends.FriendInfo import FriendInfo
-import GuiButton
+from . import GuiButton
 from pirates.piratesgui import PirateMemberList
 from direct.task import Task
 

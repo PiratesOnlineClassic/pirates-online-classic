@@ -1,5 +1,5 @@
-from AIBaseGlobal import *
-from pandac.PandaModules import *
+from .AIBaseGlobal import *
+from panda3d.core import *
 from direct.distributed.ClockDelta import *
 from direct.task import Task
 from direct.distributed import DistributedObjectAI
@@ -64,7 +64,7 @@ class TimeManagerAI(DistributedObjectAI.DistributedObjectAI):
         """
         requesterId = self.air.getAvatarIdFromSender()
         self.notify.info("Client %s exception: %s" % (requesterId, info))
-        serverVersion = simbase.config.GetString('server-version','')
+        serverVersion = base.config.GetString('server-version','')
         self.air.writeServerEvent('client-exception', requesterId, '%s|%s' % (serverVersion,info))
 
     def setSignature(self, signature, hash, pyc):

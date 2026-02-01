@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase import DirectObject
 from pirates.world import WorldCreatorBase
@@ -42,7 +42,7 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
             fileDict = {
                 'filename': fileData}
             if merge:
-                parentUid = fileData['Objects'].keys()[0]
+                parentUid = list(fileData['Objects'].keys())[0]
             
             self.loadObjectsByUid(parent, parentUid, dynamic = dynamic, fileDict = fileDict, zoneLevel = zoneLevel, startTime = startTime)
         elif parent == self.district:
@@ -74,11 +74,11 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
         objDict = objectInfo.get('Objects')
         if objDict != None:
             self.loadObjectDict(objDict, parent, parentUid, dynamic, zoneLevel = zoneLevel, startTime = startTime)
-            if objectInfo.has_key('AdditionalData'):
+            if 'AdditionalData' in objectInfo:
                 additionalFiles = objectInfo['AdditionalData']
                 for currFile in additionalFiles:
-                    if self.fileDicts.has_key(currFile + '.py'):
-                        altParentUid = self.fileDicts[currFile + '.py']['Objects'].keys()[0]
+                    if currFile + '.py' in self.fileDicts:
+                        altParentUid = list(self.fileDicts[currFile + '.py']['Objects'].keys())[0]
                         addObjDict = self.fileDicts[currFile + '.py']['Objects'][altParentUid]['Objects']
                         self.loadObjectDict(addObjDict, parent, parentUid, dynamic, zoneLevel = zoneLevel, startTime = startTime)
                         yieldThread('load object')
@@ -87,15 +87,15 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
         if fileRef:
             self.loadObjectsFromFile(fileRef + '.py', parent, parentUid, dynamic, zoneLevel = zoneLevel, startTime = startTime)
         
-        if objectInfo.has_key('AdditionalData'):
+        if 'AdditionalData' in objectInfo:
             additionalFiles = objectInfo['AdditionalData']
             for currFile in additionalFiles:
                 self.loadObjectsFromFile(currFile + '.py', parent, parentUid, dynamic, zoneLevel = zoneLevel, startTime = startTime, merge = True)
 
     def findObjectCategory(self, objectType):
-        cats = ObjectList.AVAIL_OBJ_LIST.keys()
+        cats = list(ObjectList.AVAIL_OBJ_LIST.keys())
         for currCat in cats:
-            types = ObjectList.AVAIL_OBJ_LIST[currCat].keys()
+            types = list(ObjectList.AVAIL_OBJ_LIST[currCat].keys())
             if objectType in types:
                 return currCat
         return None
@@ -126,11 +126,11 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
                     
                     OTPRender.renderReflection(False, light, 'p_light', None)
                 elif objParent:
-                    if object.has_key('Color'):
-                        if not object.has_key('Visual'):
+                    if 'Color' in object:
+                        if 'Visual' not in object:
                             object['Visual'] = {}
                         
-                        if not object['Visual'].has_key('Color'):
+                        if 'Color' not in object['Visual']:
                             object['Visual']['Color'] = object['Color']
                     
                     self.propNum += 1
@@ -184,7 +184,7 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
             if objParent:
                 pos = object['Pos']
                 hpr = object['Hpr']
-                if object.has_key('Scale'):
+                if 'Scale' in object:
                     scale = object['Scale']
                 else:
                     scale = Point3(1.0, 1.0, 1.0)

@@ -1,5 +1,5 @@
 from direct.showbase import DirectObject
-from pandac.PandaModules import *
+from panda3d.core import *
 import random
 
 class NPCPirate(DirectObject.DirectObject):
@@ -172,7 +172,7 @@ class NPCPirate(DirectObject.DirectObject):
     def randomPick(self):
         return
         if self.numHeads:
-            cList = range(0, self.numHeads)
+            cList = list(range(0, self.numHeads))
             cList.remove(self.headIdx)
             self.headIdx = random.choice(cList)
 

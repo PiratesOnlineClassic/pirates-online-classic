@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
 StateDict = {
     PiratesGlobals.TOD_DAWN: 'Dawn',
@@ -45,7 +45,7 @@ CycleStateTimeList = {
 StateBreakdownList = {}
 StateBeginTimeList = {}
 NumStates = {}
-cycles = CycleStateTimeList.keys()
+cycles = list(CycleStateTimeList.keys())
 for cycleKey in cycles:
     totalHours = 0.0
     StateBreakdownList[cycleKey] = {}
@@ -79,7 +79,7 @@ def getStateName(stateId):
 
 
 def getStateId(stateName):
-    stateKeys = StateDict.keys()
+    stateKeys = list(StateDict.keys())
     for stateId in stateKeys:
         if StateDict.get(stateId) == stateName:
             return stateId

@@ -1,11 +1,11 @@
 import math
-from pandac.PandaModules import NodePath
-import BattleManagerBase
+from panda3d.core import NodePath
+from . import BattleManagerBase
 from pirates.battle import WeaponGlobals
 from pirates.piratesbase import TeamUtils
 from pirates.battle import DistributedBattleNPC
 from pirates.uberdog.UberDogGlobals import InventoryType
-from pandac.PandaModules import *
+from panda3d.core import *
 
 class BattleManager(BattleManagerBase.BattleManagerBase):
     

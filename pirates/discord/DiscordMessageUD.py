@@ -61,7 +61,7 @@ class DiscordEmbeded:
             'description': self.description,
             'url': self.url,
             'color': self.color,
-            'fields': self.fields.values()
+            'fields': list(self.fields.values())
         }
 
         if self.timestamp:

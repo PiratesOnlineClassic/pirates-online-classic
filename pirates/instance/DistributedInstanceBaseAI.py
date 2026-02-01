@@ -90,7 +90,7 @@ class DistributedInstanceBaseAI(DistributedObjectAI, WorldNodeAI):
             return (0, 0, 0, 0)
 
         if not index:
-            index = random.choice(self.spawnPts[area].keys())
+            index = random.choice(list(self.spawnPts[area].keys()))
 
         if index not in self.spawnPts[area]:
             return (0, 0, 0, 0)

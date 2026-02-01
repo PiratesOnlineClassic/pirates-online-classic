@@ -4,7 +4,7 @@ import hashlib
 import hmac
 import json
 import time
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from panda3d.core import *
 
@@ -14,6 +14,7 @@ from direct.distributed.PyDatagram import *
 from direct.fsm.FSM import FSM
 
 from otp.distributed import OtpDoGlobals
+from otp.distributed.MsgTypes import *
 
 from pirates.pirate.HumanDNA import HumanDNA
 from pirates.quest.QuestConstants import LocationIds
@@ -21,15 +22,15 @@ from pirates.piratesbase import PiratesGlobals
 
 # Import from PyCrypto only if we are using a database that requires it. This
 # allows local hosted and developer builds of the game to run without it:
-accountDBType = simbase.config.GetString('accountdb-type', 'developer')
+accountDBType = base.config.GetString('accountdb-type', 'developer')
 if accountDBType == 'remote':
     from Crypto.Cipher import AES
 
 # Sometimes we'll want to force a specific access level, such as on the
 # developer server:
-minAccessLevel = simbase.config.GetInt('min-access-level', 100)
-accountServerEndpoint = simbase.config.GetString('account-server-endpoint', '')  # TODO
-accountServerSecret = simbase.config.GetString('account-server-secret', '6163636f756e7473')
+minAccessLevel = base.config.GetInt('min-access-level', 100)
+accountServerEndpoint = base.config.GetString('account-server-endpoint', '')  # TODO
+accountServerSecret = base.config.GetString('account-server-secret', '6163636f756e7473')
 
 http = HTTPClient()
 http.setVerifySsl(0)
@@ -38,14 +39,14 @@ http.setVerifySsl(0)
 def executeHttpRequest(url, **extras):
     timestamp = str(int(time.time()))
     signature = hmac.new(accountServerSecret, timestamp, hashlib.sha256)
-    request = urllib2.Request(accountServerEndpoint + url)
+    request = urllib.request.Request(accountServerEndpoint + url)
     request.add_header('User-Agent', 'POC-CSM')
     request.add_header('X-CSM-Timestamp', timestamp)
     request.add_header('X-CSM-Signature', signature.hexdigest())
-    for k, v in extras.items():
+    for k, v in list(extras.items()):
         request.add_header('X-CSM-' + k, v)
     try:
-        return urllib2.urlopen(request).read()
+        return urllib.request.urlopen(request).read()
     except:
         return None
 
@@ -84,7 +85,7 @@ class AccountDB:
     def __init__(self, csm):
         self.csm = csm
 
-        filename = simbase.config.GetString(
+        filename = base.config.GetString(
             'account-bridge-filename', 'astron/databases/account-bridge')
         self.dbm = semidbm.open(filename, 'c')
 
@@ -208,7 +209,7 @@ class RemoteAccountDB(AccountDB):
             return response
 
         # Next, decrypt the token using AES-128 in CBC mode:
-        accountServerSecret = simbase.config.GetString(
+        accountServerSecret = base.config.GetString(
             'account-server-secret', '6163636f756e7473')
 
         # Ensure that our secret is the correct size:
@@ -237,8 +238,8 @@ class RemoteAccountDB(AccountDB):
                 raise ValueError
             if ('accesslevel' not in token) or (not isinstance(token['accesslevel'], int)):
                 raise ValueError
-        except ValueError, e:
-            print e
+        except ValueError as e:
+            print(e)
             self.notify.warning('Invalid token.')
             response = {
                 'success': False,
@@ -248,7 +249,7 @@ class RemoteAccountDB(AccountDB):
             return response
 
         # Next, check if this token has expired:
-        expiration = simbase.config.GetInt('account-token-expiration', 1800)
+        expiration = base.config.GetInt('account-token-expiration', 1800)
         tokenDelta = int(time.time()) - token['timestamp']
         if tokenDelta > expiration:
             response = {
@@ -511,7 +512,7 @@ class CreateAvatarFSM(OperationFSM):
         humanDNA.makeFromNetString(self.dna)
 
         dclass = self.csm.air.dclassesByName['HumanDNA']
-        for fieldIndex in xrange(dclass.getNumFields()):
+        for fieldIndex in range(dclass.getNumFields()):
             field = dclass.getInheritedField(fieldIndex)
             if not field.asAtomicField():
                 continue
@@ -527,7 +528,7 @@ class CreateAvatarFSM(OperationFSM):
         pirateFields['WishName'] = ('',)
         pirateFields['setDISLid'] = (self.target,)
 
-        if simbase.config.GetBool('skip-tutorial', False):
+        if base.config.GetBool('skip-tutorial', False):
             pirateFields['setReturnLocation'] = (LocationIds.PORT_ROYAL_ISLAND,)
 
         self.csm.air.dbInterface.createObject(
@@ -561,7 +562,7 @@ class CreateAvatarFSM(OperationFSM):
             return
 
         # Otherwise, we're done!
-        self.csm.air.writeServerEvent('avatarCreated', avId=self.avId, target=self.target, dna=self.dna.encode('hex'), avatarSlot=self.index)
+        self.csm.air.writeServerEvent('avatarCreated', avId=self.avId, target=self.target, dna=self.dna.hex(), avatarSlot=self.index)
         self.csm.sendUpdateToAccountId(self.target, 'createAvatarResp', [self.avId])
         self.demand('Off')
 
@@ -626,7 +627,7 @@ class GetAvatarsFSM(AvatarOperationFSM):
     def enterSendAvatars(self):
         potentialAvs = []
 
-        for avId, fields in self.avatarFields.items():
+        for avId, fields in list(self.avatarFields.items()):
             index = self.avList.index(avId)
             wishNameState = fields.get('WishNameState', [''])[0]
             name = fields['setName'][0]
@@ -655,7 +656,7 @@ class GetAvatarsFSM(AvatarOperationFSM):
                 nameState = 4
 
             humanDNA = HumanDNA()
-            for fieldName, fieldValue in fields.items():
+            for fieldName, fieldValue in list(fields.items()):
                 if hasattr(humanDNA, fieldName):
                     getattr(humanDNA, fieldName)(*fieldValue)
 
@@ -929,7 +930,7 @@ class LoadAvatarFSM(AvatarOperationFSM):
             channel,
             self.csm.air.ourChannel,
             CLIENTAGENT_ADD_POST_REMOVE)
-        datagram.addString(datagramCleanup.getMessage())
+        datagram.appendData(datagramCleanup.getMessage())
         self.csm.air.send(datagram)
 
         self.csm.air.clientAddSessionObject(self.csm.GetPuppetConnectionChannel(self.avId), self.avId)
@@ -962,7 +963,7 @@ class LoadAvatarFSM(AvatarOperationFSM):
             channel,
             self.csm.air.ourChannel,
             CLIENTAGENT_ADD_POST_REMOVE)
-        datagram.addString(datagramCleanup.getMessage())
+        datagram.appendData(datagramCleanup.getMessage())
         self.csm.air.send(datagram)
 
         # get the doId of the avatar's inventory object that it will
@@ -1132,8 +1133,8 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         banned_addresses = []
 
         # Time to check this login to see if its authentic
-        digest_maker = hmac.new(self.key)
-        digest_maker.update(cookie)
+        digest_maker = hmac.new(self.key.encode('utf-8'), digestmod=hashlib.md5)
+        digest_maker.update(cookie.encode('utf-8') if isinstance(cookie, str) else cookie)
         serverKey = digest_maker.hexdigest()
 
         # This login is not authentic...

@@ -1,6 +1,6 @@
 from pirates.piratesbase import PLocalizer
 from pirates.piratesbase import PiratesGlobals
-from pandac.PandaModules import *
+from panda3d.core import *
 tattooNames = [
     'blank',
     'arm_color_shark',

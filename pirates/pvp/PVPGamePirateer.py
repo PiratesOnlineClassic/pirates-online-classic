@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from pirates.pvp.PVPGameBase import PVPGameBase
 from pirates.piratesbase import PiratesGlobals
@@ -153,7 +153,7 @@ class PVPGamePirateer(PVPGameBase):
                 'Score': scores[currIdx]})
         
         self.scoreList.sort(self.sortScores)
-        print 'got new score list %s' % self.scoreList
+        print('got new score list %s' % self.scoreList)
         messenger.send(self.getItemChangeMsg())
 
     def sortScores(self, item1, item2):

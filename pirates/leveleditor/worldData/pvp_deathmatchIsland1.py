@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.pvp_deathmatchIsland1
-from pandac.PandaModules import Point3, VBase3
+from panda3d.core import Point3, VBase3
 objectStruct = {
     'Locator Links':
     [['1170794752.0jubutler', '1170795136.0jubutler3', 'Bi-directional'],

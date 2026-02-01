@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.CangrejosIsland
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Interact Links':
     [['1175041664.0dxschafe2', '1175042304.0dxschafe6', 'Bi-directional'],

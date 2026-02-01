@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed import DistributedObject
 from pirates.quest import QuestDB, Quest, QuestBase, QuestTaskDNA, QuestConstants

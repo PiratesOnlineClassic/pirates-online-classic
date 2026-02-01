@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.JailTestIsland
-from pandac.PandaModules import Point3, VBase3
+from panda3d.core import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1168046233.27joswilso': {

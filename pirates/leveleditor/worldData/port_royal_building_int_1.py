@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.port_royal_building_int_1
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Interact Links':
     [['1157094552.02jasyeung', '1178246656.0dchiappe', 'Bi-directional']],

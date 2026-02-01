@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.task import Task
 from direct.distributed import DistributedObject
 from pirates.ship import DistributedShip
@@ -103,7 +103,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             if locationName:
                 search = False
             numNamedIsles = 0
-            for currIsle in base.cr.activeWorld.islands.values():
+            for currIsle in list(base.cr.activeWorld.islands.values()):
                 if len(currIsle.name) > 0:
                     numNamedIsles += 1
                     if locationName and currIsle.name == locationName or lastTgtFound == True:
@@ -222,8 +222,8 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             self.localTeleportingObj.setPosHpr(self.localTeleportDestPos[0], self.localTeleportDestPos[1], self.localTeleportDestPos[2], self.localTeleportDestPos[3], 0, 0)
             try:
                 self.localTeleportingObj.reparentTo(teleportToObj)
-            except TypeError, err:
-                print 'teleportToObj:', teleportToObj
+            except TypeError as err:
+                print('teleportToObj:', teleportToObj)
                 raise err
 
             teleportToObj.addObjectToGrid(self.localTeleportingObj)
@@ -602,7 +602,7 @@ class DistributedTeleportMgr(DistributedObject.DistributedObject):
             parentObj = base.cr.doId2do.get(parents[0])
             if parentObj:
                 callback(parentObj, teleportingObj)
-            elif parentsLen > 2 and base.cr.doId2do.has_key(parents[2]):
+            elif parentsLen > 2 and parents[2] in base.cr.doId2do:
                 base.cr.relatedObjectMgr.requestObjects([parents[0]], eachCallback=lambda param1=None, param2=teleportingObj: callback(param1, param2))
                 localAvatar.setInterest(parents[2], parents[1], ['instanceInterest'])
             else:

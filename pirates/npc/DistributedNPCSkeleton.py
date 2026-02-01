@@ -6,7 +6,7 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.battle import DistributedBattleNPC
 from pirates.npc import Skeleton
 from pirates.effects.JRSpawnEffect import JRSpawnEffect
-import NPCSkeletonGameFSM
+from . import NPCSkeletonGameFSM
 
 class DistributedNPCSkeleton(DistributedBattleNPC.DistributedBattleNPC, Skeleton.Skeleton):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCSkeleton')

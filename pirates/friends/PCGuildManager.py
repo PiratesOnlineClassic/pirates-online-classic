@@ -5,7 +5,7 @@ class PCGuildManager(GuildManager):
     
     def sendSCQuest(self, questInt, msgType, taskNum):
         self.notify.debugCall()
-        print 'GuildManager.sendSCQuest() called'
+        print('GuildManager.sendSCQuest() called')
         self.sendUpdate('sendSCQuest', [questInt, msgType, taskNum])
 
     def recvSCQuest(self, senderId, questInt, msgType, taskNum):

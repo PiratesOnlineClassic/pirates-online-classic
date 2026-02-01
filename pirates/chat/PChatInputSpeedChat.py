@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.speedchat.SpeedChatTypes import *
 from pirates.speedchat.PSpeedChatTypes import *
 from otp.speedchat.SpeedChat import SpeedChat
@@ -219,7 +219,7 @@ class PChatInputSpeedChat(DirectObject.DirectObject):
             emote_music_structure = None
             emote_expressions_structure = None
             avatar_gender = base.emoteGender
-            idList = PLocalizer.emotes.keys()
+            idList = list(PLocalizer.emotes.keys())
             idList.sort()
             for id in idList:
                 emote = PLocalizer.emotes.get(id)

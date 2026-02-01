@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
 from pirates.creature.DistributedCreature import DistributedCreature
@@ -29,7 +29,7 @@ class GrabberTentacle(DistributedCreature):
         self.creature.reparentTo(self.slider)
 
     def announceGenerate(self):
-        print 'announceGenerate - GrabberTentacle', self.doId, self.getLocation()
+        print('announceGenerate - GrabberTentacle', self.doId, self.getLocation())
         DistributedCreature.announceGenerate(self)
         self.accept('f8', self.grabAvatar, extraArgs = [localAvatar])
         self.creature.startIdleTask()
@@ -49,7 +49,7 @@ class GrabberTentacle(DistributedCreature):
         if __dev__:
             base.tentacles.discard(self)
         
-        print self.doId
+        print(self.doId)
         if self.krakenRequest:
             self.cr.relatedObjectMgr.abortRequest(self.krakenRequest)
             self.krakenRequest = None
@@ -165,7 +165,7 @@ class GrabberTentacle(DistributedCreature):
     def loop(self, *args, **kw):
         if args and args[0] == 'idle' or kw.get('animName') == 'idle' or kw.get('newAnim') == 'idle':
             kw['restart'] = 0
-            self.pose('idle', random.choice(xrange(self.creature.getNumFrames('idle'))))
+            self.pose('idle', random.choice(range(self.creature.getNumFrames('idle'))))
         
         DistributedCreature.loop(self, *args, **kw)
     
@@ -224,7 +224,7 @@ class GrabberTentacle(DistributedCreature):
                         av])
                 
             else:
-                print 'move interrupted'
+                print('move interrupted')
 
         time = self.creature.getDuration('grab_avatar')
         blendDelay = 0.5
@@ -407,10 +407,10 @@ class GrabberTentacle(DistributedCreature):
             self.rangeCollisions = cNodePath
     
     def withinRange(self, cEntry):
-        print ' withinRange-%s(%s)' % (self.doId, self.locatorId)
+        print(' withinRange-%s(%s)' % (self.doId, self.locatorId))
     
     def withoutRange(self, cEntry):
-        print 'withoutRange-%s(%s)' % (self.doId, self.locatorId)
+        print('withoutRange-%s(%s)' % (self.doId, self.locatorId))
 
     def showVis(self):
         self.rangeCollisions.show()

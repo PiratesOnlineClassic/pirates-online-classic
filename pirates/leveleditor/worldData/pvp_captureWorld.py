@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.pvp_captureWorld
-from pandac.PandaModules import Point3, VBase3
+from panda3d.core import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1176167404.55zpavlov': {

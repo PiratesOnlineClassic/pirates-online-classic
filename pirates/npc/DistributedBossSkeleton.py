@@ -1,4 +1,4 @@
-from pandac.PandaModules import Vec4
+from panda3d.core import Vec4
 from direct.directnotify import DirectNotifyGlobal
 from pirates.npc.DistributedNPCSkeleton import DistributedNPCSkeleton
 from pirates.pirate import AvatarTypes

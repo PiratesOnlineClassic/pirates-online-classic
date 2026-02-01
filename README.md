@@ -61,7 +61,7 @@ The verify branch houses the W.I.P client verification, which to put it in layma
 * If you're writing a new feature or doing any substantial change, please push it to a seperate branch and make a pull request when you believe it's ready. Refer to the Merging and Branches section for more.
 
 ## Requirements
-* [Python 2.7](https://www.python.org)
+* [Python 3.7+](https://www.python.org)
 * [Panda3D](https://github.com/AnythingTechPro/poc-panda3d)
 * [Resources](https://github.com/AnythingTechPro/poc-resources)
 * [LibPirates](https://github.com/AnythingTechPro/libpirates-cpp)

@@ -49,7 +49,7 @@ class WeaponBaseAI(WeaponBaseBase):
         if not avatar:
             return
 
-        print ("requestProjectileSkill", skillId, ammoSkillId, posHpr, timestamp, power)
+        print(("requestProjectileSkill", skillId, ammoSkillId, posHpr, timestamp, power))
 
         if self.air.targetMgr.hasProjectile(avatar.doId, skillId, ammoSkillId):
             self.notify.debug('Avatar %d tried to request projectile skill for already used skill; '

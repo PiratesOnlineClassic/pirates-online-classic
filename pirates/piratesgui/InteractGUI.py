@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.distributed import InteractGlobals
@@ -38,10 +38,10 @@ class InteractGUI(DirectFrame):
         middlePanelOver = gui.find('**/avatar_c_A_middle_over')
         bottomPanel = gui.find('**/avatar_c_A_bottom')
         bottomPanelOver = gui.find('**/avatar_c_A_bottom_over')
-        for (i, optionId, statusCode) in zip(range(len(optionIds)), optionIds, statusCodes):
+        for (i, optionId, statusCode) in zip(list(range(len(optionIds))), optionIds, statusCodes):
             optionName = InteractGlobals.InteractOptionNames.get(optionId, 'Error')
             optionHelp = InteractGlobals.InteractOptionHelpText.get(optionId, 'Error')
-            print 'DEBUG: InteractGUI.optionName = %s' % optionName
+            print('DEBUG: InteractGUI.optionName = %s' % optionName)
             if (optionName == 'Bribe') & (bribeType == 1):
                 optionName = PLocalizer.InteractBribeAlt
             

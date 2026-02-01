@@ -1,4 +1,4 @@
-from direct.showbase.PythonUtil import ParamObj
+from otp.otpbase.OTPUtil import ParamObj
 
 from pirates.pirate import AvatarTypes
 

@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import ScratchPad
 from pirates.cutscene import CutsceneData, CutsceneActor
@@ -9,6 +9,7 @@ from pirates.tutorial import TutorialGlobals
 from pirates.quest import QuestConstants
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui.Subtitler import Subtitler
+import importlib
 
 def Nothing():
     pass
@@ -78,7 +79,7 @@ def forceLowLODOnAvatars():
     if 'localAvatar' not in __builtins__:
         return
     
-    for item in base.cr.doId2do.items():
+    for item in list(base.cr.doId2do.items()):
         do = item[1]
         if do.dclass.getName() == 'DistributedNPCTownfolk':
             do.forceLOD(0)
@@ -94,7 +95,7 @@ def resetLODOnAvatars():
     if 'localAvatar' not in __builtins__:
         return
     
-    for item in base.cr.doId2do.items():
+    for item in list(base.cr.doId2do.items()):
         do = item[1]
         if do.dclass.getName() == 'DistributedNPCTownfolk':
             do.resetLOD()
@@ -112,7 +113,7 @@ def forceInteract(objUid, doorIndex = None):
         objRef = base.cr.doId2do.get(objDoId)
         if doorIndex != None:
             if len(objRef.links) <= doorIndex:
-                print 'warning: could not find door index %s for object %s' % (doorIndex, objDoId)
+                print('warning: could not find door index %s for object %s' % (doorIndex, objDoId))
                 return None
             
             doorDoId = objRef.links[doorIndex][0]
@@ -415,11 +416,11 @@ def Cutscene6_1ivals(cutscene):
 
 def subtitleSequence(cutsceneId):
     if config.GetBool('force-cut-sub-reloads', 0):
-        reload(CutsceneData)
+        importlib.reload(CutsceneData)
     
     subData = CutsceneData.CutsceneSubtitles.get(cutsceneId)
     if 'localAvatar' not in __builtins__:
-        if not __builtins__.has_key('subtitler'):
+        if 'subtitler' not in __builtins__:
             __builtins__['subtitler'] = Subtitler()
         
         subtitler = __builtins__['subtitler']

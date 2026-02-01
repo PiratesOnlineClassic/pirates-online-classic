@@ -45,7 +45,7 @@ class DiscordNotificationsUD(DiscordNotificationsBase):
                 self.publishServerHoliday(holidayId)
             except:
                 self.notify.warning('Failed to publish holiday Discord notification (%s)' % holidayId)
-                print(traceback.format_exc())
+                print((traceback.format_exc()))
 
     def serverHolidayEnd(self, holidayId):
         """

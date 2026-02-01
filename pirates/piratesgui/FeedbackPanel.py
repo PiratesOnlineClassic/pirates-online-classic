@@ -1,7 +1,7 @@
 import sys
 import os
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from otp.otpbase import OTPGlobals
 from pirates.piratesgui import PDialog
@@ -163,6 +163,6 @@ class FeedbackPanel(GuiPanel.GuiPanel):
         self.feedbackInput.enterText(name.strip())
 
     def _catSelect(self, item):
-        print 'Item Selected is %s' % item
+        print('Item Selected is %s' % item)
 
 

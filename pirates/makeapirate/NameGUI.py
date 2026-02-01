@@ -7,8 +7,8 @@ from direct.fsm import State
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
 from direct.task import Task
-from pandac.PandaModules import *
-from pandac.PandaModules import TextEncoder
+from panda3d.core import *
+from panda3d.core import TextEncoder
 from otp.namepanel import NameCheck
 from otp.otpbase import OTPLocalizer as OL
 from pirates.piratesbase import PLocalizer as PL
@@ -18,7 +18,7 @@ from pirates.piratesgui import GuiButton
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.leveleditor import NPCList
 from pirates.makeapirate.PCPickANamePattern import PCPickANamePattern
-from direct.distributed.MsgTypes import *
+from otp.distributed.MsgTypes import *
 from direct.distributed import PyDatagram
 MAX_NAME_WIDTH = 9
 
@@ -211,11 +211,11 @@ class NameGUI(DirectFrame, StateData.StateData):
     def _checkNpcNames(self, name):
         
         def match(npcName, name = name):
-            return TextEncoder.upper(npcName) == TextEncoder.upper(string.strip(name))
+            return TextEncoder.upper(npcName) == TextEncoder.upper(name.strip())
 
-        for npcId in NPCList.NPC_LIST.keys():
+        for npcId in list(NPCList.NPC_LIST.keys()):
             data = NPCList.NPC_LIST[npcId]
-            if type(data) is types.DictType and HumanDNA.HumanDNA.setName in data:
+            if type(data) is dict and HumanDNA.HumanDNA.setName in data:
                 npcName = data[HumanDNA.HumanDNA.setName]
                 if (self.independent or not self.main.isNPCEditor) and match(npcName):
                     self.notify.info('name matches NPC name "%s"' % npcName)
@@ -604,15 +604,15 @@ class NameGUI(DirectFrame, StateData.StateData):
         
         if self.getDNA().getGender() == 'f':
             self.nicknameIndex = ''
-            self.firstIndex = random.choice(range(len(self.firstNamesFemale) - 4)) + 2
-            self.prefixIndex = random.choice(range(len(self.lastPrefixesFemale) - 4)) + 2
-            self.suffixIndex = random.choice(range(len(self.lastSuffixesFemale) - 4)) + 2
+            self.firstIndex = random.choice(list(range(len(self.firstNamesFemale) - 4))) + 2
+            self.prefixIndex = random.choice(list(range(len(self.lastPrefixesFemale) - 4))) + 2
+            self.suffixIndex = random.choice(list(range(len(self.lastSuffixesFemale) - 4))) + 2
         else:
             self.nicknameIndex = ''
-            self.firstIndex = random.choice(range(len(self.firstNamesMale) - 4)) + 2
-            self.prefixIndex = random.choice(range(len(self.lastPrefixesMale) - 4)) + 2
-            self.suffixIndex = random.choice(range(len(self.lastSuffixesMale) - 4)) + 2
-        nameCombo = random.choice(self.POSSIBLE_NAME_COMBOS.keys())
+            self.firstIndex = random.choice(list(range(len(self.firstNamesMale) - 4))) + 2
+            self.prefixIndex = random.choice(list(range(len(self.lastPrefixesMale) - 4))) + 2
+            self.suffixIndex = random.choice(list(range(len(self.lastSuffixesMale) - 4))) + 2
+        nameCombo = random.choice(list(self.POSSIBLE_NAME_COMBOS.keys()))
         (self.nicknameActive, self.firstActive, self.lastActive) = self.POSSIBLE_NAME_COMBOS[nameCombo]
         self._updateGuiToPickAName([
             self.nicknameActive,
@@ -824,7 +824,7 @@ class NameGUI(DirectFrame, StateData.StateData):
         problem = NameCheck.checkName(name, [
             self._checkNpcNames])
         if problem:
-            print problem
+            print(problem)
             self.nameEntry.enterText('')
         else:
             self.fsm.request('Approved')
@@ -887,7 +887,7 @@ class NameGUI(DirectFrame, StateData.StateData):
             problem = NameCheck.checkName(name, [
                 self._checkNpcNames])
             if problem:
-                print problem
+                print(problem)
                 self.nameEntry.enterText('')
             else:
                 self.fsm.request('Done')
@@ -920,7 +920,7 @@ class NameGUI(DirectFrame, StateData.StateData):
                 maxWidth = self.text.calcWidth(name)
                 maxName = name
         
-        print maxName + ' ' + str(maxWidth)
+        print(maxName + ' ' + str(maxWidth))
         return maxName
     
     def findWidestName(self):

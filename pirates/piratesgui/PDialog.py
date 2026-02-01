@@ -1,4 +1,4 @@
-from pandac.PandaModules import TextNode
+from panda3d.core import TextNode
 from direct.gui.DirectGui import *
 from direct.directnotify import DirectNotifyGlobal
 from otp.otpgui import OTPDialog

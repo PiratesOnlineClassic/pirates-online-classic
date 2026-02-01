@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.task import Task
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
@@ -117,7 +117,7 @@ class StatusTray(GuiTray.GuiTray):
         del self.hpMeterUpYellowIval
         self.statusEffectsPanel.destroy()
         del self.statusEffectsPanel
-        for key in self.icons.keys():
+        for key in list(self.icons.keys()):
             self.icons[key].removeNode()
         
         del self.icons
@@ -354,13 +354,13 @@ class StatusTray(GuiTray.GuiTray):
         GuiTray.GuiTray.hide(self, *args, **kwargs)
 
     def updateStatusEffects(self, effects):
-        effectIdList = effects.keys()
+        effectIdList = list(effects.keys())
         for effectKeyId in effectIdList:
             effectId = effects[effectKeyId][0]
             maxDur = effects[effectKeyId][1]
             ts = effects[effectKeyId][2]
             attackerId = effects[effectKeyId][3]
-            if effectKeyId not in self.skillEffects.keys() and effectId not in [WeaponGlobals.C_VOODOO_STUN, WeaponGlobals.C_VOODOO_HEX_STUN,
+            if effectKeyId not in list(self.skillEffects.keys()) and effectId not in [WeaponGlobals.C_VOODOO_STUN, WeaponGlobals.C_VOODOO_HEX_STUN,
                                                                                 WeaponGlobals.C_INTERRUPTED, WeaponGlobals.C_OPENFIRE,
                                                                                 WeaponGlobals.C_TAKECOVER]:
 
@@ -368,7 +368,7 @@ class StatusTray(GuiTray.GuiTray):
             else:
                 self.statusEffectsPanel.updateStatusEffect(effectId, maxDur, ts, attackerId)
         
-        for effectKeyId in self.skillEffects.keys():
+        for effectKeyId in list(self.skillEffects.keys()):
             if effectKeyId not in effectIdList:
                 buff = self.skillEffects.get(effectKeyId)
                 if buff:

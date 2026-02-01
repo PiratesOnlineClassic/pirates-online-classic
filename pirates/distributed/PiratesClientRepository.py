@@ -4,12 +4,13 @@ import gc
 from direct.showbase.ShowBaseGlobal import *
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
+from panda3d.direct import CConnectionRepository
 from direct.interval.IntervalGlobal import *
 from direct.showbase.EventGroup import EventGroup
 from direct.showbase.PythonUtil import report
 from pirates.piratesbase.PiratesGlobals import *
-from PiratesMsgTypes import *
+from .PiratesMsgTypes import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.fsm import ClassicFSM
 from direct.fsm import State
@@ -44,7 +45,7 @@ from pirates.battle import CombatAnimations
 from pirates.ship import DistributedShip
 from pirates.band import DistributedBandMember
 from pirates.cutscene import Cutscene
-import PlayGame
+from . import PlayGame
 from pirates.piratesbase import PiratesGlobals
 from pirates.battle import DistributedBattleNPC
 from pirates.ship import DistributedShip
@@ -84,7 +85,7 @@ if want_fifothreads:
                         PStatClient.threadTick('ClientNetworkReader')
 
                     if self.verbose:
-                        print 'traffic done'
+                        print('traffic done')
 
         def PonderYield(self, comment=''):
             Thread.considerYield()
@@ -317,7 +318,7 @@ class PiratesClientRepository(OTPClientRepository):
         self.ignore('avatarListFailed')
         self.ignore('avatarList')
         self.avList = {}
-        for subId, avData in avatars.items():
+        for subId, avData in list(avatars.items()):
             data = []
             self.avList[subId] = data
             for av in avData:
@@ -383,10 +384,10 @@ class PiratesClientRepository(OTPClientRepository):
             OTPClientRepository.generateWithRequiredOtherFieldsOwner(self, dclass, doId, di)
 
     def enterWaitForDeleteAvatarResponse(self, potentialAvatar):
-        raise StandardError, 'This should be handled within AvatarChooser.py'
+        raise Exception('This should be handled within AvatarChooser.py')
 
     def exitWaitForDeleteAvatarResponse(self):
-        raise StandardError, 'This should be handled within AvatarChooser.py'
+        raise Exception('This should be handled within AvatarChooser.py')
 
     def sendMsgToTravelAgent(self, fieldName, args):
         dcfile = self.getDcFile()
@@ -449,7 +450,7 @@ class PiratesClientRepository(OTPClientRepository):
         self.uidMgr.reset()
         if self.distributedDistrict:
             self.distributedDistrict.worldCreator.cleanupAllAreas()
-        for doId, obj in self.doId2do.items():
+        for doId, obj in list(self.doId2do.items()):
             if not isinstance(obj, LocalPirate) and not isinstance(obj, DistributedDistrict.DistributedDistrict):
                 if hasattr(self, 'disableObject'):
                     self.disableObject(doId)
@@ -611,9 +612,9 @@ class PiratesClientRepository(OTPClientRepository):
         if newObj is not None:
             self.currCamParent = newObj.getDoId()
             self.setViewpoint(newObj, 0)
-            print 'reparenting camera to object %d' % self.currCamParent
+            print('reparenting camera to object %d' % self.currCamParent)
         else:
-            print 'problem finding a new camera parent, will try again'
+            print('problem finding a new camera parent, will try again')
         if task:
             task.delayTime = delay
         return Task.again
@@ -667,7 +668,7 @@ class PiratesClientRepository(OTPClientRepository):
         self.deleteObject(doId)
 
     def deleteObject(self, doId, ownerView = False):
-        if self.doId2do.has_key(doId):
+        if doId in self.doId2do:
             obj = self.doId2do[doId]
             del self.doId2do[doId]
             obj.deleteOrDelay()
@@ -718,26 +719,26 @@ class PiratesClientRepository(OTPClientRepository):
 
     def _removeCurrentShardInterest(self, callback):
         parentId2handles = {}
-        for handle, state in self._interests.items():
+        for handle, state in list(self._interests.items()):
             parentId2handles.setdefault(state.parentId, set())
             parentId2handles[state.parentId].add(handle)
 
         doId2parentId = {}
-        for doId in parentId2handles.keys():
+        for doId in list(parentId2handles.keys()):
             obj = self.getDo(doId)
             if obj is not None:
                 doId2parentId[doId] = obj.parentId
 
         parentId2childIds = {}
-        for doId, parentId in doId2parentId.items():
+        for doId, parentId in list(doId2parentId.items()):
             parentId2childIds.setdefault(parentId, set())
             parentId2childIds[parentId].add(doId)
 
-        print 'parentId2handles: %s' % parentId2handles
-        print 'parentId2childIds: %s' % parentId2childIds
+        print('parentId2handles: %s' % parentId2handles)
+        print('parentId2childIds: %s' % parentId2childIds)
         self.closeShardEGroup = EventGroup('closeShardInterest')
         self.acceptOnce(self.closeShardEGroup.getDoneEvent(), callback)
-        for districtId in self.activeDistrictMap.keys():
+        for districtId in list(self.activeDistrictMap.keys()):
             self._remInterests(districtId, parentId2childIds, parentId2handles)
 
     def _remInterests(self, parentId, parentId2childIds, parentId2handles):
@@ -764,7 +765,7 @@ class PiratesClientRepository(OTPClientRepository):
         OTPClientRepository.exitCloseShard(self)
 
     def startReaderPollTask(self):
-        print '########## startReaderPollTask Pirate'
+        print('########## startReaderPollTask Pirate')
         self.stopReaderPollTask()
         self.accept(CConnectionRepository.getOverflowEventName(), self.handleReaderOverflow)
         if want_fifothreads:
@@ -774,7 +775,7 @@ class PiratesClientRepository(OTPClientRepository):
             taskMgr.add(self.readerPollUntilEmpty, self.uniqueName('readerPollTask'), priority=self.taskPriority)
 
     def stopReaderPollTask(self):
-        print '########## stopReaderPollTask Pirate'
+        print('########## stopReaderPollTask Pirate')
         self.ignore(CConnectionRepository.getOverflowEventName())
         if want_fifothreads:
             if hasattr(self, 'ClientNetworkReader'):

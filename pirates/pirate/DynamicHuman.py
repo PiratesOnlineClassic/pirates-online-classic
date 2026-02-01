@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.actor import Actor
 from direct.task import Task
@@ -512,15 +512,15 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
                 self.model.faces[0][2].setColorScale(color)
             
         else:
-            numPaths = self.model.body.getNumPaths()
-            medIdx = numPaths / 3
-            lowIdx = (numPaths / 3) * 2
+            numPaths = int(self.model.body.getNumPaths())
+            medIdx = int(numPaths / 3)
+            lowIdx = int((numPaths / 3) * 2)
             if self.zombie:
                 self.model.body.setColorScale(Vec4(1, 1, 1, 1))
                 if self.optimizeLOD:
                     color = VBase4(121 / 255.0, 124 / 255.0, 103 / 255.0, 1.0)
                     self.model.faces[0][2].setColorScale(color)
-                    for i in xrange(lowIdx, numPaths):
+                    for i in range(lowIdx, numPaths):
                         self.model.body[i].setColorScale(color)
                     
                     self.model.faceZomb[2].setColorScale(color)
@@ -531,7 +531,7 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
                 if self.optimizeLOD:
                     color = VBase4(lowColor[0] * skinColor[0], lowColor[1] * skinColor[1], lowColor[2] * skinColor[2], 1.0)
                     self.model.faces[0][2].setColorScale(color)
-                    for i in xrange(lowIdx, numPaths):
+                    for i in range(lowIdx, numPaths):
                         self.model.body[i].setColorScale(color)
 
     def generateSkinTexture(self):
@@ -553,7 +553,7 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
             return None
         for parts in self.model.bodys:
             numPaths = parts.getNumPaths()
-            for i in xrange(numPaths):
+            for i in range(numPaths):
                 parts[i].setTexture(tex, 1)
 
     def generateFaceTexture(self):
@@ -574,7 +574,7 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
             parts = self.findAllMatches('**/body_master_face')
             eyeball_parts = self.eyeBalls[lodName]
             if not parts.isEmpty():
-                numPaths = parts.getNumPaths()
+                numPaths = int(parts.getNumPaths())
                 for i in range(0, numPaths):
                     parts[i].setTexture(tex, 1)
                     for i in range(0, eyeball_parts.getNumPaths()):
@@ -628,9 +628,9 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
         
         def colorParts(parts, ct):
             if self.optimizeLOD:
-                numPaths = parts.getNumPaths()
+                numPaths = int(parts.getNumPaths())
                 for j in range(0, numPaths):
-                    lowIdx = (numPaths / 3) * 2
+                    lowIdx = int((numPaths / 3) * 2)
                     if j >= lowIdx:
                         cl = parts[j].getColorScale()
                         compoundColor = VBase4(cl[0] * ct[0], cl[1] * ct[1], cl[2] * ct[2], 1.0)
@@ -722,8 +722,7 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
             'def_head_base',
             'zz_head01'], [])
         self.makeSubpart('torso', [
-            'zz_spine01',
-            'def_head01'], [
+            'zz_spine01'], [
             'zz_head01'])
         self.makeSubpart('legs', [
             'dx_root'], [
@@ -780,7 +779,7 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
                 20,
                 280]
         else:
-            raise StandardError, 'Invalid avatar-detail: %s' % avatarDetail
+            raise Exception('Invalid avatar-detail: %s' % avatarDetail)
         self.addLOD(500, dist[3], dist[2])
         if self.optimizeLOD:
             lowLOD = self.getLOD('500')
@@ -1043,10 +1042,10 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
             posDelta = VBase3(0, 0, 0)
             hprDelta = VBase3(0, 0, 0)
             sclDelta = VBase3(0, 0, 0)
-            for sliderIdx in xrange(0, len(matrixF[jointName])):
+            for sliderIdx in range(0, len(matrixF[jointName])):
                 sliderName = matrixF[jointName][sliderIdx]
                 jointSet = shapes[sliderName][0]
-                for jointIdx in xrange(0, len(jointSet)):
+                for jointIdx in range(0, len(jointSet)):
                     if jointSet[jointIdx][0] == jointName:
                         if jointSet[jointIdx][1] == TX:
                             posDelta.setX(posDelta.getX() + jointSet[jointIdx][5])
@@ -1176,16 +1175,16 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
         matrixI['initialized'].append('initialized')
         shapes = self.controlShapes
         names = self.sliderNames
-        for i in xrange(0, len(shapes)):
+        for i in range(0, len(shapes)):
             slider = shapes[names[i]]
-            for k in xrange(0, len(slider[0])):
+            for k in range(0, len(slider[0])):
                 slider[0][k][4] = slider[0][k][2]
                 if len(slider) > 1:
                     slider[1][k][4] = slider[1][k][2]
         
-        for i in xrange(0, len(shapes)):
+        for i in range(0, len(shapes)):
             slider = shapes[names[i]]
-            for k in xrange(0, len(slider[0])):
+            for k in range(0, len(slider[0])):
                 jointCtl = slider[0][k]
                 jointName = jointCtl[0]
                 matrixF[jointName].append(names[i])
@@ -1385,7 +1384,7 @@ class DynamicHuman(HumanBase.HumanBase, Biped.Biped):
             posDelta.assign(matrixI[jointName][0])
             hprDelta.assign(matrixI[jointName][1])
             sclDelta.assign(matrixI[jointName][2])
-            for sliderIdx in xrange(0, len(matrixF[jointName])):
+            for sliderIdx in range(0, len(matrixF[jointName])):
                 sliderName = matrixF[jointName][sliderIdx]
                 jointSet = self.controlShapes[sliderName][0]
                 for sliderJoint in jointSet:

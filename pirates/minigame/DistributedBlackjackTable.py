@@ -1,14 +1,14 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.task import Task
 import random
 import math
-import DistributedGameTable
-import PlayingCardGlobals
-import PlayingCard
-import BlackjackTableGUI
+from . import DistributedGameTable
+from . import PlayingCardGlobals
+from . import PlayingCard
+from . import BlackjackTableGUI
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.piratesbase import PLocalizer
 from otp.otpgui import OTPDialog

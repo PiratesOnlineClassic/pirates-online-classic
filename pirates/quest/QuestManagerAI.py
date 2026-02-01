@@ -776,27 +776,27 @@ class QuestManagerAI(DirectObject):
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def giveQuest(questId):
     invoker = spellbook.getInvoker()
-    if simbase.air.questMgr.hasQuest(invoker, questId=questId):
+    if base.air.questMgr.hasQuest(invoker, questId=questId):
         return 'Avatar already has active quest: %s!' % questId
 
-    simbase.air.questMgr.createQuest(invoker, questId)
+    base.air.questMgr.createQuest(invoker, questId)
     return 'Given new active quest: %s.' % questId
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
 def dropQuest(questId):
     invoker = spellbook.getInvoker()
-    activeQuest = simbase.air.questMgr.getQuest(invoker, questId=questId)
+    activeQuest = base.air.questMgr.getQuest(invoker, questId=questId)
     if not activeQuest:
         return 'Could not find active quest: %s!' % questId
 
-    simbase.air.questMgr.dropQuest(invoker, activeQuest.doId)
+    base.air.questMgr.dropQuest(invoker, activeQuest.doId)
     return 'Dropped active quest: %s!' % questId
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def dropAllQuests():
-    simbase.air.questMgr.dropQuests(spellbook.getInvoker())
+    base.air.questMgr.dropQuests(spellbook.getInvoker())
     return 'Dropped all active quests.'
 
 
@@ -809,9 +809,9 @@ def skipQuest(questId=''):
     if not questId:
         return 'You did not provide a valid questId!'
 
-    quest = simbase.air.questMgr.getQuest(invoker, questId=questId)
+    quest = base.air.questMgr.getQuest(invoker, questId=questId)
     for taskState in quest.getTaskStates():
         taskState.forceComplete()
 
-    simbase.air.questMgr.completeQuest(invoker, quest)
+    base.air.questMgr.completeQuest(invoker, quest)
     return 'Forced quest: %s completion status.' % questId

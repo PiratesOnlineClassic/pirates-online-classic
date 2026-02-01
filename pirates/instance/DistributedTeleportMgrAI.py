@@ -102,7 +102,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         self.avatar2fsm = {}
 
     def getWorld(self, instanceType, instanceName):
-        for object in self.air.doId2do.values():
+        for object in list(self.air.doId2do.values()):
             if not object or not isinstance(object, DistributedInstanceBaseAI):
                 continue
 
@@ -113,7 +113,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
     def getWorldNames(self, instanceType):
         names = []
-        for object in self.air.doId2do.values():
+        for object in list(self.air.doId2do.values()):
             if not object or not isinstance(object, DistributedInstanceBaseAI):
                 continue
 
@@ -252,7 +252,7 @@ def areaTeleport(locationUid):
     if not locationUid:
         return 'No location uid provided.'
 
-    simbase.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
+    base.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
     return 'Teleporting avatar %d to area: %s...' % (avatar.doId, locationUid)
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, str, str])
@@ -261,12 +261,12 @@ def world(instanceType, worldName, locationUid=None):
     Teleport command for traveling to different worlds
     """
 
-    names = simbase.air.teleportMgr.getWorldNames(instanceType)
+    names = base.air.teleportMgr.getWorldNames(instanceType)
     if worldName not in names:
         return 'Invalid world location: %s' % worldName
 
     avatar = spellbook.getTarget()
-    simbase.air.teleportMgr.d_initiateTeleport(avatar, instanceType=instanceType, instanceName=worldName, locationUid=locationUid)
+    base.air.teleportMgr.d_initiateTeleport(avatar, instanceType=instanceType, instanceName=worldName, locationUid=locationUid)
     return 'Teleporting avatar %d to world: %s...' % (avatar.doId, worldName)
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
@@ -276,7 +276,7 @@ def tp(locationName):
     """
 
     locationUid = None
-    for uid, name in PLocalizer.LocationNames.items():
+    for uid, name in list(PLocalizer.LocationNames.items()):
         name = name.lower()
         name = name.replace("'", '')
 
@@ -287,7 +287,7 @@ def tp(locationName):
 
     if locationUid != None:
         avatar = spellbook.getTarget()
-        simbase.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
+        base.air.teleportMgr.d_initiateTeleport(avatar, locationUid=locationUid)
         return 'Teleporting avatar %d to area: %s...' % (avatar.doId, locationUid)
 
     return 'Unknown location %s' % locationName

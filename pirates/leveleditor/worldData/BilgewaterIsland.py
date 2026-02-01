@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.BilgewaterIsland
-from pandac.PandaModules import Point3, VBase3
+from panda3d.core import Point3, VBase3
 objectStruct = {
     'Locator Links':
     [['1144695643.19sdnaik', '1144695785.47sdnaik', 'Bi-directional'],

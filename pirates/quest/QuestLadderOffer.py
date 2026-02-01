@@ -1,4 +1,4 @@
-from direct.showbase.PythonUtil import POD, makeTuple
+from otp.otpbase.OTPUtil import POD, makeTuple
 from pirates.quest import QuestReward, QuestLadderDB
 
 class QuestLadderOffer(POD):

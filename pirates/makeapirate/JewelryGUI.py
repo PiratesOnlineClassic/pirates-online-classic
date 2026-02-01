@@ -4,17 +4,17 @@ from direct.showbase import DirectObject
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PLocalizer
-from CharGuiBase import CharGuiSlider, CharGuiPicker
+from .CharGuiBase import CharGuiSlider, CharGuiPicker
 import random
 from pirates.pirate import HumanDNA
 from math import sin
 from math import cos
 from math import pi
-import JewelryGlobals
-import PirateMale
-import PirateFemale
+from . import JewelryGlobals
+from . import PirateMale
+from . import PirateFemale
 Zone1_Tab = 0
 Zone2_Tab = 1
 Zone3_Tab = 2
@@ -369,7 +369,7 @@ class JewelryGUI(DirectFrame, StateData.StateData):
 
     def handleNextJewelry(self, key):
         self.avatar.handleJewelryOptions(key, True)
-        print self.avatar.currentJewelry
+        print(self.avatar.currentJewelry)
     
     def handleLastJewelry(self, key):
         self.avatar.handleJewelryOptions(key, False)

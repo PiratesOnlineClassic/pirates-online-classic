@@ -60,6 +60,8 @@ class LinkManager(object):
 
     def registerLinkData(self, uniqueId):
         fileName = self.air.worldCreator.getObjectFilenameByUid(uniqueId)
+        if fileName is None:
+            return
         fileData = self.air.worldCreator.openFile(fileName + '.py')
 
         for linkData in fileData.get(WorldDataGlobals.LINK_TYPE_LOC_NODE, []):
@@ -115,7 +117,7 @@ class LocatorManager(object):
         del locators[uniqueId]
 
     def getLocator(self, uniqueId):
-        for parentUid, locators in self._locators.iteritems():
+        for parentUid, locators in self._locators.items():
             if uniqueId in locators:
                 return locators[uniqueId]
 
@@ -245,6 +247,8 @@ class MovementLinkManager(object):
 
     def registerMovementLinkData(self, uniqueId):
         fileName = self.air.worldCreator.getObjectFilenameByUid(uniqueId)
+        if fileName is None:
+            return
         fileData = self.air.worldCreator.openFile(fileName + '.py')
 
         for movementLinkData in fileData.get(WorldDataGlobals.LINK_TYPE_AI_NODE, []):
@@ -295,7 +299,7 @@ class OceanAreaManager(object):
         del self.oceanAreas[parentUid]
 
     def getRandomOceanPos(self, parentUid):
-        oceanArea = random.choice(self.oceanAreas[parentUid].values())
+        oceanArea = random.choice(list(self.oceanAreas[parentUid].values()))
         sx, sy, sz = oceanArea.startPos
         ex, ey, ez = oceanArea.endPos
         return random.uniform(sx, ex), random.uniform(sy, ey)
@@ -334,7 +338,7 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
         self.fileDicts[file] = fileDict
 
     def rFindFile(self, objSet):
-        for obj in objSet.values():
+        for obj in list(objSet.values()):
             fileName = obj.get('File')
             if fileName:
                 self.loadFileDataRecursive(fileName + '.py')
@@ -345,7 +349,7 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
 
     def getModelPathFromFile(self, file):
         fileDict = self.openFile(file + '.py')
-        return fileDict['Objects'].values()[0]['Visual']['Model']
+        return list(fileDict['Objects'].values())[0]['Visual']['Model']
 
     def loadObjectsFromFile(self, filename, parent=None, zoneLevel=0, startTime=None, parentIsObj=False):
         # load the object data recursive into the file dictionary,
@@ -359,7 +363,7 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
 
     def getObjectParentUid(self, objKey):
         found = None
-        for fileName in self.fileDicts.keys():
+        for fileName in list(self.fileDicts.keys()):
             found = self.getObjectDataFromFileByUid(objKey, fileName)
             if found:
                 break
@@ -368,7 +372,7 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
 
     def getObjectFilenameByUid(self, objKey, getParentUid=True):
         file = None
-        for fileName in self.fileDicts.keys():
+        for fileName in list(self.fileDicts.keys()):
             if WorldGlobals.PiratesWorldSceneFileBase in fileName:
                 continue
 
@@ -407,6 +411,9 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
         if not worldFileName:
             worldFileName = fileName
 
+        if worldFileName is None:
+            worldFileName = ''
+
         worldName = objectData.get('Name', '')
         if worldFileName == WorldGlobals.PiratesTutorialSceneFileBase:
             self.world = DistributedPiratesTutorialWorldAI(self.air)
@@ -432,7 +439,8 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
             self.worldDict = objectData
 
         self.air.uidMgr.addUid(self.world.getUniqueId(), self.world.doId)
-        self.oceanAreaManager.registerOceanAreaData(objKey, worldFileName)
+        if worldFileName:
+            self.oceanAreaManager.registerOceanAreaData(objKey, worldFileName)
         if self.oceanAreaManager.hasOceanArea(objKey):
             self.air.shipManager.startSpawnEnemyShips(self.world)
 

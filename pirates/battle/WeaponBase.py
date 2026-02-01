@@ -1,5 +1,5 @@
 import math
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed.ClockDelta import globalClockDelta
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
@@ -9,13 +9,13 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.effects.ProjectileEffect import ProjectileEffect
 from pirates.piratesbase import TeamUtils
 from pirates.battle import WeaponBaseBase
-import WeaponGlobals
-import CannonGlobals
+from . import WeaponGlobals
+from . import CannonGlobals
 
 class WeaponBase(WeaponBaseBase.WeaponBaseBase):
 
     def __init__(self):
-        if __builtins__.has_key('localAvatar'):
+        if 'localAvatar' in __builtins__:
             av = localAvatar
         else:
             av = self

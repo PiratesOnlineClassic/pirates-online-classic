@@ -45,14 +45,14 @@ class DistributedJailInteriorAI(DistributedGAInteriorAI):
 
     def getCellDoor(self, cellDoorId=None, avatarId=None):
         if avatarId is not None:
-            for cellDoor in self.cellDoors.values():
+            for cellDoor in list(self.cellDoors.values()):
                 if cellDoor.getAvatarId() == avatarId:
                     return cellDoor
 
         if len(self.cellDoors) == 0:
             return None
 
-        return random.choice(self.cellDoors.values())
+        return random.choice(list(self.cellDoors.values()))
 
     def avatarAlreadyInJail(self):
         pass

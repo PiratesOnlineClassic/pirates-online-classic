@@ -33,9 +33,8 @@ class DistributedInventoryBase:
 
     @classmethod
     def getInventory(cls, inventoryId, callback, timeout = 30):
-        baseRef = __builtins__.get('simbase')
-        if baseRef == None:
-            baseRef = __builtins__.get('base')
+        baseRef = __builtins__.get('base')
+        if baseRef == None or not hasattr(baseRef, 'air'):
             dcm = baseRef.cr
         else:
             dcm = baseRef.air
@@ -44,7 +43,7 @@ class DistributedInventoryBase:
             requestId = None
             callback(inv)
         else:
-            requestId = cls.InvRequestSerialGen.next()
+            requestId = next(cls.InvRequestSerialGen)
             cls.GetInvRequests.setdefault(inventoryId, {})
             cls.GetInvRequests[inventoryId][requestId] = callback
             cls.GetInvRequestId2InvId[requestId] = inventoryId
@@ -128,14 +127,14 @@ class DistributedInventoryBase:
             category = self.doIdsInCategory.setdefault(category, [])
             category.append(doId)
         
-        for (doId, category) in old.items():
+        for (doId, category) in list(old.items()):
             if self.doIds.get(doId) is None:
                 messenger.send('inventoryRemoveDoId-%s-%s' % (self.doId, category), [doId])
                 if category == InventoryCategory.SHIPS:
                     self.removeShip(doId)
         
         mightBeComplete = True
-        for (doId, category) in self.doIds.items():
+        for (doId, category) in list(self.doIds.items()):
             if category == InventoryCategory.WAGERS or category == InventoryCategory.SHIPS:
                 continue
             
@@ -170,7 +169,7 @@ class DistributedInventoryBase:
         return 'inventoryReady-%s' % self.doId
 
     def _checkDoIdsCompletion(self):
-        for (doId, category) in self.doIds.items():
+        for (doId, category) in list(self.doIds.items()):
             if category == InventoryCategory.WAGERS or category == InventoryCategory.SHIPS:
                 continue
             
@@ -192,7 +191,7 @@ class DistributedInventoryBase:
                 for requestId in reqId2callback:
                     DistributedInventoryBase.GetInvRequestId2InvId.pop(requestId)
                 
-                reqIds = reqId2callback.keys()
+                reqIds = list(reqId2callback.keys())
                 reqIds.sort()
                 for reqId in reqIds:
                     callback = reqId2callback[reqId]
@@ -266,10 +265,10 @@ class DistributedInventoryBase:
     
     def computeCategoryCounts(self):
         counts = {}
-        for category in self.doIds.values():
+        for category in list(self.doIds.values()):
             counts[category] = counts.get(category, 0) + 1
         
-        for stackType in self.stacks.keys():
+        for stackType in list(self.stacks.keys()):
             category = InventoryId.getCategory(stackType)
             if category:
                 counts[category] = counts.get(category, 0) + 1
@@ -311,10 +310,10 @@ class DistributedInventoryBase:
             self.temporaryInventory[stackType] -= amount
 
     def getDoIdList(self):
-        return self.doIds.keys()
+        return list(self.doIds.keys())
 
     def getDoIdAndCategoryList(self):
-        return self.doIds.items()
+        return list(self.doIds.items())
 
     def getAccumulator(self, accumulatorType):
         return self.accumulators.get(accumulatorType, 0)

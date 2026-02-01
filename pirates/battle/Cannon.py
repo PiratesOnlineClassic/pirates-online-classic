@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.interval.ProjectileInterval import *
 from direct.distributed.ClockDelta import *
@@ -24,7 +24,7 @@ from pirates.battle import WeaponConstants
 from pirates.battle import WeaponGlobals
 from pirates.battle.WeaponGlobals import *
 from pirates.ship import ShipGlobals
-import CannonGlobals
+from . import CannonGlobals
 import random
 localFireSfxNames = [
     'cball_fire_1.mp3',

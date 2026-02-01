@@ -20,7 +20,7 @@ class DistributedMastOV(DistributedObjectOV.DistributedObjectOV):
         DistributedObjectOV.DistributedObjectOV.disable(self)
 
     def __repr__(self):
-        return `self.doId`
+        return repr(self.doId)
 
     def setShipId(self, val):
         self.shipId = val

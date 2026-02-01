@@ -6,15 +6,15 @@ from direct.tkwidgets import Floater
 from direct.tkwidgets import Slider
 from direct.tkwidgets import VectorWidgets
 from direct.tkwidgets import Valuator
-import tkColorChooser
+import tkinter.colorchooser
 from direct.directtools.DirectUtil import getTkColorString
 import Pmw
 from direct.gui import DirectGuiGlobals as DGG
 from pirates.piratesbase import PLocalizer as PL
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import TODGlobals
-from pandac.PandaModules import *
-from Tkinter import *
+from panda3d.core import *
+from tkinter import *
 
 class TimeOfDayPanel(AppShell):
     appname = 'Time Of Day Panel'
@@ -121,7 +121,7 @@ class TimeOfDayPanel(AppShell):
         self.fogColor['command'] = self.setFogColorVec
         
         def popupFogColorPicker():
-            color = tkColorChooser.askcolor(parent = interior, initialcolor = (0, 0, 0))
+            color = tkinter.colorchooser.askcolor(parent = interior, initialcolor = (0, 0, 0))
             if color[0] is not None:
                 self.fogColor.set((color[0][0], color[0][1], color[0][2]))
 
@@ -148,7 +148,7 @@ class TimeOfDayPanel(AppShell):
         self.ambientColor['command'] = self.setAmbientColorVec
         
         def popupAmbientColorPicker():
-            color = tkColorChooser.askcolor(parent = interior, initialcolor = (0, 0, 0))
+            color = tkinter.colorchooser.askcolor(parent = interior, initialcolor = (0, 0, 0))
             if color[0] is not None:
                 self.ambientColor.set((color[0][0], color[0][1], color[0][2]))
 
@@ -171,7 +171,7 @@ class TimeOfDayPanel(AppShell):
         self.directionalColor['command'] = self.setDirectionalColorVec
         
         def popupDirectionalColorPicker():
-            color = tkColorChooser.askcolor(parent = interior, initialcolor = (0, 0, 0))
+            color = tkinter.colorchooser.askcolor(parent = interior, initialcolor = (0, 0, 0))
             if color[0] is not None:
                 self.directionalColor.set((color[0][0], color[0][1], color[0][2]))
 
@@ -235,17 +235,17 @@ class TimeOfDayPanel(AppShell):
             self.editor.objectMgr.currEditedObjInfo.setTodModified(True)
     
     def printSettings(self):
-        print '# Fog Colors'
-        print 'self.fogColors = ',
+        print('# Fog Colors')
+        print('self.fogColors = ', end=' ')
         pprint.pprint(TODGlobals.FogColors)
-        print '# Fog Ranges'
-        print 'self.fogExps = ',
+        print('# Fog Ranges')
+        print('self.fogExps = ', end=' ')
         pprint.pprint(TODGlobals.FogExps)
-        print '# Ambient Colors'
-        print 'self.ambientLightColors = ',
+        print('# Ambient Colors')
+        print('self.ambientLightColors = ', end=' ')
         pprint.pprint(TODGlobals.AmbientLightColors)
-        print '# Directional Colors'
-        print 'self.directionalLightColors = ',
+        print('# Directional Colors')
+        print('self.directionalLightColors = ', end=' ')
         pprint.pprint(TODGlobals.DirectionalLightColors)
 
 

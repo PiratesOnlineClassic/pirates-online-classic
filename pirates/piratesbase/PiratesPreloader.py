@@ -1,5 +1,5 @@
 from direct.directnotify.DirectNotifyGlobal import giveNotify
-import PiratesGlobals
+from . import PiratesGlobals
 
 class PiratesPreloader(object):
     

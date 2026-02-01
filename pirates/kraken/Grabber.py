@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from otp.otpbase import OTPRender
 from pirates.creature.Creature import Creature
@@ -158,7 +158,7 @@ class Grabber(Creature, TentacleUtils):
             self.idle = random.choice(options)
             self.loop('idle_' + self.idle)
         
-        self.iTask = self.doMethodLater(lerp(5, 20, random.random()), self.chooseIdle, `random.random()` + '-idle')
+        self.iTask = self.doMethodLater(lerp(5, 20, random.random()), self.chooseIdle, repr(random.random()) + '-idle')
     
     def chooseIdle(self, task):
         transInfo = {

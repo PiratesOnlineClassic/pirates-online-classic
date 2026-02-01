@@ -712,8 +712,8 @@ def getLevelUpSkills(rep, level):
 
 
 __skill2Level = {}
-for repData in __levelUpSkills.values():
-    for level, unlocks in repData.items():
+for repData in list(__levelUpSkills.values()):
+    for level, unlocks in list(repData.items()):
         for skillList in unlocks:
             for skillId in skillList:
                 if InventoryType.begin_Unspent <= skillId <= InventoryType.end_Unspent:

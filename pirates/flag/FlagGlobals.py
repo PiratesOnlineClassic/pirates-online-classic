@@ -1,6 +1,7 @@
 from direct.showbase.PythonUtil import *
-from pandac.PandaModules import *
+from panda3d.core import *
 import math
+from otp.otpbase.OTPUtil import Enum
 Shapes = Enum('Default,Square,Cut,TwoCut,                LongTaper,LongTaperCut,ShortTaper,ShortTaperCut')
 ShapeCount = len(Shapes)
 Layouts = Enum('Square,Circle,Hex')

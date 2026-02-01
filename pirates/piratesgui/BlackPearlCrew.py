@@ -5,7 +5,7 @@ import sys
 import datetime
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui.BorderFrame import BorderFrame
@@ -163,7 +163,7 @@ class BlackPearlCrew(DirectFrame):
     def showCrewStatus(self):
         currQuestList = localAvatar.getInventory().getQuestList()
         for item in currQuestList:
-            print item.getQuestId(), len(item.getQuestId())
+            print(item.getQuestId(), len(item.getQuestId()))
             if item.getQuestId()[0] == 'c' and item.getQuestId()[1] == '3':
                 currQuest = item.getQuestId()
 
@@ -184,13 +184,13 @@ class BlackPearlCrew(DirectFrame):
             partInt = -1
         eventInt = self.getEventInt(currQuest)
         if chapterInt < 3:
-            print 'Draw Silouettes'
+            print('Draw Silouettes')
         if chapterInt == 3:
-            print 'During Chapter 3'
+            print('During Chapter 3')
             if sectionInt < 2:
-                print 'Draw Silouettes'
+                print('Draw Silouettes')
             if sectionInt == 2:
-                print 'During Section 2'
+                print('During Section 2')
                 if partInt == 1 and eventInt >= 15 or partInt > 1:
                     self.carverAquired = True
                 if partInt == 2 and eventInt >= 11 or partInt > 2:
@@ -207,7 +207,7 @@ class BlackPearlCrew(DirectFrame):
                 self.hendryAquired = True
                 self.nillAquired = True
                 self.docAquired = True
-                print 'During Section 3'
+                print('During Section 3')
                 if partInt == 1 and eventInt >= 53 or partInt > 1:
                     self.gunnerAquired = True
                 if partInt == 2 and eventInt >= 21 or partInt > 2:
@@ -227,7 +227,7 @@ class BlackPearlCrew(DirectFrame):
                 self.giladogaAquired = True
                 self.johnAquired = True
         if chapterInt > 3:
-            print 'Draw everybody'
+            print('Draw everybody')
             self.carverAquired = True
             self.gordonAquired = True
             self.hendryAquired = True

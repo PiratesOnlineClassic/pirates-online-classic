@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from pirates.distributed import DistributedInteractive
 from pirates.piratesbase import PiratesGlobals
@@ -97,7 +97,7 @@ class DistributedBank(DistributedInteractive.DistributedInteractive):
         self.parentObjId = parentObjId
         
         def putBankOnParent(parentObj, self = self):
-            print 'putBank %s on parent %s' % (self.doId, parentObj)
+            print('putBank %s on parent %s' % (self.doId, parentObj))
             self.parentObj = parentObj
             self.reparentTo(parentObj)
             self.setColorScale(1, 1, 1, 1, 1)

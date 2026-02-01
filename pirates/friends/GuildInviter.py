@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.task.Task import Task
 from direct.fsm import ClassicFSM
 from direct.fsm import State
@@ -459,7 +459,7 @@ class GuildInviter(GuiPanel.GuiPanel):
             self.fsm.request('maybe')
 
     def __handleGuildAcceptInvite(self, avId):
-        print 'Received accept invite event on inviter'
+        print('Received accept invite event on inviter')
         self.fsm.request('yes')
     
     def __handleGuildRejectInvite(self, avId, reason):

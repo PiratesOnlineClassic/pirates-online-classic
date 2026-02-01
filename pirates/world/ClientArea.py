@@ -1,7 +1,7 @@
 import random
 import re
 import types
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.task.Task import Task
 from direct.actor import *
 from direct.showbase.DirectObject import DirectObject
@@ -53,7 +53,7 @@ class GridLODDef:
             low = self.lodNode.attachNewNode('Low')
             self.highLodNode = low
         else:
-            raise StandardError, 'Invalid grid-detail: %s' % gridDetail
+            raise Exception('Invalid grid-detail: %s' % gridDetail)
         low.setLightOff(area.cr.timeOfDayManager.dlight)
         self.children = [
             high,
@@ -198,7 +198,7 @@ class ClientArea(DirectObject):
                     createDefSword = False
                     if allProps:
                         propInfo = random.choice(allProps)
-                        if type(propInfo) == types.ListType:
+                        if type(propInfo) == list:
                             propInfo = propInfo[0]
                         
                         prop = loader.loadModel(propInfo)
@@ -258,7 +258,7 @@ class ClientArea(DirectObject):
                 __builtins__['propAv'] = propAv
             
             createDefaultProp = False
-            if object.has_key('Effect Type') and object['Effect Type'] != None and ObjectEffects.OBJECT_EFFECTS.has_key(object['Effect Type']):
+            if 'Effect Type' in object and object['Effect Type'] != None and object['Effect Type'] in ObjectEffects.OBJECT_EFFECTS:
                 ObjectEffects.OBJECT_EFFECTS[object['Effect Type']](propAv)
             
         if propAv:
@@ -266,10 +266,10 @@ class ClientArea(DirectObject):
             propAv.reparentTo(parent)
             propAv.setPos(object['Pos'])
             propAv.setHpr(object['Hpr'])
-            if object.has_key('Scale'):
+            if 'Scale' in object:
                 propAv.setScale(object['Scale'])
             
-            if object.has_key('Visual') and object['Visual'].has_key('Color'):
+            if 'Visual' in object and 'Color' in object['Visual']:
                 propAv.setColorScale(*object['Visual']['Color'])
             
             if object['Animation Track'] == 'walk' or object['Animation Track'] == 'run':
@@ -282,7 +282,7 @@ class ClientArea(DirectObject):
 
     def createPropAvatarMovement(self, uid, propAv, anim):
         for currData in self.cr.distributedDistrict.worldCreator.fileDicts:
-            if currData['Objects'].has_key(self.uniqueId):
+            if self.uniqueId in currData['Objects']:
                 for currLink in currData['Node Links']:
                     amNode1 = currLink[0] == uid
                     amNode2 = currLink[1] == uid
@@ -292,7 +292,7 @@ class ClientArea(DirectObject):
                         else:
                             path = currData['ObjectIds'][currLink[0]]
                         getDstPos = 'dstPos = currData' + path + '["Pos"]'
-                        exec getDstPos
+                        exec(getDstPos)
                         h0 = propAv.getH()
                         h1 = propAv.getH() + 180
                         p = propAv.getP()
@@ -352,7 +352,7 @@ class ClientArea(DirectObject):
         objectType = self.checkSanityOnType(objData)
         objectCat = self.cr.distributedDistrict.worldCreator.findObjectCategory(objData['Type'])
         loadableType = objectCat == 'PROP_OBJ' or objectCat == 'BUILDING_OBJ' or objectType == 'Cell Portal Area' or objectType == 'Dinghy' or objectType == 'Holiday Object'
-        if not loadableType and not objData.has_key('Objects'):
+        if not loadableType and 'Objects' not in objData:
             return None
         
         if startTime and globalClock.getRealTime() - startTime > 0.05 and delayedLoad:
@@ -365,19 +365,19 @@ class ClientArea(DirectObject):
                 zoneToLoadIn = 0
         elif not self.haveLODs:
             loadObject = True
-        elif self.toBeLoaded.has_key(zoneLevel) and self.toBeLoaded[zoneLevel].has_key(uid):
+        elif zoneLevel in self.toBeLoaded and uid in self.toBeLoaded[zoneLevel]:
             loadObject = True
         
         if objNode == None:
             if loadObject:
                 bObjAnimated = False
-                if objData.has_key('Visual') and objData['Visual'].has_key('Model'):
-                    if objData.has_key('SubObjs'):
+                if 'Visual' in objData and 'Model' in objData['Visual']:
+                    if 'SubObjs' in objData:
                         objNode = self.loadSubModels(objData)
                         objModel = objNode
                         bObjAnimated = True
                     else:
-                        if type(objData['Visual']['Model']) == types.ListType:
+                        if type(objData['Visual']['Model']) == list:
                             modelName = 'models/misc/smiley'
                             objData['Visual']['Color'] = (0.800000011920929, 0, 0, 1.0)
                             objData['Scale'] = VBase3(20.0, 20.0, 20.0)
@@ -395,7 +395,7 @@ class ClientArea(DirectObject):
                             self.notify.warning('Could not load model %s, not creating object.' % modelName)
                             return None
                     
-                    if objData.has_key('DisableCollision') and objData['DisableCollision'] == True:
+                    if 'DisableCollision' in objData and objData['DisableCollision'] == True:
                         collisionNodes = objModel.findAllMatches('**/+CollisionNode')
                         for collisionNode in collisionNodes:
                             collisionNode.removeNode()
@@ -406,7 +406,7 @@ class ClientArea(DirectObject):
                             geomNode.removeNode()
 
                     if objData['Type'] == 'Special':
-                        if objData.has_key('Visual') and objData['Visual'].has_key('Model') and objData['Visual']['Model'] == 'models/misc/smiley':
+                        if 'Visual' in objData and 'Model' in objData['Visual'] and objData['Visual']['Model'] == 'models/misc/smiley':
                             geomNodes = objModel.findAllMatches('**/+GeomNode')
                             for geomNode in geomNodes:
                                 geomNode.removeNode()
@@ -445,7 +445,7 @@ class ClientArea(DirectObject):
                                 objPos = relPos
                                 zoneId = self.getZoneFromXYZ(objPos)
                             
-                            if objData.has_key('Scale'):
+                            if 'Scale' in objData:
                                 xform.setScale(objData['Scale'])
                             
                             if objectType == 'Light_Fixtures' or objectType == 'Tunnel Cap':
@@ -461,13 +461,13 @@ class ClientArea(DirectObject):
                                         lform.flattenLight()
                                         node = lform.getChild(0)
                                         node.reparentTo(self.staticGridRoot)
-                                        if objData.has_key('Holiday'):
+                                        if 'Holiday' in objData:
                                             node.setTag('Holiday', objData['Holiday'])
 
-                            if objData['Visual'].has_key('Color'):
+                            if 'Color' in objData['Visual']:
                                 xform.setColorScale(*objData['Visual']['Color'])
                             
-                            if not self.GridLOD.has_key(zoneId):
+                            if zoneId not in self.GridLOD:
                                 self.GridLOD[zoneId] = GridLODDef(self, zoneId)
                             
                             gldef = self.GridLOD[zoneId]
@@ -549,13 +549,13 @@ class ClientArea(DirectObject):
                             objStolen = True
                             xform.removeNode()
             else:
-                if not self.toBeLoaded.has_key(zoneToLoadIn):
+                if zoneToLoadIn not in self.toBeLoaded:
                     self.toBeLoaded[zoneToLoadIn] = {}
 
                 self.toBeLoaded[zoneToLoadIn][uid] = objData
                 return None
         
-        if (objModel == None or objModel.isEmpty()) and objNode == None and objData.has_key('Visual') and objData['Visual'].has_key('Model'):
+        if (objModel == None or objModel.isEmpty()) and objNode == None and 'Visual' in objData and 'Model' in objData['Visual']:
             if not objStolen:
                 self.notify.warning('ClientArea: No model named %s' % objData['Visual']['Model'])
             
@@ -606,7 +606,7 @@ class ClientArea(DirectObject):
         
         if objModel:
             objModel.reparentTo(objNode)
-            if objData.has_key('Visual') and objData['Visual'].has_key('SignFrame') and objData['Visual']['SignFrame'] != '':
+            if 'Visual' in objData and 'SignFrame' in objData['Visual'] and objData['Visual']['SignFrame'] != '':
                 signLocator = objModel.find('**/sign_locator')
                 if signLocator and not signLocator.isEmpty():
                     signFrameName = objData['Visual']['SignFrame']
@@ -646,10 +646,10 @@ class ClientArea(DirectObject):
 
         objNode.setPos(objData['Pos'])
         objNode.setHpr(objData['Hpr'])
-        if objData.has_key('Scale'):
+        if 'Scale' in objData:
             objNode.setScale(objData['Scale'])
         
-        if objData.has_key('Visual') and objData['Visual'].has_key('Color'):
+        if 'Visual' in objData and 'Color' in objData['Visual']:
             objNode.setColorScale(*objData['Visual']['Color'])
         
         if lowNode and objectType in self.LARGE_OBJECTS_LOW:
@@ -685,7 +685,7 @@ class ClientArea(DirectObject):
             else:
                 self.notify.warning('ClientArea: large object %s has no low lod' % objModel.getName())
         
-        if objData.has_key('Objects'):
+        if 'Objects' in objData:
             self.cr.distributedDistrict.worldCreator.registerPostLoadCall(Functor(self.flattenObjNode, objNode))
         else:
             self.flattenObjNode(objNode)
@@ -835,20 +835,20 @@ class ClientArea(DirectObject):
         else:
             self.loadSubModelLODs(obj, modelName, animName, name)
         subObjs = obj.findAllMatches('**/*' + name + '*')
-        if propData['Visual'].has_key('Scale'):
+        if 'Scale' in propData['Visual']:
             for i in range(len(subObjs)):
                 currSubObj = subObjs[i]
                 currSubObj.setScale(propData['Visual']['Scale'])
 
-        if propData['Visual'].has_key('Color'):
+        if 'Color' in propData['Visual']:
             for i in range(len(subObjs)):
                 currSubObj = subObjs[i]
                 currSubObj.setColorScale(*propData['Visual']['Color'])
 
         animRateRange = [1.0, 1.0]
-        if propData.has_key('SubObjs'):
-            if type(propData['SubObjs']) == types.DictType:
-                subObjsInfo = propData['SubObjs'].values()
+        if 'SubObjs' in propData:
+            if type(propData['SubObjs']) == dict:
+                subObjsInfo = list(propData['SubObjs'].values())
             else:
                 subObjsInfo = propData['SubObjs']
             for currSubObj in subObjsInfo:
@@ -861,7 +861,7 @@ class ClientArea(DirectObject):
                 else:
                     self.loadSubModelLODs(obj, modelName, animName, name)
                 subObjs = obj.findAllMatches('**/*' + name + '*')
-                if currSubObj['Visual'].has_key('Scale'):
+                if 'Scale' in currSubObj['Visual']:
                     if bAnimatedTree:
                         transform = TransformState.makeMat(Mat4(obj.getJointTransform('modelRoot', attachInfo[1], '1')))
                         obj.freezeJoint('modelRoot', attachInfo[1], pos = Vec3(transform.getPos()), hpr = Vec3(transform.getHpr()), scale = currSubObj['Visual']['Scale'])
@@ -870,7 +870,7 @@ class ClientArea(DirectObject):
                             currLOD = subObjs[i]
                             currLOD.setScale(currSubObj['Visual']['Scale'])
 
-                if currSubObj['Visual'].has_key('Color'):
+                if 'Color' in currSubObj['Visual']:
                     for i in range(len(subObjs)):
                         currLOD = subObjs[i]
                         currLOD.setColorScale(*currSubObj['Visual']['Color'])
@@ -926,10 +926,10 @@ class ClientArea(DirectObject):
         propAv.reparentTo(parent)
         propAv.setPos(propData['Pos'])
         propAv.setHpr(propData['Hpr'])
-        if propData.has_key('Scale'):
+        if 'Scale' in propData:
             propAv.setScale(propData['Scale'])
         
-        if propData.has_key('Visual') and propData['Visual'].has_key('Color'):
+        if 'Visual' in propData and 'Color' in propData['Visual']:
             propAv.setColorScale(*propData['Visual']['Color'])
         
         self.smallObjects.append(propAv)
@@ -1015,7 +1015,7 @@ class ClientArea(DirectObject):
                         delObjs = []
                         addObjs = {}
                         for currToLoad in toLoad:
-                            if type(toLoad[currToLoad]) is types.ListType:
+                            if type(toLoad[currToLoad]) is list:
                                 objInfo = toLoad[currToLoad][0]
                                 altParent = toLoad[currToLoad][1]
                             else:
@@ -1029,7 +1029,7 @@ class ClientArea(DirectObject):
                             delObjs.append(currToLoad)
                             childens = objInfo.get('Objects')
                             if childens:
-                                for currChildUid in childens.keys():
+                                for currChildUid in list(childens.keys()):
                                     addObjs[currChildUid] = [
                                         childens[currChildUid], addedObj]
 
@@ -1037,19 +1037,19 @@ class ClientArea(DirectObject):
                                 for currDelObj in delObjs:
                                     del toLoad[currDelObj]
 
-                                for currAddObj in addObjs.keys():
+                                for currAddObj in list(addObjs.keys()):
                                     toLoad[currAddObj] = addObjs[currAddObj]
 
-                                if len(toLoad.keys()) > 0:
+                                if len(list(toLoad.keys())) > 0:
                                     taskMgr.doMethodLater(0.25, self.loadZoneObjects, 'loadZoneObjects' + str(id(self)),
                                                           extraArgs=[currZoneToLoad])
-                                    self.notify.debug('ClientArea: delaying rest of loading, %s objects left...' % len(toLoad.keys()))
+                                    self.notify.debug('ClientArea: delaying rest of loading, %s objects left...' % len(list(toLoad.keys())))
                                 return
 
                         for currDelObj in delObjs:
                             del toLoad[currDelObj]
 
-                        for currAddObj in addObjs.keys():
+                        for currAddObj in list(addObjs.keys()):
                             toLoad[currAddObj] = addObjs[currAddObj]
 
                     del self.toBeLoaded[currZoneToLoad]
@@ -1269,7 +1269,7 @@ class ClientArea(DirectObject):
             self.animControls = AnimControlCollection()
             autoBind(self.node(), self.animControls, 3)
             self.bound = True
-            for i in xrange(self.animControls.getNumAnims()):
+            for i in range(self.animControls.getNumAnims()):
                 self.animControls.getAnim(i).setPlayRate(random.uniform(0.8, 1))
 
         self.animControls.loopAll(1)
@@ -1291,7 +1291,7 @@ class ClientArea(DirectObject):
         self.findAllMatches('**/=Holiday=%s;+s' % (holidayName,)).unstash()
     
     def checkForHolidayObjects(self):
-        for holidayId in base.holidays.keys():
+        for holidayId in list(base.holidays.keys()):
             if base.getHoliday(holidayId):
                 self.unstashHolidayObjects(HolidayGlobals.getHolidayName(holidayId))
             else:

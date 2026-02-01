@@ -1,12 +1,12 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.tkwidgets.AppShell import *
 from direct.tkwidgets import Slider
-from tkFileDialog import askopenfilename
+from tkinter.filedialog import askopenfilename
 import math
 import string
 import Pmw
-from Tkinter import *
+from tkinter import *
 
 
 class WaterPanel(AppShell):
@@ -127,12 +127,12 @@ class WaterPanel(AppShell):
 
     def read_integer(self, input_file):
         s = string.strip(input_file.readline())
-        print s
+        print(s)
         return string.atoi(s)
 
     def read_float(self, input_file):
         s = string.strip(input_file.readline())
-        print s
+        print(s)
         return string.atof(s)
 
     def read_string(self, input_file):
@@ -146,10 +146,10 @@ class WaterPanel(AppShell):
             if region_version == self.region_version:
                 self.region_texture_filename = self.read_string(input_file)
                 self.set_message_bar_text(self.region_texture_message_bar, self.region_texture_filename)
-                print self.region_texture_filename
+                print(self.region_texture_filename)
                 self.region_alpha_texture_filename = self.read_string(input_file)
                 self.set_message_bar_text(self.region_alpha_texture_message_bar, self.region_alpha_texture_filename)
-                print self.region_alpha_texture_filename
+                print(self.region_alpha_texture_filename)
                 self.region_thousands_x_offset = self.read_float(input_file)
                 self.region_hundreds_x_offset = self.read_float(input_file)
                 self.region_ones_x_offset = self.read_float(input_file)
@@ -201,7 +201,7 @@ class WaterPanel(AppShell):
                 self.set_message_bar_text(self.region_file_path_message_bar, filename)
                 state = True
             else:
-                print 'ERROR: incorrect version number'
+                print('ERROR: incorrect version number')
             input_file.close()
 
         return state
@@ -527,9 +527,9 @@ class WaterPanel(AppShell):
         self.texture_sliders_array[0].set(base_ten.thousands)
         self.texture_sliders_array[1].set(base_ten.hundreds)
         self.texture_sliders_array[2].set(base_ten.ones)
-        print self.texture_sliders_array[0].get()
-        print self.texture_sliders_array[1].get()
-        print self.texture_sliders_array[2].get()
+        print(self.texture_sliders_array[0].get())
+        print(self.texture_sliders_array[1].get())
+        print(self.texture_sliders_array[2].get())
         base_ten = BaseTen(seapatch.map_y_origin)
         self.texture_sliders_array[3].set(base_ten.thousands)
         self.texture_sliders_array[4].set(base_ten.hundreds)
@@ -592,7 +592,7 @@ class WaterPanel(AppShell):
             self.save_region(output_file)
             self.set_message_bar_text(self.region_file_path_message_bar, filename)
         else:
-            print 'ERROR: texture(s) not selected'
+            print('ERROR: texture(s) not selected')
 
     def set_texture(self, filename):
         if filename != None:
@@ -617,7 +617,7 @@ class WaterPanel(AppShell):
         if not filename:
             return None
         else:
-            print filename
+            print(filename)
             self.set_texture(filename)
 
     def set_alpha_texture(self, filename):
@@ -643,7 +643,7 @@ class WaterPanel(AppShell):
         if not filename:
             return None
         else:
-            print filename
+            print(filename)
             self.set_alpha_texture(filename)
 
     def set_shader(self, filename):
@@ -666,7 +666,7 @@ class WaterPanel(AppShell):
         if not filename:
             return None
         else:
-            print filename
+            print(filename)
             self.set_shader(filename)
 
     def toggleWF(self):
@@ -704,7 +704,7 @@ class WaterPanel(AppShell):
         kw['min'] = min
         kw['resolution'] = resolution
         kw['numDigits'] = numDigits
-        widget = apply(Floater.Floater, (parent,), kw)
+        widget = Floater.Floater(*(parent,), **kw)
         widget['command'] = command
         widget.pack(fill=X)
         self.bind(widget, balloonHelp)
@@ -714,7 +714,7 @@ class WaterPanel(AppShell):
     def createAngleDial(self, parent, category, text, balloonHelp, command=None, **kw):
         kw['text'] = text
         kw['style'] = 'mini'
-        widget = apply(Dial.AngleDial, (parent,), kw)
+        widget = Dial.AngleDial(*(parent,), **kw)
         widget['command'] = command
         widget.pack(fill=X)
         self.bind(widget, balloonHelp)
@@ -728,7 +728,7 @@ class WaterPanel(AppShell):
         kw['max'] = max
         kw['resolution'] = resolution
         kw['value'] = default
-        widget = apply(Slider.Slider, (parent,), kw)
+        widget = Slider.Slider(*(parent,), **kw)
         widget.id = id
         widget['command'] = command
         widget['commandData'] = [
@@ -748,7 +748,7 @@ class WaterPanel(AppShell):
 
     def createVector2Entry(self, parent, category, text, balloonHelp, command=None, **kw):
         kw['text'] = text
-        widget = apply(VectorWidgets.Vector2Entry, (parent,), kw)
+        widget = VectorWidgets.Vector2Entry(*(parent,), **kw)
         widget['command'] = command
         widget.pack(fill=X)
         self.bind(widget, balloonHelp)
@@ -757,7 +757,7 @@ class WaterPanel(AppShell):
 
     def createVector3Entry(self, parent, category, text, balloonHelp, command=None, **kw):
         kw['text'] = text
-        widget = apply(VectorWidgets.Vector3Entry, (parent,), kw)
+        widget = VectorWidgets.Vector3Entry(*(parent,), **kw)
         widget['command'] = command
         widget.pack(fill=X)
         self.bind(widget, balloonHelp)
@@ -766,7 +766,7 @@ class WaterPanel(AppShell):
 
     def createColorEntry(self, parent, category, text, balloonHelp, command=None, **kw):
         kw['text'] = text
-        widget = apply(VectorWidgets.ColorEntry, (parent,), kw)
+        widget = VectorWidgets.ColorEntry(*(parent,), **kw)
         widget['command'] = command
         widget.pack(fill=X)
         self.bind(widget, balloonHelp)
@@ -841,7 +841,7 @@ class BaseTen:
         self.thousands = thousands
         self.hundreds = hundreds
         self.ones = value
-        print original_value, thousands, hundreds, value
+        print(original_value, thousands, hundreds, value)
 
     def mod(self, numerator, denominator):
         return math.fmod(numerator, denominator)

@@ -25,7 +25,7 @@ class DistrictTrackerAI:
             'districtName': self.district.getName(),
             'population': self.populationTracker.getPopulation(),
             'populationLimits': self.populationTracker.getPopLimits(),
-            'holidays': self.newsManager.holidayList.keys()
+            'holidays': list(self.newsManager.holidayList.keys())
         }
 
         self.notify.info('Sending District update status to UberDOG')

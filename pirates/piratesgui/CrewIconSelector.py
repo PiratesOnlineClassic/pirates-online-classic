@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from otp.otpbase import OTPGlobals
 from pirates.piratesgui import PDialog
@@ -87,7 +87,7 @@ class CrewIconSelector(GuiPanel.GuiPanel):
         rowSpot = 0
         colSpot = 0
         counter = 0
-        for (loopItr, iconFile) in CREW_ICONS.iteritems():
+        for (loopItr, iconFile) in CREW_ICONS.items():
             setKey = loopItr
             pic_name = iconFile
             tex = self.card.find('**/%s' % pic_name)

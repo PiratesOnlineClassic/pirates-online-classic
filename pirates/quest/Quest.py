@@ -1,5 +1,5 @@
 from direct.directnotify import DirectNotifyGlobal
-from direct.showbase.PythonUtil import POD, makeTuple
+from otp.otpbase.OTPUtil import POD, makeTuple
 from direct.task.Task import Task
 from pirates.piratesbase import PLocalizer
 from pirates.quest import QuestDB, QuestReward, QuestTaskDNA
@@ -233,7 +233,7 @@ class Quest(POD):
 
         returnGiverIds = self.questDNA.getReturnGiverIds()
         if returnGiverIds:
-            npcNames = map(lambda id: PLocalizer.NPCNames.get(id, PLocalizer.DefaultTownfolkName), returnGiverIds)
+            npcNames = [PLocalizer.NPCNames.get(id, PLocalizer.DefaultTownfolkName) for id in returnGiverIds]
             if len(returnGiverIds) == 1:
                 if choice and not choiceComplete:
                     return PLocalizer.SingleChoiceQuestReturnId % {

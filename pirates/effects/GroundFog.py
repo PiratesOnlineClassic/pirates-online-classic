@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase.DirectObject import *
 from direct.interval.IntervalGlobal import *
 from direct.actor import Actor
@@ -6,7 +6,7 @@ from direct.particles import ParticleEffect
 from direct.particles import Particles
 from direct.particles import ForceGroup
 from pirates.piratesbase import PiratesGlobals
-from EffectController import EffectController
+from .EffectController import EffectController
 from pirates.piratesgui.GameOptions import Options
 import random
 

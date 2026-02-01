@@ -1,10 +1,10 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from direct.showbase import DirectObject
 from direct.task import Task
 from pirates.piratesbase import PiratesGlobals
-import InteractiveBase
+from . import InteractiveBase
 
 class InteractionManager(DirectObject.DirectObject):
     notify = DirectNotifyGlobal.directNotify.newCategory('InteractionManager')

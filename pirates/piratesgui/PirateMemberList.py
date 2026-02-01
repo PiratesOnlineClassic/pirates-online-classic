@@ -1,6 +1,6 @@
 from direct.showbase.ShowBaseGlobal import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.fsm import StateData
 from otp.otpbase import OTPGlobals
 from pirates.piratesbase import PLocalizer
@@ -12,7 +12,7 @@ from otp.otpbase import OTPGlobals
 from otp.friends.FriendInfo import FriendInfo
 from pirates.piratesbase import Freebooter
 from pirates.band import BandConstance
-import GuiButton
+from . import GuiButton
 from direct.showbase.DirectObject import *
 import copy
 MODE_FRIEND_AVATAR = 0

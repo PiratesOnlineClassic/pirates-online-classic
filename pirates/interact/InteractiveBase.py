@@ -1,7 +1,7 @@
 import types
 from direct.fsm import FSM
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui import NewTutorialPanel
@@ -110,7 +110,7 @@ class InteractiveBase(FSM.FSM):
                 self.proximityCollisionNodePath.stash()
         elif allowInteract or isTarget:
             self.setupProximitySphere(parent)
-            if isinstance(sphereScale, types.TupleType):
+            if isinstance(sphereScale, tuple):
                 self.proximityCollisionNodePath.setScale(*sphereScale)
             else:
                 self.proximityCollisionNodePath.setScale(sphereScale)

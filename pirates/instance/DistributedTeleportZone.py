@@ -1,5 +1,5 @@
 from pirates.instance import DistributedInstanceBase
-from pandac.PandaModules import NodePath
+from panda3d.core import NodePath
 
 class DistributedTeleportZone(DistributedInstanceBase.DistributedInstanceBase, NodePath):
     

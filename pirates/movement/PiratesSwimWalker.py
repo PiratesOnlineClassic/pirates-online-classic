@@ -1,6 +1,6 @@
 from direct.showbase.InputStateGlobal import inputState
 from direct.controls.SwimWalker import SwimWalker
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.task.Task import Task
 
 class PiratesSwimWalker(SwimWalker):

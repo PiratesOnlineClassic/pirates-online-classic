@@ -1,7 +1,7 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed.DistributedObject import DistributedObject
-import FlagGlobals
-from Flag import Flag
+from . import FlagGlobals
+from .Flag import Flag
 
 class DistributedFlag(DistributedObject, Flag):
     notify = directNotify.newCategory('DistributedFlag')
@@ -11,12 +11,12 @@ class DistributedFlag(DistributedObject, Flag):
         Flag.__init__(self, 'flag')
 
     def setDNAString(self, dnaStr):
-        self.notify.debug('setDNAString: ' + `dnaStr`)
+        self.notify.debug('setDNAString: ' + repr(dnaStr))
         Flag.setDNAString(self, dnaStr)
         self.flatten()
     
     def d_requestDNAString(self, dnaStr):
-        self.notify.debug('d_requestDNAString: ' + `dnaStr`)
+        self.notify.debug('d_requestDNAString: ' + repr(dnaStr))
         self.sendUpdate('requestDNAString', [dnaStr])
 
     def announceGenerate(self):

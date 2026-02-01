@@ -136,7 +136,7 @@ class GridInterestHandler(object):
 
         # determine how many zones we want to see ahead of us based on
         # the cartesian grid radius set by constants for the parent object
-        for x in xrange(1, self.parentObj.gridRadius + 1):
+        for x in range(1, self.parentObj.gridRadius + 1):
             concentricZones = set(self.parentObj.getConcentricZones(zoneId, x))
             newZones.update(concentricZones)
 

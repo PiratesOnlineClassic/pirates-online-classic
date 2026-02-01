@@ -1,4 +1,4 @@
-from pandac.PandaModules import Vec4
+from panda3d.core import Vec4
 import direct.interval.IntervalGlobal as IG
 from direct.fsm.StatePush import StateVar
 from pirates.ship.DistributedShip import DistributedShip
@@ -64,7 +64,7 @@ class PlayerShip(DistributedShip):
             self.checkAnchor = None
         
         self._repairSpotMgr.destroy()
-        for ival in self._repairSpotIvals.itervalues():
+        for ival in self._repairSpotIvals.values():
             ival.pause()
         
         del self._repairSpotIvals
@@ -116,13 +116,13 @@ class PlayerShip(DistributedShip):
         
         if team:
             color = PVPGlobals.getSiegeColor(team)
-            for d in self.sails.itervalues():
-                for (sail, distSail) in d.itervalues():
+            for d in self.sails.values():
+                for (sail, distSail) in d.values():
                     sail.sailGeom.setColorScale(color)
 
         else:
-            for d in self.sails.itervalues():
-                for (sail, distSail) in d.itervalues():
+            for d in self.sails.values():
+                for (sail, distSail) in d.values():
                     sail.sailGeom.clearColorScale()
     
     def _doSiegeAndPVPTeamColors(self):
@@ -140,13 +140,13 @@ class PlayerShip(DistributedShip):
         
         if team:
             color = PVPGlobals.getTeamColor(team)
-            for d in self.sails.itervalues():
-                for (sail, distSail) in d.itervalues():
+            for d in self.sails.values():
+                for (sail, distSail) in d.values():
                     sail.sailGeom.setColorScale(color)
 
         else:
-            for d in self.sails.itervalues():
-                for (sail, distSail) in d.itervalues():
+            for d in self.sails.values():
+                for (sail, distSail) in d.values():
                     sail.sailGeom.clearColorScale()
 
     def getWheelInUseSV(self):
@@ -277,7 +277,7 @@ class PlayerShip(DistributedShip):
             self._repairSpotWoodPiles[locName].setPosHpr(locator.getPos(), locator.getHpr())
 
     def _removeRepairSpotModels(self):
-        for woodPile in self._repairSpotWoodPiles.itervalues():
+        for woodPile in self._repairSpotWoodPiles.values():
             woodPile.detachNode()
         
         self._repairSpotWoodPiles = {}

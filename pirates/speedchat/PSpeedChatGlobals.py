@@ -1,1 +1,1 @@
-from PSpeedChatQuestTerminal import PSpeedChatQuestMsgEvent
+from .PSpeedChatQuestTerminal import PSpeedChatQuestMsgEvent

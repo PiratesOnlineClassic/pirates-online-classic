@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
@@ -33,7 +33,7 @@ class BarChart(DirectFrame):
         
         meterWidth = meter['frameSize'][1] - meter['frameSize'][0]
         percentFilled = float(meter['value']) / float(meter['range'])
-        print percentFilled
+        print(percentFilled)
         newTextPos = meterWidth * percentFilled + 0.18
         meter['text_pos'] = (newTextPos, 0)
         label = DirectLabel(parent = meter, relief = None, text = data[0], text_scale = PiratesGuiGlobals.TextScaleSmall, text_align = TextNode.ALeft, text_pos = (0, 0), text_fg = PiratesGuiGlobals.TextFG2)

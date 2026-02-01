@@ -4,10 +4,9 @@ import sys
 from panda3d.core import *
 
 from direct.distributed.PyDatagram import PyDatagram
-from direct.distributed.MsgTypes import *
+from otp.distributed.MsgTypes import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.distributed.AstronInternalRepository import AstronInternalRepository
-
+from otp.distributed.AstronInternalRepository import AstronInternalRepository
 from otp.distributed.OtpDoGlobals import *
 
 

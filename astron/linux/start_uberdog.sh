@@ -20,6 +20,6 @@ echo "Astron IP: $ASTRON_IP"
 echo "Event Logger IP: $EVENTLOGGER_IP"
 echo "==============================="
 
-python -m pirates.uberdog.ServiceStart --base-channel $BASE_CHANNEL \
+python3 -m pirates.uberdog.ServiceStart --base-channel $BASE_CHANNEL \
                  --max-channels $MAX_CHANNELS --stateserver $STATESERVER \
                  --astron-ip $ASTRON_IP --eventlogger-ip $EVENTLOGGER_IP

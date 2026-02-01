@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.CutthroatIsland
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Locator Links':
     [['1183049600.0sdnaik1', '1183049856.0sdnaik1', 'Bi-directional'],

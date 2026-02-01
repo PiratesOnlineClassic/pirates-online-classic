@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesgui.BorderFrame import BorderFrame
 from pirates.piratesbase import PLocalizer
 
@@ -118,7 +118,7 @@ class TabBar(DirectFrame):
         self.refreshTabs()
 
     def destroy(self):
-        for tab in self.tabs.itervalues():
+        for tab in self.tabs.values():
             tab.destroy()
 
         self.bParent = None
@@ -146,7 +146,7 @@ class TabBar(DirectFrame):
         try:
             self.activeIndex = self.tabOrder.index(name)
             self.refreshTabs()
-            for tab in self.tabs.itervalues():
+            for tab in self.tabs.values():
                 tab['selected'] = False
 
             activeName = self.tabOrder[self.activeIndex]
@@ -181,10 +181,10 @@ class TabBar(DirectFrame):
 
     def stash(self):
         DirectFrame.stash(self)
-        for tab in self.tabs.itervalues():
+        for tab in self.tabs.values():
             tab.stash()
 
     def unstash(self):
         DirectFrame.unstash(self)
-        for tab in self.tabs.itervalues():
+        for tab in self.tabs.values():
             tab.unstash()

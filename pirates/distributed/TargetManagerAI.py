@@ -212,7 +212,7 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
             return
 
         projectiles = self.projectiles.get(avatarId)
-        for index in xrange(len(projectiles)):
+        for index in range(len(projectiles)):
             projectile = projectiles[index]
 
             if projectile[0] != skillId or projectile[1] != ammoSkillId:

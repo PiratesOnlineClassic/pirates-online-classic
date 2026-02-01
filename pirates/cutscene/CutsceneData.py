@@ -1,4 +1,4 @@
-from direct.showbase.PythonUtil import POD
+from otp.otpbase.OTPUtil import POD
 from pirates.cutscene.CutsceneActor import *
 from pirates.pirate.AvatarTypes import *
 from pirates.ship import ShipGlobals
@@ -579,7 +579,7 @@ CutsceneSubtitles = {
     'text': PLocalizer.CutSubtitle6_1__8
   }]
 }
-CutsceneIds = CutsceneFilenames.keys()
+CutsceneIds = list(CutsceneFilenames.keys())
 CutsceneIds.sort()
 PRELOADED_CUTSCENE_STAGE1 = [
     Cutscene1_1_2]

@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesgui import InventoryPage
 from pirates.piratesgui import QuestItemGui
 from pirates.piratesbase import PLocalizer
@@ -10,7 +10,7 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.uberdog.UberDogGlobals import *
 from pirates.piratesgui import BorderFrame
 from pirates.uberdog import DistributedInventoryBase
-import GuiButton
+from . import GuiButton
 from pirates.quest.QuestDetailGUI import QuestDetailBase
 from pirates.piratesgui import PDialog
 from otp.otpbase import OTPGlobals
@@ -105,7 +105,7 @@ class QuestPage(InventoryPage.InventoryPage):
             self.titleList.showTracked(questId)
             quest = localAvatar.getQuestById(questId)
             if quest is None:
-                print 'Tracked quest not found on avatar!\n  Tracked quest: %s\n  Current quests: %s' % (questId, map(lambda q: q.getQuestId(), localAvatar.getQuests()))
+                print('Tracked quest not found on avatar!\n  Tracked quest: %s\n  Current quests: %s' % (questId, [q.getQuestId() for q in localAvatar.getQuests()]))
                 self.trackedQuestLabel.hide()
             else:
                 text = quest.getStatusText()
@@ -126,7 +126,7 @@ class QuestPage(InventoryPage.InventoryPage):
         self.updateQuestTitles(quest, newQuest = True)
 
     def updateQuestTitles(self, quest = None, newQuest = False):
-        questIds = map(lambda q: q.getQuestId(), localAvatar.getQuests())
+        questIds = [q.getQuestId() for q in localAvatar.getQuests()]
         self.titleList.update(questIds, quest, newQuest)
         self.titleList.showTracked(localAvatar.activeQuestId)
         self.updateTrackedQuestLabel(localAvatar.activeQuestId)

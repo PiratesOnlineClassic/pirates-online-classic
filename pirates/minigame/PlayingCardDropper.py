@@ -1,9 +1,9 @@
 import random
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.task import Task
 from pirates.piratesbase import PLocalizer
-import PlayingCardGlobals
+from . import PlayingCardGlobals
 chanceOfHigherCard = 50
 
 def dropTier0():

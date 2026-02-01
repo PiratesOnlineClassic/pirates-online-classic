@@ -344,7 +344,7 @@ class BattleManagerBase:
             aMojo,
             attackerEffects[4]]
         if not target:
-            for i in xrange(len(targetEffects)):
+            for i in range(len(targetEffects)):
                 targetEffects[i] = 0
 
         targetEffects[0] = max(-30000, int(targetEffects[0]))

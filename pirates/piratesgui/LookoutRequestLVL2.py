@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui.ListFrame import ListFrame
@@ -190,7 +190,7 @@ class LookoutRequestLVL2(DirectFrame):
         
         def optionsReceived(options):
             if options:
-                optionKeys = options.keys()
+                optionKeys = list(options.keys())
                 for currOption in optionKeys:
                     if options[currOption][0] == PiratesGuiGlobals.UIItemType_Hidden or options.get('execute'):
                         continue
@@ -269,7 +269,7 @@ class LookoutRequestLVL2(DirectFrame):
             
         else:
             for currItem in self.activityListItems.items:
-                print 'checking item with value %s' % currItem.value
+                print('checking item with value %s' % currItem.value)
                 if currItem.value == itemValue:
                     itemToSelect = currItem
                     break

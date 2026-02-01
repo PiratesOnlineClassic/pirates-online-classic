@@ -374,7 +374,7 @@ class QuestContainer(DirectObject.DirectObject):
         for i in range(0, indent):
             text = ' ' + text
 
-        print text
+        print(text)
 
     def printAll(self, indent = 0):
         self.printLine(indent, 'Name: %s Title: %s' % (self.name, self.title))

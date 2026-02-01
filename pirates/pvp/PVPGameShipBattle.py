@@ -102,7 +102,7 @@ class PVPGameShipBattle(PVPGameBase):
                 'Score': scores[currIdx]})
         
         self.scoreList.sort(self.sortScores)
-        print 'got new score list %s' % self.scoreList
+        print('got new score list %s' % self.scoreList)
         messenger.send(self.getItemChangeMsg())
 
     def sortScores(self, item1, item2):

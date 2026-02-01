@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.DriftwoodIsland
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Interact Links':
     [['1175533440.0dxschafe', '1174930816.0dxschafe', 'Bi-directional'],

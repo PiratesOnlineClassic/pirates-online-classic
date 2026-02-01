@@ -1,5 +1,5 @@
 import math
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from pirates.distributed import DistributedInteractive

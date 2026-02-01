@@ -1,7 +1,7 @@
 import math
 import time
 import os
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.gui.DirectGui import *
 from direct.task.Task import Task
 from direct.directnotify.DirectNotifyGlobal import directNotify
@@ -35,7 +35,7 @@ from pirates.pirate import HumanDNA
 APPROVED = 1
 DENIED = 2
 
-class AvatarChooser(DirectObject, StateData):
+class AvatarChooser(StateData, DirectObject):
     notify = directNotify.newCategory('AvatarChooser')
     
     def __init__(self, parentFSM, doneEvent):
@@ -51,7 +51,7 @@ class AvatarChooser(DirectObject, StateData):
         self.subFrames = {}
         self.subAvButtons = {}
         self.handleDialogOnScreen = 0
-        self.subIds = base.cr.avList.keys()
+        self.subIds = list(base.cr.avList.keys())
         if base.cr.isPaid() == 1:
             for subId in base.cr.avList:
                 avSet = base.cr.avList[subId]
@@ -272,23 +272,23 @@ class AvatarChooser(DirectObject, StateData):
 
     def __createAvatarButtons(self):
         subCard = loader.loadModel('models/gui/toplevel_gui')
-        for subFrame in self.subFrames.values():
+        for subFrame in list(self.subFrames.values()):
             subFrame.destroy()
         
-        for buttonList in self.subAvButtons.values():
+        for buttonList in list(self.subAvButtons.values()):
             for button in buttonList:
                 button.destroy()
         
         self.subFrames = {}
         self.subAvButtons = {}
         i = 0
-        for (subId, avData) in base.cr.avList.items():
+        for (subId, avData) in list(base.cr.avList.items()):
             subFrame = DirectFrame(parent = self.avatarListFrame, relief = None, pos = (0, 0, -0.3))
             self.subFrames[subId] = subFrame
             avatarButtons = []
             self.subAvButtons[subId] = avatarButtons
             spacing = -0.1
-            for (av, slot) in zip(avData, range(len(avData))):
+            for (av, slot) in zip(avData, list(range(len(avData)))):
                 x = 0.0
                 imageColor = Vec4(1, 1, 1, 1)
                 textScale = 0.045
@@ -367,10 +367,10 @@ class AvatarChooser(DirectObject, StateData):
         self.todManager.delete()
         del self.todManager
         cleanupDialog('globalDialog')
-        for subFrame in self.subFrames.values():
+        for subFrame in list(self.subFrames.values()):
             subFrame.destroy()
         
-        for buttonList in self.subAvButtons.values():
+        for buttonList in list(self.subAvButtons.values()):
             for button in buttonList:
                 button.destroy()
 
@@ -738,7 +738,7 @@ class AvatarChooser(DirectObject, StateData):
     def updateAvatarList(self):
         self.__hideHighlightedAvatar()
         self.__createAvatarButtons()
-        self.subIds = base.cr.avList.keys()
+        self.subIds = list(base.cr.avList.keys())
         self.subIds.sort()
         if self.currentSubId not in self.subIds:
             self.notify.warning('subId %s is no longer in family: %s' % (self.currentSubIndex, self.subIds))
@@ -786,7 +786,7 @@ class AvatarChooser(DirectObject, StateData):
     
     def blockInput(self):
         color = Vec4(0.7, 0.7, 0.7, 0.7)
-        for subButtons in self.subAvButtons.values():
+        for subButtons in list(self.subAvButtons.values()):
             for button in subButtons:
                 button['state'] = DGG.DISABLED
                 button.setColorScale(color)
@@ -813,7 +813,7 @@ class AvatarChooser(DirectObject, StateData):
     def allowInput(self):
         (subId, slot) = self.choice
         potAv = base.cr.avList[subId][slot]
-        for subButtons in self.subAvButtons.values():
+        for subButtons in list(self.subAvButtons.values()):
             for button in subButtons:
                 if button['text']:
                     button['state'] = DGG.NORMAL
@@ -974,12 +974,12 @@ class AvatarChooser(DirectObject, StateData):
         self.currentSubId = self.subIds[self.currentSubIndex]
         subLabelText = '\x01white\x01%s\x02' % base.cr.launcher.getPlayToken()
         self.subLabel['text'] = subLabelText
-        for frame in self.subFrames.values():
+        for frame in list(self.subFrames.values()):
             frame.hide()
         
         self.subFrames[self.currentSubId].show()
         anyAvatars = False
-        for avList in base.cr.avList.values():
+        for avList in list(base.cr.avList.values()):
             for av in avList:
                 if av not in (OTPGlobals.AvatarSlotUnavailable, OTPGlobals.AvatarSlotAvailable, OTPGlobals.AvatarPendingCreate):
                     anyAvatars = True

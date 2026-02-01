@@ -89,7 +89,7 @@ class SpawnNodeBase:
         # Check for holiday requirements
         holidayName = self.objectData.get('Holiday', None)
         if holidayName:
-            for holidayId, name in HolidayGlobals.holidayNames.items():
+            for holidayId, name in list(HolidayGlobals.holidayNames.items()):
                 if name == holidayName:
                     return self.air.newsManager.isHolidayActive(holidayId)
             return False
@@ -388,7 +388,7 @@ class EnemySpawnNode(SpawnNodeBase):
         return avatarType
 
     def setNPCAttributes(self, npc):
-        weapons = EnemyGlobals.getEnemyWeapons(npc.getAvatarType(), npc.getLevel()).keys()
+        weapons = list(EnemyGlobals.getEnemyWeapons(npc.getAvatarType(), npc.getLevel()).keys())
 
         animSet = self.objectData.get('AnimSet', '')
         drawnAnimSets = ['attention', 'bayonet_drill']

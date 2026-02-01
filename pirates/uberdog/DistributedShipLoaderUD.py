@@ -1,7 +1,7 @@
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm.FSM import FSM
-from direct.distributed.MsgTypes import *
+from otp.distributed.MsgTypes import *
 from direct.distributed.PyDatagram import PyDatagram
 
 from pirates.ship import ShipGlobals
@@ -113,7 +113,7 @@ class CreateShipFSM(ShipLoaderOperationFSM):
         hullDNA = HullDNA()
         hullDNA.setShipClass(self.modelClass)
         hullDNA.setBaseTeam(PiratesGlobals.PLAYER_TEAM)
-        for key, value in self.hullConfig.items():
+        for key, value in list(self.hullConfig.items()):
             if not hasattr(hullDNA, key):
                 continue
 
@@ -123,7 +123,7 @@ class CreateShipFSM(ShipLoaderOperationFSM):
             getattr(hullDNA, key)(value)
 
         dclass = self.air.dclassesByName['DistributedHullDNA']
-        for fieldIndex in xrange(dclass.getNumFields()):
+        for fieldIndex in range(dclass.getNumFields()):
             field = dclass.getInheritedField(fieldIndex)
             if not field.asAtomicField():
                 continue
@@ -170,7 +170,7 @@ class CreateShipFSM(ShipLoaderOperationFSM):
             mastDNA.setShipClass(self.modelClass)
             mastDNA.setBaseTeam(PiratesGlobals.PLAYER_TEAM)
             mastDNA.setMastType(mastType)
-            for key, value in mastConfig.items():
+            for key, value in list(mastConfig.items()):
                 if not hasattr(mastDNA, key):
                     continue
 
@@ -180,7 +180,7 @@ class CreateShipFSM(ShipLoaderOperationFSM):
                 getattr(mastDNA, key)(value)
 
             dclass = self.air.dclassesByName['DistributedMastDNA']
-            for fieldIndex in xrange(dclass.getNumFields()):
+            for fieldIndex in range(dclass.getNumFields()):
                 field = dclass.getInheritedField(fieldIndex)
                 if not field.asAtomicField():
                     continue

@@ -5,7 +5,7 @@ from direct.directnotify.DirectNotifyGlobal import *
 
 from pirates.web.RPCServiceUD import RPCServiceUD
 
-from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
+from xmlrpc.server import SimpleXMLRPCRequestHandler
 
 
 class PiratesRPCHandler(SimpleXMLRPCRequestHandler):

@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.task.Task import Task
 from direct.interval.IntervalGlobal import *
 from pirates.piratesgui import PiratesGuiGlobals
@@ -51,8 +51,8 @@ class TitlePanel(DirectFrame):
             self.expTarget = TitleGlobals.getBreakpoints(self.titleId)[min(self.rank + 1, self.maxRank)]
             self.expBase = TitleGlobals.getBreakpoints(self.titleId)[self.rank]
         else:
-            print 'No Inventory'
-        print 'TitleID ', self.titleId, ' has ', self.expPoints, ' exp'
+            print('No Inventory')
+        print('TitleID ', self.titleId, ' has ', self.expPoints, ' exp')
         if self.titleNameFrame:
             self.titleNameFrame['text'] = TitleGlobals.getTitleName(self.titleId, self.expPoints)
         
@@ -111,9 +111,9 @@ class TitlePanel(DirectFrame):
         DirectFrame.destroy(self)
     
     def landToggle(self, notifyParent = 1):
-        print 'Toggling land'
+        print('Toggling land')
         self.landActive = 1 - self.landActive
-        print 'Land', self.panelIndex, ' is ', self.landActive
+        print('Land', self.panelIndex, ' is ', self.landActive)
         self.landButton['image'] = [
             self.iconInvisible,
             self.iconVisible][self.landActive]
@@ -121,9 +121,9 @@ class TitlePanel(DirectFrame):
             self.titlesPage.setLandActive(self.panelIndex, self.landActive)
 
     def seaToggle(self, notifyParent = 1):
-        print 'Toggling sea'
+        print('Toggling sea')
         self.seaActive = 1 - self.seaActive
-        print 'Sea ', self.seaActive
+        print('Sea ', self.seaActive)
         self.seaButton['image'] = [
             self.iconInvisible,
             self.iconVisible][self.seaActive]
@@ -193,7 +193,7 @@ class TitlesPage(InventoryPage.InventoryPage):
 
     def loadGui(self):
         count = 0
-        for key in TitleGlobals.TitlesDict.keys():
+        for key in list(TitleGlobals.TitlesDict.keys()):
             yPos = 0.01 - count * 0.2
             panel = TitlePanel(self.dummyFrame, key, (0, 0, yPos), count, self)
             self.titles.append(panel)

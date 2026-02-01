@@ -1,6 +1,6 @@
 import random
 import types
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed import DistributedNode
 from direct.interval.IntervalGlobal import *
 from pirates.uberdog.UberDogGlobals import InventoryType
@@ -110,9 +110,9 @@ class DistributedTargetableObject(DistributedNode.DistributedNode):
                     sfxs = getMissSfxFunc()
                 
             if sfxs:
-                if type(sfxs) == types.DictType:
+                if type(sfxs) == dict:
                     soundFx = sfxs.get(ammoSkillId)
-                elif type(sfxs) == types.TupleType:
+                elif type(sfxs) == tuple:
                     soundFx = random.choice(sfxs)
                 else:
                     soundFx = sfxs

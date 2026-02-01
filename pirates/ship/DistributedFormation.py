@@ -1,6 +1,6 @@
 from direct.distributed import DistributedSmoothNode
 from direct.fsm import FSM
-from pandac.PandaModules import NodePath
+from panda3d.core import NodePath
 from direct.showbase.ShowBaseGlobal import *
 
 class DistributedFormation(DistributedSmoothNode.DistributedSmoothNode, FSM.FSM):
@@ -23,7 +23,7 @@ class DistributedFormation(DistributedSmoothNode.DistributedSmoothNode, FSM.FSM)
         self.stopSmooth()
     
     def setState(self, stateName, timeStamp):
-        print 'DistributedFormation.setState %s' % stateName
+        print('DistributedFormation.setState %s' % stateName)
         self.request(stateName)
     
     def enterAIPatrol(self):

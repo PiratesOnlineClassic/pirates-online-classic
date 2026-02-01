@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase import DirectObject
 from direct.interval.IntervalGlobal import *
 from pirates.piratesbase import PLocalizer
@@ -100,7 +100,7 @@ class Subtitler(DirectObject.DirectObject):
             self.advancePageNumber()
             callback(*args)
 
-        for i in xrange(len(options)):
+        for i in range(len(options)):
             optionButton = GuiButton(parent = base.a2dBottomRight,
                                      pos = (-0.15 - (len(options) - 1 - i) * 0.25, 0, 0.095),
                                      text = str(options[i]),

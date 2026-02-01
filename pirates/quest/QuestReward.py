@@ -1,5 +1,5 @@
 import random
-from direct.showbase.PythonUtil import POD, invertDict
+from otp.otpbase.OTPUtil import POD, invertDict
 from direct.directnotify import DirectNotifyGlobal
 from pirates.quest import QuestRewardStruct
 from pirates.uberdog.UberDogGlobals import InventoryType, InventoryCategory
@@ -29,7 +29,7 @@ class QuestReward(POD):
         POD.__init__(self, **kwArgs)
 
     def applyTo(self, trade, av):
-        raise 'derived must override'
+        raise NotImplementedError('derived must override')
 
     def getQuestRewardStruct(self):
         rewardStruct = QuestRewardStruct.QuestRewardStruct().copyFrom(self)
@@ -187,7 +187,7 @@ class MaxMojoReward(QuestReward):
 class LuckReward(QuestReward):
 
     def applyTo(self, trade, av):
-        raise 'TODO'
+        raise NotImplementedError('TODO')
 
     def getDescriptionText(self):
         return PLocalizer.LuckRewardDesc % self.amount
@@ -196,7 +196,7 @@ class LuckReward(QuestReward):
 class SwiftnessReward(QuestReward):
 
     def applyTo(self, trade, av):
-        raise 'TODO'
+        raise NotImplementedError('TODO')
 
     def getDescriptionText(self):
         return PLocalizer.SwiftnessRewardDesc % self.amount
@@ -258,7 +258,7 @@ class PistolUpgradeReward(QuestReward):
         av.giveWeaponMessage(self.amount)
 
     def getDescriptionText(self):
-        if PLocalizer.InventoryTypeNames.has_key(self.amount):
+        if self.amount in PLocalizer.InventoryTypeNames:
             return PLocalizer.InventoryTypeNames.get(self.amount)
         else:
             return PLocalizer.PistolRewardDesc
@@ -314,7 +314,7 @@ class DaggerUpgradeReward(QuestReward):
         av.giveWeaponMessage(self.amount)
 
     def getDescriptionText(self):
-        if PLocalizer.InventoryTypeNames.has_key(self.amount):
+        if self.amount in PLocalizer.InventoryTypeNames:
             return PLocalizer.InventoryTypeNames.get(self.amount)
         else:
             return PLocalizer.DaggerRewardDesc
@@ -340,7 +340,7 @@ class CutlassUpgradeReward(QuestReward):
         av.giveWeaponMessage(self.amount)
 
     def getDescriptionText(self):
-        if PLocalizer.InventoryTypeNames.has_key(self.amount):
+        if self.amount in PLocalizer.InventoryTypeNames:
             return PLocalizer.InventoryTypeNames.get(self.amount)
         else:
             return PLocalizer.CutlassRewardDesc
@@ -366,7 +366,7 @@ class DollUpgradeReward(QuestReward):
         av.giveWeaponMessage(self.amount)
 
     def getDescriptionText(self):
-        if PLocalizer.InventoryTypeNames.has_key(self.amount):
+        if self.amount in PLocalizer.InventoryTypeNames:
             return PLocalizer.InventoryTypeNames.get(self.amount)
         else:
             return PLocalizer.DollRewardDesc
@@ -392,7 +392,7 @@ class WandUpgradeReward(QuestReward):
         av.giveWeaponMessage(self.amount)
 
     def getDescriptionText(self):
-        if PLocalizer.InventoryTypeNames.has_key(self.amount):
+        if self.amount in PLocalizer.InventoryTypeNames:
             return PLocalizer.InventoryTypeNames.get(self.amount)
         else:
             return PLocalizer.DollRewardDesc
@@ -535,9 +535,9 @@ class JewelryQuestReward(QuestReward):
             if not (uid >= JewelryGlobals.FEMALE_RBROW) or not (uid <= JewelryGlobals.FEMALE_RHAND + 9999):
                 return None
 
-        simbase.air.avatarAccessoriesManager.requestJewelryAdd(av.getDoId(), uid, forceAdd = True)
+        base.air.avatarAccessoriesManager.requestJewelryAdd(av.getDoId(), uid, forceAdd = True)
         av.giveJewelryMessage(uid)
-        simbase.air.writeServerEvent('QUEST_JEWELRY_ADDED', av.getDoId(), 'UID=%s|' % uid)
+        base.air.writeServerEvent('QUEST_JEWELRY_ADDED', av.getDoId(), 'UID=%s|' % uid)
 
     def getDescriptionText(self):
         return PLocalizer.JewelryQuestRewardDesc
@@ -547,13 +547,13 @@ class TattooQuestReward(QuestReward):
 
     def applyTo(self, trade, av):
         doId = av.getDoId()
-        keys = TattooGlobals.tattoos.keys()
+        keys = list(TattooGlobals.tattoos.keys())
         questDrop = TattooGlobals.questDrops.get(self.amount)
         for drop in questDrop:
             if drop in keys:
-                simbase.air.avatarAccessoriesManager.requestTattooAdd(doId, drop, forceAdd = True)
+                base.air.avatarAccessoriesManager.requestTattooAdd(doId, drop, forceAdd = True)
                 av.giveTattooMessage(drop)
-                simbase.air.writeServerEvent('QUEST_TATTOO_ADDED', doId, 'UID=%s|' % drop)
+                base.air.writeServerEvent('QUEST_TATTOO_ADDED', doId, 'UID=%s|' % drop)
 
     def getDescriptionText(self):
         return PLocalizer.TattooQuestRewardDesc
@@ -564,7 +564,7 @@ class ClothingQuestReward(QuestReward):
     def applyTo(self, trade, av):
         doId = av.getDoId()
         gender = av.dna.getGender()
-        keys = ClothingGlobals.UNIQUE_ID.keys()
+        keys = list(ClothingGlobals.UNIQUE_ID.keys())
         questDrop = ClothingGlobals.questDrops.get(self.amount)
         if questDrop is None:
             return None
@@ -576,9 +576,9 @@ class ClothingQuestReward(QuestReward):
         dropId = dropForGender[0]
         colorId = dropForGender[1]
         if dropId in keys:
-            simbase.air.avatarAccessoriesManager.requestClothingAdd(doId, dropId, colorId, forceAdd = True)
+            base.air.avatarAccessoriesManager.requestClothingAdd(doId, dropId, colorId, forceAdd = True)
             av.giveClothingMessage(dropId, colorId)
-            simbase.air.writeServerEvent('QUEST_CLOTHING_ADDED', doId, 'UID=%s|' % dropId)
+            base.air.writeServerEvent('QUEST_CLOTHING_ADDED', doId, 'UID=%s|' % dropId)
 
     def getDescriptionText(self):
         return PLocalizer.ClothingQuestRewardDesc

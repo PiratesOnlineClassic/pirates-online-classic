@@ -147,7 +147,7 @@ class ComboDiary:
     def __str__(self):
         s = 'ComboDiary\n'
         s += ' Avatar: Combos\n'
-        for (avId, combos) in self.timers.items():
+        for (avId, combos) in list(self.timers.items()):
             s += ' %s : \n' % avId
             for entry in combos:
                 skillId = entry[self.SKILLID_INDEX]

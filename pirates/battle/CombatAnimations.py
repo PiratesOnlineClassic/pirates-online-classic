@@ -1,7 +1,7 @@
-import WeaponGlobals
+from . import WeaponGlobals
 from direct.interval.IntervalGlobal import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.actor import Actor
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.effects.DaggerProjectile import DaggerProjectile
@@ -54,7 +54,7 @@ from pirates.effects.SpectralTrail import SpectralTrail
 from pirates.effects.SpectralSmoke import SpectralSmoke
 from pirates.effects.HealSparks import HealSparks
 from pirates.effects.FadingCard import FadingCard
-from GrenadeProjectile import GrenadeProjectile
+from .GrenadeProjectile import GrenadeProjectile
 from pirates.piratesbase import PLocalizer
 from libotp import CFSpeech, CFTimeout
 import random

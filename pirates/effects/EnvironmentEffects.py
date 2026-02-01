@@ -1,5 +1,5 @@
 import random
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.actor import Actor
 from direct.showbase.DirectObject import DirectObject
@@ -22,7 +22,7 @@ from pirates.effects.LightSmoke import LightSmoke
 from pirates.effects.MysticSmoke import MysticSmoke
 from pirates.effects.MysticFire import MysticFire
 from pirates.ai import HolidayGlobals
-from PooledEffect import PooledEffect
+from .PooledEffect import PooledEffect
 from pirates.piratesgui.GameOptions import Options
 
 class EnvironmentEffects(DirectObject):
@@ -64,7 +64,7 @@ class EnvironmentEffects(DirectObject):
     soundDict = {
         'waterfall_sound': 'audio/sfx_waterfall_small.wav',
         'waterfall_cave_sound': 'audio/sfx_cave_waterfall.wav'}
-    EffectNodeNames = effectDict.keys()
+    EffectNodeNames = list(effectDict.keys())
     animPartsDict = {
         'chandelier': [
             ('Hpr', 2, Point3(2, 2, 0), Point3(-2, -2, 0))],
@@ -103,7 +103,7 @@ class EnvironmentEffects(DirectObject):
                 effect = None
         
         self.effects = []
-        for holidayName in self.holidayEffects.keys():
+        for holidayName in list(self.holidayEffects.keys()):
             self.stopHolidayEffects(holidayName)
         
         self.holidayEffects = {}
@@ -153,7 +153,7 @@ class EnvironmentEffects(DirectObject):
             locators = self.parent.findAllMatches('**/' + effectEntry + '*;+s')
             for locator in locators:
                 if not locator.isEmpty() and locator.getTag('Holiday') != '':
-                    if not self.holidayLocators.has_key(effectEntry):
+                    if effectEntry not in self.holidayLocators:
                         self.holidayLocators[effectEntry] = [
                             locator]
                     else:
@@ -183,7 +183,7 @@ class EnvironmentEffects(DirectObject):
 
                     locator.stash()
 
-        for holidayId in base.holidays.keys():
+        for holidayId in list(base.holidays.keys()):
             if base.getHoliday(holidayId):
                 self.loadHolidayEffects(HolidayGlobals.getHolidayName(holidayId))
 
@@ -192,7 +192,7 @@ class EnvironmentEffects(DirectObject):
             effect.stop()
             effect = None
         
-        for holidayName in self.holidayEffects.keys():
+        for holidayName in list(self.holidayEffects.keys()):
             self.stopHolidayEffects(holidayName)
         
         self.holidayEffects = {}
@@ -204,7 +204,7 @@ class EnvironmentEffects(DirectObject):
             effectSetting = base.options.getSpecialEffectsSetting()
         else:
             effectSetting = 2
-        for effectEntry in self.holidayLocators.keys():
+        for effectEntry in list(self.holidayLocators.keys()):
             locators = self.holidayLocators.get(effectEntry)
             for locator in locators:
                 if locator.getTag('Holiday') == holidayName:
@@ -225,7 +225,7 @@ class EnvironmentEffects(DirectObject):
                                 effect.setScale(locatorScale)
                             
                             effect.startLoop(effectSetting)
-                            if not self.holidayEffects.has_key(holidayName):
+                            if holidayName not in self.holidayEffects:
                                 self.holidayEffects[holidayName] = [
                                     effect]
                             else:
@@ -234,7 +234,7 @@ class EnvironmentEffects(DirectObject):
                                 self.holidayEffects[holidayName] = list
 
     def stopHolidayEffects(self, holidayName):
-        if not self.holidayEffects.has_key(holidayName):
+        if holidayName not in self.holidayEffects:
             return
         
         for effect in self.holidayEffects.get(holidayName):
@@ -406,7 +406,7 @@ class EnvironmentEffects(DirectObject):
             for i in range(len(polyLights)):
                 light = polyLights[i]
                 plNode = light.node()
-                print 'light node radius = %s' % plNode.getRadius()
+                print('light node radius = %s' % plNode.getRadius())
                 plNode.setFlickerType(PolylightNode.FSIN)
                 plNode.setAttenuation(PolylightNode.AQUADRATIC)
                 plNode.setRadius(20)

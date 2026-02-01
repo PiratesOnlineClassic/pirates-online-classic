@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from pirates.distributed import DistributedInteractive
@@ -43,7 +43,7 @@ class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
 
     def handleEnterProximity(self, collEntry):
         DistributedInteractive.DistributedInteractive.handleEnterProximity(self, collEntry)
-        print 'enterproximityoftreasure'
+        print('enterproximityoftreasure')
 
     def enterProximity(self):
         if (self.belongsToTeam == PiratesGlobals.INVALID_TEAM or self.belongsToTeam != localAvatar.getTeam()) and self.value > 0:
@@ -68,12 +68,12 @@ class DistributedSurfaceTreasure(DistributedInteractive.DistributedInteractive):
 
     def startLooting(self, lootType):
         self.acceptInteraction()
-        print 'st: start looting'
+        print('st: start looting')
         if lootType == PiratesGlobals.WITHDRAW_INCREMENTAL:
             base.localAvatar.b_setGameState('Stealing')
 
     def stopLooting(self):
-        print 'st: stop looting'
+        print('st: stop looting')
         self.rejectInteraction()
         if base.localAvatar.lootCarried > 0:
             base.localAvatar.b_setGameState('LandTreasureRoam')

@@ -422,7 +422,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return self.questRewardFlags
 
     def getHighestTonic(self):
-        inventory = simbase.air.inventoryManager.getInventory(self.doId)
+        inventory = base.air.inventoryManager.getInventory(self.doId)
 
         if not inventory:
             self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
@@ -438,7 +438,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return detected
 
     def getBestTonic(self):
-        inventory = simbase.air.inventoryManager.getInventory(self.doId)
+        inventory = base.air.inventoryManager.getInventory(self.doId)
 
         if not inventory:
             self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
@@ -447,7 +447,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         tonics = inventory.getTonics()
         idealAmount = max(0, self.getMaxHp() * 0.8 - self.getHp()[0])
         bestTonicId = InventoryType.Potion1
-        for tonicId, count in sorted(tonics.iteritems()):
+        for tonicId, count in sorted(tonics.items()):
             if count:
                 bestTonicId = tonicId
                 if WeaponGlobals.getAttackSelfHP(tonicId) > idealAmount:
@@ -456,7 +456,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return bestTonicId
 
     def useTonic(self, tonicId):
-        inventory = simbase.air.inventoryManager.getInventory(self.doId)
+        inventory = base.air.inventoryManager.getInventory(self.doId)
 
         if not inventory:
             self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
@@ -861,7 +861,7 @@ def level(repType, level):
     if inventory:
         totalRep = 0
 
-        for levelIndex in xrange(level):
+        for levelIndex in range(level):
             totalRep += ReputationGlobals.getReputationNeededToLevel(
                 repType, levelIndex)
 
@@ -891,7 +891,7 @@ def removeGroggy():
     """
 
     invoker = spellbook.getInvoker()
-    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+    inventory = base.air.inventoryManager.getInventory(invoker.doId)
     inventory.setVitaeLevel(0)
     return "Removed active groggy effect!"
 

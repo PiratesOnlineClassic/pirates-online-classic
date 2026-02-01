@@ -1,6 +1,6 @@
 from direct.controls.GravityWalker import GravityWalker
 from direct.showbase.InputStateGlobal import inputState
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.task.Task import Task
 
 class PiratesGravityWalker(GravityWalker):

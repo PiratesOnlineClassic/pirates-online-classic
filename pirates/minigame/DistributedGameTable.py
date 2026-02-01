@@ -1,5 +1,5 @@
 import random
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase import DirectObject
 from direct.interval.IntervalGlobal import *
 from pirates.piratesbase import PiratesGlobals
@@ -416,7 +416,7 @@ class DistributedGameTable(DistributedInteractive.DistributedInteractive):
     def disable(self):
         DistributedInteractive.DistributedInteractive.disable(self)
         self.ignoreAll()
-        avIds = self.avId2ivals.keys()
+        avIds = list(self.avId2ivals.keys())
         for avId in avIds:
             for ival in self.avId2ivals.get(avId, []):
                 ival.finish()

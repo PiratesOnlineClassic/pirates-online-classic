@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesgui.GuiTray import GuiTray
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.ship import ShipGlobals

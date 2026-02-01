@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.tortuga_area_jungle_b_1
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {
         0: Vec4(0.207843, 0.243137, 0.447059, 1),

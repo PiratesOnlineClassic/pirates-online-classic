@@ -146,7 +146,7 @@ class AnimationChannel:
             
             try:
                 self.checkInFunc()
-            except TypeError, e:
+            except TypeError as e:
                 self.notify.warning(str(e))
                 if self.actor:
                     self.notify.warning(self.actor.getName() + ' invalid AnimationChannel state with animSpanId = ' + str(animSpanId))
@@ -216,10 +216,10 @@ class PartMixer:
     def __init__(self, mixer, channelCount, actor, partNameList):
         self.actor = actor
         self.partNameList = partNameList
-        self.channels = [ AnimationChannel(x, x in mixer.LOOP.values(), actor, partNameList, self.distributeWeight) for x in range(channelCount) ]
+        self.channels = [ AnimationChannel(x, x in list(mixer.LOOP.values()), actor, partNameList, self.distributeWeight) for x in range(channelCount) ]
 
     def __str__(self):
-        outStr = '(PartMixer: parts = %s)\n' % `self.partNameList`
+        outStr = '(PartMixer: parts = %s)\n' % repr(self.partNameList)
         for chanNum in range(len(self.channels) - 1, -1, -1):
             outStr += '%s\n' % str(self.channels[chanNum])
         
@@ -276,25 +276,25 @@ class AnimationMixer:
         'NA': NA_INDEX,
         'ACTION': ACTION_INDEX}
     sectionNames = [None]
-    sectionNameIds = dict(zip(sectionNames, range(len(sectionNames))))
-    partNameLists = dict(zip(sectionNames, []))
+    sectionNameIds = dict(list(zip(sectionNames, list(range(len(sectionNames))))))
+    partNameLists = dict(list(zip(sectionNames, [])))
     AnimRankings = {}
     defaultBlendT = 0.15
     
     def __init__(self, actor):
         self.actor = actor
-        channelCount = len([ x for x in self.LOOP.values() + self.ACTION.values() if x is not self.NA_INDEX ])
-        self.partMixers = dict(zip(self.sectionNames, [PartMixer(self, channelCount, actor, self.getPartsNameList(part)) for part in self.sectionNames]))
+        channelCount = len([ x for x in list(self.LOOP.values()) + list(self.ACTION.values()) if x is not self.NA_INDEX ])
+        self.partMixers = dict(list(zip(self.sectionNames, [PartMixer(self, channelCount, actor, self.getPartsNameList(part)) for part in self.sectionNames])))
         self.ownedIvals = []
     
     def __str__(self):
-        outStr = '(%s: %s)\n' % (self.__class__.__name__, `self.actor`)
+        outStr = '(%s: %s)\n' % (self.__class__.__name__, repr(self.actor))
         for sectionName in self.partMixers:
             outStr += '%s\n' % str(self.partMixers[sectionName])
         
         outStr += '\nOwned Intervals\n-------------------------------\n'
         for ival in self.ownedIvals:
-            outStr += `ival` + ': isPlaying = ' + `ival.isPlaying()` + '\n'
+            outStr += repr(ival) + ': isPlaying = ' + repr(ival.isPlaying()) + '\n'
         
         return outStr
     
@@ -302,9 +302,9 @@ class AnimationMixer:
         outList = []
         if sectionName is None or set(sectionName) == set(self.sectionNames):
             return None
-        elif isinstance(sectionName, types.StringType):
+        elif isinstance(sectionName, bytes):
             sectionNames = [sectionName]
-        elif isinstance(sectionName, types.ListType):
+        elif isinstance(sectionName, list):
             sectionNames = sectionName
         else:
             sectionNames = []
@@ -318,9 +318,9 @@ class AnimationMixer:
     def getSectionList(self, sectionName):
         if not sectionName:
             return self.sectionNames
-        elif isinstance(sectionName, types.StringType):
+        elif isinstance(sectionName, bytes):
             return [sectionName]
-        elif isinstance(sectionName, types.ListType):
+        elif isinstance(sectionName, list):
             return sectionName
         else:
             return []
@@ -333,7 +333,7 @@ class AnimationMixer:
         sectionNames = self.getSectionList(partName)
         rankings = self.AnimRankings.get(newAnim)
         if rankings:
-            loopIndices = self.LOOP.values()
+            loopIndices = list(self.LOOP.values())
             loopIndices.sort()
             ival = Parallel()
             for section in sectionNames:
@@ -393,7 +393,7 @@ class AnimationMixer:
         sectionNames = self.getSectionList(partName)
         rankings = self.AnimRankings.get(newAnim)
         if rankings:
-            loopIndices = self.LOOP.values()
+            loopIndices = list(self.LOOP.values())
             loopIndices.sort()
             ival = Parallel()
             for section in sectionNames:

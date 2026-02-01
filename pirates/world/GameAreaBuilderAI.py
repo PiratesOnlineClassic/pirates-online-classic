@@ -238,7 +238,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
 
             # get the other connectors UID which is located on the other
             # side or the other game area...
-            connectorUids = objects.keys()
+            connectorUids = list(objects.keys())
             if connectorUids.index(objKey) == 0:
                 locatorNode.setOtherLinkUid(connectorUids[1])
             else:
@@ -295,7 +295,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             linkOtherLocatorNode(locatorNode, otherLocatorNode)
             linkOtherLocatorNode(otherLocatorNode, locatorNode)
 
-        for objKey, objectData in objects.iteritems():
+        for objKey, objectData in objects.items():
             if objectData['Type'] == ObjectList.LOCATOR_NODE:
                 self.air.uidMgr.addUidCallback(objKey, locatorNodeArrivedCallback)
                 createConnectorLocatorNode(objKey, objectData)

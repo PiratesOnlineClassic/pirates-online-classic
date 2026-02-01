@@ -1,19 +1,19 @@
 from otp.ai.AIBase import *
 
-__builtins__['simbase'] = AIBase()
+__builtins__['base'] = AIBase()
 __builtins__['ostream'] = Notify.out()
-__builtins__['run'] = simbase.run
-__builtins__['taskMgr'] = simbase.taskMgr
-__builtins__['jobMgr'] = simbase.jobMgr
-__builtins__['eventMgr'] = simbase.eventMgr
-__builtins__['messenger'] = simbase.messenger
-__builtins__['bboard'] = simbase.bboard
-__builtins__['config'] = simbase.config
+__builtins__['run'] = base.run
+__builtins__['taskMgr'] = base.taskMgr
+__builtins__['jobMgr'] = base.jobMgr
+__builtins__['eventMgr'] = base.eventMgr
+__builtins__['messenger'] = base.messenger
+__builtins__['bboard'] = base.bboard
+__builtins__['config'] = base.config
 __builtins__['directNotify'] = directNotify
 
 from direct.showbase import Loader
-simbase.loader = Loader.Loader(simbase)
-__builtins__['loader'] = simbase.loader
+base.loader = Loader.Loader(base)
+__builtins__['loader'] = base.loader
 directNotify.setDconfigLevels()
 
 

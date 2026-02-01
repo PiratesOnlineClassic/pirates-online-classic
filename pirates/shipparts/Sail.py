@@ -2,7 +2,7 @@ import random
 from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.actor import Actor
 from direct.fsm import FSM
 from direct.fsm import State
@@ -325,7 +325,7 @@ class Sail(NodePath, ShipPart.ShipPart):
     def cutGeomTextureStates(self, geomNode, excludedStages = []):
         numGeoms = geomNode.getNumGeoms()
         finalPacket = []
-        for i in xrange(numGeoms):
+        for i in range(numGeoms):
             geomState = geomNode.getGeomState(i)
             attrib = geomState.getAttrib(TextureAttrib.getClassType())
             finalPacket.append(attrib)
@@ -334,7 +334,7 @@ class Sail(NodePath, ShipPart.ShipPart):
         return finalPacket
 
     def pasteGeomTextureStates(self, geomNode, attribList):
-        for i in xrange(geomNode.getNumGeoms()):
+        for i in range(geomNode.getNumGeoms()):
             gs = geomNode.getGeomState(i).setAttrib(attribList[i])
             geomNode.setGeomState(i, gs)
     
@@ -376,7 +376,7 @@ class Sail(NodePath, ShipPart.ShipPart):
             geomState = None
             texAttrib = None
             if self.destructIndex is None:
-                for i in xrange(sailNode.getNumGeoms()):
+                for i in range(sailNode.getNumGeoms()):
                     geomState = sailNode.getGeomState(i)
                     geomIndex = i
                     texAttrib = geomState.getAttrib(TextureAttrib.getClassType())

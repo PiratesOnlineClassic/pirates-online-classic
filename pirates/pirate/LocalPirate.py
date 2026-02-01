@@ -4,7 +4,7 @@ import types
 import random
 from direct.showbase.ShowBaseGlobal import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase.PythonUtil import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.controls import ControlManager
@@ -53,9 +53,9 @@ from pirates.quest import QuestStatus
 from pirates.quest.QuestConstants import LocationIds
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
-import Pirate
-import LocalPirateGameFSM
-from DistributedPlayerPirate import DistributedPlayerPirate
+from . import Pirate
+from . import LocalPirateGameFSM
+from .DistributedPlayerPirate import DistributedPlayerPirate
 from direct.gui import OnscreenText
 from libotp import CFThought, CFTimeout
 
@@ -783,7 +783,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
                 model = parent.modelPath
                 model = model.split('/')[-1]
         strPos = '\nMaya Pos: \n%.1f, %.1f, %.1f' % (pos[0], pos[2], -pos[1]) + '\nPanda Pos: \n%.1f, %.1f, %.1f' % (pos[0], pos[1], pos[2]) + '\nH: %.1f' % hpr[0] + '\nModel: %s' % model + '\nTexture: %s, Terrain: %s, Avatar: %s' % (base.options.getTextureScaleString(), base.options.getGameOptionString(base.options.terrain_detail_level), base.options.getGameOptionString(base.options.character_detail_level)) + '\nLoc: (%s, %s)' % (str(parentId), str(zoneId)) + ',\nVer: %s, ' % serverVersion + '\nDistrict: %s' % districtName
-        print 'Current position=', strPos.replace('\n', ', ')
+        print('Current position=', strPos.replace('\n', ', '))
         self.setChatAbsolute(strPos, CFThought | CFTimeout)
 
     def openSpeedChat(self):
@@ -821,7 +821,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
             speedMult += self.aimMod
         self.notify.debug('speedMult = %s' % speedMult)
         oldSpeeds = PiratesGlobals.PirateSpeeds[self.speedIndex]
-        newSpeeds = map(lambda x: speedMult * x, oldSpeeds)
+        newSpeeds = [speedMult * x for x in oldSpeeds]
         self.controlManager.setSpeeds(*newSpeeds)
 
     def setWalkForWeapon(self):
@@ -869,16 +869,16 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         if enable:
 
             def doPrint(task, self=self):
-                print 'AnimBlends:'
+                print('AnimBlends:')
                 self.printAnimBlends()
-                print ''
+                print('')
                 return task.cont
 
             taskMgr.add(doPrint, 'printAnimBlends')
-            print 'togglePrintAnimBlends ON'
+            print('togglePrintAnimBlends ON')
         else:
             taskMgr.remove('printAnimBlends')
-            print 'togglePrintAnimBlends OFF'
+            print('togglePrintAnimBlends OFF')
 
     def toggleOsdAnimBlends(self, enable=None):
         if not hasattr(self, '_osdAnimBlends'):
@@ -893,10 +893,10 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
                 return task.cont
 
             taskMgr.add(doOsd, 'osdAnimBlends')
-            print 'toggleOsdAnimBlends ON'
+            print('toggleOsdAnimBlends ON')
         else:
             taskMgr.remove('osdAnimBlends')
-            print 'toggleOsdAnimBlends OFF'
+            print('toggleOsdAnimBlends OFF')
 
     def toggleAvVis(self):
         self.getLOD('2000').toggleVis()
@@ -993,7 +993,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
         if amt > 0 and maxCarry > 0:
             speedMult = 1.0 - 0.5 * self.lootCarried / maxCarry
             regularSpeeds = PiratesGlobals.PirateSpeeds[self.speedIndex]
-            scaledSpeeds = map(lambda x: speedMult * x, regularSpeeds)
+            scaledSpeeds = [speedMult * x for x in regularSpeeds]
             self.controlManager.setSpeeds(*scaledSpeeds)
             self.av.updatePlayerSpeed()
 
@@ -1016,7 +1016,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
                     self.sendUpdate('interrupted', [WeaponGlobals.C_INTERRUPTED])
 
     def hasEffect(self, effectId):
-        for key in self.skillEffects.keys():
+        for key in list(self.skillEffects.keys()):
             if effectId == self.skillEffects[key][0]:
                 return 1
 
@@ -1324,7 +1324,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
     def findLegalTargets(self, task):
         TICK_DELAY = 0.5
         if task.time - self.lastTick > TICK_DELAY:
-            for do in self.cr.doId2do.values():
+            for do in list(self.cr.doId2do.values()):
                 if hasattr(do, 'isNpc') and do.doId != self.doId:
                     self.checkViewingArc(do)
 
@@ -1637,33 +1637,33 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
 
         def b_setGameState(self, *args, **kw):
             DistributedPlayerPirate.b_setGameState(self, *args, **kw)
-            print 'b_setGameState', args, kw
+            print('b_setGameState', args, kw)
 
         def printTS(self):
-            print 'TeleportState\n-----------------------------'
-            print 'location:', localAvatar.getLocation()
-            print 'pos:', localAvatar.getPos(localAvatar.getParentObj())
+            print('TeleportState\n-----------------------------')
+            print('location:', localAvatar.getLocation())
+            print('pos:', localAvatar.getPos(localAvatar.getParentObj()))
             try:
-                print 'lastZoneLevel:', localAvatar.getParentObj().lastZoneLevel
+                print('lastZoneLevel:', localAvatar.getParentObj().lastZoneLevel)
             except AttributeError:
                 pass
 
-            print '\nzoneSpheres:'
+            print('\nzoneSpheres:')
             for x in localAvatar.getParentObj().zoneSphere:
                 x.ls()
 
-            print '\naccepting:'
+            print('\naccepting:')
             for x in localAvatar.getParentObj().getAllAccepting():
-                print x
+                print(x)
 
-            print '\ncTrav:'
-            print base.cTrav
+            print('\ncTrav:')
+            print(base.cTrav)
 
     def printIZL(self, reset=False):
-        for x in self.cr.activeWorld.islands.itervalues():
+        for x in self.cr.activeWorld.islands.values():
             if reset:
                 x.setZoneLevel(min(3, x.lastZoneLevel))
-            print x.lastZoneLevel, x.getName(), x.doId
+            print(x.lastZoneLevel, x.getName(), x.doId)
 
     def addStatusEffect(self, effectId, attackerId, duration):
         DistributedPlayerPirate.addStatusEffect(self, effectId, attackerId, duration)
@@ -1791,7 +1791,7 @@ class LocalPirate(DistributedPlayerPirate, LocalAvatar):
 
     def gotWeaponReward(self, rewardType):
         self.playRewardAnimation = PLocalizer.WeaponReceiveToEmoteCmds[rewardType]
-        print 'received Weapon %s' % self.playRewardAnimation
+        print('received Weapon %s' % self.playRewardAnimation)
 
     def addLocalProjectile(self, projectile):
         self.localProjectiles.append(projectile)

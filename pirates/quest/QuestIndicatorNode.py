@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.world.ZoneLOD import ZoneLOD
 from direct.fsm.FSM import FSM
 from direct.interval.IntervalGlobal import Parallel

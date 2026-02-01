@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.port_royal_area_jungle_a_1
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Interact Links':
     [['1176150400.0dxschafe', '1176151296.0dxschafe', 'Bi-directional'],

@@ -3,14 +3,14 @@ import sys
 import socket
 import random
 import time
-from urllib import quote_plus
-from pandac.PandaModules import HTTPClient
-from pandac.PandaModules import HTTPCookie
-from pandac.PandaModules import URLSpec
-from pandac.PandaModules import Ramfile
-from pandac.PandaModules import Ostream
-from pandac.PandaModules import HTTPDate
-from pandac.PandaModules import DocumentSpec
+from urllib.parse import quote_plus
+from panda3d.core import HTTPClient
+from panda3d.core import HTTPCookie
+from panda3d.core import URLSpec
+from panda3d.core import Ramfile
+from panda3d.core import Ostream
+from panda3d.core import HTTPDate
+from panda3d.core import DocumentSpec
 from direct.task.Task import Task
 from direct.directnotify.DirectNotifyGlobal import directNotify
 notify = directNotify.newCategory('UserFunnel')
@@ -251,7 +251,7 @@ class UserFunnel:
                         value]
                     self.setTheHTTPCookie(self.pandaHTTPClientVarWSS)
         except IndexError:
-            print 'UserFunnel(Warning): Cookie Data file bad'
+            print('UserFunnel(Warning): Cookie Data file bad')
 
         del thedata
     
@@ -281,7 +281,7 @@ class UserFunnel:
                         value]
                     self.setTheHTTPCookie(self.pandaHTTPClientVarSVI)
         except IndexError:
-            print 'UserFunnel(Warning): Omniture Cookie Data file bad'
+            print('UserFunnel(Warning): Omniture Cookie Data file bad')
 
         del thedata
     
@@ -444,7 +444,7 @@ class HitBoxCookie:
         try:
             sdir = os.listdir(self.ieCookieDir)
         except WindowsError:
-            print 'Dir does not exist, do nothing'
+            print('Dir does not exist, do nothing')
             return
 
         while sdir:
@@ -503,7 +503,7 @@ class HitBoxCookie:
         while x < len(iecData):
             if iecData[x].find('DM560804E8WD') != -1:
                 iecData.pop(x)
-                print 'Removed it from the list'
+                print('Removed it from the list')
                 break
             
             x += 1
@@ -611,7 +611,7 @@ class HitBoxCookie:
 
 def convertHitBoxIEtoPython():
     if sys.platform != 'win32':
-        print 'Cookie Converter: Warning: System is not MS-Windows. I have not been setup to work with other systems yet. Sorry ' + sys.platform + ' user. The game client will create a cookie.'
+        print('Cookie Converter: Warning: System is not MS-Windows. I have not been setup to work with other systems yet. Sorry ' + sys.platform + ' user. The game client will create a cookie.')
         return
     
     if __dev__:
@@ -624,7 +624,7 @@ def convertHitBoxIEtoPython():
 
 def convertHitBoxPythontoIE():
     if sys.platform != 'win32':
-        print 'System is not MS-Windows. I have not been setup to work with other systems yet. Sorry ' + sys.platform + ' user.'
+        print('System is not MS-Windows. I have not been setup to work with other systems yet. Sorry ' + sys.platform + ' user.')
         return
     
     if os.path.isfile('cf.txt') == True:
@@ -637,7 +637,7 @@ def convertHitBoxPythontoIE():
 
 def getreg(regVar):
     if sys.platform != 'win32':
-        print "System is not MS-Windows. I haven't been setup yet to work with systems other than MS-Win using MS-Internet Explorer Cookies"
+        print("System is not MS-Windows. I haven't been setup yet to work with systems other than MS-Win using MS-Internet Explorer Cookies")
         return ''
     
     siteName = 'pirates.online.disney'
@@ -651,7 +651,7 @@ def getreg(regVar):
             break
 
     if wholeCookie == None:
-        print 'Cookie not found for site name: ' + siteName
+        print('Cookie not found for site name: ' + siteName)
         return ''
     
     CompleteCookiePath = cookiedir + '\\' + wholeCookie
@@ -708,7 +708,7 @@ def getMAC(staticMAC = [None]):
             else:
                 return 'NO_MAC'
         else:
-            print 'System is not running OSX or MS-Windows.'
+            print('System is not running OSX or MS-Windows.')
             return '-2'
     else:
         return staticMAC[0]
@@ -812,7 +812,7 @@ def reportMemoryLeaks():
     try:
         baseURL = patcherVer()[0].split('/lo')[0]
     except IndexError:
-        print 'Base URL not available for leak submit'
+        print('Base URL not available for leak submit')
         return
 
     basePort = 80

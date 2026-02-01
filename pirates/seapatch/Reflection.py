@@ -1,5 +1,5 @@
 from direct.showbase.DirectObject import DirectObject
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.otpbase import OTPRender
 
 class Reflection(DirectObject):
@@ -181,7 +181,7 @@ class Reflection(DirectObject):
                 reflection_card_node_path.setLightOff()
                 reflection_card_node_path.node().setBounds(OmniBoundingVolume())
                 reflection_card_node_path.node().setFinal(1)
-                mask = 0xFFFFFFFFL
+                mask = 0xFFFFFFFF
                 stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
                 reflection_card_node_path.setAttrib(stencil)
                 reflection_card_node_path.setBin(bin_name, bin_priority)

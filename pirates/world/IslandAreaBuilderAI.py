@@ -64,7 +64,7 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
 
             self.air.worldCreator.locatorManager.addLocator(gameArea.getUniqueId(), objKey, objectData)
 
-        for objKey, objectData in objectData.get('Objects', {}).iteritems():
+        for objKey, objectData in objectData.get('Objects', {}).items():
             if objectData['Type'] == ObjectList.LOCATOR_NODE:
                 createConnectorLocatorNode(objKey, objectData)
 

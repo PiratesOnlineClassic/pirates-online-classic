@@ -1,4 +1,4 @@
-from pandac.PandaModules import CardMaker, NodePath
+from panda3d.core import CardMaker, NodePath
 
 def getBeaconModel():
     return loader.loadModel('models/textureCards/pvp_arrow').find('**/pvp_arrow')

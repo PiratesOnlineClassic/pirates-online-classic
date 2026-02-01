@@ -7,7 +7,7 @@ class QuestLadderDynMap:
     
     def __init__(self):
         self.QuestIDLadderDynMap = {}
-        for (ladderId, ladderDNA) in QuestLadderDB.FortuneQuestLadderDict.items():
+        for (ladderId, ladderDNA) in list(QuestLadderDB.FortuneQuestLadderDict.items()):
             ladderInt = ladderDNA.questInt
             for container in ladderDNA.getContainers():
                 if container.isContainer():
@@ -15,7 +15,7 @@ class QuestLadderDynMap:
                 else:
                     self.addMapping(container.questId, ladderId, ladderInt)
 
-        for (ladderId, ladderDNA) in QuestLadderDB.FameQuestLadderDict.items():
+        for (ladderId, ladderDNA) in list(QuestLadderDB.FameQuestLadderDict.items()):
             ladderInt = ladderDNA.questInt
             for container in ladderDNA.getContainers():
                 if container.isContainer():

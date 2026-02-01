@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.ArtPrototypeLite
-from pandac.PandaModules import Point3, VBase3
+from panda3d.core import Point3, VBase3
 objectStruct = {
     'Locator Links':
     [['1142290985.8sdnaik', '1142291141.66sdnaik', 'Bi-directional'],

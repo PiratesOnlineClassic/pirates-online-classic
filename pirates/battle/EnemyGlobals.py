@@ -1,6 +1,6 @@
 import random
 import copy
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import WeaponGlobals
 from pirates.battle.EnemySkills import *
 from pirates.pirate import AvatarTypes
@@ -1543,14 +1543,14 @@ def getEnemyStats(avatarType, level, hpMultiplier = 1, mpMultiplier = 1):
 
 
 def getMonsterHp(level):
-    if simbase.config.GetBool('demo-hacks', 0) == 1 and level > 5:
+    if base.config.GetBool('demo-hacks', 0) == 1 and level > 5:
         return 700
     else:
         return __HP_CHART[level]
 
 
 def getMonsterMp(level):
-    if simbase.config.GetBool('demo-hacks', 0) == 1 and level > 5:
+    if base.config.GetBool('demo-hacks', 0) == 1 and level > 5:
         return 50
     else:
         return __MP_CHART[level]
@@ -1639,7 +1639,7 @@ def getEnemySkills(avatarType, level, skillList = [], skillLevel = 0):
     levelModifier = __baseLevelStatMultiplier.get(level)
     skillList = skillList or baseSkills[SKILL_INDEX]
     skillLevel = skillLevel or levelModifier[SKILL_MOD]
-    if not simbase.config.GetBool('npcs-all-skills', 0):
+    if not base.config.GetBool('npcs-all-skills', 0):
         skillLevel = 15
 
     skillIds = skillList[0:skillLevel]

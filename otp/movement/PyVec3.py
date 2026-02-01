@@ -1,10 +1,10 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 import types
 import math
 
 class PyVec3:
     Epsilon = 0.0001
-    ScalarTypes = (types.FloatType, types.IntType, types.LongType)
+    ScalarTypes = (float, int, int)
     
     def __init__(self, *args):
         self.assign(*args)

@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
@@ -74,7 +74,7 @@ class ScoreboardItemGui(DirectFrame):
             self.descText['text_font'] = PiratesGlobals.getInterfaceOutlineFont()
             self.valueText['text_scale'] = 0.045
             self.valueText['text_font'] = PiratesGlobals.getInterfaceOutlineFont()
-            if self.item.has_key('Value2'):
+            if 'Value2' in self.item:
                 self.valueText2 = DirectLabel(parent = self, relief = None, text = str(self.item.get('Value2')), text_align = TextNode.ALeft, text_scale = 0.05, text_fg = PiratesGuiGlobals.TextFG2, text_shadow = PiratesGuiGlobals.TextShadow, textMayChange = 1, pos = (self.width * 0.8, 0, self.height / 2), text_font = PiratesGlobals.getInterfaceOutlineFont())
             
             if self.valueText2:
@@ -83,7 +83,7 @@ class ScoreboardItemGui(DirectFrame):
             
         elif self.item.get('Type') == 'Entry':
             self.descText['text_pos'] = (self.width * 0.06, 0, 0)
-            if self.item.has_key('Value2'):
+            if 'Value2' in self.item:
                 self.valueText2 = DirectLabel(parent = self, relief = None, text = str(self.item.get('Value2')), text_align = TextNode.ALeft, text_scale = 0.05, text_fg = PiratesGuiGlobals.TextFG2, text_shadow = PiratesGuiGlobals.TextShadow, textMayChange = 1, pos = (self.width * 0.8, 0, self.height / 2), text_font = PiratesGlobals.getInterfaceOutlineFont())
             
         elif self.item.get('Type') == 'Space':

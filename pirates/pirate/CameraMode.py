@@ -1,13 +1,14 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase import DirectObject
-from direct.showbase.PythonUtil import Enum
+from otp.otpbase.OTPUtil import Enum
 from direct.fsm.FSM import FSM
 from otp.otpbase import OTPGlobals
 
-class CameraMode(DirectObject.DirectObject, FSM):
+class CameraMode(FSM, DirectObject.DirectObject):
     Modes = Enum('NORMAL, BATTLE')
     
     def __init__(self):
+        DirectObject.DirectObject.__init__(self)
         FSM.__init__(self, 'CameraMode')
         self.mouseControl = False
         self.mouseDelta = (0, 0)

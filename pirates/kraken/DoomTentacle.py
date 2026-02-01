@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.otpbase import OTPRender
 from direct.actor.Actor import Actor
 from pirates.kraken.TentacleUtils import TentacleUtils

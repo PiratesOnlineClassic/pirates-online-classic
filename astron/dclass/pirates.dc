@@ -386,7 +386,7 @@ struct AvatarInfo {
   bool isShared;
   bool isOnline;
   string wishName;
-  string wishState;
+  blob wishState;
   uint32 defaultShard;
   uint32 lastLogout;
 };
@@ -402,13 +402,13 @@ struct AccountInfo {
 struct PotentialPirate {
   uint32 avNum;
   string avName;
-  string avDNA;
+  blob avDNA;
   uint8 avPosition;
   uint8 aname;
 };
 
 dclass ClientServicesManager : DistributedObjectGlobal {
-  login(string cookie, string address, char authKey [0-256]) clsend;
+  login(blob cookie, string address, char authKey [0-256]) clsend;
   acceptLogin();
   requestAvatars() clsend;
   setAvatars(PotentialPirate avatars[]);
@@ -711,7 +711,7 @@ dclass DistributedShip : DistributedMovingObject, DistributedCharterableObject, 
   requestBoardFlagship(uint32) clsend airecv;
   shipBoarded() clsend airecv;
   setWishName(string) required db ownrecv;
-  setWishNameState(string) required db ownrecv;
+  setWishNameState(blob) required db ownrecv;
   setFlagDNAString(string) broadcast ram;
   requestShipRam(DoId, Pos, uint32) clsend airecv;
   useShipRam(Pos) broadcast;
@@ -1081,7 +1081,7 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   requestShipBadgeIcon(int8, int8) ownsend airecv;
   setStatus(uint8) ownsend required ram broadcast;
   updateClientTutorialStatus(uint8) required ownrecv;
-  setUndead(uint8, string) required broadcast ram;
+  setUndead(uint8, blob) required broadcast ram;
   setInventoryId(uint32) required broadcast db;
   setDinghyId(uint32) required broadcast ram;
   setBandId(uint32, uint32) required broadcast ram ownrecv;
@@ -1101,7 +1101,7 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   setSCEmote(uint16) broadcast ownsend airecv;
   setSpeedChatQuest(uint16, uint16, uint16) broadcast ownsend airecv;
   setSpeedChatStyleIndex(uint8) required ownsend broadcast db;
-  setGameState(string, int16) broadcast ram ownsend airecv;
+  setGameState(blob, int16) broadcast ram ownsend airecv;
   levelUpMsg(uint32, uint32, uint32) broadcast airecv;
   addQuestMsg(string, uint8) broadcast airecv;
   requestCurrentWeapon(uint16, uint8) ownsend airecv;

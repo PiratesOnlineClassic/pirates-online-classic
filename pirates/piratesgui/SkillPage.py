@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from pirates.piratesgui import InventoryPage
 from pirates.reputation import ReputationGlobals
@@ -64,7 +64,7 @@ class SkillPage(InventoryPage.InventoryPage):
         self.unspent = DirectLabel(parent=self, relief=None, text=PLocalizer.SkillPageUnspentPoints % 0, text_scale=0.04, text_align=TextNode.ACenter, text_pos=(0, -0.01), text_fg=(1, 1, 1, 1), pos=(0.8, 0, 0.02))
 
     def destroy(self):
-        for spot in self.skillFrames.keys():
+        for spot in list(self.skillFrames.keys()):
             self.skillFrames[spot].destroy()
 
         if self.tabBar:
@@ -172,7 +172,7 @@ class SkillPage(InventoryPage.InventoryPage):
                     activeSkills.remove(skillId)
                     totalActiveSkills.remove(skillId)
 
-        for spot in self.skillFrames.keys():
+        for spot in list(self.skillFrames.keys()):
             if spot not in totalComboSkills:
                 self.skillFrames[spot].hide()
 

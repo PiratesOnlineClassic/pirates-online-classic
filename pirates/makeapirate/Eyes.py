@@ -4,10 +4,10 @@ from direct.showbase import DirectObject
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PLocalizer
 from pirates.pirate import HumanDNA
-from CharGuiBase import CharGuiSlider, CharGuiPicker
+from .CharGuiBase import CharGuiSlider, CharGuiPicker
 import random
 damper = 0.5
 sliderRange = (-0.5, 0.5)
@@ -111,7 +111,7 @@ class Eyes(DirectObject.DirectObject):
         self.pgs8.node().setValue(self.avatar.dna.getEyeBulge())
 
     def reset(self):
-        for i in xrange(0, len(self.pgs)):
+        for i in range(0, len(self.pgs)):
             self.resetSlider(self.pgs[i])
         
         self.avatar.eyesColorIdx = 0
@@ -125,7 +125,7 @@ class Eyes(DirectObject.DirectObject):
     def randomPick(self):
         global damper
         damper = 1.0
-        for i in xrange(0, len(self.pgs)):
+        for i in range(0, len(self.pgs)):
             slider = self.pgs[i]
             self.resetSlider(slider)
             if self.avatar.pirate.gender == 'f':
@@ -146,7 +146,7 @@ class Eyes(DirectObject.DirectObject):
                     slider.node().setValue(value)
         
         self.saveDNA()
-        choice = random.choice(range(0, self.avatar.numEyeColors))
+        choice = random.choice(list(range(0, self.avatar.numEyeColors)))
         self.avatar.eyesColorIdx = choice
         self.avatar.pirate.setEyesColor(self.avatar.eyesColorIdx)
         self.avatar.pirate.generateEyesTexture()

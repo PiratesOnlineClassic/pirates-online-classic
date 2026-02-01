@@ -2,7 +2,7 @@ import random
 from direct.interval.IntervalGlobal import *
 from direct.task import Task
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.minigame import DistributedDiceGame
 from pirates.minigame import DiceGlobals
 from pirates.piratesgui import GuiTray
@@ -16,7 +16,7 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
         self.animPlaying = 0
 
     def rollResults(self, seat, dice):
-        print 'DistributedLiarsDice:rollResults - seat %d' % seat
+        print('DistributedLiarsDice:rollResults - seat %d' % seat)
         self.dicevals[seat] = dice
         if seat == self.mySeat:
             if self.gameState == DiceGlobals.DSTATE_WAIT:
@@ -312,7 +312,7 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
         self.catchCheat.hide()
         taskMgr.remove('doneCheat')
         if self.gameState == DiceGlobals.DSTATE_PLAY:
-            print 'DistributedDiceGame:yourTurn - powering up buttons'
+            print('DistributedDiceGame:yourTurn - powering up buttons')
             self.diceNumText.show()
             self.diceValText.show()
             self.diceNumLabel.show()
@@ -514,7 +514,7 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
         self.gui.gameStatus['text'] = PLocalizer.DiceText_Caught % name
 
     def caughtYou(self):
-        print 'DistributedLiarsDice:caughtYou'
+        print('DistributedLiarsDice:caughtYou')
         self.sendUpdate('catchCheater', [
             self.mySeat])
 
@@ -528,7 +528,7 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
                 self.oldValue])
     
     def displayChallenge(self, dieN, dieV, player1, player2, elimName):
-        print 'Entering displayChallenge with %d dice' % len(self.challDice)
+        print('Entering displayChallenge with %d dice' % len(self.challDice))
         self.animPlaying = 1
         self.extraGuiReset()
         self.diceNumText.setPos(0.6, 0, 0.4)
@@ -544,7 +544,7 @@ class DistributedLiarsDice(DistributedDiceGame.DistributedDiceGame):
         self.gui.gameStatus['text'] = '%s %s' % (elimName, PLocalizer.DiceText_Call)
         diceCount = 0
         curCount = 0
-        for (who, dlist) in self.dicevals.iteritems():
+        for (who, dlist) in self.dicevals.items():
             diceCount += dlist.count(dieV)
             counter = 0
             for i in range(len(dlist)):

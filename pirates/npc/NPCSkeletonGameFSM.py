@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed import DistributedSmoothNode
 from direct.interval.IntervalGlobal import *
 from pirates.piratesbase import PiratesGlobals

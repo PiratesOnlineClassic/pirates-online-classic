@@ -406,7 +406,7 @@ class BattleManagerAI(BattleManagerBase):
         return True
 
     def _updateSkillEffects(self, task):
-        for _ in xrange(len(self._removedPendingSkillEffects)):
+        for _ in range(len(self._removedPendingSkillEffects)):
             effectId = self._removedPendingSkillEffects.popleft()
             assert(effectId != WeaponGlobals.C_ATTUNE)
 
@@ -419,7 +419,7 @@ class BattleManagerAI(BattleManagerBase):
                     self._pendingSkillEffects.remove(pendingSkillEffect)
                     target.removeSkillEffect(pendingSkillEffect.effectId)
 
-        for _ in xrange(len(self._pendingSkillEffects)):
+        for _ in range(len(self._pendingSkillEffects)):
             pendingSkillEffect = self._pendingSkillEffects.popleft()
             assert(pendingSkillEffect is not None)
 

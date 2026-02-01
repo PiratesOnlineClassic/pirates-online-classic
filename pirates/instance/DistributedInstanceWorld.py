@@ -1,5 +1,5 @@
 from pirates.instance.DistributedInstanceBase import DistributedInstanceBase
-from pandac.PandaModules import NodePath
+from panda3d.core import NodePath
 
 class DistributedInstanceWorld(DistributedInstanceBase, NodePath):
     

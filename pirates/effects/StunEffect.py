@@ -1,9 +1,9 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
-from EffectController import EffectController
+from .EffectController import EffectController
 from direct.particles import ParticleEffect
 from direct.particles import Particles
-from PooledEffect import PooledEffect
+from .PooledEffect import PooledEffect
 
 class StunEffect(PooledEffect, EffectController):
     cardScale = 64.0

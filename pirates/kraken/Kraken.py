@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed.DistributedNode import DistributedNode
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
@@ -88,7 +88,7 @@ class Kraken(DistributedNode):
         self.grabberTentacles.discard(grabber)
     
     def getRollAngle(self):
-        dampen = max([ grabber.getRockingDampen() for grabber in self.grabberTentacles.itervalues() ])
+        dampen = max([ grabber.getRockingDampen() for grabber in self.grabberTentacles.values() ])
         if dampen:
             frameTime = globalClock.getFrameTime()
             self.dampen[1] = frameTime
@@ -119,7 +119,7 @@ class Kraken(DistributedNode):
         t /= 15
         t %= len(self.grabberTentacles)
         t = int(t)
-        for grabber in self.grabberTentacles.itervalues():
+        for grabber in self.grabberTentacles.values():
             grabber.rangeCollisions.hide()
         
         self.grabberTentacles[t].rangeCollisions.show()

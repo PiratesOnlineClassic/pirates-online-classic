@@ -3,7 +3,7 @@ import random
 from direct.showbase.DirectObject import *
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase.PythonUtil import quickProfile
 from direct.interval.ProjectileInterval import *
 from direct.interval.IntervalGlobal import *
@@ -25,10 +25,10 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.shipparts import ShipPart
 from pirates.battle.WeaponGlobals import *
 from pirates.battle.EnemySkills import EnemySkills
-from DistributedWeapon import DistributedWeapon
-import WeaponGlobals
-import CannonGlobals
-from CannonballProjectile import CannonballProjectile
+from .DistributedWeapon import DistributedWeapon
+from . import WeaponGlobals
+from . import CannonGlobals
+from .CannonballProjectile import CannonballProjectile
 localFireSfxNames = [
     'cball_fire_1.mp3',
     'cball_fire_2.mp3',
@@ -550,7 +550,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
         self.effectNode.reparentTo(self.ship.modelGeom)
 
     def completeCannonCheck(self):
-        for colList in self.collisionLists.values():
+        for colList in list(self.collisionLists.values()):
             colList.sort()
             ammo = colList[0][1].getFromNodePath().getPythonTag('ammo')
             if not ammo or ammo.destroyed:

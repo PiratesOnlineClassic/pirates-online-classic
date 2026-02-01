@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.otpgui import OTPDialog
 from direct.task.Task import Task
 from pirates.piratesgui import PiratesGuiGlobals
@@ -141,11 +141,11 @@ class LookoutRequestLVL1(InventoryPage):
         self.updateMode(PiratesGuiGlobals.REQUEST_CAT_MODE)
 
     def showStatus(self):
-        if self.foundType and self.searchParams.has_key('type'):
+        if self.foundType and 'type' in self.searchParams:
             self.foundType.show()
             self.foundType['text'] = PLocalizer.LookoutFoundStatusType % self.searchParams['type']
         
-        if self.foundCat and self.searchParams.has_key('cat'):
+        if self.foundCat and 'cat' in self.searchParams:
             self.foundCat.show()
             self.foundCat['text'] = PLocalizer.LookoutFoundStatusCat % self.searchParams['cat']
         
@@ -724,11 +724,11 @@ class LookoutRequestLVL1(InventoryPage):
             messenger.send('guiMgrToggleLookout')
     
     def clearClipPlaneHack(self, canvas):
-        print 'setting clip plane off'
+        print('setting clip plane off')
         
         def blahblah():
             canvas.setClipPlaneOff()
-            print 'has clip plane off %s' % canvas.hasClipPlaneOff()
+            print('has clip plane off %s' % canvas.hasClipPlaneOff())
 
         DelayedCall(Functor(blahblah), delay = 1)
     

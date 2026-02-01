@@ -1,6 +1,6 @@
 import time
 import string
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed import DistributedNode
 from direct.actor.DistributedActor import DistributedActor
 from direct.task import Task
@@ -10,8 +10,8 @@ from otp.otpbase import OTPLocalizer
 from otp.speedchat import SCDecoders
 from otp.chat import ChatGarbler
 from otp.chat import ChatManager
-from Avatar import Avatar
-import AvatarDNA
+from .Avatar import Avatar
+from . import AvatarDNA
 
 from libotp import *
 

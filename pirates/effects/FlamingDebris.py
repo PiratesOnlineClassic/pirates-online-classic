@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase.DirectObject import *
 from direct.interval.IntervalGlobal import *
 from pirates.piratesbase import PiratesGlobals
@@ -8,7 +8,7 @@ from pirates.effects.SmokeTrail import SmokeTrail
 from pirates.effects.FlameTrail import FlameTrail
 from pirates.effects.DustCloud import DustCloud
 import random
-from PooledEffect import PooledEffect
+from .PooledEffect import PooledEffect
 DebrisDict = {
     '0': 'models/props/rock_1_floor',
     '1': 'models/props/rock_2_floor',

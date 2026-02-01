@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.gui.DirectGui import *
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui import GuiButton

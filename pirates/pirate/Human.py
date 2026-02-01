@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.actor import Actor
 from direct.task import Task
@@ -267,7 +267,7 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         self.reducedAnimList = self.animTable
 
     def forceLoadAnimDict(self):
-        for anim in self.animDict.keys():
+        for anim in list(self.animDict.keys()):
             self.getAnimControls(anim)
 
     def createAnimDict(self, customList = None):

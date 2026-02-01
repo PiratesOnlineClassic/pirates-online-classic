@@ -1,6 +1,6 @@
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import CannonGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
@@ -50,7 +50,7 @@ class CannonGUI(DirectFrame):
         pass
 
     def startReload(self, time, volley, elapsedTime = 0, doneCallback = None):
-        print 'reloaded with time %s and elapsed %s' % (time, elapsedTime)
+        print('reloaded with time %s and elapsed %s' % (time, elapsedTime))
         self.stopReload()
         self.reloadIval = Sequence(LerpFunctionInterval(self.__updateReloadBar, time), Func(self.__reloadDone))
         if doneCallback:

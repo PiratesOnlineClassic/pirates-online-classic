@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.port_royal_area_cave_b_1
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {
         0: Vec4(0.572549, 0.219608, 0.364706, 1),

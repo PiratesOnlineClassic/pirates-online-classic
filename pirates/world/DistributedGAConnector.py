@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed import DistributedNode
 from direct.distributed import DistributedObject
 from pirates.piratesbase import PiratesGlobals
@@ -101,7 +101,7 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
         DistributedNode.DistributedNode.delete(self)
         self.stopCustomEffects()
         if self.fakeZoneId != None:
-            for node in self.GridLOD.values():
+            for node in list(self.GridLOD.values()):
                 node.cleanup()
 
             del self.GridLOD
@@ -216,8 +216,8 @@ class DistributedGAConnector(DistributedNode.DistributedNode):
 
     def setupEntranceNodes(self):
         entranceNodes = self.findAllMatches('**/entrance_locator_*')
-        eNodeMap = dict(zip([ node.getName() for node in entranceNodes ], entranceNodes))
-        eNodeMapKeys = eNodeMap.keys()
+        eNodeMap = dict(list(zip([ node.getName() for node in entranceNodes ], entranceNodes)))
+        eNodeMapKeys = list(eNodeMap.keys())
         eNodeMapKeys.sort()
         self.entranceNodes = [ eNodeMap[key] for key in eNodeMapKeys ]
 

@@ -53,7 +53,7 @@ class CentralLoggerUD(DistributedObjectGlobalUD):
 
         if self.notify.getDebug():
             # Print to console
-            print(json.dumps(event))
+            print((json.dumps(event)))
 
         if exceptionLogger == 'splunk':
             pass #TODO

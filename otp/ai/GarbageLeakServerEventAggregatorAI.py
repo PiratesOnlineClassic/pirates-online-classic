@@ -52,7 +52,7 @@ class GarbageLeakServerEventAggregatorAI(DirectObject):
     def _sendLeaks(self, task=None):
         # only send the number of occurences of each leak that
         # we haven't already sent
-        for desc, curNum in self._curLeakDesc2num.iteritems():
+        for desc, curNum in self._curLeakDesc2num.items():
             self._sentLeakDesc2num.setdefault(desc, 0)
             num = curNum - self._sentLeakDesc2num[desc]
             if num > 0:
@@ -81,7 +81,7 @@ class GarbageLeakServerEventAggregatorAI(DirectObject):
     def _sendClientLeaks(self, task=None):
         # only send the number of occurences of each leak that
         # we haven't already sent
-        for desc, curNum in self._curClientDesc2num.iteritems():
+        for desc, curNum in self._curClientDesc2num.items():
             self._sentClientDesc2num.setdefault(desc, 0)
             num = curNum - self._sentClientDesc2num[desc]
             if num > 0:

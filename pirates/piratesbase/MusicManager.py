@@ -2,6 +2,7 @@ from direct.directnotify import DirectNotifyGlobal
 from pirates.piratesbase import AmbientManagerBase
 from direct.task import Task
 from pirates.uberdog import UberDogGlobals
+import functools
 musicDict = {
     'combat_a': 'audio/music_combat_a.mp3',
     'combat_b': 'audio/music_combat_b.mp3',
@@ -106,7 +107,7 @@ class MusicManager(AmbientManagerBase.AmbientManagerBase):
         self.playlist = []
 
     def load(self, name, looping = True):
-        if musicDict.has_key(name):
+        if name in musicDict:
             path = musicDict[name]
             retval = AmbientManagerBase.AmbientManagerBase.load(self, name, path, isMusic = True, looping = looping)
             if self.ambientDict[name].sfx == None:
@@ -127,7 +128,7 @@ class MusicManager(AmbientManagerBase.AmbientManagerBase):
                 break
     
     def request(self, name, priority = 0, looping = True, volume = 0.8):
-        if not self.ambientDict.has_key(name):
+        if name not in self.ambientDict:
             if not self.load(name, looping):
                 return
 
@@ -169,7 +170,7 @@ class MusicManager(AmbientManagerBase.AmbientManagerBase):
             
             return 0
 
-        self.playlist.sort(compFunc)
+        self.playlist.sort(key=functools.cmp_to_key(compFunc))
         self.notify.debug('playlist == ')
         for musicData in self.playlist:
             self.notify.debug('    musicData=%s' % musicData.name)

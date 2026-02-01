@@ -10,7 +10,7 @@ from otp.otpbase import OTPLocalizer
 from direct.directnotify import DirectNotifyGlobal
 from otp.login import LeaveToPayDialog
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 ChatEvent = 'ChatEvent'
 NormalChatEvent = 'NormalChatEvent'
 SCChatEvent = 'SCChatEvent'
@@ -350,7 +350,7 @@ class ChatManager(DirectObject.DirectObject):
         playerName = None
         chatToToon = 1
         online = 0
-        if self.cr.doId2do.has_key(avatarId):
+        if avatarId in self.cr.doId2do:
             online = 1
         elif self.cr.isFriend(avatarId):
             online = self.cr.isFriendOnline(avatarId)
@@ -370,7 +370,7 @@ class ChatManager(DirectObject.DirectObject):
             avatarUnderstandable = av.isUnderstandable()
         
         if playerId:
-            if base.cr.playerFriendsManager.playerId2Info.has_key(playerId):
+            if playerId in base.cr.playerFriendsManager.playerId2Info:
                 playerInfo = base.cr.playerFriendsManager.playerId2Info.get(playerId)
                 playerName = playerInfo.playerName
                 online = 1

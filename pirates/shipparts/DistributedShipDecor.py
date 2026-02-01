@@ -6,7 +6,7 @@ from pirates.piratesbase import PiratesGlobals
 from direct.distributed import DistributedObject
 from pirates.piratesbase import PLocalizer
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.battle import CannonGlobals
 from pirates.battle import WeaponGlobals
 from pirates.shipparts import DecorDNA

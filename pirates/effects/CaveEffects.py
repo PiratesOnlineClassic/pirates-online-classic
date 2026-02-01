@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.task import Task
 from pirates.swamp.Swamp import Swamp
 from pirates.effects import EnvironmentEffects
@@ -56,7 +56,7 @@ class CaveEffects(EnvironmentEffects.EnvironmentEffects):
                 color = non_shader_water_color
                 water.setColorScale(color)
                 water.setTextureOff(1)
-                mask = 0xFFFFFFFFL
+                mask = 0xFFFFFFFF
                 stencil = StencilAttrib.make(1, StencilAttrib.SCFAlways, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOReplace, 1, mask, mask)
                 water.setAttrib(stencil)
                 water.setBin('water', 0)

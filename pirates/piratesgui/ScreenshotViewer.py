@@ -1,5 +1,5 @@
 import os
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.gui.DirectGui import *
 from direct.gui.OnscreenImage import OnscreenImage
 from direct.gui.DirectButton import DirectButton
@@ -29,7 +29,7 @@ class ScreenshotViewer:
         buttons = loader.loadModel('models/gui/lookout_gui')
         closeButton = (buttons.find('**/lookout_close_window'), buttons.find('**/lookout_close_window_down'), buttons.find('**/lookout_close_window_over'))
         xs = 1.2
-        self.nextButton = DirectButton(imageFrame, relief = None, command = self.next, pos = (0.7, 0, 0), image = arrow, image_scale = (-xs, xs, xs), sortOrder = -5)
+        self.nextButton = DirectButton(imageFrame, relief = None, command = self.__next__, pos = (0.7, 0, 0), image = arrow, image_scale = (-xs, xs, xs), sortOrder = -5)
         self.prevButton = DirectButton(imageFrame, relief = None, command = self.prev, pos = (-.7, 0, 0), image = arrow, image_scale = xs, sortOrder = -5)
         self.closeButton = DirectButton(imageFrame, relief = None, command = self.close, pos = (0.78, 0, -.5), image = closeButton, image_scale = 0.3, text = 'close', text_fg = PiratesGuiGlobals.TextFG1, text_scale = 0.05, text_pos = (0, -.1), sortOrder = -5)
         self.showIval = Sequence(Func(imageFrame.show), Wait(1), Parallel(LerpPosInterval(self.closeButton, 0.2, Vec3(0.78, 0, -.8), Vec3(0.78, 0, -.5)), LerpPosInterval(self.nextButton, 0.2, Vec3(1, 0, 0), Vec3(0.7, 0, 0)), LerpPosInterval(self.prevButton, 0.2, Vec3(-1, 0, 0), Vec3(-.7, 0, 0))), Func(self.imageLabel.show))
@@ -64,13 +64,13 @@ class ScreenshotViewer:
             self.prevButton['state'] = DGG.DISABLED
             self.prevButton['state'] = DGG.DISABLED
 
-    def next(self):
+    def __next__(self):
         self.currentIndex = (self.currentIndex + 1) % len(self.screens)
         
         try:
             self.showImage(self.currentIndex)
         except:
-            print 'badImage'
+            print('badImage')
 
     def prev(self):
         self.currentIndex = (self.currentIndex - 1) % len(self.screens)
@@ -78,7 +78,7 @@ class ScreenshotViewer:
         try:
             self.showImage(self.currentIndex)
         except:
-            print 'badImage'
+            print('badImage')
     
     def close(self):
         self.imageFrame.hide()

@@ -188,7 +188,7 @@ class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def maxSP():
     invoker = spellbook.getInvoker()
-    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+    inventory = base.air.inventoryManager.getInventory(invoker.doId)
     if inventory:
         inventory.b_setStackQuantity(InventoryType.UnspentMelee, 255)
         inventory.b_setStackQuantity(InventoryType.UnspentCutlass, 255)
@@ -213,7 +213,7 @@ def weaponrank(rank):
     """
 
     invoker = spellbook.getInvoker()
-    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+    inventory = base.air.inventoryManager.getInventory(invoker.doId)
 
     if rank > 6:
         return 'Rank must be within 1-6.'
@@ -299,7 +299,7 @@ def weaponrank(rank):
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def maxWeapons():
     invoker = spellbook.getInvoker()
-    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+    inventory = base.air.inventoryManager.getInventory(invoker.doId)
     if inventory:
         # There is a rank higher, but i don't think it was even a thing in-game back then,
         # Because i've heard alot about pirate blade being the best. Which is L5.
@@ -376,7 +376,7 @@ def givePlayerStack(stackId, amount):
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def gold(amount):
     invoker = spellbook.getInvoker()
-    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+    inventory = base.air.inventoryManager.getInventory(invoker.doId)
     inventory.setGoldInPocket(inventory.getGoldInPocket() + amount)
     return 'Received Gold Amount %s | Current Gold Amount: %s' % (min(amount, 65000), inventory.getGoldInPocket())
 
@@ -384,7 +384,7 @@ def gold(amount):
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def removeGold(amount):
     invoker = spellbook.getInvoker()
-    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+    inventory = base.air.inventoryManager.getInventory(invoker.doId)
     inventory.setGoldInPocket(inventory.getGoldInPocket() - min(amount, 65000))
     return 'Removed Gold Amount: %s' % amount
 
@@ -392,6 +392,6 @@ def removeGold(amount):
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
 def givePork():
     invoker = spellbook.getInvoker()
-    inventory = simbase.air.inventoryManager.getInventory(invoker.doId)
+    inventory = base.air.inventoryManager.getInventory(invoker.doId)
     inventory.b_setStackQuantity(InventoryType.PorkChunk, 10)
     return 'Pork Chunks Given!'

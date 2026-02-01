@@ -1418,16 +1418,16 @@ QuestDict = {
     'OQA.recoverTentaclesC': QuestDNA(tasks = RecoverAvatarItemTaskDNA(item = QuestItems.Tentacle, maxAttempts = Attempts.INFREQUENT, probability = Probability.INFREQUENT, num = 2, goalLocation = LocationIds.TORMENTA_CAVE_B, enemyType = AvatarTypes.Douse), questInt = 30262, returnGiverIds = (NPCIds.SHOCHETT_PRYMME,), velvetRoped = False, displayGoal = True, acquireOnce = True, droppable = False, rewards = (ReputationReward(ExpRewards.SMALL),)),
     'OQA.recoverUrchinfistEye': QuestDNA(tasks = RecoverAvatarItemTaskDNA(item = QuestItems.UrchinfistEye, maxAttempts = Attempts.INFREQUENT, probability = Probability.INFREQUENT, goalLocation = LocationIds.TORMENTA_CAVE_B, enemyType = AvatarTypes.Douse), questInt = 30263, returnGiverIds = (NPCIds.SHOCHETT_PRYMME,), velvetRoped = False, displayGoal = True, acquireOnce = True, droppable = False, rewards = (ReputationReward(ExpRewards.SMALL),)),
     'OQA.deliverTentacles': QuestDNA(tasks = DeliverItemTaskDNA(item = QuestItems.Tentacle, num = 7, npcId = NPCIds.ADORIA_DOLORES), questInt = 30265, returnGiverIds = (NPCIds.ADORIA_DOLORES,), velvetRoped = False, displayGoal = True, acquireOnce = True, droppable = False, rewards = (ClothingQuestReward(ClothingGlobals.ADVANCED_OUTFIT_PART_G),)) }
-for (questId, questDNA) in QuestDict.items():
+for (questId, questDNA) in list(QuestDict.items()):
     questDNA.setQuestId(questId)
 
 if __dev__:
-    for questDNA in QuestDict.values():
+    for questDNA in list(QuestDict.values()):
         questDNA.check()
 
 
 questIntDict = { }
-for (questId, questDNA) in QuestDict.items():
+for (questId, questDNA) in list(QuestDict.items()):
     questIntDict[questDNA.questInt] = questId
 
 

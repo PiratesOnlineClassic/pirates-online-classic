@@ -1,5 +1,8 @@
 MINIMUM_MAGICWORD_ACCESS = 200
-from direct.showbase.PythonUtil import describeException
+import traceback
+
+def describeException(backTrace=0):
+    return traceback.format_exc()
 
 
 class MagicError(Exception):
@@ -84,7 +87,7 @@ class Spellbook:
     def __repr__(self):
         r = ''
 
-        for name, word in self.words.items():
+        for name, word in list(self.words.items()):
             r += '%s (%d)\n' % (name, word.access)
 
         return r
@@ -120,9 +123,9 @@ class MagicWord:
         self.doc = doc
 
     def parseArgs(self, string):
-        maxArgs = self.func.func_code.co_argcount
-        minArgs = maxArgs - (len(self.func.func_defaults)
-                             if self.func.func_defaults else 0)
+        maxArgs = self.func.__code__.co_argcount
+        minArgs = maxArgs - (len(self.func.__defaults__)
+                             if self.func.__defaults__ else 0)
 
         args = string.split(None, maxArgs - 1)[:maxArgs]
         if len(args) < minArgs:
@@ -168,7 +171,7 @@ class MagicWordDecorator:
 
         name = self.name
         if name is None:
-            name = mw.func_name
+            name = mw.__name__
 
         word = MagicWord(name, mw, self.types, self.access, mw.__doc__)
         spellbook.addWord(word)

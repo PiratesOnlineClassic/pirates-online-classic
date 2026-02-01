@@ -1,10 +1,10 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 from pirates.piratesbase import PLocalizer, PiratesGlobals
 from direct.interval.IntervalGlobal import *
 from pirates.battle import CannonGlobals
-import DialogButton
+from . import DialogButton
 import string
 
 class NewTutorialPanel(GuiPanel.GuiPanel):
@@ -193,11 +193,11 @@ class NewTutorialPanel(GuiPanel.GuiPanel):
         self.createShowPanelIval()
         undefText = 'undefined text'
         text = PLocalizer.TutorialPanelDialog.get(mode, undefText)
-        loc = string.find(text, '[')
+        loc = text.find('[')
         start = 0
         title = None
         if loc >= 0:
-            loc2 = string.find(text, ']')
+            loc2 = text.find(']')
             start = loc2 + 1
             title = text[loc + 1:loc2]
 

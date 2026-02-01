@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase.DirectObject import *
 from direct.interval.IntervalGlobal import *
 from direct.distributed import ClockDelta
@@ -20,8 +20,8 @@ from pirates.effects.ShockwaveRing import ShockwaveRing
 from pirates.effects.CameraShaker import CameraShaker
 from pirates.ship import ShipGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
-import WeaponGlobals
-from WeaponBase import WeaponBase
+from . import WeaponGlobals
+from .WeaponBase import WeaponBase
 
 class DistributedWeapon(WeaponBase, DistributedInteractive.DistributedInteractive):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedWeapon')

@@ -1,4 +1,4 @@
-from pandac.PandaModules import Vec4
+from panda3d.core import Vec4
 from otp.web.Setting import StateVarSetting
 from direct.fsm.StatePush import FunctionCall
 from pirates.piratesbase import PLocalizer

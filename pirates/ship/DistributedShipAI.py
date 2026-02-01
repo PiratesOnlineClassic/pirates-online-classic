@@ -124,7 +124,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
             self.hull.setShipClass(self.shipClass)
             self.hull.setBaseTeam(shipTeam)
-            for key, value in hullConfig.items():
+            for key, value in list(hullConfig.items()):
                 if not hasattr(self.hull, key):
                     continue
 
@@ -157,7 +157,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
                 mast.setShipClass(modelClass)
                 mast.setBaseTeam(shipTeam)
                 mast.setMastType(mastConfigType)
-                for key, value in mastConfig.items():
+                for key, value in list(mastConfig.items()):
                     if not hasattr(mast, key):
                         continue
 
@@ -190,7 +190,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             self.cabin.setShipClass(self.shipClass)
             self.cabin.setCabinType(cabinType)
             self.cabin.setBaseTeam(shipTeam)
-            for key, value in cabinConfig.items():
+            for key, value in list(cabinConfig.items()):
                 if not hasattr(self.cabin, key):
                     continue
 
@@ -246,7 +246,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
                 sail.setBaseTeam(shipTeam)
                 sail.setMastType(configSailType)
-                for key, value in sailConfig.items():
+                for key, value in list(sailConfig.items()):
                     if not hasattr(sail, key):
                         continue
 

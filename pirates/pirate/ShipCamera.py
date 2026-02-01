@@ -3,7 +3,7 @@ from direct.fsm import ClassicFSM, State
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import reduceAngle, fitSrcAngle2Dest, clampScalar, lerp, Functor
 from direct.showbase.InputStateGlobal import inputState
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.otpbase import OTPGlobals
 from pirates.pirate.OrbitCamera import OrbitCamera
 import math

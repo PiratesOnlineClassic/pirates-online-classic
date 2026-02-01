@@ -8,7 +8,7 @@ from otp.ai import AIInterestHandles
 GUILDRANK_GM = 3
 GUILDRANK_OFFICER = 2
 GUILDRANK_MEMBER = 1
-import Queue
+import queue
 
 class GuildMemberInfo(AvatarHandle):
     
@@ -103,7 +103,7 @@ class GuildManager(DistributedObjectGlobal):
             msgIndex])
     
     def sendSCQuest(self, questInt, msgType, taskNum):
-        print 'GuildManager.sendSCQuest() called'
+        print('GuildManager.sendSCQuest() called')
         self.sendUpdate('sendSCQuest', [
             questInt,
             msgType,
@@ -201,17 +201,17 @@ class GuildManager(DistributedObjectGlobal):
         base.localAvatar.guildNameChange(guildName, changeStatus)
     
     def guildNameUpdate(self, avatarId, guildName):
-        print 'DEBUG - guildNameUpdate for ', avatarId, ' to ', guildName
+        print('DEBUG - guildNameUpdate for ', avatarId, ' to ', guildName)
     
     def invitationFrom(self, avatarId, avatarName, guildId, guildName):
-        print 'GM invitationFrom %s(%d)' % (avatarName, avatarId)
+        print('GM invitationFrom %s(%d)' % (avatarName, avatarId))
         base.localAvatar.guiMgr.handleGuildInvitation(avatarId, avatarName, guildId, guildName)
 
     def retractInvite(self, avatarId):
-        print 'GM retraction'
+        print('GM retraction')
     
     def guildAcceptInvite(self, avatarId):
-        print 'sending accept event'
+        print('sending accept event')
         messenger.send(OTPGlobals.GuildAcceptInviteEvent, [avatarId])
 
     def leaderboardTopTen(self, stuff):

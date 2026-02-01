@@ -1,4 +1,4 @@
-from pandac.PandaModules import VBase3
+from panda3d.core import VBase3
 from pirates.piratesbase import PLocalizer
 from pirates.battle import EnemyGlobals
 from pirates.battle.EnemySkills import *

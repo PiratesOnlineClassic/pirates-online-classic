@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed.ClockDelta import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.battle import WeaponGlobals
@@ -72,7 +72,7 @@ class BuffIcon(DirectFrame):
             self.myIcon.bind(DGG.EXIT, self.hideDetails)
         else:
             # TODO: Disney neglected some of these... in the future, perhaps we should add it ourselves?
-            print('Could not find description and image for effectId: %s!' % self.effectId)
+            print(('Could not find description and image for effectId: %s!' % self.effectId))
 
         self.updateIconInfo()
 

@@ -5,7 +5,7 @@ NPC_VAL_IDX = 1
 
 
 def getNPCKeys():
-    return filter(lambda x: x.find('_type') < 0, NPC_LIST.keys())
+    return [x for x in list(NPC_LIST.keys()) if x.find('_type') < 0]
 
 
 setTattooChest = HumanDNA.setTattooChest

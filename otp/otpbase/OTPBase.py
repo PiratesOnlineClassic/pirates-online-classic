@@ -1,4 +1,4 @@
-import OTPRender
+from . import OTPRender
 import time
 
 from otp.ai.MagicWordGlobal import *

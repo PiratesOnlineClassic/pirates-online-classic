@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed.ClockDelta import *
 from direct.interval.IntervalGlobal import *
 from pirates.distributed import DistributedInteractive
@@ -81,8 +81,8 @@ class DistributedCellDoor(DistributedInteractive.DistributedInteractive):
         localAvatar.b_setGameState('DoorKicking')
         localAvatar.cameraFSM.request('FPS')
         if not localAvatar.cameraFSM.getCurrentCamera():
-            print '***JCW*** DistributedCellDoor.acceptInteraction'
-            print '***JCW*** no current camera'
+            print('***JCW*** DistributedCellDoor.acceptInteraction')
+            print('***JCW*** no current camera')
             localAvatar.printState()
         else:
             oldXform = localAvatar.cameraFSM.getCurrentCamera().getTransform(render)

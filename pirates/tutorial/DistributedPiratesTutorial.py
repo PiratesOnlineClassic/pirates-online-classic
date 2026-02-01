@@ -1,13 +1,13 @@
 import time
 import random
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.fsm import FSM
 from direct.actor import Actor
 from direct.task import Task
 from direct.distributed import DistributedObject
 from direct.showbase.PythonUtil import DelayedCall
-import ShipWreck
+from . import ShipWreck
 from pirates.npc import Skeleton
 from pirates.pirate import Pirate
 from pirates.pirate import HumanDNA
@@ -728,7 +728,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             localAvatar.setH(-90)
             self.stageStumpyPositionOnBoat()
             self.acceptOnce('usedCannon', self.startShipMovement)
-            stumpyBoat.cannons.values()[0][1].setIgnoreProximity(False)
+            list(stumpyBoat.cannons.values())[0][1].setIgnoreProximity(False)
             dialogue = base.loader.loadSfx('audio/beck_cs12_4_4c_tell_to_shoot.mp3')
             localAvatar.guiMgr.subtitler.showText(PLocalizer.QuestScriptTutorialStumpy_1, sfx = dialogue, timeout = dialogue.length() + 1.0)
             localAvatar.guiMgr.subtitler.clearTextOverride = True
@@ -783,7 +783,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         self.shipWreckHitCount += 1
         if self.shipWreckHitCount > 2 and self.shipWreckState == 0:
             self.shipWreckState = 1
-            print 'ship wreck hit count %s' % self.shipWreckHitCount
+            print('ship wreck hit count %s' % self.shipWreckHitCount)
             localAvatar.cannon.fireCannonPanel.setWreckButtonText(self.shipWreckHitCount)
             localAvatar.gameFSM.lockFSM = False
             self.showCannonExitPanel()
@@ -793,7 +793,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             self.shipWreckState = 2
             self.cannonDoneShooting()
         elif self.shipWreckState == 0:
-            print 'ship wreck hit count %s' % self.shipWreckHitCount
+            print('ship wreck hit count %s' % self.shipWreckHitCount)
             localAvatar.cannon.fireCannonPanel.setWreckButtonText(self.shipWreckHitCount)
     
     def showCannonExitPanel(self):

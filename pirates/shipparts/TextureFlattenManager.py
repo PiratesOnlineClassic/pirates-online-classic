@@ -18,7 +18,7 @@ class TextureFlattenManager:
         return holeCount
     
     def clearSplattables(self, objToClear):
-        self.splattabeObjects = dict(filter(lambda x: x[0] != objToClear, self.splattableObjects))
+        self.splattabeObjects = dict([x for x in self.splattableObjects if x[0] != objToClear])
 
     def addSail(self, obj):
         holeCount = self.sailObjects.get(obj, 0)

@@ -110,7 +110,7 @@ class ShipManagerAI:
 
         # upkeep the NPC ship population:
         activeNPCShips = list(self.npcShips)
-        for _ in xrange(NPCSHIP_POP_MAX - len(activeNPCShips)):
+        for _ in range(NPCSHIP_POP_MAX - len(activeNPCShips)):
             self._spawnEnemyShip(random.choice([ShipGlobals.NAVY_FERRET,
                                                 ShipGlobals.NAVY_GREYHOUND,
                                                 ShipGlobals.NAVY_KINGFISHER,

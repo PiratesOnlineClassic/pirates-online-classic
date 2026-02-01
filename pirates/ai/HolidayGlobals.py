@@ -1,6 +1,7 @@
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.ai.HolidayDates import *
+from otp.otpbase.OTPUtil import Enum
 Month = Enum('JANUARY, FEBRUARY, MARCH, APRIL,               MAY, JUNE, JULY, AUGUST, SEPTEMBER,               OCTOBER, NOVEMBER, DECEMBER', 1)
 Day = Enum('MONDAY, TUESDAY, WEDNESDAY, THURSDAY,             FRIDAY, SATURDAY, SUNDAY')
 holidayNames = {
@@ -225,57 +226,57 @@ holidayMessages = {
     PiratesGlobals.JOLLYCURSEAUTO: {}}
 
 def getHolidayStartMsg(holidayId, paidStatus):
-    if holidayMessages.get(holidayId).has_key(MSG_START_ALL):
+    if MSG_START_ALL in holidayMessages.get(holidayId):
         return holidayMessages.get(holidayId).get(MSG_START_ALL)[0]
-    elif holidayMessages.get(holidayId).has_key(MSG_START_UNLIMITED) and paidStatus:
+    elif MSG_START_UNLIMITED in holidayMessages.get(holidayId) and paidStatus:
         return holidayMessages.get(holidayId).get(MSG_START_UNLIMITED)[0]
-    elif holidayMessages.get(holidayId).has_key(MSG_START_BASIC) and not paidStatus:
+    elif MSG_START_BASIC in holidayMessages.get(holidayId) and not paidStatus:
         return holidayMessages.get(holidayId).get(MSG_START_BASIC)[0]
     return None
 
 def getHolidayStartChatMsg(holidayId, paidStatus):
-    if holidayMessages.get(holidayId).has_key(MSG_START_ALL):
+    if MSG_START_ALL in holidayMessages.get(holidayId):
         return holidayMessages.get(holidayId).get(MSG_START_ALL)[1]
-    elif holidayMessages.get(holidayId).has_key(MSG_START_UNLIMITED) and paidStatus:
+    elif MSG_START_UNLIMITED in holidayMessages.get(holidayId) and paidStatus:
         return holidayMessages.get(holidayId).get(MSG_START_UNLIMITED)[1]
-    elif holidayMessages.get(holidayId).has_key(MSG_START_BASIC) and not paidStatus:
+    elif MSG_START_BASIC in holidayMessages.get(holidayId) and not paidStatus:
         return holidayMessages.get(holidayId).get(MSG_START_BASIC)[1]
     return None
 
 def getHolidayEndMsg(holidayId, paidStatus):
-    if holidayMessages.get(holidayId).has_key(MSG_END_ALL):
+    if MSG_END_ALL in holidayMessages.get(holidayId):
         return holidayMessages.get(holidayId).get(MSG_END_ALL)[0]
-    elif holidayMessages.get(holidayId).has_key(MSG_END_UNLIMITED) and paidStatus:
+    elif MSG_END_UNLIMITED in holidayMessages.get(holidayId) and paidStatus:
         return holidayMessages.get(holidayId).get(MSG_END_UNLIMITED)[0]
-    elif holidayMessages.get(holidayId).has_key(MSG_END_BASIC) and not paidStatus:
+    elif MSG_END_BASIC in holidayMessages.get(holidayId) and not paidStatus:
         return holidayMessages.get(holidayId).get(MSG_END_BASIC)[0]
     return None
 
 def getHolidayEndChatMsg(holidayId, paidStatus):
-    if holidayMessages.get(holidayId).has_key(MSG_END_ALL):
+    if MSG_END_ALL in holidayMessages.get(holidayId):
         return holidayMessages.get(holidayId).get(MSG_END_ALL)[1]
-    elif holidayMessages.get(holidayId).has_key(MSG_END_UNLIMITED) and paidStatus:
+    elif MSG_END_UNLIMITED in holidayMessages.get(holidayId) and paidStatus:
         return holidayMessages.get(holidayId).get(MSG_END_UNLIMITED)[1]
-    elif holidayMessages.get(holidayId).has_key(MSG_END_BASIC) and not paidStatus:
+    elif MSG_END_BASIC in holidayMessages.get(holidayId) and not paidStatus:
         return holidayMessages.get(holidayId).get(MSG_END_BASIC)[1]
     return None
 
 def getHolidayStatusMsg(holidayId):
-    if holidayMessages.get(holidayId).has_key(MSG_CHAT_STATUS):
+    if MSG_CHAT_STATUS in holidayMessages.get(holidayId):
         return holidayMessages.get(holidayId).get(MSG_CHAT_STATUS)
     return None
 
 def getHolidayIcon(holidayId):
-    if holidayMessages.get(holidayId).has_key(MSG_ICON):
+    if MSG_ICON in holidayMessages.get(holidayId):
         return holidayMessages.get(holidayId).get(MSG_ICON)
     return None
 
 def getHolidayDiscordTitle(holidayId):
-    if holidayMessages.get(holidayId).has_key(MSG_DISCORD_TITLE):
+    if MSG_DISCORD_TITLE in holidayMessages.get(holidayId):
         return holidayMessages.get(holidayId).get(MSG_DISCORD_TITLE)
     return None
 
 def getHolidayDiscordDescription(holidayId):
-    if holidayMessages.get(holidayId).has_key(MSG_DISCORD_DESC):
+    if MSG_DISCORD_DESC in holidayMessages.get(holidayId):
         return holidayMessages.get(holidayId).get(MSG_DISCORD_DESC)
     return None

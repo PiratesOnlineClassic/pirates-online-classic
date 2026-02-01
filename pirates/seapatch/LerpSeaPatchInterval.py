@@ -1,6 +1,5 @@
-from libpirates import CLerpSeaPatchInterval
 
-class LerpSeaPatchInterval(CLerpSeaPatchInterval):
+class LerpSeaPatchInterval:
     lerpNum = 1
 
     def __init__(self, name, duration, blendType, patch, initial, target):
@@ -11,5 +10,10 @@ class LerpSeaPatchInterval(CLerpSeaPatchInterval):
         blendType = self.stringBlendType(blendType)
         if target == None:
             target = SeaPatchRoot()
-
-        CLerpSeaPatchInterval.__init__(self, name, duration, blendType, patch, initial, target)
+        
+        self.name = name
+        self.duration = duration
+        self.blendType = blendType
+        self.patch = patch
+        self.initial = initial
+        self.target = target

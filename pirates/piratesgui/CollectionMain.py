@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui import InventoryPage
 from pirates.piratesgui import InventoryItemGui
@@ -114,7 +114,7 @@ class CollectionMain(InventoryPage.InventoryPage):
                 pass
 
     def buryTreasure(self):
-        print 'DPARIS DEBUG - Attempting to bury treasure here'
+        print('DPARIS DEBUG - Attempting to bury treasure here')
 
     def destroy(self):
         self.clearList()

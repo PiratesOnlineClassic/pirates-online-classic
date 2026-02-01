@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.directnotify import DirectNotifyGlobal
 from pirates.economy import EconomyGlobals
@@ -21,12 +21,12 @@ from pirates.piratesbase import Freebooter
 from direct.distributed.ClockDelta import *
 import time
 import math
-import PiratesGuiGlobals
-from SkillButton import SkillButton
-from GuiTray import GuiTray
-from GuiButton import GuiButton
+from . import PiratesGuiGlobals
+from .SkillButton import SkillButton
+from .GuiTray import GuiTray
+from .GuiButton import GuiButton
 import copy
-from TonicsPanel import TonicsPanel
+from .TonicsPanel import TonicsPanel
 STAFF_INTERVAL = 0.4
 AIM_ASSIST_DURATION = 2.0
 
@@ -237,7 +237,7 @@ class TonicButton(SkillButton):
             
             idealAmount = max(0, localAvatar.getMaxHp() * 0.8 - localAvatar.getHp())
             bestTonicId = InventoryType.Potion1
-            for (tonicId, count) in sorted(tonics.iteritems()):
+            for (tonicId, count) in sorted(tonics.items()):
                 if count:
                     bestTonicId = tonicId
                     if WeaponGlobals.getAttackSelfHP(tonicId) > idealAmount:
@@ -468,7 +468,7 @@ class CombatTray(GuiTray):
         taskMgr.remove('skillFinishedTimer')
         self.weaponIds = None
         if self.weaponButtons:
-            for button in self.weaponButtons.values():
+            for button in list(self.weaponButtons.values()):
                 button.destroy()
 
         self.weaponButtons = None
@@ -482,7 +482,7 @@ class CombatTray(GuiTray):
             self.lastAmmoSkillId[localAvatar.currentWeaponId] = ammoSkillId
 
     def refreshList(self):
-        for button in self.weaponButtons.values():
+        for button in list(self.weaponButtons.values()):
             button.refreshStock()
 
     def toggleWeapon(self, weaponId, args = None, fromWheel = 0):
@@ -560,7 +560,7 @@ class CombatTray(GuiTray):
             self.acceptInput()
 
     def setCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
-        for weaponButton in self.weaponButtons.values():
+        for weaponButton in list(self.weaponButtons.values()):
             weaponButton.destroy()
         
         self.weaponButtons = {}
@@ -965,7 +965,7 @@ class CombatTray(GuiTray):
                 return 0
             
             amt = inv.getStackQuantity(ammoSkillId)
-            if localAvatar.guiMgr.weaponPage.tonicButtons.has_key(ammoSkillId):
+            if ammoSkillId in localAvatar.guiMgr.weaponPage.tonicButtons:
                 localAvatar.guiMgr.weaponPage.tonicButtons[ammoSkillId].updateQuantity(amt - 1)
             
             for skillButton in localAvatar.guiMgr.weaponPage.tonicButtons:
@@ -1450,7 +1450,7 @@ class CombatTray(GuiTray):
         self.ignore('skillStarted')
         self.ignore('skillFinished')
         self.ignore('reloadFinished')
-        for i in xrange(1, 9):
+        for i in range(1, 9):
             self.ignore('%d' % i)
         
         self.ignoreInput()
@@ -1578,7 +1578,7 @@ class CombatTray(GuiTray):
         self.isMouseMode = 1
 
     def updateWeaponRep(self, category, rep):
-        for button in self.weaponButtons.values():
+        for button in list(self.weaponButtons.values()):
             if button.category == category:
                 button.updateRep(rep)
         

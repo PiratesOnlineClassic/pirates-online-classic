@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesgui import ButtonListItem
 from pirates.piratesgui import PiratesGuiGlobals
 import types
@@ -63,7 +63,7 @@ class LookoutListItem(ButtonListItem.ButtonListItem):
         self.selected = selected
         return
         if selected:
-            print 'selected'
+            print('selected')
             self.createListFrame()
         else:
             self.clearListFrame()

@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.tortuga_building_int_14
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Interact Links':
     [['1186512896.0dxschafe', '1186513024.0dxschafe', 'Bi-directional']],

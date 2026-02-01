@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.anvil_island_area_barbossa_cave
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1172209006.11sdnaik': {

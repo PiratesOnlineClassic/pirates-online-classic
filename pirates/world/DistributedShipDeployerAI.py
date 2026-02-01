@@ -225,7 +225,7 @@ class DistributedShipDeployerAI(DistributedNodeAI):
             pos = Point3(math.cos(angle), math.sin(angle), 0) * deployRingRadius
             return pos
 
-        for x in xrange(numSpheres):
+        for x in range(numSpheres):
             ax, ay, az = getSpherePos(x)
             bx, by = self.island.sphereCenter
             cx, cy = bx + ax, by + ay

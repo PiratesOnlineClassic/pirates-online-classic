@@ -1,9 +1,9 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.world import ClientArea
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import report
-import DistributedGAConnector
+from . import DistributedGAConnector
 
 class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientArea.ClientArea):
     notify = directNotify.newCategory('DistributedGATunnel')
@@ -210,7 +210,7 @@ class DistributedGATunnel(DistributedGAConnector.DistributedGAConnector, ClientA
         return retval
     
     def calcAmbientNames(self):
-        for i in xrange(2):
+        for i in range(2):
             area = self.areaNode[i]
             ambientName = self.calcOneAmbientName(area)
             self.ambientNames[i] = ambientName

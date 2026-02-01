@@ -1,7 +1,8 @@
 import sys
 import time
 import os
-from pandac.PandaModules import *
+from panda3d.core import *
+from panda3d.physics import *
 from direct.showbase.DirectObject import *
 from direct.showbase.PythonUtil import *
 from direct.showbase.Transitions import Transitions
@@ -25,8 +26,8 @@ from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPLocalizer
 from pirates.piratesgui import PDialog
 from libotp import *
-import PiratesGlobals
-import __builtin__
+from . import PiratesGlobals
+import builtins
 
 try:
     import embedded
@@ -456,7 +457,7 @@ class PiratesBase(OTPBase):
             try:
                 import webbrowser
                 webbrowser.open(url)
-            except WindowsError, e:
+            except WindowsError as e:
                 import os
                 os.system('explorer "%s"' % url)
     
@@ -478,7 +479,7 @@ class PiratesBase(OTPBase):
         elif gridDetail == 'low':
             self.farCull.setPos(0, 200, 0)
         else:
-            raise StandardError, 'Invalid grid-detail: %s' % gridDetail
+            raise Exception('Invalid grid-detail: %s' % gridDetail)
 
     def setLowMemory(self, lowMemory):
         self.lowMemory = lowMemory
@@ -489,8 +490,8 @@ class PiratesBase(OTPBase):
                 ConfigVariableInt('miles-audio-preload-threshold').setValue(0)
             
         else:
-            GeomVertexArrayData.getIndependentLru().setMaxSize(0xFFFFFFFFL)
-            VertexDataPage.getGlobalLru(VertexDataPage.RCResident).setMaxSize(0xFFFFFFFFL)
+            GeomVertexArrayData.getIndependentLru().setMaxSize(0xFFFFFFFF)
+            VertexDataPage.getGlobalLru(VertexDataPage.RCResident).setMaxSize(0xFFFFFFFF)
             if self.lowMemoryStreamAudio.getValue():
                 ConfigVariableInt('miles-audio-preload-threshold').setValue(-1)
     
@@ -547,7 +548,7 @@ class PiratesBase(OTPBase):
         screenShotNotice.setBin('gui-popup', 0)
         
         def clearScreenshotMsg(event):
-            print 'cleanup'
+            print('cleanup')
             screenShotNotice.destroy()
 
         taskMgr.doMethodLater(3.0, clearScreenshotMsg, 'clearWarning')
@@ -574,13 +575,13 @@ class PiratesBase(OTPBase):
     def startShow(self, cr):
         self.cr = cr
         if self.config.GetBool('want-fifothreads', 0):
-            __builtin__.yieldThread = self.cr.yieldThread
+            builtins.yieldThread = self.cr.yieldThread
         else:
             
             def nullYield(comment = ''):
                 pass
 
-            __builtin__.yieldThread = nullYield
+            builtins.yieldThread = nullYield
             del nullYield
         base.graphicsEngine.renderFrame()
         self.downloadWatcher = PiratesDownloadWatcher.PiratesDownloadWatcher(PLocalizer.LauncherPhaseNames)

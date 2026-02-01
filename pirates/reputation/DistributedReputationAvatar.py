@@ -6,7 +6,7 @@ from pirates.battle import WeaponGlobals
 from pirates.quest import DistributedQuestGiver
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.piratesbase import PiratesGlobals
-import ReputationGlobals
+from . import ReputationGlobals
 
 class DistributedReputationAvatar(DistributedAvatar.DistributedAvatar, DistributedMovingObject.DistributedMovingObject, DistributedInteractive.DistributedInteractive, DistributedQuestGiver.DistributedQuestGiver):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedReputationAvatar')

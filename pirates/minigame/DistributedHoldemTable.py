@@ -2,7 +2,7 @@ import random
 from pirates.minigame import PlayingCardGlobals
 from pirates.minigame import DistributedPokerTable
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import Point3, Vec3
+from panda3d.core import Point3, Vec3
 from pirates.piratesbase import PLocalizer
 
 class DistributedHoldemTable(DistributedPokerTable.DistributedPokerTable):

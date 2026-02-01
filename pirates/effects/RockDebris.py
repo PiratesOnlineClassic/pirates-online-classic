@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase.DirectObject import *
 from direct.interval.IntervalGlobal import *
 from pirates.piratesbase import PiratesGlobals
@@ -6,7 +6,7 @@ from direct.distributed import DistributedObject
 from pirates.effects.DustCloud import DustCloud
 from pirates.effects.SmallSplash import SmallSplash
 import random
-from PooledEffect import PooledEffect
+from .PooledEffect import PooledEffect
 DebrisDict = {
     '0': 'models/props/rock_1_floor',
     '1': 'models/props/rock_2_floor',
@@ -48,7 +48,7 @@ class RockDebris(PooledEffect):
         try:
             playProjectile = ProjectileInterval(self.transNode, startPos = self.startPos, startVel = self.startVel, endZ = self.endPlaneZ, gravityMult = 4.0)
             self.playProjectile = playProjectile
-        except StandardError:
+        except Exception:
             playProjectile = Wait(0.2)
             self.playProjectile = None
 

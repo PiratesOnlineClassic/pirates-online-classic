@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.world import WorldGlobals
 import os
@@ -35,7 +35,7 @@ class WorldCreatorBase:
     
     def loadObjectDict(self, objDict, parent, parentUid, dynamic, zoneLevel = 0, startTime = None, parentIsObj = False, fileName = None, actualParentObj = None):
         objects = []
-        for objKey in objDict.keys():
+        for objKey in list(objDict.keys()):
             newObj = self.loadObject(objDict[objKey], parent, parentUid, objKey, dynamic, zoneLevel = zoneLevel, startTime = startTime, parentIsObj = parentIsObj, fileName = fileName, actualParentObj = actualParentObj)
             if newObj:
                 objects.append(newObj)
@@ -109,7 +109,7 @@ class WorldCreatorBase:
             obj = __import__('pirates.leveleditor.worldData.' + moduleName)
         except ImportError:
             obj = None
-        except ValueError, e:
+        except ValueError as e:
             self.notify.error('%s when loading %s' % (e, filename))
 
         for symbol in [
@@ -146,12 +146,12 @@ class WorldCreatorBase:
         objectInfo = None
         for name in fileDict:
             fileData = fileDict[name]
-            if not fileData['ObjectIds'].has_key(uid):
+            if uid not in fileData['ObjectIds']:
                 continue
             
             getSyntax = 'objectInfo = fileData' + fileData['ObjectIds'][uid]
-            exec getSyntax
-            if not objectInfo.has_key('File') or objectInfo.get('File') == '':
+            exec(getSyntax)
+            if objectInfo is not None and ('File' not in objectInfo or objectInfo.get('File') == ''):
                 break
         
         return objectInfo
@@ -165,7 +165,7 @@ class WorldCreatorBase:
             if self.isObjectDefined(uid, fileName):
                 fileData = self.fileDicts[fileName]
                 getSyntax = 'objectInfo = fileData' + fileData['ObjectIds'][uid]
-                exec getSyntax
+                exec(getSyntax)
 
         return objectInfo
 
@@ -177,20 +177,20 @@ class WorldCreatorBase:
         fileList = set()
         for name in fileDict:
             fileData = fileDict[name]
-            if not fileData['ObjectIds'].has_key(uid):
+            if uid not in fileData['ObjectIds']:
                 continue
             
             getSyntax = 'objectInfo = fileData' + fileData['ObjectIds'][uid]
-            exec getSyntax
+            exec(getSyntax)
             fileList.add(name)
             objects = objectInfo.get('Objects')
             if objects:
-                for obj in objects.values():
+                for obj in list(objects.values()):
                     visual = obj.get('Visual')
                     if visual:
                         model = visual.get('Model')
                         if model:
-                            if type(model) is types.ListType:
+                            if type(model) is list:
                                 for currModel in model:
                                     fileList.add(currModel + '.bam')
                                 
@@ -199,14 +199,14 @@ class WorldCreatorBase:
 
             objects = fileData.get('Objects')
             if objects:
-                for obj in objects.values():
+                for obj in list(objects.values()):
                     visual = obj.get('Visual')
                     if visual:
                         model = visual.get('Model')
                         if model:
                             fileList.add(model + '.bam')
 
-            if not objectInfo.has_key('File') or objectInfo.get('File') == '':
+            if 'File' not in objectInfo or objectInfo.get('File') == '':
                 break
         
         return list(fileList)
@@ -222,15 +222,15 @@ class WorldCreatorBase:
             curFile = None
             for name in fileDict:
                 fileData = fileDict[name]
-                if not fileData['ObjectIds'].has_key(str(curUid)):
+                if str(curUid) not in fileData['ObjectIds']:
                     continue
                 
-                if fileData['Objects'].has_key(str(curUid)):
+                if str(curUid) in fileData['Objects']:
                     if fileData['Objects'][str(curUid)].get('Type') == 'Island':
                         return (str(curUid), isPrivate)
                     continue
-                objData = fileData['Objects'].values()[0]['Objects']
-                if objData.has_key(str(curUid)):
+                objData = list(fileData['Objects'].values())[0]['Objects']
+                if str(curUid) in objData:
                     if curUid == objUid:
                         if objData[str(curUid)].get('Private Status') == 'Private Only':
                             isPrivate = True
@@ -244,14 +244,14 @@ class WorldCreatorBase:
             if not curFile:
                 return None
             else:
-                curUid = curFile.get('Objects', {}).keys()[0]
+                curUid = list(curFile.get('Objects', {}).keys())[0]
                 if curFile['Objects'][str(curUid)].get('Type') == 'Island':
                     return (curUid, isPrivate)
 
     def isObjectDefined(self, objUid, fileName):
         fileDict = self.fileDicts
         fileData = fileDict.get(fileName)
-        if fileData and fileData['ObjectIds'].has_key(objUid):
+        if fileData and objUid in fileData['ObjectIds']:
             return True
         else:
             return False

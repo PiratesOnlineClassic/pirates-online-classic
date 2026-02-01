@@ -1,7 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PLocalizer
 from pirates.minigame import DistributedGameTable
 from pirates.minigame import PlayingCardGlobals
@@ -97,7 +97,7 @@ class DistributedDiceGame(DistributedGameTable.DistributedGameTable):
         self.mySeat = seatIndex
 
     def localAvatarGotUp(self, seatIndex):
-        print 'DistributedDiceGame:localAvatarGotUp'
+        print('DistributedDiceGame:localAvatarGotUp')
         self.extraGuiDestroy()
         self.gui.destroy()
         del self.gui
@@ -123,9 +123,9 @@ class DistributedDiceGame(DistributedGameTable.DistributedGameTable):
         self.gui.mainButton['frameColor'] = (0, 0.3, 0.4, 1)
     
     def yourTurn(self, activeSeat):
-        print 'DistributedDiceGame:yourTurn - activeSeat %d' % activeSeat
+        print('DistributedDiceGame:yourTurn - activeSeat %d' % activeSeat)
         if activeSeat != self.mySeat:
-            print 'DistributedDiceGame:yourTurn - not my seat (%d)' % self.mySeat
+            print('DistributedDiceGame:yourTurn - not my seat (%d)' % self.mySeat)
             return
         
         if self.gameState == DiceGlobals.DSTATE_DOROLL:

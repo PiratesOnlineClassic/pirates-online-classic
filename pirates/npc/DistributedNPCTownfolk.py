@@ -1,6 +1,6 @@
 import random
 import re
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
@@ -22,7 +22,7 @@ from pirates.piratesgui.NewTutorialPanel import NewTutorialPanel
 from pirates.economy import DistributedShopKeeper
 from pirates.economy import EconomyGlobals
 from pirates.piratesgui import PDialog
-import Townfolk
+from . import Townfolk
 from pirates.interact import InteractiveBase
 from pirates.leveleditor import CustomAnims
 from direct.showbase.PythonUtil import report
@@ -163,7 +163,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
         return 0
     
     def setDNAId(self, dnaId):
-        if dnaId and NPCList.NPC_LIST.has_key(dnaId):
+        if dnaId and dnaId in NPCList.NPC_LIST:
             dnaDict = NPCList.NPC_LIST[dnaId]
             customDNA = HumanDNA.HumanDNA()
             customDNA.loadFromNPCDict(dnaDict)
@@ -498,7 +498,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
             healMojoButtonState = InteractGlobals.NORMAL
         if self.shopInventory:
             storeButtonState = InteractGlobals.NORMAL
-        print 'DEBUG - optionIds: %s' % InteractGlobals.getNPCInteractMenu(self.avatarType)[1]
+        print('DEBUG - optionIds: %s' % InteractGlobals.getNPCInteractMenu(self.avatarType)[1])
         optionIds = InteractGlobals.getNPCInteractMenu(self.avatarType)[1]
         buttonStateDict = {
           InteractGlobals.QUEST: questButtonState,
@@ -635,7 +635,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
         DistributedBattleNPC.DistributedBattleNPC.setHp(self, hitPoints, quietly)
     
     def drawWeapon(self):
-        print 'draw weapon'
+        print('draw weapon')
         ival = self.pullOutCurrentWeapon()
         ival.start()
     
@@ -687,8 +687,8 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
     
     def shipTutorialPt1(self):
         nameData = [
-            PLocalizer.PirateShipPrefix.keys(),
-            PLocalizer.PirateShipSuffix.keys()]
+            list(PLocalizer.PirateShipPrefix.keys()),
+            list(PLocalizer.PirateShipSuffix.keys())]
         self.shipNamePanel = NamePanelGui.NamePanelGui(PLocalizer.NamePanelTitle, nameData, showClose = False)
         self.shipNamePanel.setPos(-1, 0, 0)
         self.acceptOnce('nameChosen', self.handleShipNameChosen)
@@ -895,7 +895,7 @@ class DistributedNPCTownfolk(DistributedBattleNPC.DistributedBattleNPC, Distribu
         return self.helpId
     
     def showVoodooDollToAvatar(self):
-        print 'triggering the interaction complete'
+        print('triggering the interaction complete')
 
     def showRespecMenu(self):
         if self.interactGUI:

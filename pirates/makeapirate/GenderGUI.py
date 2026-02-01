@@ -4,7 +4,7 @@ from direct.showbase import DirectObject
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PLocalizer
 from pirates.pirate import HumanDNA
 import random

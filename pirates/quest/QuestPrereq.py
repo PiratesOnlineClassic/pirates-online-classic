@@ -1,4 +1,4 @@
-from direct.showbase.PythonUtil import POD, makeTuple
+from otp.otpbase.OTPUtil import POD, makeTuple
 
 class QuestPrereq(POD):
     

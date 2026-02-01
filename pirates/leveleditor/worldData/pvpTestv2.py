@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.pvpTestv2
-from pandac.PandaModules import Point3, VBase3
+from panda3d.core import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1128540775.81jubutler': {

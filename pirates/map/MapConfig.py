@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase.PythonUtil import clampScalar, lerp
 from direct.gui.DirectGui import DGG, DirectFrame, DirectLabel, DirectSlider, DirectEntry, DirectButton
 from direct.gui.OnscreenText import OnscreenText
@@ -56,13 +56,13 @@ class RangeSlider(DirectFrame):
             pos = (-0.275 - width * 0.05, 0, -0.02)
         else:
             pos = (-0.025 * width, 0, -0.35)
-        self.min = DirectEntry(parent = self, initialText = `float(self.slider['range'][0])`, scale = 0.05, width = width, pos = pos)
+        self.min = DirectEntry(parent = self, initialText = repr(float(self.slider['range'][0])), scale = 0.05, width = width, pos = pos)
         updateField(self.min, 'command', lambda x: updateField(self.slider, 'range', (float(x), self.slider['range'][1])))
         if orientation == DGG.HORIZONTAL:
             pos = (0.275, 0, -0.02)
         else:
             pos = (-0.025 * width, 0, 0.3)
-        self.max = DirectEntry(parent = self, initialText = `float(self.slider['range'][1])`, scale = 0.05, width = width, pos = pos)
+        self.max = DirectEntry(parent = self, initialText = repr(float(self.slider['range'][1])), scale = 0.05, width = width, pos = pos)
         updateField(self.max, 'command', lambda x: updateField(self.slider, 'range', (self.slider['range'][0], float(x))))
         self.label = DirectLabel(parent = self, relief = None, text = label, text_scale = 0.05, text_pos = (0.03 - 0.395, 0.35 - 0.24, 0), text_align = TextNode.ALeft)
 

@@ -1,9 +1,9 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from direct.showbase.PythonUtil import reduceAngle, fitSrcAngle2Dest
 from direct.showbase.PythonUtil import clampScalar, getSetter
-from direct.showbase.PythonUtil import ParamObj
+from otp.otpbase.OTPUtil import ParamObj
 from direct.task import Task
 from otp.otpbase import OTPGlobals
 from pirates.pirate import CameraMode
@@ -151,7 +151,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
         if self.isActive():
             if not self._fadeGeom and self.getPriorValue():
                 if hasattr(self, '_hiddenGeoms'):
-                    for np in self._hiddenGeoms.keys():
+                    for np in list(self._hiddenGeoms.keys()):
                         self._unfadeGeom(np)
                     
                     self._hiddenGeoms = {}
@@ -412,7 +412,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
                     i += 1
             else:
                 self.setPracticalDistance(None)
-            for np in nonObstrGeoms.keys():
+            for np in list(nonObstrGeoms.keys()):
                 self._unfadeGeom(np)
             
         elif self._cHandlerQueue.getNumEntries() > 0:
@@ -428,7 +428,7 @@ class OrbitCamera(CameraMode.CameraMode, NodePath, ParamObj):
 
     def _stopCollisionCheck(self):
         while len(self._hiddenGeoms):
-            self._unfadeGeom(self._hiddenGeoms.keys()[0])
+            self._unfadeGeom(list(self._hiddenGeoms.keys())[0])
         del self._hiddenGeoms
         del self._fadeOutIvals
         del self._fadeInIvals

@@ -4,7 +4,7 @@ from direct.showbase import DirectObject
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PLocalizer
 from pirates.pirate import HumanDNA
 from pirates.npc import Skeleton
@@ -110,7 +110,7 @@ class NPCGUI(DirectFrame, StateData.StateData):
         self.handleGP1()
 
     def randomPick(self):
-        cList = range(0, 16)
+        cList = list(range(0, 16))
         cList.remove(self.main.skeletonType)
         choice = random.choice(cList)
         if choice == 0:

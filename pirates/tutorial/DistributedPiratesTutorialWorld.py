@@ -1,5 +1,5 @@
 import time
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.fsm import FSM
 from direct.actor import Actor
 from direct.task import Task

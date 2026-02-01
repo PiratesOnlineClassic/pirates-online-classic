@@ -982,7 +982,7 @@ PROP_ANIMS = {
 def getPropAnimList():
     resultDic = {}
     totalList = []
-    for propModel in PROP_ANIMS.keys():
+    for propModel in list(PROP_ANIMS.keys()):
         animList = [[propModel], PROP_ANIMS[propModel]]
         totalList.append(animList)
     

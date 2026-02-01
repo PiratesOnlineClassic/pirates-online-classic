@@ -5,7 +5,7 @@ from direct.fsm import ClassicFSM
 from direct.fsm import State
 from direct.showbase.DirectObject import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
@@ -40,10 +40,10 @@ from pirates.effects.ShipDebris import ShipDebris
 from pirates.effects.WoodShards import WoodShards
 from pirates.piratesbase import Freebooter
 from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
-import DistributedWeapon
-import WeaponGlobals
-import CannonGlobals
-import Cannon
+from . import DistributedWeapon
+from . import WeaponGlobals
+from . import CannonGlobals
+from . import Cannon
 
 class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPCCannon')
@@ -481,7 +481,7 @@ class DistributedPCCannon(DistributedWeapon.DistributedWeapon):
             self.requestExit()
 
     def completeCannonCheck(self):
-        for colList in self.collisionLists.values():
+        for colList in list(self.collisionLists.values()):
             colList.sort()
             ammo = colList[0][1].getFromNodePath().getPythonTag('ammo')
             if not ammo or ammo.destroyed:

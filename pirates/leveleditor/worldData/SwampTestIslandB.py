@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.SwampTestIslandB
-from pandac.PandaModules import Point3, VBase3
+from panda3d.core import Point3, VBase3
 objectStruct = {
     'Locator Links':
     [['1153868315.8sdnaik0', '1152910060.11sdnaik', 'Bi-directional'],

@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesgui import PiratesGuiGlobals
 import types
 
@@ -38,7 +38,7 @@ class ButtonListItem(DirectButton):
         self.ignoreAll()
     
     def _createIface(self):
-        if type(self.item) is types.ListType:
+        if type(self.item) is list:
             itemText = self.item[0]
         else:
             itemText = self.item

@@ -1,6 +1,6 @@
 from direct.gui.DirectGui import *
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui import InventoryPage
 from pirates.piratesgui import WeaponPanel
@@ -72,10 +72,10 @@ class WeaponPage(InventoryPage.InventoryPage):
             self.tonicButtons[tonicId] = button
 
     def refreshList(self, newWeaponId = None):
-        for panel in self.weaponPanels.values():
+        for panel in list(self.weaponPanels.values()):
             panel.destroy()
         
-        for panel in self.tonicButtons.values():
+        for panel in list(self.tonicButtons.values()):
             panel.destroy()
         
         inventory = localAvatar.getInventory()
@@ -101,7 +101,7 @@ class WeaponPage(InventoryPage.InventoryPage):
         for i in range(len(InventoryType.Potions) - 1):
             tonicId = InventoryType.Potions[i]
             tonicAmt = inv.getStackQuantity(tonicId)
-            if self.tonicButtons.has_key(tonicId):
+            if tonicId in self.tonicButtons:
                 self.tonicButtons[tonicId].updateQuantity(tonicAmt)
                 self.tonicButtons[tonicId].checkAmount()
         

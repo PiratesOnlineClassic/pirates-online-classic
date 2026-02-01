@@ -1,5 +1,5 @@
 from otp.launcher import DownloadWatcher
-from pandac.PandaModules import Point3, TextNode
+from panda3d.core import Point3, TextNode
 from direct.gui.DirectLabel import DirectLabel
 from direct.gui.DirectWaitBar import DirectWaitBar
 from direct.gui import DirectGuiGlobals as DGG

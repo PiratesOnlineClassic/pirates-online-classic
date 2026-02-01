@@ -1,7 +1,7 @@
 import random
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase.PiratesGlobals import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
@@ -116,7 +116,7 @@ class Window(NodePath, ShipPart.ShipPart):
         return filePrefix
     
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
-        print 'Window Sound'
+        print('Window Sound')
         sfx = random.choice(self.glassBreakSfx)
         base.playSfx(sfx, node = self, cutoff = 2000)
         if base.cr.wantSpecialEffects and self.ship:

@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.GameAreaSandboxIsland
-from pandac.PandaModules import Point3, VBase3
+from panda3d.core import Point3, VBase3
 objectStruct = {
     'Locator Links':
     [['1163553368.55sdnaik', '1163553327.97sdnaik', 'Bi-directional'],

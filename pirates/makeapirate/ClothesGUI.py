@@ -6,11 +6,11 @@ from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
 from direct.task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.makeapirate import ClothingGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.pirate import HumanDNA
-from CharGuiBase import CharGuiSlider, CharGuiPicker
+from .CharGuiBase import CharGuiSlider, CharGuiPicker
 import random
 genderIdx = 0
 topNumColor = 21
@@ -311,7 +311,7 @@ class ClothesGUI(DirectFrame, StateData.StateData):
             
             optionsLeft = len(self.main.JSD_CLOTHING_INTRO[idx])
             if optionsLeft:
-                choice = random.choice(range(0, optionsLeft))
+                choice = random.choice(list(range(0, optionsLeft)))
                 if self.main.lastDialog:
                     self.main.lastDialog.stop()
                 
@@ -331,18 +331,18 @@ class ClothesGUI(DirectFrame, StateData.StateData):
         self.showApparelCollections()
 
     def reset(self):
-        baseHat = self.avatar.choices['HAT'].keys()[0]
-        baseShirt = self.avatar.choices['SHIRT'].keys()[0]
+        baseHat = list(self.avatar.choices['HAT'].keys())[0]
+        baseShirt = list(self.avatar.choices['SHIRT'].keys())[0]
         baseShirtTex = self.avatar.choices['SHIRT'][baseShirt][0]
-        baseVest = self.avatar.choices['VEST'].keys()[0]
+        baseVest = list(self.avatar.choices['VEST'].keys())[0]
         baseVestTex = self.avatar.choices['VEST'][baseVest][0]
-        baseCoat = self.avatar.choices['COAT'].keys()[0]
+        baseCoat = list(self.avatar.choices['COAT'].keys())[0]
         baseCoatTex = self.avatar.choices['COAT'][baseCoat][0]
-        basePant = self.avatar.choices['PANT'].keys()[0]
+        basePant = list(self.avatar.choices['PANT'].keys())[0]
         basePantTex = self.avatar.choices['PANT'][basePant][0]
-        baseBelt = self.avatar.choices['BELT'].keys()[0]
+        baseBelt = list(self.avatar.choices['BELT'].keys())[0]
         baseBeltTex = self.avatar.choices['BELT'][baseBelt][0]
-        baseShoe = self.avatar.choices['SHOE'].keys()[0]
+        baseShoe = list(self.avatar.choices['SHOE'].keys())[0]
         baseShoeTex = self.avatar.choices['SHOE'][baseShoe][0]
         self.avatar.currentClothing = {
             'HAT': [
@@ -394,7 +394,7 @@ class ClothesGUI(DirectFrame, StateData.StateData):
             'PANT',
             'BELT',
             'SHOE']:
-            itemId = random.choice(self.avatar.choices[type].keys())
+            itemId = random.choice(list(self.avatar.choices[type].keys()))
             texId = random.choice(self.avatar.choices[type][itemId])
             self.avatar.currentClothing[type] = [
                 itemId,
@@ -409,16 +409,16 @@ class ClothesGUI(DirectFrame, StateData.StateData):
                 0]
             self.avatar.pirate.setClothesByType(type, itemId, texId, 0)
         
-        choice = random.choice(range(0, len(HumanDNA.clothesTopColors[genderIdx][:topNumColor])))
+        choice = random.choice(list(range(0, len(HumanDNA.clothesTopColors[genderIdx][:topNumColor]))))
         self.avatar.currentClothing['SHIRT'][2] = choice
         self.handleSetTopColor(choice + topNumColor * 0)
-        choice = random.choice(range(0, len(HumanDNA.clothesTopColors[genderIdx][:topNumColor])))
+        choice = random.choice(list(range(0, len(HumanDNA.clothesTopColors[genderIdx][:topNumColor]))))
         self.avatar.currentClothing['VEST'][2] = choice
         self.handleSetTopColor(choice + topNumColor * 1)
-        choice = random.choice(range(0, len(HumanDNA.clothesTopColors[genderIdx][:topNumColor])))
+        choice = random.choice(list(range(0, len(HumanDNA.clothesTopColors[genderIdx][:topNumColor]))))
         self.avatar.currentClothing['COAT'][2] = choice
         self.handleSetTopColor(choice + topNumColor * 2)
-        choice = random.choice(range(0, len(HumanDNA.clothesBotColors[genderIdx][:botNumColor])))
+        choice = random.choice(list(range(0, len(HumanDNA.clothesBotColors[genderIdx][:botNumColor]))))
         self.avatar.currentClothing['PANT'][2] = choice
         self.handleSetBotColor(choice)
         self.handleClothingChanged()
@@ -709,7 +709,7 @@ class ClothesGUI(DirectFrame, StateData.StateData):
         currentTexIdx = itemTextures.index(textureId)
         texIdx = currentTexIdx + 1
         if texIdx >= len(itemTextures):
-            itemIds = self.avatar.choices[type].keys()
+            itemIds = list(self.avatar.choices[type].keys())
             itemIds.sort()
             currIdx = itemIds.index(itemId)
             if currIdx + 1 < len(itemIds):
@@ -731,7 +731,7 @@ class ClothesGUI(DirectFrame, StateData.StateData):
         currentTexIdx = itemTextures.index(textureId)
         texIdx = currentTexIdx - 1
         if texIdx < 0:
-            itemIds = self.avatar.choices[type].keys()
+            itemIds = list(self.avatar.choices[type].keys())
             itemIds.sort()
             currIdx = itemIds.index(itemId)
             itemId = itemIds[currIdx - 1]
@@ -741,7 +741,7 @@ class ClothesGUI(DirectFrame, StateData.StateData):
         return (itemId, textureId)
 
     def getNextClothingModel(self, type):
-        models = self.avatar.choices[type].keys()
+        models = list(self.avatar.choices[type].keys())
         models.sort()
         currIdx = models.index(self.avatar.currentClothing[type][0])
         currIdx += 1
@@ -752,7 +752,7 @@ class ClothesGUI(DirectFrame, StateData.StateData):
         return (itemId, self.avatar.choices[type][itemId][0])
 
     def getLastClothingModel(self, type):
-        models = self.avatar.choices[type].keys()
+        models = list(self.avatar.choices[type].keys())
         models.sort()
         currIdx = models.index(self.avatar.currentClothing[type][0])
         currIdx -= 1

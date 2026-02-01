@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from pirates.world import DistributedDoorBase
 from pirates.piratesbase import PiratesGlobals

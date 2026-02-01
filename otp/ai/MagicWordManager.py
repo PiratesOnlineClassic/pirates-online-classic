@@ -1,7 +1,8 @@
 from direct.distributed import DistributedObject
 from direct.directnotify import DirectNotifyGlobal
 from direct.showbase import PythonUtil
-from direct.showbase.PythonUtil import Functor, DelayedCall, ScratchPad
+from otp.otpbase.OTPUtil import Functor, ScratchPad
+from direct.showbase.PythonUtil import DelayedCall
 from direct.showbase.InputStateGlobal import inputState
 from direct.task import Task
 from direct.distributed.ClockDelta import *
@@ -206,7 +207,7 @@ def taskMgr():
     Logs the client's task manager
     """
 
-    print taskMgr
+    print(taskMgr)
     return 'logging client taskMgr...'
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)
@@ -215,7 +216,7 @@ def jobMgr():
     Logs the client's job manager
     """
 
-    print jobMgr
+    print(jobMgr)
     return 'logging client jobMgr...'
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[float])
@@ -264,7 +265,7 @@ def messenger():
     Logs the client messenger
     """
 
-    print messenger
+    print(messenger)
     self.setMagicWordResponse('logging client messenger...')
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN)

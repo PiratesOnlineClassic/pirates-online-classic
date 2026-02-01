@@ -1,6 +1,6 @@
 class QuestHolderBase:
     
     def getQuests(self):
-        raise 'derived must implement'
+        raise NotImplementedError('derived must implement')
 
 

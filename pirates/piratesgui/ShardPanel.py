@@ -1,6 +1,6 @@
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.distributed import OtpDoGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesgui import PiratesGuiGlobals
@@ -236,7 +236,7 @@ class ShardPanel(DirectFrame):
         return shardButton
 
     def refreshShardLabels(self):
-        shardIds = self.shards.keys()
+        shardIds = list(self.shards.keys())
         shardIds.sort()
         startPos = Point3(0, 0, -0.05)
         offset = Point3(0, 0, -0.07)

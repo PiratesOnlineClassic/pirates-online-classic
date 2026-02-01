@@ -1,6 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
-from direct.showbase.PythonUtil import ParamObj, makeTuple
-from direct.showbase.PythonUtil import getSetter, POD
+from otp.otpbase.OTPUtil import ParamObj, makeTuple
+from direct.showbase.PythonUtil import getSetter
+from otp.otpbase.OTPUtil import POD
 from pirates.piratesbase import PLocalizer
 from pirates.quest.QuestLadder import QuestStub
 import random

@@ -41,7 +41,7 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
         if not self.__shards:
             return None
 
-        return random.choice(self.__shards.values())
+        return random.choice(list(self.__shards.values()))
 
     def requestInitLocUD(self, unused, shardId):
         avatarId = self.air.getAvatarIdFromSender()

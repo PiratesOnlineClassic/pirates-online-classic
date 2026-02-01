@@ -1,5 +1,5 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
-from direct.showbase.PythonUtil import POD, invertDict, makeTuple
+from otp.otpbase.OTPUtil import POD, makeTuple, invertDict
 from pirates.quest import QuestEvent, QuestTaskState
 from pirates.piratesbase import PLocalizer
 from pirates.pirate import AvatarTypes
@@ -124,10 +124,10 @@ class QuestTaskDNA(POD):
         pass
 
     def getDescriptionText(self, state):
-        raise 'derived must override'
+        raise NotImplementedError('derived must override')
 
     def getTitle(self):
-        raise 'derived must override'
+        raise NotImplementedError('derived must override')
 
     def getDialogBefore(self):
         return random.choice(PLocalizer.QuestDefaultDialogBefore)
@@ -209,7 +209,7 @@ class VisitTaskDNA(QuestTaskDNA):
         if npcDoId == None:
             return None
 
-        targetNpc = simbase.air.doId2do.get(npcDoId)
+        targetNpc = base.air.doId2do.get(npcDoId)
         if targetNpc == None:
             return None
 
@@ -1200,7 +1200,7 @@ class BribeNPCTaskDNA(QuestTaskDNA):
         if npcDoId == None:
             return None
 
-        targetNpc = simbase.air.doId2do.get(npcDoId)
+        targetNpc = base.air.doId2do.get(npcDoId)
         if targetNpc == None:
             return None
 
@@ -2523,16 +2523,16 @@ class ViewCutsceneTaskDNA(QuestTaskDNA):
     def handleStart(self, avId):
         self.avId = avId
         if self.waitEvent:
-            playerAv = simbase.air.doId2do[self.avId]
+            playerAv = base.air.doId2do[self.avId]
             messenger.accept(playerAv.uniqueName(self.waitEvent), self, self._playCutscene, [], 0)
         else:
             self._playCutscene()
 
     def _playCutscene(self):
-        playerAv = simbase.air.doId2do[self.avId]
+        playerAv = base.air.doId2do[self.avId]
         currWorld = playerAv.world
         npcId = currWorld.uidMgr.getDoId(self.npcId)
-        npc = simbase.air.doId2do.get(npcId)
+        npc = base.air.doId2do.get(npcId)
         if self.dialogId:
             npc.playDialogMovie(self.avId, self.dialogId)
         elif self.cutsceneId:
@@ -2540,10 +2540,10 @@ class ViewCutsceneTaskDNA(QuestTaskDNA):
 
     def handleNPCVisit(self, questEvent, taskState):
         if questEvent.npcId == self.npcId:
-            playerAv = simbase.air.doId2do[self.avId]
+            playerAv = base.air.doId2do[self.avId]
             currWorld = playerAv.world
             npcId = currWorld.uidMgr.getDoId(self.npcId)
-            npc = simbase.air.doId2do.get(npcId)
+            npc = base.air.doId2do.get(npcId)
             playerAv.b_setGameState('NPCInteract', localArgs = [npc, True])
             if self.dialogId:
                 npc.playDialogMovie(questEvent.avId, self.dialogId)
@@ -2583,7 +2583,7 @@ class ViewCutsceneTaskDNA(QuestTaskDNA):
         if npcDoId == None:
             return None
 
-        targetNpc = simbase.air.doId2do.get(npcDoId)
+        targetNpc = base.air.doId2do.get(npcDoId)
         if targetNpc == None:
             return None
 

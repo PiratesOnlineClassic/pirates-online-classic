@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.InternIsland
-from pandac.PandaModules import Point3, VBase3
+from panda3d.core import Point3, VBase3
 objectStruct = {
     'Interact Links':
     [['1175129600.0dxschafe1', '1182807424.0dxschafe', 'Bi-directional'],

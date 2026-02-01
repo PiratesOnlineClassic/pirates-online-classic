@@ -7,6 +7,6 @@ class DistributedEnemySpawner(DistributedObject.DistributedObject):
 
     def announceGenerate(self):
         DistributedObject.DistributedObject.announceGenerate(self)
-        print 'created enemy'
+        print('created enemy')
 
 

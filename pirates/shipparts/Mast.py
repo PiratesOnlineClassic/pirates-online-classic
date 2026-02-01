@@ -2,7 +2,7 @@ import random
 from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase import DirectObject
 from direct.actor import Actor
 from pirates.piratesbase import PiratesGlobals
@@ -142,7 +142,7 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
         self.propCollisions = NodePath(ModelNode('mast-%d' % self.dna.posIndex))
         
         try:
-            for i in xrange(mastHeight):
+            for i in range(mastHeight):
                 self.prop.play('Idle', partName = 'mast_%d_%d' % (i, self.dna.posIndex))
         except:
             self.notify.warning('failed call: self.prop.play("Idle")')
@@ -307,8 +307,8 @@ class Mast(DirectObject.DirectObject, NodePath, ShipPart.ShipPart):
     def showMast(self, index):
         self.prop.pose('Idle', 0, partName = 'mast_%d_%d' % (index, self.dna.posIndex))
         self.prop.update()
-        if self.ship.sails.has_key(self.dna.posIndex):
-            if self.ship.sails[self.dna.posIndex].has_key(index):
+        if self.dna.posIndex in self.ship.sails:
+            if index in self.ship.sails[self.dna.posIndex]:
                 self.ship.sails[self.dna.posIndex][index][0].respawn()
 
         if index == 0:

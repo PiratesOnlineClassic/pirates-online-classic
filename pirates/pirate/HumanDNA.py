@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import *
 import random
 from direct.distributed.PyDatagram import PyDatagram
@@ -272,15 +272,15 @@ clothesBotColors = [
 
 
 def printColors():
-    print '** Skin Colors:'
+    print('** Skin Colors:')
     for color in skinColors:
         outVal = [
             int(color.getX() * 256),
             int(color.getY() * 256),
             int(color.getZ() * 256)]
-        print str(outVal)
+        print(str(outVal))
     
-    print '\n ** Jewelry Colors:'
+    print('\n ** Jewelry Colors:')
     for color in jewelryColors:
         
         try:
@@ -291,63 +291,63 @@ def printColors():
         except:
             pass
 
-        print str(outVal)
+        print(str(outVal))
     
-    print '\n ** Hair Colors:'
+    print('\n ** Hair Colors:')
     for color in hairColors:
         outVal = [
             int(color.getX() * 256),
             int(color.getY() * 256),
             int(color.getZ() * 256)]
-        print str(outVal)
+        print(str(outVal))
     
-    print '\n ** Male Hat Colors:'
+    print('\n ** Male Hat Colors:')
     for color in hatColors[0]:
         outVal = [
             int(color.getX() * 256),
             int(color.getY() * 256),
             int(color.getZ() * 256)]
-        print str(outVal)
+        print(str(outVal))
     
-    print '\n ** Female Hat Colors:'
+    print('\n ** Female Hat Colors:')
     for color in hatColors[1]:
         outVal = [
             int(color.getX() * 256),
             int(color.getY() * 256),
             int(color.getZ() * 256)]
-        print str(outVal)
+        print(str(outVal))
     
-    print '\n ** Male Top Colors:'
+    print('\n ** Male Top Colors:')
     for color in clothesTopColors[0]:
         outVal = [
             int(color.getX() * 256),
             int(color.getY() * 256),
             int(color.getZ() * 256)]
-        print str(outVal)
+        print(str(outVal))
     
-    print '\n ** Female Top Colors:'
+    print('\n ** Female Top Colors:')
     for color in clothesTopColors[1]:
         outVal = [
             int(color.getX() * 256),
             int(color.getY() * 256),
             int(color.getZ() * 256)]
-        print str(outVal)
+        print(str(outVal))
     
-    print '\n ** Male Bottom Colors:'
+    print('\n ** Male Bottom Colors:')
     for color in clothesBotColors[0]:
         outVal = [
             int(color.getX() * 256),
             int(color.getY() * 256),
             int(color.getZ() * 256)]
-        print str(outVal)
+        print(str(outVal))
     
-    print '\n ** Female Bottom Colors:'
+    print('\n ** Female Bottom Colors:')
     for color in clothesBotColors[1]:
         outVal = [
             int(color.getX() * 256),
             int(color.getY() * 256),
             int(color.getZ() * 256)]
-        print str(outVal)
+        print(str(outVal))
 
 
 class PirateEyes:
@@ -797,10 +797,10 @@ class HumanDNA(AvatarDNA.AvatarDNA):
         return d
 
     def loadFromNPCDict(self, npcDict):
-        for f in npcDict.keys():
+        for f in list(npcDict.keys()):
             if isinstance(npcDict[f], tuple):
                 val = npcDict[f]
-                exec 'f(self, ' + str(val)[1:]
+                exec('f(self, ' + str(val)[1:])
             else:
                 f(self, npcDict[f])
 
@@ -1551,7 +1551,7 @@ class HumanDNA(AvatarDNA.AvatarDNA):
             randomGen.seed(seed)
         else:
             randomGen = random
-        colors = range(len(clothesTopColors))
+        colors = list(range(len(clothesTopColors)))
         self.gender = randomGen.choice([
             'm',
             'f'])
@@ -1570,10 +1570,10 @@ class HumanDNA(AvatarDNA.AvatarDNA):
             self.clothes.sock = 0
             self.clothes.shoe = 1
             self.clothes.belt = 0
-            self.clothes.coat = randomGen.choice(range(3))
+            self.clothes.coat = randomGen.choice(list(range(3)))
             self.clothes.coatColor = randomGen.choice(colors)
             self.head.texture = 0
-            self.clothes.hat = randomGen.choice(range(5))
+            self.clothes.hat = randomGen.choice(list(range(5)))
             self.head.hair.hair = randomGen.choice([
                 1,
                 2,
@@ -1581,13 +1581,13 @@ class HumanDNA(AvatarDNA.AvatarDNA):
                 4,
                 5,
                 6])
-            self.head.hair.beard = randomGen.choice(range(11))
+            self.head.hair.beard = randomGen.choice(list(range(11)))
             self.head.hair.mustache = randomGen.choice([
                 0,
                 1,
                 2,
                 4])
-            self.head.hair.color = randomGen.choice(range(5))
+            self.head.hair.color = randomGen.choice(list(range(5)))
         else:
             self.body.shape = randomGen.choice([
                 0,
@@ -1612,12 +1612,12 @@ class HumanDNA(AvatarDNA.AvatarDNA):
                 3,
                 4])
             self.clothes.belt = 0
-            self.clothes.coat = randomGen.choice(range(3))
+            self.clothes.coat = randomGen.choice(list(range(3)))
             self.clothes.coatColor = randomGen.choice(colors)
-            self.clothes.hat = randomGen.choice(range(5))
+            self.clothes.hat = randomGen.choice(list(range(5)))
             self.clothes.hatColor = randomGen.choice(colors)
-            self.head.hair.hair = randomGen.choice(range(16))
-            self.head.hair.color = randomGen.choice(range(5))
+            self.head.hair.hair = randomGen.choice(list(range(16)))
+            self.head.hair.color = randomGen.choice(list(range(5)))
     
     def makeNPCTownfolk(self, seed = None, gender = 'm'):
         if seed:

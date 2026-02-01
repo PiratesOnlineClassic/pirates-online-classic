@@ -87,7 +87,7 @@ class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
 
     @report(types=['frameCount'], dConfigParam='want-jail-report')
     def resetIslandZoneLevels(self):
-        for island in self.islands.itervalues():
+        for island in self.islands.values():
             island.setZoneLevel(3)
     
     def getWorldPos(self, node):
@@ -116,6 +116,6 @@ class DistributedMainWorld(DistributedInstanceBase.DistributedInstanceBase):
     if __dev__:
         
         def printIslands(self):
-            for (doId, island) in self.islands.iteritems():
-                print doId, `island`
+            for (doId, island) in self.islands.items():
+                print(doId, repr(island))
 

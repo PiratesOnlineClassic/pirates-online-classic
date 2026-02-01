@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.otpbase import OTPRender
 from libpirates import SeaPatchNode
 
@@ -35,6 +35,6 @@ class WaterShadow(NodePath):
             else:
                 shadow_spn.setEffect(CompassEffect.make(base.cr.activeWorld.getWater().patchNP, CompassEffect.PZ))
             if self.use_water_bin:
-                mask = 0xFFFFFFFFL
+                mask = 0xFFFFFFFF
                 stencil = StencilAttrib.make(1, StencilAttrib.SCFEqual, StencilAttrib.SOKeep, StencilAttrib.SOKeep, StencilAttrib.SOKeep, 1, mask, mask)
                 self.setAttrib(stencil)

@@ -5,6 +5,7 @@ import sys
 from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from otp.distributed.OtpDoGlobals import *
+from otp.distributed.MsgTypes import *
 from otp.distributed.OTPInternalRepository import OTPInternalRepository
 from pirates.distributed import PiratesMsgTypes
 
@@ -107,7 +108,3 @@ class PiratesInternalRepository(OTPInternalRepository):
         self.discordNotifications.reportServerException(e, avatarId, accountId)
         self.notify.warning('internal-exception: %s (%s)' % (repr(e), self.getAvatarIdFromSender()))
         print(trace)
-
-        # Python 2 Vs 3 compatibility
-        if not sys.version_info >= (3, 0):
-            sys.exc_clear()

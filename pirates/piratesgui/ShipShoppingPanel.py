@@ -1,6 +1,6 @@
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.ship import ShipGlobals
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesbase import PiratesGlobals
@@ -28,7 +28,7 @@ class ShipShoppingPanel(ShipSelectionPanel):
             interactNPC = base.cr.interactionMgr.getCurrent()
             if interactNPC is not None:
                 repairButtonState = DGG.DISABLED
-                for frames in self.shipFrames.itervalues():
+                for frames in self.shipFrames.values():
                     for frame in frames:
                         shipOV = frame.snapShot['shipOV']
                         if shipOV is not None:

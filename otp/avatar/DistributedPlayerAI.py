@@ -5,7 +5,7 @@ from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPLocalizer
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.PyDatagram import PyDatagram
-from direct.distributed.MsgTypes import CLIENTAGENT_EJECT
+from otp.distributed.MsgTypes import CLIENTAGENT_EJECT
 from otp.distributed import OtpDoGlobals
 from otp.ai.MagicWordGlobal import *
 
@@ -146,7 +146,7 @@ def system(message):
     Send a system message to the whole district
     """
 
-    simbase.air.systemMessage(message)
+    base.air.systemMessage(message)
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
@@ -156,7 +156,7 @@ def sysadmin(message):
     """
 
     text = 'ADMIN: ' + message
-    simbase.air.systemMessage(text)
+    base.air.systemMessage(text)
     return "Sent system message '%s' to all players in the district." % text
 
 
@@ -169,10 +169,10 @@ def update(minutes):
 
     def disconnect(task):
         dg = PyDatagram()
-        dg.addServerHeader(10, simbase.air.ourChannel, CLIENTAGENT_EJECT)
+        dg.addServerHeader(10, base.air.ourChannel, CLIENTAGENT_EJECT)
         dg.addUint16(154)
         dg.addString('Pirates Online Classic is now closed for maintenance.')
-        simbase.air.send(dg)
+        base.air.send(dg)
         return task.done
 
     def countdown(minutes):

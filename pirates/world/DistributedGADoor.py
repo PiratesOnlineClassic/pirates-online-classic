@@ -1,4 +1,4 @@
-import DistributedGAConnector
+from . import DistributedGAConnector
 
 class DistributedGADoor(DistributedGAConnector.DistributedGAConnector):
     notify = directNotify.newCategory('DistributedGADoor')

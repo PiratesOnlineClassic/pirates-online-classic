@@ -1,8 +1,8 @@
-from pandac.PandaModules import *
-from direct.distributed.MsgTypes import *
+from panda3d.core import *
+from otp.distributed.MsgTypes import *
 from direct.directnotify import DirectNotifyGlobal
-import LoginBase
-import TTAccount
+from . import LoginBase
+from . import TTAccount
 from direct.distributed.PyDatagram import PyDatagram
 
 class LoginTTAccount(LoginBase.LoginBase, TTAccount.TTAccount):

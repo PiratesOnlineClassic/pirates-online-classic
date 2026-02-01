@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.pvpShipIsland1_int_tavern
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Objects': {
         '1202846053.19akelts0': {

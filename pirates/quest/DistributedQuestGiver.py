@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase.ShowBaseGlobal import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.ClockDelta import *
@@ -111,7 +111,7 @@ class DistributedQuestGiver(Avatar.Avatar):
     def hasQuestOffers(self):
         AvailableQuests = []
         inventory = localAvatar.getInventory()
-        for (questId, questDNA) in QuestDB.QuestDict.items():
+        for (questId, questDNA) in list(QuestDB.QuestDict.items()):
             prereqExcludes = base.config.GetString('exclude-prereq-quests', '')
             if len(prereqExcludes):
                 if questId in prereqExcludes:
@@ -481,7 +481,7 @@ class DistributedQuestGiver(Avatar.Avatar):
             return False
         offerDict = {}
         fromQuests = []
-        for questId, questDNA in QuestDB.QuestDict.items():
+        for questId, questDNA in list(QuestDB.QuestDict.items()):
             prereqExcludes = base.config.GetString('exclude-prereq-quests', '')
             if len(prereqExcludes):
                 if questId in prereqExcludes:

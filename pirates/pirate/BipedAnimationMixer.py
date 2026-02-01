@@ -29,14 +29,14 @@ class BipedAnimationMixer(AnimationMixer):
         'legs',
         'torso',
         'head']
-    sectionNameIds = dict(zip(sectionNames, range(len(sectionNames))))
-    partNameLists = dict(zip(sectionNames, [
+    sectionNameIds = dict(list(zip(sectionNames, list(range(len(sectionNames))))))
+    partNameLists = dict(list(zip(sectionNames, [
         [
             'legs'],
         [
             'torso'],
         [
-            'head']]))
+            'head']])))
     AnimRankings = {
         'idle': (LOOP['IDLE'], LOOP['IDLE'], LOOP['IDLE']),
         'idle_centered': (LOOP['IDLE'], LOOP['IDLE'], LOOP['IDLE']),

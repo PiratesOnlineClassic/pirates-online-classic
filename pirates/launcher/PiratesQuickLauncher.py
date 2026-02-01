@@ -10,7 +10,7 @@ from direct.showbase.EventManagerGlobal import *
 from direct.task.TaskManagerGlobal import *
 from direct.task.Task import Task
 from direct.directnotify.DirectNotifyGlobal import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.launcher.LauncherBase import LauncherBase
 from pirates.piratesbase import PLocalizer
 
@@ -178,7 +178,7 @@ class PiratesQuickLauncher(LauncherBase):
             self.cleanup()
             return
         
-        raise StandardError, 'Some phases not listed in LauncherPhases: %s' % self.requiredInstallFiles
+        raise Exception('Some phases not listed in LauncherPhases: %s' % self.requiredInstallFiles)
 
     def getDecompressMultifile(self, mfname):
         if not self.DecompressMultifiles:

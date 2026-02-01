@@ -40,7 +40,7 @@ class PiratesAmbientManager(AmbientManagerBase.AmbientManagerBase):
 
     def requestChangeVolume(self, name, duration, finalVolume, priority = 0):
         newFinalVolume = finalVolume
-        if name in self.volumeModifierDict.keys():
+        if name in list(self.volumeModifierDict.keys()):
             newFinalVolume = finalVolume * self.volumeModifierDict[name]
         
         AmbientManagerBase.AmbientManagerBase.requestChangeVolume(self, name, duration, newFinalVolume, priority)

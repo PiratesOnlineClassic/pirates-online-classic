@@ -2,7 +2,7 @@ import os
 import sys
 from direct.gui.DirectGui import *
 from direct.task.Task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals

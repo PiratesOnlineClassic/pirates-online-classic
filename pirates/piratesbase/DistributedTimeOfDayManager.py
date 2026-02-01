@@ -2,7 +2,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.DistributedObject import DistributedObject
 from direct.distributed.ClockDelta import globalClockDelta
 from otp.ai.MagicWordGlobal import *
-from TimeOfDayManager import TimeOfDayManager
+from .TimeOfDayManager import TimeOfDayManager
 from pirates.piratesbase import TODGlobals
 from pirates.effects.FireworkGlobals import *
 

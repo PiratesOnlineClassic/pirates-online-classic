@@ -1,4 +1,4 @@
-from pandac.PandaModules import loadPrcFile
+from panda3d.core import loadPrcFile
 import os
 
 if __debug__:

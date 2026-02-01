@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.actor.Actor import Actor
 from direct.directnotify.DirectNotifyGlobal import directNotify
@@ -58,7 +58,7 @@ class CutsceneActor:
     def foundIt(self, npc):
         if npc == None:
             self.notify.debug('Movie cast not created yet')
-        elif not base.cr.doId2do.has_key(npc):
+        elif npc not in base.cr.doId2do:
             self.notify.debug('Movie cast not in doId2do')
         else:
             self.modelLoaded = base.cr.doId2do[npc]
@@ -317,7 +317,7 @@ class CutLocators(CutGenericActor):
             'interceptor': self.find('**/locator_ship_interceptor'),
             'warship': self.find('**/locator_ship_interceptor'),
             'blackpearl': self.find('**/locator_ship_ghostship')}
-        for (name, node) in self._locators.items():
+        for (name, node) in list(self._locators.items()):
             pass
         
         geomNode = self.find('**/+GeomNode')
@@ -333,7 +333,7 @@ class CutLocators(CutGenericActor):
         return self._locators[name]
     
     def destroy(self):
-        for (name, node) in self._locators.items():
+        for (name, node) in list(self._locators.items()):
             node.removeNode()
         
         del self._locators
@@ -397,13 +397,13 @@ class CutBoat(CutsceneActor, ShipModel):
         ShipModel.fadeOut(self)
     
     def hideRigging(self):
-        for mast in self.masts.values():
+        for mast in list(self.masts.values()):
             rigging = mast[0].rigging
             if rigging:
                 rigging.hide()
 
     def showRigging(self):
-        for mast in self.masts.values():
+        for mast in list(self.masts.values()):
             rigging = mast[0].rigging
             if rigging:
                 rigging.show()
@@ -1155,7 +1155,7 @@ class CutLocalPirate(CutsceneActor):
                 dna.setBodyShape(shape)
                 if base.pe.panel.useNPCinCutscene.get():
                     currNpcList = base.pe.getNPCList()
-                    if currNpcList.NPC_LIST.has_key(base.pe.cutLocalPirateId):
+                    if base.pe.cutLocalPirateId in currNpcList.NPC_LIST:
                         dnaDict = currNpcList.NPC_LIST[base.pe.cutLocalPirateId]
                         dna = HumanDNA()
                         dna.loadFromNPCDict(dnaDict)

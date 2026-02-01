@@ -1,6 +1,6 @@
 from direct.fsm.FSM import FSM
 from direct.interval.IntervalGlobal import *
-from direct.showbase.PythonUtil import Enum
+from otp.otpbase.OTPUtil import Enum
 from pirates.piratesbase import PiratesGlobals
 from pirates.pirate import Human
 import random
@@ -71,7 +71,7 @@ class MotionAnimFSM(FSM):
             if scale:
                 newScale = moveSpeed * scale
             else:
-                if type(style) is not types.StringType:
+                if type(style) is not bytes:
                     style = style.getBodyShape()
                 animFileName = self.av.getAnimFilename(self.av.getCurrentAnim())
                 animSpeedScale = PiratesGlobals.GetAnimScale(animFileName)

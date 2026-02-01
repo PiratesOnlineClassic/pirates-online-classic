@@ -1,5 +1,5 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.task.Task import Task
 from direct.fsm import ClassicFSM
 from direct.fsm import State
@@ -79,7 +79,7 @@ class RelationshipChooser(GuiPanel.GuiPanel):
         self.secretsButton['state'] = DGG.NORMAL
         if self.avId or self.pId:
             av = base.cr.doId2do.get(self.avId)
-            print 'avId %s av %s' % (self.avId, av)
+            print('avId %s av %s' % (self.avId, av))
             if av:
                 if av.commonChatFlags & base.localAvatar.commonChatFlags & OTPGlobals.CommonChat:
                     self.plFriendButton['state'] = DGG.NORMAL

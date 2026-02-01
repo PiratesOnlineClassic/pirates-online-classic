@@ -72,7 +72,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
                 localAvatar.getLocation(),
                 localAvatar.getPos()]
 
-        if not base.cr.doId2do.has_key(targetParentId):
+        if targetParentId not in base.cr.doId2do:
             self.notify.debug('Parent of target object to reparent avatar/camera to does not yet exist, skipping reparent request')
             return None
 
@@ -80,7 +80,7 @@ class PiratesMagicWordManager(MagicWordManager.MagicWordManager):
             base.cr.doId2do[targetParentId].visAvatar = localAvatar
 
         localAvatar.b_setLocation(targetParentId, zoneId, teleport = 1)
-        if base.cr.doId2do.has_key(targetId):
+        if targetId in base.cr.doId2do:
             self.cameraFollowTgt(base.cr.doId2do[targetId], targetParentId)
         else:
             self.pendingCameraReparent = base.cr.relatedObjectMgr.requestObjects([
@@ -122,13 +122,13 @@ def pilot():
     ships = base.cr.doFindAll('ship-')
     from pirates.ship.DistributedShip import DistributedShip
     ships = [ship for ship in ships if isinstance(ship, DistributedShip)]
-    print ships
+    print(ships)
     closestShip = ships[0]
     closestDist = Vec3(closestShip.getPos(localAvatar)).lengthSquared()
-    print closestShip, closestDist
+    print(closestShip, closestDist)
     for ship in ships[1:]:
         dist = Vec3(ship.getPos(localAvatar)).lengthSquared()
-        print ship, dist
+        print(ship, dist)
         if dist < closestDist:
             closestShip = ship
             closestDist = dist
@@ -486,7 +486,7 @@ def liveCam(camNum=-1):
                          '5': [Vec3(4245.52, 133.763, 37.9564), Vec3(-29.8904, -7.12525, 0), 39.3076, 1],
                          '6': [Vec3(4939.1, -264.911, 37.9564), Vec3(-29.8904, -7.12525, 0), 39.3076, 1]}
     lodNodes = render.findAllMatches('**/+LODNode')
-    for i in xrange(0, lodNodes.getNumPaths()):
+    for i in range(0, lodNodes.getNumPaths()):
         lodNodes[i].node().forceSwitch(lodNodes[i].node().getHighestSwitch())
 
     localAvatar.clearInterestNamed(None, [

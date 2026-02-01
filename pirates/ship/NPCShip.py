@@ -1,7 +1,7 @@
 from pirates.ship.DistributedShip import DistributedShip
 from pirates.piratesbase import PiratesGlobals
 from otp.otpbase import OTPGlobals
-import ShipBalance
+from . import ShipBalance
 
 class NPCShip(DistributedShip):
     

@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.gui.DirectGui import *
 from direct.interval.IntervalGlobal import *
 from pirates.piratesgui import PiratesGuiGlobals
@@ -33,7 +33,7 @@ class ShipPage(InventoryPage):
             self.tabBar.destroy()
             self.tabBar = None
         
-        for panel in self.panels.itervalues():
+        for panel in self.panels.values():
             panel.destroy()
         
         self.panels = None
@@ -84,7 +84,7 @@ class ShipPage(InventoryPage):
         self.refreshList()
 
     def clearBlankPanels(self):
-        for id in self.panels.keys():
+        for id in list(self.panels.keys()):
             if id <= 2:
                 self.removePanel(id)
 
@@ -188,7 +188,7 @@ class ShipPage(InventoryPage):
             localAvatar.getInventoryId()], eachCallback = doReadyCheck)
     
     def showPanel(self, shipId):
-        for panel in self.panels.itervalues():
+        for panel in self.panels.values():
             panel.hide()
         
         if shipId in self.panels:

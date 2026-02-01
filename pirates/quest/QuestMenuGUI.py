@@ -1,13 +1,13 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.distributed import InteractGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.piratesbase import PiratesGlobals
 from pirates.quest import QuestConstants
-import QuestDetailGUI
-import QuestDB
+from . import QuestDetailGUI
+from . import QuestDB
 
 class QuestMenuGUI(DirectFrame):
     
@@ -40,7 +40,7 @@ class QuestMenuGUI(DirectFrame):
         middlePanelOver = gui.find('**/avatar_c_A_middle_over')
         bottomPanel = gui.find('**/avatar_c_A_bottom')
         bottomPanelOver = gui.find('**/avatar_c_A_bottom_over')
-        for (i, offer) in zip(range(len(offers)), offers):
+        for (i, offer) in zip(list(range(len(offers))), offers):
             if i == 0:
                 image = (topPanel, topPanel, topPanelOver, topPanel)
                 textPos = (0, -0.02)
@@ -52,7 +52,7 @@ class QuestMenuGUI(DirectFrame):
                     z -= 0.11
                 else:
                     z -= 0.105
-            if PLocalizer.QuestStrings.has_key(offer.questId) and 'title' in PLocalizer.QuestStrings[offer.questId].keys():
+            if offer.questId in PLocalizer.QuestStrings and 'title' in list(PLocalizer.QuestStrings[offer.questId].keys()):
                 questTitle = PLocalizer.QuestStrings[offer.questId]['title']
             else:
                 questTitle = offer.getTitle()

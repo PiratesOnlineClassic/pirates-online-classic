@@ -1,6 +1,6 @@
 from direct.distributed.DistributedObject import DistributedObject
 from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.otpbase import OTPGlobals
 
 class DistributedChatManager(DistributedObjectGlobal):
@@ -45,7 +45,7 @@ class DistributedChatManager(DistributedObjectGlobal):
 
     def whisperFrom(self, fromId, message):
         if base.cr.wantSwitchboardHacks:
-            print 'received whisper on avatar: %s' % message
+            print('received whisper on avatar: %s' % message)
             whisper = WhisperPopup(message, OTPGlobals.getInterfaceFont(), WhisperPopup.WTNormal)
             whisper.manage(base.marginManager)
 

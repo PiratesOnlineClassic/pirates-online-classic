@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase.PythonUtil import clampScalar, lerp, report
 from direct.interval.IntervalGlobal import Sequence, Parallel, LerpFunc, Func, Wait
 from direct.gui.DirectGui import DirectFrame, DirectButton, DGG

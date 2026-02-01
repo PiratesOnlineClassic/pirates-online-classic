@@ -1,6 +1,6 @@
 from pirates.instance.DistributedInstanceWorld import DistributedInstanceWorld
 from direct.fsm.FSM import FSM
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
 from pirates.piratesbase import PiratesGlobals
@@ -197,7 +197,7 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
             None]
     
     def requestSpawnLocResp(self):
-        print '[rslr]'
+        print('[rslr]')
         if self.completed:
             return
         
@@ -210,18 +210,18 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
             self.goToSpawnIval = None
 
     def respawn(self):
-        print '[respawn]'
+        print('[respawn]')
         self.teleportToPosStep1()
 
     def teleportToPosStep1(self):
-        print '[teleportToPosStep1]'
+        print('[teleportToPosStep1]')
         if self.cr.activeWorld == None or self.cr.activeWorld.spawnInfo == None:
             return None
         
         self.cr.teleportMgr.createSpawnInterests(self.cr.activeWorld.spawnInfo[2], self.teleportToPosStep2, self.worldGrid, localAvatar)
 
     def teleportToPosStep2(self, parentObj, teleportingObj):
-        print '[teleportToPosStep2]'
+        print('[teleportToPosStep2]')
         base.cr.teleportMgr.localTeleportPos(self.cr.activeWorld.spawnInfo[0], parentObj, smooth = True)
 
     def requestPVPLeave(self):
@@ -386,7 +386,7 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
 
     def getPlayerStats(self):
         displayStats = []
-        for (playerId, stats) in self.stats.items():
+        for (playerId, stats) in list(self.stats.items()):
             if playerId not in self.names:
                 continue
             
@@ -416,7 +416,7 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
     def getTeamStats(self):
         displayStats = []
         teams = {}
-        for (playerId, stats) in self.stats.items():
+        for (playerId, stats) in list(self.stats.items()):
             if playerId not in self.names:
                 continue
             
@@ -440,7 +440,7 @@ class DistributedPVPInstance(DistributedInstanceWorld, FSM):
                 playerStats,
                 ['color', playerColor]])
         
-        for (team, teamStats) in teams.items():
+        for (team, teamStats) in list(teams.items()):
             teamTotals = []
             for stat in self.getColumnStats():
                 teamTotals.append([

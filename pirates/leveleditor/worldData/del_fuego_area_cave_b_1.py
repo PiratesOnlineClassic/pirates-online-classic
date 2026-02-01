@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.del_fuego_area_cave_b_1
-from pandac.PandaModules import Point3, VBase3
+from panda3d.core import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1165258019.92sdnaik': {

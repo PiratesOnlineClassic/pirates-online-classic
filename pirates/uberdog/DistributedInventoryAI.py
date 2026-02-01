@@ -56,7 +56,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setStackLimits(self.getStackLimits())
 
     def getStackLimits(self):
-        return [[stackType, limit] for stackType, limit in self.stackLimits.items()]
+        return [[stackType, limit] for stackType, limit in list(self.stackLimits.items())]
 
     def d_setStacks(self, stackTypesAndQuantities):
         self.sendUpdate('setStacks', [stackTypesAndQuantities])

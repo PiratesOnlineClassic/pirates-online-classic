@@ -1,8 +1,8 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed import DistributedNode
 from pirates.piratesbase import PiratesGlobals
 from pirates.world import WorldGlobals
-from direct.showbase.PythonUtil import HotkeyBreaker
+from otp.otpbase.OTPUtil import HotkeyBreaker
 
 class WorldNode(NodePath):
     notify = directNotify.newCategory('WorldNode')

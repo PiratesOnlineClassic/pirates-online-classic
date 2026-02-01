@@ -11,19 +11,19 @@ class QuestStatData:
     Misc = {}
     
     def incrementTasks(self, name, count = 1):
-        if not self.Tasks.has_key(name):
+        if name not in self.Tasks:
             self.Tasks[name] = count
         else:
             self.Tasks[name] = self.Tasks[name] + count
     
     def incrementEnemies(self, name, count = 1):
-        if not self.Enemies.has_key(name):
+        if name not in self.Enemies:
             self.Enemies[name] = count
         else:
             self.Enemies[name] = self.Enemies[name] + count
     
     def incrementMisc(self, name, count = 1):
-        if not self.Misc.has_key(name):
+        if name not in self.Misc:
             self.Misc[name] = count
         else:
             self.Misc[name] = self.Misc[name] + count
@@ -42,13 +42,13 @@ class QuestStatData:
     def __repr__(self):
         self.computeTime()
         argStr = ''
-        for (name, value) in self.Tasks.items():
+        for (name, value) in list(self.Tasks.items()):
             argStr += '%s=%s,' % (name, repr(self.Tasks[name]))
         
-        for (name, value) in self.Enemies.items():
+        for (name, value) in list(self.Enemies.items()):
             argStr += '%s=%s,' % (name, repr(self.Enemies[name]))
         
-        for (name, value) in self.Misc.items():
+        for (name, value) in list(self.Misc.items()):
             argStr += '%s=%s,' % (name, repr(self.Misc[name]))
         
         argStr += 'totalEnemyFightTime=%s,' % self.totalEnemyTime

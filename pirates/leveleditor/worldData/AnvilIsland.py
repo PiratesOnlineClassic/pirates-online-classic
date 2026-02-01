@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.AnvilIsland
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'Interact Links':
     [['1179265920.0dxschafe3', '1179266176.0dxschafe0', 'Bi-directional'],

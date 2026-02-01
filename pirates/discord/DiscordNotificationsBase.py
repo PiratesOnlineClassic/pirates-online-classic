@@ -60,7 +60,7 @@ class DiscordNotificationsBase:
             self.publishServerException(message, header, fields)
         except Exception as e:
             self.notify.warning('Failed to report exception: %s' % str(e))
-            print(traceback.format_exc())
+            print((traceback.format_exc()))
 
     def publishServerException(self, message, header, fields={}):
         """
@@ -99,7 +99,7 @@ class DiscordNotificationsBase:
 
         except Exception as e:
             self.notify.warning('Failed to report hacker to Discord: %s' % str(e))
-            print(traceback.format_exc())
+            print((traceback.format_exc()))
 
     def publishServerHacker(self, message, header, fields={}):
         """

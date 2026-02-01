@@ -3,7 +3,7 @@ from direct.interval.IntervalGlobal import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.effects.ShipSplintersA import ShipSplintersA
 from pirates.shipparts import DecorDNA
 from pirates.shipparts import ShipPart

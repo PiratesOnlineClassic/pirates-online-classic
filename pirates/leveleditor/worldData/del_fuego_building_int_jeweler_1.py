@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.del_fuego_building_int_jeweler_1
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {},
     'DirectionalColors': {},

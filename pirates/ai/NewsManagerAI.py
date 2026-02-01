@@ -160,15 +160,15 @@ class NewsManagerAI(DistributedObjectAI):
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def stopHoliday(holidayId):
-    simbase.air.newsManager.endHoliday(holidayId)
+    base.air.newsManager.endHoliday(holidayId)
     return 'Stopped Holiday %d' % holidayId
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, int])
 def startHoliday(holidayId, time):
-    simbase.air.newsManager.startHoliday(holidayId, time, True)
+    base.air.newsManager.startHoliday(holidayId, time, True)
     return 'Started Holiday %d' % holidayId
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, int])
 def displayMessage(messageId):
-    simbase.air.newsManager.d_displayMessage(messageId)
+    base.air.newsManager.d_displayMessage(messageId)
     return 'Sent message: %d' % messageId

@@ -4,9 +4,9 @@ from direct.showbase import DirectObject
 from direct.fsm import StateData
 from direct.gui import DirectGuiGlobals
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PLocalizer
-from CharGuiBase import CharGuiSlider, CharGuiPicker
+from .CharGuiBase import CharGuiSlider, CharGuiPicker
 import random
 damper = 0.5
 sliderRange = (-0.5, 0.5)
@@ -96,7 +96,7 @@ class Ear(DirectObject.DirectObject):
         self.pgs3.node().setValue(self.avatar.dna.getEarPosition())
 
     def reset(self):
-        for i in xrange(0, len(self.pgs)):
+        for i in range(0, len(self.pgs)):
             self.resetSlider(self.pgs[i])
         
         self.saveDNA()
@@ -107,7 +107,7 @@ class Ear(DirectObject.DirectObject):
     def randomPick(self):
         global damper
         damper = 1.0
-        for i in xrange(0, len(self.pgs)):
+        for i in range(0, len(self.pgs)):
             slider = self.pgs[i]
             self.resetSlider(slider)
             if random.choice([

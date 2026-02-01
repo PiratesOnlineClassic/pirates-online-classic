@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals
@@ -367,11 +367,11 @@ class LoadingScreen(DirectObject.DirectObject):
         else:
             screenshot = screenShots_Locations.get(targetId)
             if not screenshot:
-                if areaType_Jungles.has_key(targetId):
+                if targetId in areaType_Jungles:
                     screenshot = random.choice(screenShots_Jungles)
-                elif areaType_Swamps.has_key(targetId):
+                elif targetId in areaType_Swamps:
                     screenshot = random.choice(screenShots_Swamps)
-                elif areaType_Caves.has_key(targetId):
+                elif targetId in areaType_Caves:
                     screenshot = random.choice(screenShots_Caves)
                 else:
                     screenshot = random.choice(screenShots)

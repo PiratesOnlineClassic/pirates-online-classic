@@ -1,16 +1,16 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.fsm import StateData
 from otp.otpgui import OTPDialog
 from direct.fsm import ClassicFSM
 from direct.fsm import State
 from direct.directnotify import DirectNotifyGlobal
 from otp.otpbase import OTPLocalizer
-import TTAccount
-import GuiScreen
+from . import TTAccount
+from . import GuiScreen
 from otp.otpbase import OTPGlobals
-from direct.distributed.MsgTypes import *
+from otp.distributed.MsgTypes import *
 
 class CreateAccountScreen(StateData.StateData, GuiScreen.GuiScreen):
     notify = DirectNotifyGlobal.directNotify.newCategory('CreateAccountScreen')
@@ -171,7 +171,7 @@ class CreateAccountScreen(StateData.StateData, GuiScreen.GuiScreen):
                 data['referrer'] = referrer
             
             error = self.loginInterface.createAccount(self.userName, self.password, data)
-        except TTAccount.TTAccountException, e:
+        except TTAccount.TTAccountException as e:
             error = str(e)
             self.notify.info(error)
             self.dialog.setMessage(error + OTPLocalizer.CreateAccountScreenConnectionErrorSuffix)

@@ -1,10 +1,10 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from pirates.battle.WeaponGlobals import *
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.piratesbase import PiratesGlobals
-import Weapon
-import WeaponGlobals
+from . import Weapon
+from . import WeaponGlobals
 
 class Grenade(Weapon.Weapon):
     modelTypes = {

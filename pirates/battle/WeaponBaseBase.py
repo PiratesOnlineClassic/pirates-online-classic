@@ -1,8 +1,8 @@
 import math
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import TeamUtils
-import WeaponGlobals
+from . import WeaponGlobals
 
 class WeaponBaseBase:
     areaCollisionsCreated = 0
@@ -165,7 +165,7 @@ class WeaponBaseBase:
             else:
                 continue
         
-        print 'getting area list of %s' % targets
+        print('getting area list of %s' % targets)
         return targets
 
 

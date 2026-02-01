@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import *
 from direct.showbase.MessengerGlobal import *
 from direct.showbase.BulletinBoardGlobal import *
@@ -11,6 +11,7 @@ from direct.interval.IntervalManager import ivalMgr
 from direct.task import Task
 from direct.showbase import EventManager
 from direct.showbase import ExceptionVarDump
+from otp.otpbase.OTPUtil import getConfigShowbase, recordFunctorCreationStacks
 import math
 import sys
 import time
@@ -59,7 +60,7 @@ class AIBase:
         __builtins__['hidden'] = self.hidden
         __builtins__['render'] = self.render
         AIBase.notify.info('__dev__ == %s' % __dev__)
-        PythonUtil.recordFunctorCreationStacks()
+        recordFunctorCreationStacks()
         __builtins__['wantTestObject'] = self.config.GetBool('want-test-object', 0)
         self.wantStats = self.config.GetBool('want-pstats', 0)
         Task.TaskManager.pStatsTasks = self.config.GetBool('pstats-tasks', 0)
@@ -201,5 +202,8 @@ class AIBase:
     
     def run(self):
         self.taskMgr.run()
+
+    def destroy(self):
+        pass
 
 

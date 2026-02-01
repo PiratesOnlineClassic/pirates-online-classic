@@ -1,4 +1,5 @@
 from pirates.pirate.AvatarType import AvatarType
+from direct.showbase.PythonUtil import makeList
 
 class AvatarTypeSet(AvatarType):
     

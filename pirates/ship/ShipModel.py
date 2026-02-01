@@ -1,4 +1,5 @@
-from pandac.PandaModules import *
+from panda3d.core import *
+from panda3d.fx import ProjectionScreen
 from direct.interval.IntervalGlobal import *
 from direct.interval.ProjectileInterval import *
 from pirates.shipparts import Hull, HullDNA
@@ -142,7 +143,7 @@ class ShipModel(NodePath):
 
         self.cannons = []
         if self.cr is not None or False and fromEditor:
-            for i in xrange(len(self.dna.cannonConfig)):
+            for i in range(len(self.dna.cannonConfig)):
                 cannonType = self.dna.cannonConfig[i]
                 if cannonType > 0:
                     cannon = Cannon.Cannon(self.cr)
@@ -157,7 +158,7 @@ class ShipModel(NodePath):
         self.leftBroadside = []
         self.rightBroadside = []
         if self.cr is not None or fromEditor:
-            for i in xrange(len(self.dna.leftBroadsideConfig)):
+            for i in range(len(self.dna.leftBroadsideConfig)):
                 cannonType = self.dna.leftBroadsideConfig[i]
                 if cannonType > 0:
                     cannonPost = self.locators.find('**/broadside_left_' + str(i) + ';+s')
@@ -172,7 +173,7 @@ class ShipModel(NodePath):
                     cannon.geom_High.setScale(cannonPost.getScale(self.root))
                     self.leftBroadside.append(cannon)
             
-            for i in xrange(len(self.dna.rightBroadsideConfig)):
+            for i in range(len(self.dna.rightBroadsideConfig)):
                 cannonType = self.dna.rightBroadsideConfig[i]
                 if cannonType > 0:
                     cannonPost = self.locators.find('**/broadside_right_' + str(i) + ';+s')
@@ -266,7 +267,7 @@ class ShipModel(NodePath):
         self.masts = {}
         self.sails = {}
         configNames = (('setMastConfig1', 'setSailConfig1'), ('setMastConfig2', 'setSailConfig2'), ('setMastConfig3', 'setSailConfig3'), ('setForemastConfig', 'setForesailConfig'), ('setAftmastConfig', 'setAftsailConfig'))
-        for i in xrange(len(configNames)):
+        for i in range(len(configNames)):
             (mastConfigName, sailConfigName) = configNames[i]
             mastId = getattr(self.dna, 'g' + mastConfigName[1:])()
             if mastId == 0:
@@ -306,7 +307,7 @@ class ShipModel(NodePath):
                 mast,
                 0]
             self.sails[mast.dna.posIndex] = {}
-            for j in xrange(len(mastDNA.sailConfig)):
+            for j in range(len(mastDNA.sailConfig)):
                 if mastDNA.sailConfig[j] == 0 and fromEditor:
                     continue
                 
@@ -390,16 +391,16 @@ class ShipModel(NodePath):
         self.highStatic.hide()
         self.mediumStatic.hide()
         self.lowStatic.hide()
-        exec 'self.' + lod + 'Detail.show()'
-        exec 'self.' + lod + 'Static.show()'
+        exec('self.' + lod + 'Detail.show()')
+        exec('self.' + lod + 'Static.show()')
         for lodKey in lodDic:
-            exec 'self.hull[0].' + lodDic[lodKey] + '.hide()'
+            exec('self.hull[0].' + lodDic[lodKey] + '.hide()')
             if hasattr(self.cabin, lodDic[lodKey]):
-                exec 'self.cabin.' + lodDic[lodKey] + '.hide()'
+                exec('self.cabin.' + lodDic[lodKey] + '.hide()')
         
-        exec 'self.hull[0].' + lodDic[lod] + '.show()'
+        exec('self.hull[0].' + lodDic[lod] + '.show()')
         if hasattr(self.cabin, lodDic[lod]):
-            exec 'self.cabin.' + lodDic[lod] + '.show()'
+            exec('self.cabin.' + lodDic[lod] + '.show()')
     
     def fireCannon(self, index, ammo = InventoryType.CannonRoundShot, targetPos = None, targetNode = None, wantCollisions = 0, flightTime = None, preciseHit = False, offset = Vec3(0, 0, 0)):
         if targetNode:
@@ -410,7 +411,7 @@ class ShipModel(NodePath):
             self.cannons[index].playAttack(InventoryType.CannonShoot, ammo, 'localShipHit', targetPos, wantCollisions, flightTime, preciseHit)
 
     def fireAllCannons(self, ammo = InventoryType.CannonRoundShot, targetPos = None, targetNode = None, wantCollisions = 0):
-        for i in xrange(len(self.cannons)):
+        for i in range(len(self.cannons)):
             self.fireCannon(i, ammo, targetPos, targetNode, wantCollisions)
 
     def destroy(self):
@@ -445,14 +446,14 @@ class ShipModel(NodePath):
             decor.delete()
         
         self.decors = []
-        for mast in self.sails.values():
-            for entry in mast.values():
+        for mast in list(self.sails.values()):
+            for entry in list(mast.values()):
                 sail = entry[0]
                 sail.disable()
                 sail.delete()
 
         self.sails = {}
-        for entry in self.masts.values():
+        for entry in list(self.masts.values()):
             mast = entry[0]
             mast.disable()
             mast.delete()
@@ -483,13 +484,13 @@ class ShipModel(NodePath):
             None]
 
     def hideMasts(self):
-        for entry in self.masts.values():
+        for entry in list(self.masts.values()):
             entry[0].geom_High.stash()
             entry[0].geom_Medium.stash()
             entry[0].geom_Low.stash()
 
     def showMasts(self):
-        for entry in self.masts.values():
+        for entry in list(self.masts.values()):
             entry[0].geom_High.unstash()
             entry[0].geom_Medium.unstash()
             entry[0].geom_Low.unstash()
@@ -669,6 +670,6 @@ class ShipModel(NodePath):
             self.JRival = None
     
     def getShipInfo(self):
-        return [self.modelClass, [ [mast.dna.getMastType(), mast.dna.getPosIndex(), mast.dna.getSailConfig()] for mast, dMast in self.masts.itervalues() ]]
+        return [self.modelClass, [ [mast.dna.getMastType(), mast.dna.getPosIndex(), mast.dna.getSailConfig()] for mast, dMast in self.masts.values() ]]
 
 

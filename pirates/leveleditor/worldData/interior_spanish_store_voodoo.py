@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.interior_spanish_store_voodoo
-from pandac.PandaModules import Point3, VBase3
+from panda3d.core import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1155774520.99fxlara0': {

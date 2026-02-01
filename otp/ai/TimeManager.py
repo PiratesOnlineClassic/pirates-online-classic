@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.showbase.DirectObject import *
 from direct.distributed.ClockDelta import *
 from direct.task import Task
@@ -8,6 +8,7 @@ from otp.otpbase import OTPGlobals
 from libotp import CFSpeech
 from libotp import CFTimeout
 from direct.showbase import PythonUtil
+from direct.showbase import ExceptionVarDump
 import time
 import os
 
@@ -138,7 +139,7 @@ class TimeManager(DistributedObject.DistributedObject):
             disconnectCode])
 
     def setExceptionInfo(self):
-        info = PythonUtil.describeException()
+        info = ExceptionVarDump.describeException()
         self.notify.info('Client exception: %s' % info)
         self.sendUpdate('setExceptionInfo', [
             info])
@@ -194,7 +195,7 @@ class TimeManager(DistributedObject.DistributedObject):
 
     def d_setFrameRate(self, fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode, vendorId, deviceId, processMemory, pageFileUsage, physicalMemory, pageFaultCount, osInfo, cpuSpeed):
         info = '%0.1f fps|%0.3fd|%s avs|%s|%d|%d|%s|0x%04x|0x%04x|%0.1fMB|%0.1fMB|%0.1fMB|%d|%s|%s' % (fps, deviation, numAvs, locationCode, timeInLocation, timeInGame, gameOptionsCode, vendorId, deviceId, processMemory, pageFileUsage, physicalMemory, pageFaultCount, '%s.%d.%d.%d' % osInfo, '%0.03f,%0.03f' % cpuSpeed)
-        print 'frame rate: %s' % info
+        print('frame rate: %s' % info)
         # TODO
         '''self.sendUpdate('setFrameRate', [
             fps,

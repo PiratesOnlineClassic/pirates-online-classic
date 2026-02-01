@@ -3,7 +3,7 @@ from direct.interval.IntervalGlobal import *
 from direct.distributed import DistributedObject
 from direct.distributed import DistributedCartesianGrid
 from direct.showbase.PythonUtil import report
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.piratesgui import PiratesGuiGlobals, RadarGui
@@ -63,7 +63,7 @@ class DistributedGAInterior(DistributedGameArea.DistributedGameArea, Distributed
         self.notify.debug('delete')
         del self.coll
         self.geom.removeNode()
-        for node in self.GridLOD.values():
+        for node in list(self.GridLOD.values()):
             node.cleanup()
         
         del self.GridLOD

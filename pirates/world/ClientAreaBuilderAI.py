@@ -24,7 +24,7 @@ class ClientAreaBuilderAI(DirectObject):
 
     def findObjectsOfClass(self, objectClass):
         objects = []
-        for object in self.objectList.values():
+        for object in list(self.objectList.values()):
             if isinstance(object, objectClass):
                 objects.append(object)
 
@@ -39,7 +39,7 @@ class ClientAreaBuilderAI(DirectObject):
         del self.objectList[object.doId]
 
     def getObject(self, doId=None, uniqueId=None):
-        for object in self.objectList.values():
+        for object in list(self.objectList.values()):
             if object.doId == doId or object.getUniqueId() == uniqueId:
                 return object
 
@@ -88,7 +88,7 @@ class ClientAreaBuilderAI(DirectObject):
             return object
 
         parentData = self.air.worldCreator.getObjectDataByUid(parentUid)
-        if parentData['Type'] == 'Island':
+        if parentData is None or parentData.get('Type') == 'Island':
             object.setPos(objectPos)
             object.setHpr(objectHpr)
             return object
@@ -151,7 +151,7 @@ class ClientAreaBuilderAI(DirectObject):
         island.setUndockable(objectData.get('Undockable', False))
 
         if 'Objects' in islandWorldData:
-            for obj in islandWorldData['Objects'].values():
+            for obj in list(islandWorldData['Objects'].values()):
                 if obj['Type'] == 'LOD Sphere':
                     sphereCenter = obj['Pos']
                     island.setZoneSphereSize(*obj['Radi'])

@@ -17,8 +17,8 @@ class ClientServicesManager(DistributedObjectGlobal):
         token = self.cr.playToken or 'dev'
 
         key = 'cd09ed406383f3d3ebb62b9ce23d41dd'
-        digest_maker = hmac.new(key)
-        digest_maker.update(token)
+        digest_maker = hmac.new(key.encode('utf-8'), digestmod='md5')
+        digest_maker.update(token.encode('utf-8'))
         clientKey = digest_maker.hexdigest()
 
         address = ''#get('https://api.ipify.org/').text

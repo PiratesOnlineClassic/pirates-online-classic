@@ -39,6 +39,8 @@ class HolidayDates:
 
     def getTime(self, t):
         date = self.getCurrentDate()
+        # Convert Enum values to integers for time.mktime
+        t = tuple(x.value if hasattr(x, 'value') else x for x in t)
         if self.holidayType == HolidayDates.TYPE_CUSTOM:
             return time.mktime((t[0], t[1], t[2], t[3], t[4], t[5], 0, 0, -1))
         
@@ -60,6 +62,8 @@ class HolidayDates:
 
     def getAdjustedTime(self, t):
         date = self.getCurrentDate()
+        # Convert Enum values to integers for time.mktime
+        t = tuple(x.value if hasattr(x, 'value') else x for x in t)
         if self.holidayType == HolidayDates.TYPE_CUSTOM:
             return time.mktime((t[0], t[1], t[2], t[3], t[4], t[5], 0, 0, -1))
         

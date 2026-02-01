@@ -5,7 +5,7 @@ from otp.otpbase import OTPLocalizer
 from direct.directnotify import DirectNotifyGlobal
 from otp.otpbase import OTPGlobals
 from otp.speedchat import SCDecoders
-from pandac.PandaModules import *
+from panda3d.core import *
 from otp.chat.ChatGlobals import *
 from otp.chat.ChatMessage import ChatMessage
 import time
@@ -307,7 +307,7 @@ class ChatAssistant(DirectObject.DirectObject):
     def sendAvatarOpenTypedChat(self, message):
         error = None
         if not self.checkOpenTypedChat():
-            print 'Chat error'
+            print('Chat error')
             error = ERROR_NO_OPEN_CHAT
         
         chatFlags = CFSpeech | CFTimeout

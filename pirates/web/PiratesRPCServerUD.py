@@ -3,7 +3,7 @@ from direct.directnotify.DirectNotifyGlobal import *
 from pirates.web.PiratesRPCHandler import PiratesRPCHandler
 from pirates.web import RPCGlobals
 
-from SimpleXMLRPCServer import SimpleXMLRPCServer
+from xmlrpc.server import SimpleXMLRPCServer
 import traceback
 
 class PiratesRPCServerUD(SimpleXMLRPCServer):

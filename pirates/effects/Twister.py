@@ -1,11 +1,11 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.particles.ParticleEffect import *
 from direct.particles import Particles
 from direct.particles import ForceGroup
 import random
 import os
-from PooledEffect import PooledEffect
+from .PooledEffect import PooledEffect
 
 class Twister(PooledEffect):
     particleDummy = None

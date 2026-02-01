@@ -78,7 +78,7 @@ class DistributedHullAI(DistributedShippartAI, DistributedDestructibleArrayAI, D
 
         index = -1
         if hullCode == 255:
-            for x in xrange(len(self.arrayHp)):
+            for x in range(len(self.arrayHp)):
                 if self.arrayHp[x] > 0:
                     index = x
                     break

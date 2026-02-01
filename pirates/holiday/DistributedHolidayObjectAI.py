@@ -48,7 +48,7 @@ class DistributedHolidayObjectAI(DistributedInteractiveAI):
         if not self.holiday:
             return False
 
-        for holidayId, name in HolidayGlobals.holidayNames.items():
+        for holidayId, name in list(HolidayGlobals.holidayNames.items()):
             if name == self.holiday:
                 return self.air.newsManager.isHolidayActive(holidayId)
 

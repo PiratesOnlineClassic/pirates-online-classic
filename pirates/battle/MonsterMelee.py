@@ -9,8 +9,8 @@ _sfxDict = {}
 def cacheSfx(name, file):
     sfx = _sfxDict.get(name)
     if not sfx:
-        if type(file) == types.TupleType:
-            sfx = map(loader.loadSfx, file)
+        if type(file) == tuple:
+            sfx = list(map(loader.loadSfx, file))
         else:
             sfx = loader.loadSfx(file)
         _sfxDict[name] = sfx

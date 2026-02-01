@@ -1,7 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from direct.task.Task import Task
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.distributed.ClockDelta import *
 from direct.showbase import PythonUtil
 from pirates.pirate import HumanDNA
@@ -192,7 +192,7 @@ class DistributedBishopsHandTable(DistributedGameTable.DistributedGameTable):
             
             def timerTask(task):
                 if task.time < task.timer:
-                    self.timerLabel['text'] = `int(PythonUtil.bound(task.timer - task.time, 0, time) + 1.0)`
+                    self.timerLabel['text'] = repr(int(PythonUtil.bound(task.timer - task.time, 0, time) + 1.0))
                     return Task.cont
                 else:
                     self.timerLabel['text'] = ''
@@ -204,7 +204,7 @@ class DistributedBishopsHandTable(DistributedGameTable.DistributedGameTable):
     def startRound(self, sequence, delay, timestamp):
         self.notify.debug('startRound')
         self.game.request('WaitingForRound')
-        self.notify.debug('Received sequence: ' + `sequence`)
+        self.notify.debug('Received sequence: ' + repr(sequence))
         if self.isLocalAvatarPlaying():
             self.notify.debug('initing round')
             self.game.initRound(sequence)

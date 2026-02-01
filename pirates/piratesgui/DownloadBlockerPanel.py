@@ -1,8 +1,9 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.gui.DirectGui import *
 from direct.showbase.PythonUtil import GoldenRectangle
 from pirates.piratesgui import GuiPanel, PiratesGuiGlobals
 from pirates.piratesbase import PLocalizer
+from otp.otpbase.OTPUtil import Enum
 
 class DownloadBlockerPanel(GuiPanel.GuiPanel):
     Reasons = Enum('GENERIC,ISLAND,BOAT,TELEPORT,LOOKOUT')

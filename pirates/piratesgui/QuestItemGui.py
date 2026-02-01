@@ -1,10 +1,10 @@
 from direct.gui.DirectGui import *
-from pandac.PandaModules import *
+from panda3d.core import *
 from pirates.uberdog import UberDogGlobals
 from pirates.piratesgui import PiratesGuiGlobals
 from pirates.piratesgui.InventoryItemGui import InventoryItemGui
 from pirates.piratesbase import PLocalizer
-from GuiButton import GuiButton
+from .GuiButton import GuiButton
 
 class QuestItemGui(InventoryItemGui):
     Width = PiratesGuiGlobals.InventoryPageWidth - PiratesGuiGlobals.GridSize

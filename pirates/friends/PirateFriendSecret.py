@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.gui.DirectGui import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import StateData
@@ -113,7 +113,7 @@ class FriendSecretNeedsParentLogin(StateData.StateData):
         self.dialog.show()
     
     def exit(self):
-        print 'exit'
+        print('exit')
         self.ignoreAll()
         if self.dialog:
             self.dialog.destroy()
@@ -185,7 +185,7 @@ class FriendSecret(GuiPanel.GuiPanel, StateData.StateData):
         self.notify.debug('### requestedSecretType = %s' % self.requestedSecretType)
 
     def unload(self):
-        print 'unload'
+        print('unload')
         if self.isLoaded == 0:
             return None
         self.isLoaded = 0
@@ -204,7 +204,7 @@ class FriendSecret(GuiPanel.GuiPanel, StateData.StateData):
         return None
 
     def load(self):
-        print 'load'
+        print('load')
         if self.isLoaded == 1:
             return None
         
@@ -246,7 +246,7 @@ class FriendSecret(GuiPanel.GuiPanel, StateData.StateData):
         self.accountButton.hide()
     
     def enter(self):
-        print 'enter'
+        print('enter')
         if self.isEntered == 1:
             return
         
@@ -269,11 +269,11 @@ class FriendSecret(GuiPanel.GuiPanel, StateData.StateData):
         NametagGlobals.setOnscreenChatForced(1)
 
     def closePanel(self):
-        print 'closePanel'
+        print('closePanel')
         self.exit()
     
     def exit(self):
-        print 'exit'
+        print('exit')
         if self.isEntered == 0:
             return
         
@@ -373,7 +373,7 @@ class FriendSecret(GuiPanel.GuiPanel, StateData.StateData):
 
     def __enterSecret(self, secret):
         self.enterSecret.set('')
-        secret = string.strip(secret)
+        secret = secret.strip()
         if not secret:
             self.exit()
             return
@@ -409,7 +409,7 @@ class FriendSecret(GuiPanel.GuiPanel, StateData.StateData):
         taskMgr.doMethodLater(10.0, self.__secretTimeout, 'timeoutSecretResponse')
     
     def __secretTimeout(self, caller = None):
-        print '__secretTimeout'
+        print('__secretTimeout')
         self.ignore(OTPGlobals.PlayerFriendAddEvent)
         self.ignore(OTPGlobals.PlayerFriendRejectUseSecretEvent)
         self.nextText['text'] = OTPLocalizer.FriendSecretTimeOut
@@ -420,7 +420,7 @@ class FriendSecret(GuiPanel.GuiPanel, StateData.StateData):
         self.ok2.show()
     
     def __secretResponseOkay(self, avId, info):
-        print '__secretResponseOkay'
+        print('__secretResponseOkay')
         taskMgr.remove('timeoutSecretResponse')
         self.ignore(OTPGlobals.PlayerFriendAddEvent)
         self.ignore(OTPGlobals.PlayerFriendRejectUseSecretEvent)
@@ -431,7 +431,7 @@ class FriendSecret(GuiPanel.GuiPanel, StateData.StateData):
         self.ok2.show()
     
     def __secretResponseReject(self, reason):
-        print '__secretResponseReject'
+        print('__secretResponseReject')
         taskMgr.remove('timeoutSecretResponse')
         self.ignore(OTPGlobals.PlayerFriendAddEvent)
         self.ignore(OTPGlobals.PlayerFriendRejectUseSecretEvent)

@@ -1,4 +1,4 @@
-from SCColorScheme import SCColorScheme
+from .SCColorScheme import SCColorScheme
 
 class SCSettings:
     

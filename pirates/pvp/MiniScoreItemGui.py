@@ -1,4 +1,4 @@
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.gui.DirectGui import *
 from direct.gui.DirectGuiGlobals import *
 from direct.gui.DirectLabel import *
@@ -81,7 +81,8 @@ class MiniScoreItemGui(DirectFrame.DirectFrame):
     def colorLabel(self, color):
         self.descText['text_fg'] = color
 
-    def shakeItUp(self, (x, y, r, g, b, a)):
+    def shakeItUp(self, xxx_todo_changeme):
+        (x, y, r, g, b, a) = xxx_todo_changeme
         self.colorLabel((r, g, b, a))
         randX = random.random() * 0.005 + 0.005
         randY = random.random() * 0.005 + 0.005

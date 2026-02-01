@@ -87,6 +87,11 @@ class AvatarType:
             return False
         return self.faction == other.faction and self.track == other.track and self.id == other.id and self.boss == other.boss
 
+    def __lt__(self, other):
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+        return (self.faction, self.track, self.id, self.boss) < (other.faction, other.track, other.id, other.boss)
+
     def __ne__(self, other):
         if not isinstance(other, self.__class__):
             return True

@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.DelFuegoIsland
-from pandac.PandaModules import Point3, VBase3, Vec4
+from panda3d.core import Point3, VBase3, Vec4
 objectStruct = {
     'AmbientColors': {
         0: Vec4(0.496039, 0.568627, 0.67451, 1),

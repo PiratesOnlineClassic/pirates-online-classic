@@ -1,5 +1,5 @@
 import copy
-from pandac.PandaModules import *
+from panda3d.core import *
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.showbase import DirectObject
 from direct.gui.DirectGui import *
@@ -68,6 +68,7 @@ class GuiButton(DirectButton):
             self.bind(DGG.ENTER, self.waitShowDetails)
             self.bind(DGG.EXIT, self.hideDetails)
         else:
+            self.setFrameSize(fClearFrame = 1)
             w = self.getWidth()
             h = self.getHeight()
             pos = self.__discoverHelpWatcherPos()

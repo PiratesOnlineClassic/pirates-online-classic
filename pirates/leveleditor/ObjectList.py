@@ -460,7 +460,7 @@ AVAIL_OBJ_LIST = {
       'Properties': {
         'Aggro Radius': [PROP_UI_SLIDE, [10, 0], 'self.setAggroRadius'],
         'searchTime': [PROP_UI_ENTRY],
-        'type': [PROP_UI_COMBO, PiratesGlobals.SearchableModels.keys()]
+        'type': [PROP_UI_COMBO, list(PiratesGlobals.SearchableModels.keys())]
       },
       'Defaults': {
         'Aggro Radius': 5.0,
@@ -468,7 +468,7 @@ AVAIL_OBJ_LIST = {
         'type': 'Crate'
       },
       'Visual': {
-        'Models': PiratesGlobals.SearchableModels.values()
+        'Models': list(PiratesGlobals.SearchableModels.values())
       }
     },
     'Treasure Bank': {
@@ -1049,7 +1049,7 @@ AVAIL_OBJ_LIST = {
       },
       'Properties': {
         'Instanced': [PROP_UI_CHECK],
-        'Name': [PROP_UI_COMBO, [''] + PLocalizer.LocationNames.keys()]
+        'Name': [PROP_UI_COMBO, [''] + list(PLocalizer.LocationNames.keys())]
       },
       'Defaults': {
         'Instanced': False,
@@ -1344,7 +1344,7 @@ AVAIL_OBJ_LIST = {
             ]
           ]
         }, 'self.setAnimAvSubCategory'],
-        'Effect Type': [PROP_UI_COMBO, ObjectEffects.OBJECT_EFFECTS.keys(), 'self.applyObjectEffects'],
+        'Effect Type': [PROP_UI_COMBO, list(ObjectEffects.OBJECT_EFFECTS.keys()), 'self.applyObjectEffects'],
         'PoseAnim': [PROP_UI_ENTRY],
         'PoseFrame': [PROP_UI_ENTRY],
         'StartFrame': [PROP_UI_ENTRY],
@@ -1372,7 +1372,7 @@ AVAIL_OBJ_LIST = {
       'Raycast': 1,
       'Selectable': 1,
       'Visual': {
-        'Models': CustomAnims.PROP_ANIMS.keys(),
+        'Models': list(CustomAnims.PROP_ANIMS.keys()),
         'Properties': {
           'Animate': [PROP_UI_COMBO, CustomAnims.getPropAnimList()]
         }
@@ -2311,7 +2311,7 @@ AVAIL_OBJ_LIST = {
         'Offset': (0, 0, 1.0)
       },
       'Properties': {
-        'SFX Group': [PROP_UI_COMBO, SFXList.SOUND_FX_LIST.keys(), 'self.setSfxGroup'],
+        'SFX Group': [PROP_UI_COMBO, list(SFXList.SOUND_FX_LIST.keys()), 'self.setSfxGroup'],
         'SoundFX': [PROP_UI_COMBO, SFXList.getSFXList(), 'self.setSoundFX'],
         'Volume': [PROP_UI_SLIDE, [1, 0, 0.01], 'self.setSoundFX'],
         'DelayMin': [PROP_UI_SLIDE, [60.0, 0.0, 0.1], 'self.setSoundFX'],

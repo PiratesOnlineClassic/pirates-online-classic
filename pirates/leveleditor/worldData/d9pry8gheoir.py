@@ -1,5 +1,5 @@
 # Embedded file name: pirates.leveleditor.worldData.d9pry8gheoir
-from pandac.PandaModules import Point3, VBase3
+from panda3d.core import Point3, VBase3
 objectStruct = {
     'Objects': {
         '1156817663.05jubutler': {

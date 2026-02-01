@@ -1,5 +1,5 @@
-from pandac.PandaModules import *
-import PLocalizer
+from panda3d.core import *
+from . import PLocalizer
 from otp.otpbase.OTPGlobals import *
 from direct.gui import DirectFrame
 from direct.gui import DirectButton

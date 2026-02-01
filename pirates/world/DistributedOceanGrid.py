@@ -5,8 +5,8 @@ from pirates.seapatch.SeaPatch import SeaPatch
 from pirates.seapatch.Reflection import Reflection
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
-from pandac.PandaModules import *
-from OceanGridBase import OceanGridBase
+from panda3d.core import *
+from .OceanGridBase import OceanGridBase
 
 class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
 
@@ -61,7 +61,7 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
         if parent:
             parent.addObjectToGrid(base.localAvatar)
         elif len(self.islandGrids) > 0:
-            islandIds = self.islandGrids.keys()
+            islandIds = list(self.islandGrids.keys())
             island = self.islandGrids[islandIds[0]]
             island.addObjectToGrid(base.localAvatar)
         else:
@@ -84,7 +84,7 @@ class DistributedOceanGrid(DistributedCartesianGrid, OceanGridBase):
 
     def addOceanAreasToMap(self):
         mapPage = base.localAvatar.guiMgr.mapPage
-        areaNames = self.oceanAreas.keys()
+        areaNames = list(self.oceanAreas.keys())
         for name in areaNames:
             mapPage.addOceanArea(name, self.oceanAreas[name][2], self.oceanAreas[name][0], self.oceanAreas[name][1])
 
