@@ -112,7 +112,10 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         return self.avatarType
 
     def setGameState(self, gameState, timestamp=0):
-        self.gameFSM.request(gameState)
+        try:
+            self.gameFSM.request(gameState)
+        except AssertionError:
+            self.notify.warning("Invalid game state request: %s" % gameState)
 
     def d_setGameState(self, gameState):
         self.sendUpdate('setGameState', [gameState, globalClockDelta.getRealNetworkTime(bits=16)])

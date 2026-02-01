@@ -69,7 +69,8 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
                 tunnel = base.cr.doId2do.get(parent.links[0][0])
                 self.notify.error('Data file not found for area. connecting tunnel uid = %s' % tunnel.uniqueId)
             
-            self.notify.error('Data file not found for area being loaded: %s, make sure worldCreator.loadObjectsFromFile is being called.' % parentUid)
+            self.notify.warning('Data file not found for area being loaded: %s, make sure worldCreator.loadObjectsFromFile is being called.' % parentUid)
+            return
         
         objDict = objectInfo.get('Objects')
         if objDict != None:

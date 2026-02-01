@@ -4,6 +4,7 @@ from direct.particles import Particles
 from direct.showbase.DirectObject import *
 from direct.interval.IntervalGlobal import *
 from direct.actor import Actor
+from panda3d.physics import *
 from pirates.piratesbase import PiratesGlobals
 from pirates.effects import PolyTrail
 from .PooledEffect import PooledEffect

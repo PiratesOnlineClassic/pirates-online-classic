@@ -1,4 +1,5 @@
 from panda3d.core import *
+from panda3d.physics import *
 
 class UsesEffectNode(NodePath):
     

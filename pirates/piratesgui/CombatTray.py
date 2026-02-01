@@ -789,7 +789,7 @@ class CombatTray(GuiTray):
                 return 0
 
         rechargingTime = localAvatar.skillDiary.getTimeRemaining(skillId)
-        if rechargingTime > 0:
+        if rechargingTime is not None and rechargingTime > 0:
             if skillId == InventoryType.UseItem:
                 if ammoSkillId in InventoryType.Potions:
                     localAvatar.guiMgr.createWarning(PLocalizer.TonicRechargingWarning, PiratesGuiGlobals.TextFG6)

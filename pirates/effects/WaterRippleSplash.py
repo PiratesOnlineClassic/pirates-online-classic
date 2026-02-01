@@ -5,6 +5,7 @@ from direct.particles import Particles
 from direct.particles import ForceGroup
 from .EffectController import EffectController
 from .PooledEffect import PooledEffect
+from panda3d.physics import *
 import random
 
 class WaterRippleSplash(PooledEffect, EffectController):

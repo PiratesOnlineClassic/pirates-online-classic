@@ -56,7 +56,7 @@ class Spellbook:
 
         ensureAccess(word.access)
         if self.getTarget() and self.getTarget() != self.getInvoker():
-            if self.getInvokerAccess() < self.getTarget().getAdminAccess():
+            if self.getInvokerAccess().access < self.getTarget().getAdminAccess():
                 raise MagicError('Target must have lower or equal access')
 
         result = word.run(args)
@@ -78,11 +78,11 @@ class Spellbook:
         return self.currentTarget
 
     def getInvokerAccess(self):
-        if self.isRemote:
-            return CATEGORY_SYSTEM_ADMIN
+        if self.isRemote():
+            return CATEGORY_SYSTEM_ADMIN.access
         if not self.currentInvoker:
             return 0
-        return self.currentInvoker.getAdminAccess()
+        return self.currentInvoker.getAdminAccess().acccess
 
     def __repr__(self):
         r = ''

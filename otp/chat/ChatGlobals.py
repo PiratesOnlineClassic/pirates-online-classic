@@ -1,4 +1,3 @@
-import string
 NORMAL_CHAT = 1
 WHISPER_CHAT = 2
 GUILD_CHAT = 3
@@ -41,7 +40,7 @@ ThoughtPrefix = '.'
 def isThought(message):
     if len(message) == 0:
         return 0
-    elif string.find(message, ThoughtPrefix, 0, len(ThoughtPrefix)) >= 0:
+    elif message.startswith(ThoughtPrefix):
         return 1
     else:
         return 0

@@ -3,6 +3,7 @@ from direct.interval.IntervalGlobal import *
 from direct.particles.ParticleEffect import *
 from direct.particles import Particles
 from direct.particles import ForceGroup
+from panda3d.physics import *
 import random
 import os
 from .PooledEffect import PooledEffect

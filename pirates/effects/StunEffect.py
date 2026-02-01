@@ -1,4 +1,5 @@
 from panda3d.core import *
+from panda3d.physics import *
 from direct.interval.IntervalGlobal import *
 from .EffectController import EffectController
 from direct.particles import ParticleEffect

@@ -6,6 +6,7 @@ from direct.particles import Particles
 from direct.particles import ForceGroup
 from .PooledEffect import PooledEffect
 from direct.task import Task
+from panda3d.physics import *
 import random
 from otp.otpbase import OTPRender
 from pirates.ship import ShipGlobals

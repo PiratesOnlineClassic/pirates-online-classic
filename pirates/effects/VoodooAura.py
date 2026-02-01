@@ -6,6 +6,7 @@ from direct.particles import ForceGroup
 from otp.otpbase import OTPRender
 from .PooledEffect import PooledEffect
 from .EffectController import EffectController
+from panda3d.physics import *
 import random
 
 class VoodooAura(PooledEffect, EffectController):

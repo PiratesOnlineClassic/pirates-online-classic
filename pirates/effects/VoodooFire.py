@@ -6,6 +6,7 @@ from direct.particles import ForceGroup
 import random
 from .PooledEffect import PooledEffect
 from .EffectController import EffectController
+from panda3d.physics import *
 
 class VoodooFire(PooledEffect, EffectController):
     cardScale = 64.0

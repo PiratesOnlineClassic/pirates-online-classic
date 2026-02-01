@@ -34,6 +34,7 @@ from pirates.reputation import ReputationGlobals
 from pirates.battle import RangeDetector
 from pirates.battle import BattleSkillDiary
 from pirates.movement.CameraFSM import CameraFSM
+from pirates.movement.MotionFSM import MotionFSM
 from pirates.economy.EconomyGlobals import *
 from pirates.economy import EconomyGlobals
 from pirates.piratesbase import TeamUtils

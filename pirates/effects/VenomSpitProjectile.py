@@ -6,6 +6,7 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.effects import PolyTrail
 from .PooledEffect import PooledEffect
 from .EffectController import EffectController
+from panda3d.physics import *
 import random
 
 class VenomSpitProjectile(PooledEffect, EffectController):

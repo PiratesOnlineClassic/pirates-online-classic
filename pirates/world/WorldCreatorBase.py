@@ -149,8 +149,11 @@ class WorldCreatorBase:
             if uid not in fileData['ObjectIds']:
                 continue
             
-            getSyntax = 'objectInfo = fileData' + fileData['ObjectIds'][uid]
-            exec(getSyntax)
+            getSyntax = 'fileData' + fileData['ObjectIds'][uid]
+            try:
+                objectInfo = eval(getSyntax)
+            except:
+                objectInfo = None
             if objectInfo is not None and ('File' not in objectInfo or objectInfo.get('File') == ''):
                 break
         
@@ -164,8 +167,11 @@ class WorldCreatorBase:
             
             if self.isObjectDefined(uid, fileName):
                 fileData = self.fileDicts[fileName]
-                getSyntax = 'objectInfo = fileData' + fileData['ObjectIds'][uid]
-                exec(getSyntax)
+                getSyntax = 'fileData' + fileData['ObjectIds'][uid]
+                try:
+                    objectInfo = eval(getSyntax)
+                except:
+                    objectInfo = None
 
         return objectInfo
 
@@ -180,8 +186,13 @@ class WorldCreatorBase:
             if uid not in fileData['ObjectIds']:
                 continue
             
-            getSyntax = 'objectInfo = fileData' + fileData['ObjectIds'][uid]
-            exec(getSyntax)
+            getSyntax = 'fileData' + fileData['ObjectIds'][uid]
+            try:
+                objectInfo = eval(getSyntax)
+            except:
+                objectInfo = None
+            if objectInfo is None:
+                continue
             fileList.add(name)
             objects = objectInfo.get('Objects')
             if objects:
@@ -260,9 +271,15 @@ class WorldCreatorBase:
         if not getBase().config.GetBool('want-privateering', 1):
             return False
         
-        return 'PVPTeam' in self.getObjectDataByUid(islandUid)
+        objData = self.getObjectDataByUid(islandUid)
+        return 0 if objData == None else 'PVPTeam' in objData
     
     def getPvpIslandTeam(self, islandUid):
-        return int(self.getObjectDataByUid(islandUid).get('PVPTeam', 0))
-
-
+        objData = self.getObjectDataByUid(islandUid)
+        if objData is None:
+            return 0
+        team = objData.get('PVPTeam', 0)
+        try:
+            return int(team)
+        except (ValueError, TypeError):
+            return 0

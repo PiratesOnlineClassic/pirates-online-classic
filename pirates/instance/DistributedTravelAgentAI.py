@@ -62,6 +62,8 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
                     'invalid generate!' % avatarId)
 
                 return
+        
+            print ('d_initiateTeleport', avatarId, shardId, instanceType, instanceName, locationUid)
 
             self.air.teleportMgr.d_initiateTeleport(avatar, instanceType, instanceName, locationUid)
 

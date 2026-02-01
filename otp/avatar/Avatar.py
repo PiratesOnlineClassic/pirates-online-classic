@@ -13,6 +13,7 @@ directNotify = DirectNotifyGlobal.directNotify
 from otp.ai.MagicWordGlobal import *
 from libotp.NametagGroup import NametagGroup
 from libotp import Nametag
+from libotp import CFSpeech, CFTimeout, CFPageButton, CFNoQuitButton, CFQuitButton
 
 def reconsiderAllUnderstandable():
     for av in Avatar.ActiveAvatars:

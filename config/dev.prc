@@ -40,7 +40,7 @@ disable-blockers #t
 visualize-cartesian-grid #f
 
 # Water:
-want-low-end-water #t
+want-low-end-water #f
 
 # Analytics:
 dev-analyics #t

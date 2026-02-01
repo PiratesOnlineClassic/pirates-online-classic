@@ -157,9 +157,9 @@ class EnvironmentEffects(DirectObject):
                         self.holidayLocators[effectEntry] = [
                             locator]
                     else:
-                        list = self.holidayLocators.get(effectEntry)
-                        list.append(locator)
-                        self.holidayLocators[effectEntry] = list
+                        locList = self.holidayLocators.get(effectEntry)
+                        locList.append(locator)
+                        self.holidayLocators[effectEntry] = locList
 
                 elif not locator.isEmpty():
                     effectParent = locator.getParent()
@@ -229,9 +229,9 @@ class EnvironmentEffects(DirectObject):
                                 self.holidayEffects[holidayName] = [
                                     effect]
                             else:
-                                list = self.holidayEffects.get(holidayName)
-                                list.append(effect)
-                                self.holidayEffects[holidayName] = list
+                                effList = self.holidayEffects.get(holidayName)
+                                effList.append(effect)
+                                self.holidayEffects[holidayName] = effList
 
     def stopHolidayEffects(self, holidayName):
         if holidayName not in self.holidayEffects:

@@ -6,7 +6,6 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.quest.QuestConstants import LocationIds
 from pirates.piratesbase import Freebooter
-import string
 
 class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
     notify = directNotify.newCategory('DistributedDoorBase')
@@ -149,11 +148,11 @@ class DistributedDoorBase(DistributedInteractive.DistributedInteractive):
             self.closeDoorIval.append(Wait(self.tOpen))
         else:
             self.hasDoors = 1
-        if string.find(modelName, 'english') >= 0:
+        if modelName.find('english') >= 0:
             self.openSfx = base.loader.loadSfx('audio/sfx_door_english_open.mp3')
-        elif string.find(modelName, 'shanty') >= 0:
+        elif modelName.find('shanty') >= 0:
             self.openSfx = base.loader.loadSfx('audio/sfx_door_shanty_open.mp3')
-        elif string.find(modelName, 'spanish') >= 0:
+        elif modelName.find('spanish') >= 0:
             self.openSfx = base.loader.loadSfx('audio/sfx_door_spanish_open.mp3')
         else:
             self.openSfx = base.loader.loadSfx('audio/sfx_door_english_open.mp3')

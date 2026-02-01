@@ -3,6 +3,7 @@ from direct.showbase.DirectObject import *
 from direct.interval.IntervalGlobal import *
 from pirates.piratesbase import PiratesGlobals
 from .EffectController import EffectController
+from panda3d.physics import *
 from .PooledEffect import PooledEffect
 import random
 

@@ -1038,7 +1038,7 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
     
     def d_setGroundState(self, groundState, timestamp):
         self.sendUpdate('setGroundState', [
-            groundState,
+            groundState.value,
             timestamp])
 
     def setGroundStateLocal(self, groundState, timestamp):

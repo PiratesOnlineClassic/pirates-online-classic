@@ -5,6 +5,7 @@ from .PooledEffect import PooledEffect
 from direct.particles import ParticleEffect
 from direct.particles import Particles
 from direct.particles import ForceGroup
+from panda3d.physics import *
 from direct.actor import Actor
 import random
 

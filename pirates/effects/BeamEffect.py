@@ -5,6 +5,7 @@ from direct.actor import Actor
 from pirates.piratesbase import PiratesGlobals
 from .PooledEffect import PooledEffect
 from .EffectController import EffectController
+from panda3d.physics import *
 import random
 
 class BeamEffect(PooledEffect, EffectController):

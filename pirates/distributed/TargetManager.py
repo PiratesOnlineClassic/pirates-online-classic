@@ -1,6 +1,8 @@
 from direct.directtools.DirectSelection import *
 from direct.distributed import DistributedObject
 from direct.task import Task
+from direct.directtools.DirectGlobals import SKIP_CAMERA
+from direct.showbase.PythonUtil import clampScalar
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import TeamUtils
 from pirates.battle import WeaponGlobals
@@ -207,6 +209,8 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
         localAvatar.currentMouseOver = None
     
     def startFollowAim(self):
+        if self.reticle.isEmpty():
+            return
         self.reticle.setPos(self.RETICLE_POS)
         self.reticle.setScale(self.reticleScale)
         if localAvatar.currentWeaponId not in self.WeaponsWithoutReticles:
@@ -332,8 +336,9 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
         return Task.cont
 
     def stopFollowAim(self):
-        self.reticle.detachNode()
-        self.reticle.hide()
+        if not self.reticle.isEmpty():
+            self.reticle.detachNode()
+            self.reticle.hide()
         taskMgr.remove('aimOverTarget')
         if localAvatar.currentAimOver:
             if TeamUtils.damageAllowed(localAvatar.currentAimOver, localAvatar):
@@ -357,9 +362,9 @@ class TargetManager(DistributedObject.DistributedObject, TargetManagerBase.Targe
         tNodePath.setPos(target, 0, 0, target.getHeight() * 0.66)
         nearVec = self.getNearProjectionPoint(tNodePath)
         nearVec *= base.camLens.getFocalLength() / base.camLens.getNear()
-        render2dX = CLAMP(nearVec[0] / (base.camLens.getFilmSize()[0] / 2.0), -.9, 0.9)
+        render2dX = clampScalar(nearVec[0] / (base.camLens.getFilmSize()[0] / 2.0), -.9, 0.9)
         aspect2dX = render2dX * base.getAspectRatio()
-        aspect2dZ = CLAMP(nearVec[2] / (base.camLens.getFilmSize()[1] / 2.0), -.8, 0.9)
+        aspect2dZ = clampScalar(nearVec[2] / (base.camLens.getFilmSize()[1] / 2.0), -.8, 0.9)
         tNodePath.removeNode()
         return (Vec3(aspect2dX, 0, aspect2dZ), distance)
 

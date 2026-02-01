@@ -6,6 +6,7 @@ from direct.particles import ForceGroup
 from pirates.piratesgui.GameOptions import Options
 from .EffectController import EffectController
 from .PooledEffect import PooledEffect
+from panda3d.physics import *
 import random
 
 class WaterSplash(PooledEffect, EffectController):

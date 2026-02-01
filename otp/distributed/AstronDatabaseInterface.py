@@ -295,6 +295,7 @@ class AstronDatabaseInterface:
             del self._callbacks[ctx]
 
     def handleDatagram(self, msgType, di):
+        self.notify.debug('Handling DB datagram type: %d' % msgType)
         if msgType == DBSERVER_CREATE_OBJECT_RESP:
             self.handleCreateObjectResp(di)
         elif msgType in (DBSERVER_OBJECT_GET_ALL_RESP,

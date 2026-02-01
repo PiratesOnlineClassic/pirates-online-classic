@@ -1,4 +1,3 @@
-import string
 import sys
 from direct.showbase import DirectObject
 from otp.otpbase import OTPLocalizer
@@ -15,7 +14,7 @@ from libotp import *
 def isThought(message):
     if len(message) == 0:
         return 0
-    elif string.find(message, ThoughtPrefix, 0, len(ThoughtPrefix)) >= 0:
+    elif message.startswith(ThoughtPrefix):
         return 1
     else:
         return 0

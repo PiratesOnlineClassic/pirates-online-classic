@@ -4,6 +4,7 @@ from direct.particles import Particles
 from direct.particles import ParticleEffect
 from .EffectController import EffectController
 from .PooledEffect import PooledEffect
+from panda3d.physics import *
 
 class WaterMist(PooledEffect, EffectController):
     

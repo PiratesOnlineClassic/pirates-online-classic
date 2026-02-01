@@ -112,6 +112,7 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
                 DistributedIsland.SiegeIcon = [logos.find('**/logo_french_flag'), logos.find('**/logo_spanish_flag')]
 
     def announceGenerate(self):
+        print ('announceGenerate', self, self.doId, self.name)
         DistributedGameArea.DistributedGameArea.announceGenerate(self)
         DistributedCartesianGrid.DistributedCartesianGrid.announceGenerate(self)
         gridSphereName = self.uniqueName('GridSphere')

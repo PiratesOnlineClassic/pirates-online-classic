@@ -2,6 +2,7 @@ from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from .EffectController import EffectController
 from .PooledEffect import PooledEffect
+from panda3d.physics import *
 import random
 
 class WindWave(PooledEffect, EffectController):

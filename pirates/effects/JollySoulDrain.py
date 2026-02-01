@@ -1,4 +1,5 @@
 from panda3d.core import *
+from panda3d.physics import *
 from direct.particles import ParticleEffect
 from direct.particles import Particles
 from direct.showbase.DirectObject import *

@@ -4,6 +4,7 @@ from direct.particles import ParticleEffect
 from direct.particles import Particles
 from .EffectController import EffectController
 from .PooledEffect import PooledEffect
+from panda3d.physics import *
 
 class WaterSplashes(PooledEffect, EffectController):
     

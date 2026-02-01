@@ -180,16 +180,16 @@ class GuildPage(SocialPage.SocialPage):
         self.inviteButton['state'] = DGG.DISABLED
         self.redeemInvite['state'] = DGG.NORMAL
         self.codeInviteOptions['state'] = DGG.DISABLED
-        if self.guildRank > 2 and (self.guildReal == '0' or self.guildReal == ''):
+        if self.guildRank is not None and self.guildRank > 2 and (self.guildReal == '0' or self.guildReal == ''):
             self.renameButton['state'] = DGG.NORMAL
             self.redeemInvite['state'] = DGG.DISABLED
             
-        if self.guildRank > 1:
+        if self.guildRank is not None and self.guildRank > 1:
             self.inviteButton['state'] = DGG.NORMAL
             self.redeemInvite['state'] = DGG.DISABLED
             self.codeInviteOptions['state'] = DGG.NORMAL
-        
-        if self.guildRank > 0:
+            
+        if self.guildRank is not None and self.guildRank > 0:
             self.leaveButton['state'] = DGG.NORMAL
             self.memberButton['state'] = DGG.NORMAL
             self.redeemInvite['state'] = DGG.DISABLED

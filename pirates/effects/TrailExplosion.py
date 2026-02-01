@@ -3,6 +3,7 @@ from direct.interval.IntervalGlobal import *
 from .EffectController import EffectController
 from .PooledEffect import PooledEffect
 from pirates.effects.SparksTrailLong import SparksTrailLong
+from panda3d.physics import *
 import random
 
 class TrailExplosion(PooledEffect, EffectController):
