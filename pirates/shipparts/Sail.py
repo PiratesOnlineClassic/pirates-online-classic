@@ -475,7 +475,8 @@ class Sail(NodePath, ShipPart.ShipPart):
             self.sailGeom.flattenMultitex(useGeom = 0, target = self.holeLayer)
             holeTex = self.sailGeom.findTexture(self.holeLayer)
             SplattableObject.pasteGeomTextureStates(self.sailGeom.node(), cutStates)
-            self.sailGeom.setTexture(self.holeLayer, holeTex)
+            if holeTex:
+                self.sailGeom.setTexture(self.holeLayer, holeTex)
             if self.flash:
                 self.flash.resume()
             

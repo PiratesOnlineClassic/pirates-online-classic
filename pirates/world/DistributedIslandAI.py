@@ -8,6 +8,7 @@ from pirates.world.IslandAreaBuilderAI import IslandAreaBuilderAI
 from pirates.piratesbase import PiratesGlobals
 from pirates.treasuremap.DistributedTreasureMapInstanceAI import DistributedTreasureMapInstanceAI
 from pirates.world.DistributedShipDeployerAI import DistributedShipDeployerAI
+from pirates.movement.DistributedMovingObjectAI import DistributedMovingObjectAI
 
 
 class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Teamable):
@@ -34,6 +35,26 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         self.parentWorld = None
         self.shipDeployer = None
         self.builder = IslandAreaBuilderAI(self.air, self)
+
+    def addObjectToIslandGrid(self, av):
+        assert(av is not None)
+        self.addObjectToGrid(av)
+
+    def removeObjectFromIslandGrid(self, av):
+        assert(av is not None)
+        self.removeObjectFromGrid(av)
+
+    def handleChildArrive(self, childObj, zoneId):
+        if isinstance(childObj, DistributedMovingObjectAI):
+            self.addObjectToIslandGrid(childObj)
+    
+        DistributedCartesianGridAI.handleChildArrive(self, childObj, zoneId)
+
+    def handleChildLeave(self, childObj, zoneId):
+        if isinstance(childObj, DistributedMovingObjectAI):
+            self.removeObjectFromIslandGrid(childObj)
+
+        DistributedCartesianGridAI.handleChildLeave(self, childObj, zoneId)
 
     def generate(self):
         DistributedCartesianGridAI.generate(self)

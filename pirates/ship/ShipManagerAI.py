@@ -14,13 +14,14 @@ from pirates.piratesbase.PLocalizerEnglish import *
 
 
 NPCSHIP_POP_UPKEEP_DELAY = config.GetFloat('npcship-pop-upkeep-delay', 10.0)
-NPCSHIP_POP_MAX = config.GetInt('npcship-pop-max', 128)
-FLAGSHIP_POP_MAX = config.GetInt('flagship-pop-max', 6)
+NPCSHIP_POP_MAX = config.GetInt('npcship-pop-max', 512)
+FLAGSHIP_POP_MAX = config.GetInt('flagship-pop-max', 24)
 FLAGSHIP_SPAWN_DELAY = config.GetFloat('flagship-spawn-delay', 120.0)
 
 
 # Regular NPC ship classes (non-flagship)
 REGULAR_NPC_SHIPS = [
+    # Navy ships
     ShipGlobals.NAVY_FERRET,
     ShipGlobals.NAVY_GREYHOUND,
     ShipGlobals.NAVY_PREDATOR,
@@ -30,6 +31,7 @@ REGULAR_NPC_SHIPS = [
     ShipGlobals.NAVY_PANTHER,
     ShipGlobals.NAVY_CENTURION,
     ShipGlobals.NAVY_DREADNOUGHT,
+    # EITC ships
     ShipGlobals.EITC_SEA_VIPER,
     ShipGlobals.EITC_BLOODHOUND,
     ShipGlobals.EITC_CORSAIR,
@@ -39,11 +41,24 @@ REGULAR_NPC_SHIPS = [
     ShipGlobals.EITC_MARAUDER,
     ShipGlobals.EITC_WARLORD,
     ShipGlobals.EITC_JUGGERNAUT,
+    # Undead ships (regular skeleton ships)
+    ShipGlobals.SKEL_PHANTOM,
+    ShipGlobals.SKEL_REVENANT,
+    ShipGlobals.SKEL_STORM_REAPER,
+    ShipGlobals.SKEL_BLACK_HARBINGER,
+    ShipGlobals.SKEL_DEATH_OMEN,
+    # French Undead ships
+    ShipGlobals.SKEL_SHADOW_CROW_FR,
+    ShipGlobals.SKEL_HELLHOUND_FR,
+    # Spanish Undead ships  
+    ShipGlobals.SKEL_SHADOW_CROW_SP,
+    ShipGlobals.SKEL_HELLHOUND_SP,
 ]
 
 
 class ShipManagerAI:
     notify = DirectNotifyGlobal.directNotify.newCategory('ShipManagerAI')
+    notify.setInfo(True)
 
     def __init__(self, air):
         self.air = air

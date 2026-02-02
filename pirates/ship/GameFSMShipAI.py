@@ -50,9 +50,9 @@ AI_UPDATE_INTERVAL = 0.5  # How often AI updates its state (seconds)
 # SHIP_INSTANT_AGGRO_RADIUS: Distance within which ships instantly aggro
 AI_DETECTION_RANGE = EnemyGlobals.SHIP_SEARCH_RADIUS  # 4000 units
 AI_MIN_DETECTION_RANGE = EnemyGlobals.SHIP_MIN_SEARCH_RADIUS  # 1000 units
-AI_INSTANT_AGGRO_RANGE = EnemyGlobals.SHIP_INSTANT_AGGRO_RADIUS  # 1000 units
-AI_AGGRO_FALLOFF_RATE = EnemyGlobals.SHIP_AGGRO_RADIUS_FALLOFF_RATE  # 0.1
-AI_AGGRO_LEVEL_BUFFER = EnemyGlobals.SHIP_AGGRO_RADIUS_LEVEL_BUFFER  # 5 levels
+AI_INSTANT_AGGRO_RANGE = EnemyGlobals.SHIP_INSTANT_AGGRO_RADIUS * 1.5  # 1500 units (50% larger)
+AI_AGGRO_FALLOFF_RATE = EnemyGlobals.SHIP_AGGRO_RADIUS_FALLOFF_RATE * 0.5  # 0.05 (slower falloff)
+AI_AGGRO_LEVEL_BUFFER = EnemyGlobals.SHIP_AGGRO_RADIUS_LEVEL_BUFFER + 3  # 8 levels (attack wider level range)
 
 # Attack Ranges
 AI_ATTACK_RANGE = ShipGlobals.BROADSIDE_MAX_AUTOAIM_DIST * 0.6  # Optimal broadside attack range (1200)
@@ -70,19 +70,63 @@ AI_BROADSIDE_FIRE_VELOCITY = CannonGlobals.AI_BROADSIDE_FIRE_VELOCITY  # 200.0
 BROADSIDE_POWERMOD = CannonGlobals.BROADSIDE_POWERMOD  # 0.7
 
 # Combat Behavior Thresholds
-AI_AGGRO_MEMORY_TIME = 60.0  # How long ship remembers being attacked
+AI_AGGRO_MEMORY_TIME = 120.0  # How long ship remembers being attacked (2 minutes)
 AI_WANDER_RADIUS = 3000.0  # Radius for random wandering
-AI_FLEE_HEALTH_THRESHOLD = 0.2  # Flee when below 20% health
-AI_ENGAGE_HEALTH_THRESHOLD = 0.4  # Don't engage new targets below 40% health
+
+# Base flee/engage thresholds - AGGRESSIVE SETTINGS
+# Ships are very aggressive and rarely flee
+AI_BASE_FLEE_HEALTH_THRESHOLD = 0.05  # Base: flee only at 5% health (nearly dead)
+AI_MIN_FLEE_HEALTH_THRESHOLD = 0.0    # Minimum: high-level ships NEVER flee
+AI_MAX_FLEE_HEALTH_THRESHOLD = 0.15   # Maximum: even outmatched ships fight to 15%
+AI_BASE_ENGAGE_HEALTH_THRESHOLD = 0.10  # Base: engage new targets even at 10% health
+AI_LEVEL_THRESHOLD = EnemyGlobals.ENEMY_LEVEL_THRESHOLD  # 3 levels difference for modifier
+
+# Aggression modifiers
+AI_AGGRESSION_MULTIPLIER = 1.5  # Ships are 50% more likely to engage
 
 # Default Speeds (fallback when ship class not found)
-AI_DEFAULT_PATROL_SPEED = 400.0
-AI_DEFAULT_COMBAT_SPEED = 600.0
+# These values are tuned to match player ship effective movement speed
+# Player ships use physics with acceleration/drag, while AI uses direct interpolation
+# SLOW VALUES - ships should be easy to track and hit
+AI_DEFAULT_PATROL_SPEED = 20.0   # Very slow patrol
+AI_DEFAULT_COMBAT_SPEED = 35.0   # Slow combat speed
 AI_DEFAULT_BROADSIDE_COOLDOWN = AI_FIRE_TIME * 2.0  # Based on AI_FIRE_TIME
+
+# Speed multiplier applied to all AI ship movement
+# Set lower to make ships easier to hit
+AI_SPEED_MULTIPLIER = 0.25  # 25% of normal speed
 
 # Use ShipGlobals team constants
 PLAYER_TEAM = ShipGlobals.PLAYER_TEAM
 INVALID_TEAM = ShipGlobals.INVALID_TEAM
+NAVY_TEAM = ShipGlobals.NAVY_TEAM
+TRADING_CO_TEAM = ShipGlobals.TRADING_CO_TEAM
+UNDEAD_TEAM = ShipGlobals.UNDEAD_TEAM
+FRENCH_UNDEAD_TEAM = ShipGlobals.FRENCH_UNDEAD_TEAM
+SPANISH_UNDEAD_TEAM = ShipGlobals.SPANISH_UNDEAD_TEAM
+
+# All undead teams (for faction checks)
+ALL_UNDEAD_TEAMS = (UNDEAD_TEAM, FRENCH_UNDEAD_TEAM, SPANISH_UNDEAD_TEAM)
+
+# Gang-up behavior - AGGRESSIVE SETTINGS
+# When an ally is attacked, nearby same-team ships WILL join the fight
+AI_GANGUP_CHANCE = 75  # 75% chance to help ally (was 25%)
+AI_GANGUP_LIMIT = 8    # Max 8 ships attacking one target (was 5)
+AI_GANGUP_RANGE = AI_INSTANT_AGGRO_RANGE * 3  # 4500 units - large range to notice ally under attack
+
+# Collision Avoidance
+AI_COLLISION_CHECK_RANGE = 500.0  # Range to look ahead for obstacles
+AI_COLLISION_AVOIDANCE_RANGE = 300.0  # Distance at which to start avoiding
+AI_COLLISION_TURN_ANGLE = 45.0  # Degrees to turn when avoiding
+
+# Despawn Configuration
+# Ships will despawn after a period of idle time (no combat) to cycle variety
+# This ensures newer/varied ships spawn for different player levels
+AI_SHIP_MAX_LIFETIME = 600.0  # Maximum lifetime in seconds (10 minutes)
+AI_SHIP_IDLE_DESPAWN_TIME = 300.0  # Despawn after 5 minutes without combat
+AI_DESPAWN_CHECK_INTERVAL = 30.0  # Check despawn conditions every 30 seconds
+AI_DESPAWN_MIN_DISTANCE_FROM_PLAYER = 2000.0  # Don't despawn if player ships nearby
+AI_COLLISION_CHECK_INTERVAL = 0.5  # Seconds between collision checks
 
 # Broadside side constants from ShipGlobals
 BROADSIDE_LEFT = ShipGlobals.BROADSIDE_LEFT
@@ -94,6 +138,7 @@ TARGET_SWITCH_DAMAGE = EnemyGlobals.TARGET_SWITCH_TYPE_DAMAGE
 TARGET_SWITCH_LOW_LVL = EnemyGlobals.TARGET_SWITCH_TYPE_LOW_LVL
 TARGET_SWITCH_HIGH_LVL = EnemyGlobals.TARGET_SWITCH_TYPE_HIGH_LVL
 
+from direct.directnotify import DirectNotifyGlobal
 
 class GameFSMShipAI(FSM.FSM):
     """
@@ -126,6 +171,8 @@ class GameFSMShipAI(FSM.FSM):
     - Boarded: Pirates are fighting the crew on the flagship
     - Defeated: Crew defeated, loot being collected
     """
+    
+    notify = DirectNotifyGlobal.directNotify.newCategory('GameFSMShipAI')
 
     def __init__(self, air, ship):
         FSM.FSM.__init__(self, 'GameFSMShipAI')
@@ -162,6 +209,11 @@ class GameFSMShipAI(FSM.FSM):
         self._aiUpdateTask = None
         self._movementTask = None
         self._broadsideTask = None
+        self._despawnCheckTask = None
+        
+        # Despawn tracking
+        self._spawnTime = globalClock.getFrameTime()  # When ship was spawned
+        self._lastCombatTime = 0.0  # Last time ship was in combat
         self._moveInterval = None  # Current movement interval
         self._movementCallback = None  # Callback for when movement completes
         self._currentDestination = None  # Current movement target
@@ -196,16 +248,135 @@ class GameFSMShipAI(FSM.FSM):
         if self._broadsideTask:
             taskMgr.remove(self._broadsideTask)
             self._broadsideTask = None
+        if self._despawnCheckTask:
+            taskMgr.remove(self._despawnCheckTask)
+            self._despawnCheckTask = None
         if self._pathFollowInterval:
             self._pathFollowInterval.finish()
             self._pathFollowInterval = None
         if self._moveInterval:
             self._moveInterval.pause()
             self._moveInterval = None
+        # Clean up broadside heading task
+        taskMgr.remove(self.ship.uniqueName('broadside-heading'))
         self.ship.ignore(self._getMovementDoneName())
         self._currentDestination = None
         self._targetHeading = None
         self._movementCallback = None
+        self._broadsideTarget = None
+
+    # =========================================================================
+    # Despawn System - Cycle AI ships for variety
+    # =========================================================================
+
+    def _startDespawnCheck(self):
+        """Start the despawn check task for idle ships."""
+        if self._despawnCheckTask:
+            taskMgr.remove(self._despawnCheckTask)
+        self._despawnCheckTask = taskMgr.doMethodLater(
+            AI_DESPAWN_CHECK_INTERVAL, self._checkDespawn,
+            self.ship.uniqueName('despawn-check'))
+
+    def _stopDespawnCheck(self):
+        """Stop the despawn check task."""
+        if self._despawnCheckTask:
+            taskMgr.remove(self._despawnCheckTask)
+            self._despawnCheckTask = None
+
+    def _checkDespawn(self, task):
+        """
+        Check if this ship should despawn to allow new ships to spawn.
+        Ships despawn if:
+        1. They've exceeded maximum lifetime, OR
+        2. They've been idle (no combat) for too long
+        
+        Ships will NOT despawn if:
+        - They are currently in combat
+        - Player ships are nearby (would look strange)
+        - They are a flagship (handled separately)
+        """
+        currentTime = globalClock.getFrameTime()
+        
+        # Don't despawn flagships - they have their own lifecycle
+        if hasattr(self.ship, 'isFlagship') and self.ship.isFlagship:
+            return Task.again
+        
+        # Check if in combat state - don't despawn during combat
+        currentState = self.state
+        if currentState in ('Combat', 'AttackChase', 'CircleAttack', 'Flee'):
+            return Task.again
+        
+        # Check if any player ships are nearby - don't despawn in front of players
+        if self._isPlayerShipNearby(AI_DESPAWN_MIN_DISTANCE_FROM_PLAYER):
+            return Task.again
+        
+        # Check maximum lifetime
+        lifetime = currentTime - self._spawnTime
+        if lifetime > AI_SHIP_MAX_LIFETIME:
+            self._despawnShip('max_lifetime')
+            return Task.done
+        
+        # Check idle time (no combat)
+        if self._lastCombatTime > 0:
+            idleTime = currentTime - self._lastCombatTime
+            if idleTime > AI_SHIP_IDLE_DESPAWN_TIME:
+                self._despawnShip('idle_timeout')
+                return Task.done
+        else:
+            # Never been in combat - check time since spawn
+            if lifetime > AI_SHIP_IDLE_DESPAWN_TIME:
+                self._despawnShip('never_engaged')
+                return Task.done
+        
+        return Task.again
+
+    def _isPlayerShipNearby(self, distance):
+        """Check if any player ships are within the given distance."""
+        if not hasattr(self.air, 'shipManager'):
+            return False
+        
+        shipPos = self.ship.getPos()
+        
+        # Check all player ships via shipManager
+        for playerShip in self.air.shipManager.getPlayerShips():
+            try:
+                if not playerShip or playerShip == self.ship:
+                    continue
+                if playerShip.isEmpty():
+                    continue
+                
+                otherPos = playerShip.getPos()
+                dist = (shipPos - otherPos).length()
+                if dist < distance:
+                    return True
+            except:
+                continue
+        
+        return False
+
+    def _despawnShip(self, reason='unknown'):
+        """
+        Despawn this ship to make room for new varied ships.
+        Handles cleanup and deletion gracefully.
+        """
+        try:
+            # Log the despawn for debugging
+            shipClass = getattr(self.ship, 'shipClass', 'Unknown')
+            shipLevel = self._getShipLevel()
+            self.notify.debug(f'Despawning ship {self.ship.doId} (class={shipClass}, level={shipLevel}) reason={reason}')
+            
+            # Stop all AI activity
+            self._stopAllTasks()
+            
+            # Request deletion through the ship
+            if hasattr(self.ship, 'requestDelete'):
+                self.ship.requestDelete()
+        except Exception as e:
+            self.notify.warning(f'Error during despawn: {e}')
+
+    def _updateLastCombatTime(self):
+        """Update the last combat time to now. Called when entering combat."""
+        self._lastCombatTime = globalClock.getFrameTime()
 
     # =========================================================================
     # Ship Class-Based Configuration
@@ -215,6 +386,7 @@ class GameFSMShipAI(FSM.FSM):
         """
         Get ship speed from ShipGlobals based on ship class and situation.
         Applies ShipBalance.SpeedModifier for global speed tuning.
+        Also applies AI_SPEED_MULTIPLIER for overall AI speed control.
         
         Speed list format from ShipGlobals: [minSpeed, normalSpeed, maxSpeed, boostSpeed]
         - minSpeed: Slow cruising
@@ -222,12 +394,20 @@ class GameFSMShipAI(FSM.FSM):
         - maxSpeed: Combat speed
         - boostSpeed: Emergency/fleeing speed
         
+        Note: AI ships use direct position interpolation (posInterval), not physics.
+        Player ships use physics with acceleration/drag which results in slower
+        effective movement. ShipGlobals AI speeds (50-150 range) are tuned for
+        the interpolation approach to look comparable to player physics movement.
+        
         Args:
             combatMode: Use combat speed (maxSpeed)
             fleeing: Use boost speed for escape
         """
         # Get the global speed modifier from ShipBalance
         speedMod = ShipBalance.SpeedModifier.getValue()
+        
+        # Apply AI speed multiplier for overall control
+        speedMod = speedMod * AI_SPEED_MULTIPLIER
         
         try:
             shipClass = self.ship.shipClass
@@ -508,6 +688,115 @@ class GameFSMShipAI(FSM.FSM):
             return 1.0
         return self.ship.hp / self.ship.maxHp
 
+    def _getFleeThreshold(self, targetLevel=None):
+        """
+        Calculate dynamic flee threshold based on level difference.
+        Ships with level advantage are more aggressive (lower flee threshold).
+        Ships with level disadvantage are more cautious (higher flee threshold).
+        
+        Uses EnemyGlobals.ENEMY_LEVEL_THRESHOLD (3) for significant difference.
+        """
+        if targetLevel is None:
+            return AI_BASE_FLEE_HEALTH_THRESHOLD
+        
+        myLevel = self._getShipLevel()
+        levelDiff = myLevel - targetLevel  # Positive = we're higher level
+        
+        # Adjust threshold based on level difference
+        # Each 3 levels of advantage = 5% lower flee threshold
+        # Each 3 levels of disadvantage = 5% higher flee threshold
+        levelFactor = levelDiff / max(1, AI_LEVEL_THRESHOLD)
+        adjustment = levelFactor * 0.05
+        
+        threshold = AI_BASE_FLEE_HEALTH_THRESHOLD - adjustment
+        
+        # Clamp to valid range
+        return max(AI_MIN_FLEE_HEALTH_THRESHOLD, 
+                   min(AI_MAX_FLEE_HEALTH_THRESHOLD, threshold))
+
+    def _getEngageThreshold(self, targetLevel=None):
+        """
+        Calculate dynamic engage threshold based on level difference.
+        Ships with level advantage engage more readily (lower health needed).
+        """
+        if targetLevel is None:
+            return AI_BASE_ENGAGE_HEALTH_THRESHOLD
+        
+        myLevel = self._getShipLevel()
+        levelDiff = myLevel - targetLevel
+        
+        # Higher level ships engage even when damaged
+        levelFactor = levelDiff / max(1, AI_LEVEL_THRESHOLD)
+        adjustment = levelFactor * 0.1
+        
+        threshold = AI_BASE_ENGAGE_HEALTH_THRESHOLD - adjustment
+        
+        return max(0.1, min(0.6, threshold))
+
+    def _shouldFlee(self, target=None):
+        """
+        Determine if ship should flee from combat.
+        AGGRESSIVE: Ships rarely flee - they fight until nearly destroyed.
+        
+        Returns:
+            True if ship should flee, False if should continue fighting
+        """
+        healthPct = self._getHealthPercent()
+        
+        # Very aggressive - only flee when almost dead
+        # High level ships may NEVER flee (threshold can be 0)
+        targetLevel = None
+        if target:
+            if hasattr(target, 'getLevel'):
+                targetLevel = target.getLevel()
+            elif hasattr(target, 'gameFSM') and hasattr(target.gameFSM, '_getShipLevel'):
+                targetLevel = target.gameFSM._getShipLevel()
+        elif self.targetShip:
+            if hasattr(self.targetShip, 'getLevel'):
+                targetLevel = self.targetShip.getLevel()
+            elif hasattr(self.targetShip, 'gameFSM') and hasattr(self.targetShip.gameFSM, '_getShipLevel'):
+                targetLevel = self.targetShip.gameFSM._getShipLevel()
+        
+        fleeThreshold = self._getFleeThreshold(targetLevel)
+        
+        # Add a random chance to NOT flee even when below threshold (fighting spirit)
+        if healthPct < fleeThreshold:
+            import random
+            # 50% chance to keep fighting anyway
+            if random.random() < 0.5:
+                return False
+        
+        return healthPct < fleeThreshold
+
+    def _shouldEngage(self, target=None):
+        """
+        Determine if ship should engage a new target.
+        AGGRESSIVE: Ships almost always engage, even when damaged.
+        
+        Returns:
+            True if ship should engage, False if should avoid combat
+        """
+        healthPct = self._getHealthPercent()
+        
+        # Very aggressive - engage even at low health
+        targetLevel = None
+        if target:
+            if hasattr(target, 'getLevel'):
+                targetLevel = target.getLevel()
+            elif hasattr(target, 'gameFSM') and hasattr(target.gameFSM, '_getShipLevel'):
+                targetLevel = target.gameFSM._getShipLevel()
+        
+        engageThreshold = self._getEngageThreshold(targetLevel)
+        
+        # Aggressive ships have a chance to engage even below threshold
+        if healthPct <= engageThreshold:
+            import random
+            # 30% chance to engage anyway
+            if random.random() < 0.3:
+                return True
+        
+        return healthPct > engageThreshold
+
     def _getDistanceToTarget(self, target):
         """Get distance to a target ship."""
         if not target or target.isEmpty():
@@ -517,21 +806,257 @@ class GameFSMShipAI(FSM.FSM):
         except:
             return float('inf')
 
+    def _getShipTeam(self, ship=None):
+        """
+        Get the team of a ship.
+        Uses ShipGlobals team constants (PLAYER_TEAM, NAVY_TEAM, etc).
+        """
+        if ship is None:
+            ship = self.ship
+        
+        # Check if ship has getTeam or getBaseTeam method
+        if hasattr(ship, 'getTeam'):
+            team = ship.getTeam()
+            if team != INVALID_TEAM:
+                return team
+        
+        # NPC ships use getBaseTeam
+        if hasattr(ship, 'getBaseTeam'):
+            team = ship.getBaseTeam()
+            if team is not None and team != INVALID_TEAM:
+                return team
+        
+        # Check baseTeam attribute directly
+        if hasattr(ship, 'baseTeam'):
+            team = ship.baseTeam
+            if team is not None and team != INVALID_TEAM:
+                return team
+        
+        # Check if this is a player ship (PlayerShipAI or has player crew)
+        # Player ships have captainId or crew members
+        if hasattr(ship, 'captainId') or hasattr(ship, 'getCaptainId'):
+            return PLAYER_TEAM
+        if hasattr(ship, 'crewDoIds') or hasattr(ship, 'getCrewDoIds'):
+            return PLAYER_TEAM
+        # Check class name as fallback
+        className = ship.__class__.__name__
+        if 'Player' in className:
+            return PLAYER_TEAM
+        
+        # Try to determine team from ship class (for NPC ships)
+        if hasattr(ship, 'shipClass'):
+            try:
+                shipData = ShipGlobals.shipData.get(ship.shipClass)
+                if shipData:
+                    return shipData[ShipGlobals.TEAM_INDEX]
+            except:
+                pass
+        
+        return INVALID_TEAM
+
+    def _isSameTeam(self, otherShip):
+        """
+        Check if another ship is on the same team.
+        Ships on the same team should NEVER attack each other.
+        """
+        if not otherShip:
+            return False
+        
+        myTeam = self._getShipTeam(self.ship)
+        otherTeam = self._getShipTeam(otherShip)
+        
+        # Invalid team ships are neutral
+        if myTeam == INVALID_TEAM or otherTeam == INVALID_TEAM:
+            return False
+        
+        # Player ships are never same team as NPC ships
+        if myTeam == PLAYER_TEAM or otherTeam == PLAYER_TEAM:
+            return myTeam == otherTeam
+        
+        return myTeam == otherTeam
+
+    def _isEnemy(self, otherShip):
+        """
+        Check if another ship is an enemy.
+        All non-same-team ships are enemies (except for special alliances).
+        """
+        if not otherShip:
+            return False
+        
+        myTeam = self._getShipTeam(self.ship)
+        otherTeam = self._getShipTeam(otherShip)
+        
+        # NPC ships (this AI) should attack player ships regardless of team issues
+        # This is a safety fallback - NPC ships are always hostile to players
+        if otherTeam == PLAYER_TEAM:
+            return True
+        
+        # Invalid team = neutral, not enemy
+        if myTeam == INVALID_TEAM or otherTeam == INVALID_TEAM:
+            return False
+        
+        # Player ships are always enemies to NPC faction ships
+        if otherTeam == PLAYER_TEAM and myTeam != PLAYER_TEAM:
+            return True
+        
+        # NPC factions are enemies of players
+        if myTeam == PLAYER_TEAM:
+            return otherTeam != PLAYER_TEAM
+        
+        # Same NPC faction = allies, not enemies
+        if myTeam == otherTeam:
+            return False
+        
+        # Different NPC factions could be enemies or neutral
+        # Navy and EITC work together against pirates (not enemies)
+        # All undead factions are enemies of everyone including each other
+        # (French Undead, Spanish Undead, and regular Undead all fight everyone)
+        if myTeam in (NAVY_TEAM, TRADING_CO_TEAM):
+            if otherTeam in (NAVY_TEAM, TRADING_CO_TEAM):
+                return False  # Navy and EITC are allies
+            return True  # Enemies with undead and players
+        
+        # All undead teams fight everyone (including other undead factions)
+        if myTeam in ALL_UNDEAD_TEAMS:
+            # Undead of same faction are allies
+            if myTeam == otherTeam:
+                return False
+            return True  # Fight everyone else including other undead factions
+        
+        return myTeam != otherTeam
+
     def _isValidTarget(self, target):
         """Check if a target is valid for engagement."""
         if not target:
             return False
         if target.isEmpty():
             return False
-        # Don't attack ships on same team
-        if hasattr(target, 'getTeam') and hasattr(self.ship, 'getTeam'):
-            if target.getTeam() == self.ship.getTeam():
-                return False
+        # Don't attack ships on same team (uses faction alliance logic)
+        if self._isSameTeam(target):
+            return False
+        # Only attack enemies (respects faction alliances like Navy/EITC)
+        if not self._isEnemy(target):
+            return False
         # Don't attack sinking/sunk ships
         if hasattr(target, 'gameFSM'):
             state = target.gameFSM.getCurrentOrNextState()
             if state in ('Sinking', 'Sunk', 'Off', 'PutAway'):
                 return False
+        return True
+
+    def _findNearbyAllies(self, range=None):
+        """
+        Find allied ships within range that could assist in combat.
+        Uses AI_GANGUP_RANGE by default.
+        Returns list of allied ship AI instances.
+        """
+        if range is None:
+            range = AI_GANGUP_RANGE
+        
+        allies = []
+        self._initWorldRefs()
+        
+        if not hasattr(self.air, 'shipManager'):
+            return allies
+        
+        # Check NPC ships for allies
+        for npcShip in self.air.shipManager.getShips():
+            if npcShip == self.ship:
+                continue
+            if not npcShip or npcShip.isEmpty():
+                continue
+            if not self._isSameTeam(npcShip):
+                continue
+            
+            dist = self._getDistanceToTarget(npcShip)
+            if dist <= range:
+                # Get the ship's AI/FSM if available
+                if hasattr(npcShip, 'gameFSM'):
+                    allies.append(npcShip.gameFSM)
+                else:
+                    allies.append(npcShip)
+        
+        return allies
+
+    def _notifyAlliesOfAttack(self, attackerDoId):
+        """
+        Notify nearby allies that we're being attacked.
+        Implements POTCO gang-up behavior where nearby faction ships
+        may join the fight when one is attacked.
+        
+        Uses AI_GANGUP_CHANCE to determine if each ally responds.
+        Respects AI_GANGUP_LIMIT to prevent too many ships piling on.
+        """
+        import random
+        
+        if not attackerDoId:
+            return
+        
+        # Get the attacker ship
+        attacker = None
+        if hasattr(self.air, 'doId2do'):
+            attacker = self.air.doId2do.get(attackerDoId)
+        
+        if not attacker:
+            return
+        
+        # Count how many ships are already targeting this attacker
+        currentTargeters = 0
+        allies = self._findNearbyAllies()
+        
+        for ally in allies:
+            if hasattr(ally, 'currentTarget'):
+                if ally.currentTarget and hasattr(ally.currentTarget, 'doId'):
+                    if ally.currentTarget.doId == attackerDoId:
+                        currentTargeters += 1
+        
+        # Include ourselves in the count
+        currentTargeters += 1
+        
+        if currentTargeters >= AI_GANGUP_LIMIT:
+            return  # Already at gang-up limit
+        
+        # Notify each ally with gangup chance
+        for ally in allies:
+            if currentTargeters >= AI_GANGUP_LIMIT:
+                break
+            
+            # Skip allies already in combat with something else important
+            if hasattr(ally, 'currentTarget') and ally.currentTarget:
+                continue
+            
+            # Roll for gangup chance
+            if random.randint(1, 100) <= AI_GANGUP_CHANCE:
+                # Have this ally engage the attacker
+                if hasattr(ally, 'engageTarget'):
+                    ally.engageTarget(attacker)
+                    currentTargeters += 1
+                elif hasattr(ally, 'setTarget'):
+                    ally.setTarget(attacker)
+                    currentTargeters += 1
+
+    def engageTarget(self, target):
+        """
+        Force this ship to engage a specific target.
+        Used by gang-up system when allies call for help.
+        Immediately breaks current movement to respond.
+        """
+        if not self._isValidTarget(target):
+            return False
+        
+        # Stop current movement immediately to engage
+        self._stopMovement()
+        
+        self.targetShip = target
+        if hasattr(target, 'doId'):
+            self.targetDoId = target.doId
+        
+        currentState = self.getCurrentOrNextState()
+        
+        # Transition to combat if not already fighting
+        if currentState not in ('Attacking', 'Engaged', 'Combat', 'AttackChase', 'CircleAttack'):
+            self.request('Combat')
+        
         return True
 
     def _findNearestEnemy(self):
@@ -548,9 +1073,12 @@ class GameFSMShipAI(FSM.FSM):
         nearestDist = AI_DETECTION_RANGE
         instantAggroTarget = None
         
+        myTeam = self._getShipTeam(self.ship)
+        
         # Check player ships
         if hasattr(self.air, 'shipManager'):
-            for playerShip in self.air.shipManager.getPlayerShips():
+            playerShips = self.air.shipManager.getPlayerShips()
+            for playerShip in playerShips:
                 if not self._isValidTarget(playerShip):
                     continue
                 
@@ -608,23 +1136,75 @@ class GameFSMShipAI(FSM.FSM):
         self.attackerId = attackerDoId
 
     def onDamageReceived(self, attackerDoId, damage):
-        """Called when this ship receives damage."""
+        """Called when this ship receives damage. ALWAYS responds to attacks."""
+        self.notify.debug('onDamageReceived: ship=%d attacker=%d damage=%d state=%s' % (
+            self.ship.doId, attackerDoId, damage, self.state))
+        
         self.addThreat(attackerDoId, damage)
+        
+        # Update combat time for despawn tracking
+        self._updateLastCombatTime()
         
         currentState = self.getCurrentOrNextState()
         
-        # If we're not already in combat, respond to attack
-        if currentState in ('Patrol', 'Wander', 'PathFollow', 'Neutral'):
-            attacker = self.air.doId2do.get(attackerDoId)
-            if attacker and self._isValidTarget(attacker):
+        # Notify nearby allies of the attack (gang-up behavior)
+        self._notifyAlliesOfAttack(attackerDoId)
+        
+        # Get attacker from doId2do
+        attacker = self.air.doId2do.get(attackerDoId)
+        
+        # ALWAYS respond to attacks - don't just sit there!
+        # Even if already in combat, switch to the new attacker if they're hurting us
+        if currentState in ('Patrol', 'Wander', 'PathFollow', 'Neutral', 'Off'):
+            if attacker:
+                self.notify.debug('onDamageReceived: Engaging attacker! Switching to Combat')
+                # Stop current movement immediately to respond to attack
+                self._stopMovement()
+                
                 self.targetShip = attacker
                 self.targetDoId = attackerDoId
                 
-                # Decide whether to fight or flee
-                if self._getHealthPercent() < AI_FLEE_HEALTH_THRESHOLD:
+                # Immediately turn toward the attacker for counterattack
+                # This makes the ship visibly respond to being shot
+                self._turnTowardTarget(attacker)
+                
+                # Aggressive ships almost always fight back
+                if self._shouldFlee(attacker):
                     self.request('Flee')
                 else:
                     self.request('Combat')
+        elif currentState in ('Combat', 'AttackChase', 'CircleAttack'):
+            # Already in combat - update target if this is a new/more dangerous threat
+            if attacker and attacker != self.targetShip:
+                # Switch to new attacker if they're doing significant damage
+                if damage > 50:  # Significant damage threshold
+                    self.targetShip = attacker
+                    self.targetDoId = attackerDoId
+                    # Turn toward new threat
+                    self._turnTowardTarget(attacker)
+
+    def _turnTowardTarget(self, target):
+        """
+        Immediately turn the ship to face toward the target.
+        Used when initially responding to an attack.
+        """
+        if not target:
+            return
+        
+        try:
+            # Calculate heading to target
+            shipPos = self.ship.getPos()
+            targetPos = target.getPos()
+            dx = targetPos.getX() - shipPos.getX()
+            dy = targetPos.getY() - shipPos.getY()
+            
+            # Calculate heading (Panda3D: 0 = +Y, 90 = -X)
+            headingToTarget = -math.degrees(math.atan2(dx, dy))
+            
+            # Set ship heading to face target directly
+            self.ship.setH(headingToTarget)
+        except:
+            pass
 
     def _selectBestTarget(self):
         """
@@ -661,9 +1241,9 @@ class GameFSMShipAI(FSM.FSM):
             })
         
         if not validTargets:
-            # If no threats, look for nearby enemies
-            if self._getHealthPercent() > AI_ENGAGE_HEALTH_THRESHOLD:
-                enemy, _ = self._findNearestEnemy()
+            # If no threats, look for nearby enemies (level-aware engagement)
+            enemy, _ = self._findNearestEnemy()
+            if enemy and self._shouldEngage(enemy):
                 return enemy
             return None
         
@@ -1107,6 +1687,213 @@ class GameFSMShipAI(FSM.FSM):
         
         return True  # Path is clear
 
+    # =========================================================================
+    # Real-Time Collision Avoidance
+    # =========================================================================
+
+    def _checkCollisionAhead(self):
+        """
+        Check if there's an imminent collision with another ship or obstacle
+        directly ahead of the current heading.
+        
+        Returns: (hasCollision, obstacleInfo) where obstacleInfo is 
+                 (obstaclePos, obstacleRadius, distance) or None
+        """
+        try:
+            shipPos = self.ship.getPos()
+            shipHeading = self.ship.getH()
+            
+            # Get forward direction vector from heading
+            headingRad = math.radians(shipHeading)
+            forwardX = -math.sin(headingRad)
+            forwardY = math.cos(headingRad)
+            
+            shipX, shipY = shipPos.getX(), shipPos.getY()
+            myRadius = self._getShipCollisionRadius()
+            
+            nearestObstacle = None
+            nearestDist = AI_COLLISION_CHECK_RANGE
+            
+            # Check nearby ships
+            nearbyShips = self._getNearbyShips(maxRange=AI_COLLISION_CHECK_RANGE)
+            for otherShip, ox, oy, otherRadius in nearbyShips:
+                # Vector to other ship
+                toShipX = ox - shipX
+                toShipY = oy - shipY
+                
+                # Project onto forward direction
+                forwardDist = toShipX * forwardX + toShipY * forwardY
+                
+                # Only check things ahead of us
+                if forwardDist <= 0:
+                    continue
+                
+                # Perpendicular distance (how far off to the side)
+                perpDist = abs(toShipX * forwardY - toShipY * forwardX)
+                
+                # Combined radius for collision
+                combinedRadius = myRadius + otherRadius + 50.0  # Buffer
+                
+                # Will we collide?
+                if perpDist < combinedRadius and forwardDist < nearestDist:
+                    nearestDist = forwardDist
+                    nearestObstacle = (Point3(ox, oy, 0), otherRadius, forwardDist)
+            
+            # Check islands
+            collisionSpheres = self._getIslandCollisionSpheres()
+            for centerX, centerY, radius in collisionSpheres:
+                toIslandX = centerX - shipX
+                toIslandY = centerY - shipY
+                
+                forwardDist = toIslandX * forwardX + toIslandY * forwardY
+                
+                if forwardDist <= 0:
+                    continue
+                
+                perpDist = abs(toIslandX * forwardY - toIslandY * forwardX)
+                combinedRadius = myRadius + radius + 100.0  # Larger buffer for islands
+                
+                if perpDist < combinedRadius and forwardDist < nearestDist:
+                    nearestDist = forwardDist
+                    nearestObstacle = (Point3(centerX, centerY, 0), radius, forwardDist)
+            
+            if nearestObstacle and nearestDist < AI_COLLISION_AVOIDANCE_RANGE:
+                return (True, nearestObstacle)
+            
+            return (False, None)
+            
+        except Exception as e:
+            return (False, None)
+
+    def _getAvoidanceDirection(self, obstaclePos):
+        """
+        Calculate which direction to turn to avoid an obstacle.
+        Returns: 1 for right turn, -1 for left turn
+        """
+        try:
+            shipPos = self.ship.getPos()
+            shipHeading = self.ship.getH()
+            
+            # Vector to obstacle
+            toObstX = obstaclePos.getX() - shipPos.getX()
+            toObstY = obstaclePos.getY() - shipPos.getY()
+            
+            # Get right direction from heading
+            headingRad = math.radians(shipHeading)
+            rightX = math.cos(headingRad)
+            rightY = math.sin(headingRad)
+            
+            # If obstacle is to our right, turn left; if left, turn right
+            side = toObstX * rightX + toObstY * rightY
+            
+            return -1 if side > 0 else 1
+            
+        except:
+            return 1  # Default to right turn
+
+    def _calculateAvoidanceDestination(self, turnDirection):
+        """
+        Calculate a new destination to avoid the obstacle.
+        Turns away from the obstacle at AI_COLLISION_TURN_ANGLE.
+        
+        Args:
+            turnDirection: 1 for right, -1 for left
+        
+        Returns: Point3 of new destination
+        """
+        try:
+            shipPos = self.ship.getPos()
+            shipHeading = self.ship.getH()
+            
+            # Turn by avoidance angle
+            newHeading = shipHeading + (AI_COLLISION_TURN_ANGLE * turnDirection)
+            headingRad = math.radians(newHeading)
+            
+            # New forward direction
+            forwardX = -math.sin(headingRad)
+            forwardY = math.cos(headingRad)
+            
+            # Set destination some distance ahead in new direction
+            avoidDist = AI_COLLISION_CHECK_RANGE * 1.5
+            newX = shipPos.getX() + forwardX * avoidDist
+            newY = shipPos.getY() + forwardY * avoidDist
+            
+            # Clamp to grid bounds
+            newX, newY = self._clampToGridBounds(newX, newY)
+            
+            return Point3(newX, newY, 0)
+            
+        except:
+            return self._getRandomOceanPos()
+
+    def _performCollisionAvoidance(self):
+        """
+        Check for imminent collisions and adjust course if needed.
+        Called periodically during movement.
+        
+        Returns: True if avoidance maneuver was triggered
+        """
+        hasCollision, obstacleInfo = self._checkCollisionAhead()
+        
+        if not hasCollision:
+            return False
+        
+        obstaclePos, _, dist = obstacleInfo
+        
+        # Determine turn direction
+        turnDir = self._getAvoidanceDirection(obstaclePos)
+        
+        # Calculate avoidance destination
+        avoidDest = self._calculateAvoidanceDestination(turnDir)
+        
+        # Check if avoidance destination is safe
+        if self._isPositionSafe(avoidDest):
+            # Re-route to avoidance destination
+            currentState = self.getCurrentOrNextState()
+            speed = self._getShipSpeed(combatMode=(currentState in ('Combat', 'Attacking', 'Engaged')))
+            
+            # Store original destination to return to later
+            if self._currentDestination and not hasattr(self, '_originalDestination'):
+                self._originalDestination = self._currentDestination
+            
+            self._startMovementTo(avoidDest, speed, onComplete=self._onAvoidanceComplete)
+            return True
+        
+        # If avoidance path is blocked, try the other direction
+        turnDir = -turnDir
+        avoidDest = self._calculateAvoidanceDestination(turnDir)
+        
+        if self._isPositionSafe(avoidDest):
+            if self._currentDestination and not hasattr(self, '_originalDestination'):
+                self._originalDestination = self._currentDestination
+            
+            currentState = self.getCurrentOrNextState()
+            speed = self._getShipSpeed(combatMode=(currentState in ('Combat', 'Attacking', 'Engaged')))
+            self._startMovementTo(avoidDest, speed, onComplete=self._onAvoidanceComplete)
+            return True
+        
+        return False
+
+    def _onAvoidanceComplete(self):
+        """
+        Called when collision avoidance maneuver completes.
+        Attempts to resume original course if available.
+        """
+        if hasattr(self, '_originalDestination') and self._originalDestination:
+            originalDest = self._originalDestination
+            self._originalDestination = None
+            
+            # Check if original destination is now reachable
+            shipPos = Point3(self.ship.getX(), self.ship.getY(), 0)
+            if self._isPathSafe(shipPos, originalDest):
+                currentState = self.getCurrentOrNextState()
+                speed = self._getShipSpeed(combatMode=(currentState in ('Combat', 'Attacking', 'Engaged')))
+                self._startMovementTo(originalDest, speed)
+                return
+        
+        # No original destination or not safe, continue current state behavior
+        pass
+
     def _findSafeDestination(self, preferredDest, maxAttempts=5):
         """
         Find a safe destination, avoiding island collisions and grid bounds.
@@ -1233,6 +2020,122 @@ class GameFSMShipAI(FSM.FSM):
             angle += 360
         return angle
 
+    def _calculateBroadsideHeading(self, target, preferSide=None):
+        """
+        Calculate the heading that positions our broadside facing the target.
+        
+        For broadside combat, we want the target at ±90° from our bow.
+        This calculates the ship heading needed to achieve that positioning.
+        
+        Args:
+            target: The target ship to face with broadside
+            preferSide: BROADSIDE_LEFT or BROADSIDE_RIGHT preference, or None for nearest
+            
+        Returns:
+            (heading, side) tuple where heading is the desired ship heading
+            and side is which broadside will face the target (LEFT or RIGHT)
+        """
+        if not target:
+            return (self.ship.getH(), BROADSIDE_LEFT)
+        
+        try:
+            # Get world positions
+            shipPos = self.ship.getPos()
+            targetPos = target.getPos()
+            
+            # Calculate angle from ship to target in world space
+            dx = targetPos.getX() - shipPos.getX()
+            dy = targetPos.getY() - shipPos.getY()
+            angleToTarget = math.degrees(math.atan2(dx, dy))
+            
+            # To put target at our LEFT broadside (-90°), our heading should be:
+            # heading = angleToTarget + 90 (target ends up at -90° relative to us)
+            leftBroadsideHeading = self._normalizeAngle(-angleToTarget + 90)
+            
+            # To put target at our RIGHT broadside (+90°), our heading should be:
+            # heading = angleToTarget - 90 (target ends up at +90° relative to us)
+            rightBroadsideHeading = self._normalizeAngle(-angleToTarget - 90)
+            
+            # If side preference given, use it
+            if preferSide == BROADSIDE_LEFT:
+                return (leftBroadsideHeading, BROADSIDE_LEFT)
+            elif preferSide == BROADSIDE_RIGHT:
+                return (rightBroadsideHeading, BROADSIDE_RIGHT)
+            
+            # Otherwise, pick whichever requires less turning
+            currentHeading = self.ship.getH()
+            leftTurn = abs(self._normalizeAngle(leftBroadsideHeading - currentHeading))
+            rightTurn = abs(self._normalizeAngle(rightBroadsideHeading - currentHeading))
+            
+            if leftTurn <= rightTurn:
+                return (leftBroadsideHeading, BROADSIDE_LEFT)
+            else:
+                return (rightBroadsideHeading, BROADSIDE_RIGHT)
+                
+        except Exception as e:
+            return (self.ship.getH(), BROADSIDE_LEFT)
+
+    def _orientForBroadside(self, target, preferSide=None):
+        """
+        Rotate the ship to face its broadside at the target.
+        
+        This immediately sets the ship heading to position the broadside
+        toward the target. Call this during combat positioning.
+        
+        Args:
+            target: The target ship to face with broadside
+            preferSide: Optional preferred broadside side
+            
+        Returns:
+            The broadside side now facing the target (LEFT or RIGHT)
+        """
+        if not target:
+            return BROADSIDE_LEFT
+        
+        try:
+            heading, side = self._calculateBroadsideHeading(target, preferSide)
+            self.ship.setH(heading)
+            return side
+        except:
+            return BROADSIDE_LEFT
+
+    def _getBroadsidePosition(self, target, distance, side=None):
+        """
+        Calculate a position that allows broadside fire at the target.
+        
+        Returns a position that is 'distance' units away from target,
+        positioned to allow the specified broadside side to fire.
+        
+        Args:
+            target: The target ship
+            distance: Desired distance from target
+            side: BROADSIDE_LEFT or BROADSIDE_RIGHT, or None for auto
+            
+        Returns:
+            Point3 position for optimal broadside attack
+        """
+        if not target:
+            return None
+        
+        try:
+            targetPos = target.getPos()
+            shipPos = self.ship.getPos()
+            
+            # Get angle from target to our current position
+            dx = shipPos.getX() - targetPos.getX()
+            dy = shipPos.getY() - targetPos.getY()
+            currentAngle = math.atan2(dy, dx)
+            
+            # Calculate position at the desired distance
+            # Move along the same angle but at the specified distance
+            newX = targetPos.getX() + math.cos(currentAngle) * distance
+            newY = targetPos.getY() + math.sin(currentAngle) * distance
+            
+            return Point3(newX, newY, 0)
+            
+        except:
+            return None
+
     def _startMovementTo(self, destination, speed, onComplete=None):
         """
         Start smooth movement to a destination using position intervals.
@@ -1333,10 +2236,103 @@ class GameFSMShipAI(FSM.FSM):
         self._currentDestination = None
         self._targetHeading = None
         self._movementCallback = None
+        self._broadsideTarget = None
+        # Also stop the broadside heading update task
+        taskMgr.remove(self.ship.uniqueName('broadside-heading'))
 
     def _isMoving(self):
         """Check if ship is currently moving."""
         return self._moveInterval is not None and self._moveInterval.isPlaying()
+
+    def _startBroadsideMovement(self, destination, speed, target):
+        """
+        Move toward destination while keeping broadside facing the target.
+        
+        Unlike _startMovementTo which faces the bow toward destination,
+        this method maintains broadside orientation toward the target while
+        moving toward the destination position.
+        
+        Args:
+            destination: Point3 target position to move toward
+            speed: Movement speed (units per second)
+            target: The ship we want to keep our broadside aimed at
+        """
+        if not destination or not target:
+            return
+        
+        self._initWorldRefs()
+        
+        try:
+            # Stop any existing movement
+            self._stopMovement()
+            
+            # Validate and adjust destination to avoid island collisions
+            safeDestination = self._findSafeDestination(destination)
+            if not safeDestination:
+                return
+            
+            # Store movement parameters
+            self._currentDestination = safeDestination
+            self._broadsideTarget = target
+            
+            # Calculate distance
+            shipPos = self.ship.getPos()
+            dx = safeDestination.getX() - shipPos.getX()
+            dy = safeDestination.getY() - shipPos.getY()
+            distance = math.sqrt(dx * dx + dy * dy)
+            
+            if distance < 50:  # Already at destination
+                return
+            
+            # Orient for broadside FIRST, before moving
+            self._orientForBroadside(target)
+            
+            # Calculate movement duration based on speed
+            moveDuration = distance / max(speed, 1.0)
+            
+            # Create movement interval - position only, heading already set
+            self._moveInterval = self.ship.posInterval(
+                moveDuration,
+                (safeDestination.getX(), safeDestination.getY(), 0),
+                other=self.oceanGrid
+            )
+            
+            # Set up completion event
+            self._moveInterval.setDoneEvent(self._getMovementDoneName())
+            self.ship.acceptOnce(self._getMovementDoneName(), self._onMovementComplete)
+            
+            # Start the movement
+            self._moveInterval.start()
+            
+            # Start a task to continuously update heading during movement
+            # This keeps the broadside facing the target as we move
+            taskMgr.remove(self.ship.uniqueName('broadside-heading'))
+            taskMgr.doMethodLater(
+                0.2, self._updateBroadsideHeading,
+                self.ship.uniqueName('broadside-heading'))
+            
+        except Exception as e:
+            pass
+
+    def _updateBroadsideHeading(self, task):
+        """
+        Task to continuously update ship heading during broadside movement.
+        Keeps the broadside facing the target as the ship moves.
+        """
+        # Stop if not moving anymore
+        if not self._isMoving():
+            return Task.done
+        
+        # Get the broadside target
+        target = getattr(self, '_broadsideTarget', None)
+        if not target or not self._isValidTarget(target):
+            return Task.done
+        
+        # Re-orient for broadside
+        self._orientForBroadside(target)
+        
+        # Continue until movement completes
+        return Task.again
 
     def _getDistanceToDestination(self):
         """Get distance to current movement destination."""
@@ -1736,6 +2732,7 @@ class GameFSMShipAI(FSM.FSM):
         self._followPath()
 
     def exitPathFollow(self):
+        self._stopMovement()
         if self._pathFollowInterval is not None:
             self._pathFollowInterval.finish()
             self._pathFollowInterval = None
@@ -1753,6 +2750,9 @@ class GameFSMShipAI(FSM.FSM):
         # Generate patrol waypoints in a circuit
         self._generatePatrolWaypoints()
         self._currentWaypointIndex = 0
+        
+        # Start despawn check for idle ships
+        self._startDespawnCheck()
         
         self._aiUpdateTask = taskMgr.doMethodLater(
             AI_UPDATE_INTERVAL, self._patrolUpdate, 
@@ -1780,9 +2780,14 @@ class GameFSMShipAI(FSM.FSM):
             self._startMovementTo(self._getDirectionAwayFromEdge(), self._getShipSpeed())
             return Task.again
         
+        # Check for imminent collisions and avoid
+        if self._performCollisionAvoidance():
+            return Task.again  # Collision avoidance triggered, skip other updates
+        
         # Check for enemies
         enemy, dist = self._findNearestEnemy()
         if enemy and dist < AI_DETECTION_RANGE:
+            self._stopMovement()  # Break current movement to engage
             self.targetShip = enemy
             self.targetDoId = enemy.doId
             self.request('Combat')
@@ -1792,6 +2797,7 @@ class GameFSMShipAI(FSM.FSM):
         if self.threatList:
             target = self._selectBestTarget()
             if target:
+                self._stopMovement()  # Break current movement to engage
                 self.targetShip = target
                 self.targetDoId = target.doId
                 self.request('Combat')
@@ -1818,6 +2824,7 @@ class GameFSMShipAI(FSM.FSM):
 
     def exitPatrol(self):
         self._stopMovement()
+        self._stopDespawnCheck()
         if self._aiUpdateTask:
             taskMgr.remove(self._aiUpdateTask)
             self._aiUpdateTask = None
@@ -1832,6 +2839,9 @@ class GameFSMShipAI(FSM.FSM):
         self.homePos = self._getRandomOceanPos()
         self.wanderDestination = self._getRandomWanderPoint()
         self.ship.setSailAnimState('Idle')
+        
+        # Start despawn check for idle ships
+        self._startDespawnCheck()
         
         self._aiUpdateTask = taskMgr.doMethodLater(
             AI_UPDATE_INTERVAL, self._wanderUpdate,
@@ -1849,9 +2859,14 @@ class GameFSMShipAI(FSM.FSM):
             self._startMovementTo(self._getDirectionAwayFromEdge(), self._getShipSpeed())
             return Task.again
         
+        # Check for imminent collisions and avoid
+        if self._performCollisionAvoidance():
+            return Task.again  # Collision avoidance triggered, skip other updates
+        
         # Check for enemies
         enemy, dist = self._findNearestEnemy()
         if enemy and dist < AI_DETECTION_RANGE:
+            self._stopMovement()  # Break current movement to engage
             self.targetShip = enemy
             self.targetDoId = enemy.doId
             self.request('Combat')
@@ -1861,6 +2876,7 @@ class GameFSMShipAI(FSM.FSM):
         if self.threatList:
             target = self._selectBestTarget()
             if target:
+                self._stopMovement()  # Break current movement to engage
                 self.targetShip = target
                 self.targetDoId = target.doId
                 self.request('Combat')
@@ -1885,6 +2901,7 @@ class GameFSMShipAI(FSM.FSM):
 
     def exitWander(self):
         self._stopMovement()
+        self._stopDespawnCheck()
         if self._aiUpdateTask:
             taskMgr.remove(self._aiUpdateTask)
             self._aiUpdateTask = None
@@ -1895,6 +2912,9 @@ class GameFSMShipAI(FSM.FSM):
 
     def enterCombat(self):
         self.ship.setSailAnimState('Idle')
+        
+        # Update last combat time for despawn tracking
+        self._updateLastCombatTime()
         
         # Choose initial combat behavior - delay to avoid nested FSM transition
         def _selectCombatBehavior(task):
@@ -1917,11 +2937,26 @@ class GameFSMShipAI(FSM.FSM):
     def enterAttackChase(self):
         self.ship.setSailAnimState('Idle')
         
+        # Update last combat time for despawn tracking
+        self._updateLastCombatTime()
+        
         self._aiUpdateTask = taskMgr.doMethodLater(
             AI_UPDATE_INTERVAL, self._chaseUpdate,
             self.ship.uniqueName('chase-update'))
 
     def _chaseUpdate(self, task):
+        # Check for imminent collisions with non-targets and avoid
+        hasCollision, obstacleInfo = self._checkCollisionAhead()
+        if hasCollision and obstacleInfo:
+            obstaclePos, _, _ = obstacleInfo
+            # Only avoid if it's not our target
+            if self.targetShip:
+                targetPos = self.targetShip.getPos()
+                obstacleDist = (obstaclePos - targetPos).length()
+                if obstacleDist > 100:  # Not our target, avoid it
+                    if self._performCollisionAvoidance():
+                        return Task.again
+        
         # Validate target
         if not self._isValidTarget(self.targetShip):
             self.targetShip = self._selectBestTarget()
@@ -1943,18 +2978,30 @@ class GameFSMShipAI(FSM.FSM):
             self.request('CircleAttack')
             return Task.done
         
-        # Check health for fleeing
-        if self._getHealthPercent() < AI_FLEE_HEALTH_THRESHOLD:
+        # Check health for fleeing (level-aware)
+        if self._shouldFlee():
             self.request('Flee')
             return Task.done
         
-        # Chase target - update movement toward target position
-        targetPos = self.targetShip.getPos()
-        # Only start new movement if not moving or target moved significantly
-        if not self._isMoving() or self._getDistanceToDestination() < 100:
-            self._startMovementTo(Point3(targetPos), self._getShipSpeed(combatMode=True))
+        # Chase target - ALWAYS head toward target aggressively
+        # Turn to face target first, then move toward them
+        self._turnTowardTarget(self.targetShip)
         
-        # Try opportunistic broadside
+        targetPos = self.targetShip.getPos()
+        # Continuously update movement toward target - don't wait for movement to complete
+        # Stop current movement and recalculate path to target's current position
+        if self._isMoving():
+            # Check if target moved significantly from our destination
+            if self._currentDestination:
+                destToTarget = (Point3(targetPos) - self._currentDestination).length()
+                if destToTarget > 200:  # Target moved, update course
+                    self._stopMovement()
+                    self._startMovementTo(Point3(targetPos), self._getShipSpeed(combatMode=True) * 1.5)
+        else:
+            # Not moving, start chasing at increased speed
+            self._startMovementTo(Point3(targetPos), self._getShipSpeed(combatMode=True) * 1.5)
+        
+        # Try opportunistic broadside while chasing
         self._attemptBroadside(self.targetShip)
         
         return Task.again
@@ -1971,6 +3018,9 @@ class GameFSMShipAI(FSM.FSM):
 
     def enterCircleAttack(self):
         self.ship.setSailAnimState('Idle')
+        
+        # Update last combat time for despawn tracking
+        self._updateLastCombatTime()
         
         # Choose circle direction based on which broadside is healthier/loaded
         self.circleDirection = random.choice([1, -1])
@@ -1992,6 +3042,18 @@ class GameFSMShipAI(FSM.FSM):
             self.ship.uniqueName('circle-attack-update'))
 
     def _circleAttackUpdate(self, task):
+        # Check for imminent collisions with non-targets and avoid
+        hasCollision, obstacleInfo = self._checkCollisionAhead()
+        if hasCollision and obstacleInfo:
+            obstaclePos, _, _ = obstacleInfo
+            # Only avoid if it's not our target (we want to get close to target)
+            if self.targetShip:
+                targetPos = self.targetShip.getPos()
+                obstacleDist = (obstaclePos - targetPos).length()
+                if obstacleDist > 100:  # Not our target, avoid it
+                    if self._performCollisionAvoidance():
+                        return Task.again
+        
         # Validate target
         if not self._isValidTarget(self.targetShip):
             self.targetShip = self._selectBestTarget()
@@ -2006,28 +3068,45 @@ class GameFSMShipAI(FSM.FSM):
             self.request('AttackChase')
             return Task.done
         
-        # Check health for fleeing
-        if self._getHealthPercent() < AI_FLEE_HEALTH_THRESHOLD:
+        # Check health for fleeing (level-aware)
+        if self._shouldFlee():
             self.request('Flee')
             return Task.done
         
-        # Update circle angle
-        circleSpeed = 0.05  # Radians per update
-        self.circleAngle += circleSpeed * self.circleDirection
-        
-        # Calculate optimal circle radius based on distance
-        optimalRadius = AI_CIRCLE_RADIUS
+        # Calculate optimal attack distance
+        optimalDist = AI_ATTACK_RANGE * 0.6  # Optimal broadside range
         if dist < AI_MIN_ATTACK_RANGE:
-            optimalRadius = AI_ATTACK_RANGE * 0.8
+            optimalDist = AI_MIN_ATTACK_RANGE * 1.5
         elif dist > AI_ATTACK_RANGE:
-            optimalRadius = dist * 0.7
+            optimalDist = AI_ATTACK_RANGE * 0.8
         
-        # Get circle position and start movement if not already moving
-        circlePos = self._getCirclePosition(self.targetShip, optimalRadius, self.circleAngle)
-        if circlePos and not self._isMoving():
-            self._startMovementTo(circlePos, self._getShipSpeed(combatMode=True))
+        # Orient ship for broadside attack - rotate to face broadside at target
+        # This is the KEY fix: ship rotates so its SIDE faces the target
+        broadsideSide = self._orientForBroadside(self.targetShip)
         
-        # Attempt broadside when aligned
+        # If we're not at optimal distance, move to get there
+        # But maintain broadside orientation while moving
+        if not self._isMoving():
+            if dist > optimalDist * 1.2:
+                # Too far - move closer while maintaining broadside angle
+                # Move perpendicular to target (parallel path) to close distance
+                broadsidePos = self._getBroadsidePosition(self.targetShip, optimalDist)
+                if broadsidePos:
+                    self._startBroadsideMovement(broadsidePos, self._getShipSpeed(combatMode=True), self.targetShip)
+            elif dist < AI_MIN_ATTACK_RANGE:
+                # Too close - back off
+                broadsidePos = self._getBroadsidePosition(self.targetShip, optimalDist)
+                if broadsidePos:
+                    self._startBroadsideMovement(broadsidePos, self._getShipSpeed(combatMode=True), self.targetShip)
+            else:
+                # At good range - circle slowly while keeping broadside aimed
+                circleSpeed = 0.03  # Slower circling for better aim
+                self.circleAngle += circleSpeed * self.circleDirection
+                circlePos = self._getCirclePosition(self.targetShip, dist, self.circleAngle)
+                if circlePos:
+                    self._startBroadsideMovement(circlePos, self._getShipSpeed(combatMode=True) * 0.5, self.targetShip)
+        
+        # Attempt broadside - should now be properly aligned
         if self._attemptBroadside(self.targetShip):
             # Occasionally switch circle direction after firing
             if random.random() < 0.3:
@@ -2052,6 +3131,9 @@ class GameFSMShipAI(FSM.FSM):
 
     def enterFlee(self):
         self.ship.setSailAnimState('Idle')
+        
+        # Update last combat time for despawn tracking (fleeing is still combat)
+        self._updateLastCombatTime()
         
         # Calculate flee direction (away from threats)
         self._calculateFleeDestination()
@@ -2101,8 +3183,13 @@ class GameFSMShipAI(FSM.FSM):
             self.wanderDestination = self._getRandomOceanPos()
 
     def _fleeUpdate(self, task):
-        # Check if health recovered enough to fight
-        if self._getHealthPercent() > AI_ENGAGE_HEALTH_THRESHOLD:
+        # Check for imminent collisions and avoid (even while fleeing)
+        if self._performCollisionAvoidance():
+            return Task.again  # Collision avoidance triggered
+        
+        # Check if health recovered enough to fight (level-aware)
+        # Ships only return to combat if healthy enough based on situation
+        if not self._shouldFlee():
             # Clear threats and return to patrol
             self.threatList.clear()
             self.targetShip = None

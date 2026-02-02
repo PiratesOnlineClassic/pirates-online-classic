@@ -697,10 +697,10 @@ class ShipPilot2(PhysicsWalker):
                 self.__rotationSpeed*=1.25
                 maxSpeed = self.ship.maxSpeed * 4.0
 
-        self.__speed*=4.0
-        self.__slideSpeed*=4.0
-        self.__rotationSpeed*=1.25
-        maxSpeed = self.ship.maxSpeed * 4.0
+        self.__speed*=12.0
+        self.__slideSpeed*=12.0
+        self.__rotationSpeed*=2.0
+        maxSpeed = self.ship.maxSpeed * 12.0
                 
         #*#
         self.currentTurning += self.__rotationSpeed

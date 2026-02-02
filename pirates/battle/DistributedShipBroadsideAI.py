@@ -185,10 +185,92 @@ class DistributedShipBroadsideAI(DistributedWeaponAI):
                 spreadZ = random.gauss(0, 10)
                 hitPosList.append((relX + spreadX, relY + spreadY, relZ + spreadZ))
             
-            # Fire the broadside
+            # Fire the broadside (visual)
             self.doBroadside(side, delays, hitPosList, zoneId, flightTime)
+            
+            # Apply damage directly on server
+            # AI broadsides apply damage after a delay matching flight time
+            self._applyBroadsideDamage(targetShip, numCannons, dist, flightTime)
+            
             return True
             
         except Exception as e:
             self.notify.warning('Failed to fire broadside at target: %s' % str(e))
+            import traceback
+            traceback.print_exc()
             return False
+
+    def _applyBroadsideDamage(self, targetShip, numCannons, distance, flightTime):
+        """
+        Apply broadside damage to target ship after a delay.
+        This handles server-side damage for AI ship attacks.
+        """
+        from pirates.ship import ShipBalance
+        
+        def _doDamage(task):
+            try:
+                # Check if target still exists and is valid
+                if not targetShip or targetShip.isEmpty():
+                    return task.done
+                
+                # Get attacker ship for damage calculation
+                ship = self.getShip()
+                if not ship:
+                    return task.done
+                
+                # Base damage per cannon (based on ship's level and broadside config)
+                baseDamagePerCannon = 50  # Base damage
+                
+                # Apply NPC damage output modifier
+                npcDamageOut = ShipBalance.NPCDamageOut.getValue()
+                
+                # Apply distance falloff (less damage at max range)
+                maxRange = 2000.0
+                distanceMod = max(0.3, 1.0 - (distance / maxRange) * 0.5)
+                
+                # Calculate hit chance per cannon (accuracy decreases with distance)
+                baseAccuracy = 0.7  # 70% base accuracy
+                accuracyFalloff = max(0.3, 1.0 - (distance / maxRange) * 0.4)
+                hitChance = baseAccuracy * accuracyFalloff
+                
+                # Calculate total damage from cannons that hit
+                import random
+                totalDamage = 0
+                hitsLanded = 0
+                for i in range(numCannons):
+                    if random.random() < hitChance:
+                        cannonDamage = baseDamagePerCannon * npcDamageOut * distanceMod
+                        totalDamage += cannonDamage
+                        hitsLanded += 1
+                
+                if hitsLanded == 0:
+                    return task.done  # All shots missed
+                
+                totalDamage = int(totalDamage)
+                
+                # Apply damage to target ship
+                # Use takeDamage if available (NPCShipAI), otherwise set HP directly
+                if hasattr(targetShip, 'takeDamage'):
+                    targetShip.takeDamage(totalDamage, ship.doId, applyModifiers=False)
+                else:
+                    # Direct HP reduction for player ships
+                    newHp = max(0, targetShip.getHp() - totalDamage)
+                    targetShip.b_setHp(newHp)
+                    
+                    # Notify player ship's FSM if it has one
+                    if hasattr(targetShip, 'gameFSM') and targetShip.gameFSM:
+                        if hasattr(targetShip.gameFSM, 'onDamageReceived'):
+                            targetShip.gameFSM.onDamageReceived(ship.doId, totalDamage)
+                    
+                    # Check for sinking
+                    if newHp <= 0:
+                        targetShip.b_setGameState('Sinking', 0)
+                
+            except Exception as e:
+                self.notify.warning('Error applying broadside damage: %s' % str(e))
+            
+            return task.done
+        
+        # Schedule damage after flight time
+        taskMgr.doMethodLater(flightTime, _doDamage, 
+                              self.uniqueName('broadside-damage-%d' % targetShip.doId))

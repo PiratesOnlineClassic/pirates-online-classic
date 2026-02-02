@@ -1,4 +1,5 @@
 from direct.task import Task
+from functools import cmp_to_key
 
 class Target:
     
@@ -107,7 +108,7 @@ class ShipTargets:
             self.update()
     
     def update(self):
-        self.targets.sort(self.sortTargets)
+        self.targets.sort(key=cmp_to_key(self.sortTargets))
         numTargets = len(self.targets)
         self.hidePrimary()
         if numTargets > 0:

@@ -57,7 +57,7 @@ class CreateShipFSM(ShipLoaderOperationFSM):
         self.hullConfig = ShipGlobals.getHullConfig(self.modelClass)
 
         fields = {
-            'setBaseTeam': (ShipGlobals.PLAYER_SHIP,),
+            'setBaseTeam': (ShipGlobals.PLAYER_TEAM,),
             'setShipClass': (self.shipConfig['setShipClass'][0],),
             'setName': ('Unnamed Ship',),
             'setInventoryId': (0,),

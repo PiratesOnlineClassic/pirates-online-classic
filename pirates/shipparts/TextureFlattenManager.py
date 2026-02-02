@@ -40,8 +40,9 @@ class TextureFlattenManager:
             panel.flattenMultitex(useGeom = 0, target = obj.holeLayer)
             holeTex = panel.findTexture(obj.holeLayer)
             obj.pasteGeomTextureStates(panel.node(), attribList)
-            panel.setTexture(obj.holeLayer, holeTex)
-            obj.panelsHigh[panelIndex].setTexture(obj.holeLayer, holeTex)
+            if obj.holeLayer and holeTex:
+                panel.setTexture(obj.holeLayer, holeTex)
+                obj.panelsHigh[panelIndex].setTexture(obj.holeLayer, holeTex)
         
         self.splattableObjects.clear()
         for sail in self.sailObjects:
@@ -49,7 +50,8 @@ class TextureFlattenManager:
             sail.sailGeom.flattenMultitex(useGeom = 0, target = sail.holeLayer)
             holeTex = sail.sailGeom.findTexture(sail.holeLayer)
             sail.pasteGeomTextureStates(sail.sailGeom.node(), attribList)
-            sail.sailGeom.setTexture(sail.holeLayer, holeTex)
+            if sail.holeLayer and holeTex:
+                sail.sailGeom.setTexture(sail.holeLayer, holeTex)
         
         self.sailObjects.clear()
         return Task.cont
