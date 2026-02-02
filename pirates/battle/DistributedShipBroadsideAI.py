@@ -163,8 +163,17 @@ class DistributedShipBroadsideAI(DistributedWeaponAI):
             dist = ship.getDistance(targetShip)
             flightTime = max(1.0, dist / 500.0)  # Approximate flight time
             
+            # Get actual number of cannons on this side
+            if side == 0:
+                numCannons = len(self.leftBroadside) if self.leftBroadside else 0
+            else:
+                numCannons = len(self.rightBroadside) if self.rightBroadside else 0
+            
+            if numCannons == 0:
+                self.notify.warning('No broadside cannons on side %d' % side)
+                return False
+            
             # Generate cannon delays and hit positions with spread
-            numCannons = 6  # Typical broadside
             delays = []
             hitPosList = []
             

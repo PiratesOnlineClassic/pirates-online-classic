@@ -151,8 +151,12 @@ class DistributedShipDeployer(DistributedNode):
 
     def handleShipCollideEnter(self, colEntry):
         shipId = colEntry.getFromNodePath().getNetTag('shipId')
+        if not shipId:
+            return
         shipId = int(shipId)
         sphereId = colEntry.getIntoNodePath().getNetTag('deploySphereId')
+        if not sphereId:
+            return
         sphereId = int(sphereId)
         self.d_shipEnteredSphere(shipId, sphereId)
         for sphere in self.deploySpheres:
@@ -165,8 +169,12 @@ class DistributedShipDeployer(DistributedNode):
 
     def handleShipCollideExit(self, colEntry):
         shipId = colEntry.getFromNodePath().getNetTag('shipId')
+        if not shipId:
+            return
         shipId = int(shipId)
         sphereId = colEntry.getIntoNodePath().getNetTag('deploySphereId')
+        if not sphereId:
+            return
         sphereId = int(sphereId)
         self.d_shipExitedSphere(shipId, sphereId)
 
@@ -178,6 +186,8 @@ class DistributedShipDeployer(DistributedNode):
     @report(types=['frameCount', 'args'], dConfigParam='want-shipboard-report')
     def handleShipEnterSoftBarrier(self, colEntry):
         shipId = colEntry.getFromNodePath().getNetTag('shipId')
+        if not shipId:
+            return
         shipId = int(shipId)
         ship = base.cr.doId2do.get(shipId)
         if ship and not ship.getRespectDeployBarriers():
@@ -186,6 +196,8 @@ class DistributedShipDeployer(DistributedNode):
     @report(types=['frameCount', 'args'], dConfigParam='want-shipboard-report')
     def handleShipExitSoftBarrier(self, colEntry):
         shipId = colEntry.getFromNodePath().getNetTag('shipId')
+        if not shipId:
+            return
         shipId = int(shipId)
         ship = base.cr.doId2do.get(shipId)
         if ship and not ship.getRespectDeployBarriers():

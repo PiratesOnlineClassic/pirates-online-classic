@@ -300,11 +300,12 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
                         return
 
                     targetPos = 0
-                    if hitPosList[index] != (100, 100, 100):
+                    if index < len(hitPosList) and hitPosList[index] != (100, 100, 100):
                         tPos = hitPosList[index]
                         targetPos = Vec3(tPos[0] + zonePos[0], tPos[1] + zonePos[1], tPos[2] + zonePos[2])
 
-                    playShot = Sequence(Wait(delays[index]), Func(self.setCannonAnim, index, 0, 0), Wait(0.5), Func(self.__requestAttack, index, side, targetPos, flightTime), Wait(3.0), Func(self.setCannonAnim, index, 0, 1))
+                    delay = delays[index] if index < len(delays) else 0.0
+                    playShot = Sequence(Wait(delay), Func(self.setCannonAnim, index, 0, 0), Wait(0.5), Func(self.__requestAttack, index, side, targetPos, flightTime), Wait(3.0), Func(self.setCannonAnim, index, 0, 1))
                     playShot.start(ts)
                     self.leftPlayShots.append(playShot)
 
@@ -319,11 +320,12 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
                         return
 
                     targetPos = 0
-                    if hitPosList[index] != (100, 100, 100):
+                    if index < len(hitPosList) and hitPosList[index] != (100, 100, 100):
                         tPos = hitPosList[index]
                         targetPos = Vec3(tPos[0] + zonePos[0], tPos[1] + zonePos[1], tPos[2] + zonePos[2])
 
-                    playShot = Sequence(Wait(delays[index]), Func(self.setCannonAnim, index, 1, 0), Wait(0.5), Func(self.__requestAttack, index, side, targetPos, flightTime), Wait(3.0), Func(self.setCannonAnim, index, 1, 1))
+                    delay = delays[index] if index < len(delays) else 0.0
+                    playShot = Sequence(Wait(delay), Func(self.setCannonAnim, index, 1, 0), Wait(0.5), Func(self.__requestAttack, index, side, targetPos, flightTime), Wait(3.0), Func(self.setCannonAnim, index, 1, 1))
                     playShot.start(ts)
                     self.rightPlayShots.append(playShot)
 

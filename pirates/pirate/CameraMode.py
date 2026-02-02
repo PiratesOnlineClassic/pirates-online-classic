@@ -133,7 +133,7 @@ class CameraMode(FSM, DirectObject.DirectObject):
                 self.mouseDelta = (0, 0)
             else:
                 self.mouseDelta = (mouseData.getX() - self.lastMousePos[0], mouseData.getY() - self.lastMousePos[1])
-                base.win.movePointer(0, winSize[0] / 2, winSize[1] / 2)
+                base.win.movePointer(0, winSize[0] // 2, winSize[1] // 2)
                 mouseData = base.win.getPointer(0)
                 self.lastMousePos = (mouseData.getX(), mouseData.getY())
         return task.cont
