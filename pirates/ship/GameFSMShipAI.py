@@ -33,6 +33,7 @@ from pirates.battle import EnemyGlobals
 from pirates.battle import CannonGlobals
 from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PiratesGlobals
+from pirates.world import WorldGlobals
 
 
 # ===========================================================================
@@ -162,7 +163,7 @@ class GameFSMShipAI(FSM.FSM):
         self._movementTask = None
         self._broadsideTask = None
         self._moveInterval = None  # Current movement interval
-        self._rotateInterval = None  # Current rotation interval
+        self._movementCallback = None  # Callback for when movement completes
         self._currentDestination = None  # Current movement target
         self._targetHeading = None  # Target heading for rotation
         
@@ -201,11 +202,10 @@ class GameFSMShipAI(FSM.FSM):
         if self._moveInterval:
             self._moveInterval.pause()
             self._moveInterval = None
-        if self._rotateInterval:
-            self._rotateInterval.pause()
-            self._rotateInterval = None
+        self.ship.ignore(self._getMovementDoneName())
         self._currentDestination = None
         self._targetHeading = None
+        self._movementCallback = None
 
     # =========================================================================
     # Ship Class-Based Configuration
@@ -859,21 +859,135 @@ class GameFSMShipAI(FSM.FSM):
         
         return collisionSpheres
 
+    # =========================================================================
+    # Ocean Grid Bounds
+    # =========================================================================
+
+    def _getGridBounds(self):
+        """
+        Get the ocean grid boundaries.
+        Grid is centered at origin with size = gridSize * cellWidth.
+        
+        Returns: (minX, maxX, minY, maxY) tuple
+        """
+        gridSize = WorldGlobals.OCEAN_GRID_SIZE
+        cellWidth = WorldGlobals.OCEAN_CELL_SIZE
+        halfSize = (gridSize * cellWidth) / 2.0
+        
+        # Add a small margin so ships don't get too close to edge
+        margin = 2000.0  # 1 cell margin
+        
+        return (-halfSize + margin, halfSize - margin, 
+                -halfSize + margin, halfSize - margin)
+
+    def _isWithinGridBounds(self, x, y):
+        """
+        Check if a position is within the ocean grid bounds.
+        
+        Args:
+            x: X coordinate
+            y: Y coordinate
+            
+        Returns: True if within bounds, False otherwise
+        """
+        minX, maxX, minY, maxY = self._getGridBounds()
+        return minX <= x <= maxX and minY <= y <= maxY
+
+    def _clampToGridBounds(self, x, y):
+        """
+        Clamp a position to be within the ocean grid bounds.
+        
+        Args:
+            x: X coordinate
+            y: Y coordinate
+            
+        Returns: (clampedX, clampedY) tuple
+        """
+        minX, maxX, minY, maxY = self._getGridBounds()
+        clampedX = max(minX, min(maxX, x))
+        clampedY = max(minY, min(maxY, y))
+        return clampedX, clampedY
+
+    def _clampDestinationToGrid(self, destination):
+        """
+        Clamp a Point3 destination to be within grid bounds.
+        
+        Args:
+            destination: Point3 position
+            
+        Returns: Point3 with clamped coordinates
+        """
+        if not destination:
+            return None
+        
+        x, y = self._clampToGridBounds(destination.getX(), destination.getY())
+        return Point3(x, y, 0)
+
+    def _isApproachingGridEdge(self, margin=5000.0):
+        """
+        Check if the ship is approaching the edge of the ocean grid.
+        Useful for triggering a turn-around before hitting the boundary.
+        
+        Args:
+            margin: Distance from edge to start turning (default 5000 units)
+            
+        Returns: True if near edge, False otherwise
+        """
+        shipX = self.ship.getX()
+        shipY = self.ship.getY()
+        minX, maxX, minY, maxY = self._getGridBounds()
+        
+        # Check if within margin of any edge
+        nearEdge = (shipX <= minX + margin or shipX >= maxX - margin or
+                    shipY <= minY + margin or shipY >= maxY - margin)
+        return nearEdge
+
+    def _getDirectionAwayFromEdge(self):
+        """
+        Get a destination point that moves the ship away from the grid edge.
+        Used when a ship gets too close to the boundary.
+        
+        Returns: Point3 destination toward grid center
+        """
+        shipX = self.ship.getX()
+        shipY = self.ship.getY()
+        
+        # Move toward center (0, 0)
+        dirX = -shipX
+        dirY = -shipY
+        
+        # Normalize and scale
+        length = math.sqrt(dirX * dirX + dirY * dirY)
+        if length > 0:
+            dirX /= length
+            dirY /= length
+        
+        # Move a reasonable distance toward center
+        moveDistance = 3000.0
+        newX = shipX + dirX * moveDistance
+        newY = shipY + dirY * moveDistance
+        
+        return Point3(newX, newY, 0)
+
     def _isPositionSafe(self, pos, checkShips=True):
         """
         Check if a position is safe (not inside any collision zone).
-        Checks both island collisions and other ship positions.
+        Checks grid bounds, island collisions, and other ship positions.
         
         Args:
             pos: Position to check
             checkShips: Whether to also check for ship collisions
         
-        Returns True if safe, False if inside a collision zone.
+        Returns True if safe, False if inside a collision zone or outside grid.
         """
         if not pos:
             return False
         
         posX, posY = pos.getX(), pos.getY()
+        
+        # Check if position is within ocean grid bounds
+        if not self._isWithinGridBounds(posX, posY):
+            return False
         myRadius = self._getShipCollisionRadius()
         
         # Check island collisions
@@ -995,14 +1109,19 @@ class GameFSMShipAI(FSM.FSM):
 
     def _findSafeDestination(self, preferredDest, maxAttempts=5):
         """
-        Find a safe destination, avoiding island collisions.
+        Find a safe destination, avoiding island collisions and grid bounds.
         If preferred destination is unsafe, find an alternate.
         """
         if not preferredDest:
             return self._getRandomOceanPos()
         
-        # First check if destination itself is safe
-        if not self._isPositionSafe(preferredDest):
+        # First clamp destination to grid bounds
+        clampedDest = self._clampDestinationToGrid(preferredDest)
+        if not clampedDest:
+            return self._getRandomOceanPos()
+        
+        # Check if clamped destination itself is safe
+        if not self._isPositionSafe(clampedDest):
             # Destination is in collision zone, get a random safe point
             for _ in range(maxAttempts):
                 altDest = self._getRandomOceanPos()
@@ -1012,8 +1131,8 @@ class GameFSMShipAI(FSM.FSM):
         
         # Check if path is safe
         shipPos = Point3(self.ship.getX(), self.ship.getY(), 0)
-        if self._isPathSafe(shipPos, preferredDest):
-            return preferredDest
+        if self._isPathSafe(shipPos, clampedDest):
+            return clampedDest
         
         # Path is blocked, try to find alternate routes
         for _ in range(maxAttempts):
@@ -1026,7 +1145,7 @@ class GameFSMShipAI(FSM.FSM):
 
     def _getRandomOceanPos(self):
         """
-        Get a valid random ocean position from the world.
+        Get a valid random ocean position within the Cartesian grid bounds.
         Attempts to find a position that doesn't collide with islands.
         """
         self._initWorldRefs()
@@ -1037,16 +1156,28 @@ class GameFSMShipAI(FSM.FSM):
                 if self.world:
                     dx, dy = self.air.worldCreator.oceanAreaManager.getRandomOceanPos(
                         self.world.getUniqueId())
+                    
+                    # Clamp to grid bounds first
+                    dx, dy = self._clampToGridBounds(dx, dy)
                     pos = Point3(dx, dy, 0)
                     
-                    # Validate position is safe
+                    # Validate position is safe (includes grid bounds check)
                     if self._isPositionSafe(pos):
                         return pos
             except:
                 pass
         
-        # Fallback to current position if we can't find a safe ocean pos
-        return Point3(self.ship.getX(), self.ship.getY(), 0)
+        # Fallback: generate random position within grid bounds
+        minX, maxX, minY, maxY = self._getGridBounds()
+        for _ in range(maxAttempts):
+            dx = random.uniform(minX, maxX)
+            dy = random.uniform(minY, maxY)
+            pos = Point3(dx, dy, 0)
+            if self._isPositionSafe(pos):
+                return pos
+        
+        # Final fallback: center of grid (always valid)
+        return Point3(0, 0, 0)
 
     def _getRandomWanderPoint(self):
         """Get a random point for wandering using valid ocean positions."""
@@ -1104,10 +1235,10 @@ class GameFSMShipAI(FSM.FSM):
 
     def _startMovementTo(self, destination, speed, onComplete=None):
         """
-        Start smooth movement to a destination with realistic ship turning.
+        Start smooth movement to a destination using position intervals.
         
-        Ships rotate smoothly based on their turn rate before/during movement,
-        simulating realistic naval vessel behavior. Larger ships turn slower.
+        Uses Panda3D intervals for smooth movement with messenger events
+        for completion notification.
         
         Args:
             destination: Point3 target position
@@ -1120,13 +1251,8 @@ class GameFSMShipAI(FSM.FSM):
         self._initWorldRefs()
         
         try:
-            # Stop any existing movement and rotation
-            if self._moveInterval:
-                self._moveInterval.pause()
-                self._moveInterval = None
-            if self._rotateInterval:
-                self._rotateInterval.pause()
-                self._rotateInterval = None
+            # Stop any existing movement
+            self._stopMovement()
             
             # Validate and adjust destination to avoid island collisions
             safeDestination = self._findSafeDestination(destination)
@@ -1134,6 +1260,10 @@ class GameFSMShipAI(FSM.FSM):
                 if onComplete:
                     onComplete()
                 return
+            
+            # Store movement parameters
+            self._currentDestination = safeDestination
+            self._movementCallback = onComplete
             
             # Calculate distance
             shipPos = self.ship.getPos()
@@ -1146,73 +1276,67 @@ class GameFSMShipAI(FSM.FSM):
                     onComplete()
                 return
             
-            # Calculate target heading
-            targetHeading = self._calculateHeadingTo(safeDestination)
-            currentHeading = self.ship.getH()
+            # Create destination node for lookAt
+            destNode = NodePath('dest-node-%d' % self.ship.doId)
+            destNode.setPos(safeDestination.getX(), safeDestination.getY(), 0)
             
-            # Calculate angle difference (shortest path)
-            angleDiff = self._normalizeAngle(targetHeading - currentHeading)
+            # Face the destination
+            self.ship.lookAt(destNode)
+            destNode.removeNode()
             
-            # Store current destination and target heading
-            self._currentDestination = safeDestination
-            self._targetHeading = targetHeading
-            
-            # Calculate durations based on ship properties
-            rotateDuration = self._getRotationDuration(angleDiff)
+            # Calculate movement duration based on speed
             moveDuration = distance / max(speed, 1.0)
             
-            # Create rotation interval (smooth turning)
-            from direct.interval.IntervalGlobal import Sequence, Parallel, Func
-            
-            # Rotate ship smoothly to face destination
-            self._rotateInterval = self.ship.hprInterval(
-                rotateDuration,
-                (targetHeading, 0, 0),
-                blendType='easeInOut'
-            )
-            
-            # Create movement interval
+            # Create movement interval using ship's posInterval with oceanGrid reference
             self._moveInterval = self.ship.posInterval(
                 moveDuration,
                 (safeDestination.getX(), safeDestination.getY(), 0),
-                other=self.oceanGrid,
-                blendType='easeInOut'
+                other=self.oceanGrid
             )
             
-            # Run rotation and movement together (ship turns while moving)
-            # This creates a realistic curved path like real ships
-            moveSequence = Parallel(
-                self._rotateInterval,
-                self._moveInterval,
-                name='ai-ship-move-%d' % self.ship.doId
-            )
+            # Set up completion event
+            self._moveInterval.setDoneEvent(self._getMovementDoneName())
+            self.ship.acceptOnce(self._getMovementDoneName(), self._onMovementComplete)
             
-            # Set up completion callback
-            if onComplete:
-                moveSequence.setDoneEvent(self._getMovementDoneName())
-                self.acceptOnce(self._getMovementDoneName(), onComplete)
-            
-            moveSequence.start()
+            # Start the movement
+            self._moveInterval.start()
             
         except Exception as e:
-            pass
+            if onComplete:
+                onComplete()
+
+    def _onMovementComplete(self):
+        """Called when movement interval completes via messenger event."""
+        self._moveInterval = None
+        self._currentDestination = None
+        self._targetHeading = None
+        
+        # Safety check: ensure ship is still within grid bounds
+        shipX = self.ship.getX()
+        shipY = self.ship.getY()
+        if not self._isWithinGridBounds(shipX, shipY):
+            # Clamp position back into grid
+            clampedX, clampedY = self._clampToGridBounds(shipX, shipY)
+            self.ship.setPos(clampedX, clampedY, 0)
+        
+        if self._movementCallback:
+            callback = self._movementCallback
+            self._movementCallback = None
+            callback()
 
     def _stopMovement(self):
-        """Stop current movement and rotation intervals."""
+        """Stop current movement interval."""
         if self._moveInterval:
             self._moveInterval.pause()
             self._moveInterval = None
-        if self._rotateInterval:
-            self._rotateInterval.pause()
-            self._rotateInterval = None
+        self.ship.ignore(self._getMovementDoneName())
         self._currentDestination = None
         self._targetHeading = None
+        self._movementCallback = None
 
     def _isMoving(self):
-        """Check if ship is currently moving or rotating."""
-        moving = self._moveInterval is not None and self._moveInterval.isPlaying()
-        rotating = self._rotateInterval is not None and self._rotateInterval.isPlaying()
-        return moving or rotating
+        """Check if ship is currently moving."""
+        return self._moveInterval is not None and self._moveInterval.isPlaying()
 
     def _getDistanceToDestination(self):
         """Get distance to current movement destination."""
@@ -1376,7 +1500,6 @@ class GameFSMShipAI(FSM.FSM):
 
         self._sinkingTask = taskMgr.doMethodLater(60, _shipSunk, 
                                                    self.ship.uniqueName('shipSunk'))
-
     def exitSinking(self):
         if self._sinkingTask is not None:
             taskMgr.remove(self._sinkingTask)
@@ -1646,6 +1769,17 @@ class GameFSMShipAI(FSM.FSM):
             self._patrolWaypoints.append(waypoint)
 
     def _patrolUpdate(self, task):
+        # Safety check: if ship is outside grid, immediately move it back
+        shipX = self.ship.getX()
+        shipY = self.ship.getY()
+        if not self._isWithinGridBounds(shipX, shipY):
+            clampedX, clampedY = self._clampToGridBounds(shipX, shipY)
+            self.ship.setPos(clampedX, clampedY, 0)
+            # Stop current movement and head toward center
+            self._stopMovement()
+            self._startMovementTo(self._getDirectionAwayFromEdge(), self._getShipSpeed())
+            return Task.again
+        
         # Check for enemies
         enemy, dist = self._findNearestEnemy()
         if enemy and dist < AI_DETECTION_RANGE:
@@ -1662,6 +1796,12 @@ class GameFSMShipAI(FSM.FSM):
                 self.targetDoId = target.doId
                 self.request('Combat')
                 return Task.done
+        
+        # Check if approaching grid edge - turn back
+        if self._isApproachingGridEdge() and not self._isMoving():
+            turnBackDest = self._getDirectionAwayFromEdge()
+            self._startMovementTo(turnBackDest, self._getShipSpeed(combatMode=False))
+            return Task.again
         
         # Continue patrol - start movement if not already moving
         if self._patrolWaypoints and not self._isMoving():
@@ -1698,6 +1838,17 @@ class GameFSMShipAI(FSM.FSM):
             self.ship.uniqueName('wander-update'))
 
     def _wanderUpdate(self, task):
+        # Safety check: if ship is outside grid, immediately move it back
+        shipX = self.ship.getX()
+        shipY = self.ship.getY()
+        if not self._isWithinGridBounds(shipX, shipY):
+            clampedX, clampedY = self._clampToGridBounds(shipX, shipY)
+            self.ship.setPos(clampedX, clampedY, 0)
+            # Stop current movement and head toward center
+            self._stopMovement()
+            self._startMovementTo(self._getDirectionAwayFromEdge(), self._getShipSpeed())
+            return Task.again
+        
         # Check for enemies
         enemy, dist = self._findNearestEnemy()
         if enemy and dist < AI_DETECTION_RANGE:
@@ -1714,6 +1865,12 @@ class GameFSMShipAI(FSM.FSM):
                 self.targetDoId = target.doId
                 self.request('Combat')
                 return Task.done
+        
+        # Check if approaching grid edge - turn back
+        if self._isApproachingGridEdge() and not self._isMoving():
+            turnBackDest = self._getDirectionAwayFromEdge()
+            self._startMovementTo(turnBackDest, self._getShipSpeed(combatMode=False))
+            return Task.again
         
         # Continue wandering - start movement if not already moving
         if self.wanderDestination and not self._isMoving():

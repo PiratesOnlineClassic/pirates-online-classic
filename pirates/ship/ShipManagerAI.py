@@ -9,6 +9,7 @@ from pirates.ship.NPCShipAI import NPCShipAI
 from pirates.ship import ShipGlobals
 from pirates.ship import FlagshipGlobals
 from pirates.world import OceanZone
+from pirates.world import WorldGlobals
 from pirates.piratesbase.PLocalizerEnglish import *
 
 
@@ -115,13 +116,127 @@ class ShipManagerAI:
         self.flagships.discard(ship)
         self.npcShips.discard(ship)
 
-    def _spawnEnemyShip(self, shipClass, isFlagship=False):
+    # =========================================================================
+    # Spawn Position Helpers
+    # =========================================================================
+
+    def _getGridBounds(self):
+        """
+        Get the valid ocean grid boundaries for spawning ships.
+        Ships must spawn within these bounds to have valid zone IDs.
+        
+        Returns: (minX, maxX, minY, maxY) tuple
+        """
+        gridSize = WorldGlobals.OCEAN_GRID_SIZE
+        cellWidth = WorldGlobals.OCEAN_CELL_SIZE
+        halfSize = (gridSize * cellWidth) / 2.0
+        
+        # Add a safety margin to keep ships well within bounds
+        margin = cellWidth * 2  # 2 cells from edge
+        
+        return (-halfSize + margin, halfSize - margin, 
+                -halfSize + margin, halfSize - margin)
+
+    def _isValidSpawnPosition(self, x, y):
+        """
+        Check if a position is valid for spawning a ship.
+        Must be within the Cartesian grid bounds.
+        """
+        minX, maxX, minY, maxY = self._getGridBounds()
+        return minX <= x <= maxX and minY <= y <= maxY
+
+    def _clampToGridBounds(self, x, y):
+        """Clamp coordinates to be within valid grid bounds."""
+        minX, maxX, minY, maxY = self._getGridBounds()
+        clampedX = max(minX, min(maxX, x))
+        clampedY = max(minY, min(maxY, y))
+        return clampedX, clampedY
+
+    def _getValidSpawnPosition(self, oceanGrid, world):
+        """
+        Get a valid spawn position within the Cartesian grid.
+        Tries ocean area manager first, then falls back to random grid position.
+        
+        Returns: (x, y) tuple of valid coordinates
+        """
+        maxAttempts = 10
+        
+        for _ in range(maxAttempts):
+            try:
+                # Try to get position from ocean area manager
+                sx, sy = self.air.worldCreator.oceanAreaManager.getRandomOceanPos(
+                    world.getUniqueId())
+                
+                # Validate it's within grid bounds
+                if self._isValidSpawnPosition(sx, sy):
+                    return sx, sy
+                
+                # If outside bounds, clamp it
+                sx, sy = self._clampToGridBounds(sx, sy)
+                if self._isValidSpawnPosition(sx, sy):
+                    return sx, sy
+                    
+            except Exception as e:
+                pass
+        
+        # Fallback: generate random position within grid bounds
+        minX, maxX, minY, maxY = self._getGridBounds()
+        sx = random.uniform(minX, maxX)
+        sy = random.uniform(minY, maxY)
+        return sx, sy
+
+    def _getIslandPatrolPosition(self, island):
+        """
+        Get a spawn position near an island for patrol ships.
+        Ships will spawn in the outer patrol radius of the island.
+        
+        Args:
+            island: DistributedIslandAI to patrol around
+            
+        Returns: (x, y) tuple or None if invalid
+        """
+        if not island:
+            return None
+        
+        try:
+            islandX = island.getX()
+            islandY = island.getY()
+            
+            # Get island sphere radius (use outer sphere for patrol distance)
+            sphereRadii = getattr(island, 'sphereRadii', None)
+            if sphereRadii and len(sphereRadii) > 2:
+                patrolRadius = sphereRadii[2] + 500  # Just outside outer sphere
+            else:
+                patrolRadius = 3000  # Default patrol distance
+            
+            # Random angle around island
+            import math
+            angle = random.uniform(0, 2 * math.pi)
+            
+            sx = islandX + patrolRadius * math.cos(angle)
+            sy = islandY + patrolRadius * math.sin(angle)
+            
+            # Validate and clamp
+            if not self._isValidSpawnPosition(sx, sy):
+                sx, sy = self._clampToGridBounds(sx, sy)
+            
+            return sx, sy
+            
+        except Exception as e:
+            return None
+
+    # =========================================================================
+    # Ship Spawning
+    # =========================================================================
+
+    def _spawnEnemyShip(self, shipClass, isFlagship=False, spawnNearIsland=None):
         """
         Spawn an NPC enemy ship.
         
         Args:
             shipClass: The ship class from ShipGlobals
             isFlagship: Whether this ship should be marked as a flagship
+            spawnNearIsland: Optional island to spawn near for patrol ships
         """
         # Get ship configuration - use shipClass for all lookups
         shipConfig = ShipGlobals.getShipConfig(shipClass)
@@ -146,14 +261,32 @@ class ShipManagerAI:
         ship.setSp(hullConfig['setSp'][0])
         ship.setHullCondition(1 << 7)
         
-        # Mark as flagship if applicable
+        # Mark as flagship if applicable (use setter before generate, not b_)
         if isFlagship or FlagshipGlobals.isFlagship(shipClass):
-            ship.b_setIsFlagship(1)
+            ship.setIsFlagship(1)
 
         oceanGrid = self.world.oceanGrid
         world = oceanGrid.getParentObj()
-        sx, sy = self.air.worldCreator.oceanAreaManager.getRandomOceanPos(world.getUniqueId())
+        
+        # Get valid spawn position
+        if spawnNearIsland:
+            pos = self._getIslandPatrolPosition(spawnNearIsland)
+            if pos:
+                sx, sy = pos
+            else:
+                sx, sy = self._getValidSpawnPosition(oceanGrid, world)
+        else:
+            sx, sy = self._getValidSpawnPosition(oceanGrid, world)
+        
+        # Get zone ID and validate
         zoneId = oceanGrid.getZoneFromXYZ((sx, sy, 0))
+        
+        # Final validation - if zone is invalid, try center of grid
+        if zoneId < WorldGlobals.OCEAN_GRID_STARTING_ZONE:
+            self.notify.warning('Invalid zone %d for pos (%f, %f), using grid center' % (
+                zoneId, sx, sy))
+            sx, sy = 0, 0
+            zoneId = oceanGrid.getZoneFromXYZ((sx, sy, 0))
 
         oceanGrid.generateChildWithRequired(ship, zoneId)
         ship.setPos(oceanGrid, sx, sy, 0)
@@ -194,6 +327,8 @@ class ShipManagerAI:
             return ship
         except Exception as e:
             self.notify.warning('Exception spawning flagship %s: %s' % (shipClass, e))
+            import traceback
+            traceback.print_exc()
             return None
 
     def _upkeepNPCShipPop(self, task):
