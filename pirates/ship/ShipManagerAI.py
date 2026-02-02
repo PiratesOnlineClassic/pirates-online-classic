@@ -7,12 +7,38 @@ from pirates.ship.DistributedShipAI import DistributedShipAI
 from pirates.ship.PlayerShipAI import PlayerShipAI
 from pirates.ship.NPCShipAI import NPCShipAI
 from pirates.ship import ShipGlobals
+from pirates.ship import FlagshipGlobals
 from pirates.world import OceanZone
 from pirates.piratesbase.PLocalizerEnglish import *
 
 
 NPCSHIP_POP_UPKEEP_DELAY = config.GetFloat('npcship-pop-upkeep-delay', 10.0)
 NPCSHIP_POP_MAX = config.GetInt('npcship-pop-max', 128)
+FLAGSHIP_POP_MAX = config.GetInt('flagship-pop-max', 6)
+FLAGSHIP_SPAWN_DELAY = config.GetFloat('flagship-spawn-delay', 120.0)
+
+
+# Regular NPC ship classes (non-flagship)
+REGULAR_NPC_SHIPS = [
+    ShipGlobals.NAVY_FERRET,
+    ShipGlobals.NAVY_GREYHOUND,
+    ShipGlobals.NAVY_PREDATOR,
+    ShipGlobals.NAVY_BULWARK,
+    ShipGlobals.NAVY_VANGUARD,
+    ShipGlobals.NAVY_MONARCH,
+    ShipGlobals.NAVY_PANTHER,
+    ShipGlobals.NAVY_CENTURION,
+    ShipGlobals.NAVY_DREADNOUGHT,
+    ShipGlobals.EITC_SEA_VIPER,
+    ShipGlobals.EITC_BLOODHOUND,
+    ShipGlobals.EITC_CORSAIR,
+    ShipGlobals.EITC_IRONWALL,
+    ShipGlobals.EITC_OGRE,
+    ShipGlobals.EITC_BEHEMOTH,
+    ShipGlobals.EITC_MARAUDER,
+    ShipGlobals.EITC_WARLORD,
+    ShipGlobals.EITC_JUGGERNAUT,
+]
 
 
 class ShipManagerAI:
@@ -24,8 +50,10 @@ class ShipManagerAI:
 
         self.playerShips = set()
         self.npcShips = set()
+        self.flagships = set()  # Track flagships separately
 
         self.NPCShipUpkeepTask = None
+        self.FlagshipUpkeepTask = None
 
     def hasPlayerShip(self, ship):
         assert(ship is not None)
@@ -73,16 +101,42 @@ class ShipManagerAI:
     def getShips(self):
         return list(self.npcShips)
 
-    def _spawnEnemyShip(self, shipClass):
-        modelClass = ShipGlobals.getModelClass(shipClass)
-        shipConfig = ShipGlobals.getShipConfig(modelClass)
-        hullConfig = ShipGlobals.getHullConfig(modelClass)
+    def getFlagships(self):
+        """Get all active flagships."""
+        return list(self.flagships)
+
+    def addFlagship(self, ship):
+        """Add a flagship to tracking."""
+        self.flagships.add(ship)
+        self.npcShips.add(ship)
+
+    def removeFlagship(self, ship):
+        """Remove a flagship from tracking."""
+        self.flagships.discard(ship)
+        self.npcShips.discard(ship)
+
+    def _spawnEnemyShip(self, shipClass, isFlagship=False):
+        """
+        Spawn an NPC enemy ship.
+        
+        Args:
+            shipClass: The ship class from ShipGlobals
+            isFlagship: Whether this ship should be marked as a flagship
+        """
+        # Get ship configuration - use shipClass for all lookups
+        shipConfig = ShipGlobals.getShipConfig(shipClass)
+        hullConfig = ShipGlobals.getHullConfig(shipClass)
+        
+        # Validate that we got valid configs
+        if shipConfig is None or hullConfig is None:
+            self.notify.warning('Failed to get config for shipClass %s' % shipClass)
+            return None
 
         ship = NPCShipAI(self.air)
         ship.setBaseTeam(ShipGlobals.getShipTeam(shipClass))
         ship.setLevel(1)
         ship.setShipClass(shipConfig['setShipClass'][0])
-        ship.setName(ShipClassNames[shipClass])
+        ship.setName(ShipClassNames.get(shipClass, 'Unknown Ship'))
         ship.setNPCship(1)
         ship.setIsBoardable(1)
 
@@ -91,6 +145,10 @@ class ShipManagerAI:
         ship.setMaxSp(hullConfig['setMaxSp'][0])
         ship.setSp(hullConfig['setSp'][0])
         ship.setHullCondition(1 << 7)
+        
+        # Mark as flagship if applicable
+        if isFlagship or FlagshipGlobals.isFlagship(shipClass):
+            ship.b_setIsFlagship(1)
 
         oceanGrid = self.world.oceanGrid
         world = oceanGrid.getParentObj()
@@ -103,38 +161,65 @@ class ShipManagerAI:
 
         ship.sendCurrentPosition()
         ship.startPosHprBroadcast()
-        ship.b_setGameState('PathFollow', 0)
+        ship.b_setGameState('Patrol', 0)
+        
+        # Track flagships separately
+        if isFlagship or FlagshipGlobals.isFlagship(shipClass):
+            self.addFlagship(ship)
+        
+        return ship
+
+    def _spawnFlagship(self, shipClass=None):
+        """
+        Spawn a flagship. If shipClass is None, picks a random flagship type.
+        Returns the spawned ship or None if spawn failed.
+        """
+        if not FlagshipGlobals.ALL_FLAGSHIPS:
+            self.notify.warning('No flagship classes defined in FlagshipGlobals')
+            return None
+        
+        if shipClass is None:
+            shipClass = random.choice(FlagshipGlobals.ALL_FLAGSHIPS)
+        
+        try:
+            ship = self._spawnEnemyShip(shipClass, isFlagship=True)
+            
+            if ship:
+                self.notify.info('Spawned flagship: %s (doId=%d)' % (
+                    ShipClassNames.get(shipClass, 'Unknown'), ship.doId))
+            else:
+                self.notify.warning('Failed to spawn flagship: %s' % 
+                    ShipClassNames.get(shipClass, 'Unknown'))
+            
+            return ship
+        except Exception as e:
+            self.notify.warning('Exception spawning flagship %s: %s' % (shipClass, e))
+            return None
 
     def _upkeepNPCShipPop(self, task):
         task.delayTime = random.random() * 2.0 + NPCSHIP_POP_UPKEEP_DELAY
 
-        # upkeep the NPC ship population:
-        activeNPCShips = list(self.npcShips)
-        for _ in range(NPCSHIP_POP_MAX - len(activeNPCShips)):
-            self._spawnEnemyShip(random.choice([ShipGlobals.NAVY_FERRET,
-                                                ShipGlobals.NAVY_GREYHOUND,
-                                                ShipGlobals.NAVY_KINGFISHER,
-                                                ShipGlobals.NAVY_PREDATOR,
-                                                ShipGlobals.NAVY_BULWARK,
-                                                ShipGlobals.NAVY_VANGUARD,
-                                                ShipGlobals.NAVY_MONARCH,
-                                                ShipGlobals.NAVY_COLOSSUS,
-                                                ShipGlobals.NAVY_PANTHER,
-                                                ShipGlobals.NAVY_CENTURION,
-                                                ShipGlobals.NAVY_MAN_O_WAR,
-                                                ShipGlobals.NAVY_DREADNOUGHT,
-                                                ShipGlobals.EITC_SEA_VIPER,
-                                                ShipGlobals.EITC_BLOODHOUND,
-                                                ShipGlobals.EITC_BARRACUDA,
-                                                ShipGlobals.EITC_CORSAIR,
-                                                ShipGlobals.EITC_SENTINEL,
-                                                ShipGlobals.EITC_IRONWALL,
-                                                ShipGlobals.EITC_OGRE,
-                                                ShipGlobals.EITC_BEHEMOTH,
-                                                ShipGlobals.EITC_CORVETTE,
-                                                ShipGlobals.EITC_MARAUDER,
-                                                ShipGlobals.EITC_WARLORD,
-                                                ShipGlobals.EITC_JUGGERNAUT]))
+        # Clean up deleted ships from tracking
+        self.npcShips = {s for s in self.npcShips if not s.isEmpty()}
+        self.flagships = {s for s in self.flagships if not s.isEmpty()}
+
+        # upkeep the NPC ship population (excluding flagships):
+        regularShipCount = len(self.npcShips) - len(self.flagships)
+        for _ in range(NPCSHIP_POP_MAX - regularShipCount):
+            self._spawnEnemyShip(random.choice(REGULAR_NPC_SHIPS))
+
+        return task.again
+
+    def _upkeepFlagshipPop(self, task):
+        """Maintain flagship population."""
+        task.delayTime = random.random() * 30.0 + FLAGSHIP_SPAWN_DELAY
+
+        # Clean up deleted flagships
+        self.flagships = {s for s in self.flagships if not s.isEmpty()}
+
+        # Spawn new flagships if below max
+        for _ in range(FLAGSHIP_POP_MAX - len(self.flagships)):
+            self._spawnFlagship()
 
         return task.again
 
@@ -145,6 +230,14 @@ class ShipManagerAI:
         if self.NPCShipUpkeepTask is not None:
             taskMgr.remove(self.NPCShipUpkeepTask)
 
-        # TODO: eventually use unique task names because we will want to setup
-        # a ship spawning task for different worlds too, but this is fine for now.
+        if self.FlagshipUpkeepTask is not None:
+            taskMgr.remove(self.FlagshipUpkeepTask)
+
+        # Start regular NPC ship spawning
         self.NPCShipUpkeepTask = taskMgr.add(self._upkeepNPCShipPop, 'ShipManagerAI-NPCShipUpkeepPop')
+        
+        # Start flagship spawning (delayed start to give world time to load)
+        self.FlagshipUpkeepTask = taskMgr.doMethodLater(
+            30.0,  # Wait 30 seconds before spawning flagships
+            self._upkeepFlagshipPop, 
+            'ShipManagerAI-FlagshipUpkeepPop')

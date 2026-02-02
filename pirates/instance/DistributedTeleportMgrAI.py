@@ -11,7 +11,6 @@ from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.instance.DistributedTeleportZoneAI import DistributedTeleportZoneAI
 from pirates.instance.DistributedTeleportHandlerAI import DistributedTeleportHandlerAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
-from pirates.ship.DistributedShipAI import DistributedShipAI
 
 
 class TeleportOperationFSM(FSM):

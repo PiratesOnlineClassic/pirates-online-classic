@@ -84,8 +84,8 @@ class CameraMode(FSM, DirectObject.DirectObject):
         if 'localAvatar' in __builtins__:
             localAvatar.guiMgr._hideCursor()
         
-        base.win.movePointer(0, base.win.getXSize() / 2, base.win.getYSize() / 2)
-        self.lastMousePos = (base.win.getXSize() / 2, base.win.getYSize() / 2)
+        base.win.movePointer(0, base.win.getXSize() // 2, base.win.getYSize() // 2)
+        self.lastMousePos = (base.win.getXSize() // 2, base.win.getYSize() // 2)
         if self.getCurrentOrNextState() == 'Active':
             self._startMouseControlTasks()
 

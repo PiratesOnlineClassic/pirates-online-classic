@@ -392,16 +392,17 @@ class ShipPilot2(PhysicsWalker):
             avatarRadius = 1.4
             floorOffset = 1.0
             reach = 1.0
-        else:
-            # numeric calling convention
-            self.avatarRadius = avatarRadius
-            self.avatarNodePath = None
-            self.floorOffset = floorOffset
-            self.reach = reach
+
+        # numeric calling convention
+        self.avatarRadius = avatarRadius
+        self.avatarNodePath = None
+        self.floorOffset = floorOffset
+        self.reach = reach
 
         if self.useBowSternSpheres:
             self.frontSphereOffset = length * 0.3
             self.backSphereOffset = -length * 0.7
+        
         self.width = width
         self.length = length
         self.height = height
@@ -530,6 +531,8 @@ class ShipPilot2(PhysicsWalker):
         current walker.
         """
         self.oneTimeCollide()
+        if self.getAirborneHeight is None:
+            return
         self.avatarNodePath.setZ(
             self.avatarNodePath.getZ()-self.getAirborneHeight())
 
@@ -724,7 +727,10 @@ class ShipPilot2(PhysicsWalker):
             self.setPriorParentVector()
             self.needToDeltaPos = 0
 
-        airborneHeight=self.getAirborneHeight()
+        if self.getAirborneHeight is None:
+            airborneHeight = 0.0
+        else:
+            airborneHeight = self.getAirborneHeight()
         if airborneHeight > self.highMark:
             self.highMark = airborneHeight
             if __debug__:

@@ -4,7 +4,14 @@ from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
 from pirates.uberdog.UberDogGlobals import (InventoryCategory, InventoryId,
     InventoryType, getSkillCategory)
 
+
 class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
+    """
+    AI-side inventory implementation.
+    
+    Stores inventory data and synchronizes changes to the client via sendUpdate.
+    Follows the b_set/d_set/set pattern matching the Base class design.
+    """
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInventoryAI')
 
     def __init__(self, air):
@@ -12,7 +19,10 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         DistributedInventoryBase.__init__(self, air)
 
     def generate(self):
-        self.air.inventoryManager.addInventory(self)
+        try:
+            self.air.inventoryManager.addInventory(self)
+        except Exception:
+            self.notify.exception('Failed to register inventory with manager')
         DistributedObjectAI.generate(self)
 
     def announceGenerate(self):
@@ -141,14 +151,17 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
     def hasStackSpace(self, stackType, amount=0):
         limit = self.getStackLimit(stackType)
-        _, stored = self.getStackQuantity(stackType) or (stackType, 0)
+        result = self.getStackQuantity(stackType)
+        stored = result[1] if result else 0
         return limit > (stored + amount)
 
     def d_setTemporaryInventory(self, temporaryInventory):
-        self.sendUpdateToAvatarId(self.ownerId, 'setTemporaryInventory', [temporaryInventory])
+        if self.ownerId:
+            self.sendUpdateToAvatarId(self.ownerId, 'setTemporaryInventory', [temporaryInventory])
 
     def d_setTemporaryStack(self, stackType, amount):
-        self.sendUpdateToAvatarId(self.ownerId, 'setTemporaryStack', [stackType, amount])
+        if self.ownerId:
+            self.sendUpdateToAvatarId(self.ownerId, 'setTemporaryStack', [stackType, amount])
 
     def sendMaxHp(self, limit, avId):
         pass
@@ -157,7 +170,8 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         pass
 
     def d_requestInventoryComplete(self):
-        self.sendUpdateToAvatarId(self.ownerId, 'requestInventoryComplete', [])
+        if self.ownerId:
+            self.sendUpdateToAvatarId(self.ownerId, 'requestInventoryComplete', [])
 
     def populateInventory(self):
         self.d_requestInventoryComplete()
@@ -182,6 +196,9 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.notify.warning('No valid callback for a callback response! What was the purpose of that?')
 
     def delete(self):
-        self.air.inventoryManager.removeInventory(self)
+        try:
+            self.air.inventoryManager.removeInventory(self)
+        except Exception:
+            self.notify.exception('Failed to unregister inventory from manager')
         DistributedObjectAI.delete(self)
         DistributedInventoryBase.delete(self)

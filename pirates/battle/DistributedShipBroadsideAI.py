@@ -116,3 +116,70 @@ class DistributedShipBroadsideAI(DistributedWeaponAI):
 
     def getAmmoType(self):
         return self.ammoType
+
+    def doBroadside(self, side, delays, hitPosList, zoneId, flightTime):
+        """
+        Fire a broadside from the AI.
+        This is used by NPC ships to attack targets.
+        """
+        timestamp = globalClockDelta.getRealNetworkTime(bits=16)
+        self.sendUpdate('doBroadside', [side, delays, hitPosList, zoneId, flightTime, timestamp])
+
+    def fireAtTarget(self, targetShip, side):
+        """
+        Fire a broadside at a target ship.
+        
+        Args:
+            targetShip: The target ship to fire at
+            side: 0 for left, 1 for right
+        """
+        import random
+        
+        if not targetShip:
+            return False
+        
+        ship = self.getShip()
+        if not ship:
+            return False
+        
+        try:
+            # Get target position
+            targetPos = targetShip.getPos()
+            
+            # Get zone for network transmission
+            oceanGrid = ship.getParentObj()
+            if not oceanGrid:
+                return False
+            
+            zoneId = oceanGrid.getZoneFromXYZ(targetPos)
+            zonePos = oceanGrid.getZoneCellOrigin(zoneId)
+            
+            # Calculate relative position
+            relX = targetPos.getX() - zonePos[0]
+            relY = targetPos.getY() - zonePos[1]
+            relZ = targetPos.getZ() - zonePos[2] if hasattr(targetPos, 'getZ') else 0
+            
+            # Get distance for flight time calculation
+            dist = ship.getDistance(targetShip)
+            flightTime = max(1.0, dist / 500.0)  # Approximate flight time
+            
+            # Generate cannon delays and hit positions with spread
+            numCannons = 6  # Typical broadside
+            delays = []
+            hitPosList = []
+            
+            for i in range(numCannons):
+                delays.append(random.uniform(0, 0.5))
+                # Add spread for realism
+                spreadX = random.gauss(0, 25)
+                spreadY = random.gauss(0, 25)
+                spreadZ = random.gauss(0, 10)
+                hitPosList.append((relX + spreadX, relY + spreadY, relZ + spreadZ))
+            
+            # Fire the broadside
+            self.doBroadside(side, delays, hitPosList, zoneId, flightTime)
+            return True
+            
+        except Exception as e:
+            self.notify.warning('Failed to fire broadside at target: %s' % str(e))
+            return False

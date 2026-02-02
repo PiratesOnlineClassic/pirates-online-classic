@@ -105,9 +105,10 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         # this is normally handled by the ShipLoaderUD class on the UberDOG
         # which activates the object (therefor generating it):
         modelClass = ShipGlobals.getModelClass(self.shipClass)
-        shipConfigAll = ShipGlobals.getShipConfigAll(modelClass)
-        shipConfig = ShipGlobals.getShipConfig(modelClass)
-        hullConfig = ShipGlobals.getHullConfig(modelClass)
+        # Use shipClass for all config lookups to get the correct ship-specific data
+        shipConfigAll = ShipGlobals.getShipConfigAll(self.shipClass)
+        shipConfig = ShipGlobals.getShipConfig(self.shipClass)
+        hullConfig = ShipGlobals.getHullConfig(self.shipClass)
         shipTeam = ShipGlobals.getShipTeam(self.shipClass)
         if self.npcShip:
             # Create the ship hull object:

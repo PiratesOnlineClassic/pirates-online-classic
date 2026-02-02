@@ -3718,6 +3718,8 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
     @report(types=['frameCount', 'deltaStamp'], dConfigParam='want-shipboard-report')
     def getClosestBoardingPosH(self):
+        if not self.locators:
+            return None
         allBoardingSpots = self.locators.findAllMatches('**/boarding_spot_*;+s')
         if not allBoardingSpots:
             return None

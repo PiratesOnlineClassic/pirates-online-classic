@@ -1,6 +1,7 @@
 from direct.distributed.DistributedObjectGlobalAI import DistributedObjectGlobalAI
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm.FSM import FSM
+from direct.task import Task
 
 from otp.ai.MagicWordGlobal import *
 
@@ -9,14 +10,24 @@ from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
 
 
 class InventoryOperationFSM(FSM):
+    """
+    Base FSM for AI-side inventory operations.
+    
+    Provides guaranteed cleanup, timeout handling, and safe callback invocation.
+    """
     notify = DirectNotifyGlobal.directNotify.newCategory('InventoryOperationFSM')
+    TIMEOUT_SECONDS = 30.0
 
-    def __init__(self, air, avatar, callback=None):
+    def __init__(self, manager, avatar, callback=None):
         FSM.__init__(self, self.__class__.__name__)
 
-        self.air = air
+        self.manager = manager
+        self.air = manager.air
         self.avatar = avatar
         self.callback = callback
+        self._finished = False
+        avatarId = avatar.doId if avatar else 0
+        self._timeoutTaskName = 'InventoryFSM-AI-timeout-%d-%d' % (id(self), avatarId)
 
     def getAvatarClassName(self):
         return 'DistributedPlayerPirateAI'
@@ -27,38 +38,108 @@ class InventoryOperationFSM(FSM):
     def enterOff(self):
         pass
 
-    def exitOff(Self):
+    def exitOff(self):
         pass
 
-    def cleanup(self, *args, **kwargs):
-        del self.air.inventoryManager.avatar2fsm[self.avatar.doId]
-        self.ignoreAll()
-        self.demand('Off')
+    def enterStart(self):
+        # Start timeout timer
+        taskMgr.doMethodLater(
+            self.TIMEOUT_SECONDS,
+            self._onTimeout,
+            self._timeoutTaskName
+        )
 
+    def exitStart(self):
+        pass
+
+    def _onTimeout(self, task):
+        """Called when operation times out."""
+        if not self._finished:
+            avatarId = self.avatar.doId if self.avatar else 0
+            self.notify.warning('Operation timed out for avatar %d' % avatarId)
+            self._finish(None)
+        return Task.done
+
+    def _finish(self, *args, **kwargs):
+        """
+        Guaranteed cleanup path. Always call this to complete the operation.
+        """
+        if self._finished:
+            return
+        self._finished = True
+
+        # Cancel timeout task
+        taskMgr.remove(self._timeoutTaskName)
+
+        # Clean up any event listeners
+        self.ignoreAll()
+
+        # Unregister from manager safely
+        if hasattr(self, 'manager') and self.manager and self.avatar:
+            self.manager.avatar2fsm.pop(self.avatar.doId, None)
+
+        # Transition to Off state
+        try:
+            self.demand('Off')
+        except Exception:
+            pass
+
+        # Invoke callback safely
         if self.callback:
-            self.callback(*args, **kwargs)
+            try:
+                self.callback(*args, **kwargs)
+            except Exception:
+                avatarId = self.avatar.doId if self.avatar else 0
+                self.notify.exception('Callback failed for avatar %d' % avatarId)
+
+    def cleanup(self, *args, **kwargs):
+        """Legacy method - redirects to _finish for backwards compatibility."""
+        self._finish(*args, **kwargs)
 
 
 class LoadInventoryFSM(InventoryOperationFSM):
+    """Loads an avatar's inventory from the database."""
 
     def enterStart(self):
-        self.air.dbInterface.queryObject(self.air.dbId,
-            self.avatar.doId,
-            callback=self._avatarQueryCallback,
-            dclass=self.air.dclassesByName[self.getAvatarClassName()])
-
-        self.acceptOnce(self.avatar.getDeleteEvent(), lambda: self.cleanup(None))
-
-    def _avatarQueryCallback(self, dclass, fields):
-        if not dclass or not fields:
-            self.notify.debug('Failed to query avatar %d!' % self.avatar.doId)
-            self.cleanup(None)
+        InventoryOperationFSM.enterStart(self)
+        
+        try:
+            self.air.dbInterface.queryObject(self.air.dbId,
+                self.avatar.doId,
+                callback=self._avatarQueryCallback,
+                dclass=self.air.dclassesByName[self.getAvatarClassName()])
+        except Exception:
+            self.notify.exception('Failed to query avatar %d' % self.avatar.doId)
+            self._finish(None)
             return
 
-        inventoryId, = fields.get('setInventoryId', (0,))
+        # Listen for avatar deletion to abort gracefully
+        self.acceptOnce(self.avatar.getDeleteEvent(), self._onAvatarDeleted)
+
+    def _onAvatarDeleted(self):
+        """Handle avatar deletion during load."""
+        if not self._finished:
+            self.notify.debug('Avatar deleted during inventory load')
+            self._finish(None)
+
+    def _avatarQueryCallback(self, dclass, fields):
+        if self._finished:
+            return
+            
+        if not dclass or not fields:
+            self.notify.debug('Failed to query avatar %d!' % self.avatar.doId)
+            self._finish(None)
+            return
+
+        inventoryId = 0
+        try:
+            inventoryId, = fields.get('setInventoryId', (0,))
+        except (ValueError, TypeError):
+            inventoryId = 0
+            
         if not inventoryId:
             self.notify.warning('Avatar %d does not have an inventory!' % self.avatar.doId)
-            self.cleanup(None)
+            self._finish(None)
             return
 
         inventory = self.air.doId2do.get(inventoryId)
@@ -68,25 +149,38 @@ class LoadInventoryFSM(InventoryOperationFSM):
             self._inventoryArrivedCallback(inventory)
 
     def finalizeInventory(self):
-        self.inventory.b_setStackLimit(InventoryType.Hp, self.avatar.getMaxHp())
-        self.inventory.b_setStackLimit(InventoryType.Mojo, self.avatar.getMaxMojo())
+        if not self.inventory or not self.avatar:
+            return
+        try:
+            self.inventory.b_setStackLimit(InventoryType.Hp, self.avatar.getMaxHp())
+            self.inventory.b_setStackLimit(InventoryType.Mojo, self.avatar.getMaxMojo())
+        except Exception:
+            self.notify.exception('Failed to finalize inventory')
 
     def _inventoryArrivedCallback(self, inventory):
+        if self._finished:
+            return
+            
         self.inventory = inventory
         if not inventory:
             self.notify.warning('Failed to retrieve inventory for avatar %d' % self.avatar.doId)
-            self.cleanup(None)
+            self._finish(None)
             return
 
-        self.finalizeInventory()
-        self.inventory.populateInventory()
-        self.cleanup(self.inventory)
+        try:
+            self.finalizeInventory()
+            self.inventory.populateInventory()
+        except Exception:
+            self.notify.exception('Failed to populate inventory for avatar %d' % self.avatar.doId)
+            
+        self._finish(self.inventory)
 
     def exitStart(self):
         pass
 
 
 class LoadShipInventoryFSM(LoadInventoryFSM):
+    """Loads a ship's inventory from the database."""
 
     def getAvatarClassName(self):
         return 'PlayerShipAI'
@@ -99,65 +193,107 @@ class LoadShipInventoryFSM(LoadInventoryFSM):
 
 
 class DistributedInventoryManagerAI(DistributedObjectGlobalAI):
+    """
+    AI-side inventory manager.
+    
+    Manages inventory loading and caching. Responds to netMessenger queries
+    from the UberDog and provides inventory lookup for the AI.
+    """
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInventoryManagerAI')
 
     def __init__(self, air):
         DistributedObjectGlobalAI.__init__(self, air)
-
         self.avatar2fsm = {}
         self.inventories = {}
 
     def announceGenerate(self):
         DistributedObjectGlobalAI.announceGenerate(self)
-
         self.air.netMessenger.accept('hasInventory', self, self.sendHasInventory)
         self.air.netMessenger.accept('addInventory', self, self.addInventory)
         self.air.netMessenger.accept('removeInventory', self, self.removeInventory)
         self.air.netMessenger.accept('getInventory', self, self.sendGetInventory)
 
+    def delete(self):
+        # Clean up any pending FSMs
+        for fsm in list(self.avatar2fsm.values()):
+            try:
+                fsm._finish(None)
+            except Exception:
+                pass
+        self.avatar2fsm.clear()
+        DistributedObjectGlobalAI.delete(self)
+
+    def hasPendingOperation(self, entityId):
+        """Check if an operation is already running for this entity."""
+        return entityId in self.avatar2fsm
+
     def hasInventory(self, inventoryId):
-        return inventoryId in list(self.inventories)
+        return inventoryId in self.inventories
 
     def sendHasInventory(self, inventoryId, callback):
         self.air.netMessenger.send('hasInventoryResponse', [callback,
             self.hasInventory(inventoryId)])
 
     def addInventory(self, inventory):
+        if inventory is None:
+            return
         if self.hasInventory(inventory.doId):
             self.notify.debug('Tried to add an already existing inventory %d!' % inventory.doId)
             return
-
         self.inventories[inventory.doId] = inventory
 
     def removeInventory(self, inventory):
+        if inventory is None:
+            return
         if not self.hasInventory(inventory.doId):
             self.notify.debug('Tried to remove a non-existant inventory %d!' % inventory.doId)
             return
-
-        inventory.requestDelete()
-        del self.inventories[inventory.doId]
+        try:
+            inventory.requestDelete()
+        except Exception:
+            self.notify.exception('Failed to delete inventory %d' % inventory.doId)
+        self.inventories.pop(inventory.doId, None)
 
     def getInventory(self, avatarId):
         for inventory in list(self.inventories.values()):
-            if inventory.getOwnerId() == avatarId:
-                return inventory
-
+            try:
+                if inventory.getOwnerId() == avatarId:
+                    return inventory
+            except Exception:
+                continue
         return None
 
     def sendGetInventory(self, avatarId, callback):
         self.air.netMessenger.send('getInventoryResponse', [callback, self.getInventory(avatarId)])
 
     def runInventoryFSM(self, fsmtype, avatar, *args, **kwargs):
+        if avatar is None:
+            self.notify.warning('Cannot run FSM for None avatar')
+            callback = kwargs.get('callback')
+            if callback:
+                try:
+                    callback(None)
+                except Exception:
+                    pass
+            return False
+            
         if avatar.doId in self.avatar2fsm:
             self.notify.debug('Failed to run inventory FSM for avatar %d, '
                 'an FSM already running!' % avatar.doId)
-
-            return
+            # Call the callback with failure to avoid leaving caller hanging
+            callback = kwargs.get('callback')
+            if callback:
+                try:
+                    callback(None)
+                except Exception:
+                    pass
+            return False
 
         callback = kwargs.pop('callback', None)
-
-        self.avatar2fsm[avatar.doId] = fsmtype(self.air, avatar, callback)
-        self.avatar2fsm[avatar.doId].request('Start', *args, **kwargs)
+        fsm = fsmtype(self, avatar, callback)
+        self.avatar2fsm[avatar.doId] = fsm
+        fsm.request('Start', *args, **kwargs)
+        return True
 
     def requestInventory(self):
         avatarId = self.air.getAvatarIdFromSender()
