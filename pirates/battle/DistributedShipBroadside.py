@@ -462,6 +462,10 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
         if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
             muzzleFlameEffect = MuzzleFlame.getEffect()
             if muzzleFlameEffect:
+                # Detach from any previous parent before reparenting
+                muzzleFlameEffect.detachNode()
+                if hasattr(muzzleFlameEffect, 'particleDummy') and muzzleFlameEffect.particleDummy:
+                    muzzleFlameEffect.particleDummy.detachNode()
                 muzzleFlameEffect.reparentTo(self.effectNode)
                 muzzleFlameEffect.particleDummy.reparentTo(self.effectNode)
                 muzzleFlameEffect.flash.setScale(100)

@@ -398,9 +398,6 @@ class Human(HumanBase.HumanBase, Biped.Biped):
         if self.loaded:
             self.cleanupHuman()
 
-        if other == self and hasattr(self, 'generateBody'):
-            self.generateBody()
-
         self.loadHuman(other)
         if self.isLocal():
             self.renderReflection = True

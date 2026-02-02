@@ -1195,25 +1195,32 @@ class GameFSMShipAI(FSM.FSM):
 
     def _turnTowardTarget(self, target):
         """
-        Immediately turn the ship to face toward the target.
+        Smoothly turn the ship to face toward the target using an HprInterval.
         Used when initially responding to an attack.
         """
         if not target:
             return
-        
         try:
             # Calculate heading to target
             shipPos = self.ship.getPos()
             targetPos = target.getPos()
             dx = targetPos.getX() - shipPos.getX()
             dy = targetPos.getY() - shipPos.getY()
-            
             # Calculate heading (Panda3D: 0 = +Y, 90 = -X)
             headingToTarget = -math.degrees(math.atan2(dx, dy))
-            
-            # Set ship heading to face target directly
-            self.ship.setH(headingToTarget)
-        except:
+            currentH = self.ship.getH()
+            angleDiff = headingToTarget - currentH
+            # Normalize angle to [-180, 180]
+            angleDiff = (angleDiff + 180) % 360 - 180
+            targetH = currentH + angleDiff
+            duration = self._getRotationDuration(angleDiff)
+            # Stop any previous turn interval
+            if hasattr(self, '_turnInterval') and self._turnInterval:
+                self._turnInterval.finish()
+
+            self._turnInterval = self.ship.hprInterval(duration, (targetH, 0, 0))
+            self._turnInterval.start()
+        except Exception as e:
             pass
 
     def _selectBestTarget(self):
@@ -2521,51 +2528,53 @@ class GameFSMShipAI(FSM.FSM):
 
     def _fireIndividualCannon(self, target, cannonIndex, dist):
         """
-        Fire a single cannon at the target and apply damage.
+        Fire a single cannon at the target and apply damage, with a miss/fail rate.
         Uses the actual DistributedShipCannonAI to trigger visual effects on clients.
         """
         if not target or not self._isValidTarget(target):
             return
-        
         try:
+            # Add a miss/fail rate for enemy cannons
+            MISS_CHANCE = 0.25  # 25% chance to miss
+            if random.random() < MISS_CHANCE:
+                # Simulate a miss: fire the cannon visually, but do not apply damage
+                if cannonIndex < len(self.ship.cannons):
+                    cannon = self.ship.cannons[cannonIndex]
+                    if hasattr(cannon, 'fireAtPosition'):
+                        targetPos = target.getPos()
+                        miss_offset = random.uniform(100, 300)
+                        from panda3d.core import Point3
+                        aimPos = Point3(targetPos.getX() + miss_offset, targetPos.getY() + miss_offset, targetPos.getZ())
+                        cannon.fireAtPosition(aimPos)
+                return
             # Get the actual cannon distributed object
             if cannonIndex < len(self.ship.cannons):
                 cannon = self.ship.cannons[cannonIndex]
-                
                 # Get target position with some spread for realism
-                import random
                 targetPos = target.getPos()
                 spreadX = random.gauss(0, 15)
                 spreadY = random.gauss(0, 15)
                 spreadZ = random.gauss(0, 5)
-                
                 from panda3d.core import Point3
                 aimPos = Point3(
                     targetPos.getX() + spreadX,
                     targetPos.getY() + spreadY,
                     targetPos.getZ() + spreadZ if hasattr(targetPos, 'getZ') else spreadZ
                 )
-                
                 # Fire the cannon (sends visual effect to clients)
                 if hasattr(cannon, 'fireAtPosition'):
                     cannon.fireAtPosition(aimPos)
-            
             # Calculate accuracy based on distance
             accuracy = max(0.3, 1.0 - (dist / AI_CANNON_DIST_RANGE) * 0.5)
-            
-            import random
             if random.random() > accuracy:
                 # Miss - no damage but visual was still fired
                 return
-            
             # Calculate damage
             baseDamage = AI_INDIVIDUAL_CANNON_DAMAGE
             levelMod = self._getLevelBasedDamageModifier(target)
             distMod = self._calculateDamageFalloff(dist)
             _, damageOutMod = self._getNPCDamageModifiers()
-            
             totalDamage = int(baseDamage * levelMod * distMod * damageOutMod)
-            
             if totalDamage > 0:
                 # Apply damage to target
                 if hasattr(target, 'takeDamage'):

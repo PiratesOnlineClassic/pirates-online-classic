@@ -58,26 +58,7 @@ class DistributedPiratesTutorialAI(DistributedObjectAI, FSM):
 
         # complete the quest
         self.air.questMgr.completeQuest(avatar, self.quest)
-
-        # Create the first tutorial quest (Chapter1.rung1)
-        # The quest has no tasks, just finalizeInfo with the cutscenes
-        def _questCreated(quest=None):
-            if not quest:
-                self.notify.warning('Failed to create first quest for avatar %d' % self.avatarId)
-                return
-
-            self.notify.info('First second created for avatar %d, triggering cutscene' % self.avatarId)
-            
-            # Trigger the finalize cutscene (Jack Sparrow jail break)
-            # The quest has 2 cutscene stages: 1.1.1 and 1.1.2
-            # No NPC giver for this quest (player is alone in jail cell)
-            self.quest = quest
-            self.air.questMgr.finalizeCutscene(avatar, quest, finalizeIndex=0, npc=None)
-
-            # Send response to trigger fade in on client
-            self.d_makeAPirateCompleteResp()
-
-        self.air.questMgr.createQuest(avatar, TutorialGlobals.SECOND_QUEST, callback=_questCreated)
+        self.d_makeAPirateCompleteResp()
 
     def autoVisit(self, npcDoId):
         """Client triggered an auto-visit with an NPC"""
@@ -214,7 +195,7 @@ class DistributedPiratesTutorialAI(DistributedObjectAI, FSM):
                 interior.parentId,
                 interior.zoneId,
                 interior.doId,
-                autoFadeIn=True
+                autoFadeIn=false
             )
             self.notify.info('Sent avatar %d into jail interior via door' % self.avatarId)
         else:

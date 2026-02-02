@@ -38,7 +38,6 @@ class MuzzleFlame(PooledEffect, EffectController):
         self.flash.reparentTo(self)
         self.flash.hide()
         self.f = ParticleEffect.ParticleEffect('MuzzleFlame')
-        self.f.reparentTo(self)
         self.p0 = Particles.Particles('particles-1')
         self.p0.setFactory('ZSpinParticleFactory')
         self.p0.setRenderer('SpriteParticleRenderer')
@@ -93,12 +92,15 @@ class MuzzleFlame(PooledEffect, EffectController):
         fadeBlast = self.flash.colorScaleInterval(0.2, Vec4(0, 0, 0, 0), startColorScale = self.startCol, blendType = 'easeOut')
         scaleBlast = self.flash.scaleInterval(0.2, 10, blendType = 'easeIn')
         self.playFlash = Sequence(Func(self.flash.show), Parallel(fadeBlast, scaleBlast), Func(self.flash.hide), Func(self.flash.setScale, 25), Func(self.flash.setColorScale, Vec4(1, 1, 1, 1)))
-        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy), Func(self.f.reparentTo, self))
+        self.startEffect = Sequence(Func(self.p0.setBirthRate, 0.01), Func(self.p0.clearToInitial), Func(self.f.start, self, self.particleDummy))
         self.endEffect = Sequence(Func(self.p0.setBirthRate, 100), Wait(1.5), Func(self.cleanUpEffect))
         self.track = Parallel(Sequence(self.startEffect, Wait(0.15), self.endEffect), self.playFlash)
     
     def cleanUpEffect(self):
         self.ignore('timeOfDayChange')
+        self.detachNode()
+        if hasattr(self, 'particleDummy') and self.particleDummy:
+            self.particleDummy.detachNode()
         EffectController.cleanUpEffect(self)
         if self.pool.isUsed(self):
             self.pool.checkin(self)

@@ -1,3 +1,6 @@
+# CSM
+accountdb-type developer
+
 # Hacking Checks
 want-treasurechest-inactive-log #f
 

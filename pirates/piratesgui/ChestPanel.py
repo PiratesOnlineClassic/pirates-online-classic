@@ -53,7 +53,7 @@ class ChestPanel(DirectFrame):
         self.showIval = None
         self.destZ = 0.8
         self.active = False
-        self.currPageIndex = None
+        self.currPageIndex = 0
         self.pages = []
         self.pageTabs = []
         self.accept('page_down', self.__pageChange, [1])
@@ -127,7 +127,7 @@ class ChestPanel(DirectFrame):
             self.pages.append(page)
         else:
             self.pages.insert(index, page)
-            if self.currPageIndex >= index:
+            if self.currPageIndex is not None and self.currPageIndex >= index:
                 self.currPageIndex += 1
 
     def removePage(self, page):

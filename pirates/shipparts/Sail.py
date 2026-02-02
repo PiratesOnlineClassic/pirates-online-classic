@@ -760,7 +760,7 @@ class SailFSM(FSM.FSM):
         
         self.sail.setTargetBitmask(0)
         self.oldBound = self.sail.sailActor.node().getBounds()
-        self.sail.sailActor.node().setBound(OmniBoundingVolume())
+        self.sail.sailActor.node().setBounds(OmniBoundingVolume())
         self.sail.sailActor.node().setFinal(1)
         if self.ival:
             self.ival.pause()

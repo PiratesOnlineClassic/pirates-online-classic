@@ -179,6 +179,7 @@ class Cannon(ShipPart.ShipPart, NodePath):
                 muzzleFlameEffect = MuzzleFlame.getEffect()
                 if muzzleFlameEffect:
                     muzzleFlameEffect.reparentTo(effectParent)
+                    muzzleFlameEffect.particleDummy.detachNode()
                     muzzleFlameEffect.particleDummy.reparentTo(effectParent)
                     muzzleFlameEffect.flash.setScale(18)
                     muzzleFlameEffect.setHpr(effectParent, effectH, effectP, 0)
@@ -209,7 +210,7 @@ class Cannon(ShipPart.ShipPart, NodePath):
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 muzzleFlameEffect = MuzzleFlame.getEffect()
                 if muzzleFlameEffect:
-                    muzzleFlameEffect.reparentTo(effectParent)
+                    muzzleFlameEffect.particleDummy.detachNode()
                     muzzleFlameEffect.particleDummy.reparentTo(effectParent)
                     muzzleFlameEffect.flash.setScale(45)
                     muzzleFlameEffect.setHpr(effectParent, effectH, effectP, 0)

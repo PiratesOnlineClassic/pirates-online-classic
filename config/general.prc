@@ -20,7 +20,7 @@ aux-display p3tinydisplay
 # Audio:
 audio-music-active #t
 low-memory-stream-audio #t
-audio-library-name p3fmod_audio
+audio-library-name p3openal_audio
 audio-output-rate 44100
 
 # Models:
@@ -98,15 +98,15 @@ framebuffer-srgb #f
 
 # Animation:
 anim-blend-type normalized_linear
-hardware-animated-vertices #f
+hardware-animated-vertices #t
 
 # Performance:
 lock-to-one-cpu #f
 lock-to-one-core #f
 
 # Tutorial:
-skip-tutorial #t
-force-tutorial #f
+skip-tutorial #f
+force-tutorial #t
 force-tutorial-complete #f
 
 # Water:
@@ -123,7 +123,7 @@ support-threads #t
 empty-node-path future
 
 # Membership:
-want-membership #t
+want-membership #f
 
 # Islands:
 want-island-barriers #t

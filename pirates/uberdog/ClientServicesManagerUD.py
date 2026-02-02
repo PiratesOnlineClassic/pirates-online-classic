@@ -85,8 +85,7 @@ class AccountDB:
     def __init__(self, csm):
         self.csm = csm
 
-        filename = base.config.GetString(
-            'account-bridge-filename', 'astron/databases/account-bridge')
+        filename = base.config.GetString('account-bridge-filename', 'astron/databases/account-bridge')
         self.dbm = semidbm.open(filename, 'c')
 
     def addNameRequest(self, avId, name):
@@ -116,8 +115,7 @@ class DeveloperAccountDB(AccountDB):
 
     def lookup(self, username, callback):
         # Let's check if this user's ID is in your account database bridge:
-        if str(username) not in self.dbm:
-
+        if username.encode() not in self.dbm:
             # Nope. Let's associate them with a brand new Account object! We
             # will assign them with 600 access just because they are a
             # developer:
@@ -149,8 +147,7 @@ class LocalAccountDB(AccountDB):
 
     def lookup(self, username, callback):
         # Let's check if this user's ID is in your account database bridge:
-        if str(username) not in self.dbm:
-
+        if username.encode() not in self.dbm:
             # Nope. Let's associate them with a brand new Account object!
             response = {
                 'success': True,
