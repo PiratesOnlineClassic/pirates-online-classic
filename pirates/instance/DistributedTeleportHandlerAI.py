@@ -39,6 +39,7 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
             self.notify.warning('Cannot finish teleport for avatar %d, '
                 'invalid spawn zone %d!' % (self.avatar.doId, zoneId))
 
+            self.d_abortTeleport()
             self.teleportFsm.cleanup()
             return
 
@@ -51,3 +52,29 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
         self.avatar.b_setGameState('Spawn')
         self.teleportFsm.cleanup()
         messenger.send('teleportDone-%d' % self.avatar.doId)
+
+    def continueTeleportToTZ(self):
+        """
+        Called by the client to continue the teleport process after entering the teleport zone.
+        The client may call this if it needs to signal readiness to proceed.
+        """
+        # The teleport process is already ongoing, this is just an acknowledgment
+        # that the client is ready in the TZ. In most cases, the flow continues
+        # automatically via waitInTZ, so this is a no-op unless we need to handle
+        # specific timing issues.
+        pass
+
+    def avatarLeft(self):
+        """
+        Called by the client when the avatar leaves during teleport (e.g., teleport aborted).
+        This should clean up the teleport FSM and associated objects.
+        """
+        self.notify.debug('Avatar %d left during teleport, cleaning up...' % self.avatar.doId)
+        self.teleportFsm.cleanup()
+
+    def d_abortTeleport(self):
+        """
+        Send abort teleport message to the client. Called when the AI needs to cancel
+        the teleport process due to an error or invalid state.
+        """
+        self.sendUpdateToAvatarId(self.avatar.doId, 'abortTeleport', [])

@@ -38,7 +38,8 @@ class TeleportOperationFSM(FSM):
         pass
 
     def cleanup(self):
-        del self.air.teleportMgr.avatar2fsm[self.avatar.doId]
+        if self.avatar.doId in self.air.teleportMgr.avatar2fsm:
+            del self.air.teleportMgr.avatar2fsm[self.avatar.doId]
         self.ignoreAll()
         self.demand('Off')
 
@@ -74,6 +75,14 @@ class TeleportFSM(TeleportOperationFSM):
             self.teleportHandler.doId, 0, self.teleportZone.parentId, self.teleportZone.zoneId)
 
     def enterTeleporting(self):
+        # Notify the client that teleport is beginning (triggers loading screen and startedCallback)
+        self.avatar.d_beginningTeleport(
+            self.world.getType(),
+            0,  # fromInstanceType - will be set properly by client
+            self.world.getFileName(),
+            -1  # gameType
+        )
+
         teleportZoneDoId = self.air.allocateChannel()
         self.acceptOnce('generate-%d' % teleportZoneDoId,
             self.__teleportZoneArrivedCallback)
@@ -210,6 +219,33 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
             return
 
+        # Import here to avoid circular imports
+        from pirates.ship.DistributedShipAI import DistributedShipAI
+
+        # If friendDoId is set, we're teleporting to a friend - get their location
+        if friendDoId:
+            friend = self.air.doId2do.get(friendDoId)
+            if friend:
+                friendParent = friend.getParentObj()
+                if friendParent:
+                    # Check if the friend is on a ship
+                    if isinstance(friendParent, DistributedShipAI):
+                        # Teleport to the ship instead
+                        friendAreaDoId = friendParent.doId
+                    elif hasattr(friendParent, 'getUniqueId'):
+                        locationUid = friendParent.getUniqueId()
+
+        # If friendAreaDoId is set (e.g., teleporting to a ship), handle ship teleport
+        if friendAreaDoId:
+            areaObj = self.air.doId2do.get(friendAreaDoId)
+            if areaObj:
+                if isinstance(areaObj, DistributedShipAI):
+                    # Ship teleport - send the client the ship's location so they can board
+                    self.d_localTeleportToIdResponse(avatar.doId, areaObj.parentId, areaObj.zoneId)
+                    return
+                elif hasattr(areaObj, 'getUniqueId'):
+                    locationUid = areaObj.getUniqueId()
+
         self.d_initiateTeleport(avatar, instanceType, instanceName, locationUid)
 
     def requestTeleportToIsland(self, locationUid):
@@ -218,6 +254,64 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             return
 
         self.d_initiateTeleport(avatar, locationUid=locationUid)
+
+    def requestCrossShardDeploy(self, shardId, islandUid, shipId):
+        """
+        Handle a request to deploy a ship and teleport the avatar to it on a different shard.
+        This is typically used when on a Welcome Shard and selecting a ship to deploy.
+        """
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        if not islandUid or not shipId:
+            self.notify.warning('Cannot process cross shard deploy for avatar %d, '
+                'missing islandUid or shipId!' % self.air.getAvatarIdFromSender())
+            return
+
+        # If no shard specified or the shard is our own, handle locally
+        if not shardId or shardId == self.air.districtId:
+            # Deploy the ship locally and then teleport the avatar to it
+            self._handleLocalCrossShardDeploy(avatar, islandUid, shipId)
+        else:
+            # Forward to the UD for cross-shard handling
+            # TODO: Implement cross-shard deploy via UD
+            self.notify.warning('Cross-shard deploy to different shard %d not yet implemented!' % shardId)
+
+    def _handleLocalCrossShardDeploy(self, avatar, islandUid, shipId):
+        """
+        Handle deploying a ship and teleporting the avatar to it on this shard.
+        """
+        # Find the game area (island) for this island UID
+        from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
+        
+        gameArea = None
+        for obj in list(self.air.doId2do.values()):
+            if isinstance(obj, DistributedGameAreaAI) and obj.getUniqueId() == islandUid:
+                gameArea = obj
+                break
+        
+        if not gameArea:
+            self.notify.warning('Cannot process cross shard deploy for avatar %d, '
+                'cannot find gameArea for islandUid %s!' % (avatar.doId, islandUid))
+            return
+        
+        # Get the ship deployer from the island (gameArea), not the world
+        if not hasattr(gameArea, 'shipDeployer') or not gameArea.shipDeployer:
+            self.notify.warning('Cannot process cross shard deploy for avatar %d, '
+                'no ship deployer available on island!' % avatar.doId)
+            return
+        
+        def deployShipCallback(success):
+            if not success:
+                self.notify.warning('Cross shard deploy failed for avatar %d!' % avatar.doId)
+                return
+            
+            # After deploy, teleport to the island
+            self.d_initiateTeleport(avatar, locationUid=islandUid)
+        
+        # Deploy the ship via the island's ship deployer
+        gameArea.shipDeployer.deployShip(avatar, shipId, deployShipCallback)
 
     def d_teleportHasBegun(self, avatarId, instanceType, fromInstanceType, instanceName, gameType):
         self.sendUpdateToAvatarId(avatarId, 'teleportHasBegun', [instanceType, fromInstanceType,
@@ -239,6 +333,13 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
     def d_localTeleportToIdResponse(self, avatarId, parentId, zoneId):
         self.sendUpdateToAvatarId(avatarId, '_localTeleportToIdResponse', [parentId, zoneId])
+
+    def d_teleportToIslandResponse(self, avatarId, instanceDoId, islandDoId):
+        """
+        Send a teleport to island response to the client. This is an alternative
+        to the full teleport flow for simple island-to-island teleports.
+        """
+        self.sendUpdateToAvatarId(avatarId, 'teleportToIslandResponse', [instanceDoId, islandDoId])
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])

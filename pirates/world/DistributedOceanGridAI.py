@@ -26,11 +26,11 @@ class DistributedOceanGridAI(DistributedCartesianGridAI, OceanGridBase):
         assert(av is not None)
         self.removeObjectFromGrid(av)
 
-    #def handleChildArrive(self, childObj, zoneId):
-    #    if isinstance(childObj, DistributedMovingObjectAI):
-    #        self.addObjectToOceanGrid(childObj)
-    #
-    #    DistributedNodeAI.handleChildArrive(self, childObj, zoneId)
+    def handleChildArrive(self, childObj, zoneId):
+        if isinstance(childObj, DistributedMovingObjectAI):
+            self.addObjectToOceanGrid(childObj)
+    
+        DistributedCartesianGridAI.handleChildArrive(self, childObj, zoneId)
 
     def handleChildLeave(self, childObj, zoneId):
         if isinstance(childObj, DistributedMovingObjectAI):

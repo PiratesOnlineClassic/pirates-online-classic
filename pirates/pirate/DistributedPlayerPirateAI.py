@@ -200,6 +200,13 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def d_forceTeleportStart(self, instanceName, tzDoId, thDoId, worldGridDoId, tzParent, tzZone):
         self.sendUpdateToAvatarId(self.doId, 'forceTeleportStart', [instanceName, tzDoId, thDoId, worldGridDoId, tzParent, tzZone])
 
+    def d_beginningTeleport(self, instanceType, fromInstanceType, instanceName, gameType):
+        """
+        Notify the client that a teleport is beginning. This triggers the loading screen
+        and calls the startedCallback on the client's teleport manager.
+        """
+        self.sendUpdateToAvatarId(self.doId, 'beginningTeleport', [instanceType, fromInstanceType, instanceName, gameType])
+
     def d_setTutorialHandlerZone(self, handlerZoneId):
         self.sendUpdateToAvatarId(self.doId, 'setTutorialHandlerZone', [handlerZoneId])
 
