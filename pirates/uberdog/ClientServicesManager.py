@@ -95,3 +95,9 @@ class ClientServicesManager(DistributedObjectGlobal):
 
     def sendChooseAvatar(self, avId):
         self.sendUpdate('chooseAvatar', [avId])
+
+    def sendPopulateAvatar(self, avId, dna, usePattern, p1, p2, p3, p4):
+        self.sendUpdate('populateAvatar', [avId, dna.makeNetString(), usePattern, p1, p2, p3, p4])
+
+    def populateAvatarResp(self, success):
+        messenger.send('avatarPopulated', [success])

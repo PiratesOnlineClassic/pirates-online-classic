@@ -105,8 +105,8 @@ lock-to-one-cpu #f
 lock-to-one-core #f
 
 # Tutorial:
-skip-tutorial #f
-force-tutorial #t
+skip-tutorial #t
+force-tutorial #f
 force-tutorial-complete #f
 
 # Water:

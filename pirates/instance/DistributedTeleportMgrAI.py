@@ -158,12 +158,37 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             world = self.getWorld(instanceType, instanceName)
 
         if not world or not isinstance(world, DistributedInstanceBaseAI):
+            # If this is a tutorial world that doesn't exist yet, trigger tutorial creation
+            if instanceType == PiratesGlobals.INSTANCE_TUTORIAL:
+                # Verify the player actually needs the tutorial (hasn't completed it)
+                tutorialState = avatar.getTutorial()
+                if tutorialState >= PiratesGlobals.TUT_MET_JOLLY_ROGER:
+                    self.notify.warning('Avatar %d has tutorial state %d, skipping tutorial creation' % (avatar.doId, tutorialState))
+                    return
+
+                if avatar.doId not in self.air.tutorialManager.avatar2fsm:
+                    self.notify.info('Tutorial world not found, initiating tutorial creation for avatar %d (tutorialState=%d)' % (avatar.doId, tutorialState))
+                    self.air.tutorialManager._requestTutorial(avatar)
+                    return
+                else:
+                    # Tutorial is already in progress, don't recursively call
+                    self.notify.warning('Tutorial already in progress for avatar %d, waiting...' % avatar.doId)
+                    return
+
             self.notify.warning('Cannot initiate teleport for unknown world: '
                 'instanceType=%r instanceName=%r' % (instanceType, instanceName))
 
             return
 
         gameArea = world.builder.getObject(uniqueId=locationUid)
+        if not gameArea:
+            # Try looking up the object via uidMgr (for interiors, etc.)
+            objectDoId = self.air.uidMgr.getDoId(locationUid)
+            if objectDoId:
+                gameArea = self.air.doId2do.get(objectDoId)
+                if gameArea:
+                    self.notify.info('Found gameArea via uidMgr: %s' % gameArea)
+
         if not gameArea:
             # Attempt to select a default island if no area was supplied
             islands = world.builder.getIslands()

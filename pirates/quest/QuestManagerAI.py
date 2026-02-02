@@ -151,8 +151,8 @@ class CreateQuestFSM(CreateQuestsFSM):
 
         def _questActivatedCallback(quest):
             if not quest:
-                self.notify.warning('Failed to activate quest %d for avatar %d, '
-                    'quest failed to generate!' % (quest.doId, self.avatar.doId))
+                self.notify.warning('Failed to activate quest for avatar %d, '
+                    'quest failed to generate!' % self.avatar.doId)
 
                 self.cleanup()
                 return
@@ -165,8 +165,8 @@ class CreateQuestFSM(CreateQuestsFSM):
             # update the avatar's active quest
             self.avatar.b_setActiveQuest(quest.getQuestId())
 
-            # we're done
-            self.cleanup()
+            # we're done - pass the quest to the callback
+            self.cleanup(quest)
 
         def _questCreatedCallback(questDoId):
             if not self.activateQuestEntry(questDoId, _questActivatedCallback):

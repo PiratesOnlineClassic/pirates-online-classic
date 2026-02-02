@@ -29,9 +29,9 @@ want-dev-hotkeys #f
 want-avatar-physics-indicator #f
 
 # Tutorial:
-skip-tutorial #t
-force-tutorial #f
-force-tutorial-complete #t
+skip-tutorial #f
+force-tutorial #t
+force-tutorial-complete #f
 
 # Quests:
 disable-blockers #t

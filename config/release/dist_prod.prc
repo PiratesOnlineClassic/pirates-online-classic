@@ -137,7 +137,7 @@ disable-server-queueing #t
 show-total-population #t
 
 # Tutorial:
-skip-tutorial #t
+skip-tutorial #f
 force-tutorial #f
 ignore-teleport-requirements #t
 force-tutorial-complete #t

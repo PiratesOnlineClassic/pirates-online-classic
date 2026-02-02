@@ -1055,6 +1055,118 @@ class UnloadAvatarFSM(OperationFSM):
         self.csm.air.writeServerEvent('avatarUnload', avId=self.avId)
         self.demand('Off')
 
+
+class PopulateAvatarFSM(AvatarOperationFSM):
+    notify = directNotify.newCategory('PopulateAvatarFSM')
+    POST_ACCOUNT_STATE = 'RetrieveAvatar'
+
+    def enterStart(self, avId, dna, usePattern, p1, p2, p3, p4):
+        self.avId = avId
+        self.dna = dna
+        self.usePattern = usePattern
+        # p1=nick, p2=first, p3=prefix, p4=suffix (indices into name lists)
+        self.p1 = p1
+        self.p2 = p2
+        self.p3 = p3
+        self.p4 = p4
+
+        # Validate the DNA
+        if not HumanDNA().isValidNetString(dna):
+            self.demand('Kill', 'Invalid DNA specified!')
+            return
+
+        self.demand('RetrieveAccount')
+
+    def enterRetrieveAvatar(self):
+        if self.avId not in self.avList:
+            self.demand('Kill', 'Tried to populate an avatar not in the account!')
+            return
+
+        self.csm.air.dbInterface.queryObject(self.csm.air.dbId, self.avId,
+                                             self.__handleAvatar)
+
+    def __handleAvatar(self, dclass, fields):
+        if dclass != self.csm.air.dclassesByName['DistributedPlayerPirateUD']:
+            self.demand('Kill', "One of the account's avatars is invalid!")
+            return
+
+        self.avatarFields = fields
+        self.demand('UpdateAvatar')
+
+    def enterUpdateAvatar(self):
+        # Build the update fields from the DNA
+        updateFields = {}
+
+        humanDNA = HumanDNA()
+        humanDNA.makeFromNetString(self.dna)
+
+        dclass = self.csm.air.dclassesByName['HumanDNA']
+        for fieldIndex in range(dclass.getNumFields()):
+            field = dclass.getInheritedField(fieldIndex)
+            if not field.asAtomicField():
+                continue
+
+            fieldValue = getattr(humanDNA, field.getName().replace('set', 'get'))()
+            if isinstance(fieldValue, list):
+                updateFields[field.getName()] = fieldValue
+            else:
+                updateFields[field.getName()] = (fieldValue,)
+
+        # Handle name pattern if requested
+        if self.usePattern:
+            # Get the name lists based on gender
+            gender = humanDNA.getGender()
+            if gender == 'f':
+                nameLists = PiratesGlobals.femaleNames
+            else:
+                nameLists = PiratesGlobals.maleNames
+
+            # Pattern is (nick, first, prefix, suffix) indices
+            # nameLists[0] = nicknames (not used)
+            # nameLists[1] = first names
+            # nameLists[2] = prefixes
+            # nameLists[3] = suffixes
+            parts = []
+
+            # First name (self.p2 = first name index)
+            if self.p2 > 0 and self.p2 < len(nameLists[1]):
+                parts.append(nameLists[1][self.p2].strip())
+
+            # Last name = prefix + suffix
+            lastName = ''
+            if self.p3 > 0 and self.p3 < len(nameLists[2]):
+                prefix = nameLists[2][self.p3].strip()
+                lastName = prefix
+                # Check if prefix needs suffix to be capitalized
+                if prefix in PiratesGlobals.lastNamePrefixesCapped:
+                    if self.p4 > 0 and self.p4 < len(nameLists[3]):
+                        lastName += nameLists[3][self.p4].strip().capitalize()
+                else:
+                    if self.p4 > 0 and self.p4 < len(nameLists[3]):
+                        lastName += nameLists[3][self.p4].strip()
+
+            if lastName:
+                parts.append(lastName)
+
+            name = ' '.join(parts)
+
+            if name:
+                updateFields['WishNameState'] = ('',)
+                updateFields['WishName'] = ('',)
+                updateFields['setName'] = (name,)
+
+        # Update the avatar in the database
+        self.csm.air.dbInterface.updateObject(
+            self.csm.air.dbId,
+            self.avId,
+            self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
+            updateFields)
+
+        self.csm.air.writeServerEvent('avatarPopulated', avId=self.avId, target=self.target)
+        self.csm.sendUpdateToAccountId(self.target, 'populateAvatarResp', [True])
+        self.demand('Off')
+
+
 # --- CLIENT SERVICES MANAGER UBERDOG ---
 class ClientServicesManagerUD(DistributedObjectGlobalUD):
     notify = directNotify.newCategory('ClientServicesManagerUD')
@@ -1176,6 +1288,9 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
     def acknowledgeAvatarName(self, avId):
         self.runAccountFSM(AcknowledgeNameFSM, avId)
+
+    def populateAvatar(self, avId, dna, usePattern, p1, p2, p3, p4):
+        self.runAccountFSM(PopulateAvatarFSM, avId, dna, usePattern, p1, p2, p3, p4)
 
     def chooseAvatar(self, avId):
         currentAvId = self.air.getAvatarIdFromSender()

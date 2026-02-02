@@ -424,6 +424,8 @@ dclass ClientServicesManager : DistributedObjectGlobal {
   acknowledgeDeleteAvatarResp(uint32 avId, bool status);
   chooseAvatar(uint32 avId) clsend;
   reportPlayer(uint32 avId, uint8 category) clsend;
+  populateAvatar(uint32 avId, blob dna, bool usePattern, uint16 p1, uint16 p2, uint16 p3, uint16 p4) clsend;
+  populateAvatarResp(bool success);
 };
 
 dclass DistributedAvatarManager : OtpAvatarManager {

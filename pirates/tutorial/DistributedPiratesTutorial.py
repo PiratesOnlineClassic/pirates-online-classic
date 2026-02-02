@@ -217,6 +217,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         self.cleanup()
 
     def getStarted(self, task = None):
+        print ('getStarted', task, self.state)
         if self.state == 'Off':
             self.request('Act0Tutorial')
     
@@ -373,7 +374,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             self.preloadCutscene(CutsceneData.PRELOADED_CUTSCENE_STAGE3)
             self._stopTutorialInteriorEffects()
             self.island.setZoneLevel(0)
-            self._targetNps = self.island.findAllMatches('**/TorchFire').asList()
+            self._targetNps = list(self.island.findAllMatches('**/TorchFire'))
             self._phantomCannon = PhantomCannon(self.cr, self.island, CannonDistance, 50, self._targetNps, self.island)
             self._phantomCannon.start()
 
@@ -461,10 +462,10 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             self.acceptOnce('avatarPopulated', self.avatarPopulated)
             if self.map.nameGui.customName:
                 localAvatar.setWishName()
-                base.cr.avatarManager.sendRequestPopulateAvatar(localAvatar.doId, localAvatar.style, 0, 0, 0, 0, 0)
+                base.cr.csm.sendPopulateAvatar(localAvatar.doId, localAvatar.style, 0, 0, 0, 0, 0)
             else:
                 name = self.map.nameGui.getNumericName()
-                base.cr.avatarManager.sendRequestPopulateAvatar(localAvatar.doId, localAvatar.style, 1, name[0], name[1], name[2], name[3])
+                base.cr.csm.sendPopulateAvatar(localAvatar.doId, localAvatar.style, 1, name[0], name[1], name[2], name[3])
             self.map.exit()
             self.map.unload()
             self.map = 0
@@ -477,7 +478,10 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
                 light.turnOn()
                 self.jail.setLight(light.lightNodePath)
 
-    def avatarPopulated(self):
+    def avatarPopulated(self, success=True):
+        if not success:
+            self.notify.warning('Failed to populate avatar!')
+            return
         self.request('EscapeFromLA')
         localAvatar.b_setGameState('LandRoam')
         self.sendUpdate('makeAPirateComplete')
@@ -500,7 +504,9 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         self.handleWalkedOutToIsland()
     
     def handleGoInside(self):
-        self._phantomCannon.stop()
+        if hasattr(self, '_phantomCannon'):
+            self._phantomCannon.stop()
+        
         if hasattr(self, '_fireSound') and self._fireSound is not None:
             self._fireSound.pause()
         

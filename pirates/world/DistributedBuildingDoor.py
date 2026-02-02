@@ -64,6 +64,7 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
         self.sendUpdate('requestPrivateInteriorInstance')
 
     def setPrivateInteriorInstance(self, worldId, worldZoneId, interiorId, autoFadeIn = True):
+        print('DistributedBuildingDoor.setPrivateInteriorInstance: worldId=%d, worldZoneId=%d, interiorId=%d, autoFadeIn=%s' % (worldId, worldZoneId, interiorId, autoFadeIn))
         if worldId == 0 and worldZoneId == 0:
             worldId = self.interiorWorldParentId
             worldZoneId = self.interiorWorldZoneId
@@ -74,6 +75,7 @@ class DistributedBuildingDoor(DistributedDoorBase.DistributedDoorBase):
         self.loadInstanceWorld(worldId, worldZoneId, interiorId, autoFadeIn)
 
     def loadInstanceWorld(self, worldId, worldZoneId, interiorId, autoFadeIn):
+        print ('loadInstanceWorld', worldId, worldZoneId, interiorId, autoFadeIn)
         
         def areaFinishedCallback(interior):
             self.areaRequest = None
