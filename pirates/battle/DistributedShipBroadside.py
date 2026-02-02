@@ -422,6 +422,10 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
         ammo.setIval(s, start = True)
 
     def playFireEffect(self, spawnNode, ammoSkillId):
+        # Safety check - effectNode may be None if broadside was disabled
+        if not self.effectNode or self.effectNode.isEmpty():
+            return
+        
         if self.localAvatarUsingWeapon:
             boomSfx = random.choice(self.localFireSfx)
         else:

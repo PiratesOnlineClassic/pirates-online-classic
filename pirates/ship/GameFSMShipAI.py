@@ -69,6 +69,11 @@ AI_FIRE_TIME = CannonGlobals.AI_FIRE_TIME  # 3.0 seconds between fires
 AI_BROADSIDE_FIRE_VELOCITY = CannonGlobals.AI_BROADSIDE_FIRE_VELOCITY  # 200.0
 BROADSIDE_POWERMOD = CannonGlobals.BROADSIDE_POWERMOD  # 0.7
 
+# Individual Cannon Timing (simulated crew firing deck cannons)
+AI_INDIVIDUAL_CANNON_FIRE_INTERVAL = 1.5  # Seconds between individual cannon shots
+AI_INDIVIDUAL_CANNON_SALVO_SIZE = 3  # Number of cannons to fire per salvo
+AI_INDIVIDUAL_CANNON_DAMAGE = 15  # Base damage per individual cannon hit
+
 # Combat Behavior Thresholds
 AI_AGGRO_MEMORY_TIME = 120.0  # How long ship remembers being attacked (2 minutes)
 AI_WANDER_RADIUS = 3000.0  # Radius for random wandering
@@ -188,6 +193,7 @@ class GameFSMShipAI(FSM.FSM):
         self.targetDoId = 0
         self.threatList = {}  # {doId: (threat_level, last_attack_time)}
         self.lastBroadsideTime = 0
+        self.lastIndividualCannonTime = 0  # Track individual cannon fire timing
         self.lastAttackedTime = 0
         self.attackerId = 0
         
@@ -259,6 +265,10 @@ class GameFSMShipAI(FSM.FSM):
             self._moveInterval = None
         # Clean up broadside heading task
         taskMgr.remove(self.ship.uniqueName('broadside-heading'))
+        # Clean up any individual cannon fire tasks (dynamically based on actual cannon count)
+        numCannons = len(self.ship.cannons) if hasattr(self.ship, 'cannons') and self.ship.cannons else 0
+        for i in range(numCannons):
+            taskMgr.remove(self.ship.uniqueName('individual-cannon-%d' % i))
         self.ship.ignore(self._getMovementDoneName())
         self._currentDestination = None
         self._targetHeading = None
@@ -2426,6 +2436,147 @@ class GameFSMShipAI(FSM.FSM):
         
         return False
 
+    def _attemptIndividualCannons(self, target):
+        """
+        Fire individual deck cannons at the target, simulating crew aboard.
+        This fires a salvo of cannons staggered over time for a more realistic
+        ship-to-ship combat feel, as if skeleton/navy crew are manning the guns.
+        """
+        if not target or not self._isValidTarget(target):
+            return False
+        
+        currentTime = globalClock.getFrameTime()
+        
+        # Check cooldown
+        if currentTime - self.lastIndividualCannonTime < AI_INDIVIDUAL_CANNON_FIRE_INTERVAL:
+            return False
+        
+        dist = self._getDistanceToTarget(target)
+        
+        # Check range - individual cannons have similar range to broadside
+        if dist < AI_MIN_ATTACK_RANGE or dist > AI_CANNON_DIST_RANGE:
+            return False
+        
+        # Get the ship's cannons
+        if not hasattr(self.ship, 'cannons') or not self.ship.cannons:
+            return False
+        
+        numCannons = len(self.ship.cannons)
+        if numCannons == 0:
+            return False
+        
+        try:
+            # Get target position for aiming
+            targetPos = target.getPos()
+            
+            # Determine which cannons can fire (based on facing)
+            # Get angle to target relative to ship
+            shipPos = self.ship.getPos()
+            dx = targetPos.getX() - shipPos.getX()
+            dy = targetPos.getY() - shipPos.getY()
+            angleToTarget = math.degrees(math.atan2(dx, dy))
+            shipHeading = self.ship.getH()
+            relativeAngle = self._normalizeAngle(angleToTarget - shipHeading)
+            
+            # Determine which side can fire
+            # Left side: target at roughly -90 degrees
+            # Right side: target at roughly +90 degrees
+            # Front/rear cannons: target at 0 or 180 degrees
+            canFire = []
+            for i, cannon in enumerate(self.ship.cannons):
+                # All deck cannons can potentially fire if target is in a reasonable arc
+                # Front cannons (chase guns) fire forward, others fire broadside
+                if abs(relativeAngle) < 60:  # Front arc
+                    canFire.append(i)
+                elif abs(relativeAngle) > 120:  # Rear arc
+                    canFire.append(i)
+                elif relativeAngle < 0 and abs(relativeAngle + 90) < 60:  # Left broadside
+                    canFire.append(i)
+                elif relativeAngle > 0 and abs(relativeAngle - 90) < 60:  # Right broadside
+                    canFire.append(i)
+            
+            if not canFire:
+                return False
+            
+            # Pick cannons to fire (up to salvo size)
+            import random
+            salvoSize = min(AI_INDIVIDUAL_CANNON_SALVO_SIZE, len(canFire))
+            cannonsToFire = random.sample(canFire, salvoSize)
+            
+            # Fire the cannons with staggered timing
+            for i, cannonIndex in enumerate(cannonsToFire):
+                delay = i * 0.3  # Stagger shots
+                taskMgr.doMethodLater(
+                    delay, 
+                    self._fireIndividualCannon,
+                    self.ship.uniqueName('individual-cannon-%d' % cannonIndex),
+                    extraArgs=[target, cannonIndex, dist]
+                )
+            
+            self.lastIndividualCannonTime = currentTime
+            return True
+            
+        except Exception as e:
+            return False
+
+    def _fireIndividualCannon(self, target, cannonIndex, dist):
+        """
+        Fire a single cannon at the target and apply damage.
+        Uses the actual DistributedShipCannonAI to trigger visual effects on clients.
+        """
+        if not target or not self._isValidTarget(target):
+            return
+        
+        try:
+            # Get the actual cannon distributed object
+            if cannonIndex < len(self.ship.cannons):
+                cannon = self.ship.cannons[cannonIndex]
+                
+                # Get target position with some spread for realism
+                import random
+                targetPos = target.getPos()
+                spreadX = random.gauss(0, 15)
+                spreadY = random.gauss(0, 15)
+                spreadZ = random.gauss(0, 5)
+                
+                from panda3d.core import Point3
+                aimPos = Point3(
+                    targetPos.getX() + spreadX,
+                    targetPos.getY() + spreadY,
+                    targetPos.getZ() + spreadZ if hasattr(targetPos, 'getZ') else spreadZ
+                )
+                
+                # Fire the cannon (sends visual effect to clients)
+                if hasattr(cannon, 'fireAtPosition'):
+                    cannon.fireAtPosition(aimPos)
+            
+            # Calculate accuracy based on distance
+            accuracy = max(0.3, 1.0 - (dist / AI_CANNON_DIST_RANGE) * 0.5)
+            
+            import random
+            if random.random() > accuracy:
+                # Miss - no damage but visual was still fired
+                return
+            
+            # Calculate damage
+            baseDamage = AI_INDIVIDUAL_CANNON_DAMAGE
+            levelMod = self._getLevelBasedDamageModifier(target)
+            distMod = self._calculateDamageFalloff(dist)
+            _, damageOutMod = self._getNPCDamageModifiers()
+            
+            totalDamage = int(baseDamage * levelMod * distMod * damageOutMod)
+            
+            if totalDamage > 0:
+                # Apply damage to target
+                if hasattr(target, 'takeDamage'):
+                    target.takeDamage(self.ship.doId, totalDamage, 0)
+                elif hasattr(target, 'hull') and target.hull:
+                    hull = target.hull
+                    if hasattr(hull, 'takeDamage'):
+                        hull.takeDamage(self.ship.doId, totalDamage, 0)
+        except:
+            pass
+
     # =========================================================================
     # State Handlers
     # =========================================================================
@@ -3004,6 +3155,9 @@ class GameFSMShipAI(FSM.FSM):
         # Try opportunistic broadside while chasing
         self._attemptBroadside(self.targetShip)
         
+        # Also fire individual deck cannons while chasing (crew fires at will)
+        self._attemptIndividualCannons(self.targetShip)
+        
         return Task.again
 
     def exitAttackChase(self):
@@ -3111,6 +3265,10 @@ class GameFSMShipAI(FSM.FSM):
             # Occasionally switch circle direction after firing
             if random.random() < 0.3:
                 self.circleDirection *= -1
+        
+        # Also fire individual deck cannons (simulated crew aboard)
+        # This happens independently of broadsides for continuous fire
+        self._attemptIndividualCannons(self.targetShip)
         
         # Occasionally switch to chase if target is getting away
         if dist > AI_ATTACK_RANGE * 1.5 and random.random() < 0.1:

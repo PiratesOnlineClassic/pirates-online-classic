@@ -254,7 +254,7 @@ class PiratesClientRepository(OTPClientRepository):
             self.csm.sendCreateAvatar(newPotAv.dna, '', newPotAv.position, newPotAv.name)
             self.accept('createdNewAvatar', self.handleAvatarCreated, [newPotAv])
 
-    def handleAvatarCreated(self, newPotAv, avatarId, subId):
+    def handleAvatarCreated(self, newPotAv, avatarId, subId=0):
         newPotAv.id = avatarId
         self.loginFSM.request('waitForSetAvatarResponse', [newPotAv])
 
