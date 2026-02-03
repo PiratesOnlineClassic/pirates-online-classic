@@ -35,7 +35,10 @@ class ShipPilot2(PhysicsWalker):
     useDSSolid = 0
     useLifter = 0
     useHeightRay = 0
-
+    
+    MAX_STRAIGHT_SAIL_BONUS = 4.0
+    STRAIGHT_SAIL_BONUS_TIME = 10.0
+    
     # special methods
     def __init__(self, gravity = -32.1740, standableGround=0.707,
             hardLandingForce=16.0):
@@ -70,6 +73,11 @@ class ShipPilot2(PhysicsWalker):
         self.highMark = 0
         self.ship = None
 
+        # Keeps track of the ship sailing in a straight heading
+        # for long periods of time.  We slowly up the ship's max
+        # acceleration as this increases.
+        self.straightHeading = 0
+
     def setWalkSpeed(self, forward, jump, reverse, rotate):
         assert self.debugPrint("setWalkSpeed()")
         self.avatarControlForwardSpeed=forward
@@ -82,7 +90,7 @@ class ShipPilot2(PhysicsWalker):
         return (self.__speed, self.__rotationSpeed)
 
     def setShip(self, ship):
-        """Alias for setAvatar to match DistributedShip expectations."""
+        """Set the ship NodePath this pilot is controlling"""
         self.setAvatar(ship)
 
     def setAvatar(self, ship):
@@ -344,9 +352,8 @@ class ShipPilot2(PhysicsWalker):
         self.floorBitmask = bitMask
 
     def initializeCollisions(self, collisionTraverser,
-        avatarRadius = 1.4, floorOffset = 1.0, reach = 1.0,
-        width = 30.0, length = 105.0, height = 45.0):
-        
+            avatarRadius = 1.4, floorOffset = 1.0, reach = 1.0,
+            width = 30.0, length = 105.0, height = 45.0):
         """
         width is feet from port to starboard.
         length is feet from aft to bow.
@@ -356,53 +363,12 @@ class ShipPilot2(PhysicsWalker):
         """
         assert self.debugPrint("initializeCollisions()")
         self.cTrav = collisionTraverser
-
-        # Support calling convention where the caller passes NodePaths:
-        # initializeCollisions(cTrav, avatarNodePath, bowNodePath, sternNodePath, starboardNodePath, portNodePath)
-        if hasattr(avatarRadius, 'isEmpty'):
-            # avatarRadius is actually avatarNodePath in this convention
-            avatarNodePath = avatarRadius
-            bow = floorOffset
-            stern = reach
-            starboard = width
-            port = length
-
-            # Call setupPhysics with the provided avatar node
-            try:
-                self.avatarNodePath = self.setupPhysics(avatarNodePath)
-            except Exception:
-                self.avatarNodePath = avatarNodePath
-
-            # Compute numeric length/width from NodePath positions if possible
-            try:
-                # Compute length as distance between bow and stern in avatarNodePath's space
-                bow_pos = bow.getPos(self.avatarNodePath)
-                stern_pos = stern.getPos(self.avatarNodePath)
-                length = (bow_pos - stern_pos).length()
-            except Exception:
-                length = 105.0
-
-            try:
-                star_pos = starboard.getPos(self.avatarNodePath)
-                port_pos = port.getPos(self.avatarNodePath)
-                width = (star_pos - port_pos).length()
-            except Exception:
-                width = 30.0
-
-            avatarRadius = 1.4
-            floorOffset = 1.0
-            reach = 1.0
-
-        # numeric calling convention
         self.avatarRadius = avatarRadius
-        self.avatarNodePath = None
         self.floorOffset = floorOffset
         self.reach = reach
-
         if self.useBowSternSpheres:
             self.frontSphereOffset = length * 0.3
             self.backSphereOffset = -length * 0.7
-        
         self.width = width
         self.length = length
         self.height = height
@@ -465,7 +431,7 @@ class ShipPilot2(PhysicsWalker):
             indicator.instanceTo(contactIndicatorNode)
             self.physContactIndicator=contactIndicatorNode
         else:
-            print("failed load of physics indicator")
+            print ("failed load of physics indicator")
 
     def avatarPhysicsIndicator(self, task):
         #assert self.debugPrint("avatarPhysicsIndicator()")
@@ -531,8 +497,6 @@ class ShipPilot2(PhysicsWalker):
         current walker.
         """
         self.oneTimeCollide()
-        if self.getAirborneHeight is None:
-            return
         self.avatarNodePath.setZ(
             self.avatarNodePath.getZ()-self.getAirborneHeight())
 
@@ -633,7 +597,7 @@ class ShipPilot2(PhysicsWalker):
         #assert self.debugPrint("handleAvatarControls(task=%s)"%(task,))
         physObject=self.actorNode.getPhysicsObject()
         contact=self.actorNode.getContactVector()
-
+        
         # get the button states:
         forward = inputState.isSet("forward")
         reverse = inputState.isSet("reverse")
@@ -644,14 +608,29 @@ class ShipPilot2(PhysicsWalker):
         slideRight = 0
         jump = inputState.isSet("jump")
         # Determine what the speeds are based on the buttons:
-
+        
         # Check for Auto-Sailing
         if self.ship.getIsAutoSailing():
             forward = 1
             reverse = 0
-
+            
         # How far did we move based on the amount of time elapsed?
         dt=ClockObject.getGlobalClock().getDt()
+        
+        if reverse or turnLeft or turnRight:
+            # Reset Straight Sailing Bonus
+            self.straightHeading = 0
+            
+        # Straight Sailing Acceleration Bonus
+        straightSailDt += dt
+        straightSailBonus = 0.0
+        if straightSailDt > self.STRAIGHT_SAIL_BONUS_TIME / 2.0:
+            straightSailBonus = (straightSailDt - (self.STRAIGHT_SAIL_BONUS_TIME / 2.0)) / self.STRAIGHT_SAIL_BONUS_TIME / 2.0
+        straightSailBonus *= self.MAX_STRAIGHT_SAIL_BONUS
+        straightSailBonus += 1.0
+
+        print ("##################")
+        print (straightSailBonus)
         
         # this was causing the boat to get stuck moving forward or back
         if 0:
@@ -686,22 +665,24 @@ class ShipPilot2(PhysicsWalker):
         self.__rotationSpeed=not slide and (
                 (turnLeft and self.ship.turnRate) or
                 (turnRight and -self.ship.turnRate))
-        
-        # Enable debug turbo mode
-        maxSpeed = self.ship.maxSpeed
-        if __debug__:
-            debugRunning = inputState.isSet("debugRunning")
-            if debugRunning or base.localAvatar.getTurbo():
-                self.__speed*=4.0
-                self.__slideSpeed*=4.0
-                self.__rotationSpeed*=1.25
-                maxSpeed = self.ship.maxSpeed * 4.0
 
-        self.__speed*=12.0
-        self.__slideSpeed*=12.0
-        self.__rotationSpeed*=2.0
-        maxSpeed = self.ship.maxSpeed * 12.0
-                
+        # Add in Straight Sailing Multiplier
+        self.__speed *= straightSailBonus
+         
+        # Enable debug turbo mode
+        maxSpeed = self.ship.maxSpeed * straightSailBonus
+        debugRunning = inputState.isSet("debugRunning")
+        if debugRunning or base.localAvatar.getTurbo():
+            self.__speed*=4.0
+            self.__slideSpeed*=4.0
+            self.__rotationSpeed*=1.25
+            maxSpeed = self.ship.maxSpeed * 4.0
+
+        #self.__speed*=4.0
+        #self.__slideSpeed*=4.0
+        #self.__rotationSpeed*=1.25
+        #maxSpeed = self.ship.maxSpeed * 4.0
+        
         #*#
         self.currentTurning += self.__rotationSpeed
         if self.currentTurning > self.ship.maxTurn:
@@ -727,10 +708,7 @@ class ShipPilot2(PhysicsWalker):
             self.setPriorParentVector()
             self.needToDeltaPos = 0
 
-        if self.getAirborneHeight is None:
-            airborneHeight = 0.0
-        else:
-            airborneHeight = self.getAirborneHeight()
+        airborneHeight=self.getAirborneHeight()
         if airborneHeight > self.highMark:
             self.highMark = airborneHeight
             if __debug__:
@@ -957,13 +935,13 @@ class ShipPilot2(PhysicsWalker):
     def setPriorParentVector(self):
         assert self.debugPrint("doDeltaPos()")
 
-        #print "self.__oldDt", self.__oldDt, "self.__oldPosDelta", self.__oldPosDelta
+        #print ("self.__oldDt", self.__oldDt, "self.__oldPosDelta", self.__oldPosDelta)
         if __debug__:
             onScreenDebug.add("__oldDt", "% 10.4f"%self.__oldDt)
             onScreenDebug.add("self.__oldPosDelta",
                               self.__oldPosDelta.pPrintValues())
 
-        velocity = self.__oldPosDelta*(1/self.__oldDt)*4.0 # *4.0 is a hack
+        velocity = self.__oldPosDelta*(1/self.__oldDt)#*4.0 # *4.0 is a hack
         assert self.debugPrint("  __oldPosDelta=%s"%(self.__oldPosDelta,))
         assert self.debugPrint("  velocity=%s"%(velocity,))
         self.priorParent.setVector(Vec3(velocity))
@@ -1027,7 +1005,7 @@ class ShipPilot2(PhysicsWalker):
     if __debug__:
         def setupAvatarPhysicsIndicator(self):
             if self.wantDebugIndicator:
-                indicator=loader.loadModelCopy('phase_5/models/props/dagger')
+                indicator=loader.loadModel('phase_5/models/props/dagger')
                 #self.walkControls.setAvatarPhysicsIndicator(indicator)
 
         def debugPrint(self, message):

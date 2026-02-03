@@ -171,7 +171,7 @@ def getRank(value):
     if _cardImagesInitialized == 0:
         initCardImages()
     
-    return newValue % 13
+    return int(newValue % 13)
 
 
 def initCardImages():

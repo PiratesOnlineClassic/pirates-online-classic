@@ -583,6 +583,10 @@ class ShipModel(NodePath):
             elif decorPlacement[1] == DecorDNA.WINDOW:
                 locator = self.locators.find('**/window_' + str(posIndex) + ';+s')
             
+            if locator.isEmpty():
+                self.notify.warning('Could not find locator for decor type %s at posIndex %s' % (decorType, posIndex))
+                return
+            
             prop.setPos(locator.getPos(self.root))
             prop.setHpr(locator.getHpr(self.root))
             prop.setScale(locator.getScale(self.root))

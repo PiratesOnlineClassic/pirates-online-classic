@@ -12,7 +12,7 @@ from pirates.piratesbase import TimeOfDayManager, TODGlobals
 from pirates.treasuremap import TreasureMapRulesPanel
 from pirates.uberdog import DistributedInventoryBase
 from direct.task import Task
-from pirates.ship.ShipPilot2 import ShipPilot2
+from pirates.ship import ShipPilot2
 import random
 
 class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMapInstance):

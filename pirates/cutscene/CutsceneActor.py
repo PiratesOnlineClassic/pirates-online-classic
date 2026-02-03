@@ -52,7 +52,7 @@ class CutsceneActor:
         if 'localAvatar' in __builtins__:
             base.cr.uidMgr.addUidCallback(self.Uid, self.foundIt, timeout = 0)
         
-        if self.modelLoaded:
+        if self.modelLoaded and not self.modelLoaded.isEmpty():
             self.modelLoaded.stash()
 
     def foundIt(self, npc):

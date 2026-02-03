@@ -137,7 +137,9 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
         DistributedGameArea.DistributedGameArea.disable(self)
         DistributedCartesianGrid.DistributedCartesianGrid.disable(self)
         self.deleteZoneCollisions()
-        self.parentWorld.islands.pop(self.doId, None)
+        if hasattr(self.parentWorld, 'islands') and self.parentWorld.islands != None:
+            self.parentWorld.islands.pop(self.doId, None)
+        
         self.parentWorld = None
         self.removeActive()
         self.deleteNametag3d()
@@ -453,7 +455,10 @@ class DistributedIsland(DistributedGameArea.DistributedGameArea, DistributedCart
     def loadIslandLowLod(self):
         flatName = self.modelPath.split('_zero')
         if not self.islandLowLod:
-            self.islandLowLod = loader.loadModelCopy(flatName[0] + '_low')
+            try:
+                self.islandLowLod = loader.loadModelCopy(flatName[0] + '_low')
+            except:
+                self.islandLowLod = None # could not load pearl_island_low
 
         if self.islandLowLod and not self.islandLowLod.isEmpty():
             self.islandLowLod.reparentTo(self)

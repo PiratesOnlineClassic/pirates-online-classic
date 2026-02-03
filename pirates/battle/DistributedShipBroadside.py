@@ -434,6 +434,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
         if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
             cannonSmokeEffect = CannonBlastSmoke.getEffect()
             if cannonSmokeEffect:
+                cannonSmokeEffect.detachNode()
                 cannonSmokeEffect.reparentTo(self.effectNode)
                 cannonSmokeEffect.particleDummy.reparentTo(self.effectNode)
                 cannonSmokeEffect.setPosHpr(spawnNode, 0, -8, 0, 180, 0, 0)
@@ -443,6 +444,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
         if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
             flashEffect = MuzzleFlash.getEffect()
             if flashEffect:
+                flashEffect.detachNode()
                 flashEffect.reparentTo(self.effectNode)
                 flashEffect.flash.setScale(30)
                 flashEffect.setPos(spawnNode, 0, 0, 0)
@@ -453,6 +455,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
         if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
             explosionEffect = ExplosionFlip.getEffect()
             if explosionEffect:
+                explosionEffect.detachNode()
                 explosionEffect.reparentTo(self.effectNode)
                 pos = Vec3(0, -6, 0)
                 explosionEffect.setPos(spawnNode, pos)
@@ -478,6 +481,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
             if ammoSkillId == InventoryType.CannonGrapeShot:
                 effect = GrapeshotEffect.getEffect()
                 if effect:
+                    effect.detachNode()
                     effect.reparentTo(self.effectNode)
                     effect.setPosHpr(spawnNode, 0, 0, 0, -90, 0, 0)
                     effect.play()

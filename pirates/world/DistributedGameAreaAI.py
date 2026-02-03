@@ -22,21 +22,37 @@ class DistributedGameAreaAI(DistributedNodeAI):
         self.jailInterior = None
         self.builder = GameAreaBuilderAI(self.air, self)
 
+    def _isBlackPearlInstance(self):
+        """Check if this game area is part of a Black Pearl treasure map instance"""
+        from pirates.treasuremap.DistributedTreasureMapInstanceAI import DistributedTreasureMapInstanceAI
+        parentObj = self.getParentObj()
+        while parentObj:
+            if isinstance(parentObj, DistributedTreasureMapInstanceAI):
+                return True
+            parentObj = parentObj.getParentObj() if hasattr(parentObj, 'getParentObj') else None
+        return False
+
     def handleChildArrive(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerAI):
-            self.air.worldGridManager.handleLocationChanged(self, childObj, zoneId)
+            # Skip world grid manager for Black Pearl instances
+            if not self._isBlackPearlInstance():
+                self.air.worldGridManager.handleLocationChanged(self, childObj, zoneId)
 
         DistributedNodeAI.handleChildArrive(self, childObj, zoneId)
 
     def handleChildArriveZone(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerAI):
-            self.air.worldGridManager.handleLocationChanged(self, childObj, zoneId)
+            # Skip world grid manager for Black Pearl instances
+            if not self._isBlackPearlInstance():
+                self.air.worldGridManager.handleLocationChanged(self, childObj, zoneId)
 
         DistributedNodeAI.handleChildArriveZone(self, childObj, zoneId)
 
     def handleChildLeave(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerAI):
-            self.air.worldGridManager.clearAvatarInterest(self, childObj)
+            # Skip world grid manager for Black Pearl instances
+            if not self._isBlackPearlInstance():
+                self.air.worldGridManager.clearAvatarInterest(self, childObj)
 
         DistributedNodeAI.handleChildLeave(self, childObj, zoneId)
 

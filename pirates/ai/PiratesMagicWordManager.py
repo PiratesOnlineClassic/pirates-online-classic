@@ -740,3 +740,17 @@ def dumpinstance():
     parent.writeBamFile('dump.bam')
 
     return 'Instance Dumped'
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def blackpearl():
+    """
+    Teleports the local avatar to the Black Pearl treasure map instance.
+    This is a debug command to test the Black Pearl quest.
+    """
+
+    # This magic word sends a request to the AI server
+    if hasattr(base.cr, 'magicWordManager') and base.cr.magicWordManager:
+        base.cr.magicWordManager.sendUpdate('sendMagicWord', ['~blackpearlai', 0])
+        return 'Requesting Black Pearl instance from server...'
+    else:
+        return 'Magic word manager not available'

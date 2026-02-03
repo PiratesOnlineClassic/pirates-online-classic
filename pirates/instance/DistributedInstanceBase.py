@@ -72,9 +72,10 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
             self.worldGrid.turnOff()
 
     def getWater(self):
-        if self.worldGrid:
+        if hasattr(self, 'worldGrid') and self.worldGrid is not None:
             if hasattr(self.worldGrid, 'water'):
                 return self.worldGrid.water
+        
         return None
 
     def addCutsceneOriginNode(self, node, name):
@@ -194,7 +195,7 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
         self._turnOffIslands(cacheIslands)
         self.stash()
         self._onOffState = False
-        if self.worldGrid:
+        if hasattr(self, 'worldGrid') and self.worldGrid is not None:
             self.worldGrid.turnOff()
 
     @report(types=['frameCount', 'args'], dConfigParam=['want-connector-report', 'want-jail-report'])

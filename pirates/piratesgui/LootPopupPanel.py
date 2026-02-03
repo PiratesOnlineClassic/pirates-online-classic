@@ -185,7 +185,7 @@ class LootPopupPanel(StackMessage, DirectObject.DirectObject):
             elif itemType == ItemId.CARD:
                 textInfo = PLocalizer.InventoryTypeNames.get(quantity)
                 pic_name = ''
-                lootIcon = PlayingCardGlobals.getImage('standard', PlayingCardGlobals.getSuit(quantity), PlayingCardGlobals.getRank(quantity))
+                lootIcon = PlayingCardGlobals.getImage('standard', PlayingCardGlobals.getSuit(int(quantity)), PlayingCardGlobals.getRank(int(quantity)))
                 iconScale = 0.2
             elif itemType == ItemId.GOLD:
                 textInfo = PLocalizer.LootGold % str(quantity)

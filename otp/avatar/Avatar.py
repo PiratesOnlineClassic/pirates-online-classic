@@ -33,7 +33,7 @@ class Avatar(Actor, ShadowCaster):
         except:
             self.Avatar_initialized = 1
 
-        Actor.__init__(self, None, None, other, flattenable = 0, setFinal = 1)
+        Actor.__init__(self, None, None, other, flattenable = 0, setFinal = 0)
         ShadowCaster.__init__(self)
 
         self.name = ''

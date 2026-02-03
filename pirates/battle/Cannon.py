@@ -178,6 +178,7 @@ class Cannon(ShipPart.ShipPart, NodePath):
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 muzzleFlameEffect = MuzzleFlame.getEffect()
                 if muzzleFlameEffect:
+                    muzzleFlameEffect.detachNode()
                     muzzleFlameEffect.reparentTo(effectParent)
                     muzzleFlameEffect.particleDummy.detachNode()
                     muzzleFlameEffect.particleDummy.reparentTo(effectParent)
@@ -193,7 +194,9 @@ class Cannon(ShipPart.ShipPart, NodePath):
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsMedium:
                 cannonSmokeEffect = CannonBlastSmoke.getEffect()
                 if cannonSmokeEffect:
+                    cannonSmokeEffect.detachNode()
                     cannonSmokeEffect.reparentTo(effectParent)
+                    cannonSmokeEffect.particleDummy.detachNode()
                     cannonSmokeEffect.particleDummy.reparentTo(effectParent)
                     cannonSmokeEffect.setHpr(effectParent, effectH, effectP, 0)
                     cannonSmokeEffect.particleDummy.setHpr(effectParent, effectH, effectP, 0)
@@ -202,6 +205,7 @@ class Cannon(ShipPart.ShipPart, NodePath):
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
                 explosionEffect = ExplosionFlip.getEffect()
                 if explosionEffect:
+                    explosionEffect.detachNode()
                     explosionEffect.reparentTo(effectParent)
                     explosionEffect.setScale(0.35)
                     explosionEffect.setHpr(effectParent, effectH, effectP, 0)
@@ -210,6 +214,7 @@ class Cannon(ShipPart.ShipPart, NodePath):
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 muzzleFlameEffect = MuzzleFlame.getEffect()
                 if muzzleFlameEffect:
+                    muzzleFlameEffect.detachNode()
                     muzzleFlameEffect.particleDummy.detachNode()
                     muzzleFlameEffect.particleDummy.reparentTo(effectParent)
                     muzzleFlameEffect.flash.setScale(45)
@@ -221,6 +226,7 @@ class Cannon(ShipPart.ShipPart, NodePath):
         if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsHigh:
             if WeaponConstants.C_OPENFIRE in buffs:
                 cameraShakerEffect = CameraShaker()
+                cameraShakerEffect.detachNode()
                 cameraShakerEffect.reparentTo(effectParent)
                 cameraShakerEffect.shakeSpeed = 0.03
                 cameraShakerEffect.shakePower = 0.7
@@ -230,6 +236,7 @@ class Cannon(ShipPart.ShipPart, NodePath):
             if base.options.getSpecialEffectsSetting() >= base.options.SpecialEffectsLow:
                 effect = GrapeshotEffect.getEffect()
                 if effect:
+                    effect.detachNode()
                     effect.reparentTo(effectParent)
                     effect.setHpr(effectParent, effectH, effectP, 0)
                     effect.setPos(relativeNode.getPos(effectParent))

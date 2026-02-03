@@ -26,6 +26,7 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
         self.portalAreas = []
         self.postLoadCalls = []
         self.oceanAreas = {}
+        self.objectCatCache = {}  # Cache for object categories to reduce lookups
 
     def destroy(self):
         self.district = None
@@ -94,18 +95,24 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
                 self.loadObjectsFromFile(currFile + '.py', parent, parentUid, dynamic, zoneLevel = zoneLevel, startTime = startTime, merge = True)
 
     def findObjectCategory(self, objectType):
+        if objectType in self.objectCatCache:
+            return self.objectCatCache[objectType]
+        
         cats = list(ObjectList.AVAIL_OBJ_LIST.keys())
         for currCat in cats:
             types = list(ObjectList.AVAIL_OBJ_LIST[currCat].keys())
             if objectType in types:
+                self.objectCatCache[objectType] = currCat
                 return currCat
+        
+        self.objectCatCache[objectType] = None
         return None
 
     def createObject(self, object, parent, parentUid, objKey, dynamic, zoneLevel = 0, startTime = None, fileName = None, actualParentObj = None):
         objType = WorldCreatorBase.WorldCreatorBase.createObject(self, object, parent, parentUid, objKey, dynamic, zoneLevel = zoneLevel, startTime = startTime, fileName = fileName)
         if objType == None:
             return (None, None)
-        
+
         newObj = None
         objParent = None
         parentDoId = base.cr.uidMgr.getDoId(parentUid)
@@ -113,9 +120,14 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
             objParent = base.cr.doId2do.get(parentDoId)
             if objParent == None:
                 self.notify.warning('Parent %s not found for %s' % (parentUid, objKey))
-        
+
+        # Determine if this is static geometry
+        is_static = False
+        objectCat = self.findObjectCategory(objType)
+        if not dynamic and objectCat in ('PROP_OBJ', 'BUILDING_OBJ'):
+            is_static = True
+
         if dynamic:
-            objectCat = self.findObjectCategory(objType)
             if objType == 'Jack Sparrow Standin' and base.config.GetBool('want-npcs', 1) is 1:
                 newObj = self.createJackSparrowStandin(object, objKey, objParent)
             elif objectCat == 'PROP_OBJ' or objectCat == 'BUILDING_OBJ':
@@ -124,23 +136,19 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
                     if light:
                         base.cr.uidMgr.uid2obj[objKey] = light
                         objParent.addLight(light)
-                    
                     OTPRender.renderReflection(False, light, 'p_light', None)
                 elif objParent:
                     if 'Color' in object:
                         if 'Visual' not in object:
                             object['Visual'] = {}
-                        
                         if 'Color' not in object['Visual']:
                             object['Visual']['Color'] = object['Color']
-                    
                     self.propNum += 1
                     newObj = objParent.addChildObj(object, objKey, zoneLevel = zoneLevel, startTime = startTime, altParent = actualParentObj, actualParentObj = actualParentObj)
                     if newObj:
                         base.cr.uidMgr.uid2obj[objKey] = newObj
                         if objType in ('Pier', 'Dinghy'):
                             OTPRender.renderReflection(True, newObj, 'p_pier', None)
-
             elif objType == 'Cell Portal Area':
                 newObj = objParent.addChildObj(object, objKey, zoneLevel = zoneLevel, startTime = startTime)
             elif objType == 'Event Sphere':
@@ -150,7 +158,21 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
                 radius = object.get('Scale', VBase3(500))[0]
             elif objType == 'Location Sphere':
                 newObj = self.addLocationSphere(objKey, object, objParent)
-            
+
+        elif is_static and objParent:
+            # Attach static geometry to staticRoot for batching
+            staticRoot = self.getStaticRoot(objParent)
+            newObj = objParent.addChildObj(object, objKey, zoneLevel = zoneLevel, startTime = startTime, altParent = actualParentObj, actualParentObj = actualParentObj)
+            if newObj:
+                base.cr.uidMgr.uid2obj[objKey] = newObj
+                # Reparent to staticRoot for batching
+                if hasattr(newObj, 'getNodePath'):
+                    np = newObj.getNodePath()
+                    if not np.isEmpty():
+                        np.reparentTo(staticRoot)
+                elif hasattr(newObj, 'reparentTo'):
+                    newObj.reparentTo(staticRoot)
+
         elif objType == 'Player Spawn Node':
             if objParent:
                 pos = object['Pos']
@@ -161,7 +183,7 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
                 posHpr = (pos[0], pos[1], pos[2], hpr[0], hpr[1], hpr[2])
                 self.cr.activeWorld.addPlayerSpawnPt(objParent, posHpr, index)
                 newObj = posHpr
-            
+
         elif objType == 'Player Boot Node':
             if objParent:
                 pos = object['Pos']
@@ -170,7 +192,7 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
                 posHpr = (pos[0], pos[1], pos[2], hpr[0], hpr[1], hpr[2])
                 self.cr.activeWorld.addPlayerBootPt(tgtAreaUid, posHpr, objParent.getDoId())
                 newObj = posHpr
-            
+
         elif objType == 'Cutscene Origin Node':
             if objParent:
                 pos = object['Pos']
@@ -180,7 +202,7 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
                 node.setPosHpr(pos, hpr)
                 self.cr.activeWorld.addCutsceneOriginNode(node, name)
                 newObj = node
-            
+
         elif objType == 'Effect Node':
             if objParent:
                 pos = object['Pos']
@@ -193,7 +215,7 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
                 node = objParent.attachNewNode(name)
                 node.setPosHprScale(pos, hpr, scale)
                 newObj = node
-            
+
         if not objParent and (objType == 'Dinghy' or objType == 'Holiday Object'):
             self.notify.warning('No object parent located!')
             return (None, None)
@@ -202,7 +224,7 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
             newObj = objParent.addChildObj(object, objKey, zoneLevel = zoneLevel, startTime = startTime)
         elif objType == 'Holiday Object':
             newObj = objParent.addChildObj(object, objKey, zoneLevel = zoneLevel, startTime = startTime)
-        
+
         return (newObj, None)
 
     def loadDataFile(self, fileName):
@@ -387,5 +409,17 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
                 currObj()
         
         self.postLoadCalls = []
+
+    # Add a static root for batching static geometry
+    def getStaticRoot(self, parent):
+        if not hasattr(parent, 'staticRoot') or parent.staticRoot is None:
+            from panda3d.core import NodePath
+            parent.staticRoot = parent.attachNewNode('staticRoot')
+        return parent.staticRoot
+
+    def flattenStaticGeometry(self, parent):
+        if hasattr(parent, 'staticRoot') and parent.staticRoot is not None:
+            parent.staticRoot.flattenStrong()
+            self.notify.debug('Static geometry batched for parent: %s' % str(parent))
 
 

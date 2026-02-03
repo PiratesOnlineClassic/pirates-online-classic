@@ -3573,7 +3573,9 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
         if not self.controlManager:
             self.controlManager = ControlManager.ControlManager(enable = False)
             controls = ShipPilot2()
-            controls.initializeCollisions(base.cTrav, self.transNode, self.bow, self.stern, self.starboard, self.port)
+            # Initialize with just the collision traverser - ShipPilot2 has sensible defaults
+            # for width, length, height parameters
+            controls.initializeCollisions(base.cTrav)
             wallBitMask = PiratesGlobals.ShipCollideBitmask | PiratesGlobals.GoldBitmask
             if self.respectDeployBarriers:
                 wallBitMask |= PiratesGlobals.ShipDeployBitmask

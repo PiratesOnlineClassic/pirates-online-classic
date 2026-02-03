@@ -16,7 +16,9 @@ class PooledEffect(DirectObject, NodePath):
         else:
             (free, used) = self.pool.getNumItems()
             if free + used < self.poolLimit:
-                self.pool.add(self())
+                np = self()
+                np.detachNode()
+                self.pool.add(np)
                 return self.pool.checkout()
             else:
                 return None

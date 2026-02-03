@@ -61,7 +61,7 @@ class DistributedSteeringWheel(DistributedInteractive.DistributedInteractive, Di
 
     def delete(self):
         self.notify.debug('Delete ' + str(self.doId))
-        if self.ship.wheel[1]:
+        if self.ship and self.ship.wheel and self.ship.wheel[1]:
             if self.ship.steeringAvId == base.localAvatar.doId:
                 self.ship.clientSteeringEnd()
 

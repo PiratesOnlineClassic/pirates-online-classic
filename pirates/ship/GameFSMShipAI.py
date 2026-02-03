@@ -65,18 +65,18 @@ AI_CANNON_HEADING_RANGE = PiratesGlobals.AI_CANNON_HEADING_RANGE  # 45 degrees
 AI_CANNON_DIST_RANGE = PiratesGlobals.AI_CANNON_DIST_RANGE  # 6000 units
 
 # Broadside Timing (from CannonGlobals)
-AI_FIRE_TIME = CannonGlobals.AI_FIRE_TIME  # 3.0 seconds between fires
+AI_FIRE_TIME = 5.0  # Increased from 3.0 to add more delay between broadside fires
 AI_BROADSIDE_FIRE_VELOCITY = CannonGlobals.AI_BROADSIDE_FIRE_VELOCITY  # 200.0
 BROADSIDE_POWERMOD = CannonGlobals.BROADSIDE_POWERMOD  # 0.7
 
 # Individual Cannon Timing (simulated crew firing deck cannons)
-AI_INDIVIDUAL_CANNON_FIRE_INTERVAL = 1.5  # Seconds between individual cannon shots
+AI_INDIVIDUAL_CANNON_FIRE_INTERVAL = 4.0  # Increased from 1.5 to 4.0 seconds between individual cannon shots
 AI_INDIVIDUAL_CANNON_SALVO_SIZE = 3  # Number of cannons to fire per salvo
 AI_INDIVIDUAL_CANNON_DAMAGE = 15  # Base damage per individual cannon hit
 
 # Combat Behavior Thresholds
 AI_AGGRO_MEMORY_TIME = 120.0  # How long ship remembers being attacked (2 minutes)
-AI_WANDER_RADIUS = 3000.0  # Radius for random wandering
+AI_WANDER_RADIUS = 3000.0  # Radius for random wanderings
 
 # Base flee/engage thresholds - AGGRESSIVE SETTINGS
 # Ships are very aggressive and rarely flee
@@ -87,7 +87,7 @@ AI_BASE_ENGAGE_HEALTH_THRESHOLD = 0.10  # Base: engage new targets even at 10% h
 AI_LEVEL_THRESHOLD = EnemyGlobals.ENEMY_LEVEL_THRESHOLD  # 3 levels difference for modifier
 
 # Aggression modifiers
-AI_AGGRESSION_MULTIPLIER = 1.5  # Ships are 50% more likely to engage
+AI_AGGRESSION_MULTIPLIER = 0.1
 
 # Default Speeds (fallback when ship class not found)
 # These values are tuned to match player ship effective movement speed
@@ -115,8 +115,8 @@ ALL_UNDEAD_TEAMS = (UNDEAD_TEAM, FRENCH_UNDEAD_TEAM, SPANISH_UNDEAD_TEAM)
 
 # Gang-up behavior - AGGRESSIVE SETTINGS
 # When an ally is attacked, nearby same-team ships WILL join the fight
-AI_GANGUP_CHANCE = 75  # 75% chance to help ally (was 25%)
-AI_GANGUP_LIMIT = 8    # Max 8 ships attacking one target (was 5)
+AI_GANGUP_CHANCE = 25  # 25% chance to help ally
+AI_GANGUP_LIMIT = 5    # Max 5 ships attacking one target (was 5)
 AI_GANGUP_RANGE = AI_INSTANT_AGGRO_RANGE * 3  # 4500 units - large range to notice ally under attack
 
 # Collision Avoidance
@@ -188,6 +188,10 @@ class GameFSMShipAI(FSM.FSM):
         self.oceanGrid = None
         self.world = None
         
+        # Collision system for cannon hit detection
+        self.collisionTraverser = CollisionTraverser('aiCannonTraverser')
+        self.collisionHandler = CollisionHandlerQueue()
+        
         # Combat state
         self.targetShip = None
         self.targetDoId = 0
@@ -242,6 +246,9 @@ class GameFSMShipAI(FSM.FSM):
         self.targetShip = None
         self.targetDoId = 0
         self.threatList.clear()
+        # Clean up collision system
+        if hasattr(self, 'collisionTraverser'):
+            self.collisionTraverser.clearColliders()
 
     def _stopAllTasks(self):
         """Stop all running tasks and intervals."""
@@ -446,11 +453,15 @@ class GameFSMShipAI(FSM.FSM):
 
     def _getTurnRate(self):
         """
-        Get ship turn rate from ShipGlobals based on ship class.
+        Get ship turn rate from ShipGlobals or ship attributes, matching player ship speed.
         Turn rate is in degrees per second.
         Larger ships turn slower, smaller ships are more agile.
         """
         try:
+            # Try to get from ship attributes first (like player ships)
+            if hasattr(self.ship, 'turnRate'):
+                return self.ship.turnRate
+            # Fall back to ShipGlobals
             shipClass = self.ship.shipClass
             speedData = ShipGlobals.getAIShipSpeed(shipClass)
             if speedData and len(speedData) >= 2 and len(speedData[1]) >= 1:
@@ -458,7 +469,7 @@ class GameFSMShipAI(FSM.FSM):
                 return float(speedData[1][0])
         except:
             pass
-        return 10.0  # Default turn rate (degrees per second)
+        return 3.0  # Default turn rate (degrees per second) - reduced to match player ship rotation speed
 
     def _getRotationDuration(self, angleDiff):
         """
@@ -2526,30 +2537,78 @@ class GameFSMShipAI(FSM.FSM):
         except Exception as e:
             return False
 
-    def _fireIndividualCannon(self, target, cannonIndex, dist):
+    def _checkCannonHit(self, fromPos, toPos, target):
         """
-        Fire a single cannon at the target and apply damage, with a miss/fail rate.
-        Uses the actual DistributedShipCannonAI to trigger visual effects on clients.
+        Perform a collision ray test from cannon position to aim position.
+        Returns True if the ray hits the target, False otherwise.
+        """
+        try:
+            # Create collision ray
+            ray = CollisionRay()
+            ray.setOrigin(fromPos)
+            direction = toPos - fromPos
+            direction.normalize()
+            ray.setDirection(direction)
+            
+            # Create collision node
+            rayNode = CollisionNode('cannonRay')
+            rayNode.addSolid(ray)
+            rayNode.setFromCollideMask(BitMask32.allOff())
+            rayNode.setIntoCollideMask(BitMask32.allOff())
+            
+            # Get target's collision node
+            targetNodePath = None
+            if hasattr(target, 'getNodePath'):
+                targetNodePath = target.getNodePath()
+            elif hasattr(target, 'collisions'):
+                targetNodePath = target.collisions
+            else:
+                return False
+            
+            if not targetNodePath or targetNodePath.isEmpty():
+                return False
+            
+            # Add ray to traverser
+            rayNodePath = self.ship.attachNewNode(rayNode)
+            self.collisionTraverser.addCollider(rayNodePath, self.collisionHandler)
+            
+            # Traverse
+            self.collisionTraverser.traverse(targetNodePath)
+            
+            # Check for hits
+            self.collisionHandler.sortEntries()
+            for entry in self.collisionHandler.getEntries():
+                hitNodePath = entry.getIntoNodePath()
+                if hitNodePath and not hitNodePath.isEmpty():
+                    # Check if hit the target
+                    current = hitNodePath
+                    while current:
+                        if current == targetNodePath:
+                            # Hit the target
+                            self.collisionTraverser.removeCollider(rayNodePath)
+                            rayNodePath.removeNode()
+                            return True
+                        current = current.getParent()
+            
+            # Cleanup
+            self.collisionTraverser.removeCollider(rayNodePath)
+            rayNodePath.removeNode()
+            return False
+            
+        except Exception as e:
+            return False
+        """
+        Fire a single cannon at the target and apply damage, with physics-based hit detection.
+        Uses collision ray to determine if the shot hits the target.
         """
         if not target or not self._isValidTarget(target):
             return
         try:
-            # Add a miss/fail rate for enemy cannons
-            MISS_CHANCE = 0.25  # 25% chance to miss
-            if random.random() < MISS_CHANCE:
-                # Simulate a miss: fire the cannon visually, but do not apply damage
-                if cannonIndex < len(self.ship.cannons):
-                    cannon = self.ship.cannons[cannonIndex]
-                    if hasattr(cannon, 'fireAtPosition'):
-                        targetPos = target.getPos()
-                        miss_offset = random.uniform(100, 300)
-                        from panda3d.core import Point3
-                        aimPos = Point3(targetPos.getX() + miss_offset, targetPos.getY() + miss_offset, targetPos.getZ())
-                        cannon.fireAtPosition(aimPos)
-                return
             # Get the actual cannon distributed object
             if cannonIndex < len(self.ship.cannons):
                 cannon = self.ship.cannons[cannonIndex]
+                cannonPos = cannon.getPos(self.ship)
+                
                 # Get target position with some spread for realism
                 targetPos = target.getPos()
                 spreadX = random.gauss(0, 15)
@@ -2561,28 +2620,32 @@ class GameFSMShipAI(FSM.FSM):
                     targetPos.getY() + spreadY,
                     targetPos.getZ() + spreadZ if hasattr(targetPos, 'getZ') else spreadZ
                 )
-                # Fire the cannon (sends visual effect to clients)
+                
+                # Perform collision ray test to check for hit
+                hitTarget = self._checkCannonHit(cannonPos, aimPos, target)
+                
+                # Fire the cannon visually (sends visual effect to clients)
                 if hasattr(cannon, 'fireAtPosition'):
                     cannon.fireAtPosition(aimPos)
-            # Calculate accuracy based on distance
-            accuracy = max(0.3, 1.0 - (dist / AI_CANNON_DIST_RANGE) * 0.5)
-            if random.random() > accuracy:
-                # Miss - no damage but visual was still fired
-                return
-            # Calculate damage
-            baseDamage = AI_INDIVIDUAL_CANNON_DAMAGE
-            levelMod = self._getLevelBasedDamageModifier(target)
-            distMod = self._calculateDamageFalloff(dist)
-            _, damageOutMod = self._getNPCDamageModifiers()
-            totalDamage = int(baseDamage * levelMod * distMod * damageOutMod)
-            if totalDamage > 0:
-                # Apply damage to target
-                if hasattr(target, 'takeDamage'):
-                    target.takeDamage(self.ship.doId, totalDamage, 0)
-                elif hasattr(target, 'hull') and target.hull:
-                    hull = target.hull
-                    if hasattr(hull, 'takeDamage'):
-                        hull.takeDamage(self.ship.doId, totalDamage, 0)
+                
+                if not hitTarget:
+                    # Miss - visual fired but no damage
+                    return
+                
+                # Hit confirmed - calculate and apply damage
+                baseDamage = AI_INDIVIDUAL_CANNON_DAMAGE
+                levelMod = self._getLevelBasedDamageModifier(target)
+                distMod = self._calculateDamageFalloff(dist)
+                _, damageOutMod = self._getNPCDamageModifiers()
+                totalDamage = int(baseDamage * levelMod * distMod * damageOutMod)
+                if totalDamage > 0:
+                    # Apply damage to target
+                    if hasattr(target, 'takeDamage'):
+                        target.takeDamage(self.ship.doId, totalDamage, 0)
+                    elif hasattr(target, 'hull') and target.hull:
+                        hull = target.hull
+                        if hasattr(hull, 'takeDamage'):
+                            hull.takeDamage(self.ship.doId, totalDamage, 0)
         except:
             pass
 
@@ -2616,7 +2679,7 @@ class GameFSMShipAI(FSM.FSM):
     def exitAdrift(self):
         pass
 
-    def enterAISteering(self, avId):
+    def enterAISteering(self):
         pass
 
     def exitAISteering(self):

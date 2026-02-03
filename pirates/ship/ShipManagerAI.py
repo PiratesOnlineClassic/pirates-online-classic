@@ -14,7 +14,7 @@ from pirates.piratesbase.PLocalizerEnglish import *
 
 
 NPCSHIP_POP_UPKEEP_DELAY = config.GetFloat('npcship-pop-upkeep-delay', 10.0)
-NPCSHIP_POP_MAX = config.GetInt('npcship-pop-max', 512)
+NPCSHIP_POP_MAX = config.GetInt('npcship-pop-max', 96)
 FLAGSHIP_POP_MAX = config.GetInt('flagship-pop-max', 24)
 FLAGSHIP_SPAWN_DELAY = config.GetFloat('flagship-spawn-delay', 120.0)
 
