@@ -74,9 +74,22 @@ pip install panda3d
 
 Or build from source from the official repository: [https://github.com/panda3d/panda3d](https://github.com/panda3d/panda3d)
 
-#### 4. Download Game Resources
+#### 4. Clone Game Resources
 
-Place the game resources in a `resources` folder adjacent to this repository.
+Clone the resources repository **next to** (not inside) the pirates-online-classic folder:
+
+```bash
+cd ..  # Go back to parent directory
+git clone https://github.com/PiratesOnlineClassic/poc-resources.git resources
+```
+
+Your folder structure should look like this:
+
+```
+parent-folder/
+├── pirates-online-classic/   # This repository
+└── resources/                # Game resources (cloned above)
+```
 
 ---
 
@@ -131,29 +144,47 @@ copy build\Release\astrond.exe ..\pirates-online-classic\astron\
 
 ## 🎮 Running the Game
 
+The servers must be started in a specific order. **UberDOG must be running before the AI server starts**, otherwise no shards will be detected.
+
+### Startup Order
+
+```
+1. Astron (Message Director)
+2. UberDOG (Global Services) ← Must be running before AI!
+3. AI Server (Game World)
+4. Client (Game)
+```
+
 ### 1. Start Astron
 
+First, start the Astron message director:
+
 ```bash
-cd astron
-./astrond config/astrond.yml
+./start_astron
 ```
 
-### 2. Start the AI Server
+### 2. Start UberDOG
+
+Next, start the UberDOG server. **This must be running before the AI server or shards won't be detected:**
 
 ```bash
-python -m pirates.ai.AIStart
+./start_uberdog
 ```
 
-### 3. Start the Uberdog Server
+### 3. Start the AI Server
+
+Once UberDOG is running, start the AI server:
 
 ```bash
-python -m pirates.uberdog.UDStart
+./start_ai
 ```
 
 ### 4. Launch the Client
 
+Finally, open the game client:
+
 ```bash
-python -m pirates.piratesbase.PiratesStart
+./start_client
 ```
 
 ---
