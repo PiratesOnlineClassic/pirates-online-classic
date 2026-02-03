@@ -284,11 +284,11 @@ Pirates Online Classic uses a distributed architecture consisting of three main 
 
 ### AI Server (`pirates/ai/`)
 
-The AI server is responsible for all game world simulation. It runs the authoritative game state.
+The AI server is the heart of the game — it runs all authoritative game logic, world simulation, NPC behavior, combat resolution, and quest management. Each AI server instance represents one "shard" or "district" that players can join.
 
 #### PiratesAIRepository
 
-The main entry point for the AI server is `PiratesAIRepository`, which inherits from `PiratesInternalRepository`.
+The main entry point for the AI server is `PiratesAIRepository`, which inherits from `PiratesInternalRepository`. This class orchestrates the entire game world.
 
 ```python
 class PiratesAIRepository(PiratesInternalRepository):
@@ -298,46 +298,109 @@ class PiratesAIRepository(PiratesInternalRepository):
             PiratesGlobals.DynamicZonesBegin,
             PiratesGlobals.DynamicZonesEnd
         )
+        self.zoneId2owner = {}  # Track zone ownership
+        self.uidMgr = UniqueIdManager(self)  # Unique ID to doId mapping
 ```
 
 **Key Responsibilities:**
-- **Zone Allocation**: Dynamically allocates zones for instances, ships, and game areas
-- **Global Manager Creation**: Spawns TimeManager, FriendManager, QuestManager, etc.
+- **Zone Allocation**: Dynamically allocates zones for instances, ships, and game areas using `UniqueIdAllocator`
+- **Global Manager Creation**: Spawns all singleton manager objects on startup
 - **World Creation**: Initializes the game world through `WorldCreatorAI`
-- **Population Tracking**: Monitors shard population for load balancing
+- **Population Tracking**: Monitors shard population via `DistributedPopulationTrackerAI`
+- **District Management**: Creates and manages the `PiratesDistrictAI` that represents this shard
 
 #### Startup Sequence
 
-1. `handleConnected()` - Establishes connection to Astron
-2. `createGlobals()` - Creates singleton manager objects:
-   - `TimeManagerAI` - Server time synchronization
-   - `FriendManagerAI` - Friend list operations
-   - `QuestManagerAI` - Quest state management
-   - `BattleManagerAI` - Combat resolution
-   - `EnemySpawnerAI` - NPC spawning system
-   - `ShipManagerAI` - Ship spawning and management
-   - `TeleportMgrAI` - Cross-instance teleportation
-3. `createWorlds()` - Loads world data and spawns world instances
+The AI server follows a precise startup sequence:
+
+```python
+def handleConnected(self):
+    # 1. Allocate our district channel
+    self.districtId = self.allocateChannel()
+    
+    # 2. Create the district object (represents this shard)
+    self.distributedDistrict = PiratesDistrictAI(self)
+    self.distributedDistrict.setName(self.districtName)
+    self.distributedDistrict.generateWithRequiredAndId(...)
+    
+    # 3. Create all global manager objects
+    self.createGlobals()
+    
+    # 4. Load and spawn the game world
+    self.createWorlds()
+    
+    # 5. Mark district as available for players
+    self.distributedDistrict.b_setAvailable(1)
+```
+
+#### Global Managers Created
+
+| Manager | Purpose |
+|---------|---------|
+| `TimeManagerAI` | Server time synchronization with clients |
+| `FriendManagerAI` | Friend list operations and online status |
+| `QuestManagerAI` | Quest state machines and progression |
+| `BattleManagerAI` | Combat resolution, damage calculation, skill effects |
+| `EnemySpawnerAI` | NPC spawning, respawning, and holiday-aware behavior |
+| `ShipManagerAI` | Player and NPC ship management |
+| `TeleportMgrAI` | Cross-instance and cross-shard teleportation |
+| `TimeOfDayManagerAI` | Day/night cycle synchronization |
+| `NewsManagerAI` | Holiday events and server announcements |
+| `TradeManagerAI` | Player-to-player trading |
+| `TutorialManagerAI` | Tutorial instance management |
+| `WorldGridManagerAI` | Dynamic zone interest for players |
+| `TargetManagerAI` | Combat targeting system |
+| `BandManagerAI` | Crew/party system |
+| `CrewMatchAI` | Crew matchmaking |
+| `DiscordNotificationsAI` | Discord webhook integration |
+
+#### Battle Manager
+
+The `BattleManagerAI` handles all combat logic server-side:
+
+```python
+class BattleManagerAI(BattleManagerBase):
+    def __init__(self, air):
+        self._pendingSkillEffects = collections.deque()  # Effect queue
+        
+    def getTargetInRange(self, attacker, target, skillId, ammoSkillId):
+        # Validates attack range before allowing damage
+        attackRange = self.getModifiedAttackRange(attacker, skillId, ammoSkillId)
+        distance = self.getRelativePosition(attacker, target)
+        return distance <= attackRange
+    
+    def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, ...):
+        # Calculates damage, applies modifiers, handles crits
+        # Returns skill result for client animation
+```
+
+**Combat Features:**
+- Range validation between attacker and target
+- Skill effect queuing with duration tracking
+- Weapon ammo type detection (pistol, grenade, cannon, dagger)
+- Combo diary tracking for skill chains
 
 ---
 
 ### UberDOG Server (`pirates/uberdog/`)
 
-UberDOG handles global services that persist across all shards (districts).
+UberDOG (Uber Distributed Object Globals) handles all global services that persist across shards. There is typically only ONE UberDOG server for the entire game cluster.
 
 #### PiratesUberRepository
 
 ```python
 class PiratesUberRepository(PiratesInternalRepository):
-    def createGlobals(self):
-        self.csm = self.generateGlobalObject(
-            OTP_DO_ID_CLIENT_SERVICES_MANAGER, 
-            'ClientServicesManager'
-        )
-        self.inventoryManager = self.generateGlobalObject(
-            OTP_DO_ID_PIRATES_INVENTORY_MANAGER,
-            'DistributedInventoryManager'
-        )
+    def handleConnected(self):
+        # Create the root directory object
+        rootObj = DistributedDirectoryAI(self)
+        rootObj.generateWithRequiredAndId(self.getGameDoId(), 0, 0)
+        
+        # Start RPC server for external tools
+        if config.GetBool('want-rpc-server', True):
+            self.rpc = PiratesRPCServiceUD(self)
+            self.rpc.start()
+        
+        self.createGlobals()
 ```
 
 **Global Services:**
@@ -345,9 +408,81 @@ class PiratesUberRepository(PiratesInternalRepository):
 | Service | Description |
 |---------|-------------|
 | `ClientServicesManager` | Authentication, account creation, avatar management |
-| `DistributedInventoryManager` | Persistent inventory storage |
-| `DistributedShipLoader` | Ship data persistence |
-| `PCAvatarFriendsManager` | Cross-shard friend lists |
+| `DistributedInventoryManager` | Persistent inventory storage across sessions |
+| `DistributedShipLoader` | Ship data persistence and loading |
+| `PCAvatarFriendsManager` | Cross-shard friend lists and online status |
+| `PCGuildManager` | Guild creation, membership, and management |
+| `DistributedTravelAgent` | Cross-shard teleportation routing |
+| `CodeRedemption` | Promo code validation and rewards |
+| `CentralLogger` | Centralized event logging |
+| `PiratesSettingsMgr` | Server-wide configuration |
+| `NewsManagerUD` | Server announcements and holiday sync |
+| `DistrictTrackerUD` | Tracks all online shards |
+
+#### Client Services Manager (CSM)
+
+The CSM is the most complex UberDOG service — it handles the entire login and avatar selection flow using finite state machines:
+
+```python
+class LoginAccountFSM(OperationFSM):
+    def enterStart(self, token):
+        self.token = token
+        self.demand('QueryAccountDB')
+    
+    def enterQueryAccountDB(self):
+        self.csm.accountDB.lookup(self.token, self.__handleLookup)
+    
+    def __handleLookup(self, result):
+        if self.accountId:
+            self.demand('RetrieveAccount')
+        else:
+            self.demand('CreateAccount')
+    
+    def enterCreateAccount(self):
+        self.account = {
+            'ACCOUNT_AV_SET': [0] * 4,  # 4 avatar slots
+            'CREATED': time.ctime(),
+            'LAST_LOGIN': time.ctime(),
+            'ACCESS_LEVEL': self.accessLevel
+        }
+        self.csm.air.dbInterface.createObject(...)
+```
+
+**Login Flow States:**
+1. `Start` → Receives login token
+2. `QueryAccountDB` → Validates credentials
+3. `CreateAccount` OR `RetrieveAccount` → Gets/creates account
+4. `StoreAccountID` → Links user ID to account
+5. `SetAccount` → Finalizes login, sends avatar list
+
+**Account Database Types:**
+
+| Type | Use Case |
+|------|----------|
+| `DeveloperAccountDB` | Local dev (auto-creates accounts with access level 600) |
+| `LocalAccountDB` | Persistent local accounts (first user gets 700, others 100) |
+| `RemoteAccountDB` | Production with AES-128-CBC encrypted tokens |
+
+#### Inventory Manager
+
+The `DistributedInventoryManagerUD` handles all persistent inventory operations:
+
+```python
+class InventoryOperationFSM(FSM):
+    TIMEOUT_SECONDS = 30.0  # All operations timeout after 30s
+    
+    def _finish(self, *args, **kwargs):
+        # Guaranteed cleanup with timeout cancellation
+        taskMgr.remove(self._timeoutTaskName)
+        self.manager.avatar2fsm.pop(self.avatarId, None)
+        if self.callback:
+            self.callback(*args, **kwargs)
+```
+
+**Inventory FSM Types:**
+- `QueryInventoryFSM` - Fetches inventory ID for an avatar
+- `CreateInventoryFSM` - Creates new inventory in database
+- `QueryShipInventoryFSM` - Ship-specific inventory queries
 | `PCGuildManager` | Guild creation and management |
 | `DistributedTravelAgent` | Cross-shard teleportation |
 | `CodeRedemption` | Promo code redemption |
@@ -558,9 +693,11 @@ Each island has a `DistributedShipDeployerAI` that handles:
 
 ### Quest System (`pirates/quest/`)
 
+The quest system is one of the most valuable reverse-engineering discoveries in this project. **A significant amount of server-side AI logic was left in the original client's quest directory**, providing deep insight into how the game's quest system was designed.
+
 #### QuestManagerAI
 
-The quest system uses a FSM-based approach:
+The quest system uses a FSM-based approach for managing quest state transitions:
 
 ```python
 class QuestOperationFSM(FSM):
@@ -570,17 +707,101 @@ class QuestOperationFSM(FSM):
         self.callback = callback
 ```
 
-**Quest Components:**
-- `QuestDB` - Static quest definitions
-- `QuestLadderDB` - Quest chains and progressions
-- `QuestTaskDNA` - Individual task requirements
-- `QuestReward` - Reward definitions
+#### QuestDB — The Goldmine
 
-**Quest Flow:**
-1. Player interacts with quest giver NPC
-2. `CreateQuestsFSM` creates quest entry in database
-3. Quest tasks are tracked via `QuestTaskState`
-4. Completion triggers rewards via inventory system
+The `QuestDB.py` file contains **over 1,400 lines of quest definitions** that were originally server-side only. This includes:
+
+- **Complete main story quests** (Chapters 1-3 with Jack Sparrow, Will Turner, Elizabeth, etc.)
+- **NPC dialogue triggers** and cutscene sequences
+- **Quest task definitions** (defeat enemies, recover items, visit locations)
+- **Reward structures** (reputation, items, ships)
+- **Quest prerequisites** and progression logic
+
+```python
+# Example quest definition from QuestDB
+'c2_visit_will_turner': QuestDNA(
+    tasks=VisitTaskDNA(npcId=NPCIds.WILL_TURNER, autoTriggerInfo=(AUTO_TRIGGER_OBJ_EXISTS, [NPCIds.WILL_TURNER])),
+    instanceInfo=(INSTANCE_REF_TYPE_OBJECT, NPCIds.WILL_TURNER),
+    finalizeInfo=({
+        'type': 'cutscene',
+        'giverId': NPCIds.WILL_TURNER,
+        'sceneId': '2.1: Will Turner Sword',
+        'preloadInfo': ['2.1.b: Sword Tut end']
+    }, ...),
+    questInt=2000,
+    rewards=(ReputationReward(ExpRewards.TRIVIAL),),
+    checkPoint=PiratesGlobals.TUT_GOT_CUTLASS
+)
+```
+
+#### QuestLadderDB — Quest Chains
+
+The `QuestLadderDB.py` defines quest progression trees with branching paths:
+
+- **MainStory** - The core game storyline (Chapters 1-3)
+- **Weapon Unlock Quests** - Dagger, Pistol, Cutlass, Voodoo Doll, Staff
+- **Fortune Quests** - Side quests for treasure and items
+- **Ship PVP Quests** - Spanish and French faction ship battles
+- **Outfit Quests** - Basic, Intermediate, and Advanced clothing quests
+- **Holiday Quests** - Father's Day 2008, special events
+
+```python
+# Quest ladder structure showing branching
+FameQuestLadderDict = {
+    'MainStory': QuestLadderDNA(
+        name='MainStory',
+        firstQuestId='Chapter1.rung1',
+        containers=(
+            QuestLadderDNA(name='Chapter 1', ...),
+            QuestLadderDNA(name='Chapter 2', ...),
+            QuestLadderDNA(name='Chapter 3', ...)  # Largest chapter with rum running, ship building
+        )
+    ),
+    'WeaponDoll': QuestLadderDNA(...),   # Voodoo doll weapon quest
+    'WeaponDagger': QuestLadderDNA(...), # Dagger unlock quest
+    'WeaponGrenade': QuestLadderDNA(...),# Grenade quest
+    ...
+}
+```
+
+#### Quest Task Types
+
+The quest system supports various task types defined in `QuestTaskDNA.py`:
+
+| Task Type | Description |
+|-----------|-------------|
+| `VisitTaskDNA` | Visit a specific NPC or location |
+| `DefeatTaskDNA` | Defeat a number of enemies of a type |
+| `RecoverAvatarItemTaskDNA` | Loot items from enemies |
+| `DeliverItemTaskDNA` | Deliver items to NPCs |
+| `DeployShipTaskDNA` | Launch a ship from a dock |
+| `CaptureTaskDNA` | Capture an enemy NPC |
+| `MaroonTaskDNA` | Strand a captured NPC |
+| `SinkShipTaskDNA` | Sink enemy ships |
+| `PlayMinigameTaskDNA` | Play poker/blackjack |
+| `BribeTaskDNA` | Bribe an NPC with gold |
+| `SmuggleTaskDNA` | Smuggle cargo past enemies |
+
+#### Quest Rewards
+
+```python
+# Reward types from QuestReward.py
+ReputationReward(ExpRewards.TRIVIAL)  # XP rewards
+ShipReward(1)                          # Ship unlocks
+ItemReward(itemId, quantity)           # Inventory items
+GoldReward(amount)                     # Currency
+WeaponReward(weaponType)               # Weapon unlocks
+```
+
+#### Quest Indicators
+
+The quest system includes sophisticated indicator nodes for guiding players:
+
+- `QuestIndicatorNodeNPC` - Points to quest NPCs
+- `QuestIndicatorNodeItem` - Points to collectible items
+- `QuestIndicatorNodeShip` - Points to ships
+- `QuestIndicatorNodeArea` - Points to areas/zones
+- `QuestIndicatorNodeTunnel` - Points to area transitions
 
 ---
 
