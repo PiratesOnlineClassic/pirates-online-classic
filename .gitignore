@@ -125,7 +125,6 @@ resources/
 
 # logs/screens
 logs/
-screenshots/
 
 # Build
 build/
