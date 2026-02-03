@@ -77,6 +77,7 @@ class ShipPilot2(PhysicsWalker):
         # for long periods of time.  We slowly up the ship's max
         # acceleration as this increases.
         self.straightHeading = 0
+        self.straightSailDt = 0.0
 
     def setWalkSpeed(self, forward, jump, reverse, rotate):
         assert self.debugPrint("setWalkSpeed()")
@@ -620,12 +621,13 @@ class ShipPilot2(PhysicsWalker):
         if reverse or turnLeft or turnRight:
             # Reset Straight Sailing Bonus
             self.straightHeading = 0
+            self.straightSailDt = 0.0
             
         # Straight Sailing Acceleration Bonus
-        straightSailDt += dt
+        self.straightSailDt += dt
         straightSailBonus = 0.0
-        if straightSailDt > self.STRAIGHT_SAIL_BONUS_TIME / 2.0:
-            straightSailBonus = (straightSailDt - (self.STRAIGHT_SAIL_BONUS_TIME / 2.0)) / self.STRAIGHT_SAIL_BONUS_TIME / 2.0
+        if self.straightSailDt > self.STRAIGHT_SAIL_BONUS_TIME / 2.0:
+            straightSailBonus = (self.straightSailDt - (self.STRAIGHT_SAIL_BONUS_TIME / 2.0)) / self.STRAIGHT_SAIL_BONUS_TIME / 2.0
         straightSailBonus *= self.MAX_STRAIGHT_SAIL_BONUS
         straightSailBonus += 1.0
 
@@ -708,7 +710,10 @@ class ShipPilot2(PhysicsWalker):
             self.setPriorParentVector()
             self.needToDeltaPos = 0
 
-        airborneHeight=self.getAirborneHeight()
+        if self.getAirborneHeight is None:
+            airborneHeight = 0.0
+        else:
+            airborneHeight = self.getAirborneHeight()
         if airborneHeight > self.highMark:
             self.highMark = airborneHeight
             if __debug__:
