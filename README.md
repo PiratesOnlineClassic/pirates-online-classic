@@ -25,15 +25,15 @@ This project is community-driven and welcomes contributions from developers of a
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="screenshots/Screenshot%202026-02-01%20at%209.07.34%20PM.png" alt="Screenshot 1" width="800">
+  <img src="screenshots/Screenshot 2026-02-01 at 9.07.34 PM.png" alt="Screenshot 1" width="800">
 </p>
 
 <p align="center">
-  <img src="screenshots/Screenshot%202026-02-01%20at%209.36.30%20PM.png" alt="Screenshot 2" width="800">
+  <img src="screenshots/Screenshot 2026-02-01 at 9.36.30 PM.png" alt="Screenshot 2" width="800">
 </p>
 
 <p align="center">
-  <img src="screenshots/Screenshot%202026-02-01%20at%209.39.45%20PM.png" alt="Screenshot 3" width="800">
+  <img src="screenshots/Screenshot 2026-02-01 at 9.39.45 PM.png" alt="Screenshot 3" width="800">
 </p>
 
 ---
