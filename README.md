@@ -1627,6 +1627,213 @@ class DiscordNotificationsAI:
 
 ---
 
+## 🪄 Magic Words (Admin Commands)
+
+Magic Words are in-game commands that allow developers and game masters to test features, debug issues, and manage the game. They are entered via the chat box by typing `~` followed by the command name and any arguments.
+
+### How to Use Magic Words
+
+1. Open the chat box in-game
+2. Type `~` followed by the command name
+3. Add any required arguments separated by spaces
+4. Press Enter to execute
+
+**Example:**
+```
+~hp 500
+~gold 10000
+~tp tortuga
+```
+
+### Access Levels
+
+Magic Words require specific access levels to use:
+
+| Level | Category | Description |
+|-------|----------|-------------|
+| 200 | `CATEGORY_COMMUNITY_MANAGER` | Basic community management |
+| 300 | `CATEGORY_MODERATOR` | Moderation commands |
+| 400 | `CATEGORY_CREATIVE` | Creative/testing tools |
+| 500 | `CATEGORY_PROGRAMMER` | Developer commands |
+| 600 | `CATEGORY_SYSTEM_ADMIN` | Full system access |
+
+### Complete Magic Word Reference
+
+#### Teleportation & Movement
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `~tp` | `<locationName>` | Teleport to a location by name (e.g., `~tp tortuga`) |
+| `~areaTeleport` | `<locationUid>` | Teleport by unique location ID |
+| `~world` | `<instanceType> <worldName> [locationUid]` | Teleport to a specific world instance |
+| `~walk` | — | Reset avatar state to LandRoam |
+| `~pilot` | — | Move to nearest ship's wheel |
+| `~turbo` | — | Toggle turbo movement speed |
+| `~mario` | — | Toggle Mario-style movement physics |
+
+#### Avatar Stats
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `~hp` | `[amount]` | Set HP (0 = max HP) |
+| `~maxHp` | `<amount>` | Set maximum HP |
+| `~mojo` | `[amount]` | Set Mojo (0 = max Mojo) |
+| `~maxMojo` | `<amount>` | Set maximum Mojo |
+| `~level` | `<repType> <level>` | Set reputation level |
+| `~name` | `<name>` | Change avatar name |
+| `~setDoubleXP` | `<minutes>` | Grant double XP for X minutes |
+
+#### Inventory & Items
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `~gold` | `<amount>` | Add gold to inventory |
+| `~removeGold` | `<amount>` | Remove gold from inventory |
+| `~maxWeapons` | — | Max out all weapons to Rank 5 |
+| `~weaponrank` | `<rank>` | Set weapon rank (1-6) |
+| `~maxSP` | — | Max out all skill points (255 each) |
+| `~givePlayerStack` | `<stackId> <amount>` | Give specific inventory item |
+| `~givePork` | — | Give 10 Pork Chunks (testing) |
+
+#### Quests
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `~giveQuest` | `<questId>` | Give a quest by ID |
+| `~dropQuest` | `<questId>` | Drop an active quest |
+| `~dropAllQuests` | — | Drop all active quests |
+| `~skipQuest` | `[questId]` | Force-complete a quest |
+
+#### Ships
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `~deployShip` | `<shipIndex>` | Deploy ship by inventory index |
+| `~shipModel` | `<shipClass> <team> <wantCollisions>` | Spawn a ship model locally |
+| `~roll` | `<mass> <roll>` | Set ship fake mass and add roll |
+| `~islandShips` | `<0/1>` | Toggle ship visibility from islands |
+
+#### Holidays & Events
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `~startHoliday` | `<holidayId> <time>` | Start a holiday event |
+| `~stopHoliday` | `<holidayId>` | End a holiday event |
+| `~displayMessage` | `<messageId>` | Display a server message |
+| `~fireworks` | `[showType]` | Toggle fireworks display |
+
+#### Visual Effects
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `~bonfire` | — | Spawn bonfire effect at player position |
+| `~swamp` | — | Toggle swamp particle effects |
+| `~darkfog` | — | Toggle dark fog effects |
+| `~dust` | — | Spawn dust/debris particles with camera shake |
+| `~forceLod` | — | Force all LODs to highest detail |
+
+#### Time of Day
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `~setTime` | `<hour>` | Set time of day (0-24) |
+| `~setAmbient` | `<r> <g> <b>` | Set ambient light color |
+| `~setSun` | `<r> <g> <b>` | Set sun light color |
+
+#### Camera & Debug
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `~oobe` | — | Toggle out-of-body experience mode |
+| `~oobeCull` | — | Toggle OOBE with culling visualization |
+| `~tex` | — | Toggle textures |
+| `~wire` | — | Toggle wireframe mode |
+| `~axis` | — | Load XYZ axis model for positioning |
+| `~clearAxis` | — | Remove axis models |
+| `~liveCam` | `[camNum]` | Switch to predefined camera position |
+| `~showCams` | — | Show all live camera frustums |
+| `~hideCams` | — | Hide live camera frustums |
+
+#### Game Master Tools
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `~setGMTag` | `<state> <color> <string>` | Set GM nametag (colors: gold, red, green, blue, white) |
+| `~toggleGM` | — | Toggle GM nametag visibility |
+| `~setFounder` | `<0/1>` | Set founder badge state |
+
+#### Minigames & Activities
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `~lfa` | `<activityName>` | Request activity (blackjack, poker, pvp, tm, hsa, mmp) |
+| `~joincrew` | — | Request a new crew from crew manager |
+| `~topten` | — | Request guild leaderboard top 10 |
+| `~pvpmoney` | — | Show PVP infamy details |
+
+#### Cutscenes & UI
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `~cutscene` | `<csId>` | Play a cutscene by ID |
+| `~stayTuned` | `[questId]` | Show "Stay Tuned" popup |
+| `~crewtut` | — | Show original crew tutorial |
+
+#### Development & Debug
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `~docs` | — | Generate CSV documentation of all client commands |
+| `~objectcount` | — | Log distributed object count |
+| `~battleRandom` | `<command>` | Battle random sync (resync, status) |
+| `~taskprofileflush` | `<name>` | Flush AI task profiles |
+| `~dumpinstance` | — | Dump current instance to BAM file |
+| `~model` | `<path>` | Load a model into the world |
+| `~disconnect` | — | Disconnect from Client Agent |
+| `~dropBlockers` | — | Stash all blocker collision nodes |
+
+#### Black Pearl (Testing)
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `~blackpearl` | — | Teleport to Black Pearl instance |
+| `~blackpearlai` | — | Create Black Pearl instance (AI-side) |
+| `~bpstate` | `<state>` | Set BP state (StageOne, StageTwo, etc.) |
+| `~bpdestroy` | `<barricadeId>` | Destroy a barricade (0-4) |
+
+#### Wave & Sea Effects
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `~wave` | — | Get current sea wave settings |
+| `~setwave` | `<num> <amplitude> <wavelength> <speed>` | Set sea wave parameters |
+
+### Adding New Magic Words
+
+Magic Words are defined using the `@magicWord()` decorator:
+
+```python
+from otp.ai.MagicWordGlobal import *
+
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, str])
+def myCommand(amount, name):
+    """
+    Description of what this command does
+    """
+    invoker = spellbook.getInvoker()
+    target = spellbook.getTarget()
+    
+    # Do something...
+    return 'Command executed successfully!'
+```
+
+**Decorator Parameters:**
+- `category` - Access level required (e.g., `CATEGORY_SYSTEM_ADMIN`)
+- `types` - List of argument types (e.g., `[int, str, float]`)
+- `name` - Override the function name as the command name
+
+---
+
 ## 💬 Community
 
 Join our community to get help, share ideas, and connect with other contributors!
