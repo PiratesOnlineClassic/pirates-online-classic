@@ -28,7 +28,7 @@ class PirateInventoryAI(DistributedInventoryAI):
                 # Assign level up quests...
                 try:
                     level_up_quests = RepChart.getLevelUpQuest(repType, newLevel)[0]
-                    if not self.air.questMgr.hasQuest(level_up_quests):
+                    if not self.air.questMgr.hasQuest(avatar, questId=level_up_quests):
                         self.air.questMgr.createQuest(avatar, level_up_quests)
                 except IndexError:
                     self.notify.debug('Failed to give level up quest for %s(Level: %s); '
@@ -54,7 +54,7 @@ class PirateInventoryAI(DistributedInventoryAI):
                 # Give weapon level up quests...
                 try:
                     weapon_quests = RepChart.getWeaponLevelUpQuest(repType, newLevel, avatar)[0]
-                    if not self.air.questMgr.hasQuest(weapon_quests):
+                    if not self.air.questMgr.hasQuest(avatar, questId=weapon_quests):
                         self.air.questMgr.createQuest(avatar, weapon_quests)
                 except IndexError:
                     self.notify.debug('Failed to give weapon level up quest for %s(Level: %s); '

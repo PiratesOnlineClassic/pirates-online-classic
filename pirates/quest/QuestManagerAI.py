@@ -96,7 +96,7 @@ class CreateQuestsFSM(QuestOperationFSM):
     def enterStart(self, questIds):
         if not questIds:
             self.notify.warning('Failed to create quests for avatar %d, '
-                'no inventory found!' % self.avatar.doId)
+                'no quest ids provided!' % self.avatar.doId)
 
             self.cleanup()
             return
@@ -109,10 +109,13 @@ class CreateQuestsFSM(QuestOperationFSM):
             self.cleanup()
             return
 
+        # Work from a copy so mutations don't affect the caller's list
+        self.pendingQuestIds = list(questIds)
+
         def _questActivatedCallback(quest):
             if not quest:
-                self.notify.warning('Failed to activate quest %d for avatar %d, '
-                    'quest failed to generate!' % (quest.doId, self.avatar.doId))
+                self.notify.warning('Failed to activate a quest for avatar %d, '
+                    'quest failed to generate!' % self.avatar.doId)
 
                 self.cleanup()
                 return
@@ -131,10 +134,10 @@ class CreateQuestsFSM(QuestOperationFSM):
             if not self.activateQuestEntry(questDoId, _questActivatedCallback):
                 self.cleanup()
 
-        self.pendingQuestIds = questIds
-        for questId in self.pendingQuestIds:
+        for questId in list(self.pendingQuestIds):
             if not self.createQuestEntry(questId, callback=_questCreatedCallback):
                 self.cleanup()
+                return
 
 
 class CreateQuestFSM(CreateQuestsFSM):
@@ -191,34 +194,43 @@ class ActivateQuestsFSM(QuestOperationFSM):
             self.cleanup()
             return
 
-        self.questList = self.inventory.getDoIdListCategory(InventoryCategory.QUESTS)
-        if not self.questList:
+        questDoIds = self.inventory.getDoIdListCategory(InventoryCategory.QUESTS)
+        if not questDoIds:
             self.cleanup()
             return
 
-        for questDoId in self.questList:
-            # check to see if the quest object has already been generated,
-            # we do not want to regenerate the object over again...
+        # Count how many quests actually need to be queried from the database.
+        # Quests already in doId2do are already live and don't need re-activation.
+        self._pendingQuests = sum(
+            1 for doId in questDoIds if doId not in self.air.doId2do)
+
+        if not self._pendingQuests:
+            self.cleanup()
+            return
+
+        for questDoId in questDoIds:
             if questDoId in self.air.doId2do:
                 continue
 
             def _queryQuestCallback(dclass, fields, questDoId=questDoId):
                 if not dclass and not fields:
                     self.notify.warning('Failed to query quest %d, quest not found!' % questDoId)
-                    self.cleanup()
+                    self._pendingQuests -= 1
+                    if not self._pendingQuests:
+                        self.cleanup()
                     return
 
                 def _questActivatedCallback(quest):
                     if not quest:
                         self.notify.warning('Failed to activate quest %d for avatar %d, '
                             'quest failed to generate!' % (questDoId, self.avatar.doId))
-
-                        self.cleanup()
+                        self._pendingQuests -= 1
+                        if not self._pendingQuests:
+                            self.cleanup()
                         return
 
-                    # check to see if we're done
-                    self.questList.remove(questDoId)
-                    if not self.questList:
+                    self._pendingQuests -= 1
+                    if not self._pendingQuests:
                         self.cleanup()
 
                 self.air.questMgr.activateQuest(self.avatar, questDoId, _questActivatedCallback)
@@ -372,7 +384,7 @@ class QuestManagerAI(DirectObject):
             self.dropQuest(avatar, quest)
 
     def getQuest(self, avatar, questDoId=None, questId=None):
-        if not questDoId and not questId:
+        if questDoId is None and questId is None:
             return None
 
         questList = self.quests.get(avatar.doId)
@@ -483,30 +495,13 @@ class QuestManagerAI(DirectObject):
         self._giveRewards(avatar, quest.getRewards())
 
     def completeTaskState(self, avatar, questEvent, callback=None):
-        inventory = avatar.getInventory()
-        if not inventory:
-            self.notify.warning('Failed to complete a quest for avatar %d, '
-                'no inventory found!' % avatar.doId)
+        questObjects = list(self.quests.get(avatar.doId, {}).values())
+        if not questObjects:
+            return False
 
-            return
-
-        questList = inventory.getQuestList()
-        if not questList:
-            self.notify.warning('Failed to complete a quest for avatar %d, '
-                'the avatar\'s quest list is empty!' % avatar.doId)
-
-            return
-
-        for quest in questList:
-            assert(quest is not None)
-            questDNA = quest.getQuestDNA()
-            assert(questDNA is not None)
-
-            # if the task dna does not have a location,
-            # then force the location to be that of the event's location...
-            #for taskDNA in questDNA.getTaskDNAs():
-            #    if taskDNA.getLocation() == None:
-            #        taskDNA.setLocation(questEvent.getLocation())
+        for quest in questObjects:
+            if quest.getQuestDNA() is None:
+                continue
 
             quest.handleEvent(avatar, questEvent)
 

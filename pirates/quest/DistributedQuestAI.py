@@ -130,8 +130,11 @@ class DistributedQuestAI(DistributedObjectAI, QuestBase, Quest):
     def handleEvent(self, holder, questEvent):
         modified = 0
         for (taskState, taskDNA) in zip(self.taskStates, self.questDNA.getTasks()):
+            if not taskDNA.locationMatches(questEvent):
+                continue
+
+            taskState.resetModified()
             if questEvent.applyTo(taskState, taskDNA):
-                taskState.resetModified()
                 if holder.getAccess() != 2 and self.questDNA.getVelvetRoped():
                     holder.d_popupProgressBlocker(self.getQuestId())
                 else:
