@@ -83,7 +83,7 @@ class PirateInventoryAI(DistributedInventoryAI):
     def setGeneralRep(self, quantity):
         self.setReputation(InventoryType.GeneralRep, quantity)
 
-    def getGeneralRep(self, quantity):
+    def getGeneralRep(self):
         return self.getReputation(InventoryType.GeneralRep)
 
     def setGoldInPocket(self, quantity):
@@ -120,7 +120,7 @@ class PirateInventoryAI(DistributedInventoryAI):
             return
 
         avatar.giveCardMessage(cardId)
-        self.b_setStackQuantity(cardId, amount)
+        self.b_setStackQuantity(InventoryType.begin_Cards + cardId, amount)
 
     def setShipDoIdList(self, shipList):
         return self.b_setDoIdListCategory(InventoryCategory.SHIPS, shipList)

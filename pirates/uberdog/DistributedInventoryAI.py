@@ -27,6 +27,10 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
     def announceGenerate(self):
         DistributedObjectAI.announceGenerate(self)
+        # Stacks are set from the DB before announceGenerate fires, so mark
+        # them as ready and check whether the inventory is fully initialised.
+        self.stacksReady = True
+        self.checkIsReady()
 
     def d_setCategoryLimits(self, categoriesAndLimits):
         self.sendUpdate('setCategoryLimits', [categoriesAndLimits])
@@ -79,8 +83,9 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         return [[stackType, quantity] for stackType, quantity in list(self.stacks.items())]
 
     def setAccumulator(self, accumulatorType, quantity):
+        # Local state update only.  The targeted network send is done by
+        # d_setAccumulator; b_setAccumulator combines both.
         self.accumulators[accumulatorType] = quantity
-        self.d_setAccumulators(self.getAccumulators())
 
     def d_setAccumulator(self, accumulatorType, quantity):
         self.sendUpdateToAvatarId(self.ownerId, 'accumulator', [accumulatorType, quantity])
@@ -90,8 +95,9 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setAccumulator(accumulatorType, quantity)
 
     def setStackLimit(self, stackType, limit):
+        # Local state update only.  The targeted network send is done by
+        # d_setStackLimit; b_setStackLimit combines both.
         self.stackLimits[stackType] = limit
-        self.d_setStackLimits(self.getStackLimits())
 
     def d_setStackLimit(self, stackType, limit):
         self.sendUpdateToAvatarId(self.ownerId, 'stackLimit', [stackType, limit])
@@ -101,8 +107,18 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setStackLimit(stackType, limit)
 
     def setStackQuantity(self, stackType, quantity):
-        self.stacks[stackType] = min(quantity, self.getStackLimit(stackType))
-        self.d_setStacks(self.getStacks())
+        # Apply the stack cap only when a positive limit exists.  A missing
+        # limit defaults to 0, which would otherwise silently zero every stack
+        # that has no explicit limit configured.
+        limit = self.getStackLimit(stackType)
+        if limit > 0:
+            quantity = min(quantity, limit)
+        self.stacks[stackType] = quantity
+        # Keep stacksInCategory in sync so getStacksInCategory / getWeapons
+        # etc. return current values after individual stack changes.
+        categoryId = InventoryId.getCategory(stackType)
+        if categoryId:
+            self.stacksInCategory.setdefault(categoryId, {})[stackType] = quantity
 
     def d_setStackQuantity(self, stackType, quantity):
         self.sendUpdateToAvatarId(self.ownerId, 'stack', [stackType, quantity])
@@ -113,7 +129,9 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
     def setStacksInCategory(self, stackType, quantity):
         category = InventoryId.getCategory(stackType)
-        self.stacksInCategory[category] = {stackType: quantity}
+        # Merge into the existing category dict rather than replacing it, so
+        # other stacks in the same category are not lost.
+        self.stacksInCategory.setdefault(category, {})[stackType] = quantity
         self.setStackQuantity(stackType, quantity)
 
     def d_setStacksInCategory(self, stackType, quantity):
@@ -151,8 +169,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
     def hasStackSpace(self, stackType, amount=0):
         limit = self.getStackLimit(stackType)
-        result = self.getStackQuantity(stackType)
-        stored = result[1] if result else 0
+        stored = self.getStackQuantity(stackType)
         return limit > (stored + amount)
 
     def d_setTemporaryInventory(self, temporaryInventory):
