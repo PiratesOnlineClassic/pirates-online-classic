@@ -94,29 +94,20 @@ class TutorialFSM(FSM):
             self.exteriorDoor = self.air.doId2do.get(doorDoId)
 
         self.acceptOnce('teleportDone-%d' % self.avatar.doId, self.__avatarArrived)
-        
-        # Teleport to the exterior door's parent location (jail building area)
-        if self.exteriorDoor:
-            doorParent = self.exteriorDoor.getParentObj()
-            if doorParent:
-                self.notify.info('Teleporting avatar to door parent: %s (uid=%s)' % (doorParent, doorParent.getUniqueId() if hasattr(doorParent, 'getUniqueId') else 'N/A'))
-                self.air.teleportMgr.d_initiateTeleport(self.avatar, instanceType=self.instance.getType(),
-                    instanceName=self.instance.getFileName(), locationUid=doorParent.getUniqueId(),
-                    spawnPt=self.instance.getSpawnPt(doorParent.getUniqueId(), 0))
-                return
-        
-        # Fallback to island if door not found
-        self.air.teleportMgr.d_initiateTeleport(self.avatar, instanceType=self.instance.getType(),
-            instanceName=self.instance.getFileName(), locationUid=self.island.getUniqueId(),
-            spawnPt=self.instance.getSpawnPt(self.island.getUniqueId(), 0))
+
+        # New players start inside the jail, so teleport directly to the interior.
+        # The exterior island zone is still loaded in the background.
+        self.air.teleportMgr.d_initiateTeleport(
+            self.avatar,
+            instanceType=self.instance.getType(),
+            instanceName=self.instance.getFileName(),
+            locationUid=TutorialGlobals.JAIL_INTERIOR,
+            spawnPt=self.instance.getSpawnPt(TutorialGlobals.JAIL_INTERIOR, 0))
 
     def __avatarArrived(self):
         self.instance.d_setTutorialHandlerId(self.tutorialHandler.doId)
         self.avatar.d_setTutorialHandlerZone(self.tutorialHandlerZoneId)
         self.air.tutorialManager.d_enterTutorial(self.avatar.doId, self.island.zoneId)
-        
-        # Store the interior on the tutorial handler so it can teleport when client is ready
-        self.tutorialHandler.interior = self.interior
 
     def enterStop(self):
         if self.island:
@@ -137,7 +128,12 @@ class TutorialFSM(FSM):
         self.interior = None
         self.tutorialHandler = None
 
-        del self.air.tutorialManager.avatar2fsm[self.avatar.doId]
+        # Save the values we still need before clearing state
+        air = self.air
+        avatarId = self.avatar.doId
+
+        # Use pop to safely remove without KeyError if already cleaned up
+        air.tutorialManager.avatar2fsm.pop(avatarId, None)
         self.demand('Off')
 
     def exitStop(self):
@@ -162,16 +158,8 @@ class PiratesTutorialManagerAI(DistributedObjectAI):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
             return
-    
-    def _requestTutorial(self, avatar):
-        if avatar.doId in self.avatar2fsm:
-            self.notify.warning('Cannot handle tutorial request for avatar %d, '
-                'tutorial already in progress!' % avatar.doId)
 
-            return
-        
-        self.avatar2fsm[avatar.doId] = TutorialFSM(self.air, avatar)
-        self.avatar2fsm[avatar.doId].request('Start')
+        self._requestTutorial(avatar)
 
     def d_enterTutorial(self, avatarId, tutorialZone):
         self.sendUpdateToAvatarId(avatarId, 'enterTutorial', [tutorialZone])
