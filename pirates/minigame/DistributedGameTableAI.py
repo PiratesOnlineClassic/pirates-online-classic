@@ -1,7 +1,9 @@
 import random
 
 from direct.directnotify import DirectNotifyGlobal
+from panda3d.core import taskMgr
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
+
 
 class DistributedGameTableAI(DistributedInteractiveAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGameTableAI')
@@ -14,16 +16,30 @@ class DistributedGameTableAI(DistributedInteractiveAI):
         self.dealerType = 1
         self.tableType = 1
         self.dealerName = 'Dealer'
+        self.gameVariation = 0
 
         self.seats = [None] * self._availableSeats
         self._generatedAI = False
 
     def announceGenerate(self):
         DistributedInteractiveAI.announceGenerate(self)
+        self.sendUpdate('setAvatarSeat', [self.getAvatarSeat()])
+
+    def delete(self):
+        for seatIndex in range(self._availableSeats):
+            seat = self.seats[seatIndex]
+            if seat and seat not in (0, 1):
+                self.ignore(seat.getDeleteEvent())
+
+        DistributedInteractiveAI.delete(self)
 
     def handleRequestInteraction(self, avatar, interactType, instant):
+        if self.getOpenSeatCount() == 0:
+            self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [3, 0])
+            return self.DENY
+
         availableSeatIndex = self.getRandomOpenSeat()
-        if self.getOpenSeatCount == 0:
+        if availableSeatIndex is None:
             self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [3, 0])
             return self.DENY
 
@@ -33,12 +49,34 @@ class DistributedGameTableAI(DistributedInteractiveAI):
 
     def handleRequestExit(self, avatar):
         seatIndex = self.getAvatarSeatIndex(avatar)
-        if not seatIndex:
+        if seatIndex is None:
             return self.DENY
 
         self.avatarStand(avatar, seatIndex)
         self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [2, seatIndex])
         return self.ACCEPT
+
+    def requestSeat(self, seatIndex, name):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        if seatIndex >= self._availableSeats or self.seats[seatIndex] is not None:
+            # Requested seat unavailable; try any open seat
+            seatIndex = self.getRandomOpenSeat()
+            if seatIndex is None:
+                self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [3, 0])
+                return
+
+        self.avatarSit(avatar, seatIndex)
+        self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [1, seatIndex])
+
+    def _avatarUnexpectedExit(self, avatar):
+        seatIndex = self.getAvatarSeatIndex(avatar)
+        if seatIndex is not None:
+            self.seats[seatIndex] = None
+            self.sendUpdate('avatarStand', [avatar.doId, seatIndex])
+            self.sendUpdate('setAvatarSeat', [self.getAvatarSeat()])
 
     @property
     def availableSeats(self):
@@ -49,18 +87,16 @@ class DistributedGameTableAI(DistributedInteractiveAI):
         return self._numberAI
 
     def getAIPlayers(self):
-        ai = []
+        aiSeats = []
         for seatIndex in range(len(self.seats)):
-            seat = self.seats[seatIndex]
-            if seat == 1:
-                ai.append(seat)
+            if self.seats[seatIndex] == 1:
+                aiSeats.append(seatIndex)
 
-        return ai
+        return aiSeats
 
     def getAvatarSeatIndex(self, avatar):
         for seatIndex in range(len(self.seats)):
-            seat = self.seats[seatIndex]
-            if seat == avatar:
+            if self.seats[seatIndex] == avatar:
                 return seatIndex
 
         return None
@@ -68,42 +104,66 @@ class DistributedGameTableAI(DistributedInteractiveAI):
     def getAvailableSeatIndexes(self):
         available = []
         for seatIndex in range(len(self.seats)):
-            seat = self.seats[seatIndex]
-            if seat == None:
+            if self.seats[seatIndex] is None:
                 available.append(seatIndex)
 
         return available
 
     def getRandomOpenSeat(self):
         seats = self.getAvailableSeatIndexes()
-        if len(seats) == 0:
+        if not seats:
             return None
 
         return random.choice(seats)
 
     def getOpenSeatCount(self):
-        return len(self.getAvailableSeatIndex)
+        return len(self.getAvailableSeatIndexes())
 
     def avatarSit(self, avatar, seatIndex):
-        currentSeat = self.seats[seatIndex]
-        if currentSeat:
+        if self.seats[seatIndex] is not None:
             self.notify.warning('Failed to seat avatar; Seat %d is already occupied!' % seatIndex)
             return
 
         self.seats[seatIndex] = avatar
+        self.acceptOnce(avatar.getDeleteEvent(), self._avatarUnexpectedExit, extraArgs=[avatar])
         self.sendUpdate('avatarSit', [avatar.doId, seatIndex])
+        self.sendUpdate('setAvatarSeat', [self.getAvatarSeat()])
 
     def avatarStand(self, avatar, seatIndex):
-        currentSeat = self.seats[seatIndex]
-        if currentSeat != avatar:
+        if self.seats[seatIndex] != avatar:
             self.notify.warning('Failed to stand avatar; Seat %d is not occupied by avatar!' % seatIndex)
             return
 
+        self.ignore(avatar.getDeleteEvent())
         self.seats[seatIndex] = None
         self.sendUpdate('avatarStand', [avatar.doId, seatIndex])
+        self.sendUpdate('setAvatarSeat', [self.getAvatarSeat()])
+
+    def setAvatarSeat(self, seatList):
+        # Server-side state is managed via self.seats; this is a no-op receiver
+        pass
+
+    def getAvatarSeat(self):
+        result = []
+        for seat in self.seats:
+            if seat is None or seat in (0, 1):
+                result.append(0)
+            else:
+                result.append(seat.doId)
+        return result
+
+    def d_receiveAISpeech(self, seatIndex, message):
+        self.sendUpdate('receiveAISpeech', [seatIndex, message])
 
     def setTableType(self, type):
         self.tableType = type
+
+    def d_setTableType(self, type):
+        self.sendUpdate('setTableType', [type])
+
+    def b_setTableType(self, type):
+        self.setTableType(type)
+        self.d_setTableType(type)
 
     def getTableType(self):
         return self.tableType
@@ -114,7 +174,7 @@ class DistributedGameTableAI(DistributedInteractiveAI):
     def d_setGameVariation(self, variant):
         self.sendUpdate('setGameVariation', [variant])
 
-    def b_setGameVariant(self, variant):
+    def b_setGameVariation(self, variant):
         self.setGameVariation(variant)
         self.d_setGameVariation(variant)
 
@@ -148,11 +208,9 @@ class DistributedGameTableAI(DistributedInteractiveAI):
         return self.dealerType
 
     def getAIList(self):
-        aiList = [0] * self._availableSeats
-        aiPlayers = self.getAIPlayers()
-        for seatIndex in range(len(aiPlayers)):
-            ai = aiPlayers[seatIndex]
-            aiList[seatIndex] = ai
+        aiList = []
+        for seatIndex in range(self._availableSeats):
+            aiList.append(1 if self.seats[seatIndex] == 1 else 0)
 
         return aiList
 
@@ -167,12 +225,10 @@ class DistributedGameTableAI(DistributedInteractiveAI):
         randomGen.seed(self.getUniqueId())
 
         if self._numberAI > self._availableSeats:
-            self.notify.warning("Cannot have more ai then seats! reducing to 5")
-            self._numberAI = 5
+            self.notify.warning('Cannot have more AI than seats! Reducing to %d.' % self._availableSeats)
+            self._numberAI = self._availableSeats
 
         for i in range(self._numberAI):
-            aiType = random.randint(0, 10)
-            aiType = 1 if aiType > 0 else 0
-            self.seats[i] = aiType
+            self.seats[i] = 1
 
         randomGen.shuffle(self.seats)

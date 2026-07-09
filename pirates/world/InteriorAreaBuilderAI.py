@@ -128,7 +128,7 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
             tableCls = Distributed7StudTableAI
         elif gameType == 'Bishops':
             tableCls = DistributedBishopsHandTableAI
-        elif gameTable == 'LiarsDice':
+        elif gameType == 'LiarsDice':
             tableCls = DistributedLiarsDiceAI
         else:
             self.notify.warning('Failed to generate Parlor Table %s; %s is not a valid game type' % (objKey, gameType))

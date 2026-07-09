@@ -25,14 +25,14 @@ class DistributedSearchableContainerAI(DistributedInteractiveAI):
         if not avatar:
             return
 
-        def finalizeContainerSearch(task):
+        def _finalizeContainerSearch(task):
             self.d_stopSearching(avatar.doId, quest.getProgress())
             return task.done
 
         self.d_startSearching(avatar.doId)
         taskMgr.doMethodLater(
             self.searchTime,
-            finalizeContainerSearch,
+            _finalizeContainerSearch,
             self.uniqueName('avatarSearchTask-%d' % avatar.doId))
 
     def d_startSearching(self, avatarId):

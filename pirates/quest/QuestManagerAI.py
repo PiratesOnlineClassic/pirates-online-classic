@@ -569,6 +569,28 @@ class QuestManagerAI(DirectObject):
 
         return self.completeTaskState(avatar, questEvent)
 
+    def pokerHandWon(self, avatar, gold):
+        parentObj = avatar.getParentObj()
+        if not parentObj:
+            return
+
+        questEvent = QuestEvent.PokerHandWon()
+        questEvent.setLocation(parentObj.getUniqueId())
+        questEvent.setGold(gold)
+
+        return self.completeTaskState(avatar, questEvent)
+
+    def blackjackHandWon(self, avatar, gold):
+        parentObj = avatar.getParentObj()
+        if not parentObj:
+            return
+
+        questEvent = QuestEvent.BlackjackHandWon()
+        questEvent.setLocation(parentObj.getUniqueId())
+        questEvent.setGold(gold)
+
+        return self.completeTaskState(avatar, questEvent)
+
     def finalizeCutscene(self, avatar, quest, finalizeIndex=0, npc=None):
         taskStates = quest.getTaskStates()
         finalizeInfo = quest.questDNA.getFinalizeInfo()
