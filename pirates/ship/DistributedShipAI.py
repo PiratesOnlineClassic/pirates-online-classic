@@ -172,8 +172,11 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
                     self.notify.warning("Failed to get inventory for ship: %d!" % self.doId)
                     return
 
-                self.hull = self.getShipHull()
-                self.masts = self.getShipMasts()
+                # get hull and mast objects from inventory:
+                self.hull = self.getShipHull(inventory)
+                self.masts = self.getShipMasts(inventory)
+                
+                # done.
                 self.notify.debug("Successfully retrieved inventory for ship: %d" % self.doId)
 
             DistributedInventoryBase.getInventory(self.inventoryId, _gotInventory)
@@ -306,10 +309,8 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         for sail in self.sails:
             sail.b_setAnimState(animState)
 
-    def getShipHull(self):
-        inventory = self.getInventory()
+    def getShipHull(self, inventory):
         assert(inventory is not None)
-
         mainparts = inventory.getShipMainpartsList()
         hull = None
         for mainpart in mainparts:
@@ -320,10 +321,8 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
         return hull
 
-    def getShipMasts(self):
-        inventory = self.getInventory()
+    def getShipMasts(self, inventory):
         assert(inventory is not None)
-
         mainparts = inventory.getShipMainpartsList()
         masts = []
         for mainpart in mainparts:
