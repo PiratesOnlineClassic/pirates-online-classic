@@ -17,25 +17,18 @@ class SeaPatchRoot:
     class WaveFunction:
         WFSin = 0
         WFNoise = 1
-    
-    @staticmethod
-    def WTZ():
-        return WaveTarget.WTZ
 
-    @staticmethod
-    def WTU():
-        return WaveTarget.WTU
-
-    @staticmethod
-    def WTV():
-        return WaveTarget.WTV
-
-    @staticmethod
-    def WFSin():
-        return WaveFunction.WFSin
-    
-    def WFNoise():
-        return WaveFunction.WFNoise
+    # Plain int aliases so external callers can use `SeaPatchRoot.WTZ`, etc.
+    # as sentinel values (as every call site in the codebase does, without
+    # calling them). These previously shadowed themselves as no-arg methods
+    # returning an undefined global, so `wave['m_target'] == self.WaveTarget.WTZ`
+    # never matched a target set via `SeaPatchRoot.WTZ` and every wave was
+    # silently skipped.
+    WTZ = WaveTarget.WTZ
+    WTU = WaveTarget.WTU
+    WTV = WaveTarget.WTV
+    WFSin = WaveFunction.WFSin
+    WFNoise = WaveFunction.WFNoise
 
     def __init__(self):
         self.m_waves = []
@@ -134,7 +127,7 @@ class SeaPatchRoot:
         time_based_offset = old_uv_speed * current_time
         accumulated_offset = time_based_offset + self.m_uv_offset
         self.m_uv_speed = uvSpeed
-        self.m_uv_offset = old_uv_speed - self.m_uv_speed * accumulated_offset[0]
+        self.m_uv_offset = accumulated_offset - self.m_uv_speed * current_time
 
     def getUvSpeed(self):
         return self.m_uv_speed
@@ -163,7 +156,8 @@ class SeaPatchRoot:
         return self.m_uv_scale
 
     def getUvOffset(self):
-        return self.m_uv_offset
+        current_time = ClockObject.get_global_clock().get_frame_time()
+        return self.m_uv_speed * current_time + self.m_uv_offset
 
     def setRadius(self, radius: float):
         self.m_radius = radius
@@ -247,7 +241,7 @@ class SeaPatchRoot:
         self.allocateWave(index)
         self.m_waves[index]['m_function'] = function
 
-    def getWaveFunction(self, index: int):
+    def getWaveFunc(self, index: int):
         return self.m_waves[index]['m_function']
 
     def setChoppyK(self, index: int, choppyK: int):

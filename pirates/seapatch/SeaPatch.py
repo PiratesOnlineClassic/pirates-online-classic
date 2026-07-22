@@ -16,6 +16,13 @@ from pirates.seapatch.Water import Water
 from direct.motiontrail.MotionTrail import MotionTrail
 from pirates.piratesgui.GameOptions import *
 
+# Cache of shader paths known to fail to load in this process (e.g. an
+# unloadable shader on a Panda3D build lacking Cg/GLSL support for it). Many
+# SeaPatch/ocean-grid-cell instances are created over the life of a game
+# session, and without this cache each one would re-attempt the same doomed
+# load and print another engine error.
+_UNLOADABLE_SHADER_PATHS = set()
+
 class SeaPatch(Water):
     notify = directNotify.newCategory('SeaPatch')
 
@@ -46,9 +53,9 @@ class SeaPatch(Water):
             shader_directory = 'models/sea/'
             shader_file_name_array = [
                 '',
-                'water008_11.cg',
-                'water008_20.cg',
-                'water008_2X.cg']
+                'water008_11',
+                'water008_20',
+                'water008_2X']
             shader_model = base.win.getGsg().getShaderModel()
             maximum_shader_model = len(shader_file_name_array) - 1
             if shader_model > maximum_shader_model:
@@ -56,12 +63,19 @@ class SeaPatch(Water):
 
             file_name = shader_file_name_array[shader_model]
             shader_file_path = shader_directory + file_name
-            if os.path.exists(shader_file_path):
-                self.shader = loader.loadShader(shader_file_path)
-            else:
+            if shader_file_path in _UNLOADABLE_SHADER_PATHS:
                 self.shader = None
-            if self.shader:
-                pass
+            else:
+                self.shader = Shader.load(
+                    Shader.SL_GLSL,
+                    shader_file_path + '.vert.glsl',
+                    shader_file_path + '.frag.glsl')
+                if self.shader is None:
+                    _UNLOADABLE_SHADER_PATHS.add(shader_file_path)
+                    self.notify.warning(
+                        'Could not load water shader %r; falling back to '
+                        'non-shader sea rendering for the rest of this '
+                        'session.' % (shader_file_path,))
 
         if self.shader:
             self.seamodel = loader.loadModel('models/sea/SeaPatch34')
@@ -191,6 +205,17 @@ class SeaPatch(Water):
             self.texture_d = self.base_texture.loadRelated(InternalName.make('-d'))
             self.texture_n = self.base_texture.loadRelated(InternalName.make('-n'))
             self.texture_bb = self.base_texture.loadRelated(InternalName.make('-bb'))
+            self.texture_low2 = self.base_texture.loadRelated(InternalName.make('-low2'))
+            if self.base_texture:
+                self.seamodel.setShaderInput('tex_0', self.base_texture)
+            if self.texture_d:
+                self.seamodel.setShaderInput('tex_0_d', self.texture_d)
+            if self.texture_n:
+                self.seamodel.setShaderInput('tex_0_n', self.texture_n)
+            if self.texture_bb:
+                self.seamodel.setShaderInput('tex_0_bb', self.texture_bb)
+            if self.texture_low2:
+                self.seamodel.setShaderInput('tex_0_low2', self.texture_low2)
             self.setting_0()
             if self.saintPatricksDay:
                 self.water_color_factor_r = 0.5
@@ -318,6 +343,12 @@ class SeaPatch(Water):
         r = refNode.getHpr(render)
         self.patchNP.setPos(p.getX(), p.getY(), 0.0)
         self.patchNP.setH(r.getX())
+        # Drive the per-vertex wave deformation (real Z-height, dynamic
+        # normals, and calcUv()-driven texture coordinate scroll) once
+        # per frame. Panda3D's normal cull-callback mechanism can't be
+        # used here since set_cull_callback() isn't exposed to Python
+        # subclasses of PandaNode (see SeaPatchNode.cullCallback()).
+        self.patchNP.node().update(self.patchNP)
         todMgr = self.getTodMgr()
         if self.shader and todMgr:
             self.clear_color = todMgr.fog.getColor()

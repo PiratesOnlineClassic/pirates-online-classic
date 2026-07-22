@@ -1,6 +1,6 @@
 import threading
 from typing import List
-from panda3d.core import PandaNode, NodePath, GeomNode, Geom, GeomVertexData, GeomVertexWriter, GeomVertexRewriter, LPoint3f, LVecBase3f, LVecBase2f, LPoint2f, LVecBase4f, InternalName, GeomVertexArrayFormat, GeomVertexFormat, TransformState, ClockObject
+from panda3d.core import PandaNode, NodePath, GeomNode, Geom, GeomVertexData, GeomVertexWriter, GeomVertexRewriter, LPoint3f, LVecBase3f, LVecBase2f, LPoint2f, LVecBase4f, InternalName, GeomVertexArrayFormat, GeomVertexFormat, TransformState, ClockObject, Thread
 
 
 class SeaPatchNode(PandaNode):
@@ -74,15 +74,23 @@ class SeaPatchNode(PandaNode):
         return False
 
     def cullCallback(self, trav, data):
+        # NOTE: Panda3D's C++ CullTraverser only ever calls this if
+        # PandaNode.set_cull_callback() was called in the node's
+        # constructor (it sets an internal "fancy bits" flag checked on
+        # every node during cull). That method is protected/unpublished in
+        # Panda3D's Python bindings, so a pure-Python PandaNode subclass
+        # like this one has no way to call it - this method is therefore
+        # NEVER actually invoked by the engine. It's kept here for parity
+        # with the original C++ implementation this was ported from. The
+        # real per-frame update path is update(), which performs the same
+        # computation but is driven by a regular Python task instead (see
+        # SeaPatch.camTask).
         with self.m_lock:
             if not (self.m_root and self.m_root.isEnabled()):
                 return True
 
-            time = ClockObject.get_global_clock().get_frame_time()
-            if time == self.m_last_update:
+            if not self._shouldUpdate():
                 return True
-
-            self.m_last_update = time
 
             np = trav.get_scene().get_cull_center()
             if np.is_empty():
@@ -92,26 +100,61 @@ class SeaPatchNode(PandaNode):
                 return False
 
             current_thread = trav.get_current_thread()
-            transform = data.get_node_path().get_net_transform(current_thread)
-
-            anchor_trans = self.m_root.getAnchor().get_net_transform(current_thread)
-            anchor_trans = anchor_trans.invert_compose(transform)
-            anchor_mat = anchor_trans.get_mat()
-
-            center_trans = self.m_root.getCenter().get_net_transform(current_thread)
-            center_trans = center_trans.invert_compose(transform)
-            center_mat = center_trans.get_mat()
-
-            anchor_rel_trans = self.m_root.getAnchor().get_transform(np, current_thread)
-            anchor_rel_mat = anchor_rel_trans.get_mat()
-
-            for geom in self.m_flat_geoms:
-                self.doFlat(geom, anchor_mat, center_mat, anchor_rel_mat, current_thread)
-
-            for geom in self.m_geoms:
-                self.doWave(geom, anchor_mat, center_mat, anchor_rel_mat, current_thread)
-
+            node_path = data.get_node_path()
+            self._updateGeoms(node_path, np, current_thread)
             return True
+
+    def update(self, node_path: NodePath):
+        """
+        Recomputes wave-deformed vertex positions/normals/UVs for this
+        frame. This is the real update path used at runtime (see the note
+        in cullCallback() for why the normal Panda3D cull-callback
+        mechanism can't be used from a pure-Python PandaNode subclass).
+        Call this once per frame (e.g. from a task), after `node_path`
+        (the NodePath wrapping this SeaPatchNode) has been positioned for
+        the current frame.
+        """
+        with self.m_lock:
+            if not (self.m_root and self.m_root.isEnabled()):
+                return
+
+            if not self._shouldUpdate():
+                return
+
+            current_thread = Thread.get_current_thread()
+            np = self.m_root.getCenter()
+            if np.is_empty():
+                np = node_path
+
+            self._updateGeoms(node_path, np, current_thread)
+
+    def _shouldUpdate(self):
+        time = ClockObject.get_global_clock().get_frame_time()
+        if time == self.m_last_update:
+            return False
+
+        self.m_last_update = time
+        return True
+
+    def _updateGeoms(self, node_path: NodePath, np: NodePath, current_thread):
+        transform = node_path.get_net_transform(current_thread)
+
+        anchor_trans = self.m_root.getAnchor().get_net_transform(current_thread)
+        anchor_trans = anchor_trans.invert_compose(transform)
+        anchor_mat = anchor_trans.get_mat()
+
+        center_trans = self.m_root.getCenter().get_net_transform(current_thread)
+        center_trans = center_trans.invert_compose(transform)
+        center_mat = center_trans.get_mat()
+
+        anchor_rel_trans = self.m_root.getAnchor().get_transform(np, current_thread)
+        anchor_rel_mat = anchor_rel_trans.get_mat()
+
+        for geom in self.m_flat_geoms:
+            self.doFlat(geom, anchor_mat, center_mat, anchor_rel_mat, current_thread)
+
+        for geom in self.m_geoms:
+            self.doWave(geom, anchor_mat, center_mat, anchor_rel_mat, current_thread)
 
     def collectGeometry(self):
         self.m_geoms.clear()
@@ -166,7 +209,7 @@ class SeaPatchNode(PandaNode):
 
             if self.m_want_z:
                 z = self.m_z_offset + self.m_root.getSeaLevel()
-                vertex[2] = z
+                vertex = LPoint3f(vertex[0], vertex[1], z)
                 reader.set_data3f(vertex)
 
             if self.m_want_normal:
@@ -185,8 +228,7 @@ class SeaPatchNode(PandaNode):
             if self.m_want_uv:
                 center_transformed = center_mat.xform_point(vertex)
                 distance_squared = center_transformed.length_squared()
-                uv_coords = LPoint2f()
-                self.m_root.calcUv(uv_coords, transformed_vertex[0], transformed_vertex[1], distance_squared)
+                uv_coords = self.m_root.calcUv(transformed_vertex[0], transformed_vertex[1], distance_squared)
                 uv.set_data2f(uv_coords)
 
     def doWave(self, geom: GeomVertexData, anchor_mat, center_mat, anchor_rel_mat, current_thread):
@@ -206,7 +248,7 @@ class SeaPatchNode(PandaNode):
 
             if self.m_want_z:
                 z = self.m_z_offset + height
-                vertex[2] = z
+                vertex = LPoint3f(vertex[0], vertex[1], z)
                 reader.set_data3f(vertex)
 
             if self.m_want_normal or self.m_want_reflect:

@@ -92,7 +92,7 @@ class InventoryList(DirectScrolledFrame):
         DirectScrolledFrame.destroy(self)
     
     def sortPanels(self):
-        self.panels.sort(cmp = lambda a, b: cmp(a.name, b.name))
+        self.panels.sort(key = lambda panel: panel.name)
         self.repackPanels()
 
     def repackPanels(self):
