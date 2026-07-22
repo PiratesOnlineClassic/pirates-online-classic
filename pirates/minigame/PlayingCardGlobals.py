@@ -114,7 +114,7 @@ def getCardName(value):
         return PLocalizer.PlayingCardUnknown
     else:
         rank = value % 13
-        suit = value / 13
+        suit = value // 13
         return PLocalizer.getPlayingCardName(suit, rank)
 
 
@@ -163,7 +163,7 @@ def getSuit(value):
     if newValue < 13:
         return 0
     else:
-        return newValue / 13
+        return newValue // 13
 
 
 def getRank(value):
