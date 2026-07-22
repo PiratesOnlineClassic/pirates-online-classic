@@ -18,8 +18,11 @@ class DistributedPokerTableAI(DistributedGameTableAI):
     # Number of betting rounds including round 0 (between hands)
     NumRounds = 5  # Holdem; 7Stud sub-class overrides
     GameType = PlayingCardGlobals.Holdem
+    # Starting stack for AI seats so they can post blinds/antes.
+    AIStartingChips = 500
 
     def __init__(self, air):
+        # Base table defaults to 3 AI pirates + open seats + separate dealer.
         DistributedGameTableAI.__init__(self, air)
         self.potSize = 0
         self.anteList = list(self.DefaultAnteList)
@@ -33,8 +36,9 @@ class DistributedPokerTableAI(DistributedGameTableAI):
         self._playerHands = [[] for _ in range(self._availableSeats)]
         self._chipsCount = [0] * self._availableSeats
         self._totalWinnings = [PlayingCardGlobals.PlayerInactive] * self._availableSeats
-        self._playerActions = [[PlayingCardGlobals.NoAction, 0]] * self._availableSeats
+        self._playerActions = [[PlayingCardGlobals.NoAction, 0] for _ in range(self._availableSeats)]
         self._maxBet = 0
+        self._handActive = False
 
         # Betting round tracking
         self._deck = []
@@ -45,6 +49,7 @@ class DistributedPokerTableAI(DistributedGameTableAI):
     def delete(self):
         taskMgr.remove(self.uniqueName('poker-turn'))
         taskMgr.remove(self.uniqueName('poker-timeout'))
+        taskMgr.remove(self.uniqueName('poker-start'))
         DistributedGameTableAI.delete(self)
 
     # ------------------------------------------------------------------
@@ -90,9 +95,21 @@ class DistributedPokerTableAI(DistributedGameTableAI):
         self._communityCards = list(communityCards)
         self._playerHands = [list(h) for h in playerHands]
         self._totalWinnings = list(totalWinningsArray)
-        self._chipsCount = list(chipsCount)
+        self._chipsCount = self._normalizeChipsCount(chipsCount)
+
+    def _normalizePlayerHands(self, playerHands=None):
+        """Ensure one hand list per player seat for the DC CardHand [] field."""
+        needed = self._availableSeats
+        normalized = [list(h) for h in (playerHands or [])]
+        if len(normalized) < needed:
+            normalized += [[] for _ in range(needed - len(normalized))]
+        elif len(normalized) > needed:
+            normalized = normalized[:needed]
+        return normalized
 
     def d_setTableState(self):
+        self._chipsCount = self._normalizeChipsCount(self._chipsCount)
+        self._playerHands = self._normalizePlayerHands(self._playerHands)
         self.sendUpdate('setTableState', [
             self._round,
             self._buttonSeat,
@@ -104,7 +121,34 @@ class DistributedPokerTableAI(DistributedGameTableAI):
 
     def getTableState(self):
         return (self._round, self._buttonSeat, self._communityCards,
-                self._playerHands, self._totalWinnings, self._chipsCount)
+                self._normalizePlayerHands(self._playerHands),
+                self._totalWinnings,
+                self._normalizeChipsCount(self._chipsCount))
+
+    def _normalizeChipsCount(self, chipsCount=None):
+        """Ensure chipsCount covers every player seat for client stack display."""
+        needed = self._availableSeats
+        normalized = list(chipsCount or [])
+        if len(normalized) < needed:
+            normalized += [0] * (needed - len(normalized))
+        elif len(normalized) > needed:
+            normalized = normalized[:needed]
+        return normalized
+
+    def _minChipsToPlay(self):
+        if len(self.anteList) >= 3:
+            return self.anteList[0] + self.anteList[2]
+        if self.anteList:
+            return self.anteList[0]
+        return 20
+
+    def _seedAIChips(self):
+        """Give AI seats a playable stack if they are empty or broke."""
+        self._chipsCount = self._normalizeChipsCount(self._chipsCount)
+        minChips = self._minChipsToPlay()
+        for seatIndex in self.getAIPlayers():
+            if self._chipsCount[seatIndex] < minChips:
+                self._chipsCount[seatIndex] = self.AIStartingChips
 
     def setPotSize(self, potSize):
         self.potSize = potSize
@@ -136,16 +180,26 @@ class DistributedPokerTableAI(DistributedGameTableAI):
 
     def avatarSit(self, avatar, seatIndex):
         DistributedGameTableAI.avatarSit(self, avatar, seatIndex)
+        self._chipsCount = self._normalizeChipsCount(self._chipsCount)
         inv = self.air.inventoryManager.getInventory(avatar.doId) if avatar not in (0, 1) else None
-        self._chipsCount[seatIndex] = inv.getGoldInPocket() if inv else 0
+        if inv:
+            self._chipsCount[seatIndex] = inv.getGoldInPocket()
+        elif avatar == 1:
+            self._chipsCount[seatIndex] = max(self._chipsCount[seatIndex], self.AIStartingChips)
+        else:
+            self._chipsCount[seatIndex] = 0
         self._totalWinnings[seatIndex] = PlayingCardGlobals.PlayerLost
+        self.d_setTableState()
+        self._scheduleHandStart()
 
     def avatarStand(self, avatar, seatIndex):
         DistributedGameTableAI.avatarStand(self, avatar, seatIndex)
         self._totalWinnings[seatIndex] = PlayingCardGlobals.PlayerInactive
+        self._chipsCount = self._normalizeChipsCount(self._chipsCount)
         self._chipsCount[seatIndex] = 0
         if seatIndex in self._activeBettors:
             self._activeBettors.remove(seatIndex)
+        self.d_setTableState()
 
     # ------------------------------------------------------------------
     # Hand management
@@ -165,20 +219,38 @@ class DistributedPokerTableAI(DistributedGameTableAI):
                 seats.append(i)
         return seats
 
+    def _scheduleHandStart(self, delay=1.0):
+        """Start a hand once at least two seats are filled and no hand is running."""
+        if self._handActive:
+            return
+        if len(self._getOccupiedSeats()) < 2:
+            return
+        taskMgr.remove(self.uniqueName('poker-start'))
+        taskMgr.doMethodLater(delay, self._startHandTask,
+            self.uniqueName('poker-start'), appendTask=True)
+
     def _startHand(self):
+        occupied = self._getOccupiedSeats()
+        if len(occupied) < 2:
+            self._handActive = False
+            return
+
+        self._handActive = True
+        self._seedAIChips()
         self._buildDeck()
-        self._playerHands = [[] for _ in range(self._availableSeats)]
+        self._playerHands = self._normalizePlayerHands([])
         self._communityCards = []
-        self._activeBettors = list(self._getOccupiedSeats())
+        self._playerActions = [[PlayingCardGlobals.NoAction, 0] for _ in range(self._availableSeats)]
+        self._totalWinnings = [PlayingCardGlobals.PlayerInactive] * self._availableSeats
+        self._activeBettors = list(occupied)
         self._timeouts = {s: 0 for s in self._activeBettors}
+        self.b_setPotSize(0)
 
         # Advance button
-        occupied = self._getOccupiedSeats()
         if occupied:
             pos = occupied.index(self._buttonSeat) if self._buttonSeat in occupied else 0
             self._buttonSeat = occupied[(pos + 1) % len(occupied)]
 
-        self._totalWinnings = [PlayingCardGlobals.PlayerInactive] * self._availableSeats
         for s in self._activeBettors:
             self._totalWinnings[s] = PlayingCardGlobals.PlayerLost
 
@@ -462,8 +534,15 @@ class DistributedPokerTableAI(DistributedGameTableAI):
             if s != winnerSeat:
                 self._totalWinnings[s] = PlayingCardGlobals.PlayerLost
 
+        # AI winners keep chips on the table stack.
+        winnerSeatObj = self.seats[winnerSeat] if winnerSeat is not None else None
+        if winnerSeatObj == 1:
+            self._chipsCount = self._normalizeChipsCount(self._chipsCount)
+            self._chipsCount[winnerSeat] += winnings
+
         self.b_setPotSize(0)
         self._broadcastTableState(self.NumRounds)
+        self._handActive = False
 
         # Start next hand after a pause
         taskMgr.doMethodLater(3.0, self._startHandTask,
@@ -473,6 +552,8 @@ class DistributedPokerTableAI(DistributedGameTableAI):
         occupied = self._getOccupiedSeats()
         if len(occupied) >= 2:
             self._startHand()
+        else:
+            self._handActive = False
         return Task.done
 
     # ------------------------------------------------------------------
@@ -596,6 +677,9 @@ class DistributedPokerTableAI(DistributedGameTableAI):
 
     def announceGenerate(self):
         DistributedGameTableAI.announceGenerate(self)
+        self._seedAIChips()
         self.sendUpdate('setAnteList', [self.anteList])
         self.d_setTableState()
         self.d_setPotSize(self.potSize)
+        # Original tables deal once enough seats (AI/players) are filled.
+        self._scheduleHandStart(delay=2.0)

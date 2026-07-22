@@ -1808,11 +1808,8 @@ dclass DistributedLiarsDice : DistributedDiceGame {
   displayChallenge(uint8, uint8, uint8, uint8, string) broadcast;
 };
 
-struct PlayingCard {
-  uint8(0-255) card;
-};
-
-typedef PlayingCard CardHand[];
+// Cards are encoded as raw uint8 values; the client/AI both operate on ints.
+typedef uint8 CardHand[];
 
 typedef CardHand CardHandArray[];
 
