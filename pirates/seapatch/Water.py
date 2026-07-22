@@ -42,7 +42,16 @@ class Water(DirectObject):
         self.texture_filtering = False
         self.water_color_texture = None
         self.water_alpha_texture = None
-        self.water_speed = 10.0
+        # Drives the shader-only `uvanim` detail/normal-map scroll (u/v/u2/v2,
+        # advanced each frame in update_water() below). This is separate from
+        # (and layered on top of) SeaPatchRoot's own, much slower, out.spf-tuned
+        # base UV scroll (`setUvSpeed`, ~0.0027/sec). The old default of 10.0
+        # made this detail-map overlay scroll ~40x faster than the tuned base
+        # scroll, which read as "way too fast"/unrealistic once real waves and
+        # the base UV scroll were both actually rendering (see repo memory,
+        # Bug 9). Slowed down to bring it within a more plausible few-times-
+        # the-base-speed range for a subtle detail-ripple effect.
+        self.water_speed = 2.0
         self.water_direction_x = 0.7071
         self.water_direction_y = 0.7071
         self.water_direction = Vec2(self.water_direction_x, self.water_direction_y)
