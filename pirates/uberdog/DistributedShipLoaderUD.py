@@ -322,10 +322,9 @@ class ActivateShipFSM(ShipLoaderOperationFSM):
             channel,
             self.air.ourChannel,
             CLIENTAGENT_ADD_POST_REMOVE)
-        msg = datagramCleanup.getMessage()
-        if isinstance(msg, (bytes, bytearray)):
-            msg = msg.decode('latin-1')
-        datagram.addString(msg)
+        # CLIENTAGENT_ADD_POST_REMOVE takes a blob nested datagram. Keep the
+        # raw bytes from getMessage(); latin-1/addString corrupts high bytes.
+        datagram.addBlob(datagramCleanup.getMessage())
         self.air.send(datagram)
 
         self.air.dbInterface.queryObject(self.air.dbId,
@@ -381,10 +380,9 @@ class ActivateShipFSM(ShipLoaderOperationFSM):
             self.air.ourChannel,
             CLIENTAGENT_ADD_POST_REMOVE)
         msg = datagramCleanup.getMessage()
-        if isinstance(msg, (bytes, bytearray)):
-            msg = msg.decode('latin-1')
-        datagram.addString(msg)
-        self.air.send(datagram)
+        # CLIENTAGENT_ADD_POST_REMOVE takes a blob nested datagram. Keep the
+        # raw bytes from getMessage(); latin-1/addString corrupts high bytes.
+        datagram.addBlob(datagramCleanup.getMessage())
 
         self.pendingShipparts.remove(shippartDoId)
         if not self.pendingShipparts:

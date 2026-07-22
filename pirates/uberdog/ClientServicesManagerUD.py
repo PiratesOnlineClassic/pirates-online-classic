@@ -927,7 +927,8 @@ class LoadAvatarFSM(AvatarOperationFSM):
             channel,
             self.csm.air.ourChannel,
             CLIENTAGENT_ADD_POST_REMOVE)
-        datagram.appendData(datagramCleanup.getMessage())
+        # Must include the blob length prefix; appendData alone truncates.
+        datagram.addBlob(datagramCleanup.getMessage())
         self.csm.air.send(datagram)
 
         self.csm.air.clientAddSessionObject(self.csm.GetPuppetConnectionChannel(self.avId), self.avId)
@@ -960,7 +961,8 @@ class LoadAvatarFSM(AvatarOperationFSM):
             channel,
             self.csm.air.ourChannel,
             CLIENTAGENT_ADD_POST_REMOVE)
-        datagram.appendData(datagramCleanup.getMessage())
+        # Must include the blob length prefix; appendData alone truncates.
+        datagram.addBlob(datagramCleanup.getMessage())
         self.csm.air.send(datagram)
 
         # get the doId of the avatar's inventory object that it will

@@ -45,11 +45,12 @@ builtins.game = game
 from otp.ai.AIBaseGlobal import *
 
 from pirates.ai.PiratesAIRepository import PiratesAIRepository
-base.air = PiratesAIRepository(config.GetInt('air-base-channel', 401000000),
-  config.GetInt('air-stateserver', 10000),
-  config.GetString('district-name', 'Devhaven'))
+base.air = PiratesAIRepository(
+    ConfigVariableInt('air-base-channel', 401000000).value,
+    ConfigVariableInt('air-stateserver', 10000).value,
+    ConfigVariableString('district-name', 'Devhaven').value)
 
-host = config.GetString('air-connect', '127.0.0.1')
+host = ConfigVariableString('air-connect', '127.0.0.1').value
 port = 7199
 if ':' in host:
     host, port = host.split(':', 1)

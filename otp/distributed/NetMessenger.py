@@ -72,7 +72,8 @@ class NetMessenger(Messenger):
 
         messageType=self.__message2type[message]
         datagram.addUint16(messageType)
-        datagram.addBlob(dumps(sentArgs))
+        # Protocol 2 keeps pickle payloads portable and always returns bytes.
+        datagram.addBlob(dumps(sentArgs, protocol=2))
 
         return datagram
 

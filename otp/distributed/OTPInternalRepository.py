@@ -107,7 +107,10 @@ class OTPInternalRepository(AstronInternalRepository):
 
         dg = PyDatagram()
         dg.addServerHeader(channel, self.ourChannel, CLIENTAGENT_SEND_DATAGRAM)
-        dg.addString(msgDg.getMessage())
+        # Nested client datagrams are Astron blobs (uint16 length + raw bytes).
+        # Never pass getMessage() through addString — on Py3 it is bytes and
+        # text coercion can corrupt/truncate the nested payload.
+        dg.addBlob(msgDg.getMessage())
         self.send(dg)
 
     def kickChannel(self, channel, reason=1, message='An unexpected problem has occured.'):

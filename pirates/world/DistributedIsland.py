@@ -1,6 +1,5 @@
 import random
 import re
-import imp
 from panda3d.core import *
 from direct.actor import *
 from direct.distributed import DistributedCartesianGrid

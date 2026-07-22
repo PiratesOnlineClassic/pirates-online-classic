@@ -2,7 +2,7 @@ import random
 
 from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
-from panda3d.core import taskMgr
+from direct.task.TaskManagerGlobal import *
 from pirates.minigame.DistributedGameTableAI import DistributedGameTableAI
 from pirates.minigame import PlayingCardGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
@@ -463,7 +463,27 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
     # Helpers
     # ------------------------------------------------------------------
 
-    def _handValue(self, hand):\n        # rank = card % 13: 0=2, 1=3, ..., 7=9, 8=10, 9=J, 10=Q, 11=K, 12=Ace\n        value = 0\n        aces = 0\n        for card in hand:\n            if card == PlayingCardGlobals.Unknown:\n                continue\n            rank = card % 13\n            if rank == 12:   # Ace\n                value += 11\n                aces += 1\n            elif rank >= 8:  # 10, J, Q, K\n                value += 10\n            else:\n                value += rank + 2  # 0=2, 1=3, ..., 7=9\n\n        while value > 21 and aces > 0:\n            value -= 10\n            aces -= 1\n\n        return value
+    def _handValue(self, hand):
+        # rank = card % 13: 0=2, 1=3, ..., 7=9, 8=10, 9=J, 10=Q, 11=K, 12=Ace
+        value = 0
+        aces = 0
+        for card in hand:
+            if card == PlayingCardGlobals.Unknown:
+                continue
+            rank = card % 13
+            if rank == 12:   # Ace
+                value += 11
+                aces += 1
+            elif rank >= 8:  # 10, J, Q, K
+                value += 10
+            else:
+                value += rank + 2  # 0=2, 1=3, ..., 7=9
+
+        while value > 21 and aces > 0:
+            value -= 10
+            aces -= 1
+
+        return value
 
     def _isBlackjack(self, hand):
         if len(hand) != 2:

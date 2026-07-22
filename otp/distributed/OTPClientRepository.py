@@ -918,7 +918,11 @@ class OTPClientRepository(ClientRepositoryBase):
         datagram = PyDatagram()
         datagram.addUint16(CLIENT_CREATE_AVATAR)
         datagram.addUint16(0)
-        datagram.addString(avDNA.makeNetString())
+        # DNA is opaque binary; pack as blob-compatible bytes (uint16+payload).
+        dna = avDNA.makeNetString()
+        if isinstance(dna, str):
+            dna = dna.encode('latin-1')
+        datagram.addString(dna)
         datagram.addUint8(avPosition)
         self.newName = avName
         self.newDNA = avDNA

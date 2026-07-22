@@ -75,9 +75,28 @@ def msgpack_encode(dg, element):
     elif isinstance(element, str):
         # 0xd9 is str 8 in all recent versions of the MsgPack spec, but somehow
         # Logstash bundles a MsgPack implementation SO OLD that this isn't
-        # handled correctly so this function avoids it too
-        msgpack_length(dg, len(element), 0xa0, 0x20, None, 0xda, 0xdb)
-        dg.appendData(element.encode('utf-8'))
+        # handled correctly so this function avoids it too.
+        # Length must be the UTF-8 byte count, not the Unicode character count,
+        # or multi-byte characters truncate the msgpack payload.
+        data = element.encode('utf-8')
+        msgpack_length(dg, len(data), 0xa0, 0x20, None, 0xda, 0xdb)
+        dg.appendData(data)
+    elif isinstance(element, (bytes, bytearray)):
+        # MsgPack bin family has no "fix" form; always tag + length + payload.
+        data = bytes(element)
+        length = len(data)
+        if length < 1 << 8:
+            dg.addUint8(0xc4)
+            dg.addUint8(length)
+        elif length < 1 << 16:
+            dg.addUint8(0xc5)
+            dg.addBeUint16(length)
+        elif length < 1 << 32:
+            dg.addUint8(0xc6)
+            dg.addBeUint32(length)
+        else:
+            raise ValueError('Value too big for MessagePack')
+        dg.appendData(data)
     elif isinstance(element, float):
         # Python does not distinguish between floats and doubles, so we send
         # everything as a double in MsgPack:

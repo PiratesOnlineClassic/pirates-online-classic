@@ -4,7 +4,7 @@ from itertools import combinations
 
 from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
-from panda3d.core import taskMgr
+from direct.task.TaskManagerGlobal import *
 from pirates.minigame.DistributedGameTableAI import DistributedGameTableAI
 from pirates.minigame import PlayingCardGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType

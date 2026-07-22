@@ -1,7 +1,7 @@
 import random
 
 from direct.directnotify import DirectNotifyGlobal
-from panda3d.core import taskMgr
+from direct.task.TaskManagerGlobal import *
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 
 

@@ -23,8 +23,9 @@ text-dynamic-merge 1
 # For smoother animations
 even-animation #t
 
-# Don't rescale textures which are no power-of-2
-textures-power-2 none
+# Keep textures-power-2 as up/down when textures-auto-power-2 is enabled
+# (general.prc). "none" is invalid with auto-power-2 and aborts display setup.
+textures-power-2 down
 
 # Set default texture filters
 texture-anisotropic-degree 16

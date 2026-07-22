@@ -2019,8 +2019,27 @@ class HumanDNA(AvatarDNA.AvatarDNA):
 
         return dg.getMessage()
 
+    @staticmethod
+    def _coerceNetString(netString):
+        """Normalize DNA wire data to bytes.
+
+        On Python 3, DC blob fields and Datagram.getMessage() yield bytes.
+        Legacy string paths may still hand us str; treat those as latin-1 so
+        byte values 0x80-0xff are preserved instead of UTF-8-expanded.
+        """
+        if isinstance(netString, memoryview):
+            netString = netString.tobytes()
+        if isinstance(netString, bytearray):
+            return bytes(netString)
+        if isinstance(netString, bytes):
+            return netString
+        if isinstance(netString, str):
+            return netString.encode('latin-1')
+        raise TypeError('DNA net string must be bytes-like or str, got %r' %
+                        (type(netString).__name__,))
+
     def makeFromNetString(self, netString):
-        dg = PyDatagram(netString)
+        dg = PyDatagram(self._coerceNetString(netString))
         dgi = PyDatagramIterator(dg)
 
         # Tutorial
@@ -2133,6 +2152,10 @@ class HumanDNA(AvatarDNA.AvatarDNA):
 
     @classmethod
     def isValidNetString(cls, netString):
+        try:
+            netString = cls._coerceNetString(netString)
+        except TypeError:
+            return False
         return len(netString) == len(cls().makeNetString())
 
 

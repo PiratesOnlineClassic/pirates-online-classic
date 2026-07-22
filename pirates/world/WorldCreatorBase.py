@@ -3,7 +3,6 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.world import WorldGlobals
 import os
 import re
-import imp
 import types
 
 class WorldCreatorBase:

@@ -71,7 +71,9 @@ class MotionAnimFSM(FSM):
             if scale:
                 newScale = moveSpeed * scale
             else:
-                if type(style) is not bytes:
+                # Py2: bytes was str. Style is either a DNA object or an already-
+                # resolved body-shape value (not a text type).
+                if not isinstance(style, str):
                     style = style.getBodyShape()
                 animFileName = self.av.getAnimFilename(self.av.getCurrentAnim())
                 animSpeedScale = PiratesGlobals.GetAnimScale(animFileName)

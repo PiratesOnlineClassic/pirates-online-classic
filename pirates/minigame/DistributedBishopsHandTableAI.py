@@ -3,7 +3,7 @@ import random
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.task import Task
-from panda3d.core import taskMgr
+from direct.task.TaskManagerGlobal import *
 from pirates.minigame.DistributedGameTableAI import DistributedGameTableAI
 from pirates.minigame import BishopsHandGlobals
 

@@ -100,15 +100,23 @@ class TimeManagerAI(DistributedObjectAI.DistributedObjectAI):
         # We call this cacheStatus, but really it's the mac address or
         # other client fingerprint information, in a simple
         # obfuscating cipher.  Decode it.
-        key = 'outrageous'
+        key = b'outrageous'
         p = 0
-        fingerprint = ''
+        # cacheStatus may arrive as str or bytes depending on DC field type.
+        if isinstance(cacheStatus, str):
+            cacheStatus = cacheStatus.encode('latin-1')
+        elif isinstance(cacheStatus, memoryview):
+            cacheStatus = cacheStatus.tobytes()
+        else:
+            cacheStatus = bytes(cacheStatus)
+        fingerprint = bytearray()
         for ch in cacheStatus:
-            ic = ord(ch) ^ ord(key[p])
+            ic = ch ^ key[p]
             p += 1
             if p >= len(key):
                 p = 0
-            fingerprint += chr(ic)
+            fingerprint.append(ic)
+        fingerprint = bytes(fingerprint).decode('latin-1')
 
         self.notify.info('client-fingerprint %s|%s' % (requesterId, fingerprint))
         self.air.writeServerEvent('client-fingerprint', requesterId, fingerprint)

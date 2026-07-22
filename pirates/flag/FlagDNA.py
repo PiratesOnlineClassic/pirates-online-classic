@@ -361,9 +361,23 @@ class FlagDNA(AvatarDNA.AvatarDNA):
                     data.addUint8(item)
         
         return data.getMessage()
+
+    @staticmethod
+    def _coerceDNAString(dnaStr):
+        """Normalize flag DNA wire data to bytes for PyDatagram."""
+        if isinstance(dnaStr, memoryview):
+            dnaStr = dnaStr.tobytes()
+        if isinstance(dnaStr, bytearray):
+            return bytes(dnaStr)
+        if isinstance(dnaStr, bytes):
+            return dnaStr
+        if isinstance(dnaStr, str):
+            return dnaStr.encode('latin-1')
+        raise TypeError('Flag DNA string must be bytes-like or str, got %r' %
+                        (type(dnaStr).__name__,))
     
     def setDNAString(self, dnaStr):
-        data = PyDatagram(dnaStr)
+        data = PyDatagram(self._coerceDNAString(dnaStr))
         iter = PyDatagramIterator(data)
         self.setShapeStyle(int(iter.getUint8()))
         bgData = [

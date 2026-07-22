@@ -43,10 +43,11 @@ builtins.game = game
 from otp.ai.AIBaseGlobal import *
 
 from pirates.uberdog.PiratesUberRepository import PiratesUberRepository
-base.air = PiratesUberRepository(config.GetInt('air-base-channel', 400000000),
-    config.GetInt('air-stateserver', 10000))
+base.air = PiratesUberRepository(
+    ConfigVariableInt('air-base-channel', 400000000).value,
+    ConfigVariableInt('air-stateserver', 10000).value)
 
-host = config.GetString('air-connect', '127.0.0.1')
+host = ConfigVariableString('air-connect', '127.0.0.1').value
 port = 7199
 if ':' in host:
     host, port = host.split(':', 1)

@@ -302,7 +302,8 @@ class AnimationMixer:
         outList = []
         if sectionName is None or set(sectionName) == set(self.sectionNames):
             return None
-        elif isinstance(sectionName, bytes):
+        # Py2 treated str/bytes as one type; section names are text ('legs', etc.).
+        elif isinstance(sectionName, str):
             sectionNames = [sectionName]
         elif isinstance(sectionName, list):
             sectionNames = sectionName
@@ -318,7 +319,8 @@ class AnimationMixer:
     def getSectionList(self, sectionName):
         if not sectionName:
             return self.sectionNames
-        elif isinstance(sectionName, bytes):
+        # Py2 treated str/bytes as one type; section names are text ('legs', etc.).
+        elif isinstance(sectionName, str):
             return [sectionName]
         elif isinstance(sectionName, list):
             return sectionName
