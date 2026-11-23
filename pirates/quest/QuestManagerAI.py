@@ -598,18 +598,48 @@ class QuestManagerAI(DirectObject):
             return
 
         self.completingQuests.add(quest.doId)
+        rewards = quest.getRewards()
+        mapRewards = [reward for reward in rewards if isinstance(reward, TreasureMapReward)]
+        otherRewards = ([reward for reward in rewards if not isinstance(reward, TreasureMapReward)]
+                        if mapRewards else rewards)
+
+        def finish(success):
+            try:
+                if not success:
+                    return
+                if mapRewards and (self.air.doId2do.get(avatar.doId) is not avatar or
+                                   self.getQuest(avatar, questDoId=quest.doId) is not quest):
+                    return
+                if not self._giveRewards(avatar, otherRewards):
+                    return
+                questInt = questDNA.getQuestInt()
+                questHistory = avatar.getQuestHistory()
+                if questInt in questHistory:
+                    return
+                avatar.b_setQuestHistory(questHistory + [questInt])
+                checkpoint = questDNA.getCheckPoint()
+                if checkpoint != -1 and avatar.getTutorial() < checkpoint:
+                    avatar.b_setTutorial(checkpoint)
+                questStub.handleQuestComplete(quest, questHistory)
+            finally:
+                self.completingQuests.discard(quest.doId)
+
+        if not mapRewards:
+            finish(True)
+            return
+        if len(mapRewards) != 1:
+            self.notify.warning('Cannot award multiple treasure maps for quest %s' % quest.getQuestId())
+            finish(False)
+            return
+        trade = self.air.tradeMgr.createTrade(avatar.doId)
+        if not trade:
+            finish(False)
+            return
         try:
-            if not self._giveRewards(avatar, quest.getRewards()):
-                return
-            questInt = questDNA.getQuestInt()
-            questHistory = avatar.getQuestHistory()
-            avatar.b_setQuestHistory(questHistory + [questInt])
-            checkpoint = questDNA.getCheckPoint()
-            if checkpoint != -1 and avatar.getTutorial() < checkpoint:
-                avatar.b_setTutorial(checkpoint)
-            questStub.handleQuestComplete(quest, questHistory)
-        finally:
+            mapRewards[0].applyTo(trade, avatar, finish)
+        except Exception:
             self.completingQuests.discard(quest.doId)
+            raise
 
     def completeTaskState(self, avatar, questEvent, callback=None):
         questObjects = list(self.quests.get(avatar.doId, {}).values())
@@ -663,6 +693,47 @@ class QuestManagerAI(DirectObject):
         questEvent.setTreasureType(0) #Unused value
 
         return self.completeTaskState(avatar, questEvent, callback=callback)
+
+    def finishBuriedTreasure(self, avatar, treasureChest):
+        parentObj = avatar.getParentObj()
+        if not parentObj:
+            return 0
+
+        questEvent = QuestEvent.TreasureChestOpened()
+        questEvent.setLocation(parentObj.getUniqueId())
+        questEvent.setTreasureId(treasureChest.getUniqueId())
+        questEvent.setTreasureType(0)
+        madeProgress = False
+
+        for quest in list(self.quests.get(avatar.doId, {}).values()):
+            dna = quest.getQuestDNA()
+            if dna is None:
+                continue
+            treasureStates = [
+                state for task, state in zip(dna.getTasks(), quest.getTaskStates())
+                if isinstance(task, QuestTaskDNA.RecoverTreasureItemTaskDNA)]
+            if not treasureStates:
+                continue
+
+            if quest.isComplete():
+                if (not dna.getFinalizeInfo() and not quest.completeRequiresVisit() and
+                        dna.getQuestInt() not in avatar.getQuestHistory()):
+                    self.completeQuest(avatar, quest)
+                continue
+
+            previousProgress = [state.getProgress() for state in treasureStates]
+            quest.handleEvent(avatar, questEvent)
+            if any(state.getProgress() > previous
+                   for state, previous in zip(treasureStates, previousProgress)):
+                madeProgress = True
+
+            if quest.isComplete() and not quest.completeRequiresVisit():
+                if dna.getFinalizeInfo():
+                    self.finalizeCutscene(avatar, quest)
+                else:
+                    self.completeQuest(avatar, quest)
+
+        return int(madeProgress)
 
     def containerSearched(self, avatar, container, callback=None):
         parentObj = avatar.getParentObj()
@@ -846,7 +917,21 @@ class QuestManagerAI(DirectObject):
         def interactCallback(quest):
             self.finalizeCutscene(avatar, quest, npc=npc)
 
-        return self.completeTaskState(avatar, questEvent, callback=interactCallback)
+        if self.completeTaskState(avatar, questEvent, callback=interactCallback):
+            return True
+
+        for quest in list(self.quests.get(avatar.doId, {}).values()):
+            dna = quest.getQuestDNA()
+            if (dna is None or not quest.isComplete() or not quest.completeRequiresVisit() or
+                    quest.doId in self.finalizingQuests or
+                    dna.getQuestInt() in avatar.getQuestHistory() or
+                    not any(isinstance(task, QuestTaskDNA.RecoverTreasureItemTaskDNA)
+                            for task in dna.getTasks())):
+                continue
+            if quest.canBeReturnedTo(npc.getUniqueId()):
+                self.finalizeCutscene(avatar, quest, npc=npc)
+                return True
+        return False
 
     def attemptBribeNPC(self, avatar, npc):
         parentObj = avatar.getParentObj()

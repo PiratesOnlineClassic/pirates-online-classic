@@ -14,10 +14,10 @@ class DistributedSurfaceTreasureAI(DistributedInteractiveAI):
         self.value = 0
 
     def setWithdrawType(self, withdrawType):
-        self.widthdrawType = withdrawType
+        self.withdrawType = withdrawType
 
     def d_setWithdrawType(self, withdrawType):
-        self.sendUpdate('setWithdrawType', [withdrawpType])
+        self.sendUpdate('setWithdrawType', [withdrawType])
 
     def b_setWithdrawType(self, withdrawType):
         self.setWithdrawType(withdrawType)

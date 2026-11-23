@@ -218,8 +218,10 @@ class CollectReward(QuestReward):
 
 class TreasureMapReward(QuestReward):
 
-    def applyTo(self, trade, av):
-        trade.giveNewTreasureMap('DistributedTreasureMap')
+    def applyTo(self, trade, av, callback=None):
+        if callback is None:
+            raise ValueError('Treasure map rewards require a completion callback')
+        trade.giveNewTreasureMap(PiratesGlobals.GAME_STYLE_TM_BLACK_PEARL, callback)
 
     def getDescriptionText(self):
         return PLocalizer.TreasureMapDesc

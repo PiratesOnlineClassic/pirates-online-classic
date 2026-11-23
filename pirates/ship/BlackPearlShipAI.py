@@ -2,6 +2,7 @@ from direct.directnotify import DirectNotifyGlobal
 
 from pirates.ship.DistributedShipAI import DistributedShipAI
 from pirates.ship import ShipGlobals
+from pirates.ship import ShipBalance
 
 
 class BlackPearlShipAI(DistributedShipAI):
@@ -82,19 +83,30 @@ class BlackPearlShipAI(DistributedShipAI):
     # Damage Handling
     # =========================================================================
 
-    def takeDamage(self, damage, attackerId=0):
+    def takeDamage(self, damage, attackerId=0, applyModifiers=True):
         """Handle damage to the Black Pearl"""
         if self.hasSpawnBuff():
             return self.hp
 
         self.notify.debug('Black Pearl taking %d damage from %d' % (damage, attackerId))
 
+        if applyModifiers:
+            damage *= ShipBalance.NPCDamageIn.getValue()
+        effectiveArmor = (ShipBalance.ArmorAbsorb.getValue() *
+                          ShipBalance.NPCArmorModifier.getValue())
+        damage = int(damage * (1.0 - effectiveArmor))
+
+        oldHp = self.hp
         newHp = max(0, self.hp - damage)
         self.b_setHp(newHp)
 
+        if getattr(self, 'gameFSM', None):
+            self.gameFSM.onDamageReceived(attackerId, damage)
+
         # Check if destroyed
-        if newHp <= 0:
+        if oldHp > 0 and newHp <= 0:
             self._handleDestroyed()
+        return newHp
 
     def _handleDestroyed(self):
         """Black Pearl has been destroyed"""

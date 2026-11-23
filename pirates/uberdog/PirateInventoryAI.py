@@ -5,9 +5,21 @@ from pirates.reputation import RepChart
 from pirates.reputation import ReputationGlobals
 from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PiratesGlobals
+from pirates.uberdog.TreasureMapInventoryAI import TreasureMapInventoryAI
 
 class PirateInventoryAI(DistributedInventoryAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('PirateInventoryAI')
+
+    def __init__(self, air):
+        DistributedInventoryAI.__init__(self, air)
+        self.treasureMaps = TreasureMapInventoryAI(self)
+
+    def delete(self):
+        self.treasureMaps.close()
+        DistributedInventoryAI.delete(self)
+
+    def giveTreasureMap(self, mapId, callback):
+        self.treasureMaps.give(mapId, callback)
 
     def setReputation(self, repType, quantity):
         avatar = self.air.doId2do.get(self.ownerId)
@@ -138,6 +150,7 @@ class PirateInventoryAI(DistributedInventoryAI):
 
         # populate the avatar's quest list
         self.air.questMgr.activateQuests(avatar)
+        self.treasureMaps.activateAll()
 
         # populate the avatar's ship doId list
         shipDoIdList = self.getShipDoIdList()

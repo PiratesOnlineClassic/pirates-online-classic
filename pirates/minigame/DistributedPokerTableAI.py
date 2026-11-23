@@ -401,7 +401,8 @@ class DistributedPokerTableAI(DistributedGameTableAI):
             return
 
         seatIndex = self.getAvatarSeatIndex(avatar)
-        if seatIndex is None:
+        if (seatIndex is None or round != self._round or
+                not self._bettingOrder or self._bettingOrder[0] != seatIndex):
             return
 
         taskMgr.remove(self.uniqueName('poker-timeout'))
@@ -411,7 +412,7 @@ class DistributedPokerTableAI(DistributedGameTableAI):
         self._applyAction(seatIndex, actionCode, amount)
 
     def _applyAction(self, seatIndex, actionCode, amount):
-        if seatIndex not in self._bettingOrder:
+        if not self._bettingOrder or self._bettingOrder[0] != seatIndex:
             return
 
         self._bettingOrder.pop(0)

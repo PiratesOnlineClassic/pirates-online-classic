@@ -198,8 +198,10 @@ class WorldCreator(WorldCreatorBase.WorldCreatorBase, DirectObject.DirectObject)
                 pos = object['Pos']
                 hpr = object['Hpr']
                 name = object['CutsceneId']
-                node = objParent.attachNewNode(name)
+                node = (actualParentObj if actualParentObj else objParent).attachNewNode(name)
                 node.setPosHpr(pos, hpr)
+                if actualParentObj:
+                    node.wrtReparentTo(objParent)
                 self.cr.activeWorld.addCutsceneOriginNode(node, name)
                 newObj = node
 

@@ -16,11 +16,12 @@ class DistributedInteractiveAI(DistributedNodeAI):
         self.uniqueId = ''
 
     def requestInteraction(self, doId, interactType, instant):
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        avatarId = self.air.getAvatarIdFromSender()
+        avatar = self.air.doId2do.get(avatarId)
         if not avatar:
             self.air.logPotentialHacker(
                 message='Received requestInteraction from non-existant avatar',
-                targetAvId=avatar.doId,
+                targetAvId=avatarId,
                 doId=doId,
                 interactType=interactType,
                 instant=instant)
@@ -51,14 +52,13 @@ class DistributedInteractiveAI(DistributedNodeAI):
         pass
 
     def requestExit(self):
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        avatarId = self.air.getAvatarIdFromSender()
+        avatar = self.air.doId2do.get(avatarId)
         if not avatar:
             self.air.logPotentialHacker(
                 message='Received requestExit from non-existant avatar',
-                targetAvId=avatar.doId,
-                doId=doId,
-                interactType=interactType,
-                instant=instant)
+                targetAvId=avatarId,
+                doId=self.doId)
 
             return
 

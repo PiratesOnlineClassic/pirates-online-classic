@@ -31,5 +31,8 @@ netMessages = [
     'getAccumulatorsResponse'
     'getAccumulatorResponse',
     'getStackLimitResponse',
-    'getStackResponse'
+    'getStackResponse',
+    # Keep these at the end so existing NetMessenger message IDs stay stable.
+    'getAccumulatorsResponse',
+    'getAccumulatorResponse',
 ]

@@ -68,8 +68,9 @@ class DistributedCellDoorAI(DistributedInteractiveAI):
         if self.avatarId:
             return
 
-        self.b_setHealth(max(0, min(self.getHealth() - (random.random() * \
-            self.getMaxHealth()), 100)))
+        health = max(0, min(self.getHealth() - random.random() *
+            self.getMaxHealth(), 100))
+        self.b_setHealth(int(health + 0.5))
 
         if self.health <= 0:
             self.setAvatarId(avatar.doId)

@@ -102,12 +102,12 @@ class DistributedFortAI(DistributedBattleAvatarAI):
 
         # Notify the treasure map instance if we're part of one
         if self.treasureMapInstance:
-            # Find which barricade ID this fort belongs to
             from pirates.treasuremap import TreasureMapBlackPearlGlobals
             for barricadeId, (uid1, uid2) in TreasureMapBlackPearlGlobals.FortPairsDict.items():
                 if self.objKey in (uid1, uid2):
-                    self.treasureMapInstance.handleBarricadeDestroyed(barricadeId)
-                    break
+                    forts = self.treasureMapInstance.forts
+                    if all(uid in forts and forts[uid].isDestroyed() for uid in (uid1, uid2)):
+                        self.treasureMapInstance.handleBarricadeDestroyed(barricadeId)
 
     def setTreasureMapInstance(self, instance):
         """Set the treasure map instance this fort belongs to"""
@@ -117,7 +117,7 @@ class DistributedFortAI(DistributedBattleAvatarAI):
     # Combat
     # =========================================================================
 
-    def hitByProjectile(self, skillId, ammoSkillId, attackerDoId):
+    def hitByProjectile(self, skillId, ammoSkillId):
         """Called when hit by a projectile (cannonball)"""
         if self.destroyed:
             return
@@ -126,7 +126,7 @@ class DistributedFortAI(DistributedBattleAvatarAI):
         # Standard cannonball damage for now
         damage = 500  # Base cannonball damage
 
-        self.takeDamage(damage, attackerDoId)
+        self.takeDamage(damage, self.air.getAvatarIdFromSender())
 
     def isDestroyed(self):
         return self.destroyed

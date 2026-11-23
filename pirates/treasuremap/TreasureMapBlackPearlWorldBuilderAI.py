@@ -128,6 +128,7 @@ class TreasureMapBlackPearlWorldBuilderAI(DirectObject):
 
         fort = DistributedFortAI(self.air)
         fort.setObjKey(objKey)
+        fort.setIslandId(self.island.doId)
 
         # Get position and rotation from object data
         pos = objectData.get('Pos', (0, 0, 0))
@@ -148,6 +149,7 @@ class TreasureMapBlackPearlWorldBuilderAI(DirectObject):
             fort.setFortLevel(1)
             fort.setMaxHp(TreasureMapBlackPearlGlobals.FORT_HP_BY_LEVEL.get(1, 5000))
             fort.setHp(fort.getMaxHp())
+        fort.setLevel(fort.getFortLevel())
 
         # Set reference to the treasure map instance
         if self.treasureMapInstance:
@@ -295,14 +297,17 @@ class TreasureMapBlackPearlWorldBuilderAI(DirectObject):
         for cannons in self.fortCannons.values():
             for cannon in cannons:
                 if cannon and cannon.doId in self.air.doId2do:
-                    self.air.uidMgr.removeUid(cannon.getUniqueId())
+                    uniqueId = cannon.getUniqueId()
+                    if self.air.uidMgr.getDoId(uniqueId) == cannon.doId:
+                        self.air.uidMgr.removeUid(uniqueId)
                     cannon.requestDelete()
         self.fortCannons.clear()
 
         # Clean up forts
         for uid, fort in self.forts.items():
             if fort and fort.doId in self.air.doId2do:
-                self.air.uidMgr.removeUid(uid)
+                if self.air.uidMgr.getDoId(uid) == fort.doId:
+                    self.air.uidMgr.removeUid(uid)
                 fort.requestDelete()
         self.forts.clear()
 

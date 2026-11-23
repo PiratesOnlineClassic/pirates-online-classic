@@ -1018,14 +1018,18 @@ class GuiManager(FSM.FSM):
         self.tmObjectiveList.setPos(base.a2dLeft, 0, 0.45)
 
     def showTMCompleteUI(self, tm, results):
-        return
-        if self.tmCompleteUI == None:
-            self.createTMCompleteUI(tm, results)
+        if self.showTMCompleteLerp:
+            self.showTMCompleteLerp.pause()
+            self.showTMCompleteLerp = None
+
+        if self.tmCompleteUI:
+            self.tmCompleteUI.destroy()
+            self.tmCompleteUI = None
+
+        self.createTMCompleteUI(tm, results)
 
         self.tmCompleteUI.setAlphaScale(0)
         self.tmCompleteUI.show()
-        if self.showTMCompleteLerp:
-            self.showTMCompleteLerp.pause()
 
         self.showTMCompleteLerp = LerpColorScaleInterval(self.tmCompleteUI, 1, Vec4(1, 1, 1, 1))
         self.showTMCompleteLerp.start()

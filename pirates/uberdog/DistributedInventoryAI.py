@@ -13,16 +13,18 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
     Follows the b_set/d_set/set pattern matching the Base class design.
     """
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInventoryAI')
+    registerWithInventoryManager = True
 
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
         DistributedInventoryBase.__init__(self, air)
 
     def generate(self):
-        try:
-            self.air.inventoryManager.addInventory(self)
-        except Exception:
-            self.notify.exception('Failed to register inventory with manager')
+        if self.registerWithInventoryManager:
+            try:
+                self.air.inventoryManager.addInventory(self)
+            except Exception:
+                self.notify.exception('Failed to register inventory with manager')
         DistributedObjectAI.generate(self)
 
     def announceGenerate(self):
@@ -213,9 +215,10 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.notify.warning('No valid callback for a callback response! What was the purpose of that?')
 
     def delete(self):
-        try:
-            self.air.inventoryManager.removeInventory(self)
-        except Exception:
-            self.notify.exception('Failed to unregister inventory from manager')
+        if self.registerWithInventoryManager:
+            try:
+                self.air.inventoryManager.removeInventory(self)
+            except Exception:
+                self.notify.exception('Failed to unregister inventory from manager')
         DistributedObjectAI.delete(self)
         DistributedInventoryBase.delete(self)

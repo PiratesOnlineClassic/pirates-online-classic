@@ -37,7 +37,10 @@ class ClientAreaBuilderAI(DirectObject):
         self.objectList[object.doId] = object
 
     def removeObject(self, object, uniqueId=None):
-        self.air.uidMgr.removeUid(uniqueId or object.getUniqueId())
+        uid = uniqueId or object.getUniqueId()
+        registeredId = self.air.uidMgr.getDoId(uid)
+        if registeredId is None or registeredId == object.doId:
+            self.air.uidMgr.removeUid(uid)
         del self.objectList[object.doId]
 
     def getObject(self, doId=None, uniqueId=None):
@@ -248,6 +251,9 @@ class ClientAreaBuilderAI(DirectObject):
         (h, p, r) = islandWorldData.get('Hpr', (0, 0, 0))
 
         island = DistributedIslandAI(self.air)
+        if self.parent.getType() == PiratesGlobals.INSTANCE_TM:
+            island.cellWidth = WorldGlobals.ISLAND_TM_CELL_SIZE
+            island.gridRadius = WorldGlobals.ISLAND_TM_GRID_RADIUS
         island.setUniqueId(objKey)
         island.setName(PLocalizer.LocationNames.get(objKey, ''))
         island.setFileName(islandWorldData.get('File', ''))

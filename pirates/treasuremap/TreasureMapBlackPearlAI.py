@@ -2,9 +2,11 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.task import Task
 
+from otp.ai import AIInterestHandles
 from pirates.treasuremap.DistributedTreasureMapInstanceAI import DistributedTreasureMapInstanceAI
 from pirates.treasuremap import TreasureMapBlackPearlGlobals
 from pirates.treasuremap.TreasureMapBlackPearlWorldBuilderAI import TreasureMapBlackPearlWorldBuilderAI
+from pirates.quest import QuestEvent
 from pirates.ship import ShipGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.pirate import AvatarTypes
@@ -79,6 +81,7 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
 
         # Navy guard references
         self.navyGuards = []
+        self.deadNavyGuards = []
         self.navyGuardsKilled = 0
 
         # Fort references
@@ -89,14 +92,18 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         self.worldBuilder = None
 
         # Quest state
-        self.cutsceneEndedCount = 0
+        self.cutsceneEndedAvatars = set()
+        self.cutsceneFinished = False
         self.shipCaptured = False
         self.npcsKilled = False
         self.attackShipsSunk = 0
+        self.sunkAttackShipIds = set()
         self.barricadesDestroyed = []
 
         # Barrier sync for multi-player
         self.barrierCallbacks = {}
+        self.readyBarrier = None
+        self.arrivedParticipants = set()
 
         # Ready state for teleporting
         self.isReady = False
@@ -105,7 +112,6 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         # Interest tracking for Black Pearl visibility
         # Maps avatarId -> interestId for cleanup
         self.blackPearlInterests = {}
-        self.nextInterestId = 5000  # Start with a high number to avoid conflicts
 
     def announceGenerate(self):
         DistributedTreasureMapInstanceAI.announceGenerate(self)
@@ -128,13 +134,10 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
             # Register forts from the builder
             self._registerForts()
         else:
-            self.notify.warning('Could not find Black Pearl island - skipping fort creation')
+            self.notify.error('Could not find Black Pearl island for instance %d' % self.doId)
 
         # Create the Black Pearl ship
         self._createBlackPearl()
-
-        # Add Black Pearl interest for any participants who joined before ship was created
-        #self._addBlackPearlInterestForAllParticipants()
 
         # Spawn Navy guards on the Black Pearl
         self._spawnNavyGuards()
@@ -144,6 +147,8 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
 
         # Create attack ships
         self._createAttackShips()
+        taskMgr.doMethodLater(1.0, self._refreshBlackPearlInterests,
+            self.uniqueName('refreshBlackPearlInterests'))
 
         # Initialize barricade states
         for barricadeId in range(5):
@@ -168,12 +173,27 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         taskMgr.remove(self.uniqueName('stageTwoDelay'))
         taskMgr.remove(self.uniqueName('stageFourCutscene'))
         taskMgr.remove(self.uniqueName('checkVictory'))
+        taskMgr.remove(self.uniqueName('checkAttackShips'))
+        taskMgr.remove(self.uniqueName('checkNavyGuards'))
+        taskMgr.remove(self.uniqueName('waitClientsTimeout'))
+        taskMgr.remove(self.uniqueName('moveToCompleted'))
+        taskMgr.remove(self.uniqueName('refreshBlackPearlInterests'))
+        if self.readyBarrier is not None:
+            self.ignoreBarrier(self.readyBarrier)
+            self.readyBarrier = None
+        for avatarId in self.participants:
+            self.ignore('teleportDone-%d' % avatarId)
+        self.arrivedParticipants.clear()
+        for avatarId in list(self.blackPearlInterests):
+            self._removeBlackPearlInterest(avatarId)
+        self.pendingTeleportCallbacks = []
 
         # Clean up Navy guards
-        for guard in self.navyGuards:
+        for guard in self.navyGuards + self.deadNavyGuards:
             if guard:
                 guard.requestDelete()
         self.navyGuards = []
+        self.deadNavyGuards = []
 
         # Clean up world builder (forts and cannons)
         if self.worldBuilder:
@@ -202,53 +222,70 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
 
     def addParticipant(self, avatarId):
         """Override to add Black Pearl interest when avatar joins"""
+        if avatarId not in self.participants:
+            self.acceptOnce('teleportDone-%d' % avatarId, self._participantArrived,
+                extraArgs=[avatarId])
         DistributedTreasureMapInstanceAI.addParticipant(self, avatarId)
 
         # Add interest to the Black Pearl ship zone for this avatar
-        #if self.blackPearl and self.oceanGrid:
-        #    self._addBlackPearlInterest(avatarId)
+        if self.isReady and avatarId in self.readyAvatars:
+            self._addBlackPearlInterest(avatarId)
 
     def removeParticipant(self, avatarId):
         """Override to remove Black Pearl interest when avatar leaves"""
+        self.ignore('teleportDone-%d' % avatarId)
+        self.arrivedParticipants.discard(avatarId)
         # Remove interest first
-        #self._removeBlackPearlInterest(avatarId)
+        self._removeBlackPearlInterest(avatarId)
+        self.cutsceneEndedAvatars.discard(avatarId)
 
         DistributedTreasureMapInstanceAI.removeParticipant(self, avatarId)
+        self._finishCutsceneIfReady()
+        if self.state == 'WaitClientsReady':
+            self._waitClientsReadyTimeout(None)
+
+    def _participantArrived(self, avatarId):
+        if avatarId not in self.participants:
+            return
+        self.arrivedParticipants.add(avatarId)
+        if self.state == 'WaitClientsReady':
+            self._waitClientsReadyTimeout(None)
 
     def _addBlackPearlInterest(self, avatarId):
-        """Add interest to the Black Pearl zone for an avatar so they always see the ship"""
+        """Keep the encounter ships and forts visible to a participant."""
         if not self.blackPearl or not self.oceanGrid:
             self.notify.warning('Cannot add Black Pearl interest: ship or oceanGrid not available')
             return
 
+        island = self._getBlackPearlIsland()
+        if not island:
+            self.notify.warning('Cannot add Black Pearl interest: island not available')
+            return
         avatar = self.air.doId2do.get(avatarId)
         if not avatar:
             self.notify.warning('Cannot add Black Pearl interest: avatar %d not found' % avatarId)
             return
 
-        # Get the zone where the Black Pearl is located
-        shipZoneId = self.blackPearl.zoneId
-
-        # Generate a unique interest ID for this avatar
-        interestId = self.nextInterestId
-        self.nextInterestId += 1
-
-        # Get the client channel for this avatar
         clientChannel = avatar.GetPuppetConnectionChannel(avatarId)
-
-        # Add interest to the ocean grid's zone where the Black Pearl is
-        self.air.clientAddInterest(clientChannel, interestId, self.oceanGrid.doId, shipZoneId)
-
-        # Store the interest ID for cleanup
-        self.blackPearlInterests[avatarId] = interestId
-
-        self.notify.info('Added Black Pearl interest (id=%d, zone=%d) for avatar %d' % (
-            interestId, shipZoneId, avatarId))
+        ships = [self.blackPearl, self.goliath] + self.attackShips
+        shipZones = tuple(sorted({ship.zoneId for ship in ships if ship and ship.zoneId}))
+        fortZones = tuple(sorted({fort.zoneId for fort in self.forts.values() if fort.zoneId}))
+        previous = self.blackPearlInterests.get(avatarId)
+        if not previous or previous[0] != shipZones:
+            self.air.clientAddInterestMultiple(clientChannel,
+                AIInterestHandles.PIRATES_TREASUREMAP, self.oceanGrid.doId, shipZones, False)
+        if fortZones and (not previous or previous[1] != fortZones):
+            self.air.clientAddInterestMultiple(clientChannel,
+                AIInterestHandles.PIRATES_TREASUREMAP_FORTS, island.doId, fortZones, False)
+        elif not fortZones and previous and previous[1]:
+            self.air.clientRemoveInterest(clientChannel,
+                AIInterestHandles.PIRATES_TREASUREMAP_FORTS, False)
+        self.blackPearlInterests[avatarId] = (shipZones, fortZones)
 
     def _removeBlackPearlInterest(self, avatarId):
         """Remove Black Pearl interest for an avatar"""
-        interestId = self.blackPearlInterests.pop(avatarId, None)
-        if interestId is None:
+        interests = self.blackPearlInterests.pop(avatarId, None)
+        if interests is None:
             return
 
         avatar = self.air.doId2do.get(avatarId)
@@ -256,15 +293,22 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
             return
 
         clientChannel = avatar.GetPuppetConnectionChannel(avatarId)
-        self.air.clientRemoveInterest(clientChannel, interestId)
-
-        self.notify.info('Removed Black Pearl interest (id=%d) for avatar %d' % (interestId, avatarId))
+        self.air.clientRemoveInterest(clientChannel, AIInterestHandles.PIRATES_TREASUREMAP, False)
+        if interests[1]:
+            self.air.clientRemoveInterest(clientChannel, AIInterestHandles.PIRATES_TREASUREMAP_FORTS, False)
 
     def _addBlackPearlInterestForAllParticipants(self):
         """Add Black Pearl interest for all current participants"""
-        for avatarId in self.participants:
-            if avatarId not in self.blackPearlInterests:
+        for avatarId in list(self.participants):
+            if avatarId not in self.air.doId2do:
+                self.removeParticipant(avatarId)
+                continue
+            if avatarId in self.readyAvatars:
                 self._addBlackPearlInterest(avatarId)
+
+    def _refreshBlackPearlInterests(self, task):
+        self._addBlackPearlInterestForAllParticipants()
+        return Task.again
 
     # =========================================================================
     # Ship Creation
@@ -272,18 +316,14 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
 
     def _createBlackPearl(self):
         """Create the Black Pearl ship"""
-        from pirates.ship.NPCShipAI import NPCShipAI
+        from pirates.ship.BlackPearlShipAI import BlackPearlShipAI
 
         self.notify.info('Creating Black Pearl ship...')
         self.notify.info('self.air = %s' % self.air)
         self.notify.info('self.oceanGrid = %s' % self.oceanGrid)
 
-        try:
-            # Use NPCShipAI for now since BlackPearlShipAI may have issues
-            self.blackPearl = NPCShipAI(self.air)
-        except Exception as e:
-            self.notify.error('Failed to create Black Pearl ship: %s' % e)
-            return
+        self.blackPearl = BlackPearlShipAI(self.air)
+        self.blackPearl.setQuestInstance(self)
 
         self.notify.info('Black Pearl ship created, setting properties...')
         self.blackPearl.setBaseTeam(ShipGlobals.PLAYER_TEAM)
@@ -464,6 +504,8 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
             # Pick a random avatar type from our guard types
             avatarType = random.choice(self.NAVY_GUARD_TYPES)
             guard.setAvatarType(avatarType)
+            guard.setTeam(PiratesGlobals.NAVY_TEAM)
+            guard.setCollisionMode(PiratesGlobals.COLL_MODE_FLOORS_CL)
 
             # Set level based on avatar type (soldiers/marksmen levels)
             level = 30 + (i % 4) * 5  # Levels 30, 35, 40, 45
@@ -482,6 +524,7 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
             # Set spawn position
             sx, sy, sz = pos
             guard.setSpawnPos((sx, sy, sz))
+            guard.setInitZ(sz)
 
             # Set animation and combat state
             guard.setAnimSet('default')
@@ -493,7 +536,7 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
 
             # Generate the guard as a child of the Black Pearl ship
             # This makes the guard move with the ship
-            zoneId = self.blackPearl.zoneId
+            zoneId = PiratesGlobals.ShipZoneOnDeck
             self.blackPearl.generateChildWithRequired(guard, zoneId)
 
             # Position relative to the ship
@@ -510,6 +553,7 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
             guard._blackPearlInstance = self
 
             self.navyGuards.append(guard)
+            self.blackPearl.addNPCOnDeck(guard.doId)
             self.notify.debug('Spawned Navy guard %d (%s) at %s' % (i, avatarType.getName(), pos))
 
         self.notify.info('Spawned %d Navy guards on the Black Pearl' % len(self.navyGuards))
@@ -519,40 +563,43 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         Called when a Navy guard's gameFSM enters Death state.
         This method is called because we set guard.setSpawnNode(self).
         """
-        # We need to track which guard died - check all guards for HP <= 0
+        # The death FSM runs before the damage setter stores the new HP.
+        taskMgr.doMethodLater(0, self._checkNavyGuards, self.uniqueName('checkNavyGuards'))
+
+    def _checkNavyGuards(self, task):
         for guard in list(self.navyGuards):
             hp = guard.getHp()
-            # getHp returns [hp, quietly] tuple
-            if isinstance(hp, list):
+            if isinstance(hp, (list, tuple)):
                 hp = hp[0]
             if hp <= 0:
                 self._onNavyGuardKilled(guard)
-                break
+        return Task.done
 
     def _onNavyGuardKilled(self, guard):
         """Handle a Navy guard being killed"""
+        if guard not in self.navyGuards:
+            return
         self.navyGuardsKilled += 1
         self.notify.info('Navy guard killed: %d/%d' % (self.navyGuardsKilled, len(self.navyGuards)))
+
+        if self.blackPearl:
+            self.blackPearl.removeNPCOnDeck(guard.doId)
 
         # Remove the dead guard from our list
         if guard in self.navyGuards:
             self.navyGuards.remove(guard)
+            self.deadNavyGuards.append(guard)
 
         # Check if all guards are killed
         if self.navyGuardsKilled >= self.NUM_NAVY_GUARDS:
             self.notify.info('All Navy guards killed! Ship captured!')
-            self.npcsKilled = True
-            self.d_handleNPCsKilled()
+            self.handleNPCsKilledOnPearl()
 
     def _getBlackPearlIsland(self):
         """Get the Black Pearl island (standard DistributedIslandAI)"""
         # Search by UID for the Black Pearl island
         islandUid = TreasureMapBlackPearlGlobals.BLACKPEARL_ISLAND_UID
-        islandDoId = self.air.uidMgr.getDoId(islandUid)
-        if islandDoId:
-            return self.air.doId2do.get(islandDoId)
-        
-        return None
+        return self.builder.getObject(uniqueId=islandUid)
 
     def _registerForts(self):
         """Register forts from the world builder"""
@@ -669,7 +716,7 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
     def requestShipCapture(self):
         """Client requests ship capture (entered capture zone)"""
         avatarId = self.air.getAvatarIdFromSender()
-        if not avatarId:
+        if avatarId not in self.participants or self.state != 'StageOne':
             return
 
         self.notify.info('Avatar %d triggered ship capture' % avatarId)
@@ -682,7 +729,7 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
     def requestShipAmbush(self):
         """Client requests ship ambush event"""
         avatarId = self.air.getAvatarIdFromSender()
-        if not avatarId:
+        if avatarId not in self.participants:
             return
 
         self.notify.info('Avatar %d triggered ship ambush' % avatarId)
@@ -690,16 +737,18 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
     def requestEndCutscene(self):
         """Client requests to end the cutscene (cutscene finished or skipped)"""
         avatarId = self.air.getAvatarIdFromSender()
-        if not avatarId:
+        if avatarId not in self.participants or self.state != 'StageOne':
             return
 
         self.notify.info('Avatar %d finished cutscene' % avatarId)
-        self.cutsceneEndedCount += 1
+        self.cutsceneEndedAvatars.add(avatarId)
+        self._finishCutsceneIfReady()
 
-        # Check if all participants have finished
-        if self.cutsceneEndedCount >= len(self.participants) or self.cutsceneEndedCount >= 1:
-            # All ready, end the cutscene for everyone
+    def _finishCutsceneIfReady(self):
+        if (not self.cutsceneFinished and self.state == 'StageOne' and self.participants and
+                set(self.participants).issubset(self.cutsceneEndedAvatars)):
             taskMgr.remove(self.uniqueName('cutsceneTimeout'))
+            self.cutsceneFinished = True
             self.d_endCutscene()
 
     def handleNPCsKilledOnPearl(self):
@@ -722,7 +771,10 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
 
     def handleAttackShipDestroyed(self, shipDoId):
         """Called when an attack ship is destroyed"""
-        self.attackShipsSunk += 1
+        if shipDoId not in self.attackShipIds or shipDoId in self.sunkAttackShipIds:
+            return
+        self.sunkAttackShipIds.add(shipDoId)
+        self.attackShipsSunk = len(self.sunkAttackShipIds)
         self.d_handleAttackShipSunk()
         self.notify.info('Attack ship %d destroyed (%d/%d)' % (
             shipDoId, self.attackShipsSunk, len(self.attackShipIds)))
@@ -798,14 +850,36 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
             self.uniqueName('waitClientsTimeout'))
 
     def _waitClientsReadyTimeout(self, task):
-        """Timeout waiting for clients, move to stage one anyway"""
-        if self.state == 'WaitClientsReady':
-            self.notify.info('Wait clients ready timeout, moving to StageOne')
-            self.b_setState('StageOne')
+        if self.state != 'WaitClientsReady':
+            return Task.done
+        if self.readyBarrier is not None:
+            return Task.done
+        if not self.participants or not set(self.participants).issubset(self.arrivedParticipants):
+            return Task.again
+        self.readyBarrier = self.beginBarrier(self.uniqueName('allAvatarsReady'),
+            list(self.participants), self.CUTSCENE_WAIT_TIME, self._clientsReady)
         return Task.done
+
+    def _clientsReady(self, readyAvatars):
+        self.readyBarrier = None
+        if self.state != 'WaitClientsReady':
+            return
+        if not set(readyAvatars).intersection(self.participants):
+            self.notify.warning('No Black Pearl participants finished loading')
+            taskMgr.doMethodLater(10.0, self._waitClientsReadyTimeout,
+                self.uniqueName('waitClientsTimeout'))
+            return
+        self.readyAvatars = [avatarId for avatarId in readyAvatars
+                             if avatarId in self.participants]
+        self._addBlackPearlInterestForAllParticipants()
+        self.d_setAllPlayersReady(1)
+        self.b_setState('StageOne')
 
     def exitWaitClientsReady(self):
         taskMgr.remove(self.uniqueName('waitClientsTimeout'))
+        if self.readyBarrier is not None:
+            self.ignoreBarrier(self.readyBarrier)
+            self.readyBarrier = None
 
     def enterStageOne(self):
         """Stage One: Cutscene and board the Black Pearl"""
@@ -818,8 +892,10 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
 
     def _cutsceneTimeout(self, task):
         """Cutscene timeout - force end cutscene for stragglers"""
-        self.notify.info('Cutscene timeout, forcing end')
-        self.d_endCutscene()
+        if not self.cutsceneFinished and self.state == 'StageOne':
+            self.notify.info('Cutscene timeout, forcing end')
+            self.cutsceneFinished = True
+            self.d_endCutscene()
         return Task.done
 
     def exitStageOne(self):
@@ -829,9 +905,17 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         """Stage Two: Fight attack ships"""
         DistributedTreasureMapInstanceAI.enterStageTwo(self)
         self.notify.info('Entering Stage Two - Defeat the attack ships')
+        taskMgr.doMethodLater(1.0, self._checkAttackShips,
+            self.uniqueName('checkAttackShips'))
+
+    def _checkAttackShips(self, task):
+        for ship in self.attackShips:
+            if ship.getHp() <= 0:
+                self.handleAttackShipDestroyed(ship.doId)
+        return Task.again if self.state == 'StageTwo' else Task.done
 
     def exitStageTwo(self):
-        pass
+        taskMgr.remove(self.uniqueName('checkAttackShips'))
 
     def enterStageThree(self):
         """Stage Three: Destroy the barricades/drawbridges"""
@@ -877,16 +961,13 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         self.notify.info('Entering Reward state - Victory!')
 
         # Calculate and distribute rewards
-        instanceResults = []
-        playerResults = []
-
         for avatarId in self.participants:
             avatar = self.air.doId2do.get(avatarId)
             if avatar:
-                # Award gold, reputation, loot
-                playerResults.append([avatarId, 1])  # 1 = success
-
-        self.d_setTMComplete(instanceResults, playerResults)
+                event = QuestEvent.BossBattleCompleted()
+                event.setTreasureMapId(PiratesGlobals.GAME_STYLE_TM_BLACK_PEARL)
+                self.air.questMgr.completeTaskState(avatar, event)
+                self.sendUpdateToAvatarId(avatarId, 'setTMComplete', [[], []])
 
         # Schedule move to completed
         taskMgr.doMethodLater(30.0, self._moveToCompleted, self.uniqueName('moveToCompleted'))

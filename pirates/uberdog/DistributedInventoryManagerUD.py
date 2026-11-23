@@ -89,8 +89,8 @@ class InventoryOperationFSM(FSM):
         if self.callback:
             try:
                 self.callback(*args, **kwargs)
-            except Exception:
-                self.notify.exception('Callback failed for entity %d' % self.avatarId)
+            except Exception as error:
+                self.notify.warning('Callback failed for entity %d: %s' % (self.avatarId, error))
 
     def cleanup(self, *args, **kwargs):
         """Legacy method - redirects to _finish for backwards compatibility."""
@@ -108,8 +108,8 @@ class QueryInventoryFSM(InventoryOperationFSM):
                 self.avatarId,
                 self.avatarQueryCallback,
                 dclass=self.air.dclassesByName[self.getAvatarClassName()])
-        except Exception:
-            self.notify.exception('Failed to query avatar %d' % self.avatarId)
+        except Exception as error:
+            self.notify.warning('Failed to query avatar %d: %s' % (self.avatarId, error))
             self._finish(0)
 
     def avatarQueryCallback(self, dclass, fields):
@@ -183,8 +183,8 @@ class CreateInventoryFSM(InventoryOperationFSM):
                 self.air.dclassesByName[self.getInventoryClassName()],
                 fields=fields,
                 callback=self.inventoryCreatedCallback)
-        except Exception:
-            self.notify.exception('Failed to create inventory for %d' % self.avatarId)
+        except Exception as error:
+            self.notify.warning('Failed to create inventory for %d: %s' % (self.avatarId, error))
             self._finish(0)
 
     def inventoryCreatedCallback(self, inventoryId):
@@ -208,9 +208,10 @@ class CreateInventoryFSM(InventoryOperationFSM):
                 self.air.dclassesByName[self.getAvatarClassName()],
                 fields,
                 callback=self.inventorySetCallback)
-        except Exception:
-            self.notify.exception('Failed to update avatar %d with inventory %d' % (self.avatarId, inventoryId))
-            self._finish(inventoryId)
+        except Exception as error:
+            self.notify.warning('Failed to update avatar %d with inventory %d: %s' %
+                                (self.avatarId, inventoryId, error))
+            self._finish(0)
 
     def inventorySetCallback(self, fields):
         if self._finished:
@@ -256,8 +257,8 @@ class ActivateInventoryFSM(InventoryOperationFSM):
                 OtpDoGlobals.OTP_ZONE_ID_MANAGEMENT,
                 dclass=self.air.dclassesByName[self.getInventoryClassName()])
             self._finish(inventoryId)
-        except Exception:
-            self.notify.exception('Failed to activate inventory %d' % inventoryId)
+        except Exception as error:
+            self.notify.warning('Failed to activate inventory %d: %s' % (inventoryId, error))
             self._finish(0)
 
     def exitStart(self):
@@ -299,8 +300,8 @@ class ActivateShipInventoryFSM(ActivateInventoryFSM):
                 OtpDoGlobals.OTP_ZONE_ID_MANAGEMENT,
                 dclass=self.air.dclassesByName[self.getInventoryClassName()])
             self._finish(inventoryId)
-        except Exception:
-            self.notify.exception('Failed to activate ship inventory %d' % inventoryId)
+        except Exception as error:
+            self.notify.warning('Failed to activate ship inventory %d: %s' % (inventoryId, error))
             self._finish(0)
 
     def exitStart(self):
@@ -324,6 +325,11 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
         DistributedObjectGlobalUD.announceGenerate(self)
         self.air.netMessenger.accept('hasInventoryResponse', self, self.processCallbackResponse)
         self.air.netMessenger.accept('getInventoryResponse', self, self.processCallbackResponse)
+        self.air.netMessenger.accept('getAccumulatorsResponse', self, self.processCallbackResponse)
+        self.air.netMessenger.accept('getAccumulatorResponse', self, self.processCallbackResponse)
+        self.air.netMessenger.accept('getStackLimitResponse', self, self.processCallbackResponse)
+        self.air.netMessenger.accept('getStackResponse', self, self.processCallbackResponse)
+        self.air.netMessenger.accept('getOwnerIdResponse', self, self.processCallbackResponse)
 
     def delete(self):
         # Clean up any pending FSMs
@@ -333,6 +339,7 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
             except Exception:
                 pass
         self.avatar2fsm.clear()
+        self.air.netMessenger.ignoreAll(self)
         DistributedObjectGlobalUD.delete(self)
 
     def hasPendingOperation(self, entityId):
@@ -381,8 +388,8 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
             elif callback:
                 try:
                     callback(inventoryId)
-                except Exception:
-                    self.notify.exception('Callback failed in queryInventory')
+                except Exception as error:
+                    self.notify.warning('Callback failed in queryInventory: %s' % error)
 
         self.runInventoryFSM(QueryInventoryFSM, avatarId, callback=inventoryQueryCallback)
 
@@ -407,11 +414,8 @@ class DistributedInventoryManagerUD(DistributedObjectGlobalUD):
         if callable(callback):
             try:
                 callback(*args, **kwargs)
-            except Exception:
-                try:
-                    self.notify.exception('Exception while running callback')
-                except Exception:
-                    pass
+            except Exception as error:
+                self.notify.warning('Exception while running callback: %s' % error)
             return
 
         self.notify.warning('No valid callback for a callback response! What was the purpose of that?')

@@ -148,6 +148,12 @@ class DistributedTreasureMapInstanceAI(DistributedInstanceWorldAI, FSM):
 
     def enterCompleted(self):
         self.notify.info('Instance completed successfully')
+        for avatarId in list(self.participants):
+            if avatarId not in self.air.doId2do:
+                self.removeParticipant(avatarId)
+                continue
+
+            self._approveParticipantLeave(avatarId)
 
     def exitCompleted(self):
         pass
@@ -200,31 +206,46 @@ class DistributedTreasureMapInstanceAI(DistributedInstanceWorldAI, FSM):
         if not avatarId:
             return
 
-        self.notify.info('Avatar %d requests to leave instance (reason=%d)' % (avatarId, reason))
-        self.removeParticipant(avatarId)
+        if avatarId not in self.participants:
+            self.notify.warning('Avatar %d requested to leave instance %d without being a participant' %
+                (avatarId, self.doId))
+            return
 
-        # Get the avatar's return location
+        self.notify.info('Avatar %d requests to leave instance (reason=%d)' % (avatarId, reason))
+        self._approveParticipantLeave(avatarId)
+
+    def _approveParticipantLeave(self, avatarId):
+        """Return a participant and remove them only after a return is available."""
         avatar = self.air.doId2do.get(avatarId)
-        if avatar:
-            # Send them back to the main world
-            self._sendAvatarToMainWorld(avatar)
+        if not avatar:
+            return False
+
+        if not self._sendAvatarToMainWorld(avatar):
+            return False
+
+        self.removeParticipant(avatarId)
+        return True
 
     def _sendAvatarToMainWorld(self, avatar):
         """Send an avatar back to the main world"""
         # Find the main world instance
-        mainWorld = self.air.teleportMgr.getWorld(PiratesGlobals.INSTANCE_MAIN, 'PiratesWorld')
+        teleportMgr = getattr(self.air, 'teleportMgr', None)
+        mainWorld = teleportMgr and teleportMgr.getWorld(
+            PiratesGlobals.INSTANCE_MAIN, 'PiratesWorld')
         if not mainWorld:
             self.notify.warning('Could not find main world to return avatar to')
-            return
+            return False
 
-        # Get an island to teleport to (Port Royal by default)
+        # The Black Pearl client uses this interest while it requests a main-world teleport.
         islands = mainWorld.builder.getIslands()
-        if islands:
-            island = islands[0]
-            spawnPt = mainWorld.getSpawnPt(island.getUniqueId(), 0)
-            # Notify client
-            self.sendUpdateToAvatarId(avatar.doId, 'requestLeaveApproved', [
-                mainWorld.doId, island.zoneId, 0])
+        if not islands:
+            self.notify.warning('Could not find an island for avatar %d to return to' % avatar.doId)
+            return False
+
+        island = islands[0]
+        self.sendUpdateToAvatarId(avatar.doId, 'requestLeaveApproved', [
+            mainWorld.doId, island.zoneId, 0])
+        return True
 
     # --- Treasure Map Complete ---
     def d_setTMComplete(self, instanceResults, playerResults):

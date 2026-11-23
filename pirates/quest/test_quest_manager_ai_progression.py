@@ -54,6 +54,65 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class QuestProgressionTests(unittest.TestCase):
+    def test_map_reward_waits_for_success_and_retries_after_failure(self):
+        callbacks = []
+        trade = types.SimpleNamespace(
+            giveNewTreasureMap=lambda mapId, callback: callbacks.append((mapId, callback)))
+        air = types.SimpleNamespace(tradeMgr=types.SimpleNamespace(createTrade=lambda avId: trade),
+                                    doId2do={})
+        manager = manager_module.QuestManagerAI(air)
+        manager._giveRewards = Mock(return_value=True)
+        stub = types.SimpleNamespace(complete=False, handleQuestComplete=Mock())
+        avatar = types.SimpleNamespace(doId=1, history=[],
+            getQuestHistory=lambda: avatar.history,
+            b_setQuestHistory=lambda history: setattr(avatar, 'history', history),
+            getTutorial=lambda: 0, b_setTutorial=Mock(),
+            questStatus=types.SimpleNamespace(getQuestStub=lambda questId: stub,
+                                               getNPCInteractMode=lambda: False))
+        dna = QuestDB.QuestDict['c3.6deliverMap']
+        quest = types.SimpleNamespace(doId=2, getQuestId=lambda: 'c3.6deliverMap',
+                                      getQuestDNA=lambda: dna, isComplete=lambda: True,
+                                      getRewards=dna.getRewards)
+        manager.quests[1] = {2: quest}
+        air.doId2do[1] = avatar
+        manager.completeQuest(avatar, quest)
+        manager.completeQuest(avatar, quest)
+        self.assertEqual(len(callbacks), 1)
+        self.assertEqual(callbacks[0][0], 0)
+        manager._giveRewards.assert_not_called()
+        callbacks[0][1](False)
+        self.assertEqual(avatar.history, [])
+        manager.completeQuest(avatar, quest)
+        self.assertEqual(len(callbacks), 2)
+        callbacks[1][1](True)
+        self.assertEqual(avatar.history, [dna.getQuestInt()])
+        manager._giveRewards.assert_called_once()
+        stub.handleQuestComplete.assert_called_once()
+
+    def test_map_reward_completion_ignores_disconnected_avatar(self):
+        callback = []
+        air = types.SimpleNamespace(doId2do={}, tradeMgr=types.SimpleNamespace(
+            createTrade=lambda avId: types.SimpleNamespace(
+                giveNewTreasureMap=lambda mapId, done: callback.append(done))))
+        manager = manager_module.QuestManagerAI(air)
+        manager._giveRewards = Mock(return_value=True)
+        stub = types.SimpleNamespace(complete=False, handleQuestComplete=Mock())
+        avatar = types.SimpleNamespace(doId=1, getQuestHistory=lambda: [],
+            b_setQuestHistory=Mock(), questStatus=types.SimpleNamespace(
+                getQuestStub=lambda questId: stub, getNPCInteractMode=lambda: False))
+        dna = QuestDB.QuestDict['c3.6deliverMap']
+        quest = types.SimpleNamespace(doId=2, getQuestId=lambda: 'c3.6deliverMap',
+                                      getQuestDNA=lambda: dna, isComplete=lambda: True,
+                                      getRewards=dna.getRewards)
+        manager.quests[1] = {2: quest}
+        air.doId2do[1] = avatar
+        manager.completeQuest(avatar, quest)
+        del air.doId2do[1]
+        callback[0](True)
+        avatar.b_setQuestHistory.assert_not_called()
+        manager._giveRewards.assert_not_called()
+        self.assertNotIn(2, manager.completingQuests)
+
     def test_ladder_successors(self):
         avatar = types.SimpleNamespace(getQuestHistory=lambda: [])
         ladder = QuestLadderDB.FameQuestLadderDict['MainStory'].constructDynamicCopy(avatar)

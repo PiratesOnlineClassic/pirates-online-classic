@@ -87,6 +87,8 @@ class DistributedBuriedTreasure(DistributedInteractive.DistributedInteractive):
                 localAvatar.b_setGameState('LandTreasureRoam')
             else:
                 localAvatar.b_setGameState(localAvatar.gameFSM.defaultState)
+        if self.state == 'Use':
+            self.refreshState()
 
     def requestExit(self):
         DistributedInteractive.DistributedInteractive.requestExit(self)
@@ -114,7 +116,18 @@ class DistributedBuriedTreasure(DistributedInteractive.DistributedInteractive):
         dirtZ = min(z + 0.5, -1.5)
         dirtOldZ = min(oldZ + 0.5, -1.5)
         if self.currentDepth == self.startingDepth:
+            if self.showTreasureIval:
+                self.showTreasureIval.pause()
+                self.showTreasureIval = None
+                self.clearColorScale()
+                self.clearTransparency()
+            if self.raiseTreasureIval:
+                self.raiseTreasureIval.pause()
+                self.raiseTreasureIval = None
             if self.chest:
+                self.chestLidHigh.setHpr(0, 0, 0)
+                self.chestLidMed.setHpr(0, 0, 0)
+                self.chestLidLow.setHpr(0, 0, 0)
                 self.chest.stash()
                 self.dirt.stash()
                 self.chest.setZ(z)

@@ -29,6 +29,7 @@ class TradeBase(object):
 
 
 class LocalTrade(TradeBase):
+    notify = DirectNotifyGlobal.directNotify.newCategory('LocalTrade')
 
     def __init__(self, air):
         self.air = air
@@ -42,6 +43,13 @@ class LocalTrade(TradeBase):
 
     def getAvatarId(self):
         return self.avatarId
+
+    def giveNewTreasureMap(self, mapId, callback):
+        inventory = self.avatar.getInventory() if self.avatar else None
+        if not inventory:
+            callback(False)
+            return
+        inventory.giveTreasureMap(mapId, callback)
 
     def giveStack(self, stackType, quantity):
         TradeBase.giveStack(self, self.avatar, stackType, quantity)

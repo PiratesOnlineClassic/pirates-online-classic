@@ -1,12 +1,14 @@
-from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
+from direct.task import Task
+from pirates.uberdog.DistributedInventoryAI import DistributedInventoryAI
+from pirates.uberdog import InventoryInit
 
 from otp.ai.MagicWordGlobal import *
 
 from pirates.piratesbase import PiratesGlobals
 
 
-class DistributedTreasureMapAI(DistributedObjectAI):
+class DistributedTreasureMapAI(DistributedInventoryAI):
     """
     AI-side representation of a treasure map item.
     
@@ -15,21 +17,32 @@ class DistributedTreasureMapAI(DistributedObjectAI):
     creates a treasure map instance for the players to participate in.
     """
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTreasureMapAI')
+    registerWithInventoryManager = False
 
     def __init__(self, air):
-        DistributedObjectAI.__init__(self, air)
+        DistributedInventoryAI.__init__(self, air)
 
         self.mapId = 0
         self.isEnabled = 1
         self.objectiveIds = []
         self.participants = []  # Avatars who have accepted to join
+        self.startPending = False
+        self.activeInstance = None
+        self.pendingInstanceDoId = 0
 
     def generate(self):
-        DistributedObjectAI.generate(self)
+        DistributedInventoryAI.generate(self)
 
     def delete(self):
+        taskMgr.remove(self.uniqueName('instance-generation-timeout'))
+        if self.pendingInstanceDoId:
+            self.ignore('generate-%d' % self.pendingInstanceDoId)
+        if (self.activeInstance and self.air and
+                self.air.doId2do.get(self.activeInstance.doId) is self.activeInstance):
+            self.activeInstance.removeParticipant(self.ownerId)
+        self.activeInstance = None
         self.participants = []
-        DistributedObjectAI.delete(self)
+        DistributedInventoryAI.delete(self)
 
     # =========================================================================
     # DC Fields
@@ -84,7 +97,7 @@ class DistributedTreasureMapAI(DistributedObjectAI):
     def requestIsEnabled(self):
         """Client requests to check if this treasure map is enabled"""
         avatarId = self.air.getAvatarIdFromSender()
-        if not avatarId:
+        if not avatarId or avatarId != self.ownerId:
             return
 
         self.sendUpdateToAvatarId(avatarId, 'setIsEnabled', [self.isEnabled])
@@ -92,7 +105,7 @@ class DistributedTreasureMapAI(DistributedObjectAI):
     def requestStart(self, instanceType):
         """Client requests to start the treasure map instance"""
         avatarId = self.air.getAvatarIdFromSender()
-        if not avatarId:
+        if not avatarId or avatarId != self.ownerId:
             return
 
         avatar = self.air.doId2do.get(avatarId)
@@ -107,34 +120,68 @@ class DistributedTreasureMapAI(DistributedObjectAI):
             self.notify.warning('Treasure map %d is not enabled' % self.mapId)
             return
 
-        # Add to participants
-        if avatarId not in self.participants:
-            self.participants.append(avatarId)
+        if self.startPending:
+            return
+        if (self.activeInstance and
+                self.air.doId2do.get(self.activeInstance.doId) is self.activeInstance and
+                avatarId in self.activeInstance.participants):
+            return
 
         # Get the treasure map style info
-        mapStyle = PiratesGlobals.TM_GAME_STYLES.get(self.mapId, {})
-        mapName = mapStyle.get('MapName', 'BlackpearlWorld')
+        mapStyle = PiratesGlobals.DYNAMIC_GAME_STYLE_PROPS[PiratesGlobals.GAME_TYPE_TM].get(self.mapId)
+        if not mapStyle or not mapStyle.get('MapName'):
+            self.notify.warning('Unknown treasure map style %d' % self.mapId)
+            return
+        mapName = mapStyle['MapName']
 
         self.notify.info('Starting treasure map instance: %s' % mapName)
 
         # Request creation of the treasure map instance world
-        self._createTreasureMapInstance(avatar, mapName)
+        self.startPending = True
+        try:
+            if not self._createTreasureMapInstance(avatar, mapName):
+                self.startPending = False
+        except Exception:
+            self.startPending = False
+            raise
 
     def _createTreasureMapInstance(self, avatar, mapName):
         """Create the treasure map instance and teleport the player there"""
+        regionUid = self._getRegionUid(mapName)
+        if not regionUid:
+            self.notify.warning('No region UID configured for treasure map %s' % mapName)
+            return False
+
         # Load the world file for this treasure map
         worldFile = mapName + '.py'
 
         self.notify.info('Creating treasure map instance from file: %s' % worldFile)
 
+        previousDoId = self.air.uidMgr.getDoId(regionUid)
         # Use the world creator to load the treasure map world
         self.air.worldCreator.loadObjectsFromFile(worldFile)
 
-        # The world will be created through the WorldCreatorAI callback system
-        # Once created, we need to teleport the avatar there
-        # Register a callback for when the instance is ready
-        self.air.uidMgr.addUidCallback(self._getRegionUid(mapName), 
-            lambda instanceDoId: self._onInstanceCreated(instanceDoId, avatar))
+        # Capture the generated doId now; another instance uses the same authored UID.
+        instanceDoId = self.air.uidMgr.getDoId(regionUid)
+        if not instanceDoId or instanceDoId == previousDoId:
+            self.notify.warning('Treasure map %s did not generate a world' % mapName)
+            return False
+        if instanceDoId in self.air.doId2do:
+            self._onInstanceCreated(instanceDoId, avatar)
+        else:
+            self.pendingInstanceDoId = instanceDoId
+            self.acceptOnce('generate-%d' % instanceDoId,
+                lambda instance: self._onInstanceCreated(instance.doId, avatar))
+            taskMgr.doMethodLater(30, self._instanceGenerationTimedOut,
+                                  self.uniqueName('instance-generation-timeout'))
+        return True
+
+    def _instanceGenerationTimedOut(self, task):
+        if self.pendingInstanceDoId:
+            self.ignore('generate-%d' % self.pendingInstanceDoId)
+            self.pendingInstanceDoId = 0
+        self.startPending = False
+        return Task.done
 
     def _getRegionUid(self, mapName):
         """Get the region UID for a map name"""
@@ -146,30 +193,44 @@ class DistributedTreasureMapAI(DistributedObjectAI):
 
     def _onInstanceCreated(self, instanceDoId, avatar):
         """Called when the treasure map instance is created"""
+        taskMgr.remove(self.uniqueName('instance-generation-timeout'))
+        self.pendingInstanceDoId = 0
         instance = self.air.doId2do.get(instanceDoId)
-        if not instance:
+        if not instance or self.air.doId2do.get(avatar.doId) is not avatar:
+            self.startPending = False
             self.notify.warning('Failed to find created instance %d' % instanceDoId)
             return
 
+        self.startPending = False
+        self.activeInstance = instance
         self.notify.info('Treasure map instance created: %d, teleporting avatar %d' % (
             instanceDoId, avatar.doId))
 
-        # Add the avatar as a participant
         instance.addParticipant(avatar.doId)
+        air = self.air
 
-        # Teleport the avatar to the instance
-        # Find an island to spawn at
-        islands = instance.builder.getIslands()
-        if islands:
+        def teleport():
+            if self.air is not air or air.doId2do.get(avatar.doId) is not avatar:
+                instance.removeParticipant(avatar.doId)
+                return
+            islands = instance.builder.getIslands()
+            if not islands:
+                self.notify.warning('No islands found in treasure map instance %d' % instance.doId)
+                instance.removeParticipant(avatar.doId)
+                return
             island = islands[0]
             spawnPt = instance.getSpawnPt(island.getUniqueId(), 0)
-            self.air.teleportMgr.d_initiateTeleport(avatar,
+            air.teleportMgr.d_initiateTeleport(avatar,
                 instanceType=instance.getType(),
                 instanceName=instance.getFileName(),
                 locationUid=island.getUniqueId(),
-                spawnPt=spawnPt)
+                spawnPt=spawnPt,
+                targetWorld=instance)
+
+        if instance.isReady:
+            teleport()
         else:
-            self.notify.warning('No islands found in treasure map instance')
+            instance.pendingTeleportCallbacks.append(teleport)
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
@@ -183,6 +244,8 @@ def treasuremap(mapId=0):
 
     # Create a temporary treasure map AI
     treasureMap = DistributedTreasureMapAI(air)
+    treasureMap.setInventoryVersion(InventoryInit.UberDogRevision)
+    treasureMap.setOwnerId(invoker.doId)
     treasureMap.setMapId(mapId)
     treasureMap.generateWithRequired(air.districtId, air.allocateZone())
 

@@ -9,6 +9,7 @@ class DistributedInteractivePropAI(DistributedInteractiveAI, DistributedTargetab
     def __init__(self, air):
         DistributedInteractiveAI.__init__(self, air)
         DistributedTargetableObjectAI.__init__(self, air)
+        self.parentObjId = 0
 
     def handleRequestInteraction(self, avatar, interactType, instant):
         return self.ACCEPT
@@ -30,17 +31,17 @@ class DistributedInteractivePropAI(DistributedInteractiveAI, DistributedTargetab
         return self.modelPath
 
     def setParentObjId(self, parentId):
-        self.parentId = parentId
+        self.parentObjId = parentId
 
     def d_setParentObjId(self, parentId):
-        self.sendUpdate('setParentId', [parentId])
+        self.sendUpdate('setParentObjId', [parentId])
 
     def b_setParentObjId(self, parentId):
         self.setParentObjId(parentId)
         self.d_setParentObjId(parentId)
 
     def getParentObjId(self):
-        return self.parentId
+        return self.parentObjId
 
     def d_setMovie(self, movie):
         self.sendUpdate('setMovie', [movie])

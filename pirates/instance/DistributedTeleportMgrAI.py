@@ -131,7 +131,8 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         return names
 
     def d_initiateTeleport(self, avatar, instanceType=None, instanceName=None,
-                           locationUid=None, spawnPt=None, tutorialFsm=None):
+                           locationUid=None, spawnPt=None, tutorialFsm=None,
+                           targetWorld=None):
         if (instanceType == PiratesGlobals.INSTANCE_TUTORIAL and
                 avatar.getTutorial() < PiratesGlobals.TUT_MET_JOLLY_ROGER):
             tutorialManager = self.air.tutorialManager
@@ -154,17 +155,27 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         # then ensure this is their login teleport; not a normal teleport request...
         # The tutorial FSM supplies its own jail spawn location.
         if (returnLocation and not currentIsland and
-                instanceType != PiratesGlobals.INSTANCE_TUTORIAL):
+                instanceType != PiratesGlobals.INSTANCE_TUTORIAL and
+                targetWorld is None):
             locationUid = returnLocation
 
         gameArea = avatar.getParentObj()
-        if isinstance(gameArea, DistributedGameAreaAI) and gameArea.getUniqueId() == locationUid:
+        if (isinstance(gameArea, DistributedGameAreaAI) and
+                gameArea.getUniqueId() == locationUid and
+                (targetWorld is None or
+                 targetWorld.builder.getObject(uniqueId=locationUid) is gameArea)):
             self.notify.warning('Cannot initiate teleport for %d, '
                 'already there, locationUid=%s!' % (avatar.doId, locationUid))
 
             return
 
-        if not instanceType and not instanceName:
+        if targetWorld is not None:
+            world = targetWorld
+            if self.air.doId2do.get(world.doId) is not world:
+                self.notify.warning('Cannot initiate teleport for avatar %d: target world is unavailable' %
+                    avatar.doId)
+                return
+        elif not instanceType and not instanceName:
             world = gameArea.getParentObj()
         else:
             world = self.getWorld(instanceType, instanceName)
@@ -181,13 +192,18 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             return
 
         gameArea = world.builder.getObject(uniqueId=locationUid)
-        if not gameArea:
+        if not gameArea and targetWorld is None:
             # Try looking up the object via uidMgr (for interiors, etc.)
             objectDoId = self.air.uidMgr.getDoId(locationUid)
             if objectDoId:
                 gameArea = self.air.doId2do.get(objectDoId)
                 if gameArea:
                     self.notify.info('Found gameArea via uidMgr: %s' % gameArea)
+
+        if not gameArea and targetWorld is not None:
+            self.notify.warning('Cannot initiate teleport for avatar %d: location %r '
+                'is not in target world %d' % (avatar.doId, locationUid, world.doId))
+            return
 
         if not gameArea:
             # Attempt to select a default island if no area was supplied

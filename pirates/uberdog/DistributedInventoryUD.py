@@ -12,21 +12,6 @@ class DistributedInventoryUD(DistributedObjectUD):
     """
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInventoryUD')
 
-    def announceGenerate(self):
-        DistributedObjectUD.announceGenerate(self)
-
-        # Listen for async callback responses from the manager/AI.
-        self.air.netMessenger.accept('getAccumulatorsResponse', self, self.processCallbackResponse)
-        self.air.netMessenger.accept('getAccumulatorResponse', self, self.processCallbackResponse)
-        self.air.netMessenger.accept('getStackLimitResponse', self, self.processCallbackResponse)
-        self.air.netMessenger.accept('getStackResponse', self, self.processCallbackResponse)
-        self.air.netMessenger.accept('getOwnerIdResponse', self, self.processCallbackResponse)
-
-    def delete(self):
-        # Note: netMessenger listeners are typically global and shared,
-        # so we don't remove them here to avoid affecting other inventories.
-        DistributedObjectUD.delete(self)
-
     # -------------------------------------------------------------------------
     # Setters - Forward to AI via netMessenger
     # -------------------------------------------------------------------------
@@ -75,24 +60,3 @@ class DistributedInventoryUD(DistributedObjectUD):
         if callback is None:
             return
         self.air.netMessenger.send('getOwnerId', [self.doId, callback])
-
-    # -------------------------------------------------------------------------
-    # Callback handling
-    # -------------------------------------------------------------------------
-    def processCallbackResponse(self, callback, *args, **kwargs):
-        """Safely invoke a callback delivered via netMessenger.
-
-        Provides exception handling and logs failures instead of
-        letting them propagate into the netMessenger task.
-        """
-        if callable(callback):
-            try:
-                callback(*args, **kwargs)
-            except Exception:
-                try:
-                    self.notify.exception('Exception while running callback')
-                except Exception:
-                    pass
-            return
-
-        self.notify.warning('No valid callback for a callback response! What was the purpose of that?')
