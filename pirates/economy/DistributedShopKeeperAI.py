@@ -3,6 +3,7 @@ from direct.directnotify import DirectNotifyGlobal
 from otp.uberdog.RejectCode import RejectCode
 from pirates.economy import EconomyGlobals
 from pirates.makeapirate import BarberGlobals
+from pirates.ship import ShipGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType, InventoryCategory
 
 class DistributedShopKeeperAI(DistributedObjectAI):
@@ -50,8 +51,15 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         # Process stack limit changes
         stackBonus = EconomyGlobals.getInventoryBonus(itemId)
         if stackBonus:
-            # TODO: I will write this (internet pirate)
-            pass
+            pouchType = EconomyGlobals.getItemType(itemId)
+            ammoList = EconomyGlobals.getPouchAmmoList(pouchType)
+            if (not isinstance(stackBonus, (list, tuple)) or
+                    not isinstance(ammoList, (list, tuple)) or
+                    not ammoList or len(ammoList) != len(stackBonus)):
+                self.notify.warning('Invalid pouch ammo metadata for item %s' % itemId)
+            else:
+                for ammoId, bonus in zip(ammoList, stackBonus):
+                    inventory.b_setStackLimit(ammoId, inventory.getStackLimit(ammoId) + bonus)
 
         return 2
 
@@ -292,13 +300,76 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         self.d_makeSaleResponse(avatar.doId, 2)
 
     def requestPurchaseRepair(self, shipId):
-        pass
+        avatarId = self.air.getAvatarIdFromSender()
+        avatar = self.air.doId2do.get(avatarId)
+        if not avatar:
+            self.notify.warning('Cannot repair ship %d for missing avatar %d' %
+                (shipId, avatarId))
+            return
+
+        inventory = self.air.inventoryManager.getInventory(avatarId)
+        ship = self.air.doId2do.get(shipId)
+        if (not inventory or not ship or
+                shipId not in inventory.getShipDoIdList() or
+                ship.getGameState()[0] != 'Off'):
+            self.notify.warning('Avatar %d requested repair for unavailable ship %d' %
+                (avatarId, shipId))
+            self.d_makeSaleResponse(avatarId, RejectCode.TIMEOUT)
+            return
+
+        modelClass = ShipGlobals.getModelClass(ship.getShipClass())
+        cost = ShipGlobals.calcRepairCost(
+            ship.getMaxHp(), ship.getHp(), ship.getMaxSp(), ship.getSp(),
+            modelClass)
+        currentGold = inventory.getGoldInPocket()
+        if currentGold < cost:
+            self.d_makeSaleResponse(avatarId, RejectCode.TIMEOUT)
+            return
+
+        inventory.setGoldInPocket(currentGold - cost)
+        ship.b_setHp(ship.getMaxHp())
+        ship.b_setSp(ship.getMaxSp())
+        self.sendUpdateToAvatarId(avatarId, 'responseShipRepair', [shipId])
 
     def requestPurchaseOverhaul(self, shipId):
         pass
 
     def requestSellShip(self, shipId):
-        pass
+        avatarId = self.air.getAvatarIdFromSender()
+        avatar = self.air.doId2do.get(avatarId)
+        if not avatar:
+            self.notify.warning('Cannot sell ship %d for missing avatar %d' %
+                (shipId, avatarId))
+            return
+
+        inventory = self.air.inventoryManager.getInventory(avatarId)
+        ship = self.air.doId2do.get(shipId)
+        if (not inventory or not ship or
+                shipId not in inventory.getShipDoIdList() or
+                ship.getGameState()[0] != 'Off'):
+            self.notify.warning('Avatar %d requested sale of unavailable ship %d' %
+                (avatarId, shipId))
+            self.d_makeSaleResponse(avatarId, RejectCode.TIMEOUT)
+            return
+
+        modelClass = ShipGlobals.getModelClass(ship.getShipClass())
+        shipPrice = EconomyGlobals.getItemCost(modelClass)
+        if shipPrice is None:
+            self.notify.warning('Cannot determine sale value for ship %d' % shipId)
+            self.d_makeSaleResponse(avatarId, RejectCode.TIMEOUT)
+            return
+
+        shipIds = inventory.getShipDoIdList()
+        shipIds.remove(shipId)
+        inventory.setShipDoIdList(shipIds)
+        inventory.setGoldInPocket(
+            inventory.getGoldInPocket() + int(shipPrice / 2))
+        self.logShopkeepTransaction(
+            type='requestSellShip',
+            shipId=shipId,
+            price=int(shipPrice / 2),
+            purchaser=avatarId)
+        ship.requestDelete()
 
     def d_makeSaleResponse(self, avatarId, results):
         self.sendUpdateToAvatarId(avatarId, 'makeSaleResponse', [results])

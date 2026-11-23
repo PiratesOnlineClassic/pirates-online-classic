@@ -18,6 +18,7 @@ from pirates.shipparts.DistributedHullAI import DistributedHullAI
 from pirates.shipparts.DistributedMastAI import DistributedMastAI
 from pirates.battle.DistributedShipBroadsideAI import DistributedShipBroadsideAI
 from pirates.battle.DistributedShipCannonAI import DistributedShipCannonAI
+from pirates.battle.DistributedTutorialShipCannonAI import DistributedTutorialShipCannonAI
 from pirates.world.DistributedIslandAI import DistributedIslandAI
 from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
 from pirates.ship.GameFSMShipAI import GameFSMShipAI
@@ -370,7 +371,10 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         cannonIndex = -1
         for cannonType in shipConfig['setCannonConfig']:
             cannonIndex += 1
-            cannon = DistributedShipCannonAI(self.air)
+            if cannonType == ShipGlobals.TUTORIAL_CANNON:
+                cannon = DistributedTutorialShipCannonAI(self.air)
+            else:
+                cannon = DistributedShipCannonAI(self.air)
 
             # DistributedShippart:
             cannon.setOwnerId(0)
@@ -455,14 +459,13 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
     def handleChildArrive(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerPirateAI):
             self._playerBoarded(childObj)
-
-            # this will parent the avatar object to the ship so that
-            # other avatars can see them, and our position data will be
-            # broadcasted relative to the ship parent object:
-            self.sendUpdateToAvatarId(childObj.doId, 'setMovie', [0, childObj.doId, 0, 1, 0])
+            self._sendBoardingMovie(childObj)
 
         DistributedMovingObjectAI.handleChildArrive(self, childObj, zoneId)
         DistributedCharterableObjectAI.handleChildArrive(self, childObj, zoneId)
+
+    def _sendBoardingMovie(self, avatar):
+        self.sendUpdateToAvatarId(avatar.doId, 'setMovie', [0, avatar.doId, 0, 1, 0])
 
     def handleChildLeave(self, childObj, zoneId):
         if isinstance(childObj, DistributedPlayerPirateAI):

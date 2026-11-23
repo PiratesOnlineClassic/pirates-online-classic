@@ -328,6 +328,7 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
             spawnNode.setStartingDepth(int(objectData.get('startingDepth', 10)))
             spawnNode.setCurrentDepth(spawnNode.getStartingDepth())
 
+        spawnNode.setUniqueId(objKey)
         spawnNode.setPos(objectData.get('GridPos', objectData.get('Pos', (0, 0, 0))))
         spawnNode.setHpr(objectData.get('Hpr', (0, 0, 0)))
         spawnNode.setScale(objectData.get('Scale', (1, 1, 1)))

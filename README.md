@@ -205,6 +205,15 @@ Finally, open the game client:
 ./start_client
 ```
 
+The tutorial is enabled by default for new pirates. For development, it can be
+skipped by setting `skip-tutorial #t` and `force-tutorial-complete #t` in
+`config/personal.prc` (create the file if needed).
+The scripted introduction follows the jail, sea chest, cannon practice, and
+Port Royal sequence documented in this [2009 tutorial guide](https://www.disneysonlineworlds.com/Tutorial_%28POTCO%29).
+The tutorial scene is currently shared: only one player can use it at a time.
+Other players wait up to two minutes, then receive a connection error if the
+scene is still occupied.
+
 ---
 
 ## 🤝 Contributing

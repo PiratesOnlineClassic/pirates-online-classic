@@ -1,8 +1,11 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm.FSM import FSM
+from direct.showbase.MessengerGlobal import messenger
 
+from pirates.npc.DistributedNPCTownfolkAI import DistributedNPCTownfolkAI
 from pirates.piratesbase import PiratesGlobals
+from pirates.quest import QuestDB
 from pirates.tutorial import TutorialGlobals
 
 
@@ -15,6 +18,9 @@ class DistributedPiratesTutorialAI(DistributedObjectAI, FSM):
         FSM.__init__(self, 'DistributedPiratesTutorialAI')
 
         self.avatarId = None
+        self._firstQuestCreatePending = False
+        self._firstQuestFinalizeStarted = False
+        self._pendingMakeAPirateComplete = False
 
     def setAvatarId(self, avatarId):
         self.avatarId = avatarId
@@ -23,6 +29,109 @@ class DistributedPiratesTutorialAI(DistributedObjectAI, FSM):
         if self.avatarId:
             return self.air.doId2do.get(self.avatarId)
         return None
+
+    def _getAvatarFromSender(self, action):
+        senderId = self.air.getAvatarIdFromSender()
+        if senderId != self.avatarId:
+            self.notify.warning(
+                'Ignoring %s from avatar %s; tutorial handler belongs to avatar %s' %
+                (action, senderId, self.avatarId))
+            return None
+
+        avatar = self.getAvatar()
+        if not avatar:
+            self.notify.warning('%s: avatar %s not found' % (action, self.avatarId))
+        return avatar
+
+    def _firstQuestIsComplete(self, avatar):
+        questDNA = QuestDB.QuestDict.get(TutorialGlobals.FIRST_QUEST)
+        return bool(
+            questDNA and questDNA.getQuestInt() in avatar.getQuestHistory())
+
+    def _sendQuestEvent(self, quest, event):
+        messenger.send('%s-%d' % (event, quest.doId))
+
+    def _startFirstQuestFinalization(self, avatar, quest, finalizeIndex):
+        if self._firstQuestIsComplete(avatar):
+            self._pendingMakeAPirateComplete = False
+            self.air.questMgr.resumeCompletedTutorialQuest(avatar)
+            return
+
+        if self._firstQuestFinalizeStarted or quest.isFinalized():
+            return
+
+        self._firstQuestFinalizeStarted = True
+        self.air.questMgr.finalizeCutscene(
+            avatar, quest, finalizeIndex=finalizeIndex)
+
+        if self._pendingMakeAPirateComplete:
+            self._pendingMakeAPirateComplete = False
+            self._sendQuestEvent(quest, 'makeAPirateComplete')
+
+    def _ensureFirstQuest(self, avatar):
+        if self._firstQuestCreatePending or self._firstQuestFinalizeStarted:
+            return
+
+        questMgr = self.air.questMgr
+        if self._firstQuestIsComplete(avatar):
+            questMgr.resumeCompletedTutorialQuest(avatar)
+            return
+
+        self._firstQuestCreatePending = True
+
+        def questIdle():
+            if self._firstQuestIsComplete(avatar):
+                self._firstQuestCreatePending = False
+                self._pendingMakeAPirateComplete = False
+                questMgr.resumeCompletedTutorialQuest(avatar)
+                return
+
+            quest = questMgr.getQuest(
+                avatar, questId=TutorialGlobals.FIRST_QUEST)
+            if quest:
+                self._firstQuestCreatePending = False
+                tutorialState = avatar.getTutorial()
+                if tutorialState >= PiratesGlobals.TUT_GOT_SEACHEST:
+                    self._pendingMakeAPirateComplete = False
+                    return
+
+                finalizeIndex = int(
+                    tutorialState >= PiratesGlobals.TUT_MADE_PIRATE)
+                if self._pendingMakeAPirateComplete:
+                    finalizeIndex = max(finalizeIndex, 1)
+                self._startFirstQuestFinalization(avatar, quest, finalizeIndex)
+                return
+
+            if avatar.getTutorial() != 0:
+                self._firstQuestCreatePending = False
+                self._pendingMakeAPirateComplete = False
+                self.notify.warning(
+                    'Avatar %d has tutorial state %d but no active %s quest; '
+                    'not recreating a completed or later quest' %
+                    (avatar.doId, avatar.getTutorial(), TutorialGlobals.FIRST_QUEST))
+                return
+
+            def questCreated(createdQuest=None):
+                self._firstQuestCreatePending = False
+                if not createdQuest:
+                    self._pendingMakeAPirateComplete = False
+                    self.notify.warning(
+                        'Failed to create %s for avatar %d' %
+                        (TutorialGlobals.FIRST_QUEST, avatar.doId))
+                    return
+
+                tutorialState = avatar.getTutorial()
+                finalizeIndex = int(
+                    tutorialState >= PiratesGlobals.TUT_MADE_PIRATE)
+                if self._pendingMakeAPirateComplete:
+                    finalizeIndex = max(finalizeIndex, 1)
+                self._startFirstQuestFinalization(
+                    avatar, createdQuest, finalizeIndex)
+
+            questMgr.createQuest(
+                avatar, TutorialGlobals.FIRST_QUEST, questCreated)
+
+        questMgr.whenQuestIdle(avatar, questIdle)
 
     # --------------------------------------------------
     # Client -> AI messages (airecv clsend)
@@ -34,80 +143,97 @@ class DistributedPiratesTutorialAI(DistributedObjectAI, FSM):
         The avatar was already spawned in the jail interior by TutorialFSM,
         so no server-side teleport is needed here.
         """
-        avatar = self.getAvatar()
+        avatar = self._getAvatarFromSender('clientEnterAct0Tutorial')
         if not avatar:
-            self.notify.warning('clientEnterAct0Tutorial: avatar %s not found' % self.avatarId)
             return
 
         self.notify.info('Avatar %d entered Act0Tutorial' % self.avatarId)
         self.request('Act0Tutorial')
+        self._ensureFirstQuest(avatar)
 
     def makeAPirateComplete(self):
         """Client finished the Make-A-Pirate customization screen.
 
-        Advance the tutorial flag, create the first quest, and signal the
-        client to fade in.
+        Continue the first quest's Make-A-Pirate wait event and signal the
+        client to fade in. The client tutorial checkpoint update is replicated
+        through HumanDNA.setTutorial.
         """
-        avatar = self.getAvatar()
+        avatar = self._getAvatarFromSender('makeAPirateComplete')
         if not avatar:
-            self.notify.warning('makeAPirateComplete: avatar %s not found' % self.avatarId)
             return
 
         self.notify.info('Avatar %d completed Make-A-Pirate' % self.avatarId)
 
-        # Mark customisation complete so later logins skip this step.
-        avatar.b_setTutorial(PiratesGlobals.TUT_MADE_PIRATE)
+        if self._firstQuestIsComplete(avatar):
+            self.air.questMgr.resumeCompletedTutorialQuest(avatar)
+            self.d_makeAPirateCompleteResp()
+            return
 
-        # Give the first tutorial quest (Jack Sparrow jail-break storyline).
-        if not self.air.questMgr.hasQuest(avatar, questId=TutorialGlobals.FIRST_QUEST):
-            self.air.questMgr.createQuest(avatar, TutorialGlobals.FIRST_QUEST)
+        quest = self.air.questMgr.getQuest(
+            avatar, questId=TutorialGlobals.FIRST_QUEST)
+        if quest:
+            if not self._firstQuestFinalizeStarted:
+                self._startFirstQuestFinalization(avatar, quest, 1)
+            self._sendQuestEvent(quest, 'makeAPirateComplete')
+        elif self._firstQuestCreatePending:
+            self._pendingMakeAPirateComplete = True
 
         self.d_makeAPirateCompleteResp()
 
     def giveInitQuest(self, questType):
-        """Client requests an initial quest.
-
-        questType 0 → FIRST_QUEST  (Chapter1.rung1)
-        questType 1 → SECOND_QUEST (Chapter1.rung2)
-        """
-        avatar = self.getAvatar()
+        """Accept only the initial rung; later rungs are quest-manager driven."""
+        avatar = self._getAvatarFromSender('giveInitQuest')
         if not avatar:
             return
 
-        questId = TutorialGlobals.FIRST_QUEST if questType == 0 else TutorialGlobals.SECOND_QUEST
-        self.notify.info('Avatar %d requesting quest %s (type %d)' % (self.avatarId, questId, questType))
-
-        if not self.air.questMgr.hasQuest(avatar, questId=questId):
-            self.air.questMgr.createQuest(avatar, questId)
+        if questType == 0:
+            self._ensureFirstQuest(avatar)
+        elif questType == 1:
+            self.notify.warning(
+                'Ignoring manual request for %s; quest progression is managed by QuestManagerAI' %
+                TutorialGlobals.SECOND_QUEST)
+        else:
+            self.notify.warning(
+                'Ignoring invalid initial quest type %s from avatar %d' %
+                (questType, self.avatarId))
 
     def autoVisit(self, npcDoId):
         """Client triggered a proximity-based auto-visit with an NPC or object.
 
-        Used for scripted encounters: Dan gives the quest for Stumpy, the boat
-        proximity triggers the boarding sequence, etc.
+        Tutorial NPC and Stumpy-boat visits are handled by the quest manager.
         """
-        avatar = self.getAvatar()
+        avatar = self._getAvatarFromSender('autoVisit')
         if not avatar:
             return
 
         self.notify.info('Avatar %d auto-visiting doId %d' % (self.avatarId, npcDoId))
 
-        npc = self.air.doId2do.get(npcDoId)
-        if npc and hasattr(npc, 'getUniqueId'):
-            self.air.questMgr.requestInteract(avatar, npc)
+        target = self.air.doId2do.get(npcDoId)
+        if not target or not hasattr(target, 'getUniqueId'):
+            return
+
+        uniqueId = target.getUniqueId()
+        isDan = (uniqueId == TutorialGlobals.DAN_UID and
+                 isinstance(target, DistributedNPCTownfolkAI))
+        isStumpyBoat = uniqueId == TutorialGlobals.STUMPY_BOAT_UID
+        if isDan or isStumpyBoat:
+            self.air.questMgr.requestInteract(avatar, target)
+        else:
+            self.notify.warning(
+                'Ignoring unsupported tutorial auto-visit target %s (%d)' %
+                (uniqueId, npcDoId))
 
     def tutorialSeachestFinished(self):
-        """Client finished the sea-chest tutorial segment."""
-        avatar = self.getAvatar()
+        """Compatibility RPC; quest finalization owns the sea-chest checkpoint."""
+        avatar = self._getAvatarFromSender('tutorialSeachestFinished')
         if not avatar:
             return
 
         self.notify.info('Avatar %d finished seachest tutorial' % self.avatarId)
-        avatar.b_setTutorial(PiratesGlobals.TUT_GOT_SEACHEST)
 
     def boardedTutorialShip(self):
         """Client boarded Stumpy's boat."""
-        avatar = self.getAvatar()
+        avatar = self._getAvatarFromSender('boardedTutorialShip')
         if not avatar:
             return
 
@@ -116,20 +242,42 @@ class DistributedPiratesTutorialAI(DistributedObjectAI, FSM):
 
     def startSailingStumpy(self):
         """Client started sailing with Stumpy (cannon practice phase)."""
-        avatar = self.getAvatar()
+        avatar = self._getAvatarFromSender('startSailingStumpy')
         if not avatar:
             return
 
+        tutorialFSM = self.air.tutorialManager.avatar2fsm.get(avatar.doId)
+        if not tutorialFSM or tutorialFSM.tutorialHandler is not self:
+            self.notify.warning('Ignoring sailing request from inactive tutorial handler')
+            return
+
+        from pirates.ship.TutorialShipAI import TutorialShipAI
+        from pirates.world import WorldGlobals
+
+        ship = self.air.uidMgr.justGetMeMeObject(TutorialGlobals.STUMPY_BOAT_UID)
+        builder = getattr(ship, 'tutorialBuilder', None)
+        world = getattr(builder, 'parent', None)
+        if (not isinstance(ship, TutorialShipAI)
+                or ship.getUniqueId() != TutorialGlobals.STUMPY_BOAT_UID
+                or not world
+                or world.getFileName() != WorldGlobals.PiratesTutorialSceneFileBase):
+            self.notify.warning('Cannot start sailing: tutorial ship is unavailable')
+            return
+
         self.notify.info('Avatar %d started sailing with Stumpy' % self.avatarId)
+        if not ship.startSailing():
+            self.notify.warning('Failed to start tutorial ship sailing')
+            return
         self.request('Sailing')
 
     def targetPracticeDone(self):
-        """Client finished cannon target practice."""
-        avatar = self.getAvatar()
+        """Client finished target practice and reached the Jolly Roger stage."""
+        avatar = self._getAvatarFromSender('targetPracticeDone')
         if not avatar:
             return
 
         self.notify.info('Avatar %d finished target practice' % self.avatarId)
+        self.air.questMgr.tutorialJROnStage(avatar)
         self.request('TargetPracticeDone')
 
     # --------------------------------------------------
@@ -137,12 +285,14 @@ class DistributedPiratesTutorialAI(DistributedObjectAI, FSM):
     # --------------------------------------------------
 
     def d_makeAPirateCompleteResp(self):
-        """Broadcast the fade-in signal after Make-A-Pirate completes."""
-        self.sendUpdate('makeAPirateCompleteResp', [])
+        """Send the fade-in signal only to this tutorial handler's owner."""
+        if self.avatarId:
+            self.sendUpdateToAvatarId(self.avatarId, 'makeAPirateCompleteResp', [])
 
     def d_inventoryFailed(self):
         """Tell the client inventory creation failed so it can bail out."""
-        self.sendUpdate('inventoryFailed', [])
+        if self.avatarId:
+            self.sendUpdateToAvatarId(self.avatarId, 'inventoryFailed', [])
 
     # --------------------------------------------------
     # FSM States

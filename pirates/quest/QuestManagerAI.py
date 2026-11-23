@@ -28,7 +28,7 @@ from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 from pirates.world.DistributedBuildingDoorAI import DistributedBuildingDoorAI
 from pirates.world.DistributedInteriorDoorAI import DistributedInteriorDoorAI
 from pirates.world.DistributedDinghyAI import DistributedDinghyAI
-from pirates.uberdog.UberDogGlobals import InventoryCategory
+from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from pirates.tutorial import TutorialGlobals
 
 
@@ -53,8 +53,11 @@ class QuestOperationFSM(FSM):
         self.ignoreAll()
         self.demand('Off')
 
-        if self.callback:
-            self.callback(*args, **kwargs)
+        try:
+            if self.callback:
+                self.callback(*args, **kwargs)
+        finally:
+            self.air.questMgr.runDeferredQuestCompletions(self.avatar)
 
 
 class CreateQuestsFSM(QuestOperationFSM):
@@ -129,15 +132,18 @@ class CreateQuestsFSM(QuestOperationFSM):
             self.pendingQuestIds.remove(quest.getQuestId())
             if not self.pendingQuestIds:
                 self.cleanup()
+            else:
+                _createNextQuest()
 
         def _questCreatedCallback(questDoId):
             if not self.activateQuestEntry(questDoId, _questActivatedCallback):
                 self.cleanup()
 
-        for questId in list(self.pendingQuestIds):
-            if not self.createQuestEntry(questId, callback=_questCreatedCallback):
+        def _createNextQuest():
+            if not self.createQuestEntry(self.pendingQuestIds[0], callback=_questCreatedCallback):
                 self.cleanup()
-                return
+
+        _createNextQuest()
 
 
 class CreateQuestFSM(CreateQuestsFSM):
@@ -149,7 +155,7 @@ class CreateQuestFSM(CreateQuestsFSM):
             self.notify.warning('Failed to create quest %s for avatar %d, '
                 'no inventory found!' % (questId, self.avatar.doId))
 
-            self.cleanup()
+            self.cleanup(None)
             return
 
         def _questActivatedCallback(quest):
@@ -157,7 +163,7 @@ class CreateQuestFSM(CreateQuestsFSM):
                 self.notify.warning('Failed to activate quest for avatar %d, '
                     'quest failed to generate!' % self.avatar.doId)
 
-                self.cleanup()
+                self.cleanup(None)
                 return
 
             # update the avatar's quest list
@@ -173,10 +179,10 @@ class CreateQuestFSM(CreateQuestsFSM):
 
         def _questCreatedCallback(questDoId):
             if not self.activateQuestEntry(questDoId, _questActivatedCallback):
-                self.cleanup()
+                self.cleanup(None)
 
         if not self.createQuestEntry(questId, _questCreatedCallback):
-            self.cleanup()
+            self.cleanup(None)
 
     def exitStart(self):
         pass
@@ -251,6 +257,47 @@ class QuestManagerAI(DirectObject):
         self.air = air
         self.avatar2fsm = {}
         self.quests = {}
+        self.deferredQuestCompletions = {}
+        self.questIdleCallbacks = {}
+        self.finalizingQuests = set()
+        self.completingQuests = set()
+        self.tutorialJollyReady = set()
+        self.tutorialJollyWaiters = {}
+
+    def tutorialJROnStage(self, avatar):
+        quest = self.getQuest(avatar, questId='Chapter1.rung3')
+        if (not quest or quest.doId in self.tutorialJollyReady or
+                quest.getQuestDNA().getQuestInt() in avatar.getQuestHistory()):
+            return
+
+        self.tutorialJollyReady.add(quest.doId)
+        callback = self.tutorialJollyWaiters.pop(quest.doId, None)
+        if callback:
+            callback()
+
+    def whenQuestIdle(self, avatar, callback):
+        if avatar.doId not in self.avatar2fsm:
+            callback()
+            return
+        callbacks = self.questIdleCallbacks.setdefault(avatar.doId, [])
+        if callback not in callbacks:
+            callbacks.append(callback)
+
+    def runDeferredQuestCompletions(self, avatar):
+        while avatar.doId not in self.avatar2fsm:
+            pending = self.deferredQuestCompletions.get(avatar.doId)
+            if pending:
+                quest = pending.pop(0)
+                if self.getQuest(avatar, questDoId=quest.doId) is quest:
+                    self.completeQuest(avatar, quest)
+                continue
+            self.deferredQuestCompletions.pop(avatar.doId, None)
+            callbacks = self.questIdleCallbacks.get(avatar.doId)
+            if callbacks:
+                callbacks.pop(0)()
+                continue
+            self.questIdleCallbacks.pop(avatar.doId, None)
+            return
 
     def runQuestFSM(self, fsmtype, avatar, *args, **kwargs):
         if avatar.doId in self.avatar2fsm:
@@ -279,6 +326,7 @@ class QuestManagerAI(DirectObject):
             self.notify.debug('Failed to activate quest %d for avatar %d, '
                 'no inventory found!' % (questDoId, avatar.doId))
 
+            callback(None)
             return
 
         activeQuests = self.quests.setdefault(avatar.doId, {})
@@ -286,6 +334,7 @@ class QuestManagerAI(DirectObject):
             self.notify.warning('Cannot add a new quest %d for avatar %d, '
                 'quest already added!' % (questDoId, avatar.doId))
 
+            callback(None)
             return
 
         def _questArrivedCallback(quest):
@@ -312,7 +361,32 @@ class QuestManagerAI(DirectObject):
             self.air.dclassesByName['DistributedQuestAI'])
 
     def activateQuests(self, avatar, callback=None):
-        self.runQuestFSM(ActivateQuestsFSM, avatar, callback=callback)
+        def activated():
+            self.resumeCompletedTutorialQuest(avatar)
+            if callback:
+                callback()
+
+        self.runQuestFSM(ActivateQuestsFSM, avatar, callback=activated)
+
+    def resumeCompletedTutorialQuest(self, avatar):
+        for quest in list(self.quests.get(avatar.doId, {}).values()):
+            if (quest.getQuestId() in ('Chapter1.rung1', 'Chapter1.rung2',
+                                       'Chapter1.rung3', 'c2_visit_will_turner') and
+                    quest.getQuestDNA().getQuestInt() in avatar.getQuestHistory()):
+                if avatar.doId in self.avatar2fsm:
+                    pending = self.deferredQuestCompletions.setdefault(avatar.doId, [])
+                    if quest not in pending:
+                        pending.append(quest)
+                    return
+                nextQuestId = avatar.questStatus.getNextQuestId(quest.getQuestId())
+                while nextQuestId:
+                    nextDNA = QuestDB.QuestDict.get(nextQuestId)
+                    if not nextDNA or nextDNA.getQuestInt() not in avatar.getQuestHistory():
+                        break
+                    nextQuestId = avatar.questStatus.getNextQuestId(nextQuestId)
+                if nextQuestId:
+                    avatar._swapQuest([quest], questIds=[nextQuestId])
+                return
 
     def deactivateQuest(self, avatar, questDoId):
         if not self.hasQuest(avatar, questDoId):
@@ -322,17 +396,24 @@ class QuestManagerAI(DirectObject):
             return
 
         quest = self.quests[avatar.doId].pop(questDoId)
+        self.finalizingQuests.discard(questDoId)
+        self.tutorialJollyReady.discard(questDoId)
+        self.tutorialJollyWaiters.pop(questDoId, None)
+        self.ignore('quest-finalize-%d' % questDoId)
+        self.ignore('makeAPirateComplete-%d' % questDoId)
         quest.requestDelete()
         del quest
 
     def deactivateQuests(self, avatar):
+        self.deferredQuestCompletions.pop(avatar.doId, None)
+        self.questIdleCallbacks.pop(avatar.doId, None)
         if avatar.doId not in self.quests:
             return
 
         for questDoId in list(self.quests[avatar.doId]):
             self.deactivateQuest(avatar, questDoId)
 
-    def dropQuest(self, avatar, quest):
+    def dropQuest(self, avatar, quest, completed=False):
         if not self.hasQuest(avatar, quest.doId):
             self.notify.warning('Cannot drop quest %d for avatar %d, '
                 'quest never added!' % (quest.doId, avatar.doId))
@@ -354,7 +435,11 @@ class QuestManagerAI(DirectObject):
             return
 
         questStub = avatar.questStatus.getQuestStub(quest.getQuestId())
-        avatar.questStatus.handleQuestDropped(quest, questStub)
+        if completed:
+            if questStub and questStub.quest is quest:
+                questStub.unlinkQuest(quest.getQuestId())
+        else:
+            avatar.questStatus.handleQuestDropped(quest, questStub)
 
         # update the player's quest list on their inventory...
         questList.remove(quest.doId)
@@ -363,8 +448,8 @@ class QuestManagerAI(DirectObject):
         # update the player's quest history so that we will not ever give
         # the player the same quest again...
         questHistory = avatar.getQuestHistory()
-        questHistory.append(quest.questDNA.getQuestInt())
-        avatar.b_setQuestHistory(questHistory)
+        if quest.questDNA.getQuestInt() not in questHistory:
+            avatar.b_setQuestHistory(questHistory + [quest.questDNA.getQuestInt()])
 
         # check to see if this quest is the avatar's active quest,
         # if so then let's clear their active quest...
@@ -372,7 +457,8 @@ class QuestManagerAI(DirectObject):
             avatar.b_setActiveQuest('')
 
         # finally, deactivate the old quest.
-        messenger.send(quest.getDroppedEventString())
+        if not completed:
+            messenger.send(quest.getDroppedEventString())
         self.deactivateQuest(avatar, quest.doId)
 
     def dropQuests(self, avatar):
@@ -454,14 +540,25 @@ class QuestManagerAI(DirectObject):
 
     def _giveRewards(self, avatar, rewards=[]):
         if not rewards:
-            self.notify.debug('Failed to give rewards for avatar %d, '
-                'no rewards specified!' % avatar.doId)
+            return True
 
-            return
-
+        inventory = avatar.getInventory()
+        if not inventory:
+            self.notify.warning('Cannot give quest rewards to avatar %d: no inventory!' % avatar.doId)
+            return False
         trade = self.air.tradeMgr.createTrade(avatar.doId)
+        if not trade:
+            self.notify.warning('Cannot give quest rewards to avatar %d: no trade available!' % avatar.doId)
+            return False
         for reward in rewards:
-            reward.applyTo(trade, avatar)
+            if isinstance(reward, CutlassReward):
+                if not inventory.getStackQuantity(InventoryType.CutlassToken):
+                    trade.giveCutlassTraining()
+                if not inventory.getStackQuantity(InventoryType.CutlassWeaponL1):
+                    trade.giveStack(InventoryType.CutlassWeaponL1, 1)
+            else:
+                reward.applyTo(trade, avatar)
+        return True
 
     def completeQuest(self, avatar, quest):
         assert(avatar is not None)
@@ -473,15 +570,20 @@ class QuestManagerAI(DirectObject):
 
             return
 
+        if avatar.doId in self.avatar2fsm:
+            pending = self.deferredQuestCompletions.setdefault(avatar.doId, [])
+            if quest not in pending:
+                pending.append(quest)
+            return
+
+        self.finalizingQuests.discard(quest.doId)
         questDNA = quest.getQuestDNA()
         assert(questDNA is not None)
 
         # check to see if we've already completed this quest
         questHistory = avatar.getQuestHistory()
         if questDNA.getQuestInt() in questHistory:
-            self.notify.warning('Failed to handle complete quest for avatar %d, '
-                'quest %s was already completed!' % (avatar.doId, quest.getQuestId()))
-
+            self.resumeCompletedTutorialQuest(avatar)
             return
 
         questStub = avatar.questStatus.getQuestStub(quest.getQuestId())
@@ -491,8 +593,23 @@ class QuestManagerAI(DirectObject):
 
             return
 
-        questStub.handleQuestComplete(quest, questHistory)
-        self._giveRewards(avatar, quest.getRewards())
+        if (questStub.complete or avatar.questStatus.getNPCInteractMode() or
+                quest.doId in self.completingQuests):
+            return
+
+        self.completingQuests.add(quest.doId)
+        try:
+            if not self._giveRewards(avatar, quest.getRewards()):
+                return
+            questInt = questDNA.getQuestInt()
+            questHistory = avatar.getQuestHistory()
+            avatar.b_setQuestHistory(questHistory + [questInt])
+            checkpoint = questDNA.getCheckPoint()
+            if checkpoint != -1 and avatar.getTutorial() < checkpoint:
+                avatar.b_setTutorial(checkpoint)
+            questStub.handleQuestComplete(quest, questHistory)
+        finally:
+            self.completingQuests.discard(quest.doId)
 
     def completeTaskState(self, avatar, questEvent, callback=None):
         questObjects = list(self.quests.get(avatar.doId, {}).values())
@@ -501,6 +618,24 @@ class QuestManagerAI(DirectObject):
 
         for quest in questObjects:
             if quest.getQuestDNA() is None:
+                continue
+
+            if quest.isComplete():
+                if (callback is None and not quest.getQuestDNA().getFinalizeInfo() and
+                        not quest.completeRequiresVisit() and
+                        quest.getQuestDNA().getQuestInt() not in avatar.getQuestHistory()):
+                    self.completeQuest(avatar, quest)
+                    continue
+                if (callback is not None and
+                        isinstance(questEvent, QuestEvent.NPCVisited) and
+                        quest.doId not in self.finalizingQuests and
+                        quest.getQuestDNA().getQuestInt() not in avatar.getQuestHistory() and
+                        any(isinstance(task, QuestTaskDNA.VisitTaskDNA) and
+                            task.locationMatches(questEvent) and
+                            task.getNpcId() == questEvent.getNpcId()
+                            for task in quest.getQuestDNA().getTasks())):
+                    callback(quest)
+                    return True
                 continue
 
             quest.handleEvent(avatar, questEvent)
@@ -587,16 +722,27 @@ class QuestManagerAI(DirectObject):
         return self.completeTaskState(avatar, questEvent)
 
     def finalizeCutscene(self, avatar, quest, finalizeIndex=0, npc=None):
-        taskStates = quest.getTaskStates()
+        if quest.getQuestDNA().getQuestInt() in avatar.getQuestHistory():
+            self.resumeCompletedTutorialQuest(avatar)
+            return
+        if quest.doId in self.finalizingQuests:
+            return
+        self.finalizingQuests.add(quest.doId)
         finalizeInfo = quest.questDNA.getFinalizeInfo()
 
         def finalizeInteract():
             self.completeQuest(avatar, quest)
 
-        def finalize(finalizeIndex):
+        def finalize(finalizeIndex, waitSatisfied=False):
             if finalizeIndex >= len(finalizeInfo):
+                if finalizeInfo:
+                    checkpoint = quest.questDNA.getCheckPoint()
+                    if checkpoint == -1 or avatar.getTutorial() <= checkpoint:
+                        quest.d_amFinalized()
+                    else:
+                        quest.setFinalized()
                 # if an npc is present send the quest completed information
-                if not npc:
+                if not npc or not quest.completeRequiresVisit():
                     # didn't have an NPC, just go ahead and complete the quest anyways...
                     self.completeQuest(avatar, quest)
                 else:
@@ -608,9 +754,22 @@ class QuestManagerAI(DirectObject):
                 finalizeStateInfo = finalizeInfo[finalizeIndex]
                 quest.setFinalizeStateIndex(finalizeIndex)
 
+            if (quest.getQuestId() == TutorialGlobals.FIRST_QUEST and
+                    finalizeStateInfo.get('waitEvent') == 'makeAPirateComplete' and
+                    not waitSatisfied and
+                    avatar.getTutorial() < PiratesGlobals.TUT_MADE_PIRATE):
+                self.acceptOnce('makeAPirateComplete-%d' % quest.doId,
+                                finalize, extraArgs=[finalizeIndex, True])
+                return
+
+            if (quest.getQuestId() == 'Chapter1.rung3' and
+                    finalizeStateInfo.get('waitEvent') == 'tutorialJROnStage' and
+                    quest.doId not in self.tutorialJollyReady):
+                self.tutorialJollyWaiters[quest.doId] = lambda: finalize(finalizeIndex)
+                return
+
             def finalizeCompleteCallback():
-                quest.d_amFinalized()
-                self.completeQuest(avatar, quest)
+                finalize(len(finalizeInfo))
 
             def finalizeCallback(isDialog=False):
                 if finalizeIndex >= len(finalizeInfo):
@@ -632,7 +791,9 @@ class QuestManagerAI(DirectObject):
                             rewards.append(PistolReward())
 
                         # give the avatar their quest reward(s)...
-                        self._giveRewards(avatar, rewards)
+                        if not self._giveRewards(avatar, rewards):
+                            self.finalizingQuests.discard(quest.doId)
+                            return
 
                     finalize(finalizeIndex + 1)
 
@@ -643,25 +804,22 @@ class QuestManagerAI(DirectObject):
                 else:
                     giverId = 0
 
-                sendEvent = finalizeStateInfo.get('sendEvent', '')
-                if not sendEvent:
-                    self.acceptOnce('quest-finalize-%d' % quest.doId, finalizeCallback)
-                else:
-                    self.acceptOnce('%s-%d' % (sendEvent, quest.doId), finalizeCallback)
-
+                self.acceptOnce('quest-finalize-%d' % quest.doId, finalizeCallback)
                 quest.d_startFinalizeScene(finalizeIndex, giverId)
             elif finalizeType == 'dialog':
                 if npc is None:
+                    self.finalizingQuests.discard(quest.doId)
                     self.notify.warning('Failed to handle interact callback with unknown npc for avatar %d '
                         'with unknown finalizeType: %s!' % (avatar.doId, finalizeType))
 
                     return
 
-                self.acceptOnce('dialog-complete-%d' % npc.doId, finalizeCallback, extraArgs=[True])
-                npc.d_playDialogMovie(avatar.doId, finalizeStateInfo['sceneId'])
+                self.acceptOnce('quest-finalize-%d' % quest.doId, finalizeCallback, extraArgs=[True])
+                quest.d_startFinalizeScene(finalizeIndex, npc.doId)
             else:
+                self.finalizingQuests.discard(quest.doId)
                 self.notify.warning('Failed to handle interact callback with npc %d for avatar %d '
-                    'with unknown finalizeType: %s!' % (npc.doId, avatar.doId, finalizeType))
+                    'with unknown finalizeType: %s!' % (npc.doId if npc else 0, avatar.doId, finalizeType))
 
                 return
 
@@ -672,7 +830,9 @@ class QuestManagerAI(DirectObject):
         if not parentObj:
             return
 
-        if isinstance(npc, DistributedNPCTownfolkAI):
+        if (isinstance(npc, DistributedNPCTownfolkAI) or
+                isinstance(npc, DistributedShipAI) and
+                npc.getUniqueId() == TutorialGlobals.STUMPY_BOAT_UID):
             questEvent = QuestEvent.NPCVisited()
             questEvent.setLocation(parentObj.getUniqueId())
             questEvent.setNpcId(npc.getUniqueId())

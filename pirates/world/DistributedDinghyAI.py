@@ -1,4 +1,5 @@
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed.ClockDelta import globalClockDelta
 
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
@@ -23,6 +24,8 @@ class DistributedDinghyAI(DistributedInteractiveAI):
         captain = self.air.doId2do.get(ship.getCaptainId())
         assert(captain is not None)
 
+        timer, timestamp = ship.getTimer()
+        timeLeft = max(0, int(timer - globalClockDelta.localElapsedTime(timestamp)))
         shipInfo = [
             captain.doId,
             ship.doId,
@@ -30,7 +33,7 @@ class DistributedDinghyAI(DistributedInteractiveAI):
             ship.getSp(),
             len(ship.getCargo()),
             len(ship.getCrew()),
-            1, # TODO!
+            timeLeft,
             ship.getShipClass(),
             ship.getName(),
             ship.getSiegeTeam(),

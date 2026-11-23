@@ -434,7 +434,7 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
         self.world.setUniqueId(objKey)
         self.world.setName(worldName)
         self.world.setFileName(worldFileName)
-        self.world.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+        self.world.generateWithRequired(OTP_ZONE_ID_MANAGEMENT, ['setType'])
         if parent is None:
             self.worldDict = objectData
 

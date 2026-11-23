@@ -7,6 +7,8 @@ from direct.distributed.GridParent import GridParent
 from pirates.quest.QuestConstants import LocationIds
 from pirates.leveleditor import ObjectList
 from pirates.piratesbase import PiratesGlobals, PLocalizer
+from pirates.ship import ShipGlobals
+from pirates.tutorial import TutorialGlobals
 from pirates.world import WorldGlobals
 
 
@@ -121,6 +123,11 @@ class ClientAreaBuilderAI(DirectObject):
         newObj = None
         if objType == ObjectList.AREA_TYPE_ISLAND:
             newObj = self.createIsland(objectData, parent, parentUid, objKey, dynamic)
+        elif (objType == ObjectList.AREA_TYPE_SHIP_PART
+              and objKey == TutorialGlobals.STUMPY_BOAT_UID
+              and objectData.get('Category') == 'InterceptorTutorial'
+              and self.parent.getFileName() == WorldGlobals.PiratesTutorialSceneFileBase):
+            newObj = self.createTutorialShip(objectData, objKey)
         else:
             if not parent or not hasattr(parent, 'builder'):
                 parent = self.air.uidMgr.justGetMeMeObject(parentUid)
@@ -130,6 +137,105 @@ class ClientAreaBuilderAI(DirectObject):
             newObj = parent.builder.createObject(objType, objectData, parent, parentUid, objKey, dynamic)
 
         return newObj
+
+    def createTutorialShip(self, objectData, objKey):
+        from pirates.ship.TutorialShipAI import TutorialShipAI
+
+        oceanGrid = getattr(self.parent, 'oceanGrid', None)
+        if not oceanGrid:
+            raise RuntimeError('Cannot create tutorial ship %s without an ocean grid' % objKey)
+
+        shipClass = ShipGlobals.STUMPY_SHIP
+        shipConfig = ShipGlobals.getShipConfig(shipClass)
+        hullConfig = ShipGlobals.getHullConfig(shipClass)
+        if not shipConfig or not hullConfig:
+            raise RuntimeError('Cannot create tutorial ship %s without ship configuration' % objKey)
+
+        self.air.worldCreator.movementLinkManager.registerMovementLinkData(
+            self.parent.getUniqueId())
+        ship = TutorialShipAI(self.air)
+        ship.setUniqueId(objKey)
+        ship.setShipClass(shipClass)
+        ship.setBaseTeam(PiratesGlobals.teamStr2TeamId(
+            objectData.get('Team', PiratesGlobals.PLAYER_TEAM_STR), ShipGlobals.PLAYER_TEAM))
+        ship.setLevel(ShipGlobals.getShipLevel(shipClass))
+        ship.setNPCship(1)
+        ship.setIsBoardable(1)
+        ship.setIsFlagship(bool(objectData.get('Flagship', False)))
+        ship.setMaxHp(shipConfig['setMaxHp'][0])
+        ship.setHp(shipConfig['setHp'][0])
+        ship.setMaxSp(hullConfig['setMaxSp'][0])
+        ship.setSp(hullConfig['setSp'][0])
+        ship.setHullCondition(1 << 7)
+
+        pos = objectData.get('Pos', (0, 0, 0))
+        hpr = objectData.get('Hpr', (0, 0, 0))
+        zoneId = oceanGrid.getZoneFromXYZ(pos)
+        ship.setTutorialAuthoredPose(oceanGrid, pos, hpr)
+        oceanGrid.generateChildWithRequired(ship, zoneId)
+        ship.setPos(oceanGrid, *pos)
+        ship.setHpr(oceanGrid, *hpr)
+        oceanGrid.addObjectToOceanGrid(ship)
+        ship.sendCurrentPosition()
+        ship.startPosHprBroadcast()
+        ship.b_setGameState(objectData.get('Start State', 'Idle'), 0)
+        self.addObject(ship)
+
+        stumpy = self.createTutorialStumpy(ship)
+        ship.setTutorialStumpy(stumpy, self)
+
+        return ship
+
+    def createTutorialStumpy(self, ship):
+        from pirates.battle import EnemyGlobals
+        from pirates.leveleditor import NPCList
+        from pirates.npc.DistributedNPCTownfolkAI import DistributedNPCTownfolkAI
+        from pirates.pirate import AvatarTypes
+
+        dnaId = '1153439632.21darren'
+        dna = NPCList.NPC_LIST.get(dnaId)
+        if not dna or NPCList.NPC_LIST.get(dnaId + '_type') != 'Townsperson':
+            raise RuntimeError('Cannot create tutorial Stumpy without townsperson DNA')
+
+        stumpy = DistributedNPCTownfolkAI(self.air)
+        stumpy.setUniqueId(TutorialGlobals.STUMPY_UID)
+        stumpy.setDNAId(dnaId)
+        stumpy.setName(dna[NPCList.setName])
+        stumpy.setAvatarType(AvatarTypes.Commoner)
+        stumpy.setTeam(PiratesGlobals.VILLAGER_TEAM)
+        stumpy.setCollisionMode(PiratesGlobals.COLL_MODE_FLOORS_CL)
+
+        pos = (0, -1.2, 9)
+        hpr = (180, 0, 0)
+        stumpy.setPos(pos)
+        stumpy.setHpr(hpr)
+        stumpy.setScale(1)
+        stumpy.setSpawnPos(pos)
+        stumpy.setInitZ(pos[2])
+
+        aggroInfo = EnemyGlobals.determineAggroInfo(None)
+        stumpy.setAggroMode(aggroInfo[0])
+        stumpy.setAggroRadius(aggroInfo[1])
+
+        level = EnemyGlobals.getRandomEnemyLevel(AvatarTypes.Commoner)
+        hp, mojo = EnemyGlobals.getEnemyStats(AvatarTypes.Commoner, level)
+        stumpy.setLevel(level)
+        stumpy.setMaxHp(hp)
+        stumpy.setHp(hp, True)
+        stumpy.setMaxMojo(mojo)
+        stumpy.setMojo(mojo)
+        stumpy.setAnimSet('default')
+        stumpy.setStartState('Idle')
+        stumpy.setAmbush(False)
+
+        ship.generateChildWithRequired(stumpy, PiratesGlobals.ShipZoneOnDeck)
+        self.addObject(stumpy)
+        stumpy.setPos(ship, *pos)
+        stumpy.setHpr(ship, *hpr)
+        stumpy.d_setInitZ(stumpy.getZ())
+        stumpy.d_setSpawnIn()
+        stumpy.b_setGameState(stumpy.getStartState())
+        return stumpy
 
     def createIsland(self, objectData, parent, parentUid, objKey, dynamic):
         from pirates.world.DistributedIslandAI import DistributedIslandAI

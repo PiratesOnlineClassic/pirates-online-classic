@@ -375,6 +375,10 @@ class BattleManagerAI(BattleManagerBase):
         target = pendingSkillEffect.target
         assert(target is not None)
 
+        if target.getHp()[0] <= 0:
+            target.b_setSkillEffects([])
+            return False
+
         # check to see if the skill effect has expired
         currentTime = globalClockDelta.getFrameNetworkTime()
         if time.time() - pendingSkillEffect.timestamp >= pendingSkillEffect.duration:
@@ -393,8 +397,6 @@ class BattleManagerAI(BattleManagerBase):
             skillEffects = WeaponGlobals.getEffects(pendingSkillEffect.effectId)
             self.applyTargetEffects(target, skillEffects)
         else:
-            # TODO: Remove the skill effects from the array when the entity dies,
-            # to prevent skill effects from continuing to update:
             try:
                 skillEffects = self.getModifiedSkillEffects(attacker, target, pendingSkillEffect.skillId, pendingSkillEffect.ammoSkillId)
             except:

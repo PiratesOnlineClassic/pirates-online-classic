@@ -140,7 +140,7 @@ show-total-population #t
 skip-tutorial #f
 force-tutorial #f
 ignore-teleport-requirements #t
-force-tutorial-complete #t
+force-tutorial-complete #f
 
 # Teleport:
 teleport-all #t

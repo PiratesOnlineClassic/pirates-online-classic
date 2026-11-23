@@ -144,23 +144,44 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
     def _swapQuest(self, oldQuests=[], giverId=None, questIds=None, rewards=None):
         inventory = self.getInventory()
         if not inventory:
-            self.notify.debug('Failed to accept quest %d for avatar %d, '
-                'no inventory found!' % (nextQuestId, self.doId))
+            self.notify.debug('Failed to swap quests for avatar %d, '
+                'no inventory found!' % self.doId)
 
             return
 
-        # drop all of our old quests
-        for quest in oldQuests:
-            assert(quest is not None)
-            messenger.send(quest.getCompleteEventString())
-            self.air.questMgr.dropQuest(self, quest)
+        if getattr(self, '_questSwapPending', False):
+            return
+        self._questSwapPending = True
+        oldQuests = list(oldQuests)
+        questIds = list(questIds or [])
 
         def _questsCreatedCallback():
-            pass
+            self._questSwapPending = False
+            if any(not self.air.questMgr.hasQuest(self, questId=questId)
+                   for questId in questIds):
+                return
 
-        # give the avatar all of it's new quests that come after the
-        # previous quests they've just completed
-        self.air.questMgr.createQuests(self, questIds, _questsCreatedCallback)
+            for quest in oldQuests:
+                if self.air.questMgr.hasQuest(self, questDoId=quest.doId):
+                    messenger.send(quest.getCompleteEventString())
+                    self.air.questMgr.dropQuest(self, quest, completed=True)
+
+            if questIds and questIds[0] in (
+                    'Chapter1.rung1', 'Chapter1.rung2', 'Chapter1.rung3',
+                    'c2_visit_will_turner'):
+                self.b_setActiveQuest(questIds[0])
+                messenger.send('quest-available-%s-%d' % (questIds[0], self.doId),
+                               [self, inventory.getQuestList()])
+
+        def _startCreation():
+            missing = [questId for questId in questIds
+                       if not self.air.questMgr.hasQuest(self, questId=questId)]
+            if missing:
+                self.air.questMgr.createQuests(self, missing, _questsCreatedCallback)
+            else:
+                _questsCreatedCallback()
+
+        self.air.questMgr.whenQuestIdle(self, _startCreation)
 
     def _acceptQuest(self, nextQuestId, giverId, rewards):
         inventory = self.getInventory()
@@ -170,8 +191,9 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
 
             return
 
-        def questCreatedCallback():
-            messenger.send('quest-available-%s-%d' % (nextQuestId, self.doId), [self, inventory.getQuestList()])
+        def questCreatedCallback(quest):
+            if quest:
+                messenger.send('quest-available-%s-%d' % (nextQuestId, self.doId), [self, inventory.getQuestList()])
 
         self.air.questMgr.createQuest(self, nextQuestId, questCreatedCallback)
 

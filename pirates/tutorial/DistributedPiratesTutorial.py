@@ -182,6 +182,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         self.pendingNavyBoatRequest = None
         self.pendingDanRequest = None
         self.pendingStumpyRequest = None
+        self._waitingForStumpyIntro = False
         self.pendingIslandRequest = None
         self.tutorialInstance = None
         self.BoatStumpyDoId = None
@@ -298,9 +299,6 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         self.StumpyDoId = None
         self.IslandDoId = None
         
-        def stumpyHere(stumpyId):
-            self.StumpyDoId = stumpyId
-        
         def stumpyBoatHere(stumpyBoatId):
             self.BoatStumpyDoId = stumpyBoatId
             self.pendingStumpyBoatRequest = base.cr.relatedObjectMgr.requestObjects([
@@ -326,7 +324,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             self.pendingIslandRequest = base.cr.relatedObjectMgr.requestObjects([
                 self.IslandDoId], eachCallback = self.handleIslandGenerate)
 
-        self.cr.uidMgr.addUidCallback(TutorialGlobals.STUMPY_UID, stumpyHere)
+        self.cr.uidMgr.addUidCallback(TutorialGlobals.STUMPY_UID, self._stumpyHere)
         self.cr.uidMgr.addUidCallback(TutorialGlobals.NELL_UID, nellHere, onlyOnce = False)
         self.cr.uidMgr.addUidCallback(TutorialGlobals.DAN_UID, danHere, onlyOnce = False)
         self.cr.uidMgr.addUidCallback(TutorialGlobals.STUMPY_BOAT_UID, stumpyBoatHere, onlyOnce = False)
@@ -388,6 +386,18 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
     def removeShipWreck(self):
         self.shipWreck.delete()
         self.shipWreck.removeNode()
+
+    def _stumpyHere(self, stumpyId):
+        self.StumpyDoId = stumpyId
+        self._requestStumpyIntro()
+
+    def _requestStumpyIntro(self):
+        if not self._waitingForStumpyIntro or not self.StumpyDoId:
+            return
+
+        self._waitingForStumpyIntro = False
+        self.pendingStumpyRequest = base.cr.relatedObjectMgr.requestObjects(
+            [self.StumpyDoId], eachCallback=self.doStumpyIntro)
     
     def doStumpyBoatIntro(self, object):
         stumpyBoat = base.cr.doId2do[self.BoatStumpyDoId]
@@ -398,8 +408,8 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
                 self.accept(stumpyBoat.proximityCollisionEnterEvent, self.triggerBoBeckCut)
                 self.acceptOnce('enableBoatBoarding', self.enableBoatBoarding)
                 self.notify.debug('stumpyBoat:waiting for stumpy %s' % self.StumpyDoId)
-                self.pendingStumpyRequest = base.cr.relatedObjectMgr.requestObjects([
-                    self.StumpyDoId], eachCallback = self.doStumpyIntro)
+                self._waitingForStumpyIntro = True
+                self._requestStumpyIntro()
             else:
                 self.notify.debug('stumpyBoat:talkToDan is True')
 

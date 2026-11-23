@@ -5,7 +5,7 @@ import copy
 import io
 from direct.showbase.ShowBaseGlobal import *
 from direct.interval.IntervalGlobal import *
-from libotp.NametagConstants import *
+from libotp.NametagGlobals import *
 from panda3d.core import *
 from direct.gui.DirectGui import *
 from direct.directnotify import DirectNotifyGlobal
@@ -48,8 +48,7 @@ def clear():
 def readFile(filename):
     notify.debug('THE PARSED FILE IS %s' % filename)
     lastReadFile = filename
-    scriptFile = vfs.openReadFile(filename, 1)
-    content = scriptFile.read()
+    content = vfs.readFile(filename, 1)
     if isinstance(content, bytes):
         content = content.decode('utf-8')
     gen = tokenize.generate_tokens(io.StringIO(content).readline)

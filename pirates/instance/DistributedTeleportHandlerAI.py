@@ -19,17 +19,32 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
     def startTeleportProcess(self, parentId, zoneId, bandId):
         self.sendUpdateToAvatarId(self.avatar.doId, 'waitInTZ', [[], 0])
 
+    def _getDestinationInstance(self):
+        gameArea = self.teleportFsm.gameArea
+        instance = gameArea.getParentObj()
+        if not instance:
+            self.notify.warning('Cannot teleport avatar %d: destination area %d has no instance' %
+                (self.avatar.doId, gameArea.doId))
+            self.d_abortTeleport()
+            self.teleportFsm.cleanup()
+        return instance
+
     def teleportToInstanceReady(self, zoneId):
         world = self.teleportFsm.world
         gameArea = self.teleportFsm.gameArea
+        destination = self._getDestinationInstance()
+        if not destination:
+            return
 
         self.sendUpdateToAvatarId(self.avatar.doId, 'continueTeleportToInstance', [world.doId,
-            gameArea.zoneId, world.doId, world.getFileName(), gameArea.parentId, gameArea.zoneId,
-            gameArea.parentId, world.getFileName(), world.oceanGrid.doId])
+            world.oceanGrid.zoneId, world.doId, world.getFileName(), gameArea.parentId, gameArea.zoneId,
+            destination.doId, destination.getFileName(), world.oceanGrid.doId])
 
     def readyToFinishTeleport(self, instanceDoId):
-        world = self.teleportFsm.world
         gameArea = self.teleportFsm.gameArea
+        destination = self._getDestinationInstance()
+        if not destination:
+            return
         xPos, yPos, zPos, h = self.teleportFsm.spawnPt
 
         # ensure the zoneId we've just calculated is indeed valid,
@@ -43,8 +58,8 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
             self.teleportFsm.cleanup()
             return
 
-        world.d_setSpawnInfo(self.avatar.doId, xPos, yPos, zPos, h, 0, [gameArea.doId,
-            gameArea.parentId, gameArea.zoneId])
+        destination.d_setSpawnInfo(self.avatar.doId, xPos, yPos, zPos, h, 0, [gameArea.doId,
+            gameArea.zoneId, gameArea.parentId])
 
         self.sendUpdateToAvatarId(self.avatar.doId, 'teleportToInstanceCleanup', [])
 

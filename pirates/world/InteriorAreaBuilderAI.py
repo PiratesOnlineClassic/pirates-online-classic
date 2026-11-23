@@ -62,17 +62,17 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
 
             return
 
-        exteriorWorld = self.parent.getParentObj()
-        if not exteriorWorld:
-            self.notify.debug('Cannot create interior door %s, '
-                'for exterior with no parent!' % objKey)
-
-            return
-
         exterior = exteriorDoor.getParentObj()
         if not exterior:
             self.notify.debug('Cannot create interior door %s, '
                 'no exterior found!' % objKey)
+
+            return
+
+        exteriorWorld = exterior.getParentObj()
+        if not exteriorWorld:
+            self.notify.debug('Cannot create interior door %s, '
+                'for exterior with no parent!' % objKey)
 
             return
 

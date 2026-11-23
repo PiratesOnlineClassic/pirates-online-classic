@@ -130,7 +130,17 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
         return names
 
-    def d_initiateTeleport(self, avatar, instanceType=None, instanceName=None, locationUid=None, spawnPt=None):
+    def d_initiateTeleport(self, avatar, instanceType=None, instanceName=None,
+                           locationUid=None, spawnPt=None, tutorialFsm=None):
+        if (instanceType == PiratesGlobals.INSTANCE_TUTORIAL and
+                avatar.getTutorial() < PiratesGlobals.TUT_MET_JOLLY_ROGER):
+            tutorialManager = self.air.tutorialManager
+            # Only the owning tutorial FSM may perform its internal jail teleport.
+            if (tutorialFsm is None or
+                    tutorialManager.avatar2fsm.get(avatar.doId) is not tutorialFsm):
+                tutorialManager._requestTutorial(avatar)
+                return
+
         if avatar.doId in self.avatar2fsm:
             self.notify.warning('Cannot initiate teleport for avatar %d, '
                 'already teleporting!' % avatar.doId)
@@ -142,7 +152,9 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
         # check to see which island the avatar exited last at,
         # then ensure this is their login teleport; not a normal teleport request...
-        if returnLocation and not currentIsland:
+        # The tutorial FSM supplies its own jail spawn location.
+        if (returnLocation and not currentIsland and
+                instanceType != PiratesGlobals.INSTANCE_TUTORIAL):
             locationUid = returnLocation
 
         gameArea = avatar.getParentObj()
@@ -158,22 +170,10 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             world = self.getWorld(instanceType, instanceName)
 
         if not world or not isinstance(world, DistributedInstanceBaseAI):
-            # If this is a tutorial world that doesn't exist yet, trigger tutorial creation
             if instanceType == PiratesGlobals.INSTANCE_TUTORIAL:
-                # Verify the player actually needs the tutorial (hasn't completed it)
-                tutorialState = avatar.getTutorial()
-                if tutorialState >= PiratesGlobals.TUT_MET_JOLLY_ROGER:
-                    self.notify.warning('Avatar %d has tutorial state %d, skipping tutorial creation' % (avatar.doId, tutorialState))
-                    return
-
-                if avatar.doId not in self.air.tutorialManager.avatar2fsm:
-                    self.notify.info('Tutorial world not found, initiating tutorial creation for avatar %d (tutorialState=%d)' % (avatar.doId, tutorialState))
-                    self.air.tutorialManager._requestTutorial(avatar)
-                    return
-                else:
-                    # Tutorial is already in progress, don't recursively call
-                    self.notify.warning('Tutorial already in progress for avatar %d, waiting...' % avatar.doId)
-                    return
+                self.notify.warning('Cannot initiate tutorial teleport for avatar %d: '
+                    'tutorial world unavailable or tutorial already completed' % avatar.doId)
+                return
 
             self.notify.warning('Cannot initiate teleport for unknown world: '
                 'instanceType=%r instanceName=%r' % (instanceType, instanceName))
