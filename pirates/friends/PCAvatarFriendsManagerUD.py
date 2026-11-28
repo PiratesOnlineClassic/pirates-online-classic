@@ -28,6 +28,21 @@ class PCAvatarFriendsManagerUD(AvatarFriendsManagerUD):
         self.d_setBandId(avId, bandMgrId, bandId)
         self.air.playerFriendsManager.avatarBandIdChanged(avId, bandMgrId, bandId)
 
+    def requestDinghyFriendsList(self, dinghyId, avId, accountId):
+        # Sent to us by a district when an avatar uses a dinghy, so the dinghy
+        # can offer the avatar the ships of its friends. Both the avatar's
+        # friends and the avatars of the account's player friends count.
+        replyTo = self.air.getMsgSender()
+        friendIds = [friendId for friendId in self.getFriendIds(avId) if self.isOnline(friendId)]
+        for friendId in self.air.playerFriendsManager.getOnlineFriendAvatarIds(accountId):
+            if friendId not in friendIds:
+                friendIds.append(friendId)
+
+        dclass = self.air.dclassesByName['DistributedDinghy']
+        datagram = dclass.aiFormatUpdate('responseFriendsList', dinghyId, replyTo,
+            self.air.ourChannel, [avId, friendIds])
+        self.air.send(datagram)
+
     def d_updateAvatarFriend(self, avId, friendId):
         AvatarFriendsManagerUD.d_updateAvatarFriend(self, avId, friendId)
 

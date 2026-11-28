@@ -1,6 +1,8 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import globalClockDelta
 
+from otp.distributed.OtpDoGlobals import OTP_DO_ID_AVATAR_FRIENDS_MANAGER
+
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.piratesbase import PiratesGlobals
@@ -16,6 +18,9 @@ class DistributedDinghyAI(DistributedInteractiveAI):
         self.interactRadius = 0
         self.locationId = 0
         self.siegeTeam = 0
+
+        # avatarId -> the ids of the avatar's online friends
+        self.avatar2friends = {}
 
     def getPublicShipInfo(self, shipDoId):
         ship = self.air.doId2do.get(shipDoId)
@@ -55,14 +60,56 @@ class DistributedDinghyAI(DistributedInteractiveAI):
     def d_offerPublicOptions(self, avatarId, publicOptions):
         self.sendUpdateToAvatarId(avatarId, 'offerPublicOptions', [publicOptions])
 
+    def isFriendShip(self, ship, friendIds):
+        if not ship.getAllowFriendState() or ship.getCaptainId() not in friendIds:
+            return False
+
+        return ship.getCaptainId() in self.air.doId2do
+
+    def getOfferFriendOptions(self, friendIds):
+        friendOptions = []
+        for ship in self.air.shipManager.getPlayerShips():
+            if not self.isFriendShip(ship, friendIds):
+                continue
+
+            friendOptions.append(self.getPublicShipInfo(ship.doId))
+
+        return friendOptions
+
+    def d_offerFriendOptions(self, avatarId, friendOptions):
+        self.sendUpdateToAvatarId(avatarId, 'offerFriendOptions', [friendOptions])
+
+    def d_requestDinghyFriendsList(self, avatar):
+        # The avatar friends manager knows who the avatar's friends are, it
+        # answers with responseFriendsList. The district has no handle on the
+        # avatar friends manager UberDOG, so send the request to it directly:
+        dclass = self.air.dclassesByName['PCAvatarFriendsManager']
+        datagram = dclass.aiFormatUpdate('requestDinghyFriendsList', OTP_DO_ID_AVATAR_FRIENDS_MANAGER,
+            OTP_DO_ID_AVATAR_FRIENDS_MANAGER, self.air.ourChannel, [self.doId, avatar.doId, avatar.getDISLid()])
+        self.air.send(datagram)
+
+    def responseFriendsList(self, avatarId, friendIds):
+        avatar = self.air.doId2do.get(avatarId)
+        if not avatar:
+            return
+
+        self.avatar2friends[avatarId] = friendIds
+        friendOptions = self.getOfferFriendOptions(friendIds)
+        if friendOptions:
+            self.d_offerFriendOptions(avatarId, friendOptions)
+
     def handleRequestInteraction(self, avatar, interactType, instant):
         return self.ACCEPT
 
     def handlePostRequestInteraction(self, avatar):
         self.d_offerPublicOptions(avatar.doId, self.getOfferPublicOptions())
+        self.d_requestDinghyFriendsList(avatar)
 
     def handleRequestExit(self, avatar):
         return self.ACCEPT
+
+    def handlePostRequestExit(self, avatar):
+        self.avatar2friends.pop(avatar.doId, None)
 
     def canSelectShip(self, ship):
         if not self.air.shipManager.hasActiveShip(ship.doId):
@@ -132,6 +179,23 @@ class DistributedDinghyAI(DistributedInteractiveAI):
 
     def getSiegeTeam(self):
         return self.siegeTeam
+
+    def selectFriendShip(self, shipDoId):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        friendIds = self.avatar2friends.pop(avatar.doId, [])
+        ship = self.air.doId2do.get(shipDoId)
+        if not ship or not hasattr(ship, 'getAllowFriendState'):
+            self.d_sendAvatarToShip(avatar.doId, 0)
+            return
+
+        if not self.isFriendShip(ship, friendIds) or not self.canSelectShip(ship):
+            self.d_sendAvatarToShip(avatar.doId, 0)
+            return
+
+        self.sendAvatarToShip(avatar, ship)
 
     def selectOwnShip(self, shipId, teamSpec):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())

@@ -218,6 +218,9 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
     def isOnline(self, accountId):
         return accountId in self.account2avatar
 
+    def getOnlineFriendAvatarIds(self, accountId):
+        return [self.account2avatar[friendId] for friendId in self.getFriendIds(accountId) if self.isOnline(friendId)]
+
     def declareFriend(self, accountId, friendId):
         # Teleport queries and responses are sent straight to the friend's
         # avatar object, which the client may not be able to see. Declare
