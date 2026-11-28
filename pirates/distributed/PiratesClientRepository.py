@@ -159,6 +159,8 @@ class PiratesClientRepository(OTPClientRepository):
             taskMgr.doYield = self.taskManagerDoYieldCall
         self.loadingScreen = LoadingScreen.LoadingScreen(self)
         self.defaultShard = 0
+        # set by the district's TargetManager once it has generated
+        self.targetMgr = None
         self.accept('avatarZoneChanged', self.handleAvatarZoneChanged)
 
     def handleAvatarZoneChanged(self, av, gridId, zoneId):
