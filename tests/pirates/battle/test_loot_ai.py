@@ -167,7 +167,8 @@ class ShipLootTests(unittest.TestCase):
         npcShip.handleShipSinking.assert_called_once_with()
         npcShip.plunderShip.assert_called_once_with(playerShip)
         npcShip.rewardCrew.assert_called_once_with(playerShip)
-        npcShip.air.questMgr.shipSunk.assert_called_once_with(npcShip, [playerShip.doId])
+        # quest credit is given once the ship begins sinking, see DistributedShipAI.handleShipSinking
+        npcShip.air.questMgr.shipSunk.assert_not_called()
 
 
 class PlayingCardRewardTests(unittest.TestCase):

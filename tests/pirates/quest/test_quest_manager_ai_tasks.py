@@ -50,6 +50,9 @@ DistributedNPCTownfolkAI = loadTownfolk()
 
 
 class FakeQuest(Quest, QuestBase):
+    # quests are progressed by the ai's event handling...
+    handleEvent = manager_module.DistributedQuestAI.handleEvent
+    taskLocationMatches = staticmethod(manager_module.DistributedQuestAI.taskLocationMatches)
 
     def __init__(self, doId, questId, holder, giverId=''):
         dna = QuestDB.QuestDict[questId]

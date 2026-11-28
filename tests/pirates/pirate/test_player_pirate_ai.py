@@ -412,9 +412,13 @@ class DeathTests(unittest.TestCase):
         player.setSiegeTeam(1)
         fsm = self.makeFSM(player)
         fsm.air.siegeManager = Mock(handleAvatarDefeated=Mock(return_value=True))
+        fsm.air.questMgr = Mock()
+        fsm.air.doId2do = {7: 'attacker'}
+        fsm.air.targetMgr.getAttackers.return_value = [7]
         player.getParentObj = Mock()
         fsm.enterDeath()
         fsm.air.siegeManager.handleAvatarDefeated.assert_called_once_with(player)
+        fsm.air.questMgr.shipPVPPirateDefeated.assert_called_once_with(player, ['attacker'])
         player.getParentObj.assert_not_called()
 
     def test_jail_restores_avatar(self):

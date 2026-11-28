@@ -318,7 +318,8 @@ class BuriedTreasureAITests(unittest.TestCase):
         npc.getUniqueId = lambda: dna.getReturnGiverIds()[0]
         self.air.questMgr.requestInteract(self.avatar, npc)
         npc.d_setQuestsCompleted.assert_called_once_with(
-            self.avatar.doId, completedQuestIds=[quest_id], completedQuestDoIds=[200])
+            self.avatar.doId, completedContainerIds=[], completedQuestIds=[quest_id],
+            completedQuestDoIds=[200])
         self.air.questMgr.requestInteract(self.avatar, npc)
         npc.d_setQuestsCompleted.assert_called_once()
         self.assertEqual(self.history, [])
