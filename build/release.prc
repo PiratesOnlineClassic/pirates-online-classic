@@ -1,6 +1,6 @@
 # Release settings for the compiled client.
 #
-# nuitka_build.py copies this file into the release as config/dev.prc.
+# nuitka_build.py compiles this file into the client as config/dev.prc.
 # PiratesStart always loads config/general.prc, config/dev.prc and
 # config/performance.prc (later files win), then config/personal.prc if a
 # player made one.  In a release the dev.prc slot holds these release

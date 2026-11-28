@@ -132,6 +132,7 @@ build/*
 !build/*.md
 !build/*.prc
 !build/*.env
+build/poc_client_files.py
 !build/icons/
 temp/
 direct/
