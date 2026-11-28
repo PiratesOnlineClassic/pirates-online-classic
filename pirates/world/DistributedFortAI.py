@@ -2,6 +2,7 @@ from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from direct.directnotify import DirectNotifyGlobal
 
 from pirates.piratesbase import PiratesGlobals
+from pirates.pirate import AvatarTypes
 
 
 class DistributedFortAI(DistributedBattleAvatarAI):
@@ -35,6 +36,10 @@ class DistributedFortAI(DistributedBattleAvatarAI):
         # forts are always manned by the navy, the client sets the same team
         # for the radar (see DistributedFort.setupRadarGui)
         self.setTeam(PiratesGlobals.NAVY_TEAM)
+
+        # the client sizes every battle avatar from it's avatar type's enemy stats,
+        # the default type (Anyone) has none and the client cannot generate the fort...
+        self.setAvatarType(AvatarTypes.Navy)
 
     def generate(self):
         DistributedBattleAvatarAI.generate(self)

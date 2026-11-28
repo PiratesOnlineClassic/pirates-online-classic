@@ -4,7 +4,7 @@ import sys
 import types
 import unittest
 from types import SimpleNamespace
-from unittest.mock import Mock, patch
+from unittest.mock import MagicMock, Mock, patch
 
 from panda3d.core import loadPrcFile, loadPrcFileData
 
@@ -65,6 +65,11 @@ class DistributedFortAITests(unittest.TestCase):
         fort.sendUpdate = Mock()
         fort.b_setHp = Mock(side_effect=lambda hp, quietly: setattr(fort, 'hp', hp))
         return fort
+
+    def test_fort_is_generated_with_an_avatar_type_the_client_can_size(self):
+        from pirates.battle import EnemyGlobals
+        fort = DistributedFortAI(MagicMock())
+        self.assertIsNotNone(EnemyGlobals.getHeight(fort.getAvatarType()))
 
     def test_projectile_damage_uses_hull_damage(self):
         fort = self.makeFort()
