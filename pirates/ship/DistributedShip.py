@@ -1877,6 +1877,14 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             child.swapFloorCollideMask(PiratesGlobals.FloorBitmask, PiratesGlobals.ShipFloorBitmask)
             if not child.isLocal() and self.boardingInProgress:
                 child.wrtReparentTo(self.root)
+            elif child.getParent() != self.root:
+                # Panda's DistributedNode detaches a child leaving a grid for us,
+                # and one generated on deck (Bo Beck) has no parent at all, so
+                # get it onto the deck, it's position is relative to our root...
+                if child.getParent().isEmpty():
+                    child.reparentTo(self.root)
+                else:
+                    child.wrtReparentTo(self.root)
 
             if child.isLocal():
                 child.refreshActiveQuestStep()
