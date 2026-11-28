@@ -110,6 +110,7 @@ def makePlayer(doId=100, stacks=None, hp=100, maxHp=100, mojo=50, maxMojo=100, s
     player.power = 0
     player.maxPower = 0
     player.level = 10
+    player.tutorial = PiratesGlobals.TUT_FINISHED
     player.weapon = None
     player.toonUpTask = None
     player.skillRechargeTimes = {}
@@ -326,6 +327,49 @@ class SkillPointTests(unittest.TestCase):
             player.spendSkillPoint(InventoryType.CutlassSweep)
 
         self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassSweep), 1)
+
+
+    def test_tutorial_pirate_trains_sweep_first(self):
+        player = makePlayer(stacks={InventoryType.UnspentCutlass: 2, InventoryType.CutlassHack: 2,
+            InventoryType.CutlassSweep: 1})
+        player.tutorial = PiratesGlobals.TUT_MET_JOLLY_ROGER
+        player.spendSkillPoint(InventoryType.CutlassHack)
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassHack), 2)
+
+        player.spendSkillPoint(InventoryType.CutlassSweep)
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassSweep), 2)
+
+        # once Sweep has been trained the other skills may be trained as well...
+        player.spendSkillPoint(InventoryType.CutlassHack)
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassHack), 3)
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.UnspentCutlass), 0)
+
+    def test_sweep_rule_ends_with_the_tutorial_cutlass(self):
+        player = makePlayer(stacks={InventoryType.UnspentCutlass: 1, InventoryType.CutlassHack: 2,
+            InventoryType.CutlassSweep: 1})
+        player.tutorial = PiratesGlobals.TUT_GOT_CUTLASS
+        player.spendSkillPoint(InventoryType.CutlassHack)
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassHack), 3)
+
+
+class AccessTests(unittest.TestCase):
+
+    def test_access_follows_the_account(self):
+        from otp.otpbase import OTPGlobals
+        from pirates.piratesbase import MembershipGlobals
+
+        player = DistributedPlayerPirateAI.__new__(DistributedPlayerPirateAI)
+        self.assertEqual(player.getGameAccess(), OTPGlobals.AccessUnknown)
+        player.setGameAccess(OTPGlobals.AccessVelvetRope)
+        with patch.object(MembershipGlobals, 'wantMembership', return_value=False):
+            self.assertTrue(player.isPaid())
+            self.assertEqual(player.getAccess(), OTPGlobals.AccessFull)
+
+        with patch.object(MembershipGlobals, 'wantMembership', return_value=True):
+            self.assertFalse(player.isPaid())
+            self.assertEqual(player.getAccess(), OTPGlobals.AccessVelvetRope)
+            player.setGameAccess(OTPGlobals.AccessFull)
+            self.assertTrue(player.isPaid())
 
 
 class RespecTests(unittest.TestCase):

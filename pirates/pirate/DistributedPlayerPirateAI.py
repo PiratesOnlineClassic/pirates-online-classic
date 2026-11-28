@@ -773,6 +773,15 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
             return
 
+        # in the tutorial a new pirate is shown how to train Sweep, the first
+        # cutlass skill point has to go there, see SkillPage.addPoint...
+        if repId == InventoryType.CutlassRep and self.getTutorial() < PiratesGlobals.TUT_GOT_CUTLASS and \
+                skillId != InventoryType.CutlassSweep and inventory.getStackQuantity(InventoryType.CutlassSweep) < 2:
+            self.notify.debug('Cannot update stack %d, skill %d trained before Sweep in the tutorial!' % (
+                unspentId, skillId))
+
+            return
+
         # freebooters may only train the skills free to use, up to a
         # certain rank and only spend so many of the weapon's skill points...
         level, _ = ReputationGlobals.getLevelFromTotalReputation(repId, inventory.getReputation(repId))
