@@ -12,6 +12,7 @@ from pirates.battle import EnemyGlobals
 from pirates.battle import LootGlobals
 from pirates.pirate import AvatarTypes
 from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import Freebooter
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 
@@ -36,6 +37,7 @@ class NPCShipAI(DistributedShipAI):
 
         self.isNpc = True
         self.deckCrew = []
+        self.cannonAttackerIds = set()
         self.grappleArriveTime = 0.0
 
     def generate(self):
@@ -77,19 +79,78 @@ class NPCShipAI(DistributedShipAI):
         if isinstance(attackerShip, DistributedShipAI):
             self.recordAttacker(attackerDoId, damage)
 
-        # sinking is handled by setHp once the ship's hp reaches zero.
-        oldHp = self.hp
+        # sinking is handled by setHp once the ship's hp reaches zero,
+        # the crews that sank the ship are rewarded by handleShipSinking...
         self.b_setHp(max(0, self.hp - damage))
-
-        # the crew that sank this ship receive credit towards their quests
-        if self.hp <= 0 < oldHp:
-            self.air.questMgr.shipSunk(self, [attackerDoId])
-            self.plunderShip(attackerShip)
 
         if self.hp > 0:
             self.gameFSM.onDamageReceived(attackerDoId, damage)
 
         return self.hp
+
+    def handleShipDamage(self, damage, attacker=None):
+        # remember which of the attacking crew hit us with their cannons,
+        # they are rewarded with cannon reputation once we have been sunk...
+        if attacker is not None and hasattr(attacker, 'getCrewShipId') and int(damage) < 0 and \
+                self.isSailable() and not self.hasSpawnBuff():
+            self.cannonAttackerIds.add(attacker.doId)
+
+        DistributedShipAI.handleShipDamage(self, damage, attacker)
+
+    def handleShipSinking(self):
+        DistributedShipAI.handleShipSinking(self)
+
+        # the ship that landed the final blow plunders our cargo, both it's crew and the
+        # crew of the ship that assisted them receive credit for sinking us...
+        attackerShip, assistShip = self.getSinkAttackers()
+        attackerShips = [ship for ship in (attackerShip, assistShip)
+            if isinstance(ship, DistributedShipAI) and not ship.getNPCship()]
+
+        if not attackerShips:
+            return
+
+        self.air.questMgr.shipSunk(self, [ship.doId for ship in attackerShips])
+        if hasattr(attackerShip, 'addShipKill'):
+            attackerShip.addShipKill()
+
+        self.plunderShip(attackerShip)
+        for ship in attackerShips:
+            self.rewardCrew(ship)
+
+    def getSinkReputation(self):
+        return ShipGlobals.getShipExp(self.getLevel()) or 0
+
+    def rewardCrew(self, attackerShip):
+        # every pirate aboard the attacking ship earns sailing reputation, the
+        # pirates who manned the cannons earn cannon reputation on top of that...
+        reputation = int(self.getSinkReputation())
+        if not reputation:
+            return
+
+        for avatarId in list(attackerShip.getCrew()):
+            avatar = self.air.doId2do.get(avatarId)
+            if not avatar or not hasattr(avatar, 'getInventory'):
+                continue
+
+            inventory = avatar.getInventory()
+            if not inventory:
+                continue
+
+            if hasattr(avatar, 'isPaid') and not avatar.isPaid() and \
+                    avatar.getLevel() >= Freebooter.FreeOverallLevelCap:
+                continue
+
+            categories = [InventoryType.SailingRep]
+            if avatarId in self.cannonAttackerIds:
+                categories.append(InventoryType.CannonRep)
+
+            for categoryId in categories:
+                inventory.setReputation(categoryId, inventory.getReputation(categoryId) + reputation)
+
+            overallReputation = reputation * len(categories)
+            inventory.setOverallRep(inventory.getOverallRep() + overallReputation)
+            avatar.d_sendReputationMessage(self.doId, categories,
+                [min(reputation, 65535)] * len(categories), 0, 0, 0, 0)
 
     def plunderShip(self, attackerShip):
         # the ship that sank us plunders our cargo, the containers are
