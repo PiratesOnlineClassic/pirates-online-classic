@@ -97,8 +97,62 @@ class DistributedInstanceBaseAI(DistributedObjectAI, WorldNodeAI):
 
         return self.spawnPts[area][index]
 
+    def getAvatarArea(self, avatar):
+        # returns the game area within this instance that the avatar
+        # is currently in, or None when the avatar is somewhere else...
+        from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
+
+        area = avatar.getParentObj()
+        if not isinstance(area, DistributedGameAreaAI):
+            return None
+
+        if area.getParentObj() is not self:
+            return None
+
+        return area
+
+    def requestSpawnLoc(self):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        area = self.getAvatarArea(avatar)
+        if not area:
+            self.notify.warning('Cannot send spawn location for avatar %d, '
+                'avatar is not in instance %d!' % (avatar.doId, self.doId))
+
+            return
+
+        xPos, yPos, zPos, h = self.getSpawnPt(area.getUniqueId())
+        self.d_setSpawnInfo(avatar.doId, xPos, yPos, zPos, h, 0, [area.doId,
+            area.zoneId, area.parentId])
+
     def avatarDied(self):
-        pass
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        if not self.getAvatarArea(avatar):
+            self.notify.warning('Received avatarDied for avatar %d, '
+                'avatar is not in instance %d!' % (avatar.doId, self.doId))
+
+            return
+
+        # the avatar's Death state sends it to jail as soon as it's hp reaches
+        # zero, if that was not possible then the client would wait in it's
+        # death state forever, so release it back into the world instead...
+        if avatar.gameFSM.getCurrentOrNextState() != 'Death':
+            return
+
+        if avatar.getJailCellIndex() < 100:
+            return
+
+        self.notify.warning('Avatar %d died but could not be sent to jail, '
+            'releasing avatar!' % avatar.doId)
+
+        avatar.b_setHp(avatar.getMaxHp())
+        avatar.b_setGameState('LandRoam')
+        self.d_sendLocalAvatarToJail(avatar.doId, 0, 0, 0)
 
     def d_sendLocalAvatarToJail(self, avatarId, jailDoId, jailWorldParentId, jailWorldZone):
         self.sendUpdateToAvatarId(avatarId, 'sendLocalAvatarToJail', [jailDoId, jailWorldParentId, jailWorldZone])
