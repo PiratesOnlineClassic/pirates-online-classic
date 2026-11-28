@@ -403,6 +403,9 @@ class TreasureMapBlackPearl(DistributedTreasureMapInstance.DistributedTreasureMa
         self.setupCaptureSphere(island)
         base.transitions.fadeIn()
         pearl = self.getPearl()
+        # the pearl is hidden while cutscene 3.1 plays (see enterStageOne); with ships visible
+        # from the island it was already here when the cutscene started, the crew is on board now...
+        pearl.unstash()
         pearl.showStatusDisplay()
         pearl.forceZoneLevel(0)
         localAvatar.clearPort(island.doId)
