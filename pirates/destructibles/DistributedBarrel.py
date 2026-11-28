@@ -29,7 +29,7 @@ class DistributedBarrel(DistributedDestructibleObject.DistributedDestructibleObj
 
     def loadModel(self):
         self.prop = loader.loadModel('models/props/barrel')
-        self.coll = self.prop.findAllMatches('**/collision*').asList()
+        self.coll = list(self.prop.findAllMatches('**/collision*'))
         for c in self.coll:
             self.curMask = c.node().getIntoCollideMask()
             c.setCollideMask(PiratesGlobals.AmmoBitmask | self.curMask)
