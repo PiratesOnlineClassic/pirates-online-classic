@@ -40,6 +40,11 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
         self.air.targetMgr.clearAttacker(self.avatar)
         self.avatar.clearSkillEffects()
 
+        # privateers are respawned in place by their client rather than being
+        # sent to jail, see LocalPirateGameFSM.enterDeath...
+        if self.avatar.getSiegeTeam() and self.air.siegeManager.handleAvatarDefeated(self.avatar):
+            return
+
         inventory = self.avatar.getInventory()
         if not inventory:
             self.notify.warning('Cannot teleport avatar %d, no inventory was found!' %

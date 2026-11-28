@@ -27,6 +27,9 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
 
     TEAM_UPDATE_PERIOD = 2.0
 
+    # how often the respawn invulnerability cutoff sphere is checked
+    INVULNERABILITY_CHECK_PERIOD = 1.0
+
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
         SiegeManagerBase.__init__(self)
@@ -44,6 +47,8 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
             self._teamScores[teamId] = 0
 
         self._avatar2team = {}
+        self._avatar2ship = {}
+        self._invulnerableAvatars = {}
         self._sinkStreaks = {}
         self._teamIslands = None
         self._regenElapsed = 0.0
@@ -90,8 +95,13 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
         for avatarId in list(self._avatar2team.keys()):
             self.ignore(self.air.getAvatarExitEvent(avatarId))
 
+        for avatarId in list(self._invulnerableAvatars.keys()):
+            self._clearInvulnerabilityTasks(avatarId)
+
         self._teamShips = {}
         self._avatar2team = {}
+        self._avatar2ship = {}
+        self._invulnerableAvatars = {}
         self._sinkStreaks = {}
         self._teamIslands = None
 
@@ -138,6 +148,17 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
     def b_setUseIslandRegen(self, useIslandRegen):
         self.setUseIslandRegen(useIslandRegen)
         self.d_setUseIslandRegen(useIslandRegen)
+
+    def setUseRepairSpots(self, useRepairSpots):
+        SiegeManagerBase.setUseRepairSpots(self, useRepairSpots)
+
+        # the privateer ships only have repair spots while they are enabled...
+        for teamId in self.TeamIds:
+            for ship in self.getTeamShips(teamId):
+                if useRepairSpots:
+                    self.createShipRepairSpots(ship)
+                else:
+                    self.deleteShipRepairSpots(ship)
 
     def d_setUseRepairSpots(self, useRepairSpots):
         self.sendUpdate('setUseRepairSpots', [useRepairSpots])
@@ -290,6 +311,9 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
         ship.b_setSiegeTeam(teamId)
         self.notify.debug('Ship %d joined siege team %d' % (ship.doId, teamId))
 
+        if self._useRepairSpots:
+            self.createShipRepairSpots(ship)
+
         self._updateShipCrew(ship, teamId)
         self.updateTeamsJoinable()
         return True
@@ -299,6 +323,7 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
         if ship.getSiegeTeam():
             ship.b_setSiegeTeam(0)
 
+        self.deleteShipRepairSpots(ship)
         for avatarId in list(ship.getCrew()):
             if self._avatar2team.get(avatarId):
                 avatar = self.air.doId2do.get(avatarId)
@@ -306,6 +331,14 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
                     self.removeAvatarFromTeam(avatar)
 
         self.updateTeamsJoinable()
+
+    def createShipRepairSpots(self, ship):
+        if hasattr(ship, 'createRepairSpots') and not getattr(ship, 'repairSpots', None):
+            ship.createRepairSpots()
+
+    def deleteShipRepairSpots(self, ship):
+        if hasattr(ship, 'deleteRepairSpots'):
+            ship.deleteRepairSpots()
 
     def _removeShip(self, shipId):
         teamId = self.getShipTeam(shipId)
@@ -315,6 +348,15 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
         self._teamShips[teamId].discard(shipId)
         self._sinkStreaks.pop(shipId, None)
         self.ignore('distObjDelete-%d' % shipId)
+
+        # the pirates who sailed this ship have now lost their privateer crew...
+        for avatarId, avatarShipId in list(self._avatar2ship.items()):
+            if avatarShipId != shipId:
+                continue
+
+            avatar = self.air.doId2do.get(avatarId)
+            if avatar and avatar.doId not in self._getTeamCrewIds():
+                self.removeAvatarFromTeam(avatar)
 
     def _handleShipDeleted(self, shipId):
         self._removeShip(shipId)
@@ -332,6 +374,8 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
             avatar.b_setSiegeTeam(teamId)
 
     def removeAvatarFromTeam(self, avatar):
+        self._avatar2ship.pop(avatar.doId, None)
+        self.removeInvulnerability(avatar)
         if avatar.doId not in self._avatar2team:
             return
 
@@ -342,6 +386,9 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
 
     def _handleAvatarExit(self, avatarId):
         self._avatar2team.pop(avatarId, None)
+        self._avatar2ship.pop(avatarId, None)
+        self._clearInvulnerabilityTasks(avatarId)
+        self._invulnerableAvatars.pop(avatarId, None)
         self.ignore(self.air.getAvatarExitEvent(avatarId))
 
     def _updateShipCrew(self, ship, teamId):
@@ -349,6 +396,37 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
             avatar = self.air.doId2do.get(avatarId)
             if avatar:
                 self.addAvatarToTeam(avatar, teamId)
+                self._avatar2ship[avatar.doId] = ship.doId
+
+    def _getTeamCrewIds(self):
+        crewAvatarIds = set()
+        for teamId in self.TeamIds:
+            for ship in self.getTeamShips(teamId):
+                crewAvatarIds.update(ship.getCrew())
+
+        return crewAvatarIds
+
+    def isAvatarStillPrivateer(self, avatar):
+        """
+        Avatars remain in their privateer crew, and so keep their siege team, after going
+        ashore (privateers fight on the islands too, see TeamUtils.damageAllowed). They only
+        lose it once the privateer ship they crewed is no longer on their team, or when
+        they join the crew of another ship.
+        """
+
+        teamId = self._avatar2team.get(avatar.doId)
+        shipId = self._avatar2ship.get(avatar.doId)
+        if not teamId or not shipId:
+            return False
+
+        if self.getShipTeam(shipId) != teamId or not self.air.doId2do.get(shipId):
+            return False
+
+        crewShipId = avatar.getCrewShipId() if hasattr(avatar, 'getCrewShipId') else 0
+        if crewShipId and crewShipId != shipId:
+            return False
+
+        return True
 
     def updateTeamsJoinable(self):
         maxShips = PVPGlobals.MaxPrivateerShipsPerTeam.getValue()
@@ -381,10 +459,10 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
                 continue
 
             avatar = self.air.doId2do.get(avatarId)
-            if avatar:
-                self.removeAvatarFromTeam(avatar)
-            else:
+            if not avatar:
                 self._handleAvatarExit(avatarId)
+            elif not self.isAvatarStillPrivateer(avatar):
+                self.removeAvatarFromTeam(avatar)
 
         self.updateTeamsJoinable()
 
@@ -445,6 +523,147 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
                         break
 
     # =========================================================================
+    # Repair Kits
+    # =========================================================================
+
+    def useShipRepairKit(self, avatar, ship):
+        """
+        Called by the battle manager when an avatar uses a ship repair kit, the client
+        only offers the kit to privateers while repair kits are enabled (see
+        LocalPirateGameFSM._handleUseRepairKit). Returns True when the kit was used.
+        """
+
+        if not self._pvpEnabled or not self._useRepairKit:
+            return False
+
+        teamId = self.getAvatarTeam(avatar.doId)
+        if not teamId or not ship or self.getShipTeam(ship.doId) != teamId:
+            return False
+
+        if not ship.hasCrewMember(avatar.doId) or ship.getHp() <= 0:
+            return False
+
+        if ship.getHp() >= ship.getMaxHp() and ship.getSp() >= ship.getMaxSp():
+            return False
+
+        inventory = avatar.getInventory()
+        if not inventory:
+            return False
+
+        quantity = inventory.getStackQuantity(InventoryType.ShipRepairKit)
+        if quantity <= 0:
+            return False
+
+        inventory.b_setStackQuantity(InventoryType.ShipRepairKit, quantity - 1)
+        ship.b_setHp(min(ship.getMaxHp(), ship.getHp() + PVPGlobals.RepairKitHp.getValue()))
+        ship.b_setSp(min(ship.getMaxSp(), ship.getSp() + PVPGlobals.RepairKitSp.getValue()))
+        return True
+
+    # =========================================================================
+    # Respawn Invulnerability
+    # =========================================================================
+
+    def handleAvatarDefeated(self, avatar):
+        """
+        Privateers are not sent to jail when defeated, the client respawns them in place
+        (see DistributedMainWorld._startPvpRespawn and LocalPirateGameFSM.enterDeath),
+        once they have respawned they are temporarily invulnerable.
+        """
+
+        if not self.getAvatarTeam(avatar.doId):
+            return False
+
+        self._clearInvulnerabilityTasks(avatar.doId)
+        taskMgr.doMethodLater(PVPGlobals.MainWorldAvRespawnDelay, self._respawnAvatar,
+            self.uniqueName('respawn-%d' % avatar.doId), extraArgs=[avatar.doId])
+
+        return True
+
+    def _respawnAvatar(self, avatarId):
+        avatar = self.air.doId2do.get(avatarId)
+        if not avatar:
+            return Task.done
+
+        avatar.b_setHp(avatar.getMaxHp())
+        avatar.b_setMojo(avatar.getMaxMojo())
+        self.addInvulnerability(avatar)
+        return Task.done
+
+    def addInvulnerability(self, avatar):
+        from pirates.battle import WeaponGlobals
+
+        duration = PVPGlobals.MainWorldInvulnerabilityDuration.getValue()
+        if duration <= 0:
+            return
+
+        self.removeInvulnerability(avatar)
+
+        # the invulnerability is cut off once the avatar leaves
+        # the area of the island it respawned on...
+        island = avatar.getParentObj()
+        if not hasattr(island, 'getZoneSphereSize'):
+            island = None
+
+        self._invulnerableAvatars[avatar.doId] = island
+        avatar.addSkillEffect(WeaponGlobals.C_SPAWN, duration, avatar.doId)
+        taskMgr.doMethodLater(duration, self._invulnerabilityExpired,
+            self.uniqueName('invulnerability-%d' % avatar.doId), extraArgs=[avatar.doId])
+
+        if PVPGlobals.MainWorldInvulnerabilityWantCutoff.getValue():
+            taskMgr.doMethodLater(self.INVULNERABILITY_CHECK_PERIOD, self._checkInvulnerabilityCutoff,
+                self.uniqueName('invulnerabilityCutoff-%d' % avatar.doId), extraArgs=[avatar.doId],
+                appendTask=True)
+
+    def removeInvulnerability(self, avatar):
+        from pirates.battle import WeaponGlobals
+
+        self._clearInvulnerabilityTasks(avatar.doId)
+        if avatar.doId not in self._invulnerableAvatars:
+            return
+
+        del self._invulnerableAvatars[avatar.doId]
+        avatar.removeSkillEffect(WeaponGlobals.C_SPAWN)
+
+    def isAvatarInvulnerable(self, avatarId):
+        return avatarId in self._invulnerableAvatars
+
+    def _clearInvulnerabilityTasks(self, avatarId):
+        taskMgr.remove(self.uniqueName('respawn-%d' % avatarId))
+        taskMgr.remove(self.uniqueName('invulnerability-%d' % avatarId))
+        taskMgr.remove(self.uniqueName('invulnerabilityCutoff-%d' % avatarId))
+
+    def _invulnerabilityExpired(self, avatarId):
+        avatar = self.air.doId2do.get(avatarId)
+        if avatar:
+            self.removeInvulnerability(avatar)
+        else:
+            self._clearInvulnerabilityTasks(avatarId)
+            self._invulnerableAvatars.pop(avatarId, None)
+
+        return Task.done
+
+    def isAvatarInCutoffSphere(self, avatar, island):
+        if not island or avatar.getParentObj() is not island:
+            return False
+
+        # the avatar's position is relative to the island, as is it's zone sphere...
+        centerX, centerY = island.getZoneSphereCenter()
+        radius = island.getZoneSphereSize()[0] * PVPGlobals.MainWorldInvulnerabilityCutoffRadiusScale.getValue()
+        pos = avatar.getPos()
+        return math.hypot(pos[0] - centerX, pos[1] - centerY) <= radius
+
+    def _checkInvulnerabilityCutoff(self, avatarId, task):
+        avatar = self.air.doId2do.get(avatarId)
+        if not avatar or avatarId not in self._invulnerableAvatars:
+            return Task.done
+
+        if not self.isAvatarInCutoffSphere(avatar, self._invulnerableAvatars[avatarId]):
+            self.removeInvulnerability(avatar)
+            return Task.done
+
+        return Task.again
+
+    # =========================================================================
     # Scoring and Announcements
     # =========================================================================
 
@@ -473,6 +692,8 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
             self.notify.debug('Ship %d sunk friendly ship %d, ignoring' % (attackerShip.doId, sunkShip.doId))
             return
 
+        self.applySinkHpBonus(sunkShip, sunkTeam)
+
         worth = PVPGlobals.RenownWorthValues.get(sunkShip.getShipClass(), 0)
         self._teamScores[team] = self._teamScores.get(team, 0) + worth
         self.awardInfamy(attackerShip, worth)
@@ -490,6 +711,23 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
         streakPeriod = PVPGlobals.SinkStreakPeriod.getValue()
         if streakPeriod and streak % streakPeriod == 0 and self.announcer:
             self.announcer.d_announceSinkStreak(team, attackerShip.getName(), streak)
+
+    def applySinkHpBonus(self, sunkShip, sunkTeam):
+        # every enemy ship that helped sink the ship receives a health boost, which depends
+        # on the amount of damage it did (see PLocalizer.ShipPVPHint11 and ShipPVPHint12)...
+        bonusPercent = PVPGlobals.SinkHpBonusPercent.getValue()
+        attackerDamage = getattr(sunkShip, 'attackerDamage', None) or {}
+        for shipId, damage in list(attackerDamage.items()):
+            ship = self.air.doId2do.get(shipId)
+            if not ship or not ship.getSiegeTeam() or ship.getSiegeTeam() == sunkTeam:
+                continue
+
+            if ship.getHp() <= 0 or ship.getHp() >= ship.getMaxHp():
+                continue
+
+            bonus = int(max(0, damage) * bonusPercent)
+            if bonus:
+                ship.b_setHp(min(ship.getMaxHp(), ship.getHp() + bonus))
 
     def awardInfamy(self, ship, amount):
         if amount <= 0:

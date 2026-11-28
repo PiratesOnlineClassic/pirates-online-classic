@@ -265,6 +265,13 @@ class BattleManagerAI(BattleManagerBase):
 
             return self._otherSkillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
 
+        # ship repair kits are only available to privateers, the siege manager handles them...
+        if skillId == InventoryType.UseItem and ammoSkillId == InventoryType.ShipRepairKit:
+            if not self.air.siegeManager.useShipRepairKit(avatar, target):
+                return None
+
+            return self._otherSkillResult(avatar, None, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
+
         currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
         if not isWeaponDrawn:
             self.notify.debug('Cannot get skill result for avatar %d, '
