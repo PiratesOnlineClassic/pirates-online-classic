@@ -3,8 +3,8 @@ import sys
 import types
 import unittest
 from types import SimpleNamespace
-from pathlib import Path
 from unittest.mock import Mock, patch
+from tests import REPO_ROOT
 
 def stub_module(name, **attributes):
     module = types.ModuleType(name)
@@ -27,7 +27,7 @@ stub_module(stubbed_modules[3], DistributedGameAreaAI=type('DistributedGameAreaA
 
 spec = importlib.util.spec_from_file_location(
     '_test_DistributedTeleportMgrAI',
-    Path(__file__).parent / 'pirates/instance/DistributedTeleportMgrAI.py')
+    REPO_ROOT / 'pirates/instance/DistributedTeleportMgrAI.py')
 teleport = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(teleport)
 for name, original in original_modules.items():

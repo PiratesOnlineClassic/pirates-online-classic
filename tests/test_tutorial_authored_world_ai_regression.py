@@ -2,7 +2,6 @@ import ast
 import sys
 import types
 import unittest
-from pathlib import Path
 from unittest.mock import patch
 
 from pirates.leveleditor import NPCList
@@ -11,9 +10,10 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.ship import ShipGlobals
 from pirates.tutorial import TutorialGlobals
 from pirates.world import WorldGlobals
+from tests import REPO_ROOT
 
 
-ROOT = Path(__file__).parent
+ROOT = REPO_ROOT
 
 
 def load_builder_methods():

@@ -1,7 +1,7 @@
-import os
 import subprocess
 import sys
 import unittest
+from tests import REPO_ROOT
 
 
 class TutorialQuestParserTests(unittest.TestCase):
@@ -16,7 +16,7 @@ assert 'quest_tut_blacksmith_intro_100_v2' in QuestParser.lineDict
 """
         subprocess.run(
             [sys.executable, '-c', script],
-            cwd=os.path.dirname(os.path.abspath(__file__)),
+            cwd=str(REPO_ROOT),
             check=True,
         )
 

@@ -1,7 +1,6 @@
 import ast
 import sys
 import unittest
-from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
@@ -13,6 +12,7 @@ from pirates.tutorial import TutorialGlobals
 from pirates.world.WorldCreatorBase import WorldCreatorBase
 from pirates.world import WorldGlobals
 from otp.distributed.OtpDoGlobals import OTP_ZONE_ID_MANAGEMENT
+from tests import REPO_ROOT
 
 
 class World:
@@ -108,7 +108,7 @@ class TutorialWorldTeleportTests(unittest.TestCase):
             getObjectFilenameByUid=lambda uid: 'RambleshackWorld',
             oceanAreaManager=SimpleNamespace(
                 registerOceanAreaData=Mock(), hasOceanArea=lambda uid: False))
-        source = (Path(__file__).parent / 'pirates/world/WorldCreatorAI.py').read_text()
+        source = (REPO_ROOT / 'pirates/world/WorldCreatorAI.py').read_text()
         cls = next(node for node in ast.parse(source).body
                    if isinstance(node, ast.ClassDef) and node.name == 'WorldCreatorAI')
         method = next(node for node in cls.body
@@ -124,7 +124,7 @@ class TutorialWorldTeleportTests(unittest.TestCase):
             OTP_ZONE_ID_MANAGEMENT, ['setType'])
 
     def test_jail_exit_interest_points_to_the_islands_world(self):
-        source = (Path(__file__).parent / 'pirates/world/InteriorAreaBuilderAI.py').read_text()
+        source = (REPO_ROOT / 'pirates/world/InteriorAreaBuilderAI.py').read_text()
         cls = next(node for node in ast.parse(source).body
                    if isinstance(node, ast.ClassDef) and node.name == 'InteriorAreaBuilderAI')
         method = next(node for node in cls.body

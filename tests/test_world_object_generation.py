@@ -1,10 +1,10 @@
 import ast
-from pathlib import Path
 from types import SimpleNamespace
 import unittest
+from tests import REPO_ROOT
 
 
-ROOT = Path(__file__).parent / 'pirates/world'
+ROOT = REPO_ROOT / 'pirates/world'
 
 
 class GeneratedObject:
