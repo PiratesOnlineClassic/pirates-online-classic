@@ -327,7 +327,13 @@ class AstronInternalRepository(ConnectionRepository):
             return
 
         do = self.doId2do[doId]
-        self.removeDOFromTables(do)
+        if do.parentId is None:
+            # the object never received a location (e.g. the client left before
+            # it was placed), there is nothing to remove from the location tables...
+            del self.doId2do[doId]
+        else:
+            self.removeDOFromTables(do)
+
         do.delete()
         do.sendDeleteEvent()
 
