@@ -8,7 +8,6 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 class DistributedPCCannonAI(DistributedWeaponAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPCCannonAI')
 
-
     # the client starts reloading as soon as it fires, allow for some latency
     # before the next shot is requested (see DistributedPCCannon.startReload)...
     ReloadTolerance = 0.5
