@@ -210,6 +210,10 @@ class TestBandManager(BandTestBase):
         self.addAvatar(3, 'Liz')
         self.sender[0] = 1
         self.manager.requestInvite(99)
+        # 99 isn't on this district, and isn't online anywhere else either
+        avatarId, callback = self.air.getActivated.call_args[0]
+        self.assertEqual(avatarId, 99)
+        callback(99, False)
         self.manager.requestInvite(2)
         self.sender[0] = 3
         self.manager.requestInvite(2)
@@ -353,7 +357,7 @@ class TestBandManager(BandTestBase):
         # add a member from another district
         self.manager.handleBandRequest('addMember', 1, [[3, 1003, 'Liz', 50, 100]])
         self.assertTrue(self.manager.hasBand(3))
-        self.air.netMessenger.send.assert_any_call('bandAvatarBandId', [3, 300, band.bandId])
+        self.air.netMessenger.send.assert_any_call('bandAvatarBandId', [3, 300, band.bandId, 300])
         self.assertEqual(self.sentTo(self.manager, 1, 'requestOutCome')[-1], [3, BandConstance.outcome_ok])
 
         # the remote member's district is told about hp changes through the owner

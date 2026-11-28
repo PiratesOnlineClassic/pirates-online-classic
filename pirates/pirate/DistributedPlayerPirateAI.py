@@ -102,6 +102,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         # Let the guild manager know we've arrived on this district:
         self.air.guildManager.avatarOnline(self)
 
+        # Make sure the crew we arrived with still exists:
+        self.air.bandManager.verifyAvatarBandId(self)
+
     def generate(self):
         DistributedPlayerAI.generate(self)
         DistributedBattleAvatarAI.generate(self)

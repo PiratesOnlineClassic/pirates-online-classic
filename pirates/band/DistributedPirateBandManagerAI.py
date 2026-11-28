@@ -44,6 +44,11 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
     # on another district are still online
     MEMBER_ONLINE_CHECK_INTERVAL = 60.0
 
+    # The amount of time to wait for the district that owns an arriving avatar's
+    # band to confirm the avatar is still a member, before assuming that
+    # district has gone away and clearing the avatar's band
+    MEMBER_VERIFY_TIMEOUT = 15.0
+
     # Client bound fields which may be relayed to an avatar on another district
     RELAY_FIELDS = (
         'requestOutCome',
@@ -57,6 +62,7 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
         self.bands = {}
         self.avatar2band = {}
         self.invites = {}
+        self.remoteInvites = {}
         self.accountIds = {}
         self.nextBandId = 1
 
@@ -74,6 +80,11 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
         self.air.netMessenger.accept('bandRequest', self, self.handleBandRequest)
         self.air.netMessenger.accept('bandRelayToAvatar', self, self.handleRelayToAvatar)
         self.air.netMessenger.accept('bandAvatarBandId', self, self.handleAvatarBandId)
+        self.air.netMessenger.accept('bandInviteRequest', self, self.handleInviteRequest)
+        self.air.netMessenger.accept('bandInviteCancel', self, self.handleInviteCancel)
+        self.air.netMessenger.accept('bandInviteAccepted', self, self.handleInviteAccepted)
+        self.air.netMessenger.accept('bandVerifyMember', self, self.handleVerifyMember)
+        self.air.netMessenger.accept('bandVerifyMemberResp', self, self.handleVerifyMemberResp)
 
         taskMgr.doMethodLater(self.MEMBER_ONLINE_CHECK_INTERVAL, self.__checkMembersOnline,
             self.uniqueName('check-members-online'))
@@ -83,6 +94,11 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
         self.air.netMessenger.ignore('bandRequest', self)
         self.air.netMessenger.ignore('bandRelayToAvatar', self)
         self.air.netMessenger.ignore('bandAvatarBandId', self)
+        self.air.netMessenger.ignore('bandInviteRequest', self)
+        self.air.netMessenger.ignore('bandInviteCancel', self)
+        self.air.netMessenger.ignore('bandInviteAccepted', self)
+        self.air.netMessenger.ignore('bandVerifyMember', self)
+        self.air.netMessenger.ignore('bandVerifyMemberResp', self)
 
         for bandId in list(self.bands.keys()):
             self.removeBand(bandId)
@@ -244,6 +260,17 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
         if self.isAvatarInBand(avatar):
             return False
 
+        return self.addMemberToBand(managerId, self.getMemberInfo(avatar))
+
+    def addMemberToBand(self, managerId, memberInfo):
+        """
+        Same as addAvatarToBand, except the new member is described by it's member
+        info, so the new member's avatar may be on another district.
+        """
+
+        if self.hasBand(memberInfo[0]):
+            return False
+
         manager = self.air.doId2do.get(managerId)
         band = self.getBandFromAvatar(managerId)
         if band:
@@ -256,7 +283,7 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
         else:
             return False
 
-        self.addBandMember(band, self.getMemberInfo(avatar))
+        self.addBandMember(band, memberInfo)
         return True
 
     def d_setAvatarBandId(self, avatarId, bandManagerId, bandId):
@@ -272,14 +299,83 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
         datagram = field.aiFormatUpdate(avatarId, avatarId, self.air.ourChannel, [bandManagerId, bandId])
         self.air.send(datagram)
 
-        self.air.netMessenger.send('bandAvatarBandId', [avatarId, bandManagerId, bandId])
+        self.air.netMessenger.send('bandAvatarBandId', [avatarId, bandManagerId, bandId, self.doId])
 
-    def handleAvatarBandId(self, avatarId, bandManagerId, bandId):
+    def handleAvatarBandId(self, avatarId, bandManagerId, bandId, senderId):
         avatar = self.air.doId2do.get(avatarId)
         if not avatar or not hasattr(avatar, 'setBandId'):
             return
 
+        currentManagerId, currentBandId = avatar.getBandId()
+        if not bandManagerId and currentManagerId and currentManagerId != senderId:
+            # band ids from different band managers may arrive in any order, this
+            # avatar has since joined a band owned by another band manager and
+            # the clear is stale. The stale clear has also reached the avatar's
+            # state server object, so put the avatar's real band back.
+            self.notify.debug('Ignoring stale band clear for avatar %d from band manager %d.' % (
+                avatarId, senderId))
+
+            avatar.d_setBandId(currentManagerId, currentBandId)
+            return
+
         avatar.setBandId(bandManagerId, bandId)
+
+    def verifyAvatarBandId(self, avatar):
+        """
+        Called when an avatar arrives on this district. Makes sure the band the
+        avatar thinks it is in still exists, the avatar's band may have been
+        dissolved while it was changing district, or the district owning the
+        band may have shut down.
+        """
+
+        bandManagerId, bandId = avatar.getBandId()
+        if not bandManagerId:
+            return
+
+        if bandManagerId == self.doId:
+            band = self.getBand(bandId)
+            if not band or not band.getMember(avatar.doId):
+                avatar.b_setBandId(0, 0)
+                return
+
+            # the member has come back to the district that owns their band
+            taskMgr.remove(self.uniqueName('check-member-%d' % avatar.doId))
+            self.acceptAvatarDelete(avatar)
+            return
+
+        taskMgr.doMethodLater(self.MEMBER_VERIFY_TIMEOUT, self.__verifyMemberTimeout,
+            self.uniqueName('verify-member-%d' % avatar.doId), extraArgs=[avatar.doId, bandManagerId, bandId])
+
+        self.air.netMessenger.send('bandVerifyMember', [avatar.doId, bandManagerId, bandId])
+
+    def handleVerifyMember(self, avatarId, bandManagerId, bandId):
+        if bandManagerId != self.doId:
+            return
+
+        band = self.getBand(bandId)
+        isMember = band is not None and band.getMember(avatarId) is not None
+        self.air.netMessenger.send('bandVerifyMemberResp', [avatarId, bandManagerId, bandId, isMember])
+
+    def handleVerifyMemberResp(self, avatarId, bandManagerId, bandId, isMember):
+        if avatarId not in self.air.doId2do:
+            return
+
+        taskMgr.remove(self.uniqueName('verify-member-%d' % avatarId))
+        if not isMember:
+            self.clearStaleBandId(avatarId, bandManagerId, bandId)
+
+    def __verifyMemberTimeout(self, avatarId, bandManagerId, bandId):
+        self.notify.warning('Band manager %d never confirmed avatar %d is in band %d, '
+            'clearing the avatar\'s band.' % (bandManagerId, avatarId, bandId))
+
+        self.clearStaleBandId(avatarId, bandManagerId, bandId)
+
+    def clearStaleBandId(self, avatarId, bandManagerId, bandId):
+        avatar = self.air.doId2do.get(avatarId)
+        if not avatar or avatar.getBandId() != (bandManagerId, bandId):
+            return
+
+        avatar.b_setBandId(0, 0)
 
     def sendUpdateToAvatar(self, avatarId, fieldName, args):
         if avatarId in self.air.doId2do:
@@ -294,6 +390,10 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
 
         if avatarId not in self.air.doId2do:
             return
+
+        if fieldName == 'requestOutCome':
+            # the invitee's district has answered our avatar's invitation
+            self.clearRemoteInvite(avatarId, *args)
 
         self.sendUpdateToAvatarId(avatarId, fieldName, args)
 
@@ -340,6 +440,13 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
             if inviterId == avatarId:
                 del self.invites[inviteeId]
                 self.d_invitationCancel(inviteeId, avatarId)
+
+        for inviteeId, inviterId in list(self.remoteInvites.items()):
+            if inviterId == avatarId:
+                del self.remoteInvites[inviteeId]
+                self.air.netMessenger.send('bandInviteCancel', [avatarId, inviteeId])
+
+        taskMgr.remove(self.uniqueName('verify-member-%d' % avatarId))
 
         if not self.hasBand(avatarId):
             return
@@ -391,19 +498,6 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
 
             return
 
-        invitee = self.air.doId2do.get(avatarId)
-        if not invitee or not hasattr(invitee, 'getBandId'):
-            self.d_requestOutCome(inviterId, avatarId, BandConstance.outcome_not_online)
-            return
-
-        if avatarId in self.invites:
-            self.d_requestOutCome(inviterId, avatarId, BandConstance.outcome_already_invited)
-            return
-
-        if self.isAvatarInBand(invitee):
-            self.d_requestOutCome(inviterId, avatarId, BandConstance.outcome_already_in_Band)
-            return
-
         band = self.getBandFromAvatar(inviterId)
         if band:
             if band.managerId != inviterId:
@@ -414,13 +508,88 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
                 self.d_requestOutCome(inviterId, avatarId, BandConstance.outcome_full)
                 return
 
+        # the inviter may invite the same avatar on another district again, which
+        # is answered by that district should the first invitation still be pending
+        if avatarId in self.invites or self.remoteInvites.get(avatarId, inviterId) != inviterId:
+            self.d_requestOutCome(inviterId, avatarId, BandConstance.outcome_already_invited)
+            return
+
+        invitee = self.air.doId2do.get(avatarId)
+        if not invitee:
+            # crews are cross district, the invitee may be playing on another district
+            # (e.g. invited from the friends list), so ask the other districts.
+            self.acceptAvatarDelete(inviter)
+            self.remoteInvites[avatarId] = inviterId
+            self.air.getActivated(avatarId, lambda avatarId, activated, inviterId=inviterId:
+                self.__handleInviteeActivated(inviterId, inviter.getName(), avatarId, activated))
+
+            return
+
+        if not hasattr(invitee, 'getBandId'):
+            self.d_requestOutCome(inviterId, avatarId, BandConstance.outcome_not_online)
+            return
+
+        self.inviteAvatar(inviterId, inviter.getName(), invitee)
+
+    def __handleInviteeActivated(self, inviterId, inviterName, avatarId, activated):
+        if self.remoteInvites.get(avatarId) != inviterId:
+            # the invitation was cancelled while we were waiting
+            return
+
+        invitee = self.air.doId2do.get(avatarId)
+        if invitee:
+            # the invitee arrived on this district while we were waiting
+            del self.remoteInvites[avatarId]
+            self.inviteAvatar(inviterId, inviterName, invitee)
+            return
+
+        if not activated:
+            del self.remoteInvites[avatarId]
+            self.d_requestOutCome(inviterId, avatarId, BandConstance.outcome_not_online)
+            return
+
+        self.air.netMessenger.send('bandInviteRequest', [inviterId, inviterName, avatarId])
+
+    def handleInviteRequest(self, inviterId, inviterName, avatarId):
+        invitee = self.air.doId2do.get(avatarId)
+        if not invitee or not hasattr(invitee, 'getBandId'):
+            return
+
+        self.inviteAvatar(inviterId, inviterName, invitee)
+
+    def inviteAvatar(self, inviterId, inviterName, invitee):
+        """
+        Sends the invitation to the invitee, whom's avatar is on this district.
+        The inviter may be on any district.
+        """
+
+        avatarId = invitee.doId
+        if avatarId in self.invites:
+            self.d_requestOutCome(inviterId, avatarId, BandConstance.outcome_already_invited)
+            return
+
+        if self.isAvatarInBand(invitee):
+            self.d_requestOutCome(inviterId, avatarId, BandConstance.outcome_already_in_Band)
+            return
+
         self.invites[avatarId] = inviterId
-        self.acceptAvatarDelete(inviter)
+        inviter = self.air.doId2do.get(inviterId)
+        if inviter:
+            self.acceptAvatarDelete(inviter)
+
         self.acceptAvatarDelete(invitee)
-        self.d_invitationFrom(avatarId, inviterId, inviter.getName())
+        self.d_invitationFrom(avatarId, inviterId, inviterName)
 
     def requestCancel(self, avatarId):
         inviterId = self.air.getAvatarIdFromSender()
+        if self.remoteInvites.get(avatarId) == inviterId:
+            del self.remoteInvites[avatarId]
+            self.air.netMessenger.send('bandInviteCancel', [inviterId, avatarId])
+            return
+
+        self.handleInviteCancel(inviterId, avatarId)
+
+    def handleInviteCancel(self, inviterId, avatarId):
         if self.invites.get(avatarId) != inviterId:
             return
 
@@ -449,13 +618,34 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
             self.d_requestOutCome(avatarId, inviteeId, BandConstance.outcome_already_in_Band)
             return
 
-        inviter = self.air.doId2do.get(avatarId)
-        if not self.hasBand(avatarId) and (not inviter or self.isAvatarInBand(inviter)):
-            # the inviter's crew is owned by another district's band manager
-            self.sendBandRequest('addMember', avatarId, [self.getMemberInfo(invitee)])
+        memberInfo = self.getMemberInfo(invitee)
+        if self.canAddInvitedMember(avatarId):
+            self.handleAddMember(avatarId, memberInfo)
             return
 
-        self.handleAddMember(avatarId, self.getMemberInfo(invitee))
+        # the inviter's crew is owned by another district's band manager,
+        # or the inviter is on another district and has yet to start a crew.
+        self.air.netMessenger.send('bandInviteAccepted', [avatarId, memberInfo])
+
+    def canAddInvitedMember(self, managerId):
+        """
+        Returns True if this band manager is the one which should add an invited
+        avatar to the crew of the managerId. That is the band manager owning the
+        manager's crew, or the band manager on the district the manager is on
+        when the manager has yet to start a crew.
+        """
+
+        if self.hasBand(managerId):
+            return True
+
+        manager = self.air.doId2do.get(managerId)
+        return manager is not None and hasattr(manager, 'getBandId') and not self.isAvatarInBand(manager)
+
+    def handleInviteAccepted(self, managerId, memberInfo):
+        if not self.canAddInvitedMember(managerId):
+            return
+
+        self.handleAddMember(managerId, memberInfo)
 
     def handleAddMember(self, managerId, memberInfo):
         avatarId = memberInfo[0]
@@ -485,7 +675,16 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
         self.addBandMember(band, memberInfo)
         self.d_requestOutCome(managerId, avatarId, BandConstance.outcome_ok)
 
+    def clearRemoteInvite(self, inviterId, avatarId, responce):
+        if responce == BandConstance.outcome_already_invited:
+            # the first invitation is still pending
+            return
+
+        if self.remoteInvites.get(avatarId) == inviterId:
+            del self.remoteInvites[avatarId]
+
     def d_requestOutCome(self, inviterId, avatarId, responce):
+        self.clearRemoteInvite(inviterId, avatarId, responce)
         self.sendUpdateToAvatar(inviterId, 'requestOutCome', [avatarId, responce])
 
     def d_invitationFrom(self, inviteeId, avatarId, avatarName):

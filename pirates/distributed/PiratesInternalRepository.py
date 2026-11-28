@@ -54,6 +54,11 @@ class PiratesInternalRepository(OTPInternalRepository):
         self._registerInternalNetMessage('bandRequest')
         self._registerInternalNetMessage('bandRelayToAvatar')
         self._registerInternalNetMessage('bandAvatarBandId')
+        self._registerInternalNetMessage('bandInviteRequest')
+        self._registerInternalNetMessage('bandInviteCancel')
+        self._registerInternalNetMessage('bandInviteAccepted')
+        self._registerInternalNetMessage('bandVerifyMember')
+        self._registerInternalNetMessage('bandVerifyMemberResp')
 
         # DistributedMatchMaker
         self._registerInternalNetMessage('matchMakerCreateMatch')
