@@ -6,7 +6,7 @@ import random
 import gc
 import os
 from panda3d.core import *
-from panda3d.core import *
+from panda3d.direct import CConnectionRepository
 from direct.gui.DirectGui import *
 from otp.otpbase.OTPUtil import Enum
 from otp.distributed.OtpDoGlobals import *
@@ -369,9 +369,9 @@ class OTPClientRepository(ClientRepositoryBase):
             if downloadParFilename.exists():
                 downloadPar = open(downloadParFilename.toOsSpecific())
                 for line in downloadPar.readlines():
-                    i = string.find(line, 'VALIDATE_DOWNLOAD=')
+                    i = line.find('VALIDATE_DOWNLOAD=')
                     if i != -1:
-                        self.validateDownload = string.strip(line[i + 18:])
+                        self.validateDownload = line[i + 18:].strip()
                         break
 
     def getServerVersion(self):
@@ -1035,7 +1035,8 @@ class OTPClientRepository(ClientRepositoryBase):
         leakedIvals = self.detectLeakedIntervals()
         leakedGarbage = self.detectLeakedGarbage()
         if leakedTasks or leakedEvents or leakedIvals or leakedGarbage:
-            errorCode = base.getExitErrorCode()
+            # Panda 1.10's ShowBase has no launcher exit error code.
+            errorCode = base.getExitErrorCode() if hasattr(base, 'getExitErrorCode') else 0
             if errorCode >= OTPLauncherGlobals.NonErrorExitStateStart and errorCode <= OTPLauncherGlobals.NonErrorExitStateEnd:
                 logFunc = self.notify.warning
                 allowExit = True
@@ -1062,7 +1063,8 @@ class OTPClientRepository(ClientRepositoryBase):
             self.notify.warning('garbage already contains %d items' % len(gc.garbage))
 
         report = GarbageReport.GarbageReport('logout', verbose = True)
-        numItems = report.getNumItems()
+        # Panda 1.10's GarbageReport has no getNumItems(), it exposes numGarbage.
+        numItems = report.numGarbage
         if numItems:
             msg = "You can't leave until you take out your garbage. See report above & base.garbage"
             self.notify.info(msg)
@@ -1099,24 +1101,20 @@ class OTPClientRepository(ClientRepositoryBase):
             'clientSleep',
             'audioLoop',
             jobMgr.TaskName,
-            base.GarbageCollectTaskName]
+            getattr(base, 'GarbageCollectTaskName', 'garbageCollectStates')]
         if extraTasks is not None:
             allowedTasks.extend(extraTasks)
 
         problems = []
-        for taskPriList in taskMgr.taskList:
-            for task in taskPriList:
-                if task is None:
-                    continue
-                elif task.isRemoved():
-                    continue
-                elif task.name in allowedTasks:
-                    continue
-                else:
-                    if hasattr(task, 'debugInitTraceback'):
-                        print(task.debugInitTraceback)
+        # Panda 1.10's TaskManager has no taskList, only the C++ task manager's active tasks.
+        for task in taskMgr.getTasks():
+            if task.name in allowedTasks:
+                continue
+            else:
+                if hasattr(task, 'debugInitTraceback'):
+                    print(task.debugInitTraceback)
 
-                    problems.append(task.name)
+                problems.append(task.name)
 
         if problems:
             print(taskMgr)
