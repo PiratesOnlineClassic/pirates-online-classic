@@ -76,6 +76,9 @@ class FakeAvatar:
     def getName(self):
         return 'Pirate %d' % self.doId
 
+    def uniqueName(self, name):
+        return '%s-%d' % (name, self.doId)
+
 
 def makeAir(inventories, sender):
     avatars = dict((doId, FakeAvatar(doId)) for doId in inventories)
