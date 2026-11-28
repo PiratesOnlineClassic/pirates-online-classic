@@ -55,7 +55,7 @@ class NewsManagerAI(DistributedObjectAI):
                 holidayId = int(holidaySplit[0])
                 endTime = int(holidaySplit[1])
 
-                self.startHoliday(holidayId, time=endTime)
+                self.startHoliday(holidayId, endTime)
 
     def delete(self):
         taskMgr.remove(self.taskName('checkHolidays'))
@@ -84,26 +84,29 @@ class NewsManagerAI(DistributedObjectAI):
                 end = date.getEndTime(index)
                 if currentTime >= start and currentTime <= end:
                     remaining = end - currentTime
-                    self.startHoliday(holidayId, time=remaining)
+                    self.startHoliday(holidayId, remaining)
 
         return Task.again
 
     def __runHolidayTimer(self, task=None):
-        if len(self.holidayList) > 0:
-            for holiday in self.holidayList:
-                time = self.holidayList[holiday]
-                time -= 15
+        currentTime = time.time()
+        for holidayId, endTime in list(self.holidayList.items()):
+            if currentTime >= endTime:
+                self.endHoliday(holidayId)
 
-                self.holidayList[holiday] = time
-                if time <= 0:
-                    self.endHoliday(holiday)
+        return Task.again
 
-    def startHoliday(self, holidayId, time, quietly=False):
+    def getHolidayEndTime(self, holidayId):
+        return self.holidayList.get(holidayId, 0)
+
+    def startHoliday(self, holidayId, duration, quietly=False):
         if self.isHolidayActive(holidayId):
             return
 
         if holidayId not in self.holidayList:
-            self.holidayList[holidayId] = time
+            # Holidays are kept by the epoch time they end at, which is also
+            # what the client expects in its NewsItem list.
+            self.holidayList[holidayId] = int(time.time() + duration)
             self.notify.info('Holiday "%s" (%d) is starting!' % (HolidayGlobals.getHolidayName(holidayId), holidayId))
             self.air.netMessenger.send('uberDOGHolidayStarted', [holidayId, quietly])
             messenger.send('HolidayStarted', [holidayId])
@@ -148,14 +151,14 @@ class NewsManagerAI(DistributedObjectAI):
         self.sendUpdate('holidayNotify', [])
 
     def d_displayMessageToAvatar(self, avatarId, messageId):
-        self.sendUpdateToAvatar(avatarId, 'displayMessage', [messageId])
+        self.sendUpdateToAvatarId(avatarId, 'displayMessage', [messageId])
 
     def processTimeChange(self, cycleType, todState, stateTime):
         # Check if Jolly Rogers's curse is active
         #curseActive = self.isHolidayActive(PiratesGlobals.CURSEDNIGHT)
         #if curseActive and cycleType == PiratesGlobals.TOD_JOLLYCURSE_CYCLE:
         messageId = JollyCurseMessages.get(todState, None)
-        if messageId:
+        if messageId is not None:
             self.d_displayMessage(messageId)
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
@@ -164,11 +167,11 @@ def stopHoliday(holidayId):
     return 'Stopped Holiday %d' % holidayId
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, int])
-def startHoliday(holidayId, time):
-    base.air.newsManager.startHoliday(holidayId, time, True)
+def startHoliday(holidayId, duration):
+    base.air.newsManager.startHoliday(holidayId, duration, True)
     return 'Started Holiday %d' % holidayId
 
-@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, int])
+@magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def displayMessage(messageId):
     base.air.newsManager.d_displayMessage(messageId)
     return 'Sent message: %d' % messageId
