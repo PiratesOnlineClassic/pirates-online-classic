@@ -1,3 +1,4 @@
+from functools import cmp_to_key
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
 from panda3d.core import *
@@ -603,7 +604,7 @@ class BarberStoreGUI(DirectFrame):
                             cost,
                             holiday])
 
-        choices.sort(self.sortItems)
+        choices.sort(key=cmp_to_key(self.sortItems))
         for choice in choices:
             uid = choice[0]
             item = BarberGlobals.barber_id.get(uid)
