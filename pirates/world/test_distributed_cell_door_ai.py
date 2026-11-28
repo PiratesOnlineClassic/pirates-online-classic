@@ -7,13 +7,15 @@ from pirates.world.DistributedCellDoorAI import DistributedCellDoorAI
 
 class DistributedCellDoorAITests(unittest.TestCase):
     def setUp(self):
-        self.avatar = SimpleNamespace(doId=42)
+        self.avatar = SimpleNamespace(doId=42, parentId=7, getJailCellIndex=lambda: 0)
         self.door = DistributedCellDoorAI.__new__(DistributedCellDoorAI)
         self.door.air = SimpleNamespace(
             getAvatarIdFromSender=lambda: 42, doId2do={42: self.avatar})
         self.door.health = 100
         self.door.maxHealth = 100
         self.door.avatarId = 0
+        self.door.cellIndex = 0
+        self.door.parentId = 7
         self.door.sendUpdate = Mock()
         self.door.sendUpdateToAvatarId = Mock()
 

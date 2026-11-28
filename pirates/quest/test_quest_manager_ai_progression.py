@@ -311,7 +311,8 @@ class QuestProgressionTests(unittest.TestCase):
 
         manager = manager_module.QuestManagerAI(types.SimpleNamespace())
         dna = QuestDB.QuestDict['Chapter1.rung3']
-        avatar = types.SimpleNamespace(doId=1, getTutorial=lambda: 2, getQuestHistory=lambda: [])
+        avatar = types.SimpleNamespace(doId=1, getTutorial=lambda: 2, getQuestHistory=lambda: [],
+            getReturnLocation=lambda: '', b_setReturnLocation=Mock())
         quest = types.SimpleNamespace(
             doId=101, questId='Chapter1.rung3', questDNA=dna,
             getQuestDNA=lambda: dna, getQuestId=lambda: 'Chapter1.rung3',
@@ -350,7 +351,8 @@ class QuestProgressionTests(unittest.TestCase):
 
         manager = manager_module.QuestManagerAI(types.SimpleNamespace())
         dna = QuestDB.QuestDict['Chapter1.rung3']
-        avatar = types.SimpleNamespace(doId=1, getTutorial=lambda: 2, getQuestHistory=lambda: [])
+        avatar = types.SimpleNamespace(doId=1, getTutorial=lambda: 2, getQuestHistory=lambda: [],
+            getReturnLocation=lambda: '', b_setReturnLocation=Mock())
         quest = types.SimpleNamespace(
             doId=101, questId='Chapter1.rung3', questDNA=dna,
             getQuestDNA=lambda: dna, getQuestId=lambda: 'Chapter1.rung3',
