@@ -62,6 +62,12 @@ class DistributedInteractiveAI(DistributedNodeAI):
 
             return
 
+        # only the avatar using this object may stop using it, otherwise anyone
+        # could clear the user of an object that can only be used by one avatar...
+        if not self.MULTIUSE and self.userId and self.userId != avatar.doId:
+            self.d_rejectExit(avatar.doId)
+            return
+
         handle = self.handleRequestExit(avatar)
         if not handle:
             self.d_rejectExit(avatar.doId)
@@ -81,7 +87,18 @@ class DistributedInteractiveAI(DistributedNodeAI):
             self.notify.warning('Failed to demand exit for non-existant avatar!')
             return
 
-        self.b_setUserId(0)
+        # unlike requestExit this cannot be refused, but it may only
+        # be demanded by the avatar that is using this object...
+        if not self.MULTIUSE:
+            if self.userId != avatar.doId:
+                return
+
+            self.b_setUserId(0)
+        else:
+            self.sendUpdateToAvatarId(avatar.doId, 'setUserId', [0])
+
+        self.handlePostRequestExit(avatar)
+        messenger.send(avatar.uniqueName('interact-canceled'))
 
     def handleRequestExit(self, avatar):
         return self.DENY

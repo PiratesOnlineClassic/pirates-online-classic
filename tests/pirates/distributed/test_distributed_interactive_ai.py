@@ -48,6 +48,38 @@ class DistributedInteractiveAITests(unittest.TestCase):
         self.obj.handleRequestExit.assert_called_once_with(self.avatar)
         self.assertEqual(messenger.send.call_count, 2)
 
+    def test_another_avatar_cannot_clear_the_user(self):
+        self.obj.userId = 7
+        with patch('pirates.distributed.DistributedInteractiveAI.messenger',
+                   create=True) as messenger:
+            self.obj.requestExit()
+            self.obj.demandExit()
+
+        self.assertEqual(self.obj.userId, 7)
+        self.obj.sendUpdateToAvatarId.assert_called_once_with(42, 'rejectExit', [])
+        self.obj.handlePostRequestExit.assert_not_called()
+        messenger.send.assert_not_called()
+
+    def test_user_can_demand_exit(self):
+        self.obj.userId = 42
+        with patch('pirates.distributed.DistributedInteractiveAI.messenger',
+                   create=True) as messenger:
+            self.obj.demandExit()
+
+        self.assertEqual(self.obj.userId, 0)
+        self.obj.handlePostRequestExit.assert_called_once_with(self.avatar)
+        messenger.send.assert_called_once_with('interact-canceled-42')
+
+    def test_multiuse_exit_is_never_refused_for_another_user(self):
+        self.obj.MULTIUSE = True
+        self.obj.userId = 7
+        with patch('pirates.distributed.DistributedInteractiveAI.messenger',
+                   create=True) as messenger:
+            self.obj.requestExit()
+
+        self.obj.sendUpdateToAvatarId.assert_called_once_with(42, 'setUserId', [0])
+        messenger.send.assert_called_once_with('interact-canceled-42')
+
 
 if __name__ == '__main__':
     unittest.main()
