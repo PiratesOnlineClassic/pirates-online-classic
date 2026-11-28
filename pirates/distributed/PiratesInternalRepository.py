@@ -70,6 +70,12 @@ class PiratesInternalRepository(OTPInternalRepository):
         # DistributedTravelAgent
         self._registerInternalNetMessage('unregisterShard')
 
+        # DistributedCrewMatch
+        self._registerInternalNetMessage('crewMatchCrewAdd')
+        self._registerInternalNetMessage('crewMatchCrewRemove')
+        self._registerInternalNetMessage('crewMatchJoinRequest')
+        self._registerInternalNetMessage('crewMatchJoinResponse')
+
     def logPotentialHacker(self, message, kickChannel=False, **kwargs):
         self.notify.warning(message)
 
