@@ -173,7 +173,8 @@ class BattleNPCAITests(unittest.TestCase):
 class BattleNPCGameFSMAITests(unittest.TestCase):
     def makeFSM(self, attackers=()):
         fsm = BattleNPCGameFSMAI.__new__(BattleNPCGameFSMAI)
-        avatar = SimpleNamespace(doId=1000, currentTarget=None, isTargetValid=lambda target: bool(target and target.alive))
+        avatar = SimpleNamespace(doId=1000, currentTarget=None, isTargetValid=lambda target: bool(target and target.alive),
+            getSkillEffectIds=lambda: [])
         avatar.b_setCurrentTarget = Mock()
         avatar.getSpawnNode = Mock(return_value=None)
         avatar.uniqueName = lambda name: '%s-1000' % name

@@ -54,6 +54,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     # received the skill's result from us...
     RechargeTolerance = 1.0
 
+    # how long the avatar shows it's charge being interrupted
+    InterruptedDuration = 1
+
     # weapons that every avatar may use, even when they are not in the
     # avatar's inventory; the combat tray falls back to the avatar's fists
     # when the avatar has not been given any weapons yet...
@@ -665,6 +668,12 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             self.notify.debug('Avatar %d sent unknown interrupt effect %d!' % (
                 self.doId, effectId))
 
+            return
+
+        # the other clients show the avatar being interrupted, see
+        # DistributedBattleAvatar.addStatusEffect...
+        self.addSkillEffect(WeaponGlobals.C_INTERRUPTED, self.InterruptedDuration, self.doId)
+
     def requestUseSkill(self, skillId, index):
         pass
 
@@ -1078,8 +1087,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return avId in self.stickyTargets
 
     def requestRemoveStickyTargets(self, doIdList):
+        # the doll's attunement leaves the target as well...
         for targetDoId in doIdList:
-            self.removeStickyTarget(targetDoId)
+            self.air.battleMgr.unattuneTarget(self, targetDoId)
 
     def setDefaultShard(self, defaultShard):
         self.defaultShard = defaultShard
@@ -1310,6 +1320,12 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         jollyCurseMgr = getattr(self.air, 'jollyCurseMgr', None)
         if jollyCurseMgr:
             jollyCurseMgr.avatarLeft(self)
+
+        # the targets our doll was attuned to are no longer attuned...
+        for targetDoId in list(self.stickyTargets):
+            target = self.air.doId2do.get(targetDoId)
+            if target and hasattr(target, 'removeSkillEffect'):
+                target.removeSkillEffect(WeaponGlobals.C_ATTUNE, self.doId)
 
         self.air.targetMgr.clearAttacker(self)
         self.air.worldGridManager.clearAvatarInterests(self)

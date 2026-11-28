@@ -88,6 +88,7 @@ def makePlayer(doId=100, inventory=None, weaponId=InventoryType.CutlassWeaponL1,
     player.maxMojo = 100
     player.zombie = 0
     player.skillRechargeTimes = {}
+    player.skillEffects = []
     player.inventory = inventory or FakeInventory()
     player.getInventory = lambda: player.inventory
     player.isPaid = Mock(return_value=True)
@@ -366,7 +367,9 @@ class WeaponBaseTests(unittest.TestCase):
 
         WeaponBaseAI.requestTargetedSkill(avatar, InventoryType.GrenadeThrow, 0, 0, 200, [200, 201], 0, [0, 0, 0], 0)
         avatar.air.battleMgr.requestSkillUse.assert_called_once_with(avatar, InventoryType.GrenadeThrow, 0)
-        self.assertEqual(avatar.useTargetedSkill.call_count, 3)
+
+        # one result covers the target and all of it's area targets
+        self.assertEqual(avatar.useTargetedSkill.call_count, 1)
 
     def test_rejected_targeted_skill_has_no_result(self):
         avatar = self.makeWeaponBase(makePlayer(), allowed=False)
@@ -379,7 +382,8 @@ class WeaponBaseTests(unittest.TestCase):
         avatar.air.battleMgr.getTargetedSkillResult.return_value = [1, 2, 0, 0, [5], [0] * 5, [0] * 5, [], 3, [0, 0, 0], 0]
         avatar.sendUpdate = Mock()
         WeaponBaseAI.useProjectileSkill(avatar, avatar, None, 1, 2, 0, 0, [5], [1, 2, 3], [0, 0, 1], [], 4)
-        avatar.air.battleMgr.getTargetedSkillResult.assert_called_once_with(avatar, None, 1, 2, [5], 4, [1, 2, 3])
+        avatar.air.battleMgr.getTargetedSkillResult.assert_called_once_with(avatar, None, 1, 2, [5], 4, [1, 2, 3],
+            clientResult=0)
         self.assertEqual(avatar.sendUpdate.call_args[0][1][4], [5])
 
 

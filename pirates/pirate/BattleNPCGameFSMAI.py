@@ -21,6 +21,9 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
     # how fast npcs walk between the movement nodes of their patrol route
     WAYPOINT_WALK_SPEED = 8.0
 
+    # how long a stunned enemy waits before trying to attack again
+    StunnedAttackDelay = 0.5
+
     def __init__(self, air, avatar):
         BattleAvatarGameFSMAI.__init__(self, air, avatar)
 
@@ -237,6 +240,11 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             if not self.findNewAttackTarget():
                 self.demand('BreakCombat')
                 return task.done
+
+        # stunned enemies cannot attack until the stun wears off...
+        if WeaponGlobals.C_STUN in self.avatar.getSkillEffectIds():
+            task.setDelay(self.StunnedAttackDelay)
+            return task.again
 
         # choose a random skill to attack the player with
         baseSkills = EnemyGlobals.getBaseSkills(self.avatar.avatarType)
@@ -487,7 +495,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
         # remove attune if we have a voodoo weapon
         if WeaponGlobals.isVoodooWeapon(self.avatar.currentWeaponId) and self.avatar.currentTarget:
-            self.avatar.currentTarget.removeSkillEffect(WeaponGlobals.C_ATTUNE)
+            self.avatar.currentTarget.removeSkillEffect(WeaponGlobals.C_ATTUNE, self.avatar.doId)
 
         self.avatar.stopLookAt()
 

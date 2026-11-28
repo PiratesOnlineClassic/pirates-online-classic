@@ -1,6 +1,4 @@
 import random
-import time
-import collections
 
 from panda3d.core import *
 
@@ -12,28 +10,14 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.battle import WeaponGlobals
 from pirates.battle import EnemyGlobals
 from pirates.battle import LootGlobals
-from pirates.battle import WeaponConstants
 from pirates.uberdog import UberDogGlobals
 from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
 from pirates.battle.ComboDiaryAI import ComboDiaryAI
 from pirates.piratesbase import Freebooter
 from pirates.pirate import AvatarTypes
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
-from pirates.piratesbase import Freebooter
+from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.interact.DistributedInteractivePropAI import DistributedInteractivePropAI
-
-
-class PendingSkillEffect(object):
-
-    def __init__(self, effectId, skillId, ammoSkillId, duration, attacker, target):
-        self.effectId = effectId
-        self.skillId = skillId
-        self.ammoSkillId = ammoSkillId
-        self.duration = duration
-        self.timestamp = time.time()
-
-        self.attacker = attacker
-        self.target = target
 
 
 class BattleManagerAI(BattleManagerBase):
@@ -64,12 +48,6 @@ class BattleManagerAI(BattleManagerBase):
 
     def __init__(self, air):
         self.air = air
-
-        self._pendingSkillEffects = collections.deque()
-        self._removedPendingSkillEffects = collections.deque()
-
-        self.__updateSkillEffectsTask = taskMgr.doMethodLater(1.0, self._updateSkillEffects,
-            'BattleManagerAI-updateSkillEffects')
 
     def getTargetInRange(self, attacker, target, skillId, ammoSkillId):
         tolerance = 0
@@ -128,6 +106,11 @@ class BattleManagerAI(BattleManagerBase):
             WeaponGlobals.getIsCannonSkill(skillId)
 
     def canUseSkill(self, avatar, skillId, ammoSkillId):
+        # stunned avatars cannot use any skill, see CombatTray.trySkill...
+        if WeaponGlobals.C_STUN in self.getSkillEffectIds(avatar):
+            self.notify.debug('Avatar %d cannot use skill %d while stunned!' % (avatar.doId, skillId))
+            return False
+
         if self.isPlayerSkillHandledElsewhere(skillId):
             return True
 
@@ -266,9 +249,35 @@ class BattleManagerAI(BattleManagerBase):
 
         return friendlyFire
 
-    def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge=0):
+    def advanceAttackSeed(self, avatar):
+        # the attacking client advances the attacker's battle random once for every
+        # attack it predicts (see BattleManager.doAttack) and then rolls the attack's
+        # accuracy and damage in a fixed order. advancing it once per request here
+        # as well gives the exact same rolls, so the damage the client displays is
+        # the damage we deal...
+        battleRandom = getattr(avatar, 'battleRandom', None)
+        if battleRandom:
+            battleRandom.advanceAttackSeed()
+
+    def resyncBattleRandom(self, avatar):
+        # the client advances it's battle random for attacks it never sends us
+        # (e.g. on friendly targets), once the results we roll differ from the
+        # client's both sides are reset to the avatar's initial seed...
+        battleRandom = getattr(avatar, 'battleRandom', None)
+        if not battleRandom:
+            return
+
+        battleRandom.resync()
+        if isinstance(avatar, DistributedPlayerPirateAI):
+            avatar.sendUpdateToAvatarId(avatar.doId, 'battleRandomSync', [])
+
+    def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge=0,
+                               clientResult=None):
         if not avatar:
             return None
+
+        # every attack the client requests was rolled with a newly advanced seed...
+        self.advanceAttackSeed(avatar)
 
         # tonics are used on the avatar itself and may be used without
         # any weapon drawn, they never effect the avatar's area targets...
@@ -308,16 +317,116 @@ class BattleManagerAI(BattleManagerBase):
         # the skill's ammo and mojo were spent when the skill was requested,
         # see requestSkillUse...
 
-        # this is just the client requesting an action for the skill used,
-        # they are not actually attacking any kind of target...
-        if not target:
-            return self._otherSkillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
+        # the client requested a valid skill result, calculate the result for
+        # the skill's target and all of it's area targets and send it back...
+        return self._skillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge, clientResult)
 
-        # the client requested a valid skill result, attempt to calculate
-        # the result for the client and send the result back...
-        return self._skillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
+    def canAttackTarget(self, avatar, target, skillId, ammoSkillId):
+        # ensure the avatar that has sent this skill request obeys
+        # the pirate code and can use the weapon on the target...
+        if not self.obeysPirateCode(avatar, target):
+            self.notify.debug('Cannot get skill result for avatar %d, '
+                'does not obey pirate code!' % (avatar.doId))
 
-    def _skillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge):
+            return False
+
+        # pvp instances decide which players may damage one another...
+        if isinstance(avatar, DistributedPlayerPirateAI) and isinstance(target, DistributedPlayerPirateAI):
+            world = target.getWorld()
+            if world and world.getType() == PiratesGlobals.INSTANCE_PVP:
+                if not WeaponGlobals.isFriendlyFire(skillId, ammoSkillId):
+                    if not world.isDamageAllowed(avatar, target):
+                        return False
+
+                    world.avatarAttacked(avatar, target)
+            elif not WeaponGlobals.isFriendlyFire(skillId, ammoSkillId):
+                if not self.isPlayerDamageAllowed(avatar, target):
+                    self.notify.debug('Cannot get skill result for avatar %d, '
+                        'cannot damage player %d outside of pvp!' % (avatar.doId, target.doId))
+
+                    return False
+
+        return True
+
+    def isAreaTargetValid(self, avatar, target, skillId, ammoSkillId):
+        # the client only lists the targets around the skill's target, see
+        # WeaponBaseBase.getAreaList; the attacker is only listed when the
+        # skill damages it's own user...
+        if target is avatar:
+            return bool(WeaponGlobals.isAttackAreaSelfDamaging(skillId, ammoSkillId))
+
+        if isinstance(target, DistributedInteractivePropAI):
+            return True
+
+        if target.getHp()[0] <= 0:
+            return False
+
+        if WeaponGlobals.getIsDollAttackSkill(skillId):
+            # hexes only effect the targets the doll is attuned to...
+            if isinstance(avatar, DistributedPlayerPirateAI) and not avatar.hasStickyTarget(target.doId):
+                return False
+        elif not self.isInSkillArea(avatar, target, skillId, ammoSkillId):
+            return False
+
+        return self.canAttackTarget(avatar, target, skillId, ammoSkillId)
+
+    # the leeway given to the area of a skill, positions are not exact...
+    AreaTolerance = WeaponGlobals.AI_AOE_RANGE_TOLERANCE * 2
+
+    def isInSkillArea(self, avatar, target, skillId, ammoSkillId):
+        if WeaponGlobals.getAttackAreaShape(skillId, ammoSkillId) == WeaponGlobals.AREA_OFF:
+            return False
+
+        attackRange = self.getModifiedAttackRange(avatar, skillId, ammoSkillId)
+        if attackRange == WeaponGlobals.INF_RANGE:
+            return True
+
+        # the area is centered around the skill's target which is within the skill's
+        # range, or spans the skill's range for tubes and cones...
+        maxDistance = attackRange + self.getModifiedAttackAreaRadius(avatar, skillId, ammoSkillId) + self.AreaTolerance
+        return self.getRelativePosition(avatar, target) <= maxDistance
+
+    def getAttackResult(self, avatar, target, skillId, ammoSkillId, areaIdList, charge):
+        # mirrors the client's prediction, see BattleManager.doAttack...
+        spawnProtected = target is not None and WeaponGlobals.C_SPAWN in self.getSkillEffectIds(target)
+        if spawnProtected and not WeaponGlobals.getIsShipSkill(skillId) and not WeaponGlobals.getIsDollAttackSkill(skillId):
+            return WeaponGlobals.RESULT_MISS
+
+        skillResult = self.willWeaponHit(avatar, target, skillId, ammoSkillId, charge)
+        if skillResult == WeaponGlobals.RESULT_NOT_AVAILABLE:
+            return skillResult
+
+        if not WeaponGlobals.getNeedTarget(skillId, ammoSkillId):
+            return WeaponGlobals.RESULT_HIT
+
+        if not target and not areaIdList:
+            return WeaponGlobals.RESULT_MISS
+
+        if target is not None:
+            # enemies breaking combat are returning to their spawn and cannot be hit...
+            gameFSM = getattr(target, 'gameFSM', None)
+            if getattr(target, 'isNpc', False) and gameFSM and gameFSM.getCurrentOrNextState() == 'BreakCombat':
+                return WeaponGlobals.RESULT_MISS
+
+            if spawnProtected:
+                return WeaponGlobals.RESULT_MISS
+
+        return skillResult
+
+    # the results the client predicts by rolling the battle random...
+    RolledResults = (
+        WeaponGlobals.RESULT_MISS,
+        WeaponGlobals.RESULT_HIT,
+        WeaponGlobals.RESULT_PARRY,
+        WeaponGlobals.RESULT_DODGE,
+        WeaponGlobals.RESULT_RESIST)
+
+    # the results of attacks the client already knows never landed...
+    ClientMissedResults = (
+        WeaponGlobals.RESULT_OUT_OF_RANGE,
+        WeaponGlobals.RESULT_AGAINST_PIRATE_CODE)
+
+    def _skillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge, clientResult=None):
         currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
         if not isWeaponDrawn:
             self.notify.debug('Cannot get skill result for avatar %d, '
@@ -333,67 +442,80 @@ class BattleManagerAI(BattleManagerBase):
                 self.notify.warning('Freebooter (%d) attempted to use paid weapon (%d)' % (avatar.doId, currentWeaponId))
                 return None
 
-        # ensure the avatar that has sent this skill request obeys
-        # the pirate code and can use the weapon on the target...
-        obeysPirateCode = self.obeysPirateCode(avatar, target)
-        if not obeysPirateCode:
+        if target is not None and not self.canAttackTarget(avatar, target, skillId, ammoSkillId):
+            return None
+
+        # the client lists at most MAX_AREA_TARGETS area targets, see WeaponBaseBase.getAreaList...
+        areaTargets = []
+        for areaId in list(areaIdList)[:WeaponGlobals.MAX_AREA_TARGETS]:
+            if target is not None and areaId == target.doId:
+                continue
+
+            areaTarget = self.air.doId2do.get(areaId)
+            if isinstance(areaTarget, (DistributedBattleAvatarAI, DistributedInteractivePropAI)):
+                areaTargets.append(areaTarget)
+
+        # this is just the client requesting an action for the skill used,
+        # they are not actually attacking any kind of target...
+        if target is None and not areaTargets:
+            return self._otherSkillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
+
+        # roll the attack in the same order the attacking client does, see
+        # BattleManager.doAttack and LocalPirate.composeRequestTargetedSkill...
+        skillResult = self.getAttackResult(avatar, target, skillId, ammoSkillId, areaTargets, charge)
+        if skillResult == WeaponGlobals.RESULT_NOT_AVAILABLE:
             self.notify.debug('Cannot get skill result for avatar %d, '
-                'does not obey pirate code!' % (avatar.doId))
+                'skill %d result was not available!' % (avatar.doId, skillId))
 
             return None
 
-        # pvp instances decide which players may damage one another...
-        if isinstance(avatar, DistributedPlayerPirateAI) and isinstance(target, DistributedPlayerPirateAI):
-            world = target.getWorld()
-            if world and world.getType() == PiratesGlobals.INSTANCE_PVP:
-                if not WeaponGlobals.isFriendlyFire(skillId, ammoSkillId):
-                    if not world.isDamageAllowed(avatar, target):
-                        return None
+        primaryTarget = target
+        if primaryTarget is None and isinstance(getattr(avatar, 'currentTarget', None), DistributedBattleAvatarAI):
+            primaryTarget = avatar.currentTarget
 
-                    world.avatarAttacked(avatar, target)
-            elif not WeaponGlobals.isFriendlyFire(skillId, ammoSkillId):
-                if not self.isPlayerDamageAllowed(avatar, target):
-                    self.notify.debug('Cannot get skill result for avatar %d, '
-                        'cannot damage player %d outside of pvp!' % (avatar.doId, target.doId))
+        attackerEffects, targetEffects = self.getModifiedSkillEffects(avatar, primaryTarget, skillId, ammoSkillId, charge)
+        if target is None:
+            targetEffects = [0, 0, 0, 0, 0]
 
-                    return None
+        resultAreaIdList = []
+        areaIdEffects = []
+        areaHits = []
+        for areaTarget in areaTargets:
+            areaEffects = self.getModifiedSkillEffects(avatar, areaTarget, skillId, ammoSkillId, charge)[1]
+            if not self.isAreaTargetValid(avatar, areaTarget, skillId, ammoSkillId):
+                continue
 
-        skillResult = self.willWeaponHit(avatar, target, skillId, ammoSkillId, charge)
-        distance = self.getRelativePosition(avatar, target)
+            resultAreaIdList.append(areaTarget.doId)
+            areaIdEffects.append(areaEffects)
+            areaHits.append((areaTarget, areaEffects))
+
+        if clientResult in self.RolledResults and skillResult in self.RolledResults and clientResult != skillResult:
+            self.notify.debug('Avatar %d rolled %d for skill %d, we rolled %d!' % (
+                avatar.doId, clientResult, skillId, skillResult))
+
+            self.resyncBattleRandom(avatar)
+        elif clientResult in self.ClientMissedResults:
+            # the client never displayed the attack landing...
+            skillResult = clientResult
+
         timestamp = globalClockDelta.getRealNetworkTime(bits=32)
+        hitTargets = [target] if target is not None else []
+        hitTargets += [areaTarget for areaTarget, areaEffects in areaHits]
+        for hitTarget in hitTargets:
+            # check to see if our dictionary of target to attacker data contains this attacker,
+            # if not we will assume this is a new attacker to the target and assign them accordingly...
+            if hitTarget is avatar or isinstance(hitTarget, DistributedInteractivePropAI):
+                continue
 
-        # check to see if our dictionary of target to attacker data contains this attacker,
-        # if not we will assume this is a new attacker to the target and assign them accordingly...
-        if not self.air.targetMgr.hasTarget(avatar.doId) and not self.air.targetMgr.hasAttacker(avatar.doId, target.doId):
-            self.air.targetMgr.addAttacker(avatar, target)
+            if not self.air.targetMgr.hasTarget(avatar.doId) and not self.air.targetMgr.hasAttacker(avatar.doId, hitTarget.doId):
+                self.air.targetMgr.addAttacker(avatar, hitTarget)
 
         # add the skill info to the attackers battle skill diary to track
         # what skills they have used and when...
         if not avatar.battleSkillDiary.hasSkill(skillId):
             avatar.battleSkillDiary.addSkill(timestamp, skillId, ammoSkillId)
 
-        # calculate the moddified skill result for this skill, add this including
-        # the attack data according to which ever weapon the avatar is using...
-        if WeaponGlobals.isBladedWeapon(currentWeaponId):
-            attackerEffects, targetEffects = self.getModifiedSkillEffectsSword(avatar, target, skillId, ammoSkillId, charge, distance)
-        else:
-            attackerEffects, targetEffects = self.getModifiedSkillEffects(avatar, target, skillId, ammoSkillId, charge, distance)
-
-        areaIdEffects = [
-            attackerEffects,
-            targetEffects
-        ]
-
-        if skillResult == WeaponGlobals.RESULT_NOT_AVAILABLE:
-            self.notify.debug('Cannot get skill result for avatar %d, '
-                'skill %d result was not available!' % (avatar.doId, skillId))
-
-            return None
-        elif skillResult == WeaponGlobals.RESULT_MISS:
-            pass
-        elif skillResult == WeaponGlobals.RESULT_DODGE:
-            pass
-        elif skillResult in [WeaponGlobals.RESULT_HIT, WeaponGlobals.RESULT_PARRY, WeaponGlobals.RESULT_RESIST]:
+        if skillResult in (WeaponGlobals.RESULT_HIT, WeaponGlobals.RESULT_PARRY, WeaponGlobals.RESULT_RESIST):
             # update this skills current reputation, this will eventually add up
             # and all skills used will be rewarded reputation...
             skillData = avatar.battleSkillDiary.getSkill(skillId)
@@ -401,8 +523,8 @@ class BattleManagerAI(BattleManagerBase):
                 return None
 
             # only update the experience for avatar's, enemies do not need experience...
-            if isinstance(avatar, DistributedPlayerPirateAI):
-                experience = self.getModifiedAttackReputation(avatar, target, skillId, ammoSkillId)
+            if isinstance(avatar, DistributedPlayerPirateAI) and hitTargets:
+                experience = self.getModifiedAttackReputation(avatar, hitTargets[0], skillId, ammoSkillId)
                 if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEXPHOLIDAY) or avatar.hasTempDoubleXPReward():
                     experience *= 2
                 elif self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEXPHOLIDAYPAID) and avatar.isPaid():
@@ -410,73 +532,66 @@ class BattleManagerAI(BattleManagerBase):
 
                 skillData[2] += experience
 
-            # check to see if the avatar knows of any skills that are valid combos,
-            # recent attacks are measured within a certain time frame...
-            totalCombo, totalDamage, numAttackers = avatar.comboDiary.getCombo()
-            if totalCombo and numAttackers > 1:
-                # apply the combo damage including the combo bonus damage to the
-                # target, then broadcast the combo info to all targets with interest...
-                targetEffects[0] = totalDamage + WeaponGlobals.getComboBonus(numAttackers)
-                target.b_setCombo(totalCombo, numAttackers, targetEffects[0], avatar.doId)
+        if skillResult == WeaponGlobals.RESULT_HIT:
+            if target is not None:
+                # check to see if the avatar knows of any skills that are valid combos,
+                # recent attacks are measured within a certain time frame...
+                totalCombo, totalDamage, numAttackers = avatar.comboDiary.getCombo()
+                if totalCombo and numAttackers > 1:
+                    # apply the combo damage including the combo bonus damage to the
+                    # target, then broadcast the combo info to all targets with interest...
+                    targetEffects[0] = totalDamage + WeaponGlobals.getComboBonus(numAttackers)
+                    target.b_setCombo(totalCombo, numAttackers, targetEffects[0], avatar.doId)
 
-            # update the avatar's combo diary so we can determine if any other attacks
-            # made by avatars attacking the avatar's current target is a combo...
-            for attackerDoId in self.air.targetMgr.getAttackers(target.doId):
-                attacker = self.air.doId2do.get(attackerDoId)
-                if not attacker:
-                    continue
+                # update the avatar's combo diary so we can determine if any other attacks
+                # made by avatars attacking the avatar's current target is a combo...
+                for attackerDoId in self.air.targetMgr.getAttackers(target.doId):
+                    attacker = self.air.doId2do.get(attackerDoId)
+                    if not attacker:
+                        continue
 
-                attacker.comboDiary.recordAttack(avatar.doId, skillId, targetEffects[0])
+                    attacker.comboDiary.recordAttack(avatar.doId, skillId, targetEffects[0])
 
-            # players have already spent the mojo this skill costs, when the
-            # skill was requested. don't charge them for it a second time...
-            appliedAttackerEffects = attackerEffects
-            if isinstance(avatar, DistributedPlayerPirateAI) and attackerEffects[3] < 0:
-                appliedAttackerEffects = list(attackerEffects)
-                appliedAttackerEffects[3] = 0
+                self.applySkillHit(avatar, target, targetEffects, skillId, ammoSkillId)
 
-            # when the skill result is parry, this means that we've reversed the
-            # attack our attacker has done to us onto them
-            appliedTargetEffects = targetEffects
-            if skillResult == WeaponGlobals.RESULT_PARRY:
-                prevTargetEffects = targetEffects
-                prevAttackerEffects = attackerEffects
+            for areaTarget, areaEffects in areaHits:
+                self.applySkillHit(avatar, areaTarget, areaEffects, skillId, ammoSkillId)
 
-                targetEffects = prevAttackerEffects
-                attackerEffects = prevTargetEffects
+        # the attacking client displays the skill's effects on it's user no matter
+        # the result (see LocalPirate.composeRequestTargetedSkill), players have
+        # already spent the mojo this skill costs when the skill was requested...
+        appliedAttackerEffects = list(attackerEffects)
+        if isinstance(avatar, DistributedPlayerPirateAI) and appliedAttackerEffects[3] < 0:
+            appliedAttackerEffects[3] = 0
 
-                appliedTargetEffects = appliedAttackerEffects
-                appliedAttackerEffects = prevTargetEffects
-
-            # apply the target effects to both the target and attacker
-            self.applyTargetEffects(target, appliedTargetEffects)
+        if skillResult in self.RolledResults and avatar.getHp()[0] > 0:
             self.applyTargetEffects(avatar, appliedAttackerEffects)
 
-            # add skill effects for both attacker and target, this will also
-            # check to see if the attacker or target can be damaged...
-            self.applySkillEffect(target, targetEffects, avatar, skillId, ammoSkillId)
-            self.applySkillEffect(avatar, attackerEffects, avatar, skillId, ammoSkillId)
+        return [skillId, ammoSkillId, skillResult, target.doId if target is not None else 0, resultAreaIdList,
+            attackerEffects, targetEffects, areaIdEffects, timestamp, pos, charge]
 
+    def applySkillHit(self, avatar, target, targetEffects, skillId, ammoSkillId):
+        # handle interactive props
+        if isinstance(target, DistributedInteractivePropAI):
+            target.d_propSlashed()
+            return
+
+        self.applyTargetEffects(target, targetEffects)
+
+        effectId = targetEffects[2]
+        if effectId == WeaponGlobals.C_ATTUNE:
             # check to see if the skill used by the avatar was the doll attuning effect,
             # and that the avatar's current weapon is infact an doll weapon...
-            if WeaponGlobals.isVoodooWeapon(currentWeaponId) and skillId == InventoryType.DollAttune:
-                avatar.addStickyTarget(target.doId)
-
-                # set the target's skill effect so that the attuning effect is
-                # present, this will also set the avatar's local attune list...
-                target.addSkillEffect(WeaponGlobals.C_ATTUNE, 0, avatar.doId)
-
-            # handle interactive props
-            if isinstance(target, DistributedInteractivePropAI):
-                target.d_propSlashed()
+            if skillId == InventoryType.DollAttune and WeaponGlobals.isVoodooWeapon(avatar.currentWeaponId):
+                self.attuneTarget(avatar, target)
+        elif effectId == WeaponGlobals.C_BUFF_BREAK:
+            self.breakHostileSkillEffects(target)
         else:
-            self.notify.debug('Cannot get skill result for avatar %d, '
-                'unknown skill result %d for skill %d!' % (avatar.doId, skillResult, skillId))
+            self.applySkillEffect(target, effectId, avatar, skillId, ammoSkillId)
 
-            return None
-
-        return [skillId, ammoSkillId, skillResult, target.doId, areaIdList, attackerEffects, targetEffects,
-            areaIdEffects, timestamp, pos, charge]
+        # some skills shatter the target's voodoo attunements...
+        if WeaponGlobals.getSkillUnattune(skillId):
+            self.shatterAttunements(avatar, target, skillId, ammoSkillId)
 
     def _otherSkillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge):
         # since this skill doesn't have a target we cannot set an effect for it,
@@ -495,11 +610,6 @@ class BattleManagerAI(BattleManagerBase):
             0,
             0]
 
-        areaIdEffects = [
-            attackerEffects,
-            targetEffects
-        ]
-
         if skillId == InventoryType.UseItem:
             if ammoSkillId in UberDogGlobals.InventoryType.Potions:
                 if not avatar.useTonic(ammoSkillId):
@@ -512,8 +622,8 @@ class BattleManagerAI(BattleManagerBase):
 
                 return None
 
-        return [skillId, ammoSkillId, WeaponGlobals.RESULT_HIT, 0, areaIdList, attackerEffects, targetEffects,
-            areaIdEffects, timestamp, pos, charge]
+        return [skillId, ammoSkillId, WeaponGlobals.RESULT_HIT, 0, [], attackerEffects, targetEffects,
+            [], timestamp, pos, charge]
 
     def applyTargetEffects(self, target, targetEffects):
         if not target.getDamagable():
@@ -523,37 +633,109 @@ class BattleManagerAI(BattleManagerBase):
         if target.getAvatarType() == AvatarTypes.Monkey:
             return
 
-        target.b_setHp(max(0, min(target.getHp()[0] + targetEffects[0], target.getMaxHp())))
-        target.b_setPower(max(0, min(target.getPower() + targetEffects[1], target.getMaxPower())))
-        target.b_setLuck(max(0, min(target.getLuck() + targetEffects[2], target.getMaxLuck())))
-        target.b_setMojo(max(0, min(target.getMojo() + targetEffects[3], target.getMaxMojo())))
-        target.b_setSwiftness(max(0, min(target.getSwiftness() + targetEffects[4], target.getMaxSwiftness())))
+        # the third effect is the skill's effect id (see WeaponGlobals.getAttackEffects),
+        # luck is never changed by a skill...
+        hp, power, effectId, mojo, swiftness = targetEffects
+        if hp:
+            target.b_setHp(max(0, min(target.getHp()[0] + int(hp), target.getMaxHp())))
 
-    def appendSkillEffect(self, pendingSkillEffect):
-        if pendingSkillEffect in self._pendingSkillEffects:
-            return
+        if power:
+            target.b_setPower(max(0, min(target.getPower() + int(power), target.getMaxPower())))
 
-        self._pendingSkillEffects.append(pendingSkillEffect)
+        if mojo:
+            target.b_setMojo(max(0, min(target.getMojo() + int(mojo), target.getMaxMojo())))
 
-    def removePendingSkillEffect(self, effectId):
-        if effectId in self._removedPendingSkillEffects:
-            return
+        if swiftness:
+            target.b_setSwiftness(max(0, min(target.getSwiftness() + int(swiftness), target.getMaxSwiftness())))
 
-        if effectId == WeaponGlobals.C_ATTUNE:
-            return
+    # the skill effect flags which are status effects the client's buff tray
+    # and status visuals know of (see BuffIcon.buffTable), the other flags
+    # only modify the attack itself (see BattleManagerBase.getModifiedSkillEffects)...
+    StatusEffects = (
+        WeaponGlobals.C_FLAMING,
+        WeaponGlobals.C_ON_FIRE,
+        WeaponGlobals.C_WOUND,
+        WeaponGlobals.C_POISON,
+        WeaponGlobals.C_ACID,
+        WeaponGlobals.C_REGEN,
+        WeaponGlobals.C_STUN,
+        WeaponGlobals.C_UNSTUN,
+        WeaponGlobals.C_SLOW,
+        WeaponGlobals.C_PAIN,
+        WeaponGlobals.C_HOLD,
+        WeaponGlobals.C_BLIND,
+        WeaponGlobals.C_DIRT,
+        WeaponGlobals.C_TAUNT,
+        WeaponGlobals.C_CURSE,
+        WeaponGlobals.C_HASTEN,
+        WeaponGlobals.C_WEAKEN)
 
-        self._removedPendingSkillEffects.append(effectId)
+    # the status effects which deal their effects every time they recur,
+    # see WeaponGlobals.getEffects and getAttackRecur...
+    RecurringEffects = (
+        WeaponGlobals.C_FLAMING,
+        WeaponGlobals.C_ON_FIRE,
+        WeaponGlobals.C_WOUND,
+        WeaponGlobals.C_POISON,
+        WeaponGlobals.C_ACID,
+        WeaponGlobals.C_REGEN)
 
-    def getPendingSkillEffect(self, effectId):
-        for pendingSkillEffect in list(self._pendingSkillEffects):
-            if pendingSkillEffect.effectId == effectId:
-                return pendingSkillEffect
+    # the status effects a cure removes from it's target, everything but the
+    # defensive buffs (see WeaponGlobals.getIsDefensiveBuff)...
+    HostileEffects = (
+        WeaponGlobals.C_FLAMING,
+        WeaponGlobals.C_ON_FIRE,
+        WeaponGlobals.C_WOUND,
+        WeaponGlobals.C_POISON,
+        WeaponGlobals.C_ACID,
+        WeaponGlobals.C_STUN,
+        WeaponGlobals.C_SLOW,
+        WeaponGlobals.C_PAIN,
+        WeaponGlobals.C_HOLD,
+        WeaponGlobals.C_BLIND,
+        WeaponGlobals.C_DIRT,
+        WeaponGlobals.C_TAUNT,
+        WeaponGlobals.C_CURSE,
+        WeaponGlobals.C_WEAKEN)
 
-        return None
+    # the effect durations shortened by the grenade's ignore pain passive,
+    # see the skill's description in PLocalizer.SkillDescriptions...
+    IgnorePainEffects = (WeaponGlobals.C_STUN, WeaponGlobals.C_SLOW)
 
-    def applySkillEffect(self, target, targetEffects, attacker, skillId, ammoSkillId):
-        targetEffectId = targetEffects[2]
-        if not targetEffectId or targetEffectId == WeaponGlobals.C_ATTUNE:
+    def getSkillRank(self, avatar, skillId):
+        if not skillId or not isinstance(avatar, DistributedPlayerPirateAI):
+            return 0
+
+        inventory = avatar.getInventory()
+        if not inventory:
+            return 0
+
+        # an avatar's skill rank is it's skill point stack minus one, see SkillPage...
+        return max(0, inventory.getStackQuantity(skillId) - 1)
+
+    def getSkillEffectDuration(self, attacker, target, effectId, skillId, ammoSkillId):
+        duration = WeaponGlobals.getAttackDuration(skillId, ammoSkillId)
+        if duration <= 0:
+            return duration
+
+        # every rank past the first lengthens the effect by a quarter of it's
+        # duration (see SkillButton.createHelpFrame). the ammo's effect replaces
+        # the skill's effect, see WeaponGlobals.getAttackEffects...
+        rank = self.getSkillRank(attacker, ammoSkillId or skillId)
+        if rank > 1:
+            duration += duration * (rank - 1) / 4.0
+
+        if effectId in self.IgnorePainEffects:
+            rank = self.getSkillRank(target, InventoryType.GrenadeIgnorePain)
+            if rank:
+                reduction = WeaponGlobals.getAttackDuration(InventoryType.GrenadeIgnorePain)
+                reduction += reduction * (rank - 1) / 4.0
+                duration *= max(0.0, 1.0 - reduction)
+
+        return duration
+
+    def applySkillEffect(self, target, effectId, attacker, skillId, ammoSkillId):
+        if effectId not in self.StatusEffects:
             return
 
         if isinstance(target, DistributedInteractivePropAI):
@@ -564,86 +746,82 @@ class BattleManagerAI(BattleManagerBase):
         if target.getAvatarType() == AvatarTypes.Monkey:
             return
 
-        effectAttackDuration = WeaponGlobals.getAttackDuration(skillId, ammoSkillId)
-        maxEffectStack = WeaponGlobals.getBuffStackNumber(targetEffectId)
-        if not target.getDamagable():
+        if not target.getDamagable() or target.getHp()[0] <= 0:
             return
 
-        # make sure the avatar does not already have too many of these skill effects applied
-        if target.getSkillEffectCount(targetEffectId) >= maxEffectStack:
+        # stun immunity
+        if effectId == WeaponGlobals.C_STUN and target.hasSkillEffect(WeaponGlobals.C_UNSTUN):
             return
 
-        # add the skill effect to the avatar's list of skill effects which will be sent to the client
-        target.addSkillEffect(targetEffectId, effectAttackDuration, attacker.doId)
+        duration = self.getSkillEffectDuration(attacker, target, effectId, skillId, ammoSkillId)
+        if duration <= 0:
+            return
 
-        # store a pending skill effect so we can apply it's effects to the target,
-        # and remove the skill effect from the target when it expires:
-        pendingSkillEffect = PendingSkillEffect(targetEffectId, skillId, ammoSkillId, effectAttackDuration, attacker, target)
-        self.appendSkillEffect(pendingSkillEffect)
+        # the client shows one buff per effect and attacker, the same attacker
+        # renews it's effect. make sure the avatar does not already have too many
+        # of these skill effects applied...
+        attackerIds = target.getSkillEffectAttackers(effectId)
+        if attacker.doId not in attackerIds and len(attackerIds) >= WeaponGlobals.getBuffStackNumber(effectId):
+            return
 
-    def _updateSkillEffect(self, pendingSkillEffect):
-        assert(pendingSkillEffect is not None)
+        recur = 0
+        if effectId in self.RecurringEffects:
+            recur = WeaponGlobals.getAttackRecur(skillId, ammoSkillId)
 
-        attacker = pendingSkillEffect.attacker
-        assert(attacker is not None)
+        target.addSkillEffect(effectId, duration, attacker.doId, recur)
 
-        target = pendingSkillEffect.target
-        assert(target is not None)
+    def applySkillEffectTick(self, target, effectId, attackerId):
+        # damage over time effects deal their effects every time they recur...
+        effects = WeaponGlobals.getEffects(effectId)
+        if effects and target.getHp()[0] > 0:
+            self.applyTargetEffects(target, effects)
 
-        if target.getHp()[0] <= 0:
-            target.b_setSkillEffects([])
-            return False
+    def breakHostileSkillEffects(self, target):
+        if not hasattr(target, 'removeSkillEffect'):
+            return
 
-        # check to see if the skill effect has expired
-        currentTime = globalClockDelta.getFrameNetworkTime()
-        if time.time() - pendingSkillEffect.timestamp >= pendingSkillEffect.duration:
-            target.removeSkillEffect(pendingSkillEffect.effectId)
-            return False
+        for effectId in self.HostileEffects:
+            target.removeSkillEffect(effectId)
 
-        if pendingSkillEffect.effectId in [WeaponConstants.C_FLAMING,
-                                           WeaponConstants.C_ON_FIRE,
-                                           WeaponConstants.C_WOUND,
-                                           WeaponConstants.C_ACID,
-                                           WeaponConstants.C_POISON,
-                                           WeaponConstants.C_REGEN,
-                                           WeaponConstants.C_STUN,
-                                           WeaponConstants.C_HOLD]:
+    def getMaxAttunedTargets(self, avatar):
+        # every rank of attune allows the doll to be attuned to another target,
+        # see the skill's description in PLocalizer.SkillDescriptions...
+        return max(1, self.getSkillRank(avatar, InventoryType.DollAttune))
 
-            skillEffects = WeaponGlobals.getEffects(pendingSkillEffect.effectId)
-            self.applyTargetEffects(target, skillEffects)
-        else:
-            try:
-                skillEffects = self.getModifiedSkillEffects(attacker, target, pendingSkillEffect.skillId, pendingSkillEffect.ammoSkillId)
-            except:
-                return False
+    def attuneTarget(self, avatar, target):
+        if isinstance(avatar, DistributedPlayerPirateAI) and not avatar.hasStickyTarget(target.doId):
+            stickyTargets = list(avatar.getStickyTargets())
+            while stickyTargets and len(stickyTargets) >= self.getMaxAttunedTargets(avatar):
+                self.unattuneTarget(avatar, stickyTargets.pop(0))
 
-            if skillEffects is not None:
-                self.applyTargetEffects(target, skillEffects[0])
+        if hasattr(avatar, 'addStickyTarget'):
+            avatar.addStickyTarget(target.doId)
 
-        return True
+        # set the target's skill effect so that the attuning effect is
+        # present, this will also set the avatar's local attune list...
+        target.addSkillEffect(WeaponGlobals.C_ATTUNE, 0, avatar.doId)
 
-    def _updateSkillEffects(self, task):
-        for _ in range(len(self._removedPendingSkillEffects)):
-            effectId = self._removedPendingSkillEffects.popleft()
-            assert(effectId != WeaponGlobals.C_ATTUNE)
+    def unattuneTarget(self, avatar, targetDoId):
+        if hasattr(avatar, 'removeStickyTarget'):
+            avatar.removeStickyTarget(targetDoId)
 
-            pendingSkillEffect = self.getPendingSkillEffect(effectId)
-            if pendingSkillEffect is not None:
-                target = pendingSkillEffect.target
-                assert(target is not None)
+        target = self.air.doId2do.get(targetDoId)
+        if target and hasattr(target, 'removeSkillEffect'):
+            target.removeSkillEffect(WeaponGlobals.C_ATTUNE, avatar.doId)
 
-                if pendingSkillEffect in self._pendingSkillEffects:
-                    self._pendingSkillEffects.remove(pendingSkillEffect)
-                    target.removeSkillEffect(pendingSkillEffect.effectId)
+    def shatterAttunements(self, attacker, target, skillId, ammoSkillId):
+        if not isinstance(target, DistributedPlayerPirateAI) or not target.getStickyTargets():
+            return
 
-        for _ in range(len(self._pendingSkillEffects)):
-            pendingSkillEffect = self._pendingSkillEffects.popleft()
-            assert(pendingSkillEffect is not None)
+        if target.hasSkillEffect(WeaponGlobals.C_VOODOO_STUN_LOCK):
+            return
 
-            if self._updateSkillEffect(pendingSkillEffect):
-                self._pendingSkillEffects.append(pendingSkillEffect)
+        for targetDoId in list(target.getStickyTargets()):
+            self.unattuneTarget(target, targetDoId)
 
-        return task.again
+        # the client shows the attunements shattering, see DistributedBattleAvatar.addStatusEffect...
+        duration = max(1, WeaponGlobals.getAttackDuration(skillId, ammoSkillId))
+        target.addSkillEffect(WeaponGlobals.C_VOODOO_STUN, duration, attacker.doId)
 
     def updateTarget(self, targetId, attackers):
         target = self.air.doId2do.get(targetId)
@@ -698,9 +876,8 @@ class BattleManagerAI(BattleManagerBase):
         assert(attacker is not None)
 
         # remove the doll attuning when out of range.
-        if attacker.hasStickyTarget(target.doId):
-            attacker.removeSkillEffect(WeaponGlobals.C_ATTUNE)
-            attacker.removeStickyTarget(target.doId)
+        if hasattr(attacker, 'hasStickyTarget') and attacker.hasStickyTarget(target.doId):
+            self.unattuneTarget(attacker, target.doId)
 
         # clear the avatar's skill diaries
         attacker.battleSkillDiary.clear()

@@ -49,6 +49,11 @@ class CreatureGameFSMAI(BattleNPCGameFSMAI):
             task.setDelay(WeaponGlobals.SHORT_DELAY)
             return task.again
 
+        # stunned creatures cannot attack until the stun wears off...
+        if WeaponGlobals.C_STUN in self.avatar.getSkillEffectIds():
+            task.setDelay(self.StunnedAttackDelay)
+            return task.again
+
         # since we cannot move closer to our target, we can only use the skills
         # that will actually reach it; if none do then just wait for the
         # target to move back into our range...

@@ -12,10 +12,19 @@ from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.battle.BattleRandom import BattleRandom
 from pirates.battle.BattleSkillDiaryAI import BattleSkillDiaryAI
+from pirates.battle import WeaponConstants
 
 
 class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleAvatarAI')
+
+    # how often the avatar's skill effects recur and expire
+    SkillEffectsUpdateInterval = 0.5
+
+    # slowed avatars move at half their speed and hastened avatars move at one and
+    # a half their speed (see PLocalizer.HastenDesc), see LocalPirate.updatePlayerSpeed...
+    SlowStunMod = -0.5
+    HastenHasteMod = 0.5
 
     def __init__(self, air):
         DistributedReputationAvatarAI.__init__(self, air)
@@ -55,6 +64,9 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.teamCombo = 0
         self.comboDamage = 0
         self.skillEffects = []
+        self._skillEffectTimers = {}
+        self._skillEffectsTask = None
+        self._skillEffectImmobilized = False
         self.ensnaredTargetId = 0
         self.level = 0
 
@@ -377,8 +389,28 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
     def getSwiftnessMod(self):
         return self.swiftnessMod
 
+    def setHasteMod(self, hasteMod):
+        self.hasteMod = hasteMod
+
+    def d_setHasteMod(self, hasteMod):
+        self.sendUpdate('setHasteMod', [hasteMod])
+
+    def b_setHasteMod(self, hasteMod):
+        self.setHasteMod(hasteMod)
+        self.d_setHasteMod(hasteMod)
+
     def getHasteMod(self):
         return self.hasteMod
+
+    def setStunMod(self, stunMod):
+        self.stunMod = stunMod
+
+    def d_setStunMod(self, stunMod):
+        self.sendUpdate('setStunMod', [stunMod])
+
+    def b_setStunMod(self, stunMod):
+        self.setStunMod(stunMod)
+        self.d_setStunMod(stunMod)
 
     def getStunMod(self):
         return self.stunMod
@@ -425,31 +457,54 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
         return False
 
-    def addSkillEffect(self, effectId, duration, attackerId):
-        timestamp = globalClockDelta.getRealNetworkTime(bits=16)
-        skillEffect = [
+    def getSkillEffectTime(self):
+        return globalClock.getFrameTime()
+
+    def addSkillEffect(self, effectId, duration, attackerId, recur=0):
+        # the client keys it's buffs by their effect and attacker, it only reads
+        # a buff's duration and timestamp when the buff first appears. renewing
+        # an effect removes the old buff first so the buff tray restarts it...
+        if self.__removeSkillEffectEntries(effectId, attackerId):
+            self.d_setSkillEffects(self.skillEffects)
+
+        # buff durations are sent in whole seconds (int16), their timestamps
+        # are 16 bit network times, see BuffIcon.updateIconInfo...
+        self.skillEffects.append([
             effectId,
-            duration,
-            timestamp,
-            attackerId]
+            max(-32768, min(32767, int(duration))),
+            globalClockDelta.getRealNetworkTime(bits=16),
+            attackerId])
 
-        self.skillEffects.append(skillEffect)
+        now = self.getSkillEffectTime()
+        expireTime = now + duration if duration > 0 else None
+        nextTickTime = now + recur if recur > 0 else None
+        self._skillEffectTimers[(effectId, attackerId)] = [expireTime, nextTickTime, recur]
+
         self.d_setSkillEffects(self.skillEffects)
+        self.updateSkillEffectMods()
+        self.__startSkillEffectsTask()
 
-    def removeSkillEffect(self, effectId):
-        if not self.hasSkillEffect(effectId):
+    def __removeSkillEffectEntries(self, effectId, attackerId=None):
+        removed = False
+        for skillEffect in list(self.skillEffects):
+            if skillEffect[0] != effectId:
+                continue
+
+            if attackerId is not None and skillEffect[3] != attackerId:
+                continue
+
+            self.skillEffects.remove(skillEffect)
+            self._skillEffectTimers.pop((skillEffect[0], skillEffect[3]), None)
+            removed = True
+
+        return removed
+
+    def removeSkillEffect(self, effectId, attackerId=None):
+        if not self.__removeSkillEffectEntries(effectId, attackerId):
             return
 
-        for skillEffect in list(self.skillEffects):
-            if skillEffect[0] == effectId:
-                self.skillEffects.remove(skillEffect)
-
-                # attempt to remove the skill effect from the battle manager's
-                # deque of pending skill effects:
-                self.air.battleMgr.removePendingSkillEffect(effectId)
-                break
-
         self.d_setSkillEffects(self.skillEffects)
+        self.updateSkillEffectMods()
 
     def getSkillEffectCount(self, effectId):
         numSkillEffects = 0
@@ -459,12 +514,18 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
         return numSkillEffects
 
+    def getSkillEffectAttackers(self, effectId):
+        return [skillEffect[3] for skillEffect in self.skillEffects if skillEffect[0] == effectId]
+
     def clearSkillEffects(self):
-        for skillEffect in list(self.skillEffects):
-            self.air.battleMgr.removePendingSkillEffect(skillEffect[0])
+        self.__stopSkillEffectsTask()
+        self._skillEffectTimers = {}
+        if not self.skillEffects:
+            return
 
         self.skillEffects = []
         self.d_setSkillEffects(self.skillEffects)
+        self.updateSkillEffectMods()
 
     def getSkillEffects(self):
         return self.skillEffects
@@ -478,6 +539,83 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
                 effectIds.append(skillEffect[0])
 
         return effectIds
+
+    def __startSkillEffectsTask(self):
+        if self._skillEffectsTask or not self._skillEffectTimers:
+            return
+
+        self._skillEffectsTask = taskMgr.doMethodLater(self.SkillEffectsUpdateInterval,
+            self.__updateSkillEffectsTask, self.taskName('updateSkillEffects'))
+
+    def __stopSkillEffectsTask(self):
+        if self._skillEffectsTask:
+            taskMgr.remove(self._skillEffectsTask)
+            self._skillEffectsTask = None
+
+    def __updateSkillEffectsTask(self, task):
+        self.updateSkillEffects(self.getSkillEffectTime())
+        if not self._skillEffectTimers:
+            self._skillEffectsTask = None
+            return task.done
+
+        return task.again
+
+    def updateSkillEffects(self, now):
+        # defeated avatars lose all of their effects...
+        if self.hp <= 0:
+            self.clearSkillEffects()
+            return
+
+        expired = []
+        for key, timer in list(self._skillEffectTimers.items()):
+            expireTime, nextTickTime, recur = timer
+
+            # damage over time effects deal their effects every time they recur
+            # until they expire, see BattleManagerAI.applySkillEffectTick...
+            while nextTickTime is not None and nextTickTime <= now and (expireTime is None or nextTickTime <= expireTime):
+                self.air.battleMgr.applySkillEffectTick(self, key[0], key[1])
+                if self._skillEffectTimers.get(key) is not timer:
+                    break
+
+                nextTickTime += recur
+                timer[1] = nextTickTime
+
+            if self._skillEffectTimers.get(key) is not timer:
+                continue
+
+            if expireTime is not None and now >= expireTime:
+                expired.append(key)
+
+        removed = False
+        for effectId, attackerId in expired:
+            removed = self.__removeSkillEffectEntries(effectId, attackerId) or removed
+
+        if removed:
+            self.d_setSkillEffects(self.skillEffects)
+            self.updateSkillEffectMods()
+
+    def updateSkillEffectMods(self):
+        # the client moves it's avatar at the speed these mods give, see
+        # LocalPirate.updatePlayerSpeed. stuns and holds take all of the avatar's
+        # swiftness away (see WeaponGlobals.getEffects), until they expire...
+        effectIds = self.getSkillEffectIds()
+        immobilized = WeaponConstants.C_STUN in effectIds or WeaponConstants.C_HOLD in effectIds
+        if immobilized and not self._skillEffectImmobilized:
+            self._skillEffectImmobilized = True
+            if self.swiftness > 0:
+                self.b_setSwiftness(0)
+        elif not immobilized and self._skillEffectImmobilized:
+            self._skillEffectImmobilized = False
+            if self.swiftness < self.maxSwiftness:
+                self.b_setSwiftness(self.maxSwiftness)
+
+        stunMod = self.SlowStunMod if WeaponConstants.C_SLOW in effectIds else 0
+        if stunMod != self.stunMod:
+            self.b_setStunMod(stunMod)
+
+        hasteMod = self.HastenHasteMod if WeaponConstants.C_HASTEN in effectIds else 0
+        if hasteMod != self.hasteMod:
+            self.b_setHasteMod(hasteMod)
 
     def setEnsnaredTargetId(self, ensnaredTargetId):
         self.ensnaredTargetId = ensnaredTargetId
@@ -512,7 +650,9 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         return self.avatarType.isA(AvatarTypes.BossType)
 
     def delete(self):
-        self.clearSkillEffects()
+        self.__stopSkillEffectsTask()
+        self._skillEffectTimers = {}
+        self.skillEffects = []
         if self.battleRandom:
             self.battleRandom.delete()
             self.battleRandom = None
