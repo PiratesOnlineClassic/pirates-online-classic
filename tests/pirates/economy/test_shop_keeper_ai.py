@@ -62,7 +62,8 @@ class ShopKeeperAITests(unittest.TestCase):
 
     def setUp(self):
         self.avatar = types.SimpleNamespace(doId=1000, isPaid=lambda: True,
-            b_setHairHair=Mock(), b_setHairBeard=Mock(), b_setHairMustache=Mock(), b_setHairColor=Mock())
+            b_setHairHair=Mock(), b_setHairBeard=Mock(), b_setHairMustache=Mock(), b_setHairColor=Mock(),
+            d_spentSkillPoint=Mock())
         self.inventory = FakeInventory()
         self.air = Mock()
         self.air.getAvatarIdFromSender.return_value = self.avatar.doId
@@ -421,6 +422,7 @@ class ShopKeeperAITests(unittest.TestCase):
 
         self.assertTrue(self.shop.isRespecOption(InteractGlobals.RESPEC_CUTLASS))
         self.assertTrue(self.shop.handleRespec(self.avatar, self.inventory, InteractGlobals.RESPEC_CUTLASS))
+        self.avatar.d_spentSkillPoint.assert_called_once_with(InventoryType.CutlassRep)
 
         # starting skills are reset to their first rank, the rest are locked again
         self.assertEqual(self.inventory.getStackQuantity(InventoryType.CutlassHack), 2)

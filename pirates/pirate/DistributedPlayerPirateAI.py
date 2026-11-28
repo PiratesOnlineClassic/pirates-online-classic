@@ -798,66 +798,17 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.d_spentSkillPoint(skillId)
 
     def resetSkillPoints(self, repId):
-        # the client asks to reset the skills of a weapon when the avatar
-        # buys a respec from a trainer, see DistributedNPCTownfolk.respecTransaction...
+        # the client sends this alongside the respec option it selects on the
+        # trainer (DistributedNPCTownfolk.respecTransaction), the trainer charges
+        # for and performs the respec so only the request is checked here...
         if not self._isSenderSelf('resetSkillPoints', skillId=repId):
             return
 
-        inventory = self.getInventory()
-        if not inventory:
-            self.notify.debug('Cannot reset skill points of %d for avatar %d, '
-                'no inventory present' % (repId, self.doId))
-
-            return
-
-        numRespecId = getNumRespecType(repId)
-        if repId not in self.SkillTracks or numRespecId is None:
+        if repId not in self.SkillTracks or getNumRespecType(repId) is None:
             self.air.logPotentialHacker(
                 message='Attempted to reset the skill points of an invalid weapon',
                 targetAvId=self.doId,
                 repId=repId)
-
-            return
-
-        numRespecs = inventory.getStackQuantity(numRespecId)
-        goldCost = EconomyGlobals.getRespecCost(numRespecs)
-        if inventory.getGoldInPocket() < goldCost:
-            self.notify.debug('Avatar %d cannot afford to reset the skill points of %d!' % (
-                self.doId, repId))
-
-            return
-
-        # every skill trained is reset to it's unlocked rank, the starting
-        # skills keep their first rank, see SkillPage.respec...
-        begin, end, unspentId = self.SkillTracks[repId]
-        refundedPoints = 0
-        resetSkills = []
-        for skillId in range(begin, end):
-            if skillId in InventoryType.DontResetSkills:
-                continue
-
-            resetQuantity = 1
-            if skillId in InventoryType.StartingSkills:
-                resetQuantity = 2
-
-            skillQuantity = inventory.getStackQuantity(skillId)
-            if skillQuantity > resetQuantity:
-                refundedPoints += skillQuantity - resetQuantity
-                resetSkills.append((skillId, resetQuantity))
-
-        if not refundedPoints:
-            self.notify.debug('Avatar %d has no skill points of %d to reset!' % (
-                self.doId, repId))
-
-            return
-
-        inventory.setGoldInPocket(inventory.getGoldInPocket() - goldCost)
-        for skillId, resetQuantity in resetSkills:
-            inventory.b_setStackQuantity(skillId, resetQuantity)
-
-        inventory.b_setStackQuantity(unspentId, inventory.getStackQuantity(unspentId) + refundedPoints)
-        inventory.b_setStackQuantity(numRespecId, numRespecs + 1)
-        self.d_spentSkillPoint(repId)
 
     def d_spentSkillPoint(self, category):
         self.sendUpdateToAvatarId(self.doId, 'spentSkillPoint', [category])

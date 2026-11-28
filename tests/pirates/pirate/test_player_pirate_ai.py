@@ -329,38 +329,14 @@ class RespecTests(unittest.TestCase):
             InventoryType.CutlassSweep: 3,
             InventoryType.CutlassCleave: 1})
 
-    def test_respec_refunds_skill_points(self):
+    def test_reset_request_alone_does_not_respec(self):
+        # the trainer performs and charges for the respec when its option is selected,
+        # see tests/pirates/npc/test_townfolk_respec_ai.py...
         player = self.makeTrainedPlayer()
         player.resetSkillPoints(InventoryType.CutlassRep)
-
-        inventory = player.inventory
-        self.assertEqual(inventory.getStackQuantity(InventoryType.CutlassHack), 2)
-        self.assertEqual(inventory.getStackQuantity(InventoryType.CutlassSlash), 2)
-        self.assertEqual(inventory.getStackQuantity(InventoryType.CutlassSweep), 1)
-        self.assertEqual(inventory.getStackQuantity(InventoryType.CutlassCleave), 1)
-        self.assertEqual(inventory.getStackQuantity(InventoryType.UnspentCutlass), 5)
-        self.assertEqual(inventory.getStackQuantity(InventoryType.NumRespecCutlass), 1)
-        self.assertEqual(inventory.getGoldInPocket(), 750)
-        player.sendUpdateToAvatarId.assert_called_with(player.doId, 'spentSkillPoint', [InventoryType.CutlassRep])
-
-    def test_respec_cost_increases(self):
-        player = self.makeTrainedPlayer(gold=3000)
-        player.inventory.stacks[InventoryType.NumRespecCutlass] = 1
-        player.resetSkillPoints(InventoryType.CutlassRep)
-        self.assertEqual(player.inventory.getGoldInPocket(), 500)
-        self.assertEqual(player.inventory.getStackQuantity(InventoryType.NumRespecCutlass), 2)
-
-    def test_respec_requires_gold(self):
-        player = self.makeTrainedPlayer(gold=100)
-        player.resetSkillPoints(InventoryType.CutlassRep)
         self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassHack), 4)
-        self.assertEqual(player.inventory.getGoldInPocket(), 100)
-
-    def test_respec_without_trained_skills_is_free(self):
-        player = makePlayer(stacks={InventoryType.GoldInPocket: 1000, InventoryType.CutlassHack: 2})
-        player.resetSkillPoints(InventoryType.CutlassRep)
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.UnspentCutlass), 1)
         self.assertEqual(player.inventory.getGoldInPocket(), 1000)
-        self.assertEqual(player.inventory.getStackQuantity(InventoryType.NumRespecCutlass), 0)
 
     def test_respec_of_invalid_weapon_is_rejected(self):
         player = self.makeTrainedPlayer()

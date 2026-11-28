@@ -1439,6 +1439,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
         inventory.b_setStackQuantity(unspentId, inventory.getStackQuantity(unspentId) + refund)
         inventory.b_setStackQuantity(numRespecType, numRespecs + 1)
+        avatar.d_spentSkillPoint(weaponRep)
 
         # Log transaction for analytics and GM purposes
         self.logShopkeepTransaction(
