@@ -15,8 +15,6 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     def __init__(self, air):
         DistributedBattleAvatarAI.__init__(self, air)
 
-        self.gameFSM = BattleNPCGameFSMAI(self.air, self)
-
         self.name = ''
         self.spawnPos = [0, 0, 0]
         self.animSet = ''
@@ -26,6 +24,9 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         self.vehicleDoId = 0
 
         self.spawnNode = None
+
+    def createGameFSM(self):
+        return BattleNPCGameFSMAI(self.air, self)
 
     def generate(self):
         DistributedBattleAvatarAI.generate(self)

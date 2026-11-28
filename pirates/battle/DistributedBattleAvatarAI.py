@@ -22,7 +22,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         WeaponBaseAI.__init__(self, air)
         Teamable.__init__(self)
 
-        self.gameFSM = BattleAvatarGameFSMAI(self.air, self)
+        self.gameFSM = self.createGameFSM()
         self.isNpc = True
         self.battleRandom = None
 
@@ -60,6 +60,9 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
         self.currentTarget = None
         self.weapon = None
+
+    def createGameFSM(self):
+        return BattleAvatarGameFSMAI(self.air, self)
 
     def announceGenerate(self):
         DistributedReputationAvatarAI.announceGenerate(self)
