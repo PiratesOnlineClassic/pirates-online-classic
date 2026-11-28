@@ -69,7 +69,8 @@ def msgpack_encode(dg, element):
         for k,v in element.items():
             msgpack_encode(dg, k)
             msgpack_encode(dg, v)
-    elif isinstance(element, list):
+    elif isinstance(element, (list, tuple)):
+        # MsgPack only has arrays, tuples are sent as arrays too:
         msgpack_length(dg, len(element), 0x90, 0x10, None, 0xdc, 0xdd)
         for v in element:
             msgpack_encode(dg, v)
@@ -104,7 +105,7 @@ def msgpack_encode(dg, element):
         dg.addUint8(0xcb)
         dg.addBeFloat64(element)
     else:
-        raise TypeError('Encountered non-MsgPack-packable value: %r' % element)
+        raise TypeError('Encountered non-MsgPack-packable value: %r' % (element,))
 
 class AstronInternalRepository(ConnectionRepository):
     """
