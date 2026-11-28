@@ -1,0 +1,7 @@
+# Building the release client with Nuitka (build/nuitka_build.py).
+# Install into the same Python as requirements.txt; see build/README.md.
+-r requirements.txt
+nuitka==4.4
+
+# Optional: lets Nuitka turn a .png icon into .ico/.icns.
+# imageio
