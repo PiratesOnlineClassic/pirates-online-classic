@@ -1,3 +1,4 @@
+import sys
 import unittest
 from types import SimpleNamespace
 from unittest.mock import MagicMock, Mock, patch
@@ -116,7 +117,10 @@ class BossAITests(unittest.TestCase):
         del attacker.getGameAccess
         target = Mock()
         target.getGoldScale.return_value = 2
+        # only player pirates are rewarded, let the mock attacker pass as one.
+        battleManagerModule = sys.modules[BattleManagerAI.__module__]
         with patch.object(EnemyGlobals, 'getGoldDrop', return_value=10) as getGoldDrop, \
+                patch.object(battleManagerModule, 'DistributedPlayerPirateAI', Mock), \
                 patch('random.random', return_value=0.0):
             battleMgr.rewardAttacker(attacker, target)
 
