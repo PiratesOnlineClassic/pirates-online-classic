@@ -1,17 +1,27 @@
+from direct.interval.IntervalGlobal import *
 from pirates.creature.DistributedCreature import DistributedCreature
 from pirates.kraken.HolderGameFSM import HolderGameFSM
 from pirates.kraken.Holder import Holder
+import random
 
 class HolderTentacle(DistributedCreature):
     
     def __init__(self, cr):
-        DistributedCreature.__init__(self, cr, Holder())
-        Holder.__init__(self)
-        Holder.generateCreature(self)
+        DistributedCreature.__init__(self, cr)
+        self.creature = Holder()
         self.emergeIval = None
 
+    def setupCreature(self, avatarType):
+        self.creature.reparentTo(self.getGeomNode())
+
+    def disable(self):
+        if self.emergeIval:
+            self.emergeIval.finish()
+            self.emergeIval = None
+        
+        DistributedCreature.disable(self)
+
     def delete(self):
-        Holder.delete(self)
         DistributedCreature.delete(self)
     
     def setKrakenId(self, krackenId):

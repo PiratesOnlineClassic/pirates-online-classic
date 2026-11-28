@@ -10,11 +10,13 @@ import random
 class GrabberTentacle(DistributedCreature):
     
     def __init__(self, cr):
-        DistributedCreature.__init__(self, cr, Grabber(self.uniqueName))
+        DistributedCreature.__init__(self, cr)
+        self.creature = Grabber(self.uniqueName)
         self.krakenId = 0
         self.krakenRequest = None
         self.avatarId = 0
         self.avRequest = None
+        self.grabbedMast = 0
         self.shipRequest = None
         self.moveTask = None
         self.rockingDampen = 0
@@ -23,7 +25,7 @@ class GrabberTentacle(DistributedCreature):
         self.locatorId = -1
         self.rangeCollisions = None
 
-    def setupCreature(self):
+    def setupCreature(self, avatarType):
         self.slideBase = NodePath('slideBase')
         self.slider = self.slideBase.attachNewNode('slider')
         self.creature.reparentTo(self.slider)
@@ -31,7 +33,9 @@ class GrabberTentacle(DistributedCreature):
     def announceGenerate(self):
         print('announceGenerate - GrabberTentacle', self.doId, self.getLocation())
         DistributedCreature.announceGenerate(self)
-        self.accept('f8', self.grabAvatar, extraArgs = [localAvatar])
+        if __dev__:
+            self.accept('f8', self.grabAvatar, extraArgs = [localAvatar.doId])
+        
         self.creature.startIdleTask()
         if not self.emerged:
             self.creature.hide()
@@ -70,7 +74,7 @@ class GrabberTentacle(DistributedCreature):
         taskMgr.remove(self.uniqueName('grabDelay'))
         kraken = self.getKraken()
         if kraken:
-            kraken.removeGrabberTentacle(self.doId)
+            kraken.removeGrabberTentacle(self.locatorId)
         
         self.ignore('f8')
         self.ignore(self.uniqueName('enterRange'))
@@ -285,6 +289,27 @@ class GrabberTentacle(DistributedCreature):
                 self.avRequest = None
 
             self.avRequest = self.cr.relatedObjectMgr.requestObjects((avId,), eachCallback = avatarArrived)
+
+    def grabMast(self, mast):
+        self.grabbedMast = mast
+        time = self.creature.getDuration('grab_mast')
+        blendDelay = 0.5
+        if mast:
+            self.creature.setPlayRate(1, 'grab_mast')
+            self.creature.play('grab_mast')
+            self.creature.loop('grab_mast_idle', blendT = time - blendDelay, blendDelay = blendDelay)
+        else:
+            self.creature.setPlayRate(-1, 'grab_mast')
+            self.creature.play('grab_mast')
+            self.creature.loop('idle_d', blendT = time - blendDelay, blendDelay = blendDelay)
+
+    def setGrabbedMast(self, mast):
+        self.grabbedMast = mast
+        if mast:
+            self.creature.loop('grab_mast_idle', blendT = 0)
+
+    def getGrabbedMast(self):
+        return self.grabbedMast
 
     def moveToTarget(self, targetNode, time, dampenRocking = False, callback = None):
         self.stopMove()

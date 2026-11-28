@@ -63,7 +63,7 @@ class Kraken(DistributedNode):
         def shipArrived(ship):
             self.shipRomRequest = None
             ship.setKraken(self)
-            for grabber in self.grabberTentacles:
+            for grabber in self.grabberTentacles.values():
                 grabber.attachToShipLocator()
                 grabber.setupCollisions()
             
@@ -84,11 +84,11 @@ class Kraken(DistributedNode):
             grabber.attachToShipLocator(pos = startPos)
             grabber.setupCollisions()
 
-    def removeGrabberTentacle(self, grabber):
-        self.grabberTentacles.discard(grabber)
+    def removeGrabberTentacle(self, locId):
+        self.grabberTentacles.pop(locId, None)
     
     def getRollAngle(self):
-        dampen = max([ grabber.getRockingDampen() for grabber in self.grabberTentacles.values() ])
+        dampen = max([ grabber.getRockingDampen() for grabber in self.grabberTentacles.values() ] + [0])
         if dampen:
             frameTime = globalClock.getFrameTime()
             self.dampen[1] = frameTime
