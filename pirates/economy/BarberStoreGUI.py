@@ -590,7 +590,7 @@ class BarberStoreGUI(DirectFrame):
                             owned = True
 
                     if holiday is not None:
-                        if holiday in AccessoriesStoreGUI.holidayIdList:
+                        if holiday in BarberStoreGUI.holidayIdList:
                             choices.append([
                                 index,
                                 owned,
@@ -701,7 +701,7 @@ class BarberStoreGUI(DirectFrame):
             if remainder > 0:
                 numPages += 1.0 - remainder
 
-            page = startIndex / self.buttonsPerPage + 1
+            page = startIndex // self.buttonsPerPage + 1
         else:
             numPages = 1
             page = 1

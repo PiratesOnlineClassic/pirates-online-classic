@@ -1378,7 +1378,7 @@ class JewelryStoreGUI(DirectFrame):
             if remainder > 0:
                 numPages += 1.0 - remainder
 
-            page = startIndex / self.buttonsPerPage + 1
+            page = startIndex // self.buttonsPerPage + 1
         else:
             numPages = 1
             page = 1
