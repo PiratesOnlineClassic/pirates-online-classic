@@ -1923,6 +1923,18 @@ class OTPClientRepository(ClientRepositoryBase):
         # This interest has pending generates! Play them.
         generates = self.__pendingGenerates[handle]
         del self.__pendingGenerates[handle]
+
+        # unless the interest was removed before it completed (a ship that sailed out of
+        # view before it's parts arrived), the objects it was waiting on are no longer
+        # wanted and their parent may already be gone:
+        interest = self._interests.get(handle)
+        if interest is None or interest.isPendingDelete():
+            for generate in generates:
+                self.__doId2pendingInterest.pop(generate[0], None)
+
+            self.__pendingMessages.pop(handle, None)
+            return
+
         generates.sort(key=lambda x: x[3])  # sort by classId
         for doId, parentId, zoneId, classId, dg, other in generates:
             di = DatagramIterator(dg)
