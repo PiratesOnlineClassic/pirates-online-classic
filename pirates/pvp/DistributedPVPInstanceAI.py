@@ -7,6 +7,7 @@ from direct.task import Task
 
 from otp.ai import AIInterestHandles
 
+from pirates.battle import WeaponGlobals
 from pirates.instance.DistributedInstanceWorldAI import DistributedInstanceWorldAI
 from pirates.piratesbase import PiratesGlobals
 from pirates.pvp import PVPGlobals
@@ -31,6 +32,15 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
     SetupDelay = 1.0
     CompletedLeaveDelay = config.GetFloat('pvp-completed-leave-delay', 60.0)
 
+    # the client teleports itself back to the main world when it leaves the
+    # instance (see DistributedPVPInstance.performLeave), we only step in when
+    # it has not started doing so by itself after this amount of time...
+    LeaveTeleportTimeout = config.GetFloat('pvp-leave-teleport-timeout', 5.0)
+
+    # respawned players are given the temporary spawning invulnerability
+    # skill effect (WeaponGlobals.C_SPAWN) the client already understands...
+    RespawnInvulnerabilityDuration = config.GetFloat('pvp-respawn-invulnerability-duration', 5.0)
+
     def __init__(self, air):
         DistributedInstanceWorldAI.__init__(self, air)
         FSM.__init__(self, self.__class__.__name__)
@@ -48,6 +58,7 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
         self.lastAttackers = {}
         self.instanceInterests = set()
         self.teamSpawnPts = {}
+        self.spawnProtected = set()
 
         self.readyBarrier = None
         self.gameStartTime = 0
@@ -104,6 +115,9 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
             self.removePlayer(avatarId)
 
         for avatarId in list(self.instanceInterests):
+            taskMgr.remove(self.uniqueName('leaveTeleport-%d' % avatarId))
+
+        for avatarId in list(self.instanceInterests):
             self.removeInstanceInterest(avatarId)
 
         self.ignoreAll()
@@ -148,8 +162,20 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
 
     def findSpawnNodes(self, areaUid, objData):
         for objKey, childData in list(objData.get('Objects', {}).items()):
-            if childData.get('Type') == 'Player Spawn Node':
+            objType = childData.get('Type')
+            if objType == 'Player Spawn Node':
                 self.addTeamSpawnPt(areaUid, childData)
+            elif objType == 'Island Game Area':
+                # the deathmatch and mayhem maps only place their spawn nodes
+                # within the island's game areas, which live in their own files...
+                areaFile = childData.get('File')
+                if areaFile:
+                    areaFileData = self.air.worldCreator.openFile(areaFile + '.py')
+                    if areaFileData:
+                        childData = areaFileData.get('Objects', {}).get(objKey, childData)
+
+                self.findSpawnNodes(objKey, childData)
+                continue
 
             self.findSpawnNodes(areaUid, childData)
 
@@ -263,6 +289,7 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
         self.lastAttackers.pop(avatarId, None)
         self.ignore('distObjDelete-%d' % avatarId)
         self.ignore('teleportDone-%d' % avatarId)
+        self.removeSpawnProtection(avatarId)
 
         avatar = self.air.doId2do.get(avatarId)
         if avatar:
@@ -273,6 +300,7 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
     def __playerDeleted(self, avatarId):
         self.removePlayer(avatarId)
         self.instanceInterests.discard(avatarId)
+        taskMgr.remove(self.uniqueName('leaveTeleport-%d' % avatarId))
         self.handlePlayerLeft(avatarId)
 
     def handlePlayerLeft(self, avatarId):
@@ -354,14 +382,53 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
     def handlePlayerArrived(self, avatarId):
         pass
 
+    def waitForPlayerLeave(self, avatarId):
+        # the client always initiates it's own teleport back to the main world
+        # when leaving (DistributedPVPInstance.performLeave), so we must not start
+        # a second teleport which would collide with it. Once the avatar has
+        # left the instance they no longer need to see it, close the interest
+        # we opened for them...
+        self.acceptOnce('teleportDone-%d' % avatarId, self.__playerLeft,
+            extraArgs=[avatarId])
+
+        taskName = self.uniqueName('leaveTeleport-%d' % avatarId)
+        taskMgr.remove(taskName)
+        taskMgr.doMethodLater(self.LeaveTeleportTimeout, self.__leaveTeleportTimeout,
+            taskName, extraArgs=[avatarId])
+
+    def __playerLeft(self, avatarId):
+        taskMgr.remove(self.uniqueName('leaveTeleport-%d' % avatarId))
+        self.removeInstanceInterest(avatarId)
+
+    def isAvatarInInstance(self, avatar):
+        return avatar.getWorld() is self
+
+    def __leaveTeleportTimeout(self, avatarId):
+        avatar = self.air.doId2do.get(avatarId)
+        if not avatar or avatarId in self.players:
+            return Task.done
+
+        if avatarId in self.air.teleportMgr.avatar2fsm:
+            # the avatar's own teleport is still in progress...
+            return Task.done
+
+        if not self.isAvatarInInstance(avatar):
+            self.__playerLeft(avatarId)
+            return Task.done
+
+        self.notify.info('Avatar %d never left pvp instance %d, sending them home...' % (
+            avatarId, self.doId))
+
+        self.sendPlayerToMainWorld(avatarId)
+        return Task.done
+
     def sendPlayerToMainWorld(self, avatarId):
         avatar = self.air.doId2do.get(avatarId)
         if not avatar:
             return
 
-        # once the avatar has left the instance they no longer
-        # need to see it, close the interest we opened for them...
-        self.acceptOnce('teleportDone-%d' % avatarId, self.removeInstanceInterest,
+        self.ignore('teleportDone-%d' % avatarId)
+        self.acceptOnce('teleportDone-%d' % avatarId, self.__playerLeft,
             extraArgs=[avatarId])
 
         self.air.teleportMgr.d_initiateTeleport(avatar,
@@ -446,10 +513,39 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
 
         avatar.b_setHp(avatar.getMaxHp())
         avatar.b_setMojo(avatar.getMaxMojo())
+        self.addSpawnProtection(avatar)
 
         x, y, z, h = spawnPt
         self.d_setSpawnInfo(avatar.doId, x, y, z, h, 0, [area.doId, area.zoneId,
             area.parentId])
+
+    def addSpawnProtection(self, avatar):
+        duration = self.RespawnInvulnerabilityDuration
+        if duration <= 0:
+            return
+
+        self.removeSpawnProtection(avatar.doId)
+        self.spawnProtected.add(avatar.doId)
+        avatar.addSkillEffect(WeaponGlobals.C_SPAWN, duration, avatar.doId)
+        taskMgr.doMethodLater(duration, self.__spawnProtectionExpired,
+            self.uniqueName('spawnProtection-%d' % avatar.doId), extraArgs=[avatar.doId])
+
+    def removeSpawnProtection(self, avatarId):
+        taskMgr.remove(self.uniqueName('spawnProtection-%d' % avatarId))
+        if avatarId not in self.spawnProtected:
+            return
+
+        self.spawnProtected.discard(avatarId)
+        avatar = self.air.doId2do.get(avatarId)
+        if avatar:
+            avatar.removeSkillEffect(WeaponGlobals.C_SPAWN)
+
+    def hasSpawnProtection(self, avatarId):
+        return avatarId in self.spawnProtected
+
+    def __spawnProtectionExpired(self, avatarId):
+        self.removeSpawnProtection(avatarId)
+        return Task.done
 
     def avatarDied(self):
         pass
@@ -464,7 +560,7 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
 
         self.d_requestLeaveApproved(avatarId)
         self.removePlayer(avatarId)
-        self.sendPlayerToMainWorld(avatarId)
+        self.waitForPlayerLeave(avatarId)
         self.handlePlayerLeft(avatarId)
 
     # -------------------------------------------------------------------
@@ -480,6 +576,10 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
 
         if attacker.doId == target.doId:
             return True
+
+        # the client treats spawning players as unattackable, see BattleManager.doAttack
+        if self.hasSpawnProtection(target.doId):
+            return False
 
         return self.getTeam(attacker.doId) != self.getTeam(target.doId)
 
@@ -652,7 +752,7 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
         for avatarId in list(self.players.keys()):
             self.d_performAILeave(avatarId)
             self.removePlayer(avatarId)
-            self.sendPlayerToMainWorld(avatarId)
+            self.waitForPlayerLeave(avatarId)
 
         self.request('Cleanup')
         return Task.done
@@ -670,7 +770,17 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
         for avatarId in list(self.players.keys()):
             self.removePlayer(avatarId)
 
+        # the islands and their game areas are all generated beneath us, along
+        # with any sub instance a game area may have been given by the builder...
+        for subInstance in self.getSubInstances():
+            self.removeSubInstance(subInstance)
+            for object in list(subInstance.builder.objectList.values()):
+                subInstance.builder.removeObject(object)
+
+            subInstance.requestDelete()
+
         for object in list(self.builder.objectList.values()):
+            self.builder.removeObject(object)
             object.requestDelete()
 
         if self.oceanGrid:

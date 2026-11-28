@@ -50,6 +50,12 @@ class FakeInstanceWorldAI(DistributedObjectAI):
     def d_setSpawnInfo(self, avatarId, x, y, z, h, spawnZone, parents):
         self.sendUpdateToAvatarId(avatarId, 'setSpawnInfo', [x, y, z, h, spawnZone, parents])
 
+    def getSubInstances(self):
+        return []
+
+    def removeSubInstance(self, subInstance):
+        pass
+
 
 instanceModule = types.ModuleType('pirates.instance.DistributedInstanceWorldAI')
 instanceModule.DistributedInstanceWorldAI = FakeInstanceWorldAI
@@ -139,6 +145,16 @@ class FakeAvatar:
 
     def b_setLootCarried(self, amount, maxCarry):
         self.lootCarried = (amount, maxCarry)
+
+    def getBandId(self):
+        return getattr(self, 'bandId', (0, 0))
+
+    def addSkillEffect(self, effectId, duration, attackerId):
+        self.skillEffects = getattr(self, 'skillEffects', []) + [[effectId, duration, 0, attackerId]]
+
+    def removeSkillEffect(self, effectId):
+        self.skillEffects = [effect for effect in getattr(self, 'skillEffects', [])
+                             if effect[0] != effectId]
 
 
 def makeAir(avatars, senderId=0):
@@ -312,13 +328,63 @@ class PVPInstanceTests(unittest.TestCase):
         self.assertNotIn(2, instance.players)
         self.assertEqual(avatars[1].pvpTeam, 0)
         self.assertEqual(instance.state, 'Completed')
-        kwargs = instance.air.teleportMgr.d_initiateTeleport.call_args[1]
-        self.assertEqual(kwargs['instanceType'], PiratesGlobals.INSTANCE_MAIN)
-        self.assertEqual(kwargs['locationUid'], 'returnIsland')
+
+        # the client teleports itself home, the AI must not start a second teleport...
+        teleport = instance.air.teleportMgr.d_initiateTeleport
+        self.assertEqual(teleport.call_count, 2)
+        self.assertTrue(all(call[1]['instanceType'] == PiratesGlobals.INSTANCE_PVP
+                            for call in teleport.call_args_list))
+        self.assertTrue(taskMgr.hasTaskNamed('leaveTeleport-2-9000'))
 
         # the instance interest is closed once the avatar has left
         messenger.send('teleportDone-2')
         instance.air.clientRemoveInterest.assert_called_once()
+        self.assertFalse(taskMgr.hasTaskNamed('leaveTeleport-2-9000'))
+
+    def test_leave_falls_back_to_ai_teleport(self):
+        instance, avatars = self.startTeamBattle()
+        instance.request('Game')
+        instance.air.senderId = 2
+        instance.requestLeave()
+        teleport = instance.air.teleportMgr.d_initiateTeleport
+
+        # the avatar's own teleport is still running, nothing to do...
+        instance.air.teleportMgr.avatar2fsm[2] = object()
+        instance._DistributedPVPInstanceAI__leaveTeleportTimeout(2)
+        self.assertEqual(teleport.call_count, 2)
+
+        # the client never left, send it home ourselves...
+        del instance.air.teleportMgr.avatar2fsm[2]
+        instance._DistributedPVPInstanceAI__leaveTeleportTimeout(2)
+        self.assertEqual(teleport.call_count, 3)
+        kwargs = teleport.call_args[1]
+        self.assertEqual(kwargs['instanceType'], PiratesGlobals.INSTANCE_MAIN)
+        self.assertEqual(kwargs['locationUid'], 'returnIsland')
+
+    def test_completed_leave_waits_for_client_teleport(self):
+        instance, avatars = self.startTeamBattle()
+        instance.request('Game')
+        instance.request('Completed')
+        instance._DistributedPVPInstanceAI__completedLeave(None)
+        self.assertEqual(len(updatesNamed(instance.sendUpdateToAvatarId, 'performAILeave')), 2)
+        self.assertEqual(instance.air.teleportMgr.d_initiateTeleport.call_count, 2)
+        self.assertEqual(instance.state, 'Cleanup')
+
+    def test_respawn_gives_spawn_protection(self):
+        instance, avatars = self.startTeamBattle()
+        instance.request('Game')
+        instance.air.senderId = 2
+        instance.requestSpawnLoc()
+        self.assertTrue(instance.hasSpawnProtection(2))
+        weaponGlobals = sys.modules[DistributedPVPInstanceAI.__module__].WeaponGlobals
+        self.assertEqual(avatars[1].skillEffects[0][0], weaponGlobals.C_SPAWN)
+        self.assertFalse(instance.isDamageAllowed(avatars[0], avatars[1]))
+        self.assertTrue(taskMgr.hasTaskNamed('spawnProtection-2-9000'))
+
+        instance._DistributedPVPInstanceAI__spawnProtectionExpired(2)
+        self.assertFalse(instance.hasSpawnProtection(2))
+        self.assertEqual(avatars[1].skillEffects, [])
+        self.assertTrue(instance.isDamageAllowed(avatars[0], avatars[1]))
 
     def test_load_spawn_points_from_world_data(self):
         instance = makeInstance(DistributedPVPTeamBattleAI, [])
@@ -339,6 +405,49 @@ class PVPInstanceTests(unittest.TestCase):
             1: [('island', (10, 20, 30, 90))],
             2: [('island', (4, 5, 6, 0))],
             0: [('island', (7, 8, 9, 0))]})
+
+    def test_load_spawn_points_from_island_game_areas(self):
+        instance = makeInstance(DistributedPVPTeamBattleAI, [])
+        worlds = {
+            'pvp_captureWorld.py': {'Objects': {'region': {'Type': 'Region', 'Objects': {
+                'island': {'Type': 'Island', 'File': 'pvp_deathmatchIsland1'}}}}},
+            'pvp_deathmatchIsland1.py': {'Objects': {'island': {'Type': 'Island', 'Objects': {
+                'jungle': {'Type': 'Island Game Area', 'File': 'pvp_jungle', 'Objects': {
+                    'locator': {'Type': 'Locator Node'}}}}}}},
+            'pvp_jungle.py': {'Objects': {'jungle': {'Type': 'Island Game Area', 'Objects': {
+                'spawn1': {'Type': 'Player Spawn Node', 'Spawnables': 'Team 1',
+                    'Pos': (1, 2, 3), 'Hpr': (0, 0, 0)},
+                'spawn2': {'Type': 'Player Spawn Node', 'Spawnables': 'Team 2',
+                    'Pos': (4, 5, 6), 'Hpr': (180, 0, 0)}}}}}}
+        instance.air.worldCreator = SimpleNamespace(openFile=lambda name: worlds.get(name))
+        instance.loadSpawnPoints()
+        self.assertEqual(instance.teamSpawnPts, {
+            1: [('jungle', (1, 2, 3, 0))],
+            2: [('jungle', (4, 5, 6, 180))]})
+
+    def test_cleanup_removes_game_areas_and_sub_instances(self):
+        instance = makeInstance(DistributedPVPTeamBattleAI, [])
+        island = SimpleNamespace(requestDelete=Mock())
+        gameArea = SimpleNamespace(requestDelete=Mock())
+        removed = []
+        instance.builder = SimpleNamespace(objectList={1: island, 2: gameArea},
+            removeObject=lambda obj: removed.append(obj))
+
+        subArea = SimpleNamespace(requestDelete=Mock())
+        subInstance = SimpleNamespace(requestDelete=Mock(),
+            builder=SimpleNamespace(objectList={3: subArea}, removeObject=lambda obj: removed.append(obj)))
+
+        instance.getSubInstances = lambda: [subInstance]
+        instance.removeSubInstance = Mock()
+        instance.requestDelete = Mock()
+        instance._DistributedPVPInstanceAI__cleanupInstance(None)
+
+        self.assertEqual(set(map(id, removed)), set(map(id, [island, gameArea, subArea])))
+        island.requestDelete.assert_called_once_with()
+        gameArea.requestDelete.assert_called_once_with()
+        subInstance.requestDelete.assert_called_once_with()
+        instance.removeSubInstance.assert_called_once_with(subInstance)
+        instance.requestDelete.assert_called_once_with()
 
 
 class ShipBattleTests(unittest.TestCase):
@@ -396,6 +505,42 @@ class PVPManagerTests(unittest.TestCase):
         self.assertFalse(manager.hasChallenge(1, 2))
         manager.sendUpdateToAvatarId.assert_any_call(1, 'challengeAccepted', [2])
         manager.sendUpdateToAvatarId.assert_any_call(2, 'challengeAccepted', [1])
+        manager.createPVPInstance.assert_called_once_with(manager.ChallengeGameStyle, [[1], [2]])
+
+    def test_challenge_brings_crews(self):
+        manager = self.makeManager(1)
+        mainWorld = manager.air.doId2do[1].world
+        crew = [FakeAvatar(3), FakeAvatar(4), FakeAvatar(5), FakeAvatar(6)]
+        for avatar in crew:
+            avatar.world = mainWorld
+            manager.air.doId2do[avatar.doId] = avatar
+
+        manager.air.doId2do[1].bandId = (100, 1)
+        crew[0].bandId = (100, 1)
+        crew[1].bandId = (100, 1)
+        manager.air.doId2do[2].bandId = (100, 2)
+        crew[2].bandId = (100, 2)
+
+        # crew members already in a pvp match or teleporting stay behind
+        crew[1].world = SimpleNamespace(getType=lambda: PiratesGlobals.INSTANCE_PVP)
+        manager.air.teleportMgr.avatar2fsm[5] = object()
+
+        manager.requestChallenge(2)
+        manager.air.senderId = 2
+        manager.acceptChallenge(1)
+        manager.createPVPInstance.assert_called_once_with(manager.ChallengeGameStyle, [[1, 3], [2]])
+
+    def test_challenge_within_crew_only_brings_the_two_players(self):
+        manager = self.makeManager(1)
+        crewmate = FakeAvatar(3)
+        crewmate.world = manager.air.doId2do[1].world
+        manager.air.doId2do[3] = crewmate
+        for avatarId in (1, 2, 3):
+            manager.air.doId2do[avatarId].bandId = (100, 1)
+
+        manager.requestChallenge(2)
+        manager.air.senderId = 2
+        manager.acceptChallenge(1)
         manager.createPVPInstance.assert_called_once_with(manager.ChallengeGameStyle, [[1], [2]])
 
     def test_accept_without_challenge_is_rejected(self):

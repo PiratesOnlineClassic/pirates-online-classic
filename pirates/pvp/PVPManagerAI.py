@@ -24,9 +24,20 @@ PVPWorldClasses = {
     'pvp_shipBattle4IslandWorld1': DistributedPVPShipBattleAI,
 }
 
+# the worlds hosted for each of the game styles the client lists in the lookout
+# (see GameTypeGlobals.GameTypes). Mayhem is the free for all battle style, which
+# is played within the mayhem island's interior, and team battle is played within
+# the jungles of the deathmatch islands; both of these maps only have spawn nodes
+# within their island game areas.
+#
+# The capture the loot and pirateer game rules (PVPGameCTLAI and PVPGamePirateerAI)
+# are not hosted, the client only lists those game styles when it's
+# pvp-testing-level config is raised (which it never is in this version) and
+# there are no instance classes or worlds for them...
 PVPGameStyleWorlds = {
-    PiratesGlobals.GAME_STYLE_BATTLE: config.GetString('pvp-battle-worlds', 'pvpTestv2').split(),
-    PiratesGlobals.GAME_STYLE_TEAM_BATTLE: config.GetString('pvp-team-battle-worlds', 'pvp_captureWorld').split(),
+    PiratesGlobals.GAME_STYLE_BATTLE: config.GetString('pvp-battle-worlds', 'pvp_mayhemWorld1').split(),
+    PiratesGlobals.GAME_STYLE_TEAM_BATTLE: config.GetString('pvp-team-battle-worlds',
+        'pvp_deathmatchWorld1 pvp_deathmatchWorld2').split(),
     PiratesGlobals.GAME_STYLE_SHIP_BATTLE: config.GetString('pvp-ship-battle-worlds', 'pvp_shipBattleWorld1').split(),
 }
 
@@ -81,6 +92,61 @@ class PVPManagerAI(DistributedObjectAI):
 
         teleportMgr = self.air.teleportMgr
         if challenger.doId in teleportMgr.avatar2fsm or challengee.doId in teleportMgr.avatar2fsm:
+            return False
+
+        return True
+
+    def getCrewMemberIds(self, avatar):
+        # a challenge brings along the members of each avatar's crew who are
+        # on this district, the client's challenge panel sends the challenger
+        # to the lookout with their crew invited (see PVPInviter.__handleYes)...
+        bandId = avatar.getBandId()
+        if not bandId[0] or not bandId[1]:
+            return [avatar.doId]
+
+        memberIds = [avatar.doId]
+        for member in list(self.air.doId2do.values()):
+            if member is avatar or not hasattr(member, 'getBandId'):
+                continue
+
+            if not hasattr(member, 'getInventory'):
+                continue
+
+            if tuple(member.getBandId()) != tuple(bandId):
+                continue
+
+            memberIds.append(member.doId)
+
+        return memberIds
+
+    def isSameCrew(self, avatar, otherAvatar):
+        bandId = tuple(avatar.getBandId())
+        return bandId[0] != 0 and bandId[1] != 0 and bandId == tuple(otherAvatar.getBandId())
+
+    def getChallengeTeam(self, avatar, otherAvatar):
+        team = [avatar.doId]
+        if self.isSameCrew(avatar, otherAvatar):
+            # pirates in the same crew are not brought along to fight each other...
+            return team
+
+        for memberId in self.getCrewMemberIds(avatar):
+            member = self.air.doId2do.get(memberId)
+            if not member or member is avatar or member is otherAvatar:
+                continue
+
+            # the rest of the crew may only come along when they are free to do so...
+            if not self.canJoinChallenge(member):
+                continue
+
+            team.append(memberId)
+
+        return team
+
+    def canJoinChallenge(self, avatar):
+        if self.isAvatarInPVP(avatar):
+            return False
+
+        if avatar.doId in self.air.teleportMgr.avatar2fsm:
             return False
 
         return True
@@ -167,7 +233,11 @@ class PVPManagerAI(DistributedObjectAI):
 
         self.d_challengeAccepted(challengerId, challengeeId)
         self.d_challengeAccepted(challengeeId, challengerId)
-        self.createPVPInstance(self.ChallengeGameStyle, [[challengerId], [challengeeId]])
+
+        teams = [self.getChallengeTeam(challenger, challengee),
+                 self.getChallengeTeam(challengee, challenger)]
+
+        self.createPVPInstance(self.ChallengeGameStyle, teams)
 
     def d_challengeFrom(self, avatarId, challengerId):
         self.sendUpdateToAvatarId(avatarId, 'challengeFrom', [challengerId])
