@@ -6,3 +6,10 @@ class DistributedDestructibleObjectAI(DistributedNodeAI):
 
     def __init__(self, air):
         DistributedNodeAI.__init__(self, air)
+        self.DcObjectType = ''
+
+    def setDcObjectType(self, dcObjectType):
+        self.DcObjectType = dcObjectType
+
+    def getDcObjectType(self):
+        return self.DcObjectType
