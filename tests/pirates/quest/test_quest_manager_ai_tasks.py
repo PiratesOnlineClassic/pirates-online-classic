@@ -9,7 +9,7 @@ from unittest.mock import Mock, patch
 from direct.showbase.MessengerGlobal import messenger
 from panda3d.direct import DCFile, DCPacker
 
-from pirates.quest.test_quest_manager_ai_progression import manager_module
+from tests.pirates.quest.test_quest_manager_ai_progression import manager_module
 from pirates.quest.DistributedQuestAvatarAI import DistributedQuestAvatarAI
 from pirates.quest.DistributedQuestGiverAI import DistributedQuestGiverAI
 from pirates.quest import QuestDB, QuestEvent
@@ -26,6 +26,8 @@ from pirates.pirate.AvatarType import AvatarType
 from pirates.piratesbase import PiratesGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 
+from tests import REPO_ROOT
+
 
 def loadTownfolk():
     modules = {}
@@ -36,7 +38,7 @@ def loadTownfolk():
         modules[path] = module
 
     spec = importlib.util.spec_from_file_location('_quest_tasks_townfolk_test',
-        Path(__file__).parent.parent / 'npc' / 'DistributedNPCTownfolkAI.py')
+        REPO_ROOT / 'pirates' / 'npc' / 'DistributedNPCTownfolkAI.py')
     module = importlib.util.module_from_spec(spec)
     with patch.dict(sys.modules, modules):
         spec.loader.exec_module(module)

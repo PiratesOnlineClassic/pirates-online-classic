@@ -1,6 +1,8 @@
 import dbm.dumb
 import math
 import os
+
+from tests import REPO_ROOT
 import sys
 import tempfile
 import types
@@ -445,7 +447,7 @@ class DCTests(AccessoriesShopTests):
         AccessoriesShopTests.setUp(self)
         from panda3d.direct import DCFile
         self.dcFile = DCFile()
-        root = os.path.join(os.path.dirname(__file__), '..', '..', 'astron', 'dclass')
+        root = os.path.join(str(REPO_ROOT), 'astron', 'dclass')
         self.assertTrue(self.dcFile.read(os.path.join(root, 'otp.dc')))
         self.assertTrue(self.dcFile.read(os.path.join(root, 'pirates.dc')))
 
