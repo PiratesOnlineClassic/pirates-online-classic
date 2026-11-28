@@ -2,16 +2,21 @@ from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm.FSM import FSM
 from direct.showbase.MessengerGlobal import messenger
+from direct.task import Task
 
 from pirates.npc.DistributedNPCTownfolkAI import DistributedNPCTownfolkAI
 from pirates.piratesbase import PiratesGlobals
 from pirates.quest import QuestDB
+from pirates.quest.QuestConstants import LocationIds
 from pirates.tutorial import TutorialGlobals
 
 
 class DistributedPiratesTutorialAI(DistributedObjectAI, FSM):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPiratesTutorialAI')
     notify.setInfo(True)
+
+    INVENTORY_WAIT_SECONDS = 1.0
+    INVENTORY_WAIT_ATTEMPTS = 15
 
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
@@ -21,6 +26,11 @@ class DistributedPiratesTutorialAI(DistributedObjectAI, FSM):
         self._firstQuestCreatePending = False
         self._firstQuestFinalizeStarted = False
         self._pendingMakeAPirateComplete = False
+        self._inventoryWaitAttempts = 0
+
+    def delete(self):
+        taskMgr.remove(self.uniqueName('waitForInventory'))
+        DistributedObjectAI.delete(self)
 
     def setAvatarId(self, avatarId):
         self.avatarId = avatarId
@@ -118,6 +128,8 @@ class DistributedPiratesTutorialAI(DistributedObjectAI, FSM):
                     self.notify.warning(
                         'Failed to create %s for avatar %d' %
                         (TutorialGlobals.FIRST_QUEST, avatar.doId))
+                    if not avatar.getInventory():
+                        self.d_inventoryFailed()
                     return
 
                 tutorialState = avatar.getTutorial()
@@ -149,7 +161,33 @@ class DistributedPiratesTutorialAI(DistributedObjectAI, FSM):
 
         self.notify.info('Avatar %d entered Act0Tutorial' % self.avatarId)
         self.request('Act0Tutorial')
+        if not avatar.getInventory():
+            # The tutorial quests live on the avatar's inventory, wait for it
+            # to finish loading before handing out the first quest...
+            self._inventoryWaitAttempts = 0
+            taskMgr.remove(self.uniqueName('waitForInventory'))
+            taskMgr.doMethodLater(self.INVENTORY_WAIT_SECONDS, self.__waitForInventory,
+                self.uniqueName('waitForInventory'))
+            return
+
         self._ensureFirstQuest(avatar)
+
+    def __waitForInventory(self, task):
+        avatar = self.getAvatar()
+        if not avatar:
+            return Task.done
+
+        if avatar.getInventory():
+            self._ensureFirstQuest(avatar)
+            return Task.done
+
+        self._inventoryWaitAttempts += 1
+        if self._inventoryWaitAttempts >= self.INVENTORY_WAIT_ATTEMPTS:
+            self.notify.warning('Avatar %d has no inventory, cannot start the tutorial!' % avatar.doId)
+            self.d_inventoryFailed()
+            return Task.done
+
+        return Task.again
 
     def makeAPirateComplete(self):
         """Client finished the Make-A-Pirate customization screen.
@@ -277,6 +315,12 @@ class DistributedPiratesTutorialAI(DistributedObjectAI, FSM):
             return
 
         self.notify.info('Avatar %d finished target practice' % self.avatarId)
+
+        # once the Jolly Roger sinks Stumpy's boat the client initiates a teleport
+        # to the main world using it's return location, new pirates wash up in Port Royal...
+        if avatar.getReturnLocation() != LocationIds.PORT_ROYAL_ISLAND:
+            avatar.b_setReturnLocation(LocationIds.PORT_ROYAL_ISLAND)
+
         self.air.questMgr.tutorialJROnStage(avatar)
         self.request('TargetPracticeDone')
 

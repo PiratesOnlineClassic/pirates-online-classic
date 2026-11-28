@@ -14,6 +14,8 @@ def _load_handler_module():
     npc_package = importlib.import_module('pirates.npc')
     original_quest_db = sys.modules.get('pirates.quest.QuestDB')
     original_quest_attr = getattr(quest_package, 'QuestDB', None)
+    original_constants = sys.modules.get('pirates.quest.QuestConstants')
+    original_constants_attr = getattr(quest_package, 'QuestConstants', None)
     original_townfolk = sys.modules.get(
         'pirates.npc.DistributedNPCTownfolkAI')
     original_townfolk_attr = getattr(
@@ -25,7 +27,12 @@ def _load_handler_module():
         'pirates.npc.DistributedNPCTownfolkAI')
     townfolk_module.DistributedNPCTownfolkAI = type(
         'DistributedNPCTownfolkAI', (), {})
+    quest_constants = types.ModuleType('pirates.quest.QuestConstants')
+    quest_constants.LocationIds = types.SimpleNamespace(
+        PORT_ROYAL_ISLAND='1150922126.8dzlu')
     sys.modules['pirates.quest.QuestDB'] = quest_db
+    sys.modules['pirates.quest.QuestConstants'] = quest_constants
+    quest_package.QuestConstants = quest_constants
     sys.modules['pirates.npc.DistributedNPCTownfolkAI'] = townfolk_module
     quest_package.QuestDB = quest_db
     npc_package.DistributedNPCTownfolkAI = (
@@ -34,6 +41,15 @@ def _load_handler_module():
     try:
         return importlib.import_module(module_name)
     finally:
+        if original_constants is None:
+            sys.modules.pop('pirates.quest.QuestConstants', None)
+        else:
+            sys.modules['pirates.quest.QuestConstants'] = original_constants
+        if original_constants_attr is None:
+            delattr(quest_package, 'QuestConstants')
+        else:
+            quest_package.QuestConstants = original_constants_attr
+
         if original_quest_db is None:
             sys.modules.pop('pirates.quest.QuestDB', None)
         else:
@@ -70,6 +86,17 @@ class _Avatar:
 
     def __init__(self, do_id):
         self.doId = do_id
+        self.returnLocation = ''
+        self.inventory = object()
+
+    def getReturnLocation(self):
+        return self.returnLocation
+
+    def b_setReturnLocation(self, returnLocation):
+        self.returnLocation = returnLocation
+
+    def getInventory(self):
+        return self.inventory
 
 
 class _QuestManager:
@@ -205,6 +232,51 @@ class DistributedPiratesTutorialAITests(unittest.TestCase):
 
         self.assertEqual(ship.startCount, 1)
         self.assertEqual(events, [('state', 'Sailing')])
+
+
+    def test_target_practice_sends_new_pirate_to_port_royal(self):
+        handler, avatar, _, _ = self.makeHandler()
+
+        handler.targetPracticeDone()
+
+        self.assertEqual(avatar.returnLocation, '1150922126.8dzlu')
+
+    def test_enter_act0_waits_for_inventory_then_starts_first_quest(self):
+        handler, avatar, _, events = self.makeHandler()
+        avatar.inventory = None
+        handler.uniqueName = lambda name: '%s-%d' % (name, avatar.doId)
+        handler._ensureFirstQuest = lambda av: events.append(('firstQuest', av.doId))
+        handler.d_inventoryFailed = lambda: events.append(('inventoryFailed',))
+        handler.getAvatar = lambda: avatar
+        tasks = []
+        module = sys.modules[Handler.__module__]
+
+        with patch.object(module, 'taskMgr', create=True) as task_mgr:
+            task_mgr.doMethodLater.side_effect = (
+                lambda delay, method, name: tasks.append(method))
+            handler.clientEnterAct0Tutorial()
+
+        self.assertEqual(events, [('state', 'Act0Tutorial')])
+        self.assertEqual(len(tasks), 1)
+
+        self.assertEqual(tasks[0](None), module.Task.again)
+        avatar.inventory = object()
+        self.assertEqual(tasks[0](None), module.Task.done)
+        self.assertEqual(events[-1], ('firstQuest', avatar.doId))
+
+    def test_enter_act0_reports_inventory_failure(self):
+        handler, avatar, _, events = self.makeHandler()
+        avatar.inventory = None
+        handler.getAvatar = lambda: avatar
+        handler.d_inventoryFailed = lambda: events.append(('inventoryFailed',))
+        handler._inventoryWaitAttempts = 0
+        module = sys.modules[Handler.__module__]
+        waitForInventory = getattr(handler, '_%s__waitForInventory' % Handler.__name__)
+
+        for attempt in range(Handler.INVENTORY_WAIT_ATTEMPTS - 1):
+            self.assertEqual(waitForInventory(None), module.Task.again)
+        self.assertEqual(waitForInventory(None), module.Task.done)
+        self.assertEqual(events, [('inventoryFailed',)])
 
 
 if __name__ == '__main__':
