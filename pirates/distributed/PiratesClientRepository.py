@@ -159,6 +159,15 @@ class PiratesClientRepository(OTPClientRepository):
             taskMgr.doYield = self.taskManagerDoYieldCall
         self.loadingScreen = LoadingScreen.LoadingScreen(self)
         self.defaultShard = 0
+        self.accept('avatarZoneChanged', self.handleAvatarZoneChanged)
+
+    def handleAvatarZoneChanged(self, av, gridId, zoneId):
+        # Panda's DistributedCartesianGrid only announces grid zone changes
+        # now, rather than calling handleAvatarZoneChange itself, so hand the
+        # change back to the grid to set the avatar's location...
+        grid = self.doId2do.get(gridId)
+        if grid:
+            grid.handleAvatarZoneChange(av, zoneId)
 
     def gotoFirstScreen(self):
         self.startReaderPollTask()
