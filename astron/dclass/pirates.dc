@@ -285,7 +285,7 @@ dclass DistributedTeleportZone : DistributedInstanceWorld {
 };
 
 dclass HumanDNA {
-  setTutorial(uint8) required broadcast db clsend airecv;
+  setTutorial(uint8) required broadcast db ownsend airecv;
   setGender(char) required broadcast db airecv;
   setBodyShape(uint8) required broadcast db airecv;
   setBodyHeight(int8/100) required broadcast db airecv;

@@ -2,16 +2,59 @@ from direct.directnotify.DirectNotifyGlobal import *
 from otp.ai.MagicWordGlobal import *
 
 from pirates.pirate.HumanDNA import HumanDNA
+from pirates.piratesbase import PiratesGlobals
 
 
 class HumanDNAAI(HumanDNA):
     notify = directNotify.newCategory('HumanDNAAI')
 
+    def setTutorial(self, tutorial):
+        """
+        setTutorial is ownsend, the state server has already stored (and saved)
+        the value by the time the AI receives it. A client may only make the
+        checkpoint updates the real client makes itself, anything else is
+        reverted to the AI's value. The AI's own updates go through b_setTutorial.
+        """
+
+        air = getattr(self, 'air', None)
+        if air and air.getAccountIdFromSender():
+            oldTutorial = getattr(self, 'tutorial', PiratesGlobals.TUT_STARTED)
+            if not self.isValidClientTutorial(air.getAvatarIdFromSender(), oldTutorial, tutorial):
+                air.logPotentialHacker(
+                    message='Received an invalid setTutorial update from a client!',
+                    targetAvId=getattr(self, 'doId', 0),
+                    oldTutorial=oldTutorial,
+                    tutorial=tutorial)
+
+                # the state server has already stored the client's value,
+                # overwrite it with the value the AI knows about...
+                self.d_setTutorial(oldTutorial)
+                return
+
+        HumanDNA.setTutorial(self, tutorial)
+
+    def isValidClientTutorial(self, senderId, oldTutorial, tutorial):
+        if senderId != getattr(self, 'doId', None):
+            return False
+
+        if tutorial == oldTutorial:
+            return True
+
+        # DistributedPiratesTutorial.exitAct1MakeAPirate
+        if tutorial == PiratesGlobals.TUT_MADE_PIRATE:
+            return oldTutorial < PiratesGlobals.TUT_MADE_PIRATE
+
+        # ChatTutorial.updateTutorialState, shown at TUT_CHAPTER3_STARTED
+        if tutorial == PiratesGlobals.TUT_INTRODUCTION_TO_FRIENDS:
+            return PiratesGlobals.TUT_CHAPTER3_STARTED <= oldTutorial < tutorial
+
+        return False
+
     def d_setTutorial(self, tutorial):
         self.sendUpdate('setTutorial', [tutorial])
 
     def b_setTutorial(self, tutorial):
-        self.setTutorial(tutorial)
+        HumanDNA.setTutorial(self, tutorial)
         self.d_setTutorial(tutorial)
 
     def d_setGender(self, gender):

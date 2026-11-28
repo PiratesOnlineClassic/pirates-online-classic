@@ -554,6 +554,9 @@ class CreateAvatarFSM(OperationFSM):
             else:
                 pirateFields[field.getName()] = (fieldValue,)
 
+        # The client's DNA blob carries a tutorial value too, a new avatar
+        # always starts at the beginning of the tutorial...
+        pirateFields['setTutorial'] = (PiratesGlobals.TUT_STARTED,)
         pirateFields['setName'] = (self.name,)
         pirateFields['WishNameState'] = ('OPEN',)
         pirateFields['WishName'] = ('',)
