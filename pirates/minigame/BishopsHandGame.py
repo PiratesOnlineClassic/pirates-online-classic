@@ -4,6 +4,7 @@ from direct.task.Task import Task
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
 from panda3d.core import *
+import random
 from direct.showbase import PythonUtil
 from direct.fsm import FSM
 from pirates.piratesbase import PiratesGlobals

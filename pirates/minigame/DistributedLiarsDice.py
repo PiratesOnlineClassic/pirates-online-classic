@@ -3,6 +3,7 @@ from direct.interval.IntervalGlobal import *
 from direct.task import Task
 from direct.gui.DirectGui import *
 from panda3d.core import *
+from libotp import CFThought, CFTimeout
 from pirates.minigame import DistributedDiceGame
 from pirates.minigame import DiceGlobals
 from pirates.piratesgui import GuiTray

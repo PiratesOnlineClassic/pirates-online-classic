@@ -1,5 +1,6 @@
 from pirates.minigame import DistributedLock
 from direct.interval.IntervalGlobal import *
+from panda3d.core import Vec3
 
 class DistributedLockDoor(DistributedLock.DistributedLock):
     

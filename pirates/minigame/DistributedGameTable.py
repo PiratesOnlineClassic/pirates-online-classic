@@ -1,5 +1,6 @@
 import random
 from panda3d.core import *
+from libotp import CFSpeech, CFTimeout
 from direct.showbase import DirectObject
 from direct.interval.IntervalGlobal import *
 from pirates.piratesbase import PiratesGlobals

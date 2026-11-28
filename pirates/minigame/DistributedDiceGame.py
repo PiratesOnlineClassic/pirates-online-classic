@@ -8,6 +8,7 @@ from pirates.minigame import PlayingCardGlobals
 from pirates.minigame import DiceGlobals
 from pirates.minigame import PlayingCard
 from pirates.minigame import DiceGameGUI
+from pirates.piratesgui import PiratesGuiGlobals
 from pirates.pirate import HumanDNA
 from pirates.uberdog.UberDogGlobals import *
 from direct.task import Task

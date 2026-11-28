@@ -1,3 +1,4 @@
+import time
 from direct.directnotify import DirectNotifyGlobal
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
