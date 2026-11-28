@@ -21,6 +21,13 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
         self.avatar.stopToonUp()
 
     def enterDeath(self):
+        # avatars defeated in a pvp instance are not sent to jail,
+        # the instance will respawn them when they ask for a spawn point...
+        world = self.avatar.getWorld()
+        if world and world.getType() == PiratesGlobals.INSTANCE_PVP:
+            world.avatarDefeated(self.avatar)
+            return
+
         inventory = self.avatar.getInventory()
         assert(inventory is not None)
 

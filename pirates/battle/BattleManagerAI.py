@@ -157,6 +157,16 @@ class BattleManagerAI(BattleManagerBase):
 
             return None
 
+        # pvp instances decide which players may damage one another...
+        if isinstance(avatar, DistributedPlayerPirateAI) and isinstance(target, DistributedPlayerPirateAI):
+            world = target.getWorld()
+            if world and world.getType() == PiratesGlobals.INSTANCE_PVP:
+                if not WeaponGlobals.isFriendlyFire(skillId, ammoSkillId):
+                    if not world.isDamageAllowed(avatar, target):
+                        return None
+
+                    world.avatarAttacked(avatar, target)
+
         skillResult = self.willWeaponHit(avatar, target, skillId, ammoSkillId, charge)
         distance = self.getRelativePosition(avatar, target)
         timestamp = globalClockDelta.getRealNetworkTime(bits=32)
