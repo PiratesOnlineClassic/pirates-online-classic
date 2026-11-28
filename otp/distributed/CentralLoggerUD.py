@@ -41,6 +41,10 @@ class CentralLoggerUD(DistributedObjectGlobalUD):
             message=message,
             **fields)
 
+    def d_reportException(self, sender, exception, isClient=False):
+        # the UberDOG logs its own exceptions directly...
+        self.reportException(sender, exception, isClient)
+
     def reportException(self, sender, exception, isClient=False):
         self.notify.info('Received exception log request')
 

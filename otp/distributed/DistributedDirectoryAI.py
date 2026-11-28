@@ -3,12 +3,6 @@ from direct.directnotify import DirectNotifyGlobal
 
 
 class DistributedDirectoryAI(DistributedObjectAI):
-    """
-    An empty object used as a parent for other objects, such as the game root
-    the UberDOG generates. Parenting rules were an OTP server concept that
-    Astron does not use, so they are only stored.
-    """
-
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedDirectoryAI')
 
     def __init__(self, air):
