@@ -46,6 +46,9 @@ class SeaPatch(Water):
 
         patchNode = SeaPatchNode('seapatch', self.patch)
         patchNode.setWantReflect(0)
+        # NodePath.node() hands back a plain PandaNode wrapper, not our Python
+        # SeaPatchNode subclass, so keep a reference to the real node around.
+        self.patchNode = patchNode
         self.patchNP = NodePath(patchNode)
         shader_file_path = None
         if base.config.GetBool('want-shaders', 1) and base.win and base.win.getGsg() and base.win.getGsg().getShaderModel() >= GraphicsStateGuardian.SM20:
@@ -297,6 +300,7 @@ class SeaPatch(Water):
         self.cNodePath.removeNode()
         self.seamodel.removeNode()
         self.patchNP.removeNode()
+        self.patchNode = None
         self.parentNP = None
         self.todMgr = None
         taskMgr.remove('seaFloatTask-' + str(id(self)))
@@ -348,7 +352,7 @@ class SeaPatch(Water):
         # per frame. Panda3D's normal cull-callback mechanism can't be
         # used here since set_cull_callback() isn't exposed to Python
         # subclasses of PandaNode (see SeaPatchNode.cullCallback()).
-        self.patchNP.node().update(self.patchNP)
+        self.patchNode.update(self.patchNP)
         todMgr = self.getTodMgr()
         if self.shader and todMgr:
             self.clear_color = todMgr.fog.getColor()
