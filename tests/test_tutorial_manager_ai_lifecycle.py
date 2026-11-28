@@ -30,6 +30,9 @@ class Avatar:
     def d_setTutorialHandlerZone(self, zone):
         self.zones.append(zone)
 
+    def getTutorial(self):
+        return 0
+
 
 class SceneObject:
     def __init__(self, doId, zoneId=42):
