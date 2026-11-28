@@ -21,6 +21,8 @@ sys.modules.setdefault('semidbm', types.ModuleType('semidbm'))
 from panda3d.direct import DCFile
 from panda3d.core import Filename
 
+from otp.chat import ChatFilter
+from otp.chat.WhiteList import WhiteList
 from otp.distributed.MsgTypes import CLIENTAGENT_ADD_POST_REMOVE
 from otp.friends.GuildManagerUD import (GuildDB, GUILDRANK_GM, GUILDRANK_OFFICER, GUILDRANK_MEMBER,
     GUILD_NAME_APPROVED, GUILD_NAME_REJECTED, TOKEN_ERROR_INVALID, TOKEN_PERMANENT)
@@ -84,6 +86,13 @@ class GuildManagerUDTests(unittest.TestCase):
             self.updates.append((avatarId, fieldName, args))
 
         self.manager.sendUpdateToAvatarId = sendUpdateToAvatarId
+
+        # Whitelist chat goes through the server chat filter; use a known
+        # whitelist rather than whatever pwhitelist.txt is on the model path:
+        ChatFilter.setWhiteList(WhiteList(['ahoy', 'matey']))
+
+    def tearDown(self):
+        ChatFilter.setWhiteList(None)
 
     def online(self, avatarId, name=None):
         self.manager.recvAvatarOnline(avatarId, name or 'Pirate%d' % avatarId, 0, 0)
@@ -285,13 +294,17 @@ class GuildManagerUDTests(unittest.TestCase):
         self.assertEqual(self.updatesFor(1, 'recvAvatarOffline'), [[3, 'Pirate3']])
 
         self.send(2, 'sendChat', 'Yo ho', 0, 0)
-        self.send(2, 'sendWLChat', 'Yo ho', 0, 0)
+        self.send(2, 'sendWLChat', 'Ahoy matey', 0, 0)
+        self.send(2, 'sendWLChat', 'Ahoy scallywag', 0, 0)
+        self.send(2, 'sendSC', 100)
+        # Not a SpeedChat phrase, the chat filter drops it:
         self.send(2, 'sendSC', 5)
         self.send(2, 'sendSCQuest', 1, 2, 3)
         for avatarId in (1, 2):
             self.assertEqual(self.updatesFor(avatarId, 'recvChat'), [[2, 'Yo ho', 0, 0]])
-            self.assertEqual(self.updatesFor(avatarId, 'recvWLChat'), [[2, 'Yo ho', 0, 0]])
-            self.assertEqual(self.updatesFor(avatarId, 'recvSC'), [[2, 5]])
+            self.assertEqual(self.updatesFor(avatarId, 'recvWLChat'),
+                             [[2, 'Ahoy matey', 0, 0], [2, 'Ahoy arrr', 0, 0]])
+            self.assertEqual(self.updatesFor(avatarId, 'recvSC'), [[2, 100]])
             self.assertEqual(self.updatesFor(avatarId, 'recvSCQuest'), [[2, 1, 2, 3]])
 
         self.assertEqual(self.updatesFor(3, 'recvChat'), [])
