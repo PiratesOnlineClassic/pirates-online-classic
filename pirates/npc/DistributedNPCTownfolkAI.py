@@ -215,11 +215,14 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
         if not avatar or avatar.getTutorial() >= PiratesGlobals.TUT_GOT_SHIP:
             return
 
-        inventory = avatar.getInventory()
-        if not inventory or inventory.getShipDoIdList() or avatar.getConstructedShipDoId():
+        if avId in self.tutorialShipAvIds:
             return
 
-        if avId in self.tutorialShipAvIds:
+        # an avatar that already owns a ship has nothing to build, Darby's
+        # closing dialog (quest_tut_darby_ship2) can play straight away...
+        inventory = avatar.getInventory()
+        if not inventory or inventory.getShipDoIdList() or avatar.getConstructedShipDoId():
+            messenger.send(avatar.uniqueName('tutorialShipConstructed'))
             return
 
         typedName, nameIndices = nameHolder
@@ -227,8 +230,18 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
 
         def _shipCreatedCallback(shipId):
             self.tutorialShipAvIds.discard(avId)
-            if shipId:
-                avatar.setConstructedShipDoId(shipId)
+            if self.air.doId2do.get(avId) is not avatar:
+                return
+
+            if not shipId:
+                # have the avatar pick a name and try again, the
+                # finalize scene is still waiting on the ship...
+                self.notify.warning('Failed to construct the tutorial ship for avatar %d!' % avId)
+                self.d_playDialogMovie(avId, 'quest_tut_darby_ship1')
+                return
+
+            avatar.setConstructedShipDoId(shipId)
+            messenger.send(avatar.uniqueName('tutorialShipConstructed'))
 
         self.tutorialShipAvIds.add(avId)
         self.air.shipLoader.createShip(avatar, ShipGlobals.INTERCEPTORL1, shipName, callback=_shipCreatedCallback)

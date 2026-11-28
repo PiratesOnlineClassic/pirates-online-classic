@@ -239,6 +239,54 @@ class QuestProgressionTests(unittest.TestCase):
         quest.d_amFinalized.assert_called_once()
         manager.completeQuest.assert_called_once_with(avatar, quest)
 
+    def test_darby_waits_for_the_tutorial_ship_before_closing(self):
+        manager = manager_module.QuestManagerAI(types.SimpleNamespace())
+        events = {}
+        manager.acceptOnce = lambda event, callback, extraArgs=[]: events.update(
+            {event: lambda: callback(*extraArgs)})
+        manager.completeQuest = Mock()
+        avatar = types.SimpleNamespace(
+            doId=1, tutorial=0, shipId=0, getTutorial=lambda: avatar.tutorial,
+            getQuestHistory=lambda: [], getConstructedShipDoId=lambda: avatar.shipId,
+            uniqueName=lambda name: '%s-1' % name)
+        dna = QuestDB.QuestDict['c2.9visitDarby']
+        scenes = []
+        quest = types.SimpleNamespace(
+            doId=5, questDNA=dna, getQuestDNA=lambda: dna,
+            getQuestId=lambda: 'c2.9visitDarby',
+            setFinalizeStateIndex=lambda idx: None,
+            d_startFinalizeScene=lambda idx, giver: scenes.append((idx, giver)),
+            d_amFinalized=Mock(), setFinalized=Mock(), completeRequiresVisit=lambda: False)
+        npc = types.SimpleNamespace(doId=77)
+        manager.finalizeCutscene(avatar, quest, npc=npc)
+        self.assertEqual(scenes, [(0, 77)])
+
+        # the name panel is still up, the ship has not been built yet...
+        events.pop('quest-finalize-5')()
+        self.assertEqual(scenes, [(0, 77)])
+        manager.completeQuest.assert_not_called()
+
+        avatar.shipId = 5000
+        events.pop('tutorialShipConstructed-1')()
+        self.assertEqual(scenes, [(0, 77), (1, 77)])
+        events.pop('quest-finalize-5')()
+        manager.completeQuest.assert_called_once_with(avatar, quest)
+
+    def test_ship_reward_always_grants_the_ship_token(self):
+        from pirates.quest.QuestReward import ShipReward
+        trade = Mock()
+        avatar = types.SimpleNamespace(constructedShipDoId=None)
+        ShipReward(1).applyTo(trade, avatar)
+        trade.giveShip.assert_not_called()
+        trade.giveNewShipToken.assert_called_once_with()
+
+        trade = Mock()
+        avatar.constructedShipDoId = 5000
+        ShipReward(1).applyTo(trade, avatar)
+        trade.giveShip.assert_called_once_with(5000)
+        trade.giveNewShipToken.assert_called_once_with()
+        self.assertIsNone(avatar.constructedShipDoId)
+
     def test_jolly_waits_for_the_matching_avatars_target_practice(self):
         from direct.showbase.MessengerGlobal import messenger
 

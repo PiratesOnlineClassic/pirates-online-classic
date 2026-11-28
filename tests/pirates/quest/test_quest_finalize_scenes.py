@@ -60,6 +60,7 @@ class QuestFinalizeSceneTests(unittest.TestCase):
 
             avatar = types.SimpleNamespace(doId=1, getTutorial=lambda: PiratesGlobals.TUT_FINISHED,
                                            getQuestHistory=lambda: [],
+                                           getConstructedShipDoId=lambda: 0,
                                            uniqueName=lambda event: '%s-1' % event)
             dna = QuestDB.QuestDict[questId]
             scenes = []
@@ -74,6 +75,9 @@ class QuestFinalizeSceneTests(unittest.TestCase):
             for index in range(len(dna.getFinalizeInfo())):
                 self.assertEqual(scenes, list(range(index + 1)), questId)
                 events.pop('quest-finalize-5')()
+                # Darby's closing dialog waits for the tutorial ship to be built...
+                if 'tutorialShipConstructed-1' in events:
+                    events.pop('tutorialShipConstructed-1')()
 
             self.assertNotIn('quest-finalize-5', events, questId)
             manager.completeQuest.assert_called_once_with(avatar, quest)

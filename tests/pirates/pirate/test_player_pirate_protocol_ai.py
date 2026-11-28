@@ -107,7 +107,16 @@ class TownfolkTutorialTests(unittest.TestCase):
                                  constructedShipDoId=0)
         avatar.getConstructedShipDoId = lambda: avatar.constructedShipDoId
         avatar.setConstructedShipDoId = lambda shipId: setattr(avatar, 'constructedShipDoId', shipId)
+        avatar.uniqueName = lambda name: '%s-%d' % (name, avatar.doId)
         return avatar
+
+    def listenForShip(self):
+        from direct.showbase.MessengerGlobal import messenger
+        heard = []
+        listener = SimpleNamespace()
+        messenger.accept('tutorialShipConstructed-100', listener, lambda: heard.append(True), [], 0)
+        self.addCleanup(messenger.ignore, 'tutorialShipConstructed-100', listener)
+        return heard
 
     def test_cutlass_is_leveled_up(self):
         avatar = self.makeAvatar(PiratesGlobals.TUT_GOT_CUTLASS - 1)
@@ -137,9 +146,34 @@ class TownfolkTutorialTests(unittest.TestCase):
         args, kwargs = npc.air.shipLoader.createShip.call_args
         self.assertEqual(args, (avatar, ShipGlobals.INTERCEPTORL1, 'Black Gull'))
 
-        # the quest's ShipReward hands over the constructed ship...
+        # the quest's ShipReward hands over the constructed ship, Darby's
+        # closing dialog has been waiting for it...
+        heard = self.listenForShip()
         kwargs['callback'](5000)
         self.assertEqual(avatar.constructedShipDoId, 5000)
+        self.assertEqual(heard, [True])
+
+    def test_failed_tutorial_ship_asks_for_another_name(self):
+        avatar = self.makeAvatar(PiratesGlobals.TUT_GOT_SHIP - 1)
+        npc = self.makeNpc(avatar)
+        npc.d_playDialogMovie = Mock()
+        heard = self.listenForShip()
+        npc.shipTutorialPt1(avatar.doId, ['Black Gull', []])
+        npc.air.shipLoader.createShip.call_args[1]['callback'](0)
+        self.assertEqual(heard, [])
+        self.assertEqual(avatar.constructedShipDoId, 0)
+        npc.d_playDialogMovie.assert_called_once_with(avatar.doId, 'quest_tut_darby_ship1')
+
+        npc.shipTutorialPt1(avatar.doId, ['Black Gull', []])
+        self.assertEqual(npc.air.shipLoader.createShip.call_count, 2)
+
+    def test_ship_owner_moves_straight_on_to_the_closing_dialog(self):
+        owner = self.makeAvatar(PiratesGlobals.TUT_GOT_SHIP - 1, ships=[5000])
+        npc = self.makeNpc(owner)
+        heard = self.listenForShip()
+        npc.shipTutorialPt1(owner.doId, ['Black Gull', []])
+        npc.air.shipLoader.createShip.assert_not_called()
+        self.assertEqual(heard, [True])
 
     def test_tutorial_ship_is_only_built_once(self):
         avatar = self.makeAvatar(PiratesGlobals.TUT_GOT_SHIP - 1)

@@ -295,6 +295,7 @@ class QuestManagerAI(DirectObject):
         self.completingQuests = set()
         self.tutorialJollyReady = set()
         self.tutorialJollyWaiters = {}
+        self.tutorialShipWaits = {}
         self.avatar2questGiver = {}
         self.avatar2questOffer = {}
         self.questDynMap = QuestLadderDynMap()
@@ -501,6 +502,9 @@ class QuestManagerAI(DirectObject):
         self.tutorialJollyWaiters.pop(questDoId, None)
         self.ignore('quest-finalize-%d' % questDoId)
         self.ignore('makeAPirateComplete-%d' % questDoId)
+        shipEvent = self.tutorialShipWaits.pop(questDoId, None)
+        if shipEvent:
+            self.ignore(shipEvent)
         quest.requestDelete()
         del quest
 
@@ -1460,6 +1464,19 @@ class QuestManagerAI(DirectObject):
                     avatar.getTutorial() < PiratesGlobals.TUT_MADE_PIRATE):
                 self.acceptOnce('makeAPirateComplete-%d' % quest.doId,
                                 finalize, extraArgs=[finalizeIndex, True])
+                return
+
+            # Darby Drydock's closing dialog waits for the ship the avatar just
+            # named to be built, the quest's ShipReward hands that ship over...
+            if (finalizeStateInfo.get('waitEvent') == 'tutorialShipConstructed' and
+                    not waitSatisfied and not avatar.getConstructedShipDoId()):
+                def shipConstructed():
+                    self.tutorialShipWaits.pop(quest.doId, None)
+                    finalize(finalizeIndex, True)
+
+                shipEvent = avatar.uniqueName('tutorialShipConstructed')
+                self.tutorialShipWaits[quest.doId] = shipEvent
+                self.acceptOnce(shipEvent, shipConstructed)
                 return
 
             if (quest.getQuestId() == 'Chapter1.rung3' and
