@@ -628,7 +628,7 @@ class ShipPilot2(PhysicsWalker):
         straightSailBonus = 0.0
         if self.straightSailDt > self.STRAIGHT_SAIL_BONUS_TIME / 2.0:
             straightSailBonus = (self.straightSailDt - (self.STRAIGHT_SAIL_BONUS_TIME / 2.0)) / self.STRAIGHT_SAIL_BONUS_TIME / 2.0
-            # the bonus ramps up to MAX_STRAIGHT_SAIL_BONUS, it does not grow forever:
+            # ramp up to MAX_STRAIGHT_SAIL_BONUS, don't grow forever:
             straightSailBonus = min(straightSailBonus, 1.0)
         straightSailBonus *= self.MAX_STRAIGHT_SAIL_BONUS
         straightSailBonus += 1.0
@@ -671,9 +671,13 @@ class ShipPilot2(PhysicsWalker):
         self.__speed *= straightSailBonus
          
         # Enable debug turbo mode
-        maxSpeed = self.ship.maxSpeed * straightSailBonus
+        # the straight sailing bonus gets the ship up to it's top speed
+        # faster, it does not raise the ship class's top speed:
+        maxSpeed = self.ship.maxSpeed
+        turbo = 0
         debugRunning = inputState.isSet("debugRunning")
         if debugRunning or base.localAvatar.getTurbo():
+            turbo = 1
             self.__speed*=4.0
             self.__slideSpeed*=4.0
             self.__rotationSpeed*=1.25
@@ -805,9 +809,10 @@ class ShipPilot2(PhysicsWalker):
                 or self.__speed
                 or self.__slideSpeed
                 or self.__rotationSpeed):
-            # the speeds are accelerations applied through base.controlForce,
-            # the physics manager integrates them over time so they must not
-            # be scaled by dt (doing so made the ships crawl along at ~1 ft/s):
+            # __speed and __slideSpeed are accelerations applied through
+            # base.controlForce, the avatar physics manager integrates them
+            # over dt so they must not be scaled by dt here as well (doing so
+            # left the ships crawling along at ~1 ft/s):
             distance = self.__speed
             goForward = True
             if (distance < 0):
@@ -835,7 +840,7 @@ class ShipPilot2(PhysicsWalker):
                 maxLen = self.ship.acceleration * straightSailBonus
             else:
                 maxLen = self.ship.reverseAcceleration
-            if debugRunning or base.localAvatar.getTurbo():
+            if turbo:
                 maxLen *= 4.0
             if newVector.length() > maxLen:
                 newVector.normalize()
@@ -875,28 +880,27 @@ class ShipPilot2(PhysicsWalker):
 
 
         #*#
-        # modify based on sail damage
-        sailRatio = 1.0
-        if self.ship.maxSp > 0:
-            sailRatio = max(0, self.ship.Sp) / float(self.ship.maxSp)
-
-        speed = physVel
-        if (goForward):
-            maxSpeed *= sailRatio
-            if physVelLen > maxSpeed:
-                speed.normalize()
-                speed *= maxSpeed
+        # clamp the ship's velocity to it's top speed, which way the ship is
+        # actually moving decides the limit so that backing the sails while
+        # under way slows the ship down instead of stopping it dead:
+        speed = Vec3(physVel)
+        heading = Mat3.rotateMatNormaxis(
+            self.avatarNodePath.getH(), Vec3.up()).xform(Vec3.forward())
+        if speed.dot(heading) >= 0.0:
+            speedLimit = maxSpeed
         else:
-            maxReverseSpeed = self.ship.maxReverseSpeed * sailRatio
-            if physVelLen > maxReverseSpeed:
-                speed.normalize()
-                speed *= maxReverseSpeed
+            speedLimit = self.ship.maxReverseSpeed
+            if turbo:
+                speedLimit *= 4.0
 
         #speed *= 1.0 - dt * 0.05
 
-        # clamp the ship's velocity to it's max speed, without this the ship's
-        # max speed (and the sail damage penalty) would never be applied:
-        physObject.setVelocity(speed)
+        # sail damage is already applied to the ship's speed stats
+        # by DistributedShip.calcModifiedStats
+        if physVelLen > speedLimit:
+            speed.normalize()
+            speed *= speedLimit
+            physObject.setVelocity(speed)
 
         #rotMat=Mat3.rotateMatNormaxis(self.avatarNodePath.getH(), Vec3.up())
         #speed=rotMat.xform(speed)
