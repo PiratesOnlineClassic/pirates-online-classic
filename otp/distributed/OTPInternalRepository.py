@@ -57,10 +57,19 @@ class OTPInternalRepository(AstronInternalRepository):
 
         self.send(dg)
 
+    # The interests the AI opens on a client's behalf share the client agent's interest
+    # ids with the client's own, which the client numbers from 1. Like the OTP server,
+    # the AI's are kept in the upper half (see DoInterestManager._sendRemoveAIInterest,
+    # how the client closes one of them), so neither ever replaces the other's interest...
+    AIInterestBit = 1 << 15
+
+    def getAIInterestId(self, interestId):
+        return interestId | self.AIInterestBit
+
     def clientAddInterest(self, clientChannel, interestId, parentId, zoneId, sendInterestDone=True):
         dg = PyDatagram()
         dg.addServerHeader(clientChannel, self.ourChannel, CLIENTAGENT_ADD_INTEREST)
-        dg.addUint16(interestId)
+        dg.addUint16(self.getAIInterestId(interestId))
         dg.addUint32(parentId)
         dg.addUint32(zoneId)
         dg.addBool(sendInterestDone)
@@ -69,7 +78,7 @@ class OTPInternalRepository(AstronInternalRepository):
     def clientAddInterestMultiple(self, clientChannel, interestId, parentId, zoneList, sendInterestDone=True):
         dg = PyDatagram()
         dg.addServerHeader(clientChannel, self.ourChannel, CLIENTAGENT_ADD_INTEREST_MULTIPLE)
-        dg.addUint16(interestId)
+        dg.addUint16(self.getAIInterestId(interestId))
         dg.addUint32(parentId)
         dg.addUint16(len(zoneList))
         for zoneId in zoneList:
@@ -81,7 +90,7 @@ class OTPInternalRepository(AstronInternalRepository):
     def clientRemoveInterest(self, clientChannel, interestId, sendInterestDone=True):
         dg = PyDatagram()
         dg.addServerHeader(clientChannel, self.ourChannel, CLIENTAGENT_REMOVE_INTEREST)
-        dg.addUint16(interestId)
+        dg.addUint16(self.getAIInterestId(interestId))
         dg.addBool(sendInterestDone)
         self.send(dg)
 

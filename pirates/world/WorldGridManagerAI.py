@@ -20,7 +20,9 @@ class GridInterestContextAllocator(object):
     grids (an island and the ocean grid for example) share the same zone numbers...
     """
 
-    MinContext = 0x8000
+    # the bottom of the AI's half is left to the fixed AI interest handles
+    # (otp.ai.AIInterestHandles, opened as 0x8000 + handle)...
+    MinContext = 0x8100
     MaxContext = 0xFFFF
 
     def __init__(self):
