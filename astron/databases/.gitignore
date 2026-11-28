@@ -1,2 +1,4 @@
 *.db
 account-bridge/
+guilds/
+player-friends/
