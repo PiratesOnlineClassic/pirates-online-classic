@@ -32,6 +32,7 @@ class CreatingDatabase(FakeDatabase):
 def makeNamingManager():
     mgr = makeManager()
     mgr.air.dbInterface = CreatingDatabase(mgr.air.dclassesByName)
+    mgr.air.avatarNameChanged = Mock()
     mgr.accountDB.addNameRequest.return_value = 'Success'
     mgr.accountDB.getNameStatus.return_value = 'PENDING'
     return mgr
@@ -258,6 +259,7 @@ class SetNamePatternTests(unittest.TestCase):
         self.assertEqual(fields['setName'], (makePatternName('f', 5, 2, 3),))
         self.assertEqual(fields['WishNameState'], ('',))
         mgr.accountDB.removeNameRequest.assert_called_once_with(AV_FINISHED)
+        mgr.air.avatarNameChanged.assert_called_once_with(AV_FINISHED, ACCOUNT_ID, fields['setName'][0])
 
 
 class PopulateAvatarNameTests(unittest.TestCase):
