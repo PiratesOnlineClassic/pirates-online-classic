@@ -10,12 +10,7 @@ from pirates.piratesbase import PLocalizer
 
 
 class PirateBand:
-    """
-    Book keeping for a single crew owned by this band manager.
-    The crew's members are DistributedBandMemberAI objects generated
-    under the band manager in the band's own zone.
-    """
-
+    # the crew's members are generated under the band manager in the band's own zone
     def __init__(self, bandId):
         self.bandId = bandId
         self.zoneId = bandId
@@ -133,10 +128,7 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
         return band.getMemberIds()
 
     def isAvatarInBand(self, avatar):
-        """
-        Returns True if the avatar is in a band owned by any band manager.
-        """
-
+        # the avatar's band may be owned by any district's band manager
         if self.hasBand(avatar.doId):
             return True
 
@@ -252,22 +244,13 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
             band.members[newManagerId].b_setIsManager(1)
 
     def addAvatarToBand(self, managerId, avatar):
-        """
-        Adds the avatar to the band managed by the managerId, if the manager isn't
-        in a band yet then a new band is created. Returns True on success.
-        """
-
         if self.isAvatarInBand(avatar):
             return False
 
         return self.addMemberToBand(managerId, self.getMemberInfo(avatar))
 
     def addMemberToBand(self, managerId, memberInfo):
-        """
-        Same as addAvatarToBand, except the new member is described by it's member
-        info, so the new member's avatar may be on another district.
-        """
-
+        # the new member's avatar may be on another district
         if self.hasBand(memberInfo[0]):
             return False
 
@@ -321,13 +304,8 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
         avatar.setBandId(bandManagerId, bandId)
 
     def verifyAvatarBandId(self, avatar):
-        """
-        Called when an avatar arrives on this district. Makes sure the band the
-        avatar thinks it is in still exists, the avatar's band may have been
-        dissolved while it was changing district, or the district owning the
-        band may have shut down.
-        """
-
+        # the avatar's band may have been dissolved while it was changing
+        # district, or the district owning the band may have shut down...
         bandManagerId, bandId = avatar.getBandId()
         if not bandManagerId:
             return
@@ -398,10 +376,6 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
         self.sendUpdateToAvatarId(avatarId, fieldName, args)
 
     def sendBandRequest(self, request, avatarId, args):
-        """
-        Sends a band request to the band manager which owns the avatar's band.
-        """
-
         handler = self.bandRequestHandlers[request]
         if self.hasBand(avatarId):
             handler(avatarId, *args)
@@ -558,11 +532,7 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
         self.inviteAvatar(inviterId, inviterName, invitee)
 
     def inviteAvatar(self, inviterId, inviterName, invitee):
-        """
-        Sends the invitation to the invitee, whom's avatar is on this district.
-        The inviter may be on any district.
-        """
-
+        # the inviter may be on any district
         avatarId = invitee.doId
         if avatarId in self.invites:
             self.d_requestOutCome(inviterId, avatarId, BandConstance.outcome_already_invited)
@@ -628,13 +598,8 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
         self.air.netMessenger.send('bandInviteAccepted', [avatarId, memberInfo])
 
     def canAddInvitedMember(self, managerId):
-        """
-        Returns True if this band manager is the one which should add an invited
-        avatar to the crew of the managerId. That is the band manager owning the
-        manager's crew, or the band manager on the district the manager is on
-        when the manager has yet to start a crew.
-        """
-
+        # the band manager owning the crew adds the member, or the manager's
+        # own district when the manager has yet to start a crew...
         if self.hasBand(managerId):
             return True
 
@@ -753,10 +718,6 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
     # Member status
 
     def updateAvatarHp(self, avatar):
-        """
-        Called by the avatar when it's hp or max hp has changed.
-        """
-
         if not self.isAvatarInBand(avatar):
             return
 
@@ -781,7 +742,7 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
             return [0, '', 0, [], False]
 
         # only the captain's ship is shown as the crew member's ship
-        captainId = ship.getCaptainId() if hasattr(ship, 'getCaptainId') else 0
+        captainId = ship.getCaptainId()
         if captainId and captainId != avatar.doId:
             return [0, '', 0, [], False]
 
@@ -796,10 +757,6 @@ class DistributedPirateBandManagerAI(DistributedObjectAI):
         self.updateAvatarShipInfo(avatar)
 
     def updateAvatarShipInfo(self, avatar):
-        """
-        Called by the avatar when it's active ship has changed.
-        """
-
         if not self.isAvatarInBand(avatar):
             return
 

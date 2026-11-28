@@ -122,11 +122,7 @@ class DistributedCrewMatchAI(DistributedObjectAI):
         taskMgr.remove(self.uniqueName('join-crew-%d' % avatarId))
 
     def canSponsorCrew(self, avatarId):
-        """
-        Returns True if the avatar is the captain of a crew or has
-        started a crew of one, and that crew still has some room.
-        """
-
+        # captains of a crew with room to spare, or of a crew of one
         if avatarId in self.crewsOfOne:
             return True
 
@@ -208,11 +204,7 @@ class DistributedCrewMatchAI(DistributedObjectAI):
         return True
 
     def addMemberToCrew(self, sponsorId, memberInfo):
-        """
-        Adds the new member to the sponsor's crew, the sponsor must be on this
-        district. The new member may be on any district.
-        """
-
+        # the sponsor must be on this district, the new member may be on any district
         if sponsorId not in self.air.doId2do:
             return False
 
@@ -234,12 +226,6 @@ class DistributedCrewMatchAI(DistributedObjectAI):
         self.pendingJoins.pop(avatarId, None)
 
     def joinCrew(self, sponsorId, avatarId, notifySuccess):
-        """
-        Adds the avatar to the sponsor's crew and lets the avatar know how it went,
-        when the sponsor is on another district the sponsor's district is asked to
-        add the avatar.
-        """
-
         if sponsorId in self.air.doId2do:
             success = self.addAvatarToCrew(sponsorId, avatarId)
             if notifySuccess or not success:
