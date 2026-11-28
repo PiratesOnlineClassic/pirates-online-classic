@@ -1,5 +1,6 @@
 from direct.directnotify import DirectNotifyGlobal
 from pirates.holiday.DistributedHolidayObjectAI import DistributedHolidayObjectAI
+from pirates.holiday.DistributedHolidayBonfireAI import DistributedHolidayBonfireAI
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 class DistributedHolidayPigAI(DistributedHolidayObjectAI):
@@ -12,15 +13,19 @@ class DistributedHolidayPigAI(DistributedHolidayObjectAI):
     def __init__(self, air):
         DistributedHolidayObjectAI.__init__(self, air)
         self.pigRoasting = False
+        self.bonfireStartedEvent = None
 
     def announceGenerate(self):
         DistributedHolidayObjectAI.announceGenerate(self)
 
-        self.accept('BonfireStarted', self.bonfireStarted)
+        # the pig roasts over the bonfire lit on it's own island
+        self.bonfireStartedEvent = DistributedHolidayBonfireAI.getBonfireStartedEvent(self.parentId)
+        self.accept(self.bonfireStartedEvent, self.bonfireStarted)
 
     def delete(self):
         DistributedHolidayObjectAI.delete(self)
-        self.ignore('BonfireStarted')
+        if self.bonfireStartedEvent:
+            self.ignore(self.bonfireStartedEvent)
 
     def setPigRoasting(self, value):
         self.pigRoasting = value

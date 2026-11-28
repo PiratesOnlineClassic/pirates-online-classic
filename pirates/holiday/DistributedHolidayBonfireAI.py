@@ -8,15 +8,29 @@ class DistributedHolidayBonfireAI(DistributedHolidayObjectAI):
     def __init__(self, air):
         DistributedHolidayObjectAI.__init__(self, air)
         self.fireStarted = False
-    
+        self.lightTrack = None
+
+    def delete(self):
+        if self.lightTrack:
+            self.lightTrack.pause()
+            self.lightTrack = None
+
+        DistributedHolidayObjectAI.delete(self)
+
+    @staticmethod
+    def getBonfireStartedEvent(parentId):
+        return 'BonfireStarted-%d' % parentId
+
     def setFireStarted(self, value):
         if value and not self.fireStarted:
-            messenger.send('BonfireStarted', [])
+            # only the holiday objects on our own island care about our fire...
+            messenger.send(self.getBonfireStartedEvent(self.parentId), [])
 
         self.fireStarted = value
-        
+
         island = self.getParentObj()
-        island.b_setFeastFireEnabled(value)
+        if island and hasattr(island, 'b_setFeastFireEnabled'):
+            island.b_setFeastFireEnabled(value)
 
     def d_setFireStarted(self, value):
         self.sendUpdate('setFireStarted', [value])
@@ -36,14 +50,19 @@ class DistributedHolidayBonfireAI(DistributedHolidayObjectAI):
         self.sendUpdateToAvatarId(avatarId, 'finishInteraction', [])
 
     def handleHolidayInteract(self, avatar, interactType, instant):
-        if self.fireStarted:
+        # the fire is lit once, by the first avatar to light it...
+        if self.fireStarted or self.lightTrack:
             return self.DENY
 
-        lightTrack = Sequence(
+        def finishLighting():
+            self.lightTrack = None
+            self.d_finishInteraction(avatar.doId)
+
+        self.lightTrack = Sequence(
             Wait(5.0),
             Func(self.b_setFireStarted, value=True),
             Wait(1.5),
-            Func(self.d_finishInteraction, avatarId=avatar.doId))
-        lightTrack.start()
+            Func(finishLighting))
+        self.lightTrack.start()
 
         return self.ACCEPT

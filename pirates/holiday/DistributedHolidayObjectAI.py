@@ -6,6 +6,9 @@ from pirates.ai import HolidayGlobals
 class DistributedHolidayObjectAI(DistributedInteractiveAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedHolidayObjectAI')
 
+    # every avatar may use a holiday object at once
+    MULTIUSE = True
+
     INTERACT_NONE = 0
     INTERACT_ALL = 1
     INTERACT_GM = 2
