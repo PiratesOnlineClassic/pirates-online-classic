@@ -839,5 +839,54 @@ class ShipManagerTutorialShipTests(unittest.TestCase):
         self.assertEqual(ship.values['b_setGameState'], ('Idle', 0))
 
 
+class SteeredShipGridZoneTests(unittest.TestCase):
+
+    def makeOceanGrid(self):
+        from pirates.world import WorldGlobals
+        from pirates.world.DistributedOceanGridAI import DistributedOceanGridAI
+        oceanGrid = DistributedOceanGridAI.__new__(DistributedOceanGridAI)
+        NodePath.__init__(oceanGrid, 'oceanGrid')
+        oceanGrid.doId = 4000
+        oceanGrid.startingZone = WorldGlobals.OCEAN_GRID_STARTING_ZONE
+        oceanGrid.gridSize = WorldGlobals.OCEAN_GRID_SIZE
+        oceanGrid.gridRadius = WorldGlobals.OCEAN_GRID_RADIUS
+        oceanGrid.cellWidth = WorldGlobals.OCEAN_CELL_SIZE
+        oceanGrid.style = 'Cartesian'
+        return oceanGrid
+
+    def test_steered_ship_follows_its_position_into_the_next_cell(self):
+        oceanGrid = self.makeOceanGrid()
+        ship = makeShip()
+        ship.reparentTo(oceanGrid)
+        ship.getParentObj = lambda: oceanGrid
+        ship.zoneId = oceanGrid.getZoneFromXYZ((0, 0, 0))
+        ship.b_setLocation = Mock()
+
+        with patch.object(builtins, 'taskMgr', Mock(), create=True) as taskMgr:
+            ship.setClientController(42)
+            delay, callback, name = taskMgr.doMethodLater.call_args[0]
+
+        self.assertEqual(name, 'updateGridZone-1000')
+        task = Mock()
+
+        # still in the same cell, nothing to do...
+        self.assertIs(callback(task), task.again)
+        ship.b_setLocation.assert_not_called()
+
+        # sailed a full cell east, the ship (and so it's crew's interest) moves along...
+        ship.setPos(oceanGrid.cellWidth, 0, 0)
+        callback(task)
+        ship.b_setLocation.assert_called_once_with(
+            oceanGrid.doId, oceanGrid.getZoneFromXYZ((oceanGrid.cellWidth, 0, 0)))
+
+    def test_letting_go_of_the_wheel_stops_the_zone_checks(self):
+        ship = makeShip()
+        with patch.object(builtins, 'taskMgr', Mock(), create=True) as taskMgr:
+            ship.setClientController(0)
+
+        taskMgr.remove.assert_called_once_with('updateGridZone-1000')
+        taskMgr.doMethodLater.assert_not_called()
+
+
 if __name__ == '__main__':
     unittest.main()

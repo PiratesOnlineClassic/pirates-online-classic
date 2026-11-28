@@ -524,6 +524,7 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
     def delete(self):
         self.clearSkillEffectTasks()
         self.stopPosHprBroadcast()
+        taskMgr.remove(self.uniqueName('updateGridZone'))
         for effectId in (WeaponGlobals.C_OPENFIRE, WeaponGlobals.C_TAKECOVER):
             taskMgr.remove(self.uniqueName('crew-skill-effect-%d' % effectId))
         if hasattr(self, 'gameFSM'):
@@ -956,8 +957,29 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
     def d_sendCrewToIsland(self, avatarId, islandDoId, posH):
         self.sendUpdateToAvatarId(avatarId, 'sendCrewToIsland', [islandDoId, posH])
 
+    # how often the zone of a ship steered by a client is checked against it's position...
+    GridZoneCheckPeriod = 1.0
+
     def setClientController(self, clientControllerDoId):
         self.clientControllerDoId = clientControllerDoId
+
+        # the helmsman's client only sends us the ship's position, so keep the ship
+        # in the ocean cell it has sailed into, this moves the crew's interest along with it...
+        taskMgr.remove(self.uniqueName('updateGridZone'))
+        if clientControllerDoId:
+            taskMgr.doMethodLater(self.GridZoneCheckPeriod, self.__updateGridZone,
+                self.uniqueName('updateGridZone'))
+
+    def __updateGridZone(self, task):
+        oceanGrid = self.getParentObj()
+        if not isinstance(oceanGrid, DistributedOceanGridAI):
+            return task.again
+
+        zoneId = oceanGrid.getZoneFromXYZ(self.getPos())
+        if zoneId != self.zoneId and oceanGrid.isValidZone(zoneId):
+            self.b_setLocation(oceanGrid.doId, zoneId)
+
+        return task.again
 
     def d_setClientController(self, clientControllerDoId):
         self.sendUpdate('setClientController', [clientControllerDoId])
