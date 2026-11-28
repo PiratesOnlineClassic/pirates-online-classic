@@ -6,6 +6,7 @@ from pirates.minigame import PlayingCardGlobals
 class Distributed7StudTableAI(DistributedPokerTableAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('Distributed7StudTableAI')
 
+    # rounds: 1 two down and one up, 2-4 one up each, 5 one down, 6 showdown
     NumRounds = 6
     GameType = PlayingCardGlobals.SevenStud
 
@@ -13,16 +14,15 @@ class Distributed7StudTableAI(DistributedPokerTableAI):
         DistributedPokerTableAI.__init__(self, air)
         self.setTableType(1)
 
-    def _dealInitialCards(self):
-        # 7 Stud: 3 cards initially (2 hole, 1 up)
-        occupied = self._activeBettors
-        for _ in range(3):
-            for s in occupied:
-                self._playerHands[s].append(self._dealCard())
+    def getRoundDeal(self, round):
+        if round == 1:
+            return (3, 0)
+        elif round in (2, 3, 4, 5):
+            return (1, 0)
 
-    def _startBettingRound(self, round):
-        # 7 Stud: one additional card dealt per round after the first
-        if round >= 2:
-            for s in self._activeBettors:
-                self._playerHands[s].append(self._dealCard())
-        DistributedPokerTableAI._startBettingRound(self, round)
+        return (0, 0)
+
+    def isCardVisible(self, cardIndex):
+        # third through sixth street are dealt face up; the first two
+        # cards and the river card are the pirate's hole cards.
+        return 2 <= cardIndex <= 5

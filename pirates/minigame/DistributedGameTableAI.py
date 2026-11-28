@@ -9,6 +9,18 @@ class DistributedGameTableAI(DistributedInteractiveAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGameTableAI')
     MULTIUSE = True
 
+    # requestSeatResponse answer codes understood by DistributedGameTable
+    SeatResponseDeny = 0
+    SeatResponseSit = 1
+    SeatResponseStand = 2
+    SeatResponseFull = 3
+    SeatResponseNoGold = 4
+    SeatResponseNonPayer = 5
+
+    # seat place holders; anything else in a seat is a player avatar
+    EmptySeat = None
+    AISeat = 1
+
     def __init__(self, air, availableSeats=7, numberAI=3):
         DistributedInteractiveAI.__init__(self, air)
         self._availableSeats = availableSeats
@@ -28,23 +40,28 @@ class DistributedGameTableAI(DistributedInteractiveAI):
     def delete(self):
         for seatIndex in range(self._availableSeats):
             seat = self.seats[seatIndex]
-            if seat and seat not in (0, 1):
+            if self.isPlayerSeat(seatIndex):
                 self.ignore(seat.getDeleteEvent())
 
         DistributedInteractiveAI.delete(self)
 
     def handleRequestInteraction(self, avatar, interactType, instant):
+        if self.getAvatarSeatIndex(avatar) is not None:
+            # this avatar is already seated at our table...
+            self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [self.SeatResponseDeny, 0])
+            return self.DENY
+
         if self.getOpenSeatCount() == 0:
-            self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [3, 0])
+            self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [self.SeatResponseFull, 0])
             return self.DENY
 
         availableSeatIndex = self.getRandomOpenSeat()
         if availableSeatIndex is None:
-            self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [3, 0])
+            self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [self.SeatResponseFull, 0])
             return self.DENY
 
         self.avatarSit(avatar, availableSeatIndex)
-        self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [1, availableSeatIndex])
+        self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [self.SeatResponseSit, availableSeatIndex])
         return self.ACCEPT
 
     def handleRequestExit(self, avatar):
@@ -53,7 +70,7 @@ class DistributedGameTableAI(DistributedInteractiveAI):
             return self.DENY
 
         self.avatarStand(avatar, seatIndex)
-        self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [2, seatIndex])
+        self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [self.SeatResponseStand, seatIndex])
         return self.ACCEPT
 
     def requestSeat(self, seatIndex, name):
@@ -61,22 +78,37 @@ class DistributedGameTableAI(DistributedInteractiveAI):
         if not avatar:
             return
 
+        if self.getAvatarSeatIndex(avatar) is not None:
+            return
+
         if seatIndex >= self._availableSeats or self.seats[seatIndex] is not None:
             # Requested seat unavailable; try any open seat
             seatIndex = self.getRandomOpenSeat()
             if seatIndex is None:
-                self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [3, 0])
+                self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [self.SeatResponseFull, 0])
                 return
 
         self.avatarSit(avatar, seatIndex)
-        self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [1, seatIndex])
+        self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [self.SeatResponseSit, seatIndex])
+
+    def standPlayer(self, seatIndex):
+        """
+        Forces the player in the specified seat to get up from the table,
+        used when a player runs out of gold, times out or gets caught cheating.
+        """
+
+        if not self.isPlayerSeat(seatIndex):
+            return
+
+        avatar = self.seats[seatIndex]
+        self.avatarStand(avatar, seatIndex)
+        self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [self.SeatResponseStand, seatIndex])
+        self.sendUpdateToAvatarId(avatar.doId, 'setUserId', [0])
 
     def _avatarUnexpectedExit(self, avatar):
         seatIndex = self.getAvatarSeatIndex(avatar)
         if seatIndex is not None:
-            self.seats[seatIndex] = None
-            self.sendUpdate('avatarStand', [avatar.doId, seatIndex])
-            self.sendUpdate('setAvatarSeat', [self.getAvatarSeat()])
+            self.avatarStand(avatar, seatIndex)
 
     @property
     def availableSeats(self):
@@ -86,20 +118,55 @@ class DistributedGameTableAI(DistributedInteractiveAI):
     def numberAI(self):
         return self._numberAI
 
+    def isAISeat(self, seatIndex):
+        return self.seats[seatIndex] is not None and self.seats[seatIndex] == self.AISeat
+
+    def isPlayerSeat(self, seatIndex):
+        seat = self.seats[seatIndex]
+        return seat is not None and seat not in (0, 1)
+
     def getAIPlayers(self):
         aiSeats = []
         for seatIndex in range(len(self.seats)):
-            if self.seats[seatIndex] == 1:
+            if self.isAISeat(seatIndex):
                 aiSeats.append(seatIndex)
 
         return aiSeats
 
+    def getPlayerSeats(self):
+        playerSeats = []
+        for seatIndex in range(len(self.seats)):
+            if self.isPlayerSeat(seatIndex):
+                playerSeats.append(seatIndex)
+
+        return playerSeats
+
+    def getOccupiedSeats(self):
+        occupied = []
+        for seatIndex in range(len(self.seats)):
+            if self.seats[seatIndex] is not None:
+                occupied.append(seatIndex)
+
+        return occupied
+
     def getAvatarSeatIndex(self, avatar):
         for seatIndex in range(len(self.seats)):
-            if self.seats[seatIndex] == avatar:
+            if self.isPlayerSeat(seatIndex) and self.seats[seatIndex] == avatar:
                 return seatIndex
 
         return None
+
+    def getSenderSeatIndex(self):
+        """
+        Returns the seat index of the avatar that sent the current field update,
+        or None if the sender is not seated at this table.
+        """
+
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return None
+
+        return self.getAvatarSeatIndex(avatar)
 
     def getAvailableSeatIndexes(self):
         available = []
@@ -118,6 +185,12 @@ class DistributedGameTableAI(DistributedInteractiveAI):
 
     def getOpenSeatCount(self):
         return len(self.getAvailableSeatIndexes())
+
+    def getSeatName(self, seatIndex):
+        if self.isPlayerSeat(seatIndex):
+            return self.seats[seatIndex].getName()
+
+        return ''
 
     def avatarSit(self, avatar, seatIndex):
         if self.seats[seatIndex] is not None:
@@ -145,15 +218,73 @@ class DistributedGameTableAI(DistributedInteractiveAI):
 
     def getAvatarSeat(self):
         result = []
-        for seat in self.seats:
-            if seat is None or seat in (0, 1):
-                result.append(0)
+        for seatIndex in range(len(self.seats)):
+            if self.isPlayerSeat(seatIndex):
+                result.append(self.seats[seatIndex].doId)
             else:
-                result.append(seat.doId)
+                result.append(0)
+
         return result
+
+    # ------------------------------------------------------------------
+    # Gold helpers; table games are played with the gold in the
+    # avatar's pocket, which the client reads directly from it's inventory
+    # ------------------------------------------------------------------
+
+    def getSeatInventory(self, seatIndex):
+        if not self.isPlayerSeat(seatIndex):
+            return None
+
+        return self.air.inventoryManager.getInventory(self.seats[seatIndex].doId)
+
+    def getSeatGold(self, seatIndex):
+        inventory = self.getSeatInventory(seatIndex)
+        if not inventory:
+            return 0
+
+        return inventory.getGoldInPocket()
+
+    def takeSeatGold(self, seatIndex, amount):
+        """
+        Removes up to amount gold from the player in the seat, returns the
+        amount of gold that was actually taken.
+        """
+
+        inventory = self.getSeatInventory(seatIndex)
+        if not inventory or amount <= 0:
+            return 0
+
+        amount = min(amount, inventory.getGoldInPocket())
+        inventory.setGoldInPocket(inventory.getGoldInPocket() - amount)
+        return amount
+
+    def giveSeatGold(self, seatIndex, amount):
+        inventory = self.getSeatInventory(seatIndex)
+        if not inventory or amount <= 0:
+            return False
+
+        inventory.setGoldInPocket(inventory.getGoldInPocket() + amount)
+        return True
 
     def d_receiveAISpeech(self, seatIndex, message):
         self.sendUpdate('receiveAISpeech', [seatIndex, message])
+
+    def d_receiveAIThoughts(self, seatIndex, message):
+        self.sendUpdate('receiveAIThoughts', [seatIndex, message])
+
+    def aiSpeak(self, seatIndex, phrases, chance=1.0):
+        """
+        Has the AI player sitting in the seat say a random phrase from the
+        list of phrases specified, when the random chance succeeds.
+        """
+
+        if not phrases or not self.isAISeat(seatIndex):
+            return
+
+        if random.random() > chance:
+            return
+
+        self.d_receiveAISpeech(seatIndex, random.choice(phrases))
 
     def setTableType(self, type):
         self.tableType = type
@@ -210,7 +341,7 @@ class DistributedGameTableAI(DistributedInteractiveAI):
     def getAIList(self):
         aiList = []
         for seatIndex in range(self._availableSeats):
-            aiList.append(1 if self.seats[seatIndex] == 1 else 0)
+            aiList.append(1 if self.isAISeat(seatIndex) else 0)
 
         return aiList
 
@@ -229,6 +360,6 @@ class DistributedGameTableAI(DistributedInteractiveAI):
             self._numberAI = self._availableSeats
 
         for i in range(self._numberAI):
-            self.seats[i] = 1
+            self.seats[i] = self.AISeat
 
         randomGen.shuffle(self.seats)
