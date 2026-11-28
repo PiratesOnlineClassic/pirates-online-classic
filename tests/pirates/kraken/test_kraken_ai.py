@@ -152,6 +152,18 @@ class KrakenAITests(unittest.TestCase):
             self.assertGreater(grabber.getMaxHp(), 0)
             self.assertIn((grabber, 'emerge', [1]), self.sent)
 
+    def test_holders_wrap_the_hull_bow_and_stern_on_both_sides(self):
+        posHprs = KrakenAI.getHolderPosHprs(ShipGlobals.WARSHIPL3, 4)
+        self.assertEqual([pos for pos, hpr in posHprs],
+            [(90, 90, -10), (-90, 90, -10), (90, -120, -10), (-90, -120, -10)])
+        self.assertEqual([hpr[0] for pos, hpr in posHprs], [-90, 90, -90, 90])
+        self.assertEqual(KrakenAI.getHolderPosHprs(ShipGlobals.BLACK_PEARL, 4), [])
+
+        kraken = self.spawn()
+        holder = kraken.holderTentacles[0]
+        expected = KrakenAI.getHolderPosHprs(self.ship.shipClass, 4)[0][0]
+        self.assertEqual(tuple(round(c) for c in holder.getPos()), expected)
+
     def test_level_is_clamped(self):
         self.ship.level = 1
         self.assertEqual(self.spawn().getLevel(), KrakenAI.MinLevel)

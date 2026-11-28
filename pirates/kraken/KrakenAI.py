@@ -139,10 +139,42 @@ class KrakenAI(DistributedObjectAI, FSM):
         self.body = self.createPart(KrakenBodyAI, AvatarTypes.KrakenBody)
         self.generatePart(self.body)
 
+    @staticmethod
+    def getHolderPosHprs(shipClass, numHolders):
+        """
+        The holders wrap the hull from below, bow and stern on either side of the ship,
+        just outboard of the grabber locators (see DistributedShip.setupKrakenLocators)...
+        """
+
+        locators = ShipGlobals.KrakenLocators.get(shipClass, ())
+        if not locators:
+            return []
+
+        sideX = max(locator[0][0] for locator in locators) + 30
+        foreY = max(locator[0][1] for locator in locators)
+        aftY = min(locator[0][1] for locator in locators)
+        posHprs = []
+        for x in range(numHolders):
+            side = 1 if x % 2 == 0 else -1
+            y = (foreY, aftY)[(x // 2) % 2]
+            posHprs.append(((side * sideX, y, -10), (-90 * side, 0, 0)))
+
+        return posHprs
+
     def createHolderTentacles(self):
+        ship = self.getShip()
+        posHprs = self.getHolderPosHprs(ship.getShipClass(), self.NumHolderTentacles)
         for x in range(self.NumHolderTentacles):
             holder = self.createPart(HolderTentacleAI, AvatarTypes.HolderTentacle)
+            if x < len(posHprs):
+                pos, hpr = posHprs[x]
+                holder.setPos(*pos)
+                holder.setHpr(*hpr)
+
             self.generatePart(holder)
+            if hasattr(holder, 'sendCurrentPosition'):
+                holder.sendCurrentPosition()
+
             self.holderTentacles.append(holder)
 
     def createGrabberTentacles(self):
