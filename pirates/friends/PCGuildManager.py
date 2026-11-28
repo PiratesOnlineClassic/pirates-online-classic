@@ -1,4 +1,5 @@
 from pirates.piratesbase import PLocalizer
+from otp.otpbase import OTPLocalizer
 from otp.friends.GuildManager import GuildManager
 
 class PCGuildManager(GuildManager):
@@ -11,6 +12,7 @@ class PCGuildManager(GuildManager):
     def recvSCQuest(self, senderId, questInt, msgType, taskNum):
         self.notify.debugCall()
         senderName = self.id2Name.get(senderId, None)
+        from pirates.speedchat.PSpeedChatQuestTerminal import decodeSCQuestMsgInt
         message = decodeSCQuestMsgInt(questInt, msgType, taskNum)
         if senderName:
             displayMess = '%s %s %s' % (senderName, OTPLocalizer.GuildPrefix, message)

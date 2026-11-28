@@ -2,6 +2,7 @@ from panda3d.core import *
 from direct.gui.DirectGui import *
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm import StateData
+from libotp import NametagGlobals
 import string
 from otp.otpbase import OTPLocalizer
 from otp.otpbase import OTPGlobals
