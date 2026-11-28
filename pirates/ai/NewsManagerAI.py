@@ -13,12 +13,27 @@ from pirates.ai import HolidayGlobals
 from pirates.ai.HolidayDates import HolidayDates
 from pirates.piratesbase import PiratesGlobals, TODGlobals
 
+# NewsManager.messages ids
+MSG_FULL_MOON_WARNING = 0
+MSG_FULL_MOON_FINAL_WARNING = 1
+MSG_CURSE_COMING = 2
+MSG_CURSE_ACTIVE = 3
+MSG_CURSE_END = 7
+
+# the jolly curse cycle starts with the moon waxing to full (five minutes of
+# a regular hour long cycle), the final warning is given a minute before...
+FULL_MOON_FINAL_WARNING_TIME = 60
+
 JollyCurseMessages = {
-    PiratesGlobals.TOD_HALLOWEEN: 0,
-    PiratesGlobals.TOD_HALF2FULLMOON: 1,
-    PiratesGlobals.TOD_FULLMOON: 3,
-    PiratesGlobals.TOD_FULL2HALFMOON: 7
+    PiratesGlobals.TOD_HALF2FULLMOON: MSG_FULL_MOON_WARNING,
+    PiratesGlobals.TOD_FULLMOON: MSG_CURSE_ACTIVE,
+    PiratesGlobals.TOD_FULL2HALFMOON: MSG_CURSE_END
 }
+
+JollyCurseHolidays = [
+    PiratesGlobals.JOLLYROGERCURSE,
+    PiratesGlobals.JOLLYCURSEAUTO
+]
 
 
 class NewsManagerAI(DistributedObjectAI):
@@ -30,6 +45,10 @@ class NewsManagerAI(DistributedObjectAI):
         self.wantHolidays = config.GetBool('want-holidays', True)
 
         self.holidayList = {}
+
+        # holidays stopped while they are scheduled to be running are not
+        # restarted by the schedule until their scheduled end time...
+        self.suppressedHolidays = {}
 
     def announceGenerate(self):
         DistributedObjectAI.announceGenerate(self)
@@ -60,31 +79,48 @@ class NewsManagerAI(DistributedObjectAI):
     def delete(self):
         taskMgr.remove(self.taskName('checkHolidays'))
         taskMgr.remove(self.taskName('holidayTimerTask'))
+        taskMgr.remove(self.taskName('fullMoonWarning'))
 
         DistributedObjectAI.delete(self)
 
     def isHolidayActive(self, holidayId):
         return holidayId in self.holidayList
 
+    def getScheduledEndTime(self, holidayId, currentTime):
+        """
+        Returns the end time of the scheduled date the holiday is running in
+        at the current time, or None when the holiday is not scheduled to run
+        """
+
+        date = HolidayGlobals.getHolidayDates(holidayId)
+        if date is None or isinstance(date, dict):
+            return None
+
+        for index in range(len(date.startDates)):
+            start = date.getStartTime(index)
+            end = date.getEndTime(index)
+            if currentTime >= start and currentTime <= end:
+                return end
+
+        return None
+
     def __checkHolidays(self, task=None):
         holidays = HolidayGlobals.holidays
 
         for holidayId in holidays:
-            date = HolidayGlobals.getHolidayDates(holidayId)
             currentTime = time.time()
+            end = self.getScheduledEndTime(holidayId, currentTime)
 
-            if date is None:
-                continue
+            suppressedEnd = self.suppressedHolidays.get(holidayId)
+            if suppressedEnd is not None:
+                if end is not None and currentTime <= suppressedEnd:
+                    continue
 
-            if isinstance(date, dict):
-                continue
+                del self.suppressedHolidays[holidayId]
 
-            for index in range(len(date.startDates)):
-                start = date.getStartTime(index)
-                end = date.getEndTime(index)
-                if currentTime >= start and currentTime <= end:
-                    remaining = end - currentTime
-                    self.startHoliday(holidayId, remaining)
+            if end is not None:
+                remaining = end - currentTime
+                self.startHoliday(holidayId, remaining)
 
         return Task.again
 
@@ -100,6 +136,12 @@ class NewsManagerAI(DistributedObjectAI):
         return self.holidayList.get(holidayId, 0)
 
     def startHoliday(self, holidayId, duration, quietly=False):
+        # the clients look up the holiday's messages as soon as it starts,
+        # an unknown holiday would break every client in the district...
+        if holidayId not in HolidayGlobals.holidayNames:
+            self.notify.warning('Attempted to start unknown holiday %d!' % holidayId)
+            return
+
         if self.isHolidayActive(holidayId):
             return
 
@@ -109,8 +151,15 @@ class NewsManagerAI(DistributedObjectAI):
             self.holidayList[holidayId] = int(time.time() + duration)
             self.notify.info('Holiday "%s" (%d) is starting!' % (HolidayGlobals.getHolidayName(holidayId), holidayId))
             self.air.netMessenger.send('uberDOGHolidayStarted', [holidayId, quietly])
+
+            # warn everyone before the time of day switches over to
+            # the jolly curse cycle and the moon starts to become full...
+            if holidayId in JollyCurseHolidays:
+                self.d_displayMessage(MSG_CURSE_COMING)
+
             messenger.send('HolidayStarted', [holidayId])
 
+        self.suppressedHolidays.pop(holidayId, None)
         self.processHolidayChange()
 
     def endHoliday(self, holidayId):
@@ -122,6 +171,12 @@ class NewsManagerAI(DistributedObjectAI):
             del self.holidayList[holidayId]
             self.notify.info('Holiday %s is ending!' % holidayId)
             messenger.send('HolidayEnded', [holidayId])
+
+        # don't let the schedule start the holiday right back up again,
+        # if it was stopped before it's scheduled end time...
+        scheduledEnd = self.getScheduledEndTime(holidayId, time.time())
+        if scheduledEnd is not None:
+            self.suppressedHolidays[holidayId] = scheduledEnd
 
         self.processHolidayChange()
         self.air.netMessenger.send('uberDOGHolidayEnded', [holidayId])
@@ -154,12 +209,27 @@ class NewsManagerAI(DistributedObjectAI):
         self.sendUpdateToAvatarId(avatarId, 'displayMessage', [messageId])
 
     def processTimeChange(self, cycleType, todState, stateTime):
-        # Check if Jolly Rogers's curse is active
-        #curseActive = self.isHolidayActive(PiratesGlobals.CURSEDNIGHT)
-        #if curseActive and cycleType == PiratesGlobals.TOD_JOLLYCURSE_CYCLE:
+        # the moon phases are only part of the jolly curse cycle,
+        # which runs while one of Jolly Roger's curse holidays is active...
+        taskMgr.remove(self.taskName('fullMoonWarning'))
+        if cycleType != TODGlobals.TOD_JOLLYCURSE_CYCLE:
+            return
+
         messageId = JollyCurseMessages.get(todState, None)
-        if messageId is not None:
-            self.d_displayMessage(messageId)
+        if messageId is None:
+            return
+
+        if todState == PiratesGlobals.TOD_HALF2FULLMOON:
+            stateDuration = self.air.timeOfDayMgr.cycleDuration * TODGlobals.getStateDuration(cycleType, todState)
+            warningDelay = stateDuration - stateTime - FULL_MOON_FINAL_WARNING_TIME
+            if warningDelay <= 0:
+                self.d_displayMessage(MSG_FULL_MOON_FINAL_WARNING)
+                return
+
+            taskMgr.doMethodLater(warningDelay, self.d_displayMessage, self.taskName('fullMoonWarning'),
+                extraArgs=[MSG_FULL_MOON_FINAL_WARNING])
+
+        self.d_displayMessage(messageId)
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def stopHoliday(holidayId):
@@ -168,6 +238,9 @@ def stopHoliday(holidayId):
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int, int])
 def startHoliday(holidayId, duration):
+    if holidayId not in HolidayGlobals.holidayNames:
+        return 'Unknown holiday %d!' % holidayId
+
     base.air.newsManager.startHoliday(holidayId, duration, True)
     return 'Started Holiday %d' % holidayId
 
