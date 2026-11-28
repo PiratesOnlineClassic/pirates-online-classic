@@ -9,12 +9,21 @@ from pirates.makeapirate import ClothingGlobals
 from pirates.piratesbase import PiratesGlobals
 
 
-def packClothing(uid, colorId):
-    return (uid << 8) | (colorId & 0xFF)
+# Set on starting items, the clothing an avatar was made with. The tailor
+# shows these as "Starting Item" and will not buy them back.
+ORIGINAL_BIT = 1 << 31
+
+
+def packClothing(uid, colorId, original=0):
+    value = (uid << 8) | (colorId & 0xFF)
+    if original:
+        value |= ORIGINAL_BIT
+
+    return value
 
 
 def unpackClothing(value):
-    return (value >> 8, value & 0xFF)
+    return ((value & ~ORIGINAL_BIT) >> 8, value & 0xFF, int(bool(value & ORIGINAL_BIT)))
 
 
 class AccessoriesDB:
@@ -40,6 +49,10 @@ class AccessoriesDB:
 
         wardrobe = json.loads(data)
         wardrobe.setdefault('clothing', [])
+
+        # Clothing is stored as [uid, colorId, original].
+        wardrobe['clothing'] = [list(item[:2]) + [item[2] if len(item) > 2 else 0]
+            for item in wardrobe['clothing']]
         wardrobe.setdefault('jewelry', [])
         wardrobe.setdefault('tattoos', [])
         return wardrobe
@@ -101,27 +114,34 @@ class AvatarAccessoriesManagerUD(DistributedObjectGlobalUD):
             return False
 
         count = 0
-        for ownedUid, colorId in clothing:
-            if self.getClothingType(ownedUid) == itemType:
+        for owned in clothing:
+            if self.getClothingType(owned[0]) == itemType:
                 count += 1
 
         return count < self.ClothingLimit
 
     def getClothingList(self, avatarId):
         wardrobe = self.accessoriesDB.getWardrobe(avatarId)
-        return [packClothing(uid, colorId) for uid, colorId in wardrobe['clothing']]
+        return [packClothing(*item) for item in wardrobe['clothing']]
+
+    def findClothing(self, clothing, uid, colorId):
+        for item in clothing:
+            if item[0] == uid and item[1] == colorId:
+                return item
+
+        return None
 
     def addClothing(self, avatarId, items):
         wardrobe = self.accessoriesDB.getWardrobe(avatarId)
         clothing = wardrobe['clothing']
-        for uid, colorId in items:
-            if [uid, colorId] in clothing:
+        for uid, colorId, original in items:
+            if self.findClothing(clothing, uid, colorId):
                 continue
 
             if not self.canAddClothing(clothing, uid):
                 return False
 
-            clothing.append([uid, colorId])
+            clothing.append([uid, colorId, int(bool(original))])
 
         self.accessoriesDB.setWardrobe(avatarId, wardrobe)
         return True
@@ -130,11 +150,11 @@ class AvatarAccessoriesManagerUD(DistributedObjectGlobalUD):
         wardrobe = self.accessoriesDB.getWardrobe(avatarId)
         clothing = wardrobe['clothing']
         for uid, colorId in items:
-            if [uid, colorId] not in clothing:
+            if not self.findClothing(clothing, uid, colorId):
                 return False
 
         for uid, colorId in items:
-            clothing.remove([uid, colorId])
+            clothing.remove(self.findClothing(clothing, uid, colorId))
 
         self.accessoriesDB.setWardrobe(avatarId, wardrobe)
         return True
@@ -174,7 +194,7 @@ class AvatarAccessoriesManagerUD(DistributedObjectGlobalUD):
         self.reply('responseClothingFromDB', [context, self.getClothingList(avatarId)])
 
     def requestClothingAddDB(self, context, avatarId, accountId, items, cost, location):
-        success = self.addClothing(avatarId, [(item[0], item[1]) for item in items])
+        success = self.addClothing(avatarId, [(item[0], item[1], item[2]) for item in items])
         if success:
             self.air.writeServerEvent('clothingAdded', avId=avatarId, items=items, cost=cost, location=location)
 
@@ -190,7 +210,7 @@ class AvatarAccessoriesManagerUD(DistributedObjectGlobalUD):
     def requestClothingDropDB(self, context, avatarId, accountId, gender, level):
         uid = ClothingGlobals.getRandomClothingDrop(level, gender)
         colorId = ClothingGlobals.getRandomClothingColor(level)
-        success = self.addClothing(avatarId, [(uid, colorId)])
+        success = self.addClothing(avatarId, [(uid, colorId, 0)])
         if success:
             self.air.writeServerEvent('clothingDropped', avId=avatarId, uid=uid, colorId=colorId)
 
@@ -201,8 +221,19 @@ class AvatarAccessoriesManagerUD(DistributedObjectGlobalUD):
         self.reply('responsePaidToUnpaidRollBack', [context, [], 1])
 
     def migrateDNAElements(self, context, avatarId, accountId, elements, location):
-        # Wardrobes start empty; there is no legacy DNA storage to migrate.
-        self.notify.debug('migrateDNAElements for %d ignored' % avatarId)
+        """
+        Sent by the AI the first time an avatar's wardrobe is loaded, with the
+        clothing the avatar is wearing. These become its starting items.
+        """
+
+        if self.accessoriesDB.getWardrobe(avatarId)['clothing']:
+            # Already migrated.
+            return
+
+        items = [unpackClothing(value) for value in elements]
+        items = [(uid, colorId, 1) for uid, colorId, original in items if self.getClothingType(uid) is not None]
+        if items and self.addClothing(avatarId, items):
+            self.air.writeServerEvent('clothingMigrated', avId=avatarId, items=items, location=location)
 
     def sendCurrentDNAtoAccDB(self, avatarId, location):
         self.notify.debug('sendCurrentDNAtoAccDB for %d ignored' % avatarId)
