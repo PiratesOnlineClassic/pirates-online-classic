@@ -169,7 +169,7 @@ class PlayingCardTier3Reward(QuestReward):
 class MaxHpReward(QuestReward):
 
     def applyTo(self, trade, av):
-        trade.giveStack(InventoryType.Hp, self.amount)
+        trade.giveMaxHp(self.amount)
 
     def getDescriptionText(self):
         return PLocalizer.MaxHpRewardDesc % self.amount
@@ -178,7 +178,7 @@ class MaxHpReward(QuestReward):
 class MaxMojoReward(QuestReward):
 
     def applyTo(self, trade, av):
-        trade.giveStack(InventoryType.Mojo, self.amount)
+        trade.giveMaxMojo(self.amount)
 
     def getDescriptionText(self):
         return PLocalizer.MaxMojoRewardDesc % self.amount

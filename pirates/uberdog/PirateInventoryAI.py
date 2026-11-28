@@ -87,21 +87,27 @@ class PirateInventoryAI(DistributedInventoryAI):
 
         # every reputation category raises the avatar's max hp and mojo,
         # see GuiManager.showLevelUpText...
-        maxHp = avatar.getMaxHp() + RepChart.getHpGain(repType)
-        maxMojo = avatar.getMaxMojo() + RepChart.getManaGain(repType)
-        avatar.b_setMaxHp(maxHp)
-        avatar.b_setMaxMojo(maxMojo)
-
-        # the client derives the local avatar's max hp and mojo from these
-        # stack limits, see DistributedInventory.stackLimit...
-        self.b_setStackLimit(InventoryType.Hp, maxHp)
-        self.b_setStackLimit(InventoryType.Mojo, maxMojo)
-
+        maxHp, maxMojo = self.raiseMaxHpMojo(avatar, RepChart.getHpGain(repType), RepChart.getManaGain(repType))
         if repType == InventoryType.OverallRep:
             avatar.b_setHp(maxHp)
             avatar.b_setMojo(maxMojo)
 
         avatar.d_levelUpMsg(repType, level, 0)
+
+    def raiseMaxHpMojo(self, avatar, hpGain=0, mojoGain=0):
+        maxHp = avatar.getMaxHp() + hpGain
+        maxMojo = avatar.getMaxMojo() + mojoGain
+        if hpGain:
+            avatar.b_setMaxHp(maxHp)
+
+        if mojoGain:
+            avatar.b_setMaxMojo(maxMojo)
+
+        # the client derives the local avatar's max hp and mojo from these
+        # stack limits, see DistributedInventory.stackLimit...
+        self.b_setStackLimit(InventoryType.Hp, maxHp)
+        self.b_setStackLimit(InventoryType.Mojo, maxMojo)
+        return maxHp, maxMojo
 
     def getReputation(self, repType):
         return self.getAccumulator(repType)
@@ -113,6 +119,10 @@ class PirateInventoryAI(DistributedInventoryAI):
         stackLimits = dict(self.stackLimits)
         for stackType, limit in list(InventoryInit.StackLimits.items()):
             stackLimits.setdefault(stackType, limit)
+
+        # ...and raise the limits older inventories were made with too low...
+        for stackType in InventoryInit.RaisedStackLimits:
+            stackLimits[stackType] = max(stackLimits[stackType], InventoryInit.StackLimits[stackType])
 
         # the ammo pouches owned raise the limits of the ammo they carry...
         for pouchId in InventoryInit.AmmoPouches:

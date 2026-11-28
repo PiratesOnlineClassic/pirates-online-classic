@@ -2,6 +2,7 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 
 from pirates.pirate.BattleAvatarGameFSMAI import BattleAvatarGameFSMAI
 from pirates.uberdog.UberDogGlobals import InventoryType
+from pirates.uberdog import InventoryInit
 from pirates.piratesbase import PiratesGlobals
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
@@ -104,7 +105,7 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
         self.avatar.b_setJailCellIndex(cellDoor.getCellIndex())
 
         # update the avatar's inventory values
-        vitaeCost = (10 * 60) * 60
+        vitaeCost = InventoryInit.VitaeCost
         inventory.b_setStackQuantity(InventoryType.Vitae_Level, 1)
         inventory.b_setStackQuantity(InventoryType.Vitae_Cost, vitaeCost)
         inventory.b_setStackQuantity(InventoryType.Vitae_Left, vitaeCost)

@@ -221,6 +221,32 @@ class InventoryTests(unittest.TestCase):
         inventory.setReputation(InventoryType.CutlassRep, rep)
         self.assertEqual(inventory.getReputation(InventoryType.CutlassRep), rep)
 
+    def test_max_hp_and_mojo_rewards_raise_the_maximums(self):
+        from pirates.quest.QuestReward import MaxHpReward, MaxMojoReward
+        from pirates.trades.TradeAI import LocalTrade
+
+        avatar = FakeAvatar(paid=True)
+        inventory = makeInventory(avatar)
+        trade = LocalTrade(Mock())
+        trade.avatar = avatar
+
+        MaxHpReward(amount=25).applyTo(trade, avatar)
+        MaxMojoReward(amount=10).applyTo(trade, avatar)
+        self.assertEqual((avatar.maxHp, avatar.maxMojo), (125, 60))
+        self.assertEqual(inventory.getStackLimit(InventoryType.Hp), 125)
+        self.assertEqual(inventory.getStackLimit(InventoryType.Mojo), 60)
+        self.assertEqual(inventory.getStackQuantity(InventoryType.Hp), 0)
+
+    def test_vitae_stacks_hold_the_jail_cost(self):
+        avatar = FakeAvatar(paid=True)
+        inventory = makeInventory(avatar)
+        inventory.stackLimits[InventoryType.Vitae_Left] = 10000
+        inventory.updateStackLimits()
+        self.assertEqual(inventory.getStackLimit(InventoryType.Vitae_Left), InventoryInit.VitaeCost)
+
+        inventory.b_setStackQuantity(InventoryType.Vitae_Cost, InventoryInit.VitaeCost)
+        self.assertEqual(inventory.getStackQuantity(InventoryType.Vitae_Cost), 36000)
+
 
 class KingsheadDoorTests(unittest.TestCase):
 

@@ -60,6 +60,22 @@ class LocalTrade(TradeBase):
     def giveStackableTypeLimit(self, stackType, limit):
         TradeBase.giveStackableTypeLimit(self, self.avatar, stackType, limit)
 
+    def giveMaxHp(self, amount):
+        self.raiseMaxHpMojo(hpGain=amount)
+
+    def giveMaxMojo(self, amount):
+        self.raiseMaxHpMojo(mojoGain=amount)
+
+    def raiseMaxHpMojo(self, hpGain=0, mojoGain=0):
+        inventory = self.avatar.getInventory()
+        if not inventory:
+            self.notify.warning('Failed to raise max hp/mojo of avatar %d, '
+                'avatar has no inventory!' % self.avatar.doId)
+
+            return
+
+        inventory.raiseMaxHpMojo(self.avatar, hpGain, mojoGain)
+
     def giveReputation(self, reputationType, reputation):
         inventory = self.avatar.getInventory()
         if not inventory:

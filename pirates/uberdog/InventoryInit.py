@@ -51,6 +51,10 @@ CategoryLimits = {
     InventoryCategory.PVP_RENOWN: 10,
 }
 
+# a defeated pirate is groggy for ten hours of play (in seconds), see
+# PlayerPirateGameFSMAI.enterDeath, the vitae stacks have to hold that much:
+VitaeCost = 10 * 60 * 60
+
 StackLimits = {
     InventoryType.MeleePunch: 6,
     InventoryType.MeleeKick: 6,
@@ -190,9 +194,9 @@ StackLimits = {
     InventoryType.UnspentPistol: 50,
     InventoryType.UnspentSailing: 50,
     InventoryType.Vitae_Level: 100,
-    InventoryType.Vitae_Cost: 10000,
-    InventoryType.Vitae_Left: 10000,
-    InventoryType.Vitae_Update: 10000,
+    InventoryType.Vitae_Cost: VitaeCost,
+    InventoryType.Vitae_Left: VitaeCost,
+    InventoryType.Vitae_Update: VitaeCost,
     InventoryType.Potion1: 3,
     InventoryType.Potion2: 3,
     InventoryType.Potion3: 3,
@@ -426,6 +430,13 @@ for i in range(52):
 
 for i in range(InventoryType.begin_Songs, InventoryType.end_Songs):
     StackLimits[i] = 1
+
+# limits that were raised since inventories were first made, an inventory
+# saved with a lower limit is given the new one (see PirateInventoryAI.updateStackLimits):
+RaisedStackLimits = (
+    InventoryType.Vitae_Cost,
+    InventoryType.Vitae_Left,
+    InventoryType.Vitae_Update)
 
 AmmoPouches = (
     InventoryType.PistolPouchL1,
