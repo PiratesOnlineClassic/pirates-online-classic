@@ -53,6 +53,7 @@ from pirates.pirate import DistributedPlayerPirateAI as player_pirate_module
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
 from pirates.pirate.PlayerPirateGameFSMAI import PlayerPirateGameFSMAI
 from pirates.uberdog.UberDogGlobals import InventoryType
+from otp.chat import ChatFilter
 
 # patch the WeaponGlobals module the code under test actually uses...
 WeaponGlobals = player_pirate_module.WeaponGlobals
@@ -328,6 +329,55 @@ class DeathTests(unittest.TestCase):
         self.assertEqual(player.getHp()[0], 75)
         self.assertEqual(player.getMojo(), 75)
         world.d_setSpawnInfo.assert_called_once()
+
+
+
+class SpeedChatTests(unittest.TestCase):
+    """SpeedChat emotes and quest messages are relayed by the AI once checked."""
+
+    SENDER = (5 << 32) | 100
+
+    def makeChatter(self):
+        player = makePlayer()
+        player.parentId = 10
+        player.zoneId = 20
+        player.chatFlood = ChatFilter.ChatFlood(limit=10, window=5.0)
+        player.air = Mock(ourChannel=4000)
+        player.air.getAvatarIdFromSender.return_value = 100
+        player.air.getMsgSender.return_value = self.SENDER
+        player.dclass = Mock()
+        return player
+
+    def test_emote_relayed(self):
+        from pirates.piratesbase import PLocalizer
+        emoteId = sorted(PLocalizer.EmoteMessagesThirdPerson)[0]
+        player = self.makeChatter()
+        player.setSCEmote(emoteId)
+        player.dclass.getFieldByName.assert_called_once_with('setSCEmote')
+        player.dclass.getFieldByName.return_value.aiFormatUpdate.assert_called_once_with(
+            100, (10 << 32) | 20, self.SENDER, [emoteId])
+        player.air.kickChannel.assert_not_called()
+
+    def test_invalid_emote_ejected_not_relayed(self):
+        player = self.makeChatter()
+        player.setSCEmote(65535)
+        player.air.send.assert_not_called()
+        player.air.kickChannel.assert_called_once()
+
+    def test_quest_message_relayed(self):
+        from pirates.quest import QuestDB
+        questInt = next(q for q, questId in QuestDB.questIntDict.items()
+                        if QuestDB.QuestDict.get(questId) and len(QuestDB.QuestDict[questId].getTasks()) == 1)
+        player = self.makeChatter()
+        player.setSpeedChatQuest(questInt, 1, 0)
+        player.dclass.getFieldByName.return_value.aiFormatUpdate.assert_called_once_with(
+            100, (10 << 32) | 20, self.SENDER, [questInt, 1, 0])
+
+    def test_invalid_quest_message_ejected_not_relayed(self):
+        player = self.makeChatter()
+        player.setSpeedChatQuest(65535, 0, 0)
+        player.air.send.assert_not_called()
+        player.air.kickChannel.assert_called_once()
 
 
 if __name__ == '__main__':

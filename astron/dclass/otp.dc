@@ -179,8 +179,8 @@ dclass DistributedPlayer : DistributedAvatar {
   setWhisperSCEmoteFrom(uint32, uint16) airecv clsend;
   setSystemMessage(uint32, string) ownrecv;
   setCommonChatFlags(uint8) broadcast ownrecv ram;
-  setSC(uint16) broadcast ownsend airecv;
-  setSCCustom(uint16) broadcast ownsend airecv;
+  setSC(uint16) ownsend airecv;
+  setSCCustom(uint16) ownsend airecv;
   setFriendsList(FriendEntry friendsList[] = []) ownrecv required db airecv;
   setDISLname(string) broadcast ownrecv ram;
   setDISLid(uint32=0) broadcast ownrecv ram db;

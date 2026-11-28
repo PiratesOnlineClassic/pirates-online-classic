@@ -4,6 +4,7 @@ from otp.avatar import PlayerBase
 from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPLocalizer
 from otp.chat import ChatFilter
+from otp.chat.ChatRelayAI import ChatRelayAI
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.PyDatagram import PyDatagram
 from otp.distributed.MsgTypes import CLIENTAGENT_EJECT
@@ -11,7 +12,7 @@ from otp.distributed import OtpDoGlobals
 from otp.ai.MagicWordGlobal import *
 
 
-class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI, PlayerBase.PlayerBase):
+class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI, PlayerBase.PlayerBase, ChatRelayAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerAI')
 
     # Shared by every avatar on the district, since a whisper is handled by
@@ -82,32 +83,6 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI, PlayerBase.Pl
     # client sends them to us and we relay them once they've been checked,
     # which is what the original game server did when it scrubbed chat.
 
-    def sendUpdateToLocation(self, fieldName, args, senderChannel=None):
-        """
-        Sends a field update to every client with interest in our location,
-        the same as the State Server does for a broadcast field. The update
-        goes out as if sent from senderChannel, so the client agent of the
-        avatar who chatted doesn't echo it back to them.
-        """
-
-        if not self.parentId and not self.zoneId:
-            return
-
-        if senderChannel is None:
-            senderChannel = self.air.ourChannel
-
-        field = self.dclass.getFieldByName(fieldName)
-        locationChannel = (self.parentId << 32) | self.zoneId
-        dg = field.aiFormatUpdate(self.doId, locationChannel, senderChannel, args)
-        self.air.send(dg)
-
-    def chatViolation(self, issue, eject=False):
-        self.notify.warning('Avatar %s: %s' % (self.air.getAvatarIdFromSender(), issue))
-        self.air.writeServerEvent('suspicious', avId=self.air.getAvatarIdFromSender(), issue=issue)
-        if eject:
-            self.air.kickChannel(self.air.getMsgSender(), ChatFilter.ChatBootCode,
-                'Chat violation: %s' % issue)
-
     def _getChatSender(self, fieldName):
         avatarId = self.air.getAvatarIdFromSender()
         if avatarId != self.doId:
@@ -115,29 +90,6 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI, PlayerBase.Pl
             return 0
 
         return avatarId
-
-    def _isFlooding(self, avatarId):
-        if not self.chatFlood.isFlooding(avatarId):
-            return False
-
-        if self.chatFlood.shouldWarn(avatarId):
-            self.air.writeServerEvent('chat-flood', avId=avatarId)
-            self.notify.info('Dropping chat from %d, too many messages.' % avatarId)
-
-        return True
-
-    def _cleanTypedChat(self, avatarId, fieldName, chatString):
-        message = ChatFilter.cleanMessage(chatString)
-        if message is None:
-            if chatString.strip():
-                self.chatViolation('%s too long (%d)' % (fieldName, len(chatString)))
-
-            return None
-
-        if self._isFlooding(avatarId):
-            return None
-
-        return message
 
     def d_setChat(self, chatString, chatFlags, senderChannel=None):
         self.sendUpdateToLocation('setChat', [chatString, chatFlags, self.DISLid], senderChannel)
@@ -172,15 +124,39 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI, PlayerBase.Pl
         self.air.writeServerEvent('chat-said-wl', avId=avatarId, chatFlags=chatFlags, message=message)
         self.d_setWLChat(message, ChatFilter.cleanChatFlags(chatFlags), self.air.getMsgSender())
 
+    # SpeedChat comes to us too rather than being broadcast, so that a phrase
+    # the menu doesn't have never reaches the other clients (they look the
+    # phrase up when they log it).
+
+    def _getSpeedChatSender(self, fieldName, isValid, description):
+        avatarId = self._getChatSender(fieldName)
+        if not avatarId:
+            return 0
+
+        if not isValid:
+            self.chatViolation('invalid %s' % description, eject=True)
+            return 0
+
+        if self._isFlooding(avatarId):
+            return 0
+
+        return avatarId
+
+    def d_setSC(self, msgIndex, senderChannel=None):
+        self.sendUpdateToLocation('setSC', [msgIndex], senderChannel)
+
     def setSC(self, msgIndex):
-        # SpeedChat is broadcast straight from the client, all we can do is
-        # make sure nobody gets away with a phrase the menu doesn't have.
-        if not ChatFilter.isValidSpeedChat(msgIndex):
-            self.chatViolation('invalid SpeedChat index %d' % msgIndex, eject=True)
+        if self._getSpeedChatSender('setSC', ChatFilter.isValidSpeedChat(msgIndex),
+                                    'SpeedChat index %d' % msgIndex):
+            self.d_setSC(msgIndex, self.air.getMsgSender())
+
+    def d_setSCCustom(self, msgIndex, senderChannel=None):
+        self.sendUpdateToLocation('setSCCustom', [msgIndex], senderChannel)
 
     def setSCCustom(self, msgIndex):
-        if not ChatFilter.isValidSpeedChatCustom(msgIndex):
-            self.chatViolation('invalid SpeedChat custom index %d' % msgIndex, eject=True)
+        if self._getSpeedChatSender('setSCCustom', ChatFilter.isValidSpeedChatCustom(msgIndex),
+                                    'SpeedChat custom index %d' % msgIndex):
+            self.d_setSCCustom(msgIndex, self.air.getMsgSender())
 
     # Whispers come to the AI of the avatar being whispered, from whoever
     # sent them, so all we know about the sender is their channel.

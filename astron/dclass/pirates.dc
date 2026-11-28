@@ -1100,8 +1100,8 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   setDefaultZone(uint32) ownrecv required db;
   setLastLogout(uint32) required db;
   setCustomMessages(uint16[]) ownrecv required db;
-  setSCEmote(uint16) broadcast ownsend airecv;
-  setSpeedChatQuest(uint16, uint16, uint16) broadcast ownsend airecv;
+  setSCEmote(uint16) ownsend airecv;
+  setSpeedChatQuest(uint16, uint16, uint16) ownsend airecv;
   setSpeedChatStyleIndex(uint8) required ownsend broadcast db;
   setGameState(string, int16) broadcast ram ownsend airecv;
   levelUpMsg(uint32, uint32, uint32) broadcast airecv;

@@ -14,6 +14,7 @@ from pirates.pirate.PlayerPirateGameFSMAI import PlayerPirateGameFSMAI
 from pirates.quest.DistributedQuestAvatar import DistributedQuestAvatar
 from pirates.quest.QuestStatus import QuestStatus
 from pirates.piratesbase import PLocalizer
+from pirates.chat import PChatFilter
 from pirates.piratesbase import PiratesGlobals
 from pirates.pirate import AvatarTypes
 from pirates.quest.QuestConstants import LocationIds
@@ -476,28 +477,22 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         return inventory.getStackQuantity(weaponId) > 0
 
+    def d_setSCEmote(self, emoteId, senderChannel=None):
+        self.sendUpdateToLocation('setSCEmote', [emoteId], senderChannel)
+
     def setSCEmote(self, emoteId):
-        # Broadcast straight from the client; every other client looks the
-        # emote up when it logs the message, so a made up one breaks them.
-        if emoteId not in PLocalizer.EmoteMessagesThirdPerson:
-            self.chatViolation('invalid SpeedChat emote %d' % emoteId, eject=True)
+        if self._getSpeedChatSender('setSCEmote', PChatFilter.isValidSpeedChatEmote(emoteId),
+                                    'SpeedChat emote %d' % emoteId):
+            self.d_setSCEmote(emoteId, self.air.getMsgSender())
+
+    def d_setSpeedChatQuest(self, questInt, msgType, taskNum, senderChannel=None):
+        self.sendUpdateToLocation('setSpeedChatQuest', [questInt, msgType, taskNum], senderChannel)
 
     def setSpeedChatQuest(self, questInt, msgType, taskNum):
-        if not self.isValidSpeedChatQuest(questInt, msgType, taskNum):
-            self.chatViolation('invalid SpeedChat quest message (%d, %d, %d)' % (
-                questInt, msgType, taskNum), eject=True)
-
-    def isValidSpeedChatQuest(self, questInt, msgType, taskNum):
-        if msgType not in (0, 1, 2):
-            return False
-
-        questId = QuestDB.questIntDict.get(questInt)
-        questDNA = QuestDB.QuestDict.get(questId)
-        if questDNA is None:
-            return False
-
-        numTasks = len(questDNA.getTasks())
-        return numTasks == 1 or 0 <= taskNum < numTasks
+        if self._getSpeedChatSender('setSpeedChatQuest',
+                                    PChatFilter.isValidSpeedChatQuest(questInt, msgType, taskNum),
+                                    'SpeedChat quest message (%d, %d, %d)' % (questInt, msgType, taskNum)):
+            self.d_setSpeedChatQuest(questInt, msgType, taskNum, self.air.getMsgSender())
 
     def requestCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
         avatarId = self.air.getAvatarIdFromSender()

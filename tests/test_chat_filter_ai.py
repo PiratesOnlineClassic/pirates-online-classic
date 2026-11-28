@@ -131,6 +131,37 @@ class PlayerChatTests(unittest.TestCase):
         av.setSC(5)
         av.air.kickChannel.assert_called_once_with(SenderChannel, ChatFilter.ChatBootCode, unittest.mock.ANY)
 
+    def test_speedchat_relayed_to_location_as_sender(self):
+        av = makeAvatar()
+        av.setSC(100)
+        av.setSCCustom(10)
+        names = [c.args[0] for c in av.dclass.getFieldByName.call_args_list]
+        field = av.dclass.getFieldByName.return_value
+        self.assertEqual(names, ['setSC', 'setSCCustom'])
+        self.assertEqual(field.aiFormatUpdate.call_args_list, [
+            call(1, (10 << 32) | 20, SenderChannel, [100]),
+            call(1, (10 << 32) | 20, SenderChannel, [10])])
+        self.assertEqual(av.air.send.call_count, 2)
+
+    def test_invalid_or_spoofed_speedchat_not_relayed(self):
+        av = makeAvatar()
+        av.setSC(5)
+        av.setSCCustom(65535)
+        av.air.send.assert_not_called()
+        self.assertEqual(av.air.kickChannel.call_count, 2)
+
+        av = makeAvatar(senderId=2)
+        av.setSC(100)
+        av.air.send.assert_not_called()
+
+    def test_speedchat_flood(self):
+        av = makeAvatar()
+        for i in range(5):
+            av.setSC(100)
+
+        self.assertEqual(av.air.send.call_count, 3)
+        av.air.kickChannel.assert_not_called()
+
     def test_whisper_relayed_to_owner(self):
         av = makeAvatar(doId=2, senderId=1)
         av.chatFlood = ChatFilter.ChatFlood(limit=10, window=5.0)
