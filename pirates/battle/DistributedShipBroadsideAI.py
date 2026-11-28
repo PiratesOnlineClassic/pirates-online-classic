@@ -188,8 +188,10 @@ class DistributedShipBroadsideAI(DistributedWeaponAI):
         if not numCannons:
             return False
 
+        # the target is parented to it's ocean grid cell, the shots land
+        # relative to the cell of the ocean grid the target is in:
         oceanGrid = ship.getParentObj()
-        targetPos = targetShip.getPos()
+        targetPos = targetShip.getPos(oceanGrid)
         zoneId = oceanGrid.getZoneFromXYZ(targetPos)
         zonePos = oceanGrid.getZoneCellOrigin(zoneId)
 

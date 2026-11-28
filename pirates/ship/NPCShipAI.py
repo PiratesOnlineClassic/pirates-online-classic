@@ -105,7 +105,7 @@ class NPCShipAI(DistributedShipAI):
         # is given to every crew that damaged us by DistributedShipAI.handleShipSinking...
         attackerShip, assistShip = self.getSinkAttackers()
         attackerShips = [ship for ship in (attackerShip, assistShip)
-            if isinstance(ship, DistributedShipAI) and not ship.getNPCship()]
+            if isinstance(ship, DistributedShipAI) and ship.isCrewedByPlayers()]
 
         if not attackerShips:
             return
@@ -252,18 +252,20 @@ class NPCShipAI(DistributedShipAI):
         if state not in ('GrappleLerping', 'InPosition', 'Boarded', 'Defeated'):
             return Task.done
 
+        # the boarding position is on the ocean grid, we are parented to one of it's cells:
+        grid = self.getParentObj()
         pos, h = self.getBoardingPosHpr(attackerShip)
         if state == 'GrappleLerping':
             timeLeft = self.grappleArriveTime - globalClock.getFrameTime()
             if timeLeft > self.GrappleMovePeriod:
                 t = self.GrappleMovePeriod / timeLeft
-                pos = self.getPos() + (pos - self.getPos()) * t
+                pos = self.getPos(grid) + (pos - self.getPos(grid)) * t
                 h = self.getH() + self.gameFSM._normalizeAngle(h - self.getH()) * t
             else:
                 self.handleInBoardingPosition(attackerShip)
 
         # once in position the flagship stays lashed alongside the boarding ship:
-        self.setPosHpr(pos[0], pos[1], 0, h, 0, 0)
+        self.setPosHpr(grid, pos[0], pos[1], 0, h, 0, 0)
         return Task.again
 
     def handleInBoardingPosition(self, attackerShip):

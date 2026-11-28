@@ -649,13 +649,27 @@ class GameFSMShipAITests(_TaskPatchedTestCase):
         broadside.leftBroadside = [1, 1]
         broadside.rightBroadside = [1, 1, 1]
         broadside.sendUpdate = Mock()
-        grid = SimpleNamespace(getZoneFromXYZ=lambda pos: 100, getZoneCellOrigin=lambda zoneId: (0, 0, 0))
-        self.ship.getParentObj = lambda: grid
-        self.target.setPos(500, 0, 0)
+        class Grid(NodePath):
+            def getZoneFromXYZ(self, pos):
+                return 100 if pos[0] < 2000 else 101
 
+            def getZoneCellOrigin(self, zoneId):
+                return (0, 0, 0)
+
+        grid = Grid('grid')
+        cell = grid.attachNewNode('cell')
+        cell.setPos(2000, 0, 0)
+        self.ship.reparentTo(grid)
+        self.ship.getParentObj = lambda: grid
+        self.target.reparentTo(cell)
+        self.target.setPos(grid, 500, 0, 0)
         self.assertTrue(broadside.fireAtTarget(self.target, ShipGlobals.BROADSIDE_RIGHT))
+
         args = broadside.sendUpdate.call_args[0][1]
         self.assertEqual(len(args[1]), 3)
+        # the shots land around the target on the ocean grid, not around it's cell position:
+        self.assertEqual(args[3], 100)
+        self.assertAlmostEqual(sum(pos[0] for pos in args[2]) / 3.0, 500, delta=100)
         delay, callback, name = self.taskMgr.doMethodLater.call_args[0]
         extraArgs = self.taskMgr.doMethodLater.call_args[1]['extraArgs']
 

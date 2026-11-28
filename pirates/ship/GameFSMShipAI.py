@@ -39,6 +39,9 @@ class GameFSMShipAI(FSM.FSM):
     BroadsideHeadingRange = PiratesGlobals.AI_CANNON_HEADING_RANGE
     BroadsideReloadTime = 10.0
 
+    # ships kept to a sea lane stop this close to their target:
+    HoldRange = 600.0
+
     # ships keep this far away from islands and the edge of the ocean grid:
     IslandBuffer = 200.0
     GridMargin = WorldGlobals.OCEAN_CELL_SIZE
@@ -76,6 +79,14 @@ class GameFSMShipAI(FSM.FSM):
         self._broadsideTarget = None
         self._islandSpheres = None
 
+        # ships may be kept to a sea lane, a list of (x, y, radius) points the
+        # ship sails along without straying further than the radius from it,
+        # (used where the islands can't be avoided by their collision spheres)...
+        self.seaLane = None
+
+        # a ship that is hunting a target never gives up on it:
+        self.huntTarget = None
+
     def _initWorldRefs(self):
         if self.oceanGrid is None:
             self.oceanGrid = self.ship.getParentObj()
@@ -97,6 +108,7 @@ class GameFSMShipAI(FSM.FSM):
         self.targetShip = None
         self.targetDoId = 0
         self.threatList = {}
+        self.huntTarget = None
 
     def _stopAllTasks(self):
         self._stopThinking()
@@ -217,12 +229,119 @@ class GameFSMShipAI(FSM.FSM):
 
         return True
 
+    def setSeaLane(self, seaLane):
+        self.seaLane = list(seaLane) if seaLane else None
+
+    def hunt(self, target):
+        # the ship goes after the target and keeps after it until it's sunk:
+        self.huntTarget = target
+        return self.engageTarget(target)
+
+    def stopHunting(self):
+        self.huntTarget = None
+
+    def _getHuntTarget(self):
+        if self.huntTarget is not None and not self._isValidTarget(self.huntTarget):
+            self.huntTarget = None
+
+        return self.huntTarget
+
     def onDamageReceived(self, attackerDoId, damage):
         self.addThreat(attackerDoId, damage)
         if self.getCurrentOrNextState() in self.EngageStates:
             self.engageTarget(self.air.doId2do.get(attackerDoId))
 
     # Navigation:
+
+    def _getLaneSegments(self):
+        points = self.seaLane or []
+        if len(points) == 1:
+            return [(points[0], points[0])]
+
+        return list(zip(points, points[1:]))
+
+    def _projectOnLaneSegment(self, x, y, a, b):
+        # returns how far along the segment the closest point to (x, y) is (0 - 1),
+        # and the distance to that point:
+        dx, dy = b[0] - a[0], b[1] - a[1]
+        lengthSq = dx * dx + dy * dy
+        t = 0.0
+        if lengthSq > 0:
+            t = max(0.0, min(1.0, ((x - a[0]) * dx + (y - a[1]) * dy) / lengthSq))
+
+        px, py = a[0] + dx * t, a[1] + dy * t
+        return t, math.hypot(x - px, y - py)
+
+    def _getLanePosition(self, x, y):
+        # the distance along the lane of the closest point on the lane to (x, y),
+        # and how far (x, y) strays from the lane past the lane's radius:
+        bestAlong = 0.0
+        bestStray = None
+        along = 0.0
+        for a, b in self._getLaneSegments():
+            t, dist = self._projectOnLaneSegment(x, y, a, b)
+            radius = a[2] + (b[2] - a[2]) * t
+            stray = dist - radius
+            if bestStray is None or stray < bestStray:
+                bestAlong = along + math.hypot(b[0] - a[0], b[1] - a[1]) * t
+                bestStray = stray
+
+            along += math.hypot(b[0] - a[0], b[1] - a[1])
+
+        return bestAlong, bestStray or 0.0
+
+    def _getLanePoint(self, along):
+        for a, b in self._getLaneSegments():
+            length = math.hypot(b[0] - a[0], b[1] - a[1])
+            if along <= length or (a, b) == self._getLaneSegments()[-1]:
+                t = max(0.0, min(1.0, along / length)) if length else 0.0
+                return Point3(a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, 0)
+
+            along -= length
+
+        return Point3(self.seaLane[0][0], self.seaLane[0][1], 0)
+
+    def _isInLane(self, x, y):
+        return not self.seaLane or self._getLanePosition(x, y)[1] <= 0
+
+    def _isHolding(self):
+        # in the narrow waters of a lane the ship holds it's position once it is
+        # close enough to it's target to trade broadsides, turning to bring it's guns to bear:
+        target = self._broadsideTarget
+        return bool(self.seaLane and target is not None and self._isValidTarget(target) and
+                    self._getDistanceToTarget(target) < self.HoldRange)
+
+    def _clampToLane(self, x, y):
+        # the point in the lane closest to (x, y):
+        best = None
+        for a, b in self._getLaneSegments():
+            t, dist = self._projectOnLaneSegment(x, y, a, b)
+            radius = a[2] + (b[2] - a[2]) * t
+            if best is None or dist - radius < best[0]:
+                best = (dist - radius, a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, dist, radius)
+
+        stray, px, py, dist, radius = best
+        if stray <= 0 or not dist:
+            return Point3(x, y, 0)
+
+        scale = radius * 0.9 / dist
+        return Point3(px + (x - px) * scale, py + (y - py) * scale, 0)
+
+    def _getLaneWaypoint(self, destination):
+        # ships follow the lane to their destination, aiming for a point a little
+        # further along the lane until the destination is just ahead of them:
+        shipPos = self._getGridPos(self.ship)
+        shipAlong, shipStray = self._getLanePosition(shipPos[0], shipPos[1])
+        destAlong, destStray = self._getLanePosition(destination[0], destination[1])
+        if abs(destAlong - shipAlong) <= self.WaypointRadius:
+            return self._clampToLane(destination[0], destination[1])
+
+        if shipStray > 0:
+            # get back onto the lane before going anywhere else:
+            return self._getLanePoint(shipAlong)
+
+        step = min(self.WaypointRadius * 1.5, abs(destAlong - shipAlong))
+        return self._getLanePoint(shipAlong + (step if destAlong > shipAlong else -step))
 
     def _getGridBounds(self):
         halfSize = (WorldGlobals.OCEAN_GRID_SIZE * WorldGlobals.OCEAN_CELL_SIZE) / 2.0
@@ -271,6 +390,10 @@ class GameFSMShipAI(FSM.FSM):
         return self._islandSpheres
 
     def _getBlockingIsland(self, x, y):
+        # a sea lane keeps the ship clear of the islands by itself:
+        if self.seaLane:
+            return None
+
         for centerX, centerY, radius in self._getIslandCollisionSpheres():
             radius += self.IslandBuffer
             if (x - centerX) ** 2 + (y - centerY) ** 2 < radius * radius:
@@ -283,6 +406,10 @@ class GameFSMShipAI(FSM.FSM):
 
     def _getRandomPatrolPos(self):
         homeX, homeY = self.homePos[0], self.homePos[1]
+        if self.seaLane:
+            homeAlong = self._getLanePosition(homeX, homeY)[0]
+            return self._getLanePoint(max(0.0, homeAlong + random.uniform(-self.PatrolRadius, self.PatrolRadius) / 4.0))
+
         for _ in range(10):
             angle = random.uniform(0, 2 * math.pi)
             dist = random.uniform(self.WaypointRadius, self.PatrolRadius)
@@ -337,7 +464,11 @@ class GameFSMShipAI(FSM.FSM):
             callback()
 
     def _getDesiredHeading(self):
-        heading = self._calculateHeadingTo(self._currentDestination)
+        destination = self._currentDestination
+        if self.seaLane:
+            destination = self._getLaneWaypoint(destination)
+
+        heading = self._calculateHeadingTo(destination)
         target = self._broadsideTarget
         if target and self._isValidTarget(target) and self._getDistanceToTarget(target) < self.BroadsideRange:
             # once in range the ship sails alongside the target, putting
@@ -346,12 +477,17 @@ class GameFSMShipAI(FSM.FSM):
             leftBeam = self._normalizeAngle(bearing - 90.0)
             rightBeam = self._normalizeAngle(bearing + 90.0)
             if abs(self._normalizeAngle(leftBeam - self.ship.getH())) < abs(self._normalizeAngle(rightBeam - self.ship.getH())):
-                heading = leftBeam
+                beamHeading = leftBeam
             else:
-                heading = rightBeam
+                beamHeading = rightBeam
 
-        pos = self._getGridPos(self.ship)
-        x, y = pos[0], pos[1]
+            # a ship kept to a lane only turns broadside where there's room to:
+            x, y = self._getGridPos(self.ship).getXy()
+            if self._isHolding() or self._isInLane(x + -math.sin(math.radians(beamHeading)) * self.WaypointRadius,
+                                                   y + math.cos(math.radians(beamHeading)) * self.WaypointRadius):
+                heading = beamHeading
+
+        x, y = self._getGridPos(self.ship).getXy()
         blocking = self._getBlockingIsland(x + -math.sin(math.radians(heading)) * self.IslandBuffer,
             y + math.cos(math.radians(heading)) * self.IslandBuffer)
         if blocking:
@@ -378,12 +514,20 @@ class GameFSMShipAI(FSM.FSM):
         heading += max(-maxTurn, min(maxTurn, turn))
 
         distance = self._movementSpeed * dt
-        pos = self._getGridPos(self.ship)
-        x = pos[0] + -math.sin(math.radians(heading)) * distance
-        y = pos[1] + math.cos(math.radians(heading)) * distance
+        if self._isHolding():
+            distance = 0
+
+        shipX, shipY = self._getGridPos(self.ship).getXy()
+        x = shipX + -math.sin(math.radians(heading)) * distance
+        y = shipY + math.cos(math.radians(heading)) * distance
+        if self.seaLane and not self._isInLane(x, y) and self._isInLane(shipX, shipY):
+            # don't run aground, turn without making way until the ship can carry on:
+            x, y = shipX, shipY
+
         x, y = self._clampToGridBounds(x, y)
-        if self.oceanGrid is not None and not self.oceanGrid.isEmpty():
-            self.ship.setPosHpr(self.oceanGrid, x, y, 0, heading, 0, 0)
+        grid = self.ship.getParentObj()
+        if grid is not None:
+            self.ship.setPosHpr(grid, x, y, 0, heading, 0, 0)
         else:
             self.ship.setPosHpr(x, y, 0, heading, 0, 0)
 
@@ -454,7 +598,7 @@ class GameFSMShipAI(FSM.FSM):
         self._startThinking(self.__patrolThink)
 
     def __patrolThink(self, task):
-        target = self._selectBestTarget() or self._findNearestEnemy()
+        target = self._getHuntTarget() or self._selectBestTarget() or self._findNearestEnemy()
         if target:
             self.engageTarget(target)
             return Task.done
@@ -471,14 +615,15 @@ class GameFSMShipAI(FSM.FSM):
         self._initWorldRefs()
         self.ship.setSailAnimState('Idle')
         if not self._isValidTarget(self.targetShip):
-            self.targetShip = self._selectBestTarget()
+            self.targetShip = self._getHuntTarget() or self._selectBestTarget()
 
         self._startThinking(self.__chaseThink)
 
     def __chaseThink(self, task):
-        if not self._isValidTarget(self.targetShip) or self._getDistanceToTarget(self.targetShip) > self.LoseTargetRadius:
+        if not self._isValidTarget(self.targetShip) or (self.targetShip is not self._getHuntTarget() and
+                self._getDistanceToTarget(self.targetShip) > self.LoseTargetRadius):
             self.threatList.pop(self.targetDoId, None)
-            self.targetShip = self._selectBestTarget()
+            self.targetShip = self._getHuntTarget() or self._selectBestTarget()
             if not self.targetShip:
                 self.ship.b_setGameState('Patrol', 0)
                 return Task.done
