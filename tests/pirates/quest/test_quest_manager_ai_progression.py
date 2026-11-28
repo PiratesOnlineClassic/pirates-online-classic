@@ -19,6 +19,9 @@ def load_manager():
         'pirates.world.DistributedBuildingDoorAI',
         'pirates.world.DistributedInteriorDoorAI',
         'pirates.world.DistributedDinghyAI',
+        'pirates.world.DistributedGATunnelAI',
+        'pirates.interact.DistributedSearchableContainerAI',
+        'pirates.treasuremap.DistributedBuriedTreasureAI',
     ):
         module = types.ModuleType(path)
         name = path.rsplit('.', 1)[1]

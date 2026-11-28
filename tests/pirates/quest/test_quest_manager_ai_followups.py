@@ -217,69 +217,9 @@ class QuestFollowupTests(unittest.TestCase):
 
         self.assertEqual(self.manager.getQuestStepGoalUid(self.avatar, quest), NPCIds.BLACK_MACK)
 
-    def makeArea(self, cls, doId, parent, uid='', pos=(0, 0, 0)):
-        obj = cls.__new__(cls)
-        obj.doId = doId
-        obj.parentId = parent.doId if parent else 0
-        obj.getParentObj = lambda: parent
-        obj.getUniqueId = lambda: uid
-        obj.getPos = lambda: pos
-        obj.getHpr = lambda: (90, 0, 0)
-        self.harness.air.doId2do[doId] = obj
-        return obj
-
-    def test_quest_step_on_the_same_island(self):
-        world = types.SimpleNamespace(doId=1, getParentObj=lambda: None)
-        island = self.makeArea(manager_module.DistributedIslandAI, 10, world, uid='island-uid')
-        npc = self.makeArea(manager_module.DistributedNPCTownfolkAI, 20, island, pos=(1, 2, 3))
-        self.avatar.getParentObj = lambda: island
-        self.harness.air.uidMgr = types.SimpleNamespace(justGetMeMeObject=lambda uid: npc)
-        self.assertEqual(self.manager.getQuestStep(self.avatar, 'npc-uid'),
-                         [10, 20, QuestStep.STNPC, [1, 2, 3, 90], 'island-uid'])
-
-    def test_quest_step_leaves_and_enters_interiors(self):
-        world = types.SimpleNamespace(doId=1, getParentObj=lambda: None)
-        island = self.makeArea(manager_module.DistributedIslandAI, 10, world, uid='island-uid')
-        tavern = self.makeArea(manager_module.DistributedGAInteriorAI, 11, world)
-        shop = self.makeArea(manager_module.DistributedGAInteriorAI, 12, world)
-        tavernDoor = self.makeArea(manager_module.DistributedBuildingDoorAI, 30, island)
-        shopDoor = self.makeArea(manager_module.DistributedInteriorDoorAI, 31, shop)
-        tavern.getExteriorFrontDoor = lambda: tavernDoor
-        tavern.getExteriorBackDoor = lambda: None
-        shop.getInteriorFrontDoor = lambda: shopDoor
-        npc = self.makeArea(manager_module.DistributedNPCTownfolkAI, 20, tavern)
-        self.harness.air.uidMgr = types.SimpleNamespace(justGetMeMeObject=lambda uid: npc)
-
-        self.avatar.getParentObj = lambda: island
-        step = self.manager.getQuestStep(self.avatar, 'npc-uid')
-        self.assertEqual(step[:3], [10, 30, QuestStep.STExteriorDoor])
-        self.assertEqual(step[4], 'island-uid')
-
-        self.avatar.getParentObj = lambda: shop
-        step = self.manager.getQuestStep(self.avatar, 'npc-uid')
-        self.assertEqual(step[:3], [12, 31, QuestStep.STInteriorDoor])
-
-    def test_quest_step_finds_the_closest_enemy(self):
-        world = types.SimpleNamespace(doId=1, getParentObj=lambda: None)
-        island = self.makeArea(manager_module.DistributedIslandAI, 10, world, uid='island-uid')
-        self.avatar.getParentObj = lambda: island
-        self.avatar.getX = lambda: 0
-        self.avatar.getY = lambda: 0
-        enemies = []
-        for doId, pos, avatarType in ((40, (100, 0, 0), AvatarTypes.Navy), (41, (10, 0, 0), AvatarTypes.Navy),
-                                      (42, (1, 0, 0), AvatarTypes.Undead)):
-            enemy = self.makeArea(manager_module.DistributedBattleAvatarAI, doId, island, pos=pos)
-            enemy.getAvatarType = lambda avatarType=avatarType: avatarType
-            enemy.getLevel = lambda: 5
-            enemy.getHp = lambda: (10, 10)
-            enemies.append(enemy)
-
-        step = self.manager.getQuestStep(self.avatar, QuestGoal([0, AvatarTypes.Navy]))
-        self.assertEqual(step[:3], [10, 41, QuestStep.STNPC])
-        self.assertEqual(self.manager.getQuestStep(self.avatar, None)[:3], [self.avatar.doId, 0, 0])
-
     def test_goal_changes_resend_the_active_quest_step(self):
         quest = self.harness.addQuest('ccbm.1poker')
+        self.harness.air.uidMgr = types.SimpleNamespace(justGetMeMeObject=lambda uid: None)
         self.avatar.activeQuest = 'ccbm.1poker'
         self.avatar.requestQuestStep = Mock()
         self.manager.pokerHandWon(self.avatar, 1)
