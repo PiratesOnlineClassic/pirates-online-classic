@@ -16,6 +16,15 @@ class TutorialShipAI(DistributedShipAI):
         self.tutorialOceanGrid = None
         self.tutorialAuthoredPos = None
         self.tutorialAuthoredHpr = None
+        self.tutorialAuthoredState = None
+
+    def setGameState(self, stateName, avId, timeStamp=0):
+        # remember the level editor start state, the tutorial ship is
+        # shared by every new pirate and must be restored after each one...
+        if stateName and self.tutorialAuthoredState is None:
+            self.tutorialAuthoredState = stateName
+
+        DistributedShipAI.setGameState(self, stateName, avId, timeStamp)
 
     def setTutorialStumpy(self, stumpy, builder):
         self.tutorialStumpy = stumpy
@@ -182,6 +191,12 @@ class TutorialShipAI(DistributedShipAI):
         self.setHpr(oceanGrid, *self.tutorialAuthoredHpr)
         if self.parentId != oceanGrid.doId or self.zoneId != zoneId:
             self.b_setLocation(oceanGrid.doId, zoneId)
+
+        # the last crew member leaving puts the ship away, bring it back
+        # to it's authored state for the next pirate's tutorial...
+        authoredState = getattr(self, 'tutorialAuthoredState', None)
+        if authoredState and self.getGameState()[0] != authoredState:
+            self.b_setGameState(authoredState, 0)
 
         self.sendCurrentPosition()
         return True
