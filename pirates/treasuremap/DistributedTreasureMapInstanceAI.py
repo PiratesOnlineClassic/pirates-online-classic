@@ -1,6 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm.FSM import FSM
 from direct.distributed.ClockDelta import globalClockDelta
+from direct.task import Task
 
 from otp.ai.MagicWordGlobal import *
 
@@ -10,6 +11,10 @@ from pirates.piratesbase import PiratesGlobals
 
 class DistributedTreasureMapInstanceAI(DistributedInstanceWorldAI, FSM):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTreasureMapInstanceAI')
+
+    # how long an instance with nobody left in it waits before it is
+    # removed, long enough for the last avatars to finish teleporting out...
+    CleanupDelay = 15.0
 
     def __init__(self, air):
         DistributedInstanceWorldAI.__init__(self, air)
@@ -29,12 +34,14 @@ class DistributedTreasureMapInstanceAI(DistributedInstanceWorldAI, FSM):
         DistributedInstanceWorldAI.announceGenerate(self)
 
     def delete(self):
+        taskMgr.remove(self.uniqueName('cleanupInstance'))
         self.participants = []
         self.readyAvatars = []
         DistributedInstanceWorldAI.delete(self)
 
     def addParticipant(self, avatarId):
         """Add an avatar to the instance participants"""
+        taskMgr.remove(self.uniqueName('cleanupInstance'))
         if avatarId not in self.participants:
             self.participants.append(avatarId)
             self.notify.info('Added participant %d to instance %d' % (avatarId, self.doId))
@@ -44,8 +51,48 @@ class DistributedTreasureMapInstanceAI(DistributedInstanceWorldAI, FSM):
         if avatarId in self.participants:
             self.participants.remove(avatarId)
             self.notify.info('Removed participant %d from instance %d' % (avatarId, self.doId))
+
+            # once the last avatar has left (or was disconnected) there is
+            # nobody left to finish the treasure map, the instance is removed...
+            if not self.participants:
+                taskMgr.remove(self.uniqueName('cleanupInstance'))
+                taskMgr.doMethodLater(self.CleanupDelay, self.__cleanupInstance,
+                    self.uniqueName('cleanupInstance'))
         if avatarId in self.readyAvatars:
             self.readyAvatars.remove(avatarId)
+
+    def __cleanupInstance(self, task):
+        if self.participants or self.air.doId2do.get(self.doId) is not self:
+            return Task.done
+
+        self.notify.info('Removing empty treasure map instance %d' % self.doId)
+
+        # the islands and their game areas are all generated beneath us, along
+        # with any sub instance (interiors) a game area may have been given...
+        for subInstance in self.getSubInstances():
+            self.removeSubInstance(subInstance)
+            self._deleteBuilderObjects(subInstance.builder)
+            subInstance.requestDelete()
+
+        self._deleteBuilderObjects(self.builder)
+        if self.oceanGrid and self.air.doId2do.get(self.oceanGrid.doId) is self.oceanGrid:
+            self.oceanGrid.requestDelete()
+
+        if self.air.uidMgr.getDoId(self.getUniqueId()) == self.doId:
+            self.air.uidMgr.removeUid(self.getUniqueId())
+
+        self.requestDelete()
+        return Task.done
+
+    def _deleteBuilderObjects(self, builder):
+        for object in list(builder.objectList.values()):
+            childBuilder = getattr(object, 'builder', None)
+            if childBuilder is not None and childBuilder is not builder and hasattr(childBuilder, 'objectList'):
+                self._deleteBuilderObjects(childBuilder)
+
+            builder.removeObject(object)
+            if self.air.doId2do.get(object.doId) is object:
+                object.requestDelete()
 
     def getParticipants(self):
         return self.participants
@@ -212,7 +259,20 @@ class DistributedTreasureMapInstanceAI(DistributedInstanceWorldAI, FSM):
             return
 
         self.notify.info('Avatar %d requests to leave instance (reason=%d)' % (avatarId, reason))
+
+        # an avatar defeated in a treasure map is not sent to jail, the client
+        # leaves the treasure map instead, so it is revived on it's way out...
+        avatar = self.air.doId2do.get(avatarId)
+        if avatar and avatar.getHp()[0] <= 0:
+            self._reviveDefeatedAvatar(avatar)
+
         self._approveParticipantLeave(avatarId)
+
+    def _reviveDefeatedAvatar(self, avatar):
+        self.notify.info('Reviving defeated avatar %d leaving instance %d' % (avatar.doId, self.doId))
+        self.air.targetMgr.clearAttacker(avatar)
+        avatar.b_setHp(avatar.getMaxHp())
+        avatar.b_setMojo(avatar.getMaxMojo())
 
     def _approveParticipantLeave(self, avatarId):
         """Return a participant and remove them only after a return is available."""

@@ -27,7 +27,7 @@ class TreasureMapCompletionTests(unittest.TestCase):
         instance.readyAvatars = []
         instance.sendUpdateToAvatarId = Mock()
         instance.air = SimpleNamespace(
-            doId2do={avatarId: SimpleNamespace(doId=avatarId)
+            doId2do={avatarId: SimpleNamespace(doId=avatarId, getHp=lambda: [100, 0])
                      for avatarId in participants},
             teleportMgr=SimpleNamespace(),
             getAvatarIdFromSender=lambda: 42,
