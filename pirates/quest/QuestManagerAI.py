@@ -20,12 +20,14 @@ from pirates.quest import QuestDB
 from pirates.quest import QuestLadderDB
 from pirates.quest.QuestPath import QuestStep, QuestGoal
 from pirates.quest.QuestLadderDNA import QuestLadderDNA, QuestContainerDNA
+from pirates.quest.QuestLadder import QuestStub
 from pirates.quest.QuestLadderDynMap import QuestLadderDynMap
 from pirates.quest.QuestLadderDependency import QuestLadderDependency
 from pirates.quest.QuestOffer import QuestOffer
 from pirates.quest.QuestLadderOffer import QuestLadderOffer
 from pirates.quest import QuestTaskDNA
-from pirates.quest.QuestConstants import PropIds, getPropList, getShipList
+from pirates.quest.QuestConstants import PropIds, QuestItems, getPropList, getShipList
+from pirates.piratesbase import CollectionMap
 from pirates.pirate import AvatarTypes
 from pirates.reputation.ReputationGlobals import getLevelFromTotalReputation
 from pirates.piratesbase import PiratesGlobals
@@ -37,6 +39,7 @@ from pirates.world.DistributedBuildingDoorAI import DistributedBuildingDoorAI
 from pirates.world.DistributedInteriorDoorAI import DistributedInteriorDoorAI
 from pirates.world.DistributedDinghyAI import DistributedDinghyAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
+from pirates.uberdog import InventoryInit
 from pirates.tutorial import TutorialGlobals
 
 
@@ -801,7 +804,8 @@ class QuestManagerAI(DirectObject):
 
         questStatus = getattr(avatar, 'questStatus', None)
         questStub = questStatus.getQuestStub(quest.getQuestId()) if questStatus else None
-        if not questStub or questStub.quest is not quest or questStub.complete:
+        if (not isinstance(questStub, QuestStub) or questStub.quest is not quest or
+                questStub.complete):
             return []
 
         # the stub is only treated as complete by it's containers once
@@ -831,7 +835,23 @@ class QuestManagerAI(DirectObject):
 
         for ladderName in list(ladderDeleteList):
             ladderDeleteList.remove(ladderName)
+            self.removeLadderChoiceContainers(avatar, ladderName)
             avatar.questStatus.deleteLadder(ladderName)
+
+    def removeLadderChoiceContainers(self, avatar, ladderName):
+        # a ladder that ends with a quest choice only adds itself to the ladder
+        # history once completed, not it's final choice. the choice must not stay
+        # behind in the avatar's current choices once the ladder is gone...
+        ladder = avatar.questStatus.ladders.get(ladderName)
+        if not ladder:
+            return
+
+        choiceContainers = []
+        ladder.getChoiceContainers(choiceContainers)
+        for container in choiceContainers:
+            if (container.getQuestInt() in avatar.getCurrentQuestChoiceContainers() or
+                    avatar.questStatus.choiceContainers.get(container.getName()) is container):
+                avatar.questStatus.removeCurrentQuestChoiceContainer(container)
 
     def completeTaskState(self, avatar, questEvent, callback=None):
         questObjects = list(self.quests.get(avatar.doId, {}).values())
@@ -861,11 +881,19 @@ class QuestManagerAI(DirectObject):
                     return True
                 continue
 
+            # treasure collections are delivered by handing over the collection pieces...
+            collectionTasks = self.getCollectionDeliverTasks(avatar, quest, questEvent)
+            if collectionTasks is None:
+                continue
+
             isActiveQuest = quest.getQuestId() == avatar.getActiveQuest()
             if isActiveQuest:
                 previousGoal = self.getQuestStepGoalKey(avatar, quest)
 
             quest.handleEvent(avatar, questEvent)
+            for taskState, collectionId in collectionTasks:
+                if taskState.isComplete():
+                    self.takeCollection(avatar, collectionId)
 
             # the client only asks for a new quest step when it changes areas, let it
             # know when the active quest's goal has moved on to another task or npc...
@@ -892,6 +920,75 @@ class QuestManagerAI(DirectObject):
                 completed = True
 
         return completed
+
+    # the treasure collection quests ask the avatar to deliver a whole treasure
+    # collection, the collection is unlocked by the previous quest of the ladder
+    # (see the CollectReward of tr.3visitElizabeth, tt.2recoverTooth, tm.1visitWill,
+    # trr.1visitBarbossa, tc.2poker and tf.1visitTia). the number of items the task
+    # asks for is the number of pieces the collection needs (CollectionMap.Collection_Needed)...
+    DeliverCollections = {
+        QuestItems.Painting: InventoryType.Collection_Set3,
+        QuestItems.Tooth: InventoryType.Collection_Set5,
+        QuestItems.Medal: InventoryType.Collection_Set4,
+        QuestItems.Ring: InventoryType.Collection_Set6,
+        QuestItems.ChessPiece: InventoryType.Collection_Set7,
+        QuestItems.Figurine: InventoryType.Collection_Set8,
+    }
+
+    def getCollectionPieces(self, collectionId):
+        return [(collectionId + 1 + i, CollectionMap.Collection_Needed.get(collectionId + 1 + i, 1))
+                for i in range(CollectionMap.Collection_Set_Sizes.get(collectionId, 0))]
+
+    def hasCollection(self, avatar, collectionId):
+        inventory = avatar.getInventory()
+        if not inventory:
+            return False
+
+        return all(inventory.getStackQuantity(pieceId) >= needed
+                   for pieceId, needed in self.getCollectionPieces(collectionId))
+
+    def takeCollection(self, avatar, collectionId):
+        inventory = avatar.getInventory()
+        if not inventory:
+            return
+
+        for pieceId, needed in self.getCollectionPieces(collectionId):
+            quantity = inventory.getStackQuantity(pieceId)
+            inventory.b_setStackQuantity(pieceId, max(0, quantity - needed))
+
+    def getCollectionDeliverTasks(self, avatar, quest, questEvent):
+        """
+        Returns the (taskState, collectionId) pairs of the quest's incomplete collection
+        deliver tasks the npc visit applies to, or None when the avatar has not yet
+        found every piece of a collection the npc is waiting for
+        """
+
+        if not isinstance(questEvent, QuestEvent.NPCVisited):
+            return []
+
+        collectionTasks = []
+        for taskDNA, taskState in zip(quest.getQuestDNA().getTasks(), quest.getTaskStates()):
+            if type(taskDNA) is not QuestTaskDNA.DeliverItemTaskDNA or taskState.isComplete():
+                continue
+
+            # only the tasks asking for the whole collection, a single medal
+            # handed to Will Turner is not the medal collection...
+            collectionId = self.DeliverCollections.get(taskDNA.getItem())
+            if collectionId is None or taskDNA.getNpcId() != questEvent.getNpcId():
+                continue
+
+            if taskDNA.getNum() != sum(needed for pieceId, needed in self.getCollectionPieces(collectionId)):
+                continue
+
+            if not DistributedQuestAI.taskLocationMatches(taskDNA, questEvent):
+                continue
+
+            if not self.hasCollection(avatar, collectionId):
+                return None
+
+            collectionTasks.append((taskState, collectionId))
+
+        return collectionTasks
 
     def treasureChestOpened(self, avatar, treasureChest, callback=None):
         parentObj = avatar.getParentObj()
@@ -1532,6 +1629,11 @@ class QuestManagerAI(DirectObject):
 
             if questLadderInt in ladderHistory:
                 return False
+
+        # the avatar's inventory only holds so many quests...
+        questLimit = InventoryInit.CategoryLimits[InventoryCategory.QUESTS]
+        if inventory and len(inventory.getDoIdListCategory(InventoryCategory.QUESTS)) >= questLimit:
+            return False
 
         # the avatar must not already be working on this quest,
         # or any other quest from the same quest ladder...

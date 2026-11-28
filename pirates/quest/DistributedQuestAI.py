@@ -137,10 +137,19 @@ class DistributedQuestAI(DistributedObjectAI, QuestBase, Quest):
         Quest.setFinalized(self)
         self.sendUpdateToAvatarId(self.ownerId, 'amFinalized', [])
 
+    @staticmethod
+    def taskLocationMatches(taskDNA, questEvent):
+        # deliver item tasks given to an npc have no location (their DataSet overrides
+        # the location with None), the npc can be visited anywhere...
+        if taskDNA.getLocation() is None:
+            return True
+
+        return taskDNA.locationMatches(questEvent)
+
     def handleEvent(self, holder, questEvent):
         modified = 0
         for (taskState, taskDNA) in zip(self.taskStates, self.questDNA.getTasks()):
-            if not taskDNA.locationMatches(questEvent):
+            if not self.taskLocationMatches(taskDNA, questEvent):
                 continue
 
             taskState.resetModified()
