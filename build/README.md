@@ -174,8 +174,8 @@ Environment: `client_main.py` reads `config/release.env` and sets each
 variable only if it isn't already set, so a launcher can override any of
 them. It sets `POC_GAMESERVER` (the production server from
 `config/environ/default.env`, **check it before a release**),
-`GAME_ENVIRONMENT=LIVE` and the `GAME_*` URLs (the `MOREINFO` URL is fixed
-to `https://`; `default.env` has `https:/`). The play token comes from
+`GAME_ENVIRONMENT=LIVE` and the `GAME_*` URLs on piratesclassic.online.
+The play token comes from
 `--token`, then `POC_TOKEN`, then a prompt when run from a terminal. With
 none of those it shows an error and exits.
 

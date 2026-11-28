@@ -8,10 +8,10 @@ set TEST_SERVER=142.44.142.240
 set PRODUCTION_SERVER=142.44.142.241
 set GAME_SHOW_ADDS=YES
 
-set GAME_INGAME_UPGRADE=https://www.piratesclassic.com/
-set GAME_INGAME_MOREINFO=https:/www.piratesclassic.com/about
-set GAME_INGAME_NAMING=https://www.piratesclassic.com/help/nameapprovals
-set GAME_INGAME_MANAGE_ACCT=https://www.piratesclassic.com/account
+set GAME_INGAME_UPGRADE=https://www.piratesclassic.online/
+set GAME_INGAME_MOREINFO=https://www.piratesclassic.online/about
+set GAME_INGAME_NAMING=https://www.piratesclassic.online/help/nameapprovals
+set GAME_INGAME_MANAGE_ACCT=https://www.piratesclassic.online/account
 
 rem Constants
 SET LOCALHOST_SERVER=127.0.0.1
