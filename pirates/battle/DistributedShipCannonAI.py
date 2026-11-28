@@ -34,6 +34,13 @@ class DistributedShipCannonAI(DistributedPCCannonAI, DistributedShippartAI, Dist
         return self.cannonIndex
 
     def handleRequestInteraction(self, avatar, interactType, instant):
+        if self.userId and self.userId != avatar.doId and self.userId in self.air.doId2do:
+            return self.DENY
+
+        ship = self.getShip()
+        if ship is not None and not ship.isSailable():
+            return self.DENY
+
         self.startWeapon(avatar.doId)
         return self.ACCEPT
 

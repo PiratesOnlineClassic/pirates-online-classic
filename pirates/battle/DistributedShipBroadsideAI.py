@@ -2,6 +2,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
 
 from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
+from pirates.ship import ShipGlobals
 
 
 class DistributedShipBroadsideAI(DistributedWeaponAI):
@@ -35,8 +36,54 @@ class DistributedShipBroadsideAI(DistributedWeaponAI):
         if avatar.doId != ship.clientControllerDoId:
             return
 
+        if not ship.isSailable():
+            return
+
         timestamp = globalClockDelta.getRealNetworkTime(bits=16)
         self.sendUpdate('doBroadside', [side, delays, hitPosList, zoneId, flightTime, timestamp])
+
+    def requestCannonEnabledState(self, side, index, state):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        # clients may only report a cannon port as being knocked out by a projectile,
+        # the cannon ports are only ever re-enabled by repairing the ship...
+        if state:
+            self.air.writeServerEvent('suspicious', avId=avatar.doId,
+                issue='Tried to enable cannon port %d:%d on broadside %d!' % (side, index, self.doId))
+
+            return
+
+        if side == ShipGlobals.BROADSIDE_LEFT:
+            enabledState = list(self.leftBroadsideEnabledState)
+        elif side == ShipGlobals.BROADSIDE_RIGHT:
+            enabledState = list(self.rightBroadsideEnabledState)
+        else:
+            return
+
+        if index >= len(enabledState) or not enabledState[index]:
+            return
+
+        enabledState[index] = 0
+        if side == ShipGlobals.BROADSIDE_LEFT:
+            self.b_setLeftBroadsideEnabledState(enabledState)
+        else:
+            self.b_setRightBroadsideEnabledState(enabledState)
+
+    def setCannonAnim(self, index, side, anim, timestamp):
+        # this field is relayed between the clients by the state server,
+        # there is nothing for the AI to do with it...
+        pass
+
+    def invitationResponce(self, avatarId, response):
+        pass
+
+    def requestRemove(self, avatarId):
+        pass
+
+    def requestCrewIconUpdate(self, iconId):
+        pass
 
     def setShipId(self, shipId):
         self.shipId = shipId
@@ -256,18 +303,8 @@ class DistributedShipBroadsideAI(DistributedWeaponAI):
                 if hasattr(targetShip, 'takeDamage'):
                     targetShip.takeDamage(totalDamage, ship.doId, applyModifiers=False)
                 else:
-                    # Direct HP reduction for player ships
-                    newHp = max(0, targetShip.getHp() - totalDamage)
-                    targetShip.b_setHp(newHp)
-                    
-                    # Notify player ship's FSM if it has one
-                    if hasattr(targetShip, 'gameFSM') and targetShip.gameFSM:
-                        if hasattr(targetShip.gameFSM, 'onDamageReceived'):
-                            targetShip.gameFSM.onDamageReceived(ship.doId, totalDamage)
-                    
-                    # Check for sinking
-                    if newHp <= 0:
-                        targetShip.b_setGameState('Sinking', 0)
+                    # player ships handle their own damage, sinking and attack notifications:
+                    targetShip.handleShipDamage(-totalDamage, ship)
                 
             except Exception as e:
                 self.notify.warning('Error applying broadside damage: %s' % str(e))
