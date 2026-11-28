@@ -145,6 +145,7 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.targetMgr.startup()
 
         self.inventoryManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_INVENTORY_MANAGER, 'DistributedInventoryManager')
+        self.accessoriesManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_AVATAR_ACCESSORIES_MANAGER, 'AvatarAccessoriesManager')
 
         self.magicWords = PiratesMagicWordManagerAI(self)
         self.magicWords.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
