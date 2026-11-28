@@ -9,32 +9,25 @@ class HumanDNAAI(HumanDNA):
     notify = directNotify.newCategory('HumanDNAAI')
 
     def setTutorial(self, tutorial):
-        """
-        setTutorial is ownsend, the state server has already stored (and saved)
-        the value by the time the AI receives it. A client may only make the
-        checkpoint updates the real client makes itself, anything else is
-        reverted to the AI's value. The AI's own updates go through b_setTutorial.
-        """
-
-        air = getattr(self, 'air', None)
-        if air and air.getAccountIdFromSender():
-            oldTutorial = getattr(self, 'tutorial', PiratesGlobals.TUT_STARTED)
-            if not self.isValidClientTutorial(air.getAvatarIdFromSender(), oldTutorial, tutorial):
-                air.logPotentialHacker(
+        # setTutorial is ownsend, so the state server has already stored the
+        # client's value by now. a client may only make the checkpoint updates
+        # the real client makes, anything else is reverted to the AI's value...
+        if self.air.getAccountIdFromSender():
+            oldTutorial = self.tutorial
+            if not self.isValidClientTutorial(self.air.getAvatarIdFromSender(), oldTutorial, tutorial):
+                self.air.logPotentialHacker(
                     message='Received an invalid setTutorial update from a client!',
-                    targetAvId=getattr(self, 'doId', 0),
+                    targetAvId=self.doId,
                     oldTutorial=oldTutorial,
                     tutorial=tutorial)
 
-                # the state server has already stored the client's value,
-                # overwrite it with the value the AI knows about...
                 self.d_setTutorial(oldTutorial)
                 return
 
         HumanDNA.setTutorial(self, tutorial)
 
     def isValidClientTutorial(self, senderId, oldTutorial, tutorial):
-        if senderId != getattr(self, 'doId', None):
+        if senderId != self.doId:
             return False
 
         if tutorial == oldTutorial:
