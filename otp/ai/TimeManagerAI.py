@@ -73,8 +73,9 @@ class TimeManagerAI(DistributedObjectAI.DistributedObjectAI):
         the xrc signature and the prc hash to the AI for logging in
         case the client does anything suspicious.
         """
+        requesterId = self.air.getAvatarIdFromSender()
+
         if signature:
-            requesterId = self.air.getAvatarIdFromSender()
             prcHash = HashVal()
             prcHash.setFromBin(hash)
             info = '%s|%s' % (signature, prcHash.asHex())

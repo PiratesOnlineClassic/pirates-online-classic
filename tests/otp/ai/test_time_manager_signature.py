@@ -19,7 +19,7 @@ SCRIPT = textwrap.dedent('''
     from panda3d.core import HashVal
     from otp.ai.TimeManagerAI import TimeManagerAI
 
-    def run(expected, reported):
+    def run(expected, reported, hasPycHash=False):
         air = SimpleNamespace(events=[], getAvatarIdFromSender=lambda: 5)
         air.writeServerEvent = lambda *a: air.events.append(a)
         mgr = TimeManagerAI.__new__(TimeManagerAI)
@@ -27,7 +27,10 @@ SCRIPT = textwrap.dedent('''
         mgr.notify = Mock()
         builtins.base = SimpleNamespace(config=SimpleNamespace(
             GetString=lambda name, default='': expected))
-        mgr.setSignature(reported, HashVal().asBin(), HashVal().asBin())
+        pycHash = HashVal()
+        if hasPycHash:
+            pycHash.hashString('test client bytecode signature')
+        mgr.setSignature(reported, HashVal().asBin(), pycHash.asBin())
         return [e[0] for e in air.events], air.events
 
     kinds, _ = run('', 'abc123')
@@ -39,6 +42,9 @@ SCRIPT = textwrap.dedent('''
     kinds, events = run('abc123', 'deadbeef')
     suspicious = [e for e in events if e[0] == 'suspicious']
     assert len(suspicious) == 1 and 'deadbeef' in suspicious[0][2], events
+
+    kinds, events = run('', '', hasPycHash=True)
+    assert 'client-py-signature' in kinds and events[-1][1] == 5, events
     print('OK')
 ''')
 
