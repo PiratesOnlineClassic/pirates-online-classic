@@ -54,6 +54,7 @@ finally:
         if _module is not None:
             sys.modules[_name] = _module
 
+from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 
@@ -130,7 +131,7 @@ class SetTutorialTests(unittest.TestCase):
 
 def makePirate(air, **attributes):
     av = SimpleNamespace(air=air, doId=AV_ID, notify=Mock(), sendUpdate=Mock(), **attributes)
-    for name in ('_isSenderSelf', '_setGMNameTag', 'getGMNameTag', 'd_updateGMNameTag'):
+    for name in ('_isSenderSelf', '_setGMNameTag', 'getGMNameTag', 'd_updateGMNameTag', 'hasWeapon'):
         setattr(av, name, getattr(DistributedPlayerPirateAI, name).__get__(av))
     return av
 
@@ -207,30 +208,50 @@ class AvatarRequestTests(unittest.TestCase):
         inventory.b_setStackQuantity.assert_not_called()
         air.logPotentialHacker.assert_called_once()
 
+    def makeArmedPirate(self, air, ownedWeapons, currentWeaponId=0):
+        inventory = Mock()
+        inventory.getStackQuantity.side_effect = lambda itemId: 1 if itemId in ownedWeapons else 0
+        return makePirate(air, weapon=Mock(), getInventory=lambda: inventory,
+            DefaultWeapons=DistributedPlayerPirateAI.DefaultWeapons,
+            currentWeaponId=currentWeaponId, isPaid=lambda: True, b_setCurrentWeapon=Mock())
+
     def testDrawUnownedWeaponRejected(self):
         air = makeAir()
-        inventory = Mock()
-        inventory.getStackQuantity.return_value = 0
-        av = makePirate(air, weapon=Mock(), getInventory=lambda: inventory,
-            b_setCurrentWeapon=Mock())
+        av = self.makeArmedPirate(air, ownedWeapons=())
         DistributedPlayerPirateAI.requestCurrentWeapon(av, InventoryType.CutlassWeaponL6, 1)
-        av.b_setCurrentWeapon.assert_not_called()
+        # the unowned weapon is never set, the avatar is left with nothing drawn:
+        av.b_setCurrentWeapon.assert_called_once_with(0, False)
+        av.weapon.d_setMovie.assert_called_once_with(WeaponGlobals.WEAPON_MOVIE_STOP, AV_ID)
+        air.logPotentialHacker.assert_called_once()
+
+    def testDrawUnownedWeaponKeepsCurrentWeaponSheathed(self):
+        air = makeAir()
+        av = self.makeArmedPirate(air, ownedWeapons=(InventoryType.CutlassWeaponL1,),
+            currentWeaponId=InventoryType.CutlassWeaponL1)
+        DistributedPlayerPirateAI.requestCurrentWeapon(av, InventoryType.CutlassWeaponL6, 1)
+        av.b_setCurrentWeapon.assert_called_once_with(InventoryType.CutlassWeaponL1, False)
         air.logPotentialHacker.assert_called_once()
 
     def testDrawOwnedWeapon(self):
         air = makeAir()
-        inventory = Mock()
-        inventory.getStackQuantity.return_value = 1
-        av = makePirate(air, weapon=Mock(), getInventory=lambda: inventory,
-            b_setCurrentWeapon=Mock())
+        av = self.makeArmedPirate(air, ownedWeapons=(InventoryType.CutlassWeaponL1,))
         DistributedPlayerPirateAI.requestCurrentWeapon(av, InventoryType.CutlassWeaponL1, 1)
-        av.b_setCurrentWeapon.assert_called_once_with(InventoryType.CutlassWeaponL1, 1)
+        av.b_setCurrentWeapon.assert_called_once_with(InventoryType.CutlassWeaponL1, True)
+        air.logPotentialHacker.assert_not_called()
 
-    def testSheathUnownedWeaponAllowed(self):
-        av = makePirate(makeAir(), weapon=Mock(), getInventory=lambda: Mock(
-            getStackQuantity=Mock(return_value=0)), b_setCurrentWeapon=Mock())
+    def testDrawWithoutWeapon(self):
+        av = self.makeArmedPirate(makeAir(), ownedWeapons=(), currentWeaponId=0)
+        DistributedPlayerPirateAI.requestCurrentWeapon(av, 0, 1)
+        av.b_setCurrentWeapon.assert_called_once_with(0, False)
+        av.air.logPotentialHacker.assert_not_called()
+
+    def testSheathUnownedWeaponNotLogged(self):
+        # sheathing can't attack with the weapon, it's put away without the
+        # unowned weapon ever being set...
+        av = self.makeArmedPirate(makeAir(), ownedWeapons=())
         DistributedPlayerPirateAI.requestCurrentWeapon(av, InventoryType.CutlassWeaponL1, 0)
-        av.b_setCurrentWeapon.assert_called_once_with(InventoryType.CutlassWeaponL1, 0)
+        av.b_setCurrentWeapon.assert_called_once_with(0, False)
+        av.air.logPotentialHacker.assert_not_called()
 
     def testUseTonicRejectsNonTonics(self):
         air = makeAir()
