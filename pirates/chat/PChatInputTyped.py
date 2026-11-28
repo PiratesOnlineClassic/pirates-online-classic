@@ -4,6 +4,7 @@ import sys
 from direct.directnotify import DirectNotifyGlobal
 from direct.gui.DirectGui import *
 from panda3d.core import *
+from libotp import CFSpeech, CFTimeout
 from otp.otpbase import OTPLocalizer
 
 class PChatInputTyped(FSM.FSM, DirectEntry):

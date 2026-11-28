@@ -7,6 +7,7 @@ from direct.directnotify import DirectNotifyGlobal
 from otp.otpbase import OTPGlobals
 from otp.speedchat import SCDecoders
 from panda3d.core import *
+from libotp import CFSpeech, CFTimeout
 from otp.chat.ChatGlobals import *
 from otp.speedchat import SpeedChatGlobals
 from otp.chat.ChatMessage import ChatMessage
