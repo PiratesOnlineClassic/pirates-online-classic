@@ -128,7 +128,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
             self.d_setGameState(gameState)
 
     def getGameState(self):
-        return self.gameFsm.getCurrentOrNextState()
+        return self.gameFSM.getCurrentOrNextState()
 
     def setShipId(self, shipId):
         self.shipId = shipId
@@ -207,11 +207,14 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         if self.getImmortal():
             return
 
-        if hp <= 0 and self.hp > 0:
-            self.b_setGameState('Death')
-
+        justRanOutOfHp = hp <= 0 and self.hp > 0
         self.hp = max(0, hp)
         self.quietly = quietly
+
+        # update our hp before entering the death state, so that the death
+        # state sees the avatar as defeated and may restore it's hp...
+        if justRanOutOfHp:
+            self.b_setGameState('Death')
 
     def d_setHp(self, hp, quietly=False):
         if self.getImmortal():
@@ -225,6 +228,9 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
     def getHp(self):
         return [self.hp, self.quietly]
+
+    def getAdjMaxHp(self):
+        return self.maxHp
 
     def setImmortal(self, immortal):
         self.immortal = immortal
@@ -283,6 +289,9 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
     def getMojo(self):
         return self.mojo
+
+    def getAdjMaxMojo(self):
+        return self.maxMojo
 
     def setSwiftness(self, swiftness):
         self.swiftness = swiftness

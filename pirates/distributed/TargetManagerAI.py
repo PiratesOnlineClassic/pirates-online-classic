@@ -45,9 +45,13 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
 
         # clear all of our previously targeted attackers
         attackerDoIds = self.objectDict[target.doId]
-        for attackerDoId in attackerDoIds:
+        for attackerDoId in list(attackerDoIds):
             attacker = self.air.doId2do.get(attackerDoId)
-            assert(attacker is not None)
+            if not attacker:
+                # the attacker has since left the district
+                attackerDoIds.remove(attackerDoId)
+                continue
+
             self.removeAttacker(attacker, target)
 
         del self.objectDict[target.doId]
@@ -60,7 +64,11 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
         attackerDoIds = self.objectDict[target.doId]
         for attackerDoId in list(attackerDoIds):
             attacker = self.air.doId2do.get(attackerDoId)
-            assert(attacker is not None)
+            if not attacker:
+                # the attacker has since left the district
+                attackerDoIds.remove(attackerDoId)
+                continue
+
             self.removeAttacker(attacker, target)
 
     def hasAttacker(self, attackerId, targetId):
@@ -107,10 +115,12 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
         # removes attacker from all targets and clears the attacker
         # entirely from the target manager
         for targetDoId, attackerDoIds in list(self.objectDict.items()):
+            if attacker.doId not in attackerDoIds:
+                continue
+
+            attackerDoIds.remove(attacker.doId)
             target = self.air.doId2do.get(targetDoId)
-            assert(target is not None)
-            if attacker.doId in attackerDoIds:
-                attackerDoIds.remove(attacker.doId)
+            if target:
                 self.air.battleMgr.clearAttacker(target, attacker)
 
         attacker.b_setCurrentTarget(0)
@@ -157,6 +167,10 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
 
                 weights[attackTargetDoId] = totalDamageDone
 
+            # none of our attackers are on this district anymore...
+            if not weights:
+                return None
+
             return max(weights, key=weights.get)
         elif targetSwitchType == EnemyGlobals.TARGET_SWITCH_TYPE_LOW_LVL:
             weights = {}
@@ -167,6 +181,10 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
 
                 weights[attackTargetDoId] = attacker.getLevel()
 
+            # none of our attackers are on this district anymore...
+            if not weights:
+                return None
+
             return min(weights, key=weights.get)
         elif targetSwitchType == EnemyGlobals.TARGET_SWITCH_TYPE_HIGH_LVL:
             weights = {}
@@ -176,6 +194,10 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
                     continue
 
                 weights[attackTargetDoId] = attacker.getLevel()
+
+            # none of our attackers are on this district anymore...
+            if not weights:
+                return None
 
             return max(weights, key=weights.get)
 
