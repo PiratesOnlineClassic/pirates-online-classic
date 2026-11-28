@@ -268,9 +268,11 @@ class TradeAI(DistributedObjectAI, TradeBase):
             return False
 
         # only items that exist within the economy may change hands, this
-        # excludes reputation, skills, skill points and training tokens...
+        # excludes reputation, skills, skill points and training tokens. The
+        # ammo capacity a pouch gave stays with it's buyer, so a pouch could
+        # be traded away and bought again for more capacity...
         itemCategory = EconomyGlobals.getItemCategory(stackType)
-        return itemCategory is not None and itemCategory != ItemType.SHIP
+        return itemCategory is not None and itemCategory not in (ItemType.SHIP, ItemType.POUCH)
 
     def collapseGiving(self, giving):
         # the client appends a new slot every time an item is offered,
