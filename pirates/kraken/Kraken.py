@@ -138,7 +138,7 @@ class Kraken(DistributedNode):
         self.doomTentacle.play('emerge')
     
     def hideSideTentacles(self, side):
-        numTent = len(self.grabberTentacles) / 2
+        numTent = len(self.grabberTentacles) // 2
         for i in range(numTent):
             self.grabberTentacles[i + numTent * side].emerge(0)
         
