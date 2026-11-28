@@ -1,3 +1,4 @@
+from functools import cmp_to_key
 from pirates.pvp.DistributedPVPInstance import DistributedPVPInstance
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
@@ -61,7 +62,7 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
         ship.b_setIsBoardable(ship.isBoardable)
 
     def respawn(self):
-        posHpr = self.instance.cr.activeWorld.spawnInfo[0]
+        posHpr = self.cr.activeWorld.spawnInfo[0]
         localAvatar.setPos(posHpr[0], posHpr[1], posHpr[2])
     
     def hasTimeLimit(self):
@@ -101,7 +102,7 @@ class DistributedPVPShipBattle(DistributedPVPInstance):
                 'Team': teamName,
                 'Score': teamScore})
         
-        scoreList.sort(self.sortScores)
+        scoreList.sort(key = cmp_to_key(self.sortScores))
         return scoreList
 
     def createScoreboardItem(self, item, parent, itemType = None, columnWidths = [], color = None):

@@ -1101,7 +1101,7 @@ class GuiManager(FSM.FSM):
 
     def showPVPTimer(self, pvpInstance):
         if pvpInstance.hasTimeLimit():
-            timeRemaining = pvpInstance.getTimeLimit() - globalClock.getRealTime() - pvpInstance.gameStartTime
+            timeRemaining = pvpInstance.getTimeLimit() - (globalClock.getRealTime() - pvpInstance.gameStartTime)
             self.setTimer(timeRemaining, alarmTime = 10)
             self._oldTimerPos = self.timer.getPos()
             self.timer.setPos(0.4, 0, 1.5)
