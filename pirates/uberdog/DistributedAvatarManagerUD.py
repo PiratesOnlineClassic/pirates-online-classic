@@ -136,12 +136,6 @@ class PatternNameFSM(AvatarOperationFSM):
 
 
 class FinalizeNameFSM(AvatarOperationFSM):
-    """
-    The client acknowledges the result of a typed name request from the
-    avatar chooser. An approved name replaces the avatar's name and a
-    rejected one opens the avatar back up for naming.
-    """
-
     notify = DirectNotifyGlobal.directNotify.newCategory('FinalizeNameFSM')
     POST_AVATAR_STATE = 'Finalize'
 
@@ -182,12 +176,6 @@ class FinalizeNameFSM(AvatarOperationFSM):
 
 
 class ShareAvatarFSM(AvatarOperationFSM):
-    """
-    Avatar sharing between the sub accounts of a family account. Accounts on
-    this server only ever carry a single sub account, so once the avatar has
-    been validated the request is rejected.
-    """
-
     notify = DirectNotifyGlobal.directNotify.newCategory('ShareAvatarFSM')
     POST_AVATAR_STATE = 'Share'
 
@@ -199,6 +187,8 @@ class ShareAvatarFSM(AvatarOperationFSM):
         self.mgr.d_rejectShareAvatar(self.target, reasonId)
 
     def enterShare(self):
+        # accounts here only ever have a single sub account, so there is
+        # nobody to share an avatar with...
         self.reject(RejectCode.INVALID_ACCOUNT)
         self.demand('Off')
 
@@ -303,6 +293,3 @@ class DistributedAvatarManagerUD(OtpAvatarManagerUD):
 
     def d_patternNameResponse(self, accountId, success):
         self.sendUpdateToAccountId(accountId, 'patternNameResponse', [success])
-
-    def d_sendAvIdList(self, accountId, avIds):
-        self.sendUpdateToAccountId(accountId, 'sendAvIdList', [avIds])
