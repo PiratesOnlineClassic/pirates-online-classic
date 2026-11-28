@@ -8,9 +8,11 @@ class DistributedChatManagerUD(DistributedObjectGlobalUD):
     avatar is and which crew and guild it belongs to; client chat sent to the
     chat manager is then relayed to the avatars it is meant for.
 
-    Pirates routes most of its chat through the avatars, guild manager and
-    crew objects directly, so in practice this object mostly carries admin
-    chat and whispers between avatars on different districts.
+    Pirates doesn't use it: the client never calls any of the chat manager's
+    send methods, its *From handlers do nothing and nothing listens for the
+    adminChat event. Open chat and whispers are checked and relayed by
+    DistributedPlayerAI, crew, guild and team chat by their own managers, so
+    the districts don't report avatars here and the object is left dormant.
     """
 
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedChatManagerUD')
