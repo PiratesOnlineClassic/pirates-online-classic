@@ -1,3 +1,4 @@
+import builtins
 import sys
 import types
 import unittest
@@ -35,7 +36,19 @@ def makeInventory(stacks=None, stackLimits=None):
     return inventory
 
 
+def setUpModule():
+    # the full lists are stored a moment after the change, see DistributedInventoryAI.persistField
+    global _taskMgrPatch
+    _taskMgrPatch = patch.object(builtins, 'taskMgr', Mock(), create=True)
+    _taskMgrPatch.start()
+
+
+def tearDownModule():
+    _taskMgrPatch.stop()
+
+
 def lastUpdate(inventory, fieldName):
+    inventory.flushPersistedFields()
     for call in reversed(inventory.sendUpdate.call_args_list):
         if call[0][0] == fieldName:
             return dict((key, value) for key, value in call[0][1][0])
@@ -96,6 +109,47 @@ class InventoryPersistenceTests(unittest.TestCase):
         inventory.sendUpdateToAvatarId.assert_called_once_with(
             inventory.ownerId, 'stackLimit', [InventoryType.AmmoAsp, 125])
         self.assertEqual(lastUpdate(inventory, 'setStackLimits'), {InventoryType.AmmoAsp: 125})
+
+
+class InventoryPersistenceBatchingTests(unittest.TestCase):
+
+    def setUp(self):
+        builtins.taskMgr.reset_mock()
+
+    def sentFields(self, inventory):
+        return [call[0][0] for call in inventory.sendUpdate.call_args_list]
+
+    def test_changes_are_stored_together_a_moment_later(self):
+        inventory = makeInventory()
+        for _ in range(10):
+            inventory.b_setStackQuantity(InventoryType.AmmoAsp, inventory.getStackQuantity(InventoryType.AmmoAsp) + 1)
+        inventory.b_setAccumulator(InventoryType.CutlassRep, 20)
+
+        # the owner hears of every change right away...
+        self.assertEqual(inventory.sendUpdateToAvatarId.call_count, 11)
+        self.assertEqual(self.sentFields(inventory), [])
+        builtins.taskMgr.doMethodLater.assert_called_once()
+        delay, method, taskName = builtins.taskMgr.doMethodLater.call_args[0]
+        self.assertEqual(delay, inventory.PersistDelay)
+
+        # ...and the database is sent a single list of each kind
+        method(Mock(done='done'))
+        self.assertEqual(self.sentFields(inventory), ['setStacks', 'setAccumulators'])
+        self.assertEqual(lastUpdate(inventory, 'setStacks'), {InventoryType.AmmoAsp: 10})
+
+        # nothing left to store
+        inventory.flushPersistedFields()
+        self.assertEqual(len(self.sentFields(inventory)), 2)
+
+    def test_pending_changes_are_stored_before_the_inventory_is_deleted(self):
+        inventory = makeInventory()
+        inventory.b_setStackLimit(InventoryType.AmmoAsp, 125)
+        with patch('pirates.uberdog.DistributedInventoryAI.DistributedObjectAI.requestDelete') as requestDelete:
+            inventory.requestDelete()
+
+        self.assertEqual(self.sentFields(inventory), ['setStackLimits'])
+        requestDelete.assert_called_once_with(inventory)
+        builtins.taskMgr.remove.assert_called_with(inventory.getPersistTaskName())
 
 
 class InventoryUpgradeTests(unittest.TestCase):

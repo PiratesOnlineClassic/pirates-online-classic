@@ -1,3 +1,4 @@
+import builtins
 import sys
 import types
 import unittest
@@ -65,9 +66,15 @@ class FakeAvatar:
 class PirateInventoryReputationTests(unittest.TestCase):
 
     def setUp(self):
+        # the inventory stores it's accumulators a moment after they change
+        taskMgrPatch = patch.object(builtins, 'taskMgr', Mock(), create=True)
+        taskMgrPatch.start()
+        self.addCleanup(taskMgrPatch.stop)
+
         self.avatar = FakeAvatar()
         self.inventory = PirateInventoryAI.__new__(PirateInventoryAI)
         DistributedInventoryBase.__init__(self.inventory, None)
+        self.inventory.doId = 5000
         self.inventory.ownerId = self.avatar.doId
         self.inventory.air = Mock()
         self.inventory.air.doId2do = {self.avatar.doId: self.avatar}

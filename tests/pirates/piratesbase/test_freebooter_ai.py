@@ -204,6 +204,11 @@ class InventoryTests(unittest.TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
+        # the inventory stores it's lists a moment after they change
+        patcher = patch('builtins.taskMgr', Mock(), create=True)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
     def test_freebooters_stop_earning_reputation_at_the_caps(self):
         avatar = FakeAvatar(paid=False)
         inventory = makeInventory(avatar)

@@ -18,6 +18,13 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
     # stack quantities are sent to the client as uint16 values...
     MaxStackQuantity = 0xFFFF
 
+    # the owner learns of every single change through the targeted stack, stackLimit and
+    # accumulator updates right away, the full lists are only sent to have the database
+    # store them. They are sent at most this often, so a fight's ammo, a groggy pirate's
+    # vitae ticking down or a pile of loot costs one database write rather than one per change...
+    PersistDelay = 1.0
+    PersistFields = ('setStackLimits', 'setStacks', 'setAccumulators')
+
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
         DistributedInventoryBase.__init__(self, air)
@@ -103,7 +110,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
         # the targeted accumulator update is not a database field, store
         # the avatar's accumulators so they are kept across logins...
-        self.d_setAccumulators(self.getAccumulators())
+        self.persistField('setAccumulators')
 
     def setStackLimit(self, stackType, limit):
         # Local state update only.  The targeted network send is done by
@@ -119,7 +126,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
         # store the stack limits, they may be raised by quest rewards
         # and purchases such as ammo pouches...
-        self.d_setStackLimits(self.getStackLimits())
+        self.persistField('setStackLimits')
 
     def setStackQuantity(self, stackType, quantity):
         # Apply the stack cap only when a positive limit exists.  A missing
@@ -148,7 +155,7 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
         # the targeted stack update is not a database field, store the
         # avatar's stacks so they are kept across logins...
-        self.d_setStacks(self.getStacks())
+        self.persistField('setStacks')
 
     def setStacksInCategory(self, stackType, quantity):
         category = InventoryId.getCategory(stackType)
@@ -235,11 +242,47 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
         self.notify.warning('No valid callback for a callback response! What was the purpose of that?')
 
+    def getPersistTaskName(self):
+        return 'persist-inventory-%d' % self.doId
+
+    def persistField(self, fieldName):
+        """
+        Has the database store the full list behind fieldName (setStacks, setStackLimits
+        or setAccumulators) within PersistDelay seconds.
+        """
+
+        pendingFields = self.__dict__.setdefault('_pendingPersistFields', set())
+        if not pendingFields:
+            taskMgr.doMethodLater(self.PersistDelay, self.__persistTask, self.getPersistTaskName())
+
+        pendingFields.add(fieldName)
+
+    def __persistTask(self, task):
+        self.flushPersistedFields()
+        return task.done
+
+    def flushPersistedFields(self):
+        pendingFields = self.__dict__.get('_pendingPersistFields')
+        if not pendingFields:
+            return
+
+        taskMgr.remove(self.getPersistTaskName())
+        self._pendingPersistFields = set()
+        for fieldName in self.PersistFields:
+            if fieldName in pendingFields:
+                getattr(self, 'd_%s' % fieldName)(getattr(self, 'get%s' % fieldName[3:])())
+
+    def requestDelete(self):
+        # store what changed before the object is gone...
+        self.flushPersistedFields()
+        DistributedObjectAI.requestDelete(self)
+
     def delete(self):
         if self.registerWithInventoryManager:
             try:
                 self.air.inventoryManager.removeInventory(self)
             except Exception:
                 self.notify.exception('Failed to unregister inventory from manager')
+        self.flushPersistedFields()
         DistributedObjectAI.delete(self)
         DistributedInventoryBase.delete(self)
