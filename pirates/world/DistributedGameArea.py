@@ -574,7 +574,7 @@ class DistributedGameArea(DistributedNode.DistributedNode):
                 water_color_file_path = island_water_parameters.default_water_color_file_path
                 alpha_texture_file_path = island_water_parameters.default_water_alpha_file_path
                 opacity_texture_file_path = None
-                shader_file_path = 'models/swamps/cuba_swamp001_2X.cg'
+                shader_file_path = 'models/swamps/cuba_swamp001_2X'
                 reflection = Reflection.getGlobalReflection()
                 self.swamp_water = Swamp(None, None, reflection, model, shader_file_path)
                 island_water_parameters.swamp_water = self.swamp_water

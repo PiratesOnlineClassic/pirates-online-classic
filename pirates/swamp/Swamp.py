@@ -8,9 +8,13 @@ from direct.showbase.DirectObject import DirectObject
 from pirates.piratesbase import PiratesGlobals
 from otp.otpbase import OTPRender
 from pirates.seapatch.Reflection import Reflection
-from pirates.seapatch.Water import Water
+from pirates.seapatch.Water import Water, getShaderBasePath, loadWaterShader
 if base.config.GetBool('want-water-panel', False):
     from pirates.seapatch.WaterPanel import *
+
+# Swamp shader paths known to fail to load in this process, so each new swamp
+# doesn't retry the same doomed load and print another engine error.
+_UNLOADABLE_SHADER_PATHS = set()
 
 
 class Swamp(Water):
@@ -132,11 +136,20 @@ class Swamp(Water):
             self.water_panel.setSeaPatch(self)
         
         if input_shader_file_path == None:
-            shader_file_path = 'models/swamps/swamp002_2X.cg'
+            shader_file_path = 'models/swamps/swamp002_2X'
         else:
-            shader_file_path = input_shader_file_path
+            shader_file_path = getShaderBasePath(input_shader_file_path)
         if base.config.GetBool('want-shaders', 1) and base.win and base.win.getGsg() and base.win.getGsg().getShaderModel() >= GraphicsStateGuardian.SM20:
-            self.shader = loader.loadShader(shader_file_path)
+            if shader_file_path in _UNLOADABLE_SHADER_PATHS:
+                self.shader = None
+            else:
+                self.shader = loadWaterShader(shader_file_path)
+                if self.shader is None:
+                    _UNLOADABLE_SHADER_PATHS.add(shader_file_path)
+                    self.notify.warning(
+                        'Could not load swamp shader %r; falling back to '
+                        'non-shader swamp rendering for the rest of this '
+                        'session.' % (shader_file_path,))
             if self.shader != None:
                 self.seamodel.setShader(self.shader)
                 self.seamodel.setFogOff()
