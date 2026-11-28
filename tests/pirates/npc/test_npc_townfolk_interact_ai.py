@@ -64,6 +64,27 @@ class TownfolkInteractTests(unittest.TestCase):
         self.npc.sendUpdateToAvatarId.assert_called_with(42, 'offerOptions',
             [townfolk_module.NPC_DIALOG_GREETING])
 
+    def test_healer_only_heals_a_groggy_avatar_to_its_adjusted_max_hp(self):
+        from pirates.distributed import InteractGlobals
+
+        inventory = SimpleNamespace(gold=100)
+        inventory.getGoldInPocket = lambda: inventory.gold
+        inventory.setGoldInPocket = lambda gold: setattr(inventory, 'gold', gold)
+        avatar = SimpleNamespace(doId=42, hp=75, getAdjMaxHp=lambda: 75, getMaxHp=lambda: 100,
+            b_setHp=Mock())
+        self.npc.air.doId2do = {42: avatar}
+        self.npc.air.getAvatarIdFromSender = lambda: 42
+        self.npc.air.inventoryManager = SimpleNamespace(getInventory=lambda doId: inventory)
+
+        self.npc.selectOption(InteractGlobals.HEAL_HP)
+        avatar.b_setHp.assert_not_called()
+        self.assertEqual(inventory.gold, 100)
+
+        avatar.hp = 50
+        self.npc.selectOption(InteractGlobals.HEAL_HP)
+        avatar.b_setHp.assert_called_once_with(75)
+        self.assertLess(inventory.gold, 100)
+
     def test_npcs_can_be_used_by_many_avatars(self):
         self.assertTrue(DistributedNPCTownfolkAI.MULTIUSE)
 

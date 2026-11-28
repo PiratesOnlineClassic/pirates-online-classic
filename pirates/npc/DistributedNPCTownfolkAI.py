@@ -108,12 +108,14 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
             return
 
         if option == InteractGlobals.HEAL_HP:
+            # a groggy avatar is only healed up to it's adjusted max hp,
+            # just like the client's heal confirmation...
             hp = avatar.hp
-            maxHp = avatar.getMaxHp()
-            if hp == maxHp:
+            maxHp = avatar.getAdjMaxHp()
+            if hp >= maxHp:
                 return
 
-            cost = EconomyGlobals.getAvatarHealHpCost(maxHp)
+            cost = EconomyGlobals.getAvatarHealHpCost(maxHp - hp)
             if cost > inventory.getGoldInPocket():
                 return
 
@@ -122,7 +124,7 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
         elif option == InteractGlobals.HEAL_MOJO:
             mojo = avatar.getMojo()
             maxMojo = avatar.getMaxMojo()
-            if mojo == maxMojo:
+            if mojo >= maxMojo:
                 return
 
             cost = EconomyGlobals.getAvatarHealMojoCost(maxMojo - mojo)
