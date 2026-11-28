@@ -455,7 +455,7 @@ class BlackPearlAITests(unittest.TestCase):
     def test_fort_projectile_uses_dc_arguments_and_sender(self):
         fort = DistributedFortAI.__new__(DistributedFortAI)
         fort.destroyed = False
-        fort.air = SimpleNamespace(getAvatarIdFromSender=lambda: 42)
+        fort.air = SimpleNamespace(getAvatarIdFromSender=lambda: 42, doId2do={})
         fort.takeDamage = Mock()
         fort.hitByProjectile(1, 2)
         fort.takeDamage.assert_called_once_with(ANY, 42)
@@ -465,6 +465,7 @@ class BlackPearlAITests(unittest.TestCase):
         fort = DistributedFortAI.__new__(DistributedFortAI)
         fort.objKey = '1175907906.7kmuller'
         fort.destroyed = False
+        fort.cannons = []
         fort.treasureMapInstance = instance
         first = SimpleNamespace(isDestroyed=lambda: True)
         second = SimpleNamespace(isDestroyed=lambda: False)

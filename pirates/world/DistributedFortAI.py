@@ -14,6 +14,8 @@ class DistributedFortAI(DistributedBattleAvatarAI):
     """
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedFortAI')
 
+    BaseProjectileDamage = 500
+
     def __init__(self, air):
         DistributedBattleAvatarAI.__init__(self, air)
 
@@ -27,6 +29,13 @@ class DistributedFortAI(DistributedBattleAvatarAI):
         # Reference to the treasure map instance (if part of one)
         self.treasureMapInstance = None
 
+        # Cannons that are mounted on this fort (DistributedFortCannonAI)
+        self.cannons = []
+
+        # forts are always manned by the navy, the client sets the same team
+        # for the radar (see DistributedFort.setupRadarGui)
+        self.setTeam(PiratesGlobals.NAVY_TEAM)
+
     def generate(self):
         DistributedBattleAvatarAI.generate(self)
 
@@ -36,6 +45,7 @@ class DistributedFortAI(DistributedBattleAvatarAI):
 
     def delete(self):
         self.treasureMapInstance = None
+        self.cannons = []
         DistributedBattleAvatarAI.delete(self)
 
     # =========================================================================
@@ -74,6 +84,31 @@ class DistributedFortAI(DistributedBattleAvatarAI):
     def getFortLevel(self):
         return self.fortLevel
 
+    def d_setDrawbridgesLerpR(self, r):
+        self.sendUpdate('setDrawbridgesLerpR', [r])
+
+    def d_hideDrawbridges(self):
+        self.sendUpdate('hideDrawbridges', [])
+
+    # =========================================================================
+    # Cannons
+    # =========================================================================
+
+    def addCannon(self, cannon):
+        if cannon in self.cannons:
+            return
+
+        self.cannons.append(cannon)
+        if self.destroyed:
+            cannon.destroyCannon(repair=False)
+
+    def removeCannon(self, cannon):
+        if cannon in self.cannons:
+            self.cannons.remove(cannon)
+
+    def getCannons(self):
+        return self.cannons
+
     # =========================================================================
     # Damage Handling
     # =========================================================================
@@ -100,6 +135,10 @@ class DistributedFortAI(DistributedBattleAvatarAI):
         self.destroyed = True
         self.notify.info('Fort %s destroyed by %d' % (self.objKey, attackerId))
 
+        # a destroyed fort can no longer man its cannons
+        for cannon in list(self.cannons):
+            cannon.destroyCannon(repair=False)
+
         # Notify the treasure map instance if we're part of one
         if self.treasureMapInstance:
             from pirates.treasuremap import TreasureMapBlackPearlGlobals
@@ -122,11 +161,20 @@ class DistributedFortAI(DistributedBattleAvatarAI):
         if self.destroyed:
             return
 
-        # Calculate damage based on ammo type
-        # Standard cannonball damage for now
-        damage = 500  # Base cannonball damage
+        attackerId = self.air.getAvatarIdFromSender()
+        self.takeDamage(self.getProjectileDamage(attackerId, skillId, ammoSkillId), attackerId)
 
-        self.takeDamage(damage, self.air.getAvatarIdFromSender())
+    def getProjectileDamage(self, attackerId, skillId, ammoSkillId):
+        """
+        Forts take hull damage from cannon ammo, just like a ship hull does.
+        Falls back on the base cannonball damage when the attack has no hull damage.
+        """
+        attacker = self.air.doId2do.get(attackerId)
+        damage = 0
+        if attacker:
+            damage = int(abs(self.air.battleMgr.getModifiedHullDamage(attacker, self, skillId, ammoSkillId)))
+
+        return damage or self.BaseProjectileDamage
 
     def isDestroyed(self):
         return self.destroyed
