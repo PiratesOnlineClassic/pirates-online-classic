@@ -429,7 +429,7 @@ for i in range(InventoryType.begin_Songs, InventoryType.end_Songs):
 
 StartingStacks = {
     # Weapons
-    InventoryType.CutlassWeaponL1: 1, # This should be modified once tutorial work is being done. It is given during the will turner cutscene
+    InventoryType.CutlassWeaponL1: 0, # Given by Will Turner during the 2.1 cutscene
     InventoryType.PistolWeaponL1: 0,
     InventoryType.MusketWeaponL1: 0,
     InventoryType.BayonetWeaponL1: 0,
@@ -457,7 +457,7 @@ StartingStacks = {
     InventoryType.CannonRoundShot: 2,
 
     # Weapon Tokens
-    InventoryType.CutlassToken: 1, # This should be modified once tutorial work is being done. It is given during the will turner cutscene
+    InventoryType.CutlassToken: 0, # Given by Will Turner during the 2.1 cutscene
     InventoryType.FirstDeathToken: 1,
 
     # Teleport Tokens

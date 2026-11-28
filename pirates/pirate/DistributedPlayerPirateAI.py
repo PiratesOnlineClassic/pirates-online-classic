@@ -17,6 +17,7 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.pirate import AvatarTypes
 from pirates.quest.QuestConstants import LocationIds
 from pirates.quest import QuestDB
+from pirates.quest.QuestReward import CutlassReward
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
@@ -259,6 +260,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
             return
 
+        # skipping the tutorial also skips Will Turner's sword lesson,
+        # so give the avatar the cutlass they would have received there...
+        self.air.questMgr._giveRewards(self, [CutlassReward()])
         self.air.questMgr.createQuest(self, questDNA.getQuestId())
 
     def setReturnLocation(self, returnLocation):
