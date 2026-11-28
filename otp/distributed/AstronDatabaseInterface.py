@@ -247,6 +247,19 @@ class AstronDatabaseInterface:
             # Oh well, better honor their request:
             callback(None)
 
+    def deleteObject(self, databaseId, doId):
+        """
+        Permanently delete object `doId` from the database.
+
+        The database does not respond to this request, so there is no callback.
+        The object should no longer be active on a DB-StateServer.
+        """
+
+        dg = PyDatagram()
+        dg.addServerHeader(databaseId, self.air.ourChannel, DBSERVER_OBJECT_DELETE)
+        dg.addUint32(doId)
+        self.air.send(dg)
+
     def handleUpdateObjectResp(self, di, multi):
         ctx = di.getUint32()
         success = di.getUint8()
