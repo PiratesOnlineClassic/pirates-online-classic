@@ -70,7 +70,7 @@ def pickFrenchUndead(minVal = 0, maxVal = len(FrenchUndead) - 1):
 
 
 def randomUndead(level):
-    retval = level / 3
+    retval = level // 3
     rnd = random.randint(0, 14)
     if rnd < 5:
         retval -= 1
@@ -98,7 +98,7 @@ NavyCommon = (Cadet, Guard, Sergeant, Veteran, Officer)
 
 
 def randomNavy(level):
-    retval = level / 4
+    retval = level // 4
     rnd = random.randint(0, 14)
     if rnd < 5:
         retval -= 1

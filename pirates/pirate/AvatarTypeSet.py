@@ -15,7 +15,7 @@ class AvatarTypeSet(AvatarType):
         if not isinstance(other, self.__class__):
             return False
         
-        if len(self._avatarTypes) != len(other._avatarTypes):
+        if len(self._sortedTypes) != len(other._sortedTypes):
             return False
         
         return self._sortedTypes == other._sortedTypes
@@ -24,7 +24,7 @@ class AvatarTypeSet(AvatarType):
         if not isinstance(other, self.__class__):
             return True
         
-        if len(self._avatarTypes) != len(other._avatarTypes):
+        if len(self._sortedTypes) != len(other._sortedTypes):
             return True
         
         return self._sortedTypes != other._sortedTypes
