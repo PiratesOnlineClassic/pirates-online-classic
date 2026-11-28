@@ -31,11 +31,11 @@ uberdogs:
       id: 4677
       anonymous: false
 
-    - class: AvatarFriendsManager
+    - class: PCAvatarFriendsManager
       id: 4686
       anonymous: false
 
-    - class: PlayerFriendsManager
+    - class: PCPlayerFriendsManager
       id: 4687
       anonymous: false
 
