@@ -50,6 +50,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     # while it is not in battle...
     ToonUpTime = 2.0
 
+    # the avatar's voodoo keeps regenerating while it fights, only slower;
+    # without it voodoo users could never cast again once their mojo ran out...
+    BattleMojoRegenDivisor = 4
+
     # the amount of seconds a skill may be used before it has finished
     # recharging, the client only starts recharging a skill once it has
     # received the skill's result from us...
@@ -222,14 +226,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getInventory(self):
         return self.air.inventoryManager.getInventory(self.doId)
 
-    def setCurrentTarget(self, currentTargetDoId):
-        # the avatar does not regenerate while it is fighting a target...
-        if currentTargetDoId:
-            self.stopToonUp()
-        elif self.currentTarget is not None and self.gameFSM.getCurrentOrNextState() == 'LandRoam':
-            self.startToonUp()
-
-        DistributedBattleAvatarAI.setCurrentTarget(self, currentTargetDoId)
+    def isInBattle(self):
+        return self.currentTarget is not None or self.gameFSM.getCurrentOrNextState() != 'LandRoam'
 
     def d_setFounder(self, founder):
         self.sendUpdate('setFounder', [founder])
@@ -1193,13 +1191,19 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         if hp <= 0:
             return task.again
 
+        # the avatar's health does not regenerate while it is fighting a target...
+        inBattle = self.isInBattle()
         maxHp = self.getAdjMaxHp()
         maxMojo = self.getAdjMaxMojo()
-        if hp < maxHp:
+        if hp < maxHp and not inBattle:
             self.b_setHp(min(maxHp, hp + max(1, int(10 * self.getLevel() / 1.25))))
 
         if self.getMojo() < maxMojo:
-            self.b_setMojo(min(maxMojo, self.getMojo() + max(1, int(8 * self.getLevel() / 1.35))))
+            mojoRegen = max(1, int(8 * self.getLevel() / 1.35))
+            if inBattle:
+                mojoRegen = max(1, mojoRegen // self.BattleMojoRegenDivisor)
+
+            self.b_setMojo(min(maxMojo, self.getMojo() + mojoRegen))
 
         return task.again
 

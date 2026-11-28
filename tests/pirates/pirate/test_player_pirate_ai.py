@@ -248,17 +248,27 @@ class RegenerationTests(unittest.TestCase):
         player.toonUp(Mock())
         self.assertEqual(player.getHp()[0], 0)
 
-    def test_toon_up_stops_while_targeting(self):
+    def test_only_voodoo_regenerates_while_targeting(self):
+        player = makePlayer(hp=10, mojo=10)
+        player.currentTarget = SimpleNamespace(doId=1000)
+        player.toonUp(Mock())
+        self.assertEqual(player.getHp()[0], 10)
+        self.assertEqual(player.getMojo(), 10 + int(8 * 10 / 1.35) // player.BattleMojoRegenDivisor)
+
+    def test_only_voodoo_regenerates_with_a_weapon_drawn(self):
+        player = makePlayer(hp=10, mojo=10, state='Battle')
+        player.toonUp(Mock())
+        self.assertEqual(player.getHp()[0], 10)
+        self.assertGreater(player.getMojo(), 10)
+
+    def test_regeneration_runs_in_battle(self):
         player = makePlayer()
         player.startToonUp = Mock()
         player.stopToonUp = Mock()
-        player.air.doId2do = {}
-        player.setCurrentTarget(1000)
-        player.stopToonUp.assert_called_once_with()
-
-        player.currentTarget = SimpleNamespace(resetComboLevel=Mock())
-        player.setCurrentTarget(0)
+        PlayerPirateGameFSMAI.enterBattle(SimpleNamespace(avatar=player))
         player.startToonUp.assert_called_once_with()
+        PlayerPirateGameFSMAI.exitBattle(SimpleNamespace(avatar=player))
+        player.stopToonUp.assert_called_once_with()
 
     def test_toon_up_does_not_start_when_defeated(self):
         player = makePlayer(state='Death')

@@ -20,6 +20,13 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
     def exitLandRoam(self):
         self.avatar.stopToonUp()
 
+    def enterBattle(self):
+        # only the avatar's voodoo regenerates while it's weapon is drawn...
+        self.avatar.startToonUp()
+
+    def exitBattle(self):
+        self.avatar.stopToonUp()
+
     def enterDeath(self):
         # only the AI may decide when an avatar has been defeated...
         if self.avatar.getHp()[0] > 0:
