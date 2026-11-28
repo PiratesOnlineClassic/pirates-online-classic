@@ -38,7 +38,7 @@ class PCAvatarFriendsManagerUD(AvatarFriendsManagerUD):
             if friendId not in friendIds:
                 friendIds.append(friendId)
 
-        dclass = self.air.dclassesByName['DistributedDinghy']
+        dclass = self.air.dclassesByName['DistributedDinghyAI']
         datagram = dclass.aiFormatUpdate('responseFriendsList', dinghyId, replyTo,
             self.air.ourChannel, [avId, friendIds])
         self.air.send(datagram)
