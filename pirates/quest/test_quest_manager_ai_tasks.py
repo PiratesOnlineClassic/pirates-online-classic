@@ -497,6 +497,18 @@ class QuestTaskTests(unittest.TestCase):
         self.assertEqual(self.harness.getQuestIds(), ['ccbm.1poker'])
         self.assertNotIn(19945, self.avatar.getQuestHistory())
 
+    def test_quests_sharing_a_quest_int_both_complete(self):
+        self.harness.addQuest('cards.prt3.stealShipSchedule')
+        for questId in ('cards.prt3.stealShipSchedule', 'cards.prt3.captureCaptain'):
+            self.assertEqual(self.harness.getQuestIds(), [questId])
+            quest = self.manager.getQuest(self.avatar, questId=questId)
+            for taskState in quest.getTaskStates():
+                taskState.forceComplete()
+
+            self.manager.completeQuest(self.avatar, quest)
+
+        self.assertEqual(self.harness.getQuestIds(), ['cards.prt3.maroonCaptain'])
+
     def test_relogin_restores_quest_choice_containers(self):
         self.avatar.currentQuestChoiceContainers = [3901]
         self.harness.addQuest('c3r1.1sinkNavyShips')

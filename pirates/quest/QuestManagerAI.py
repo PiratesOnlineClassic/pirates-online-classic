@@ -294,6 +294,18 @@ class QuestManagerAI(DirectObject):
         self.questDynMap = QuestLadderDynMap()
         self.questDependency = QuestLadderDependency()
 
+        questInts = collections.Counter(questDNA.getQuestInt() for questDNA in QuestDB.QuestDict.values())
+        self.sharedQuestInts = set(questInt for questInt, count in questInts.items() if count > 1)
+
+    def hasCompletedQuest(self, avatar, questDNA):
+        # a few quests share their quest int with another quest of the same
+        # ladder, the quest history can not tell these quests apart...
+        questInt = questDNA.getQuestInt()
+        if questInt in self.sharedQuestInts:
+            return False
+
+        return questInt in avatar.getQuestHistory()
+
     def setQuestOffer(self, avatar, offer):
         self.avatar2questOffer[avatar.doId] = offer
 
@@ -675,7 +687,7 @@ class QuestManagerAI(DirectObject):
 
         # check to see if we've already completed this quest
         questHistory = avatar.getQuestHistory()
-        if questDNA.getQuestInt() in questHistory:
+        if self.hasCompletedQuest(avatar, questDNA):
             self.resumeCompletedTutorialQuest(avatar)
             return
 
@@ -713,9 +725,10 @@ class QuestManagerAI(DirectObject):
                     return
                 questInt = questDNA.getQuestInt()
                 questHistory = avatar.getQuestHistory()
-                if questInt in questHistory:
+                if self.hasCompletedQuest(avatar, questDNA):
                     return
-                avatar.b_setQuestHistory(questHistory + [questInt])
+                if questInt not in questHistory:
+                    avatar.b_setQuestHistory(questHistory + [questInt])
                 checkpoint = questDNA.getCheckPoint()
                 if checkpoint != -1 and avatar.getTutorial() < checkpoint:
                     avatar.b_setTutorial(checkpoint)
