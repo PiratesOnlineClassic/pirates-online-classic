@@ -10,6 +10,7 @@ from direct.distributed.PyDatagramIterator import PyDatagramIterator
 from otp.distributed.AstronDatabaseInterface import AstronDatabaseInterface
 from otp.distributed.NetMessenger import NetMessenger
 import collections
+import socket
 
 # Helper functions for logging output:
 def msgpack_length(dg, length, fix, maxfix, tag8, tag16, tag32):
@@ -226,7 +227,7 @@ class AstronInternalRepository(ConnectionRepository):
         dg2 = PyDatagram()
         dg2.addServerControlHeader(CONTROL_ADD_POST_REMOVE)
         dg2.addUint64(self.ourChannel)
-        dg2.addBlob(dg.getMessage())
+        dg2.addBlob(bytes(dg.getMessage()))
         self.send(dg2)
 
     def clearPostRemove(self):
@@ -682,8 +683,10 @@ class AstronInternalRepository(ConnectionRepository):
             self.notify.warning('Invalid Event Log host specified: %s:%s' % (host, port))
             self.eventSocket = None
         else:
-            self.eventSocket = SocketUDPOutgoing()
-            self.eventSocket.InitToAddress(address)
+            # Panda's SocketUDPOutgoing only accepts a str under Python 3 and
+            # would UTF-8 encode our msgpack payload, so use a plain UDP socket.
+            self.eventSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            self.eventLogAddress = (address.getIpPort().rsplit(':', 1)[0], address.getPort())
 
     def writeServerEvent(self, logtype, *args, **kwargs):
         """
@@ -709,7 +712,10 @@ class AstronInternalRepository(ConnectionRepository):
 
         dg = PyDatagram()
         msgpack_encode(dg, log)
-        self.eventSocket.Send(dg.getMessage())
+        try:
+            self.eventSocket.sendto(dg.getMessage(), self.eventLogAddress)
+        except OSError as e:
+            self.notify.warning('Failed to send event %s to the Event Logger: %s' % (logtype, e))
 
     def setAI(self, doId, aiChannel):
         """
