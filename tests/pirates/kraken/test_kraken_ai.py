@@ -43,12 +43,19 @@ class FakeShip:
         self.hp = 1000
         self.level = 30
         self.spawnBuff = False
+        self.gameState = 'Adrift'
         self.children = []
         self.nextDoId = doId + 1
         air.doId2do[doId] = self
 
     def getDeleteEvent(self):
         return 'ship-delete-%d' % self.doId
+
+    def uniqueName(self, name):
+        return '%s-%d' % (name, self.doId)
+
+    def getCurrentGameState(self):
+        return self.gameState
 
     def getShipClass(self):
         return self.shipClass
@@ -207,6 +214,28 @@ class KrakenAITests(unittest.TestCase):
         self.assertEqual(kraken.state, 'Retreat')
         for grabber in kraken.grabberTentacles.values():
             self.assertEqual(grabber.getEmerged(), 0)
+
+    def test_sinking_ship_keeps_the_kraken_for_the_sink_cutscene(self):
+        from direct.showbase.MessengerGlobal import messenger
+        kraken = self.spawn()
+        avatar = FakeAvatar(900, self.ship.doId)
+        self.air.doId2do[avatar.doId] = avatar
+        grabber = kraken.grabberTentacles[0]
+        grabber.grabAvatar(avatar.doId)
+
+        self.ship.hp = 0
+        self.ship.gameState = 'Sinking'
+        messenger.send(self.ship.uniqueName('shipSinking'), [self.ship])
+        self.assertEqual(kraken.state, 'SinkShip')
+        self.assertEqual(grabber.getGrabbedAvatar(), 0)
+
+        # the tentacles stay up for the doom tentacle cutscene...
+        self.assertEqual(grabber.getEmerged(), 1)
+        self.requestDelete.assert_not_called()
+
+        # an attack tick on the sunk ship doesn't send the kraken away either
+        kraken._KrakenAI__attack(SimpleNamespace())
+        self.assertEqual(kraken.state, 'SinkShip')
 
     def test_body_death_defeats_kraken_and_rewards_crew(self):
         kraken = self.spawn()

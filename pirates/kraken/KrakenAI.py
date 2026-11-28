@@ -38,6 +38,11 @@ class KrakenAI(DistributedObjectAI, FSM):
     # how long it takes the kraken to sink back into the deep
     SubmergeDelay = 5.0
 
+    # once the kraken has sunk it's ship it stays for the client's sink cutscene,
+    # the doom tentacle drags the ship under (see DistributedShip.playSinkAnim),
+    # we leave with the ship or once the ship has had long enough to sink...
+    SinkShipTimeout = 30.0
+
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
         FSM.__init__(self, 'KrakenAI')
@@ -58,6 +63,7 @@ class KrakenAI(DistributedObjectAI, FSM):
             return
 
         self.accept(ship.getDeleteEvent(), self.handleShipDeleted)
+        self.accept(ship.uniqueName('shipSinking'), self.handleShipSinking)
 
         self.level = self.getLevelForShip(ship)
         self.createBody()
@@ -70,6 +76,7 @@ class KrakenAI(DistributedObjectAI, FSM):
         self.ignoreAll()
         self.stopAttack()
         taskMgr.remove(self.taskName('submerge'))
+        taskMgr.remove(self.taskName('sinkShip'))
         FSM.cleanup(self)
 
         # the client expects the kraken to leave before it's parts do.
@@ -198,6 +205,14 @@ class KrakenAI(DistributedObjectAI, FSM):
             if not self.getLivingGrabbers():
                 self.request('Defeated')
 
+    def handleShipSinking(self, ship):
+        if self.state == 'Attack':
+            self.request('SinkShip')
+
+    def isShipSinking(self, ship):
+        getState = getattr(ship, 'getCurrentGameState', None)
+        return getState is not None and getState() in ('Sinking', 'Sunk')
+
     def handleShipDeleted(self):
         self.shipId = 0
         self.requestDelete()
@@ -215,7 +230,11 @@ class KrakenAI(DistributedObjectAI, FSM):
     def __attack(self, task):
         ship = self.getShip()
         if not ship or ship.getHp() <= 0:
-            self.request('Retreat')
+            if ship and self.isShipSinking(ship):
+                self.request('SinkShip')
+            else:
+                self.request('Retreat')
+
             return Task.done
 
         # a freshly deployed ship is protected by its spawn dome:
@@ -265,6 +284,22 @@ class KrakenAI(DistributedObjectAI, FSM):
 
     def exitAttack(self):
         self.stopAttack()
+
+    def enterSinkShip(self):
+        # the ship is lost, let go of the crew so they can go down with
+        # her, the client hides the far side's tentacles and raises the
+        # doom tentacle itself (Kraken.hideSideTentacles/spawnDoomTentacle)...
+        for grabber in self.grabberTentacles.values():
+            grabber.releaseAvatar()
+
+        taskMgr.doMethodLater(self.SinkShipTimeout, self.__shipSunk, self.taskName('sinkShip'))
+
+    def exitSinkShip(self):
+        taskMgr.remove(self.taskName('sinkShip'))
+
+    def __shipSunk(self, task):
+        self.requestDelete()
+        return Task.done
 
     def enterDefeated(self):
         self.rewardCrew()
