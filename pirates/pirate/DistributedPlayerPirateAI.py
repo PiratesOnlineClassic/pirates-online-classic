@@ -28,6 +28,36 @@ from pirates.piratesbase import Freebooter
 class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNAAI, DistributedQuestAvatarAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerPirateAI')
 
+    # the groggy (vitae) state is counted down once every second,
+    # this is the amount of vitae removed each time...
+    GroggyUpdateTime = 1.0
+    GroggyUpdateAmount = 20
+
+    # the avatar's health and voodoo regenerate every few seconds
+    # while it is not in battle...
+    ToonUpTime = 2.0
+
+    # the amount of seconds a skill may be used before it has finished
+    # recharging, the client only starts recharging a skill once it has
+    # received the skill's result from us...
+    RechargeTolerance = 1.0
+
+    # weapons that every avatar may use, even when they are not in the
+    # avatar's inventory; the combat tray falls back to the avatar's fists
+    # when the avatar has not been given any weapons yet...
+    DefaultWeapons = (0, InventoryType.MeleeWeaponL1)
+
+    # combo skills which require the previous skill in the combo
+    # chain to be learned first, see the client's SkillPage.addPoint...
+    ComboOrderSkills = (
+        InventoryType.CutlassSlash,
+        InventoryType.CutlassCleave,
+        InventoryType.CutlassFlourish,
+        InventoryType.CutlassStab,
+        InventoryType.DaggerSwipe,
+        InventoryType.DaggerGouge,
+        InventoryType.DaggerEviscerate)
+
     def __init__(self, air):
         DistributedPlayerAI.__init__(self, air)
         DistributedBattleAvatarAI.__init__(self, air)
@@ -63,6 +93,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.bandId = 0
         self.lootCarried = 0
         self.maxLootCarried = 0
+        self.skillRechargeTimes = {}
 
     def announceGenerate(self):
         DistributedPlayerAI.announceGenerate(self)
@@ -75,7 +106,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         DistributedPlayerAI.generate(self)
         DistributedBattleAvatarAI.generate(self)
 
-        taskMgr.doMethodLater(0.05, self.__processGroggy, self.uniqueName('process-groggy'))
+        taskMgr.doMethodLater(self.GroggyUpdateTime, self.__processGroggy, self.uniqueName('process-groggy'))
         taskMgr.doMethodLater(10, self.__processDoubleXP, self.uniqueName('process-double-xp'))
 
     def __processGroggy(self, task):
@@ -86,7 +117,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         vitaeLevel = inventory.getVitaeLevel()
         if vitaeLevel:
             # increment down the Vitae
-            amount = max(inventory.getVitaeLeft() - 1, 0)
+            amount = max(inventory.getVitaeLeft() - self.GroggyUpdateAmount, 0)
             inventory.setVitaeLeft(amount)
 
             # check if the groggy state has expired
@@ -133,11 +164,11 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return self.air.inventoryManager.getInventory(self.doId)
 
     def setCurrentTarget(self, currentTargetDoId):
-        if self.currentTarget is not None:
-            if not currentTargetDoId:
-                self.startToonUp()
-        else:
+        # the avatar does not regenerate while it is fighting a target...
+        if currentTargetDoId:
             self.stopToonUp()
+        elif self.currentTarget is not None and self.gameFSM.getCurrentOrNextState() == 'LandRoam':
+            self.startToonUp()
 
         DistributedBattleAvatarAI.setCurrentTarget(self, currentTargetDoId)
 
@@ -200,6 +231,27 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         DistributedBattleAvatarAI.setMaxHp(self, maxHp)
         if self.isGenerated():
             self.air.bandManager.updateAvatarHp(self)
+
+    def isGroggy(self):
+        inventory = self.getInventory()
+        if not inventory:
+            return False
+
+        return inventory.getStackQuantity(InventoryType.Vitae_Level) > 0
+
+    def getAdjMaxHp(self):
+        # groggy avatars may only regain a portion of their max hp,
+        # this matches the client's DistributedBattleAvatar.getAdjMaxHp...
+        if self.isGroggy():
+            return int(self.maxHp * 0.75)
+
+        return self.maxHp
+
+    def getAdjMaxMojo(self):
+        if self.isGroggy():
+            return int(self.maxMojo * 0.75)
+
+        return self.maxMojo
 
     def setGuildName(self, guildName):
         self.guildName = guildName
@@ -348,17 +400,79 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getEmote(self):
         return self.emoteId
 
+    def hasWeapon(self, weaponId):
+        if weaponId in self.DefaultWeapons:
+            return True
+
+        if not WeaponGlobals.getRepId(weaponId):
+            return False
+
+        inventory = self.getInventory()
+        if not inventory:
+            return False
+
+        return inventory.getStackQuantity(weaponId) > 0
+
     def requestCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
-        if not self.weapon:
+        avatarId = self.air.getAvatarIdFromSender()
+        if avatarId != self.doId:
+            self.air.logPotentialHacker(
+                message='Attempted to change the weapon of another avatar',
+                targetAvId=self.doId)
+
             return
 
-        self.weapon.d_setMovie(WeaponGlobals.WEAPON_MOVIE_START if isWeaponDrawn else \
-            WeaponGlobals.WEAPON_MOVIE_STOP, self.doId)
+        isWeaponDrawn = bool(isWeaponDrawn)
+        if not self.hasWeapon(currentWeaponId):
+            self.notify.warning('Avatar %d requested weapon %d which is not in their inventory!' % (
+                self.doId, currentWeaponId))
+
+            # put away whichever weapon the avatar was using, so the
+            # avatar cannot attack with a weapon it does not own...
+            currentWeaponId = self.currentWeaponId if self.hasWeapon(self.currentWeaponId) else 0
+            isWeaponDrawn = False
+
+        # an avatar without a weapon has nothing to draw...
+        if not currentWeaponId:
+            isWeaponDrawn = False
+
+        repId = WeaponGlobals.getRepId(currentWeaponId)
+        if isWeaponDrawn and not self.isPaid() and not Freebooter.allowedFreebooterWeapon(repId):
+            self.notify.warning('Freebooter %d attempted to draw paid weapon %d!' % (
+                self.doId, currentWeaponId))
+
+            isWeaponDrawn = False
+
+        if self.weapon:
+            self.weapon.d_setMovie(WeaponGlobals.WEAPON_MOVIE_START if isWeaponDrawn else \
+                WeaponGlobals.WEAPON_MOVIE_STOP, self.doId)
 
         self.b_setCurrentWeapon(currentWeaponId, isWeaponDrawn)
 
     def requestCurrentAmmo(self, skillId):
-        pass
+        if skillId:
+            repId = WeaponGlobals.getRepId(self.currentWeaponId)
+            if not repId or WeaponGlobals.getSkillReputationCategoryId(skillId) != repId:
+                self.notify.debug('Avatar %d requested ammo %d for weapon %d!' % (
+                    self.doId, skillId, self.currentWeaponId))
+
+                return
+
+            inventory = self.getInventory()
+            if not inventory or inventory.getStackQuantity(skillId) < 2:
+                self.notify.debug('Avatar %d requested ammo %d they have not learned!' % (
+                    self.doId, skillId))
+
+                return
+
+        self.b_setCurrentAmmo(skillId)
+
+    def interrupted(self, effectId):
+        # the client lets us know their charged attack was interrupted by
+        # an enemy's attack, the charge is never tracked by the AI...
+        if effectId != WeaponGlobals.C_INTERRUPTED:
+            self.notify.debug('Avatar %d sent unknown interrupt effect %d!' % (
+                self.doId, effectId))
 
     def requestUseSkill(self, skillId, index):
         pass
@@ -421,6 +535,20 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
                 return
 
+            # freebooters may only train their skills up to a certain rank...
+            if not self.isPaid() and skillQuantity + 1 > Freebooter.FreeSkillCap:
+                self.notify.debug('Cannot update stack %d, freebooter skill cap reached; skillQuantity=%d' % (
+                    stackType, skillQuantity))
+
+                return
+
+            # combo skills must be learned in the order they are chained...
+            if skillId in self.ComboOrderSkills and inventory.getStackQuantity(skillId - 1) <= 1:
+                self.notify.debug('Cannot update stack %d, previous combo skill %d was never learned!' % (
+                    stackType, skillId - 1))
+
+                return
+
             # update the player's skill quantity and their skill
             # points quantity stack...
             inventory.b_setStackQuantity(skillId, skillQuantity + 1)
@@ -480,7 +608,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return self.questRewardFlags
 
     def getHighestTonic(self):
-        inventory = base.air.inventoryManager.getInventory(self.doId)
+        inventory = self.getInventory()
 
         if not inventory:
             self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
@@ -496,15 +624,15 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return detected
 
     def getBestTonic(self):
-        inventory = base.air.inventoryManager.getInventory(self.doId)
+        inventory = self.getInventory()
 
         if not inventory:
             self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
             return 0
 
         tonics = inventory.getTonics()
-        idealAmount = max(0, self.getMaxHp() * 0.8 - self.getHp()[0])
-        bestTonicId = InventoryType.Potion1
+        idealAmount = max(0, self.getAdjMaxHp() * 0.8 - self.getHp()[0])
+        bestTonicId = 0
         for tonicId, count in sorted(tonics.items()):
             if count:
                 bestTonicId = tonicId
@@ -513,12 +641,54 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         return bestTonicId
 
+    def isSkillRecharging(self, skillId, ammoSkillId=0):
+        lastUsed = self.skillRechargeTimes.get(skillId)
+        if lastUsed is None:
+            return False
+
+        # allow some leeway, the client starts recharging the skill when
+        # it receives the skill's result and not when it was requested...
+        rechargeTime = self.air.battleMgr.getModifiedRechargeTime(self, skillId, ammoSkillId)
+        return globalClock.getRealTime() - lastUsed < rechargeTime - self.RechargeTolerance
+
+    def startSkillRecharge(self, skillId):
+        self.skillRechargeTimes[skillId] = globalClock.getRealTime()
+
     def useTonic(self, tonicId):
-        inventory = base.air.inventoryManager.getInventory(self.doId)
+        avatarId = self.air.getAvatarIdFromSender()
+        if avatarId and avatarId != self.doId:
+            self.air.logPotentialHacker(
+                message='Attempted to use a tonic for another avatar',
+                targetAvId=self.doId,
+                tonicId=tonicId)
+
+            return False
+
+        if tonicId not in InventoryType.Potions:
+            self.air.logPotentialHacker(
+                message='Attempted to use an invalid tonic',
+                tonicId=tonicId)
+
+            return False
+
+        if self.getHp()[0] <= 0:
+            self.notify.debug('Avatar %d cannot use tonic %d while defeated!' % (
+                self.doId, tonicId))
+
+            return False
+
+        # all tonics share the same recharge time...
+        if self.isSkillRecharging(InventoryType.UseItem, tonicId):
+            self.notify.debug('Avatar %d cannot use tonic %d, tonics are still recharging!' % (
+                self.doId, tonicId))
+
+            return False
+
+        inventory = self.getInventory()
 
         if not inventory:
             self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
-            return
+            return False
 
         amount = inventory.getStackQuantity(tonicId)
 
@@ -528,30 +698,42 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                 message='Attempted to use a tonic they do not have',
                 tonicId=tonicId)
 
-            return
+            return False
 
-        # Calculate max potential values for restoring
-        healedHp = min(WeaponGlobals.getAttackSelfHP(tonicId) + self.getHp()[0], self.getMaxHp())
-        restoredMojo = min(WeaponGlobals.getAttackSelfMojo(tonicId) + self.getMojo(), self.getMaxMojo())
-        restoredPower = min(WeaponGlobals.getAttackSelfPower(tonicId) + self.getPower(), self.getMaxPower())
+        # Calculate max potential values for restoring, groggy avatars
+        # cannot be restored past their adjusted max hp and mojo...
+        healedHp = max(self.getHp()[0], min(WeaponGlobals.getAttackSelfHP(tonicId) + self.getHp()[0], self.getAdjMaxHp()))
+        restoredMojo = max(self.getMojo(), min(WeaponGlobals.getAttackSelfMojo(tonicId) + self.getMojo(), self.getAdjMaxMojo()))
+        restoredPower = max(self.getPower(), min(WeaponGlobals.getAttackSelfPower(tonicId) + self.getPower(), self.getMaxPower()))
 
         # Apply values
-        self.b_setHp(healedHp)
-        self.b_setMojo(restoredMojo)
-        self.b_setPower(restoredPower)
+        self.b_setHp(int(healedHp))
+        self.b_setMojo(int(restoredMojo))
+        self.b_setPower(int(restoredPower))
 
-        inventory.b_setStackQuantity(tonicId, inventory.getStackQuantity(tonicId) - 1)
+        inventory.b_setStackQuantity(tonicId, amount - 1)
+        self.startSkillRecharge(InventoryType.UseItem)
+        return True
 
     def useBestTonic(self):
         tonicId = self.getBestTonic()
         if tonicId == 0:
-            self.notify.warning('Failed to determine the best tonic for %d' % self.doId)
+            self.notify.debug('Failed to determine the best tonic for %d' % self.doId)
             return
 
         self.useTonic(tonicId)
 
     def flagFirstDeath(self):
-        pass
+        # the client displays the morale message the first time a
+        # high enough level avatar is defeated, remember that it has...
+        inventory = self.getInventory()
+        if not inventory:
+            return
+
+        if inventory.getStackQuantity(InventoryType.FirstDeathToken) > 0:
+            return
+
+        inventory.b_setStackQuantity(InventoryType.FirstDeathToken, 1)
 
     def d_levelUpMsg(self, category, level, messageId):
         self.sendUpdate('levelUpMsg', [category, level, messageId])
@@ -724,17 +906,23 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.b_setTempDoubleXPReward(tempDoubleXPReward)
 
     def startToonUp(self):
-        self.toonUpTask = taskMgr.doMethodLater(2.0, self.toonUp, self.taskName('toonUp'))
+        self.stopToonUp()
+        self.toonUpTask = taskMgr.doMethodLater(self.ToonUpTime, self.toonUp, self.taskName('toonUp'))
 
     def toonUp(self, task):
-        if self.getHp()[0] >= self.getMaxHp() and self.getMojo() >= self.getMaxMojo():
-            return task.done
+        hp = self.getHp()[0]
 
-        if self.getHp()[0] < self.getMaxHp():
-            self.b_setHp(min(self.getMaxHp(), self.getHp()[0] + 10 * self.getLevel() / 1.25))
+        # defeated avatars do not regenerate, they are healed by the jail...
+        if hp <= 0:
+            return task.again
 
-        if self.getMojo() < self.getMaxMojo():
-            self.b_setMojo(min(self.getMaxMojo(), self.getMojo() + 8 * self.getLevel() / 1.35))
+        maxHp = self.getAdjMaxHp()
+        maxMojo = self.getAdjMaxMojo()
+        if hp < maxHp:
+            self.b_setHp(min(maxHp, hp + max(1, int(10 * self.getLevel() / 1.25))))
+
+        if self.getMojo() < maxMojo:
+            self.b_setMojo(min(maxMojo, self.getMojo() + max(1, int(8 * self.getLevel() / 1.35))))
 
         return task.again
 
@@ -813,6 +1001,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         taskMgr.remove(self.uniqueName('process-groggy'))
         taskMgr.remove(self.uniqueName('process-double-xp'))
+        self.stopToonUp()
 
         DistributedPlayerAI.delete(self)
         DistributedBattleAvatarAI.delete(self)

@@ -21,6 +21,13 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
         self.avatar.stopToonUp()
 
     def enterDeath(self):
+        # only the AI may decide when an avatar has been defeated...
+        if self.avatar.getHp()[0] > 0:
+            self.notify.warning('Avatar %d entered death state with %d hp remaining!' % (
+                self.avatar.doId, self.avatar.getHp()[0]))
+
+            return
+
         # avatars defeated in a pvp instance are not sent to jail,
         # the instance will respawn them when they ask for a spawn point...
         world = self.avatar.getWorld()
@@ -28,16 +35,12 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
             world.avatarDefeated(self.avatar)
             return
 
+        # the avatar is no longer fighting anything, clear it from all of
+        # the targets it was attacking so it cannot be rewarded for them...
+        self.air.targetMgr.clearAttacker(self.avatar)
+        self.avatar.clearSkillEffects()
+
         inventory = self.avatar.getInventory()
-        assert(inventory is not None)
-
-        parentObj = self.avatar.getParentObj()
-        interior = parentObj.getJailInterior()
-        if not interior:
-            island = self.air.uidMgr.justGetMeMeObject(self.avatar.getReturnLocation())
-            assert(island is not None)
-            interior = island.getJailInterior()
-
         if not inventory:
             self.notify.warning('Cannot teleport avatar %d, no inventory was found!' %
                 self.avatar.doId)
@@ -50,11 +53,18 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
 
             return
 
+        parentObj = self.avatar.getParentObj()
         if not isinstance(parentObj, DistributedGameAreaAI):
             self.notify.warning('Cannot teleport avatar %d to jail, '
                 'parent object has invalid type: %r!' % (self.avatar.doId, parentObj))
 
             return
+
+        interior = parentObj.getJailInterior()
+        if not interior:
+            island = self.air.uidMgr.justGetMeMeObject(self.avatar.getReturnLocation())
+            if island:
+                interior = island.getJailInterior()
 
         if not interior:
             self.notify.warning('Cannot teleport avatar %d to jail, '
@@ -80,7 +90,6 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
         inventory.b_setStackQuantity(InventoryType.Vitae_Level, 1)
         inventory.b_setStackQuantity(InventoryType.Vitae_Cost, vitaeCost)
         inventory.b_setStackQuantity(InventoryType.Vitae_Left, vitaeCost)
-        self.avatar.b_setHp(1)
 
         # tell the instance to send the avatar to the jail, and set it's interest
         # properly before we update their game state...
@@ -110,6 +119,11 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
                 'parent object has invalid type: %r!' % (self.avatar.doId, parentObj))
 
             return
+
+        # the avatar has served it's sentence for being defeated, wake it up
+        # with as much health and voodoo as it's groggy state allows...
+        self.avatar.b_setHp(self.avatar.getAdjMaxHp())
+        self.avatar.b_setMojo(self.avatar.getAdjMaxMojo())
 
         # broadcast the avatar's current cell index to enable interaction with
         # the appropriate cell door...
