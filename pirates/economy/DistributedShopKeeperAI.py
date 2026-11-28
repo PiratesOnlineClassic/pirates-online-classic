@@ -1239,13 +1239,21 @@ class DistributedShopKeeperAI(DistributedObjectAI):
     def __getOwnedShip(self, avatarId, shipId, handlerName, states=InPortShipStates):
         inventory = self.air.inventoryManager.getInventory(avatarId)
         ship = self.air.doId2do.get(shipId)
-        if (not inventory or not ship or
-                shipId not in inventory.getShipDoIdList() or
-                ship.getGameState()[0] not in states):
-            self.notify.warning('Avatar %d requested %s for unavailable ship %d' %
-                (avatarId, handlerName, shipId))
-            self.d_makeSaleResponse(avatarId, RejectCode.TIMEOUT)
-            return None, None
+        if not inventory:
+            reason = 'the avatar has no inventory'
+        elif shipId not in inventory.getShipDoIdList():
+            reason = 'the avatar does not own it'
+        elif not ship:
+            reason = 'the ship is not loaded'
+        elif ship.getGameState()[0] not in states:
+            reason = 'the ship is %s' % ship.getGameState()[0]
+        else:
+            return inventory, ship
+
+        self.notify.warning('Avatar %d requested %s for unavailable ship %d, %s!' %
+            (avatarId, handlerName, shipId, reason))
+        self.d_makeSaleResponse(avatarId, RejectCode.TIMEOUT)
+        return None, None
 
         return inventory, ship
 
@@ -1271,6 +1279,8 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             modelClass)
         currentGold = inventory.getGoldInPocket()
         if currentGold < cost:
+            self.notify.warning('Avatar %d cannot afford the %d gold repair of ship %d, they have %d!' %
+                (avatarId, cost, shipId, currentGold))
             self.d_makeSaleResponse(avatarId, RejectCode.TIMEOUT)
             return
 
