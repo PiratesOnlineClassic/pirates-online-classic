@@ -133,18 +133,26 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         return self.getSkillEffects()
 
     def addSkillEffect(self, effectId, duration, attackerId):
-        timestamp = globalClockDelta.getRealNetworkTime(bits=16)
-        for skillEffect in self.skillEffects:
+        # the client keys it's buffs by their effect and attacker, it only reads a
+        # buff's duration and timestamp when the buff first appears. renewing an
+        # effect removes the old buff first so the buff tray restarts it, see
+        # DistributedBattleAvatarAI.addSkillEffect...
+        renewed = False
+        for skillEffect in list(self.skillEffects):
             if skillEffect[0] == effectId and skillEffect[3] == attackerId:
-                skillEffect[1] = duration
-                skillEffect[2] = timestamp
-                break
-        else:
-            self.skillEffects.append([
-                effectId,
-                duration,
-                timestamp,
-                attackerId])
+                self.skillEffects.remove(skillEffect)
+                renewed = True
+
+        if renewed:
+            self.d_setSkillEffects(self.skillEffects)
+
+        # buff durations are sent in whole seconds (int16), their timestamps
+        # are 16 bit network times, see BuffIcon.updateIconInfo...
+        self.skillEffects.append([
+            effectId,
+            max(-32768, min(32767, int(duration))),
+            globalClockDelta.getRealNetworkTime(bits=16),
+            attackerId])
 
         self.d_setSkillEffects(self.skillEffects)
 
