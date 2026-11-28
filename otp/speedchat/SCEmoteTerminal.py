@@ -1,4 +1,5 @@
 from direct.gui.DirectGui import *
+from panda3d.core import TextNode
 from .SCTerminal import SCTerminal
 from otp.otpbase.OTPLocalizer import EmoteList, EmoteWhispers
 from otp.avatar import Emote
