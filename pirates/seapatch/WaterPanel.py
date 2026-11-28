@@ -126,17 +126,17 @@ class WaterPanel(AppShell):
             output_file.close()
 
     def read_integer(self, input_file):
-        s = string.strip(input_file.readline())
+        s = input_file.readline().strip()
         print(s)
-        return string.atoi(s)
+        return int(s)
 
     def read_float(self, input_file):
-        s = string.strip(input_file.readline())
+        s = input_file.readline().strip()
         print(s)
-        return string.atof(s)
+        return float(s)
 
     def read_string(self, input_file):
-        return string.strip(input_file.readline())
+        return input_file.readline().strip()
 
     def load_region(self, filename):
         state = False
@@ -585,7 +585,7 @@ class WaterPanel(AppShell):
             if not filename:
                 return None
 
-            if string.find(filename, '.wtr') != -1:
+            if filename.find('.wtr') != -1:
                 output_file = open(filename, 'w')
             else:
                 output_file = open(filename + '.wtr', 'w')
