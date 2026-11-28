@@ -240,6 +240,23 @@ class TailorTests(AccessoriesShopTests):
         self.assertEqual(self.gold(), 0)
         self.assertNotIn(uid, [item[0] for item in self.openTailor()])
 
+    def test_holiday_clothing_is_only_sold_during_its_holiday(self):
+        self.openTailor()
+        uid = 6
+        item = ClothingGlobals.UNIQUE_ID[uid]
+        self.assertEqual(item[8], PiratesGlobals.FREEHATWEEK)
+        colorId = ClothingGlobals.stores[SHOP_ID][uid][0]
+
+        self.air.newsManager.isHolidayActive.return_value = False
+        self.shop.requestAccessories([[uid, colorId, item[0]]], [])
+        self.assertEqual(self.lastSaleResponse(), RejectCode.TIMEOUT)
+        self.assertNotIn(uid, [entry[0] for entry in self.openTailor()])
+
+        self.air.newsManager.isHolidayActive.side_effect = lambda holidayId: holidayId == PiratesGlobals.FREEHATWEEK
+        self.shop.requestAccessories([[uid, colorId, item[0]]], [])
+        self.assertEqual(self.lastSaleResponse(), DistributedShopKeeperAI.SALE_SUCCESS)
+        self.assertIn(uid, [entry[0] for entry in self.openTailor()])
+
     def test_wardrobe_limit(self):
         self.openTailor()
         hats = storeClothing(ClothingGlobals.HAT, count=PiratesGlobals.WARDROBE_LIMIT_TAILOR + 1)

@@ -11,10 +11,14 @@ from pirates.economy.AvatarAccessoriesManagerAI import getClothingGender, getJew
 from pirates.economy.EconomyGlobals import ItemType, ItemId
 from pirates.makeapirate import BarberGlobals, ClothingGlobals, JewelryGlobals, TattooGlobals
 from pirates.pirate import AvatarTypes
+from pirates.pirate.HumanDNA import availableHairColors
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.ship import ShipGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType, InventoryCategory
+
+# the barber's saint patrick's day green, see BarberStoreGUI.setPage
+SAINT_PATRICKS_HAIR_COLOR = 8
 
 
 class DistributedShopKeeperAI(DistributedObjectAI):
@@ -474,6 +478,11 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         if inventory:
             self.__setCurrency(inventory, currency, self.__getCurrency(inventory, currency) + refund)
 
+    def __isHolidayItemAvailable(self, holidayId):
+        # holiday items are only offered by the stores while their holiday
+        # is running, see NewsManager.startHoliday...
+        return holidayId is None or self.air.newsManager.isHolidayActive(holidayId)
+
     # Tailor:
 
     def __getClothingPrice(self, uid, colorId):
@@ -584,7 +593,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             item = ClothingGlobals.UNIQUE_ID.get(uid)
             if not item or item[0] != clothingType or colorId not in storeItems.get(uid, []) or \
                     getClothingGender(uid) != gender or self.__findClothing(clothing, uid, colorId) or \
-                    [uid, colorId] in bought:
+                    [uid, colorId] in bought or not self.__isHolidayItemAvailable(item[8]):
                 self.__rejectAccessories(avatarId, 'Received requestAccessories buy for clothing this shop does not sell!',
                     uid=uid, colorId=colorId)
 
@@ -811,7 +820,8 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
         bought = []
         for uid in purchases:
-            if uid not in TattooGlobals.tattoos or uid not in storeItems or uid in tattoos or uid in bought:
+            if uid not in TattooGlobals.tattoos or uid not in storeItems or uid in tattoos or uid in bought or \
+                    not self.__isHolidayItemAvailable(TattooGlobals.tattoos[uid][7]):
                 self.__rejectAccessories(avatarId, 'Received requestTattoo buy for a tattoo this shop does not sell!',
                     uid=uid)
 
@@ -1001,7 +1011,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         bought = []
         for uid in purchases:
             if uid not in JewelryGlobals.jewelry_id or uid not in storeItems or getJewelryGender(uid) != gender or \
-                    uid in jewelry or uid in bought:
+                    uid in jewelry or uid in bought or not self.__isHolidayItemAvailable(JewelryGlobals.jewelry_id[uid][6]):
                 self.__rejectAccessories(avatarId, 'Received requestJewelry buy for jewelry this shop does not sell!',
                     uid=uid)
 
@@ -1133,6 +1143,21 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
         if itemType not in (BarberGlobals.HAIR, BarberGlobals.BEARD, BarberGlobals.MUSTACHE):
             self.notify.warning('Received invalid barber hair type: %s!' % itemType)
+            self.d_makeBarberResponse(avatar.doId, idx, color, False)
+            return
+
+        # the green hair color is only offered during saint patrick's day,
+        # styles without a color choice keep the avatar's current color,
+        # see BarberStoreGUI.setPage...
+        colorOffered = color in availableHairColors or color == avatar.getHairColor() or (
+            color == SAINT_PATRICKS_HAIR_COLOR and self.__isHolidayItemAvailable(PiratesGlobals.SAINTPATRICKSDAY))
+        if not colorOffered or not self.__isHolidayItemAvailable(item[5]):
+            self.air.logPotentialHacker(
+                message='Received requestBarber for a style or color the barber does not offer!',
+                itemId=itemId,
+                itemType=itemType,
+                color=color)
+
             self.d_makeBarberResponse(avatar.doId, idx, color, False)
             return
 

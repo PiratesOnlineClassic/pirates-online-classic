@@ -219,6 +219,29 @@ class ShopKeeperAITests(unittest.TestCase):
         self.assertEqual(self.lastResponse(), (1000, 'makeBarberResponse', [1, 3, True]))
         self.assertEqual(self.inventory.getGoldInPocket(), 800)
 
+    def test_barber_green_hair_only_during_saint_patricks_day(self):
+        from pirates.piratesbase import PiratesGlobals
+
+        self.avatar.getHairColor = lambda: 0
+        self.air.newsManager.isHolidayActive.return_value = False
+        self.shop.requestBarber(1, 8)
+        self.avatar.b_setHairColor.assert_not_called()
+        self.assertEqual(self.lastResponse(), (1000, 'makeBarberResponse', [1, 8, False]))
+        self.assertEqual(self.inventory.getGoldInPocket(), 1000)
+
+        self.air.newsManager.isHolidayActive.side_effect = lambda holidayId: holidayId == PiratesGlobals.SAINTPATRICKSDAY
+        self.shop.requestBarber(1, 8)
+        self.avatar.b_setHairColor.assert_called_once_with(8)
+
+        # an avatar may keep the green it already has once the holiday is over...
+        self.air.newsManager.isHolidayActive.side_effect = None
+        self.avatar.getHairColor = lambda: 8
+        self.shop.requestBarber(1, 8)
+        self.assertEqual(self.lastResponse(), (1000, 'makeBarberResponse', [1, 8, True]))
+
+        self.shop.requestBarber(1, 9)
+        self.assertEqual(self.lastResponse(), (1000, 'makeBarberResponse', [1, 9, False]))
+
     def test_barber_rejects_unaffordable_style(self):
         self.inventory.setGoldInPocket(0)
         self.shop.requestBarber(1, 3)
