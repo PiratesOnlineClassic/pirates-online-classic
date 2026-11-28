@@ -1,8 +1,13 @@
+import math
+import random
+
 from direct.directnotify import DirectNotifyGlobal
+from direct.distributed.ClockDelta import globalClockDelta
 
 from pirates.battle.DistributedPCCannonAI import DistributedPCCannonAI
 from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PiratesGlobals
+from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedIslandCannonAI(DistributedPCCannonAI):
@@ -17,7 +22,19 @@ class DistributedIslandCannonAI(DistributedPCCannonAI):
         self.destructState = PiratesGlobals.CANNON_STATE_NORMAL
         self.repairTime = config.GetFloat('island-cannon-repair-time', 60.0)
 
+    # cannons manned by the AI fire round shot, the shots fly the way they do when
+    # a client fires the cannon (see Cannon.playAttack, the cannon's projectile
+    # power is scaled down and the ProjectileInterval's gravity is scaled up):
+    AISkillId = InventoryType.CannonShoot
+    AIAmmoSkillId = InventoryType.CannonRoundShot
+    AIProjectileSpeedScale = 0.6
+    AIProjectileGravity = 32.0 * 4.0
+
+    # a shot that misses lands this many degrees to either side of the target:
+    AIMissSpread = (2.0, 5.0)
+
     def delete(self):
+        taskMgr.remove(self.uniqueName('ai-shot'))
         taskMgr.remove(self.uniqueName('repairCannon'))
         if self.userId:
             self.ignore(self.air.getAvatarExitEvent(self.userId))
@@ -173,3 +190,81 @@ class DistributedIslandCannonAI(DistributedPCCannonAI):
 
         self.notify.debug('Cannon %d on island %d repaired' % (self.doId, self.islandId))
         self.b_setDestructState(PiratesGlobals.CANNON_STATE_NORMAL)
+
+    # =========================================================================
+    # AI Fire
+    # =========================================================================
+
+    def getProjectileSpeed(self):
+        return WeaponGlobals.getAttackProjectilePower(self.AISkillId, self.AIAmmoSkillId) * self.AIProjectileSpeedScale
+
+    def getAim(self, target):
+        """
+        Returns the heading and pitch the cannon has to fire at to land a shot on the
+        target, and the shot's flight time, or None when the target is out of range.
+        """
+        parent = target.getParentObj()
+        cannonPos = self.getPos(parent)
+        targetPos = target.getPos(parent)
+        dx, dy = targetPos[0] - cannonPos[0], targetPos[1] - cannonPos[1]
+        dz = targetPos[2] - cannonPos[2]
+        distance = math.hypot(dx, dy)
+        if distance <= 0:
+            return None
+
+        # the lower of the two angles a shot fired at the cannon's
+        # projectile speed can be fired at to pass through the target:
+        speed = self.getProjectileSpeed()
+        gravity = self.AIProjectileGravity
+        speedSq = speed * speed
+        discriminant = speedSq * speedSq - gravity * (gravity * distance * distance + 2.0 * dz * speedSq)
+        if discriminant < 0:
+            return None
+
+        pitch = math.atan2(speedSq - math.sqrt(discriminant), gravity * distance)
+        heading = -math.degrees(math.atan2(dx, dy))
+        flightTime = distance / (speed * math.cos(pitch))
+        return heading, math.degrees(pitch), flightTime
+
+    def getAIShotDamage(self):
+        return -WeaponGlobals.getAttackHullHP(self.AISkillId, self.AIAmmoSkillId)
+
+    def canFireAtTarget(self):
+        # a cannon that is knocked out or manned by a pirate is out of the AI's hands:
+        return not self.isDestroyed() and not self.userId
+
+    def fireAtTarget(self, target, accuracy, attackerId=0):
+        """
+        Fires a shot at the target ship, every client is shown the shot
+        (see DistributedPCCannon.useProjectileSkill) and the target takes the
+        damage once the shot lands, if it was on target.
+        """
+        if not self.canFireAtTarget():
+            return False
+
+        aim = self.getAim(target)
+        if aim is None:
+            return False
+
+        heading, pitch, flightTime = aim
+        hit = random.random() < accuracy
+        if not hit:
+            heading += random.choice((-1, 1)) * random.uniform(*self.AIMissSpread)
+
+        x, y, z = self.getPos()
+        timestamp = globalClockDelta.getRealNetworkTime(bits=32)
+        self.sendUpdate('useProjectileSkill', [self.AISkillId, self.AIAmmoSkillId,
+            [x, y, z, heading, pitch, 0], timestamp, 0])
+
+        if hit:
+            taskMgr.doMethodLater(flightTime, self.__shotLanded, self.uniqueName('ai-shot'),
+                extraArgs=[target, attackerId or self.doId])
+
+        return True
+
+    def __shotLanded(self, target, attackerId):
+        if target.isEmpty() or target.isDeleted() or not hasattr(target, 'takeDamage'):
+            return
+
+        target.takeDamage(self.getAIShotDamage(), attackerId, applyModifiers=False)
+

@@ -1,5 +1,8 @@
+import random
+
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from direct.directnotify import DirectNotifyGlobal
+from direct.task import Task
 
 from pirates.piratesbase import PiratesGlobals
 from pirates.pirate import AvatarTypes
@@ -17,6 +20,13 @@ class DistributedFortAI(DistributedBattleAvatarAI):
 
     BaseProjectileDamage = 500
 
+    # the fort's gunners fire each of it's cannons at the fort's
+    # target whenever it sails within range of that cannon:
+    CannonRange = 1600.0
+    CannonReloadTime = (9.0, 15.0)
+    CannonAccuracy = 0.5
+    GunnerPeriod = 1.0
+
     def __init__(self, air):
         DistributedBattleAvatarAI.__init__(self, air)
 
@@ -32,6 +42,10 @@ class DistributedFortAI(DistributedBattleAvatarAI):
 
         # Cannons that are mounted on this fort (DistributedFortCannonAI)
         self.cannons = []
+
+        # the ship the fort's gunners are firing at, and when each cannon is reloaded:
+        self.attackTarget = None
+        self.cannonReloadTimes = {}
 
         # forts are always manned by the navy, the client sets the same team
         # for the radar (see DistributedFort.setupRadarGui)
@@ -49,6 +63,7 @@ class DistributedFortAI(DistributedBattleAvatarAI):
         self.notify.debug('Fort %s generated with doId %d' % (self.objKey, self.doId))
 
     def delete(self):
+        self.stopAttacking()
         self.treasureMapInstance = None
         self.cannons = []
         DistributedBattleAvatarAI.delete(self)
@@ -141,6 +156,7 @@ class DistributedFortAI(DistributedBattleAvatarAI):
         self.notify.info('Fort %s destroyed by %d' % (self.objKey, attackerId))
 
         # a destroyed fort can no longer man its cannons
+        self.stopAttacking()
         for cannon in list(self.cannons):
             cannon.destroyCannon(repair=False)
 
@@ -180,3 +196,60 @@ class DistributedFortAI(DistributedBattleAvatarAI):
 
     def isDestroyed(self):
         return self.destroyed
+
+    # =========================================================================
+    # Gunners
+    # =========================================================================
+
+    def startAttacking(self, target):
+        """The fort's gunners open fire on the target ship."""
+        if self.destroyed:
+            return
+
+        self.attackTarget = target
+        if not taskMgr.hasTaskNamed(self.uniqueName('fort-gunners')):
+            # each cannon gets a head start, so the fort's cannons don't all fire together:
+            now = globalClock.getFrameTime()
+            for cannon in self.cannons:
+                self.cannonReloadTimes[cannon.doId] = now + random.uniform(0, self.CannonReloadTime[1])
+
+            taskMgr.doMethodLater(self.GunnerPeriod, self.__gunnersTask, self.uniqueName('fort-gunners'))
+
+    def stopAttacking(self):
+        # the gunners only ever man the cannons while the fort has a target:
+        if getattr(self, 'attackTarget', None) is None:
+            return
+
+        self.attackTarget = None
+        self.cannonReloadTimes = {}
+        taskMgr.remove(self.uniqueName('fort-gunners'))
+
+    def getAttackTarget(self):
+        return self.attackTarget
+
+    def isValidAttackTarget(self, target):
+        if target is None or target.isEmpty() or target.isDeleted():
+            return False
+
+        return not hasattr(target, 'isSailable') or target.isSailable()
+
+    def __gunnersTask(self, task):
+        target = self.attackTarget
+        if self.destroyed or not self.isValidAttackTarget(target):
+            self.stopAttacking()
+            return Task.done
+
+        now = globalClock.getFrameTime()
+        parent = target.getParentObj()
+        for cannon in list(self.cannons):
+            if now < self.cannonReloadTimes.get(cannon.doId, 0) or not cannon.canFireAtTarget():
+                continue
+
+            if (target.getPos(parent) - cannon.getPos(parent)).length() > self.CannonRange:
+                continue
+
+            if cannon.fireAtTarget(target, self.CannonAccuracy, self.doId):
+                self.cannonReloadTimes[cannon.doId] = now + random.uniform(*self.CannonReloadTime)
+
+        return Task.again
+

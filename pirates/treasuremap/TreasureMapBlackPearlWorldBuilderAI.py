@@ -12,8 +12,11 @@ Objects created:
 - Pier data
 """
 
+from panda3d.core import NodePath
+
 from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
+from direct.distributed.GridParent import GridParent
 
 from pirates.world.DistributedFortAI import DistributedFortAI
 from pirates.battle.DistributedFortCannonAI import DistributedFortCannonAI
@@ -180,13 +183,13 @@ class TreasureMapBlackPearlWorldBuilderAI(DirectObject):
                 self.fortCannons[objKey] = []
                 for cannonKey, cannonData in fortObjects.items():
                     if cannonData.get('Type') == 'Cannon':
-                        cannon = self._createFortCannon(cannonKey, cannonData, fort)
+                        cannon = self._createFortCannon(cannonKey, cannonData, fort, objectData)
                         if cannon:
                             self.fortCannons[objKey].append(cannon)
 
         return fort
 
-    def _createFortCannon(self, objKey, objectData, parentFort):
+    def _createFortCannon(self, objKey, objectData, parentFort, fortData=None):
         """
         Create a cannon that belongs to a fort.
         """
@@ -197,22 +200,33 @@ class TreasureMapBlackPearlWorldBuilderAI(DirectObject):
         cannon = DistributedFortCannonAI(self.air)
         cannon.setUniqueId(objKey)
 
-        # Get position - prefer GridPos (absolute) over Pos (relative)
-        pos = objectData.get('Pos', (0, 0, 0))
-        gridPos = objectData.get('GridPos', None)
-        hpr = objectData.get('Hpr', (0, 0, 0))
-
-        actualPos = gridPos if gridPos else pos
+        # the cannon's Pos and Hpr are relative to it's fort (the level
+        # editor's GridPos isn't kept up to date, see WorldCreatorAI.getObjectAreaPosHpr):
+        fortData = fortData or {}
+        fortNode = NodePath('fort')
+        fortNode.setPos(fortData.get('Pos', (0, 0, 0)))
+        fortNode.setHpr(fortData.get('Hpr', (0, 0, 0)))
+        cannonNode = fortNode.attachNewNode('cannon')
+        cannonNode.setPos(objectData.get('Pos', (0, 0, 0)))
+        cannonNode.setHpr(objectData.get('Hpr', (0, 0, 0)))
+        actualPos = cannonNode.getPos(NodePath())
+        actualHpr = cannonNode.getHpr(NodePath())
+        fortNode.removeNode()
 
         # Set the island ID and fort ID
         cannon.setIslandId(self.island.doId)
         cannon.setFortId(parentFort.doId)
 
-        # Generate the cannon as child of the island
+        # the cannon is generated in it's island cell, it's position is relative to the
+        # cell (the island's far reaches are too far for a DistributedNode's position fields):
         zoneId = self.island.getZoneFromXYZ(actualPos)
+        cannon.reparentTo(GridParent.getCellOrigin(self.island, zoneId))
+        cannon.setPos(self.island, actualPos)
+        cannon.setHpr(self.island, actualHpr)
         self.island.generateChildWithRequired(cannon, zoneId)
-        cannon.setPos(self.island, actualPos[0], actualPos[1], actualPos[2])
-        cannon.setHpr(hpr[0], hpr[1], hpr[2])
+        GridParent.releaseCellOrigin(self.island, zoneId)
+        cannon.d_setPos(*cannon.getPos())
+        cannon.d_setHpr(*cannon.getHpr())
 
         # Register with UID manager
         self.air.uidMgr.addUid(objKey, cannon.doId)
