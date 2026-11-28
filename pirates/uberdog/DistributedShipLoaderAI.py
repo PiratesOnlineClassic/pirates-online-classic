@@ -44,7 +44,7 @@ class ShipLoaderOperationFSM(FSM):
 
 class CreateShipFSM(ShipLoaderOperationFSM):
 
-    def enterStart(self, shipClass):
+    def enterStart(self, shipClass, shipName=''):
         self.modelClass = ShipGlobals.getModelClass(shipClass)
         if not self.modelClass:
             self.notify.warning('Failed to create ship for avatar %d, '
@@ -61,7 +61,7 @@ class CreateShipFSM(ShipLoaderOperationFSM):
             self.cleanup(0)
             return
 
-        self.air.shipLoader.sendCreateShip(self.avatar.doId, shipClass)
+        self.air.shipLoader.sendCreateShip(self.avatar.doId, shipClass, shipName)
 
     def exitStart(self):
         pass
@@ -143,9 +143,19 @@ class DistributedShipLoaderAI(DistributedObjectGlobalAI):
         self.avatar2fsm[avatar.doId] = fsmtype(self.air, avatar, callback)
         self.avatar2fsm[avatar.doId].request('Start', *args, **kwargs)
 
-    def createShip(self, avatar, shipClass):
+    def createShip(self, avatar, shipClass, shipName='', callback=None):
+        # only one loader operation may run per avatar, a ship purchased while
+        # another operation is running (e.g. several ships bought at once, or the
+        # avatar's ships still activating) is queued up behind it...
+        if avatar.doId in self.avatar2fsm:
+            pendingShips = self.avatar2pendingShips.setdefault(avatar.doId, [])
+            pendingShips.append((shipClass, shipName, callback))
+            return
 
         def _shipCreatedCallback(shipId):
+            if callback:
+                callback(shipId)
+
             if not shipId:
                 self._activateNextPendingShip(avatar)
                 return
@@ -155,10 +165,10 @@ class DistributedShipLoaderAI(DistributedObjectGlobalAI):
             # a new ship object, the Uberdog will activate the avatar's ships object on login...
             self.activateShip(avatar, shipId)
 
-        self.runShipLoaderFSM(CreateShipFSM, avatar, shipClass, callback=_shipCreatedCallback)
+        self.runShipLoaderFSM(CreateShipFSM, avatar, shipClass, shipName, callback=_shipCreatedCallback)
 
-    def sendCreateShip(self, avatarId, shipClass):
-        self.air.netMessenger.send('createShip', [avatarId, shipClass])
+    def sendCreateShip(self, avatarId, shipClass, shipName=''):
+        self.air.netMessenger.send('createShip', [avatarId, shipClass, shipName])
 
     def createShipResponse(self, avatarId, shipId):
         fsm = self.avatar2fsm.get(avatarId)
@@ -208,7 +218,17 @@ class DistributedShipLoaderAI(DistributedObjectGlobalAI):
             del self.avatar2pendingShips[avatar.doId]
 
         if avatar.isDeleted():
-            self.avatar2pendingShips.pop(avatar.doId, None)
+            # the avatar has gone, let anyone waiting on a ship creation know it failed...
+            for pendingShip in [shipId] + self.avatar2pendingShips.pop(avatar.doId, []):
+                if isinstance(pendingShip, tuple) and pendingShip[2]:
+                    pendingShip[2](0)
+
+            return
+
+        # pending operations are either ship creations (shipClass, shipName, callback)
+        # or the doId of a ship to activate...
+        if isinstance(shipId, tuple):
+            self.createShip(avatar, *shipId)
             return
 
         self.activateShip(avatar, shipId)

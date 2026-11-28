@@ -1,4 +1,5 @@
 import math
+import string
 
 from panda3d.core import ConfigVariableBool, Vec2
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
@@ -11,6 +12,7 @@ from pirates.economy.EconomyGlobals import ItemType, ItemId
 from pirates.makeapirate import BarberGlobals, ClothingGlobals, JewelryGlobals, TattooGlobals
 from pirates.pirate import AvatarTypes
 from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
 from pirates.ship import ShipGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType, InventoryCategory
 
@@ -29,6 +31,11 @@ class DistributedShopKeeperAI(DistributedObjectAI):
     # The hull condition bit the client reads as "ship is in overhaul",
     # see DistributedShipOV.setHullCondition.
     OVERHAUL_BIT = 1 << 7
+
+    # The longest typed ship name we accept and the characters it may contain,
+    # these match the client's name entry (see NamePanelGui).
+    MAX_SHIP_NAME_LENGTH = 32
+    SHIP_NAME_CHARS = set(string.ascii_letters + " .,'-")
 
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
@@ -219,6 +226,57 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         for ammoId, bonus in zip(ammoList, stackBonus):
             inventory.b_setStackLimit(ammoId, inventory.getStackLimit(ammoId) + bonus)
 
+    def __getShipName(self, names, index):
+        """
+        Returns the name the avatar chose for the index'th ship of a purchase,
+        the client sends a (typedName, nameIndices) pair per ship which comes
+        from NamePanelGui, either a typed name or a pick-a-name.
+        """
+
+        if index >= len(names):
+            return ''
+
+        typedName, nameIndices = names[index]
+        if nameIndices:
+            if len(nameIndices) != 2 or \
+                    nameIndices[0] not in PLocalizer.PirateShipPrefix.values() or \
+                    nameIndices[1] not in PLocalizer.PirateShipSuffix.values():
+                return ''
+
+            return PLocalizer.getShipName(nameIndices).strip()
+
+        typedName = ' '.join(typedName.split())
+        if not typedName or len(typedName) > self.MAX_SHIP_NAME_LENGTH:
+            return ''
+
+        if not set(typedName).issubset(self.SHIP_NAME_CHARS):
+            return ''
+
+        return typedName
+
+    def __createPurchasedShip(self, avatar, shipClass, shipName, price):
+
+        def _shipCreatedCallback(shipId):
+            if shipId:
+                return
+
+            # the ship could not be created, give the avatar back their gold...
+            self.notify.warning('Failed to create purchased ship %d for avatar %d, '
+                'refunding %d gold!' % (shipClass, avatar.doId, price))
+
+            inventory = self.air.inventoryManager.getInventory(avatar.doId)
+            if not inventory:
+                return
+
+            inventory.setGoldInPocket(inventory.getGoldInPocket() + price)
+            self.logShopkeepTransaction(
+                type='refundShipPurchase',
+                shipClass=shipClass,
+                price=price,
+                purchaser=avatar.doId)
+
+        self.air.shipLoader.createShip(avatar, shipClass, shipName, callback=_shipCreatedCallback)
+
     def requestMakeSale(self, buying, selling, names):
         avatar, inventory = self.__getAvatarAndInventory('requestMakeSale')
         if not inventory:
@@ -246,7 +304,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             else:
                 pending[itemId] = pending.get(itemId, 0) + quantity
 
-            purchases.append((itemId, quantity))
+            purchases.append((itemId, quantity, price))
             totalCost += price
 
         sold = {}
@@ -278,10 +336,14 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         for itemId, itemQuantity in sales:
             inventory.b_setStackQuantity(itemId, inventory.getStackQuantity(itemId) - itemQuantity)
 
-        for itemId, itemQuantity in purchases:
+        shipIndex = 0
+        for itemId, itemQuantity, price in purchases:
             itemCategory = EconomyGlobals.getItemCategory(itemId)
             if itemCategory == ItemType.SHIP:
-                self.air.shipLoader.createShip(avatar, itemId)
+                # the ship loader creates the ship asynchronously, the gold
+                # is refunded should the ship fail to be created...
+                self.__createPurchasedShip(avatar, itemId, self.__getShipName(names, shipIndex), price)
+                shipIndex += 1
                 continue
 
             inventory.b_setStackQuantity(itemId, (inventory.getStackQuantity(itemId) or 0) + itemQuantity)
@@ -291,7 +353,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         # Log transaction for analytics and GM purposes
         self.logShopkeepTransaction(
             type='requestMakeSale',
-            buying=purchases,
+            buying=[(itemId, itemQuantity) for itemId, itemQuantity, price in purchases],
             selling=sales,
             price=totalCost,
             gain=totalGain,
@@ -1136,8 +1198,9 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             return
 
         inventory.setGoldInPocket(currentGold - cost)
-        ship.b_setHp(ship.getMaxHp())
-        ship.b_setSp(ship.getMaxSp())
+
+        # restores the ship's hp and sp along with the hp of all of it's parts...
+        ship.repairShip()
 
         # Log transaction for analytics and GM purposes
         self.logShopkeepTransaction(
@@ -1185,10 +1248,9 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
         inventory.setGoldInPocket(currentGold - cost)
 
-        # reconstruct the ship, this restores it to full health and takes it
-        # out of overhaul...
-        ship.b_setHp(ship.getMaxHp())
-        ship.b_setSp(ship.getMaxSp())
+        # reconstruct the ship, this restores it (and all of it's parts)
+        # to full health and takes it out of overhaul...
+        ship.repairShip()
         if hasattr(ship, 'getHullCondition'):
             ship.b_setHullCondition(ship.getHullCondition() & ~self.OVERHAUL_BIT)
 

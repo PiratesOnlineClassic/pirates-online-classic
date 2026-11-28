@@ -44,7 +44,7 @@ class ShipLoaderOperationFSM(FSM):
 
 class CreateShipFSM(ShipLoaderOperationFSM):
 
-    def enterStart(self, shipClass):
+    def enterStart(self, shipClass, shipName=''):
         self.modelClass = ShipGlobals.getModelClass(shipClass)
         if not self.modelClass:
             self.notify.warning('Failed to create ship for avatar %d, '
@@ -59,7 +59,7 @@ class CreateShipFSM(ShipLoaderOperationFSM):
         fields = {
             'setBaseTeam': (ShipGlobals.PLAYER_TEAM,),
             'setShipClass': (self.shipConfig['setShipClass'][0],),
-            'setName': ('Unnamed Ship',),
+            'setName': (shipName or 'Unnamed Ship',),
             'setInventoryId': (0,),
             'setIsFlagship': (0,),
             'setMaxHp': (self.shipConfig['setMaxHp'][0],),
@@ -435,12 +435,18 @@ class DistributedShipLoaderUD(DistributedObjectGlobalUD):
         self.avatar2fsm[avatarId] = fsmtype(self.air, avatarId, callback)
         self.avatar2fsm[avatarId].request('Start', *args, **kwargs)
 
-    def createShip(self, avatarId, shipClass):
+    def createShip(self, avatarId, shipClass, shipName=''):
 
         def _shipCreatedCallback(shipId):
             self.air.netMessenger.send('createShipResponse', [avatarId, shipId])
 
-        self.runShipLoaderFSM(CreateShipFSM, avatarId, shipClass, callback=_shipCreatedCallback)
+        if avatarId in self.avatar2fsm:
+            # we can only run one operation per avatar at once, let the AI know
+            # this ship could not be created so the purchase can be refunded...
+            _shipCreatedCallback(0)
+            return
+
+        self.runShipLoaderFSM(CreateShipFSM, avatarId, shipClass, shipName, callback=_shipCreatedCallback)
 
     def activateShip(self, avatarId, shipId):
 

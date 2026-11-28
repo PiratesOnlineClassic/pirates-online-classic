@@ -178,7 +178,8 @@ class ShopKeeperAITests(unittest.TestCase):
         self.inventory.ships = []
         self.shop.requestMakeSale([[ItemId.INTERCEPTOR_L1, 1]], [], [])
         self.assertEqual(self.lastResponse()[2], [2])
-        self.air.shipLoader.createShip.assert_called_once_with(self.avatar, ItemId.INTERCEPTOR_L1)
+        self.air.shipLoader.createShip.assert_called_once()
+        self.assertEqual(self.air.shipLoader.createShip.call_args[0], (self.avatar, ItemId.INTERCEPTOR_L1, ''))
         self.assertEqual(self.inventory.getGoldInPocket(), 900)
         self.assertNotIn(ItemId.INTERCEPTOR_L1, self.inventory.stacks)
 
@@ -252,8 +253,7 @@ class ShopKeeperAITests(unittest.TestCase):
         self.shop.requestPurchaseOverhaul(5000)
 
         self.assertEqual(self.inventory.getGoldInPocket(), 1000 - int(800 * 0.4))
-        ship.b_setHp.assert_called_once_with(1000)
-        ship.b_setSp.assert_called_once_with(500)
+        ship.repairShip.assert_called_once_with()
         ship.b_setHullCondition.assert_called_once_with(3)
 
     def test_overhaul_rejects_ship_not_in_bottle(self):
@@ -261,7 +261,7 @@ class ShopKeeperAITests(unittest.TestCase):
 
         self.shop.requestPurchaseOverhaul(5000)
 
-        ship.b_setHp.assert_not_called()
+        ship.repairShip.assert_not_called()
         self.assertEqual(self.inventory.getGoldInPocket(), 1000)
 
     def test_sell_ship_pays_half_and_removes_ship(self):
