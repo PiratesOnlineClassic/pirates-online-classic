@@ -44,6 +44,13 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
             self.air.targetMgr.clearTarget(self.avatar)
             return
 
+        # nor are avatars defeated in a treasure map, the client asks to leave the
+        # treasure map instead (see TreasureMapBlackPearl.localAvEnterDeath)...
+        if world and world.getType() == PiratesGlobals.INSTANCE_TM:
+            self.air.targetMgr.clearAttacker(self.avatar)
+            self.avatar.clearSkillEffects()
+            return
+
         # the avatar is no longer fighting anything, clear it from all of
         # the targets it was attacking so it cannot be rewarded for them...
         self.air.targetMgr.clearAttacker(self.avatar)
