@@ -93,9 +93,11 @@ class PiratesAIRepository(PiratesInternalRepository):
 
     def incrementPopulation(self):
         self.populationTracker.b_setPopulation(self.populationTracker.getPopulation() + 1)
+        self.distributedDistrict.b_setAvatarCount(self.populationTracker.getPopulation())
 
     def decrementPopulation(self):
         self.populationTracker.b_setPopulation(self.populationTracker.getPopulation() - 1)
+        self.distributedDistrict.b_setAvatarCount(self.populationTracker.getPopulation())
 
     def createGlobals(self):
         """
@@ -106,6 +108,7 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.populationTracker.setShardId(self.districtId)
         self.populationTracker.setPopLimits(config.GetInt('shard-pop-limit-low', 100),
             config.GetInt('shard-pop-limit-high', 300))
+        self.distributedDistrict.setPopulationLimits(*self.populationTracker.getPopLimits())
 
         self.populationTracker.generateWithRequiredAndId(self.allocateChannel(),
             self.getGameDoId(), OTP_ZONE_ID_DISTRICTS_STATS)

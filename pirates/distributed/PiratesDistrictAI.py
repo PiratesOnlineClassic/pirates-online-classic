@@ -67,3 +67,23 @@ class PiratesDistrictAI(DistributedDistrictAI):
 
     def getShardType(self):
         return self.shardType
+
+    def setPopulationLimits(self, lowLimit, highLimit):
+        self.populationLimits = [lowLimit, highLimit]
+
+    def getPopulationLimits(self):
+        return self.populationLimits
+
+    def d_setStats(self, avatarCount, newAvatarCount):
+        self.sendUpdate('setStats', [avatarCount, newAvatarCount])
+
+    def b_setStats(self, avatarCount, newAvatarCount):
+        self.setAvatarCount(avatarCount)
+        self.setNewAvatarCount(newAvatarCount)
+        self.d_setStats(avatarCount, newAvatarCount)
+
+    def isFull(self):
+        # a district is considered full once it reaches it's high population limit,
+        # a limit of zero means the district has no population limit...
+        highLimit = self.populationLimits[1]
+        return bool(highLimit) and self.avatarCount >= highLimit
