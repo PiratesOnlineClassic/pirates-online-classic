@@ -5,6 +5,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.fsm.FSM import FSM
 from direct.task import Task
 
+from pirates.piratesbase import PiratesGlobals
 from pirates.world import WorldGlobals
 from pirates.tutorial import TutorialGlobals
 from pirates.tutorial.DistributedPiratesTutorialAI import DistributedPiratesTutorialAI
@@ -33,6 +34,7 @@ class TutorialFSM(FSM):
         self._finished = False
         self._handlerPublished = False
         self._teleportFSM = None
+        self._lockedDoors = set()
         self._timeoutTaskName = 'tutorial-start-%d-%d' % (avatar.doId, id(self))
 
     def _waitForUid(self, uid, callback):
@@ -192,15 +194,62 @@ class TutorialFSM(FSM):
             self._fail('Tutorial teleport could not start')
 
     def __avatarArrived(self):
+        # the tutorial scene is shared by every new pirate, so the doors start
+        # unlocked and are locked behind the avatar as it passes each stage...
+        self._lockedDoors = set()
+        self.accept(DistributedObjectAI.staticGetZoneChangeEvent(self.avatar.doId),
+            self._updateDoorLocks)
+        self._updateDoorLocks()
+
         self.instance.d_setTutorialHandlerId(self.tutorialHandler.doId)
         self._handlerPublished = True
         self.avatar.d_setTutorialHandlerZone(self.tutorialHandlerZoneId)
         self.air.tutorialManager.d_enterTutorial(self.avatar.doId, self.island.zoneId)
         taskMgr.remove(self._timeoutTaskName)
 
+    def _getExteriorDoors(self, interior):
+        if not interior:
+            return []
+
+        return [door for door in (interior.getExteriorFrontDoor(), interior.getExteriorBackDoor()) if door]
+
+    def _getStageDoors(self):
+        tavern = self.air.uidMgr.justGetMeMeObject(TutorialGlobals.TAVERN_INTERIOR)
+        return (
+            (self.interior, PiratesGlobals.TUT_MADE_PIRATE),
+            (tavern, PiratesGlobals.TUT_GOT_SEACHEST))
+
+    def _updateDoorLocks(self, *args):
+        if self._finished:
+            return
+
+        # once the avatar has passed the stage a building belongs to and walked out
+        # of it, the building's exterior doors are locked so it can't go back inside.
+        # the stage comes from the avatar's tutorial checkpoint, so the doors are
+        # locked again when the avatar resumes the tutorial at a later checkpoint...
+        tutorial = self.avatar.getTutorial()
+        parentId = getattr(self.avatar, 'parentId', 0)
+        for interior, stage in self._getStageDoors():
+            if not interior or tutorial < stage or parentId == interior.doId:
+                continue
+
+            for door in self._getExteriorDoors(interior):
+                if door.doId not in self._lockedDoors:
+                    self._lockedDoors.add(door.doId)
+                    door.b_setLocked(True)
+
+    def _unlockDoors(self):
+        for doorId in getattr(self, '_lockedDoors', ()):
+            door = self.air.doId2do.get(doorId)
+            if door:
+                door.b_setLocked(False)
+
+        self._lockedDoors = set()
+
     def enterStop(self):
         taskMgr.remove(self._timeoutTaskName)
         self.ignoreAll()
+        self._unlockDoors()
         for uid, callback in list(self._pendingUidCallbacks.items()):
             self.air.uidMgr.removeUidCallback(uid, callback)
         self._pendingUidCallbacks.clear()

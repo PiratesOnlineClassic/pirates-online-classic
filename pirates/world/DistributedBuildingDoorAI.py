@@ -66,6 +66,10 @@ class DistributedBuildingDoorAI(DistributedDoorBaseAI):
         if not avatar:
             return
 
+        if self.locked:
+            self.notify.warning('Avatar %d requested the interior of locked door %d!' % (avatar.doId, self.doId))
+            return
+
         interior = self.air.doId2do.get(self.interiorDoId)
         if not interior:
             self.notify.warning('Cannot set interior instance %d interact for door %d, '

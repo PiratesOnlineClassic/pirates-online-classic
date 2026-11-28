@@ -37,6 +37,9 @@ class _Avatar:
     def d_setTutorialHandlerZone(self, zoneId):
         self.handlerZones.append(zoneId)
 
+    def getTutorial(self):
+        return 0
+
     def enterLocation(self, parentId, zoneId):
         # mirrors DistributedObjectAI.setLocation's zone change notification
         oldZoneId = self.zoneId
@@ -66,6 +69,12 @@ class _SceneObject:
 
     def d_setTutorialHandlerId(self, doId):
         self.handlerIds.append(doId)
+
+    def getExteriorFrontDoor(self):
+        return None
+
+    def getExteriorBackDoor(self):
+        return None
 
 
 class _Handler:
