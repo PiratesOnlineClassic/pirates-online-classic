@@ -158,3 +158,5 @@ local/
 # Models
 *.bam
 *.eg
+# Claude Code local state and agent worktrees
+.claude/
