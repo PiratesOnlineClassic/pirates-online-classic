@@ -367,6 +367,8 @@ class QuestProgressionTests(unittest.TestCase):
         handler.air = types.SimpleNamespace(
             questMgr=manager, doId2do={1: avatar}, getAvatarIdFromSender=lambda: 1)
         handler.request = Mock()
+        # the undead ship has been sunk, see TutorialShipAI.spawnTutorialTarget...
+        handler._getTutorialShip = lambda: types.SimpleNamespace(isTutorialTargetSunk=lambda: True)
         with patch.object(builtins, 'messenger', messenger, create=True):
             manager.finalizeCutscene(avatar, quest)
             handler.targetPracticeDone()

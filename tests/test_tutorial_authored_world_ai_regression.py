@@ -59,7 +59,7 @@ def load_tutorial_ship_methods():
             'startSailing', '_sailToNextWaypoint',
             '_startAuthoredMovementTo', 'stopSailing',
             'setTutorialStumpy', 'setTutorialAuthoredPose',
-            'resetSailingToAuthoredPose', 'delete',
+            'resetSailingToAuthoredPose', 'removeTutorialTarget', 'delete',
         }
     ]
     class StubDistributedShipAI:

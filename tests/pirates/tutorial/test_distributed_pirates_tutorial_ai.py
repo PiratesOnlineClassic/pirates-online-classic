@@ -147,6 +147,10 @@ class DistributedPiratesTutorialAITests(unittest.TestCase):
         handler.request = lambda state: events.append(('state', state))
         return handler, avatar, quest_manager, events
 
+    def sinkUndeadShip(self, handler, sunk=True):
+        handler._getTutorialShip = lambda: types.SimpleNamespace(
+            isTutorialTargetSunk=lambda: sunk)
+
     def test_target_practice_done_requires_owner_sender(self):
         handler, avatar, quest_manager, events = self.makeHandler()
         handler.air.senderId = avatar.doId + 1
@@ -158,6 +162,7 @@ class DistributedPiratesTutorialAITests(unittest.TestCase):
 
     def test_target_practice_signal_is_latched_before_jolly_wait(self):
         handler, avatar, quest_manager, events = self.makeHandler()
+        self.sinkUndeadShip(handler)
 
         handler.targetPracticeDone()
 
@@ -201,6 +206,7 @@ class DistributedPiratesTutorialAITests(unittest.TestCase):
             def __init__(self):
                 self.uid = '1124236671.37jubutler'
                 self.startCount = 0
+                self.targetCount = 0
 
             def getUniqueId(self):
                 return self.uid
@@ -208,6 +214,10 @@ class DistributedPiratesTutorialAITests(unittest.TestCase):
             def startSailing(self):
                 self.startCount += 1
                 return True
+
+            def spawnTutorialTarget(self):
+                self.targetCount += 1
+                return object()
 
         ship = Ship()
         handler.air.uidMgr = types.SimpleNamespace(
@@ -231,15 +241,27 @@ class DistributedPiratesTutorialAITests(unittest.TestCase):
             handler.startSailingStumpy()
 
         self.assertEqual(ship.startCount, 1)
+        self.assertEqual(ship.targetCount, 1)
         self.assertEqual(events, [('state', 'Sailing')])
 
 
     def test_target_practice_sends_new_pirate_to_port_royal(self):
         handler, avatar, _, _ = self.makeHandler()
+        self.sinkUndeadShip(handler)
 
         handler.targetPracticeDone()
 
         self.assertEqual(avatar.returnLocation, '1150922126.8dzlu')
+
+    def test_target_practice_needs_the_undead_ship_sunk(self):
+        handler, avatar, quest_manager, events = self.makeHandler()
+        self.sinkUndeadShip(handler, sunk=False)
+
+        handler.targetPracticeDone()
+
+        self.assertEqual(quest_manager.signalCount, 0)
+        self.assertEqual(events, [])
+        self.assertNotEqual(avatar.returnLocation, '1150922126.8dzlu')
 
     def test_enter_act0_waits_for_inventory_then_starts_first_quest(self):
         handler, avatar, _, events = self.makeHandler()

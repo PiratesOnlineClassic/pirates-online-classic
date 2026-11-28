@@ -8,6 +8,7 @@ import zlib
 from types import SimpleNamespace
 from unittest.mock import ANY, MagicMock, Mock, patch
 
+from direct.showbase.DirectObject import DirectObject
 from panda3d.core import (ExecutionEnvironment, NodePath, Point3, Filename, VirtualFileMountRamdisk,
                           VirtualFileSystem, loadPrcFile, loadPrcFileData)
 
@@ -133,6 +134,18 @@ class DistributedShipAITests(unittest.TestCase):
         ship.b_setGameState.assert_called_once_with('Sinking', 0)
         ship.setHp(0)
         ship.b_setGameState.assert_called_once_with('Sinking', 0)
+
+    def test_sinking_is_announced_with_the_ship(self):
+        ship = makeShip()
+        ship.b_setGameState = Mock()
+        sunk = []
+        listener = DirectObject()
+        listener.accept(ship.uniqueName('shipSinking'), sunk.append)
+        self.addCleanup(listener.ignoreAll)
+
+        ship.setHp(-50)
+
+        self.assertEqual(sunk, [ship])
 
     def test_damage_tracks_final_blow_and_assist_for_siege(self):
         siegeManager = Mock()

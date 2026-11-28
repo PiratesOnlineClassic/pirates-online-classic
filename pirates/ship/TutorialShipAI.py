@@ -1,10 +1,22 @@
 from direct.directnotify import DirectNotifyGlobal
 
 from pirates.ship.DistributedShipAI import DistributedShipAI
+from pirates.ship import ShipGlobals
+from pirates.tutorial import TutorialGlobals
 
 
 class TutorialShipAI(DistributedShipAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('TutorialShipAI')
+
+    # once Beck sets sail an undead ship turns up to the left of the ship
+    # wreck (as seen from the tutorial cannon), the new pirate has to sink it
+    # before the Jolly Roger shows up. it's only level 1, idles where it is and
+    # never fires back...
+    TargetShipClass = ShipGlobals.SKEL_PHANTOM
+    TargetShipLevel = 1
+    TargetShipHp = 1000
+    TargetShipPos = (110, 540, 0)
+    TargetShipH = 80
 
     def __init__(self, air):
         DistributedShipAI.__init__(self, air)
@@ -17,6 +29,8 @@ class TutorialShipAI(DistributedShipAI):
         self.tutorialAuthoredPos = None
         self.tutorialAuthoredHpr = None
         self.tutorialAuthoredState = None
+        self.tutorialTarget = None
+        self.tutorialTargetSunk = False
 
     def setGameState(self, stateName, avId, timeStamp=0):
         # remember the level editor start state, the tutorial ship is
@@ -177,8 +191,80 @@ class TutorialShipAI(DistributedShipAI):
         if wasSailing and getattr(self, 'gameFSM', None):
             self.gameFSM._stopMovement()
 
+    def spawnTutorialTarget(self):
+        if self.tutorialTarget and not self.tutorialTarget.isDeleted():
+            return self.tutorialTarget
+
+        oceanGrid = self.tutorialOceanGrid
+        if not oceanGrid:
+            self.notify.warning('Cannot spawn the tutorial target without an ocean grid!')
+            return None
+
+        from pirates.piratesbase.PLocalizer import ShipClassNames
+        from pirates.ship.NPCShipAI import NPCShipAI
+
+        shipClass = self.TargetShipClass
+        shipConfig = ShipGlobals.getShipConfig(shipClass)
+        hullConfig = ShipGlobals.getHullConfig(shipClass)
+        if not shipConfig or not hullConfig:
+            self.notify.warning('Cannot spawn the tutorial target without ship configuration!')
+            return None
+
+        ship = NPCShipAI(self.air)
+        ship.setUniqueId(TutorialGlobals.UNDEAD_SHIP_UID)
+        ship.setBaseTeam(ShipGlobals.getShipTeam(shipClass))
+        ship.setLevel(self.TargetShipLevel)
+        ship.setShipClass(shipClass)
+        ship.setName(ShipClassNames.get(shipClass, ''))
+        ship.setNPCship(1)
+        ship.setIsBoardable(0)
+        ship.setMaxHp(self.TargetShipHp)
+        ship.setHp(self.TargetShipHp)
+        ship.setMaxSp(hullConfig['setMaxSp'][0])
+        ship.setSp(hullConfig['setSp'][0])
+        ship.setHullCondition(1 << 7)
+
+        zoneId = oceanGrid.getZoneFromXYZ(self.TargetShipPos)
+        oceanGrid.generateChildWithRequired(ship, zoneId)
+        ship.setPos(oceanGrid, *self.TargetShipPos)
+        ship.setHpr(oceanGrid, self.TargetShipH, 0, 0)
+        oceanGrid.addObjectToOceanGrid(ship)
+        ship.sendCurrentPosition()
+        ship.startPosHprBroadcast()
+
+        # Idle isn't one of the states the ship's AI engages from, so it
+        # just sits there and takes it...
+        ship.b_setGameState('Idle', 0)
+
+        self.tutorialTarget = ship
+        self.tutorialTargetSunk = False
+        self.acceptOnce(ship.uniqueName('shipSinking'), self.__tutorialTargetSinking)
+        return ship
+
+    def __tutorialTargetSinking(self, ship):
+        if ship is not self.tutorialTarget:
+            return
+
+        self.tutorialTargetSunk = True
+        self.notify.info('Tutorial target %d has been sunk' % ship.doId)
+
+    def isTutorialTargetSunk(self):
+        return self.tutorialTargetSunk
+
+    def removeTutorialTarget(self):
+        target = getattr(self, 'tutorialTarget', None)
+        self.tutorialTarget = None
+        self.tutorialTargetSunk = False
+        if not target:
+            return
+
+        self.ignore(target.uniqueName('shipSinking'))
+        if not target.isDeleted():
+            target.requestDelete()
+
     def resetSailingToAuthoredPose(self):
         self.stopSailing()
+        self.removeTutorialTarget()
         if self.tutorialAuthoredPos is None or self.tutorialAuthoredHpr is None:
             return False
 
@@ -203,6 +289,7 @@ class TutorialShipAI(DistributedShipAI):
 
     def delete(self):
         self.stopSailing()
+        self.removeTutorialTarget()
 
         if self.tutorialStumpy:
             if (self.tutorialBuilder

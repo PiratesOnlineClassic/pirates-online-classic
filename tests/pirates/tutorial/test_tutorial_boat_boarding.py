@@ -6,15 +6,19 @@ from unittest.mock import Mock
 from tests import REPO_ROOT
 
 
-def load_enable_boat_boarding(namespace):
+def load_tutorial_methods(namespace, *names):
     source = (REPO_ROOT / 'pirates/tutorial/DistributedPiratesTutorial.py').read_text()
     tree = ast.parse(source)
     cls = next(node for node in tree.body
                if isinstance(node, ast.ClassDef) and node.name == 'DistributedPiratesTutorial')
-    method = next(node for node in cls.body
-                  if isinstance(node, ast.FunctionDef) and node.name == 'enableBoatBoarding')
-    exec(compile(ast.Module(body=[method], type_ignores=[]), str(__file__), 'exec'), namespace)
-    return namespace['enableBoatBoarding']
+    methods = [node for node in cls.body
+               if isinstance(node, ast.FunctionDef) and node.name in names]
+    exec(compile(ast.Module(body=methods, type_ignores=[]), str(__file__), 'exec'), namespace)
+    return [namespace[name] for name in names]
+
+
+def load_enable_boat_boarding(namespace):
+    return load_tutorial_methods(namespace, 'enableBoatBoarding')[0]
 
 
 class TutorialBoatBoardingTests(unittest.TestCase):
@@ -49,6 +53,55 @@ class TutorialBoatBoardingTests(unittest.TestCase):
         tutorialCannon.setIgnoreProximity.assert_called_once_with(False)
         plainCannon.setIgnoreProximity.assert_not_called()
         tutorial.acceptOnce.assert_called_once_with('usedCannon', tutorial.startShipMovement)
+
+
+class TutorialUndeadShipTests(unittest.TestCase):
+
+    def setUp(self):
+        dialogue = SimpleNamespace(length=lambda: 1.0)
+        self.localAvatar = SimpleNamespace(
+            gameFSM=SimpleNamespace(lockFSM=True),
+            cannon=SimpleNamespace(fireCannonPanel=SimpleNamespace(setWreckButtonText=Mock())),
+            guiMgr=SimpleNamespace(subtitler=SimpleNamespace(showText=Mock())))
+        namespace = {
+            'base': SimpleNamespace(loader=SimpleNamespace(loadSfx=lambda name: dialogue)),
+            'localAvatar': self.localAvatar,
+            'PLocalizer': SimpleNamespace(QuestScriptTutorialStumpy_6='Praise',
+                                          QuestScriptTutorialStumpy_8='Look sharp!'),
+            'print': lambda *args: None,
+        }
+        methods = load_tutorial_methods(namespace, 'setupUndeadShip', 'undeadShipSunk', 'cannonHitWreck')
+        self.tutorial = SimpleNamespace(
+            notify=SimpleNamespace(debug=Mock()), acceptOnce=Mock(), cannonDoneShooting=Mock(),
+            showCannonExitPanel=Mock(), shipWreckHitCount=0, shipWreckState=0,
+            pendingUndeadShipRequest='pending')
+        self.setupUndeadShip, self.undeadShipSunk, self.cannonHitWreck = [
+            (lambda method: lambda *args: method(self.tutorial, *args))(method) for method in methods]
+        self.tutorial.undeadShipSunk = self.undeadShipSunk
+
+    def test_wreck_is_only_practice(self):
+        for _ in range(10):
+            self.cannonHitWreck(None)
+
+        self.tutorial.cannonDoneShooting.assert_not_called()
+        self.tutorial.showCannonExitPanel.assert_not_called()
+        self.assertTrue(self.localAvatar.gameFSM.lockFSM)
+        # Beck still praises the third hit...
+        self.localAvatar.guiMgr.subtitler.showText.assert_called_once()
+
+    def test_sinking_the_undead_ship_ends_target_practice(self):
+        undeadShip = SimpleNamespace(hideName=Mock(), uniqueName=lambda name: name + '-77')
+
+        self.setupUndeadShip(undeadShip)
+
+        self.assertIsNone(self.tutorial.pendingUndeadShipRequest)
+        self.tutorial.acceptOnce.assert_called_once_with('shipSinking-77', self.undeadShipSunk)
+        self.tutorial.cannonDoneShooting.assert_not_called()
+
+        self.undeadShipSunk()
+
+        self.assertFalse(self.localAvatar.gameFSM.lockFSM)
+        self.tutorial.cannonDoneShooting.assert_called_once_with()
 
 
 if __name__ == '__main__':

@@ -184,6 +184,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         self.pendingStumpyRequest = None
         self._waitingForStumpyIntro = False
         self.pendingIslandRequest = None
+        self.pendingUndeadShipRequest = None
         self.tutorialInstance = None
         self.BoatStumpyDoId = None
         self.island = None
@@ -242,6 +243,12 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         if self.pendingIslandRequest:
             base.cr.relatedObjectMgr.abortRequest(self.pendingIslandRequest)
             self.pendingIslandRequest = None
+
+        if self.pendingUndeadShipRequest:
+            base.cr.relatedObjectMgr.abortRequest(self.pendingUndeadShipRequest)
+            self.pendingUndeadShipRequest = None
+
+        self.cr.uidMgr.removeUidCallback(TutorialGlobals.UNDEAD_SHIP_UID, self._undeadShipHere)
         
         taskMgr.remove(self.taskName('handleAct0Tutorial'))
         self._stopFog()
@@ -793,6 +800,7 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
         self.island.stopCustomEffects()
         self._phantomCannon.stop()
         self.generateShipWreck(self.island)
+        self.cr.uidMgr.addUidCallback(TutorialGlobals.UNDEAD_SHIP_UID, self._undeadShipHere)
         self.sendUpdate('startSailingStumpy')
         UserFunnel.logSubmit(1, 'CUTSCENE_THREE_END')
         UserFunnel.logSubmit(0, 'CUTSCENE_THREE_END')
@@ -801,6 +809,24 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
     def targetPracticeDone(self):
         pass
 
+    def _undeadShipHere(self, undeadShipId):
+        self.pendingUndeadShipRequest = base.cr.relatedObjectMgr.requestObjects([
+            undeadShipId], eachCallback = self.setupUndeadShip)
+
+    def setupUndeadShip(self, undeadShip):
+        # the AI sends an undead ship after us once we set sail, sinking it
+        # is what ends target practice and brings on the Jolly Roger...
+        self.pendingUndeadShipRequest = None
+        undeadShip.hideName()
+        self.acceptOnce(undeadShip.uniqueName('shipSinking'), self.undeadShipSunk)
+        dialogue = base.loader.loadSfx('audio/beck_cs12_9_11b_tell_warning.mp3')
+        localAvatar.guiMgr.subtitler.showText(PLocalizer.QuestScriptTutorialStumpy_8, sfx = dialogue, timeout = dialogue.length() + 1.0)
+
+    def undeadShipSunk(self):
+        self.notify.debug('undeadShipSunk')
+        localAvatar.gameFSM.lockFSM = False
+        self.cannonDoneShooting()
+
     def cannonHitWreck(self, shipWreck):
         self.notify.debug('cannonHitTarget')
         self.shipWreckHitCount += 1
@@ -808,13 +834,10 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             self.shipWreckState = 1
             print('ship wreck hit count %s' % self.shipWreckHitCount)
             localAvatar.cannon.fireCannonPanel.setWreckButtonText(self.shipWreckHitCount)
-            localAvatar.gameFSM.lockFSM = False
-            self.showCannonExitPanel()
+            # the wreck is only for practice, the undead ship has to be sunk
+            # before the player may leave the cannon (see setupUndeadShip)...
             dialogue = base.loader.loadSfx('audio/beck_cs12_5_5a_tell_praise.mp3')
             localAvatar.guiMgr.subtitler.showText(PLocalizer.QuestScriptTutorialStumpy_6, sfx = dialogue, timeout = dialogue.length() + 1.0)
-        elif self.shipWreckHitCount > 5 and self.shipWreckState == 1:
-            self.shipWreckState = 2
-            self.cannonDoneShooting()
         elif self.shipWreckState == 0:
             print('ship wreck hit count %s' % self.shipWreckHitCount)
             localAvatar.cannon.fireCannonPanel.setWreckButtonText(self.shipWreckHitCount)

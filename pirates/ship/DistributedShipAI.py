@@ -1,5 +1,6 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
+from direct.showbase.MessengerGlobal import messenger
 
 from pirates.battle.Teamable import Teamable
 from pirates.piratesbase import FreebooterAI
@@ -1326,6 +1327,9 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         questMgr = getattr(self.air, 'questMgr', None)
         if questMgr is not None:
             questMgr.shipSinking(self)
+
+        # let anyone else interested in us know we have been sunk...
+        messenger.send(self.uniqueName('shipSinking'), [self])
 
     def shipAttacked(self, attackerShipId, damage):
         if self.npcShip and attackerShipId and self.hp > 0:

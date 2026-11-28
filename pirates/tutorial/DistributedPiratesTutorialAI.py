@@ -289,6 +289,24 @@ class DistributedPiratesTutorialAI(DistributedObjectAI, FSM):
             self.notify.warning('Ignoring sailing request from inactive tutorial handler')
             return
 
+        ship = self._getTutorialShip()
+        if not ship:
+            self.notify.warning('Cannot start sailing: tutorial ship is unavailable')
+            return
+
+        self.notify.info('Avatar %d started sailing with Stumpy' % self.avatarId)
+        if not ship.startSailing():
+            self.notify.warning('Failed to start tutorial ship sailing')
+            return
+
+        # an undead ship shows up for the new pirate to sink, the Jolly Roger
+        # arrives once it has gone down (see targetPracticeDone)...
+        if not ship.spawnTutorialTarget():
+            self.notify.warning('Failed to spawn the tutorial target ship')
+
+        self.request('Sailing')
+
+    def _getTutorialShip(self):
         from pirates.ship.TutorialShipAI import TutorialShipAI
         from pirates.world import WorldGlobals
 
@@ -299,19 +317,21 @@ class DistributedPiratesTutorialAI(DistributedObjectAI, FSM):
                 or ship.getUniqueId() != TutorialGlobals.STUMPY_BOAT_UID
                 or not world
                 or world.getFileName() != WorldGlobals.PiratesTutorialSceneFileBase):
-            self.notify.warning('Cannot start sailing: tutorial ship is unavailable')
-            return
+            return None
 
-        self.notify.info('Avatar %d started sailing with Stumpy' % self.avatarId)
-        if not ship.startSailing():
-            self.notify.warning('Failed to start tutorial ship sailing')
-            return
-        self.request('Sailing')
+        return ship
 
     def targetPracticeDone(self):
         """Client finished target practice and reached the Jolly Roger stage."""
         avatar = self._getAvatarFromSender('targetPracticeDone')
         if not avatar:
+            return
+
+        # target practice is over once the undead ship has been sunk...
+        ship = self._getTutorialShip()
+        if not ship or not ship.isTutorialTargetSunk():
+            self.notify.warning('Avatar %d finished target practice without sinking the undead ship' %
+                self.avatarId)
             return
 
         self.notify.info('Avatar %d finished target practice' % self.avatarId)
