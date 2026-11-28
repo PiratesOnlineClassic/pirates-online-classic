@@ -36,6 +36,15 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     GroggyUpdateTime = 1.0
     GroggyUpdateAmount = 20
 
+    # the islands (ports of call) with a jail we may be sent back to when we are defeated,
+    # these are island uids so Padres Del Fuego is the island and not it's port...
+    ValidReturnLocations = (
+        LocationIds.PORT_ROYAL_ISLAND,
+        LocationIds.TORTUGA_ISLAND,
+        LocationIds.DEL_FUEGO_ISLAND,
+        LocationIds.CUBA_ISLAND
+    )
+
     # the avatar's health and voodoo regenerate every few seconds
     # while it is not in battle...
     ToonUpTime = 2.0
@@ -177,18 +186,12 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         parentObj = self.getParentObj()
         if parentObj:
             if isinstance(parentObj, DistributedIslandAI):
-                if self.currentIsland:
-                    validReturns = [
-                        LocationIds.PORT_ROYAL_ISLAND,
-                        LocationIds.TORTUGA_ISLAND,
-                        LocationIds.DEL_FUEGO_PORT,
-                        LocationIds.CUBA_ISLAND
-                    ]
+                if self.currentIsland != parentObj.getUniqueId():
+                    self.b_setCurrentIsland(parentObj.getUniqueId())
 
-                    if self.currentIsland in validReturns:
-                        self.b_setReturnLocation(self.currentIsland)
-
-                self.b_setCurrentIsland(parentObj.getUniqueId())
+                # the island we have just arrived at becomes our return location
+                # (where we are jailed and respawn), the client also requests this...
+                self.updateReturnLocation(parentObj)
 
     def getInventory(self):
         return self.air.inventoryManager.getInventory(self.doId)
@@ -450,8 +453,77 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getJailCellIndex(self):
         return self.jailCellIndex
 
+    def getReturnIslandFromArea(self, area):
+        """
+        Returns the island a game area belongs to if that island is one we can return to,
+        building interiors belong to the island their exterior door is on...
+        """
+
+        from pirates.world.DistributedIslandAI import DistributedIslandAI
+
+        if isinstance(area, DistributedGAInteriorAI) and area.getIsBuilding():
+            exteriorDoor = area.getExteriorFrontDoor() or area.getExteriorBackDoor()
+            area = exteriorDoor.getParentObj() if exteriorDoor else None
+
+        if not isinstance(area, DistributedIslandAI):
+            return None
+
+        world = area.getParentObj()
+        if not world or not hasattr(world, 'getType') or world.getType() != PiratesGlobals.INSTANCE_MAIN:
+            return None
+
+        if area.getUniqueId() not in self.ValidReturnLocations:
+            return None
+
+        return area
+
+    def updateReturnLocation(self, area):
+        island = self.getReturnIslandFromArea(area)
+        if not island:
+            return
+
+        if self.returnLocation != island.getUniqueId():
+            self.b_setReturnLocation(island.getUniqueId())
+
+    def requestReturnLocation(self, locationDoId):
+        """
+        Sent by the client's island or interior once it has added us to it's grid,
+        we only trust the area we are actually located within...
+        """
+
+        area = self.air.doId2do.get(locationDoId)
+        if not isinstance(area, DistributedGameAreaAI):
+            return
+
+        if area.doId != self.parentId:
+            self.notify.debug('Ignoring return location request from avatar %d, '
+                'avatar is not located within area %d!' % (self.doId, locationDoId))
+
+            return
+
+        self.updateReturnLocation(area)
+
     def requestCurrentIsland(self, locationDoId):
-        pass
+        """
+        The client clears it's current island (0) once it is aboard a crew ship, otherwise
+        it sends the island it has been added to, only accept the island we are on...
+        """
+
+        from pirates.world.DistributedIslandAI import DistributedIslandAI
+
+        parentObj = self.getParentObj()
+        if not locationDoId:
+            if not isinstance(parentObj, DistributedIslandAI) and self.currentIsland:
+                self.b_setCurrentIsland('')
+
+            return
+
+        island = self.air.doId2do.get(locationDoId)
+        if not isinstance(island, DistributedIslandAI) or island is not parentObj:
+            return
+
+        if self.currentIsland != island.getUniqueId():
+            self.b_setCurrentIsland(island.getUniqueId())
 
     def setCurrentIsland(self, currentIsland):
         self.currentIsland = currentIsland
