@@ -8,10 +8,28 @@ from pirates.minigame import DiceGlobals
 
 
 class DistributedLiarsDiceAI(DistributedDiceGameAI):
+    """
+    Liar's Dice.  After everyone has rolled, the seats take turns making
+    claims about how many dice of a value are on the table, each claim
+    raising the last.  A seat may instead call the last claim a bluff; the
+    dice are shown and whoever was wrong is eliminated.  Rounds repeat until
+    a single seat remains, who takes the pot.
+
+    Pirates may also cheat by jostling the table (or with mojo); a rough
+    attempt gives the other pirates a moment to catch them at it.
+    """
+
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLiarsDiceAI')
 
     # How many seconds other players have to press "catch" after a cheat fires
     CatchWindow = 5
+    # cheatResult codes sent by the client
+    CheatClean = 0
+    CheatRough = 2
+    CheatBotched = 4
+    ClaimTimeout = 45.0
+    ChallengeDelay = 8.0
+    AITurnDelay = (2.0, 3.5)
 
     def __init__(self, air):
         DistributedDiceGameAI.__init__(self, air)
@@ -20,20 +38,51 @@ class DistributedLiarsDiceAI(DistributedDiceGameAI):
         self._lastBetSeat = -1
         self._eliminatedSeats = set()
         self._activeCheat = {}  # seatIndex -> dieValue, expires via task
+        self._bettingActive = False
 
     def delete(self):
         taskMgr.remove(self.uniqueName('ld-turn'))
         taskMgr.remove(self.uniqueName('ld-catchexpire'))
         DistributedDiceGameAI.delete(self)
 
+    def isSeatInGame(self, seatIndex):
+        return seatIndex in self._readySeats and seatIndex not in self._eliminatedSeats
+
     # ------------------------------------------------------------------
     # Seat lifecycle
     # ------------------------------------------------------------------
 
-    def avatarStand(self, avatar, seatIndex):
-        self._eliminatedSeats.discard(seatIndex)
+    def handleSeatLeft(self, seatIndex):
         self._activeCheat.pop(seatIndex, None)
-        DistributedDiceGameAI.avatarStand(self, avatar, seatIndex)
+        if not self._bettingActive:
+            self._eliminatedSeats.discard(seatIndex)
+            DistributedDiceGameAI.handleSeatLeft(self, seatIndex)
+            return
+
+        if not self.getPlayerSeats():
+            self._resetRound()
+            return
+
+        wasActive = seatIndex == self._activeSeat
+        self._eliminatedSeats.add(seatIndex)
+        if self._lastBetSeat == seatIndex:
+            self._lastBetSeat = -1
+
+        if self._getActiveSeatCount() <= 1:
+            self._resolveWinner()
+        elif wasActive:
+            self._advanceBettingTurn()
+
+    def _resetRound(self):
+        taskMgr.remove(self.uniqueName('ld-turn'))
+        taskMgr.remove(self.uniqueName('ld-catchexpire'))
+        self._eliminatedSeats = set()
+        self._activeCheat = {}
+        self._bettingActive = False
+        self._currentBetDice = 0
+        self._currentBetValue = 0
+        self._lastBetSeat = -1
+        DistributedDiceGameAI._resetRound(self)
 
     # ------------------------------------------------------------------
     # After all dice rolled, begin the betting phase
@@ -43,18 +92,35 @@ class DistributedLiarsDiceAI(DistributedDiceGameAI):
         self._currentBetDice = 0
         self._currentBetValue = 0
         self._lastBetSeat = -1
+        self._bettingActive = True
+        self.sendUpdate('tableStatus', [1, 1])
 
         firstSeat = self._getNextActiveSeat(-1)
         if firstSeat is None:
+            self._resetRound()
             return
 
-        self._activeSeat = firstSeat
-        name = self._getPlayerName(firstSeat)
-        self.sendUpdate('currentTurn', [DiceGlobals.DSTATE_PLAY, firstSeat, name])
+        self._startBettingTurn(firstSeat)
 
-        if self.seats[firstSeat] == 1:
-            taskMgr.doMethodLater(2.0, self._aiTakeTurn,
-                self.uniqueName('ld-turn'), extraArgs=[firstSeat], appendTask=True)
+    def _startBettingTurn(self, seatIndex):
+        taskMgr.remove(self.uniqueName('ld-turn'))
+        self._activeSeat = seatIndex
+        self.d_currentTurn(DiceGlobals.DSTATE_PLAY, seatIndex)
+        self.d_yourTurn(seatIndex)
+
+        if self.isAISeat(seatIndex):
+            taskMgr.doMethodLater(random.uniform(*self.AITurnDelay), self._aiTakeTurn,
+                self.uniqueName('ld-turn'), extraArgs=[seatIndex], appendTask=True)
+        else:
+            taskMgr.doMethodLater(self.ClaimTimeout, self._claimTimeoutTask,
+                self.uniqueName('ld-turn'), extraArgs=[seatIndex], appendTask=True)
+
+    def _claimTimeoutTask(self, seatIndex, task=None):
+        # the pirate dawdled, make the smallest claim possible for them
+        if self._activeSeat == seatIndex:
+            self._makeClaim(seatIndex, *self._getMinimumClaim())
+
+        return Task.done
 
     # ------------------------------------------------------------------
     # Seat helpers
@@ -63,119 +129,159 @@ class DistributedLiarsDiceAI(DistributedDiceGameAI):
     def _getNextActiveSeat(self, fromSeat):
         for i in range(1, self._availableSeats + 1):
             idx = (fromSeat + i) % self._availableSeats
-            if idx in self._eliminatedSeats:
-                continue
-            if self.seats[idx] is None:
-                continue
-            return idx
+            if self.seats[idx] is not None and self.isSeatInGame(idx):
+                return idx
+
         return None
 
     def _getActiveSeatCount(self):
         count = 0
         for i in range(self._availableSeats):
-            if i not in self._eliminatedSeats and self.seats[i] is not None:
+            if self.seats[i] is not None and self.isSeatInGame(i):
                 count += 1
+
         return count
 
     # ------------------------------------------------------------------
     # Client messages
     # ------------------------------------------------------------------
 
+    def _getSenderSeat(self, mySeat):
+        seatIndex = self.getSenderSeatIndex()
+        if seatIndex is None or seatIndex != mySeat:
+            return None
+
+        return seatIndex
+
     def betUpdate(self, mySeat, betDice, betValue):
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-        if not avatar:
-            return
-
-        if self.getAvatarSeatIndex(avatar) != mySeat:
-            return
-
-        if mySeat != self._activeSeat:
+        seatIndex = self._getSenderSeat(mySeat)
+        if seatIndex is None or not self._bettingActive or seatIndex != self._activeSeat:
             return
 
         if not self._isValidClaim(betDice, betValue):
             return
 
-        self._currentBetDice = betDice
-        self._currentBetValue = betValue
-        self._lastBetSeat = mySeat
-        self.sendUpdate('tableStatus', [betDice, betValue])
-        self._advanceBettingTurn()
+        self._makeClaim(seatIndex, betDice, betValue)
 
     def callBluff(self, mySeat, oldDice, oldValue):
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-        if not avatar:
+        seatIndex = self._getSenderSeat(mySeat)
+        if seatIndex is None or not self._bettingActive or seatIndex != self._activeSeat:
             return
 
-        if self.getAvatarSeatIndex(avatar) != mySeat:
+        if seatIndex == self._lastBetSeat or self._lastBetSeat < 0:
             return
 
-        if mySeat == self._lastBetSeat or self._lastBetSeat < 0:
-            return
-
-        self._resolveChallenge(challenger=mySeat, claimer=self._lastBetSeat,
-            claimedDice=oldDice, claimedValue=oldValue)
+        # always judge the claim the server knows about
+        self._resolveChallenge(challenger=seatIndex, claimer=self._lastBetSeat,
+            claimedDice=self._currentBetDice, claimedValue=self._currentBetValue)
 
     def cheatResult(self, seatIndex, dieValue, resultCode):
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-        if not avatar:
+        if self._getSenderSeat(seatIndex) is None or not self._roundActive:
             return
 
-        if self.getAvatarSeatIndex(avatar) != seatIndex:
+        if resultCode == self.CheatBotched:
+            # the whole table saw that one
+            self._catchCheater(seatIndex)
+            return
+
+        if resultCode != self.CheatRough:
             return
 
         self._activeCheat[seatIndex] = dieValue
-        self.sendUpdate('incomingCheat', [seatIndex, self.CatchWindow, dieValue])
-        taskMgr.doMethodLater(self.CatchWindow, self._cheatExpireTask,
+        # every other pirate gets a moment to catch the cheater at it
+        for otherSeat in self.getPlayerSeats():
+            if otherSeat != seatIndex and self.isSeatInGame(otherSeat):
+                self.sendUpdate('incomingCheat', [otherSeat, self.CatchWindow, dieValue])
+
+        taskMgr.remove(self.uniqueName('ld-catchexpire'))
+        taskMgr.doMethodLater(self.CatchWindow + 1, self._cheatExpireTask,
             self.uniqueName('ld-catchexpire'), extraArgs=[seatIndex], appendTask=True)
 
     def catchCheater(self, mySeat):
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-        if not avatar:
-            return
-
-        if self.getAvatarSeatIndex(avatar) != mySeat:
+        seatIndex = self._getSenderSeat(mySeat)
+        if seatIndex is None:
             return
 
         # Find the most recent cheat from someone other than this player
         cheaterSeat = None
-        for seatIndex in list(self._activeCheat.keys()):
-            if seatIndex != mySeat:
-                cheaterSeat = seatIndex
+        for cheatSeat in list(self._activeCheat.keys()):
+            if cheatSeat != seatIndex:
+                cheaterSeat = cheatSeat
                 break
 
         if cheaterSeat is None:
             return
 
-        cheaterName = self._getPlayerName(cheaterSeat)
-        self.sendUpdate('gotCaught', [cheaterSeat, cheaterName])
+        self._catchCheater(cheaterSeat)
+
+    def _catchCheater(self, cheaterSeat):
         self._activeCheat.pop(cheaterSeat, None)
         taskMgr.remove(self.uniqueName('ld-catchexpire'))
+        self.sendUpdate('gotCaught', [cheaterSeat, self._getPlayerName(cheaterSeat)])
+
+        # cheaters are thrown out of the game, their ante stays in the pot
+        wasActive = cheaterSeat == self._activeSeat
+        self._eliminateSeat(cheaterSeat)
+        if self._lastBetSeat == cheaterSeat:
+            self._lastBetSeat = -1
+
+        if not self._bettingActive:
+            if wasActive:
+                taskMgr.remove(self.uniqueName('dice-roll'))
+                self._advanceRollPhase(cheaterSeat)
+            return
+
+        if self._getActiveSeatCount() <= 1:
+            self._resolveWinner()
+        elif wasActive:
+            self._advanceBettingTurn()
 
     # ------------------------------------------------------------------
     # Internal game logic
     # ------------------------------------------------------------------
 
+    def _getMaxDice(self):
+        return self.NumDice * self._getActiveSeatCount()
+
     def _isValidClaim(self, numDice, dieValue):
-        if not (1 <= dieValue <= 6):
+        # mirrors DistributedLiarsDice.makeClaim on the client, which starts
+        # every round with a claim of one 1
+        if not (1 <= dieValue <= 6) or not (1 <= numDice <= self.NumDice * self._availableSeats):
             return False
+
+        oldDice = max(1, self._currentBetDice)
+        oldValue = max(1, self._currentBetValue)
+        if numDice < oldDice:
+            return False
+
+        return numDice > oldDice or dieValue > oldValue
+
+    def _getMinimumClaim(self):
         if self._currentBetDice == 0:
-            return numDice >= 1
-        if numDice > self._currentBetDice:
-            return True
-        if numDice == self._currentBetDice and dieValue > self._currentBetValue:
-            return True
-        return False
+            return (1, 2)
+        elif self._currentBetValue < 6:
+            return (self._currentBetDice, self._currentBetValue + 1)
+
+        return (self._currentBetDice + 1, 1)
+
+    def _makeClaim(self, seatIndex, numDice, dieValue):
+        taskMgr.remove(self.uniqueName('ld-turn'))
+        self._currentBetDice = numDice
+        self._currentBetValue = dieValue
+        self._lastBetSeat = seatIndex
+        self.sendUpdate('tableStatus', [numDice, dieValue])
+        self._advanceBettingTurn()
 
     def _countDiceWithValue(self, value):
         total = 0
         for seatIndex, dice in self._rolledDice.items():
-            if seatIndex not in self._eliminatedSeats:
-                for d in dice:
-                    if d == value:
-                        total += 1
+            if self.isSeatInGame(seatIndex):
+                total += list(dice).count(value)
+
         return total
 
     def _resolveChallenge(self, challenger, claimer, claimedDice, claimedValue):
+        taskMgr.remove(self.uniqueName('ld-turn'))
         actualCount = self._countDiceWithValue(claimedValue)
         if actualCount >= claimedDice:
             # Claim was true - challenger loses
@@ -188,56 +294,51 @@ class DistributedLiarsDiceAI(DistributedDiceGameAI):
         self.sendUpdate('displayChallenge', [claimedDice, claimedValue,
             claimer, challenger, loserName])
         self._eliminateSeat(loserSeat)
+        self._bettingActive = False
+        self._activeSeat = -1
 
         if self._getActiveSeatCount() <= 1:
             self._resolveWinner()
         else:
-            taskMgr.doMethodLater(2.5, self._beginNewRound,
+            taskMgr.doMethodLater(self.ChallengeDelay, self._beginNewRound,
                 self.uniqueName('ld-turn'), appendTask=True)
 
     def _eliminateSeat(self, seatIndex):
         self._eliminatedSeats.add(seatIndex)
 
     def _resolveWinner(self):
-        for seatIndex in range(self._availableSeats):
-            if seatIndex in self._eliminatedSeats:
-                continue
-            seat = self.seats[seatIndex]
-            if seat and seat not in (0, 1):
-                self._payWinner(seat.doId)
-                self._eliminatedSeats.clear()
-                return
+        winnerSeat = self._getNextActiveSeat(-1)
+        if winnerSeat is None:
+            # nobody left standing, the house keeps the pot
+            self._resetRound()
+            return
 
-        # AI wins; just reset
-        self._eliminatedSeats.clear()
-        self._resetRound()
+        self._payWinner(winnerSeat)
 
     def _beginNewRound(self, task=None):
         self.sendUpdate('newRound', [])
         self._currentBetDice = 0
         self._currentBetValue = 0
         self._lastBetSeat = -1
+        self._bettingActive = False
         self._rolledDice = {}
 
         firstSeat = self._getNextActiveSeat(-1)
         if firstSeat is not None:
             self._activeSeat = firstSeat
             self._requestRoll(firstSeat)
+        else:
+            self._resetRound()
 
         return Task.done
 
     def _advanceBettingTurn(self):
         nextSeat = self._getNextActiveSeat(self._activeSeat)
         if nextSeat is None:
+            self._resetRound()
             return
 
-        self._activeSeat = nextSeat
-        name = self._getPlayerName(nextSeat)
-        self.sendUpdate('currentTurn', [DiceGlobals.DSTATE_PLAY, nextSeat, name])
-
-        if self.seats[nextSeat] == 1:
-            taskMgr.doMethodLater(2.0, self._aiTakeTurn,
-                self.uniqueName('ld-turn'), extraArgs=[nextSeat], appendTask=True)
+        self._startBettingTurn(nextSeat)
 
     def _cheatExpireTask(self, seatIndex, task=None):
         self._activeCheat.pop(seatIndex, None)
@@ -248,11 +349,11 @@ class DistributedLiarsDiceAI(DistributedDiceGameAI):
     # ------------------------------------------------------------------
 
     def _aiTakeTurn(self, seatIndex, task=None):
-        if self._activeSeat != seatIndex:
+        if self._activeSeat != seatIndex or not self._bettingActive:
             return Task.done
 
         # Decide whether to challenge or make a new claim
-        if self._currentBetDice > 0 and self._shouldAIChallenge(seatIndex):
+        if self._lastBetSeat >= 0 and self._lastBetSeat != seatIndex and self._shouldAIChallenge(seatIndex):
             self._resolveChallenge(challenger=seatIndex, claimer=self._lastBetSeat,
                 claimedDice=self._currentBetDice, claimedValue=self._currentBetValue)
         else:
@@ -260,36 +361,38 @@ class DistributedLiarsDiceAI(DistributedDiceGameAI):
 
         return Task.done
 
+    def _getExpectedCount(self, seatIndex, value):
+        # the AI knows it's own dice and guesses at everyone else's
+        ownDice = self._rolledDice.get(seatIndex, [])
+        otherDice = self.NumDice * (self._getActiveSeatCount() - 1)
+        return list(ownDice).count(value) + otherDice / 6.0
+
     def _shouldAIChallenge(self, seatIndex):
-        activePlayers = self._getActiveSeatCount()
-        totalDice = activePlayers * self.NumDice
-        expectedCount = totalDice / 6.0
-        # Challenge if claimed count is more than double the expected frequency
-        if self._currentBetDice > expectedCount * 2.0:
-            return random.random() < 0.7
-        if self._currentBetDice > expectedCount * 1.5:
-            return random.random() < 0.3
+        expectedCount = self._getExpectedCount(seatIndex, self._currentBetValue)
+        if self._currentBetDice > self._getMaxDice():
+            return True
+        if self._currentBetDice > expectedCount + 2:
+            return random.random() < 0.8
+        if self._currentBetDice > expectedCount + 1:
+            return random.random() < 0.4
         return False
 
     def _aiMakeClaim(self, seatIndex):
-        if self._currentBetDice == 0:
-            # First claim: start conservatively
-            newDice = max(1, self._getActiveSeatCount())
-            newValue = random.randint(1, 6)
-        elif random.random() < 0.5:
-            # Raise the count
-            newDice = self._currentBetDice + 1
-            newValue = random.randint(1, 6)
-        else:
-            # Raise the value at same count
-            newValue = self._currentBetValue + 1
-            newDice = self._currentBetDice
-            if newValue > 6:
-                newValue = 1
-                newDice += 1
+        ownDice = list(self._rolledDice.get(seatIndex, []))
+        # claim on the value we hold the most of
+        favorite = max(range(1, 7), key=lambda value: (ownDice.count(value), random.random()))
+        expected = int(self._getExpectedCount(seatIndex, favorite))
 
-        self._currentBetDice = newDice
-        self._currentBetValue = newValue
-        self._lastBetSeat = seatIndex
-        self.sendUpdate('tableStatus', [newDice, newValue])
-        self._advanceBettingTurn()
+        newDice, newValue = self._getMinimumClaim()
+        if self._isValidClaim(max(newDice, 1), favorite):
+            newDice, newValue = max(newDice, 1), favorite
+        elif self._isValidClaim(newDice + 1, favorite) and newDice + 1 <= expected + 1:
+            newDice, newValue = newDice + 1, favorite
+
+        if newDice > expected + 1 and self._lastBetSeat >= 0 and self._lastBetSeat != seatIndex:
+            # nothing believable left to claim, call the bluff instead
+            self._resolveChallenge(challenger=seatIndex, claimer=self._lastBetSeat,
+                claimedDice=self._currentBetDice, claimedValue=self._currentBetValue)
+            return
+
+        self._makeClaim(seatIndex, newDice, newValue)
