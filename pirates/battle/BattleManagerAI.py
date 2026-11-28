@@ -248,11 +248,23 @@ class BattleManagerAI(BattleManagerBase):
 
     def isPlayerDamageAllowed(self, avatar, target):
         # outside of pvp instances players cannot harm one another, unless
-        # one of them has been cursed undead, see TeamUtils.friendOrFoe...
+        # one of them has been cursed undead, see TeamUtils.friendOrFoe:
+        # players on pvp or siege teams only fight the other team though...
+        friendlyFire = config.GetBool('want-friendly-fire', False)
+        for teamGetter in ('getPVPTeam', 'getSiegeTeam'):
+            try:
+                avatarTeam = getattr(avatar, teamGetter)()
+                targetTeam = getattr(target, teamGetter)()
+            except AttributeError:
+                continue
+
+            if avatarTeam and targetTeam:
+                return avatarTeam != targetTeam or friendlyFire
+
         if avatar.getZombie() or target.getZombie():
             return True
 
-        return config.GetBool('want-friendly-fire', False)
+        return friendlyFire
 
     def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge=0):
         if not avatar:
