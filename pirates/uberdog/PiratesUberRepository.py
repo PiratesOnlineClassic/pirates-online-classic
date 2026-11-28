@@ -54,6 +54,8 @@ class PiratesUberRepository(PiratesInternalRepository):
         self.settingsMgr = self.generateGlobalObject(OTP_DO_ID_PIRATES_SETTINGS_MANAGER, 'PiratesSettingsMgr')
         self.centralLogger = self.generateGlobalObject(OTP_DO_ID_CENTRAL_LOGGER, 'CentralLogger')
         self.csm = self.generateGlobalObject(OTP_DO_ID_CLIENT_SERVICES_MANAGER, 'ClientServicesManager')
+        self.avatarManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_AVATAR_MANAGER, 'DistributedAvatarManager')
+        self.chatManager = self.generateGlobalObject(OTP_DO_ID_CHAT_MANAGER, 'DistributedChatManager')
         self.travelAgent = self.generateGlobalObject(OTP_DO_ID_PIRATES_TRAVEL_AGENT, 'DistributedTravelAgent')
         self.codeRedemption = self.generateGlobalObject(OTP_DO_ID_PIRATES_CODE_REDEMPTION, 'CodeRedemption')
         self.inventoryManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_INVENTORY_MANAGER, 'DistributedInventoryManager')

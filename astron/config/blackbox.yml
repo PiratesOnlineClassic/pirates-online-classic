@@ -51,6 +51,14 @@ uberdogs:
       id: 4703
       anonymous: false
 
+    - class: DistributedAvatarManager
+      id: 4674
+      anonymous: false
+
+    - class: DistributedChatManager
+      id: 4681
+      anonymous: false
+
 roles:
     - type: clientagent
       bind: 0.0.0.0:6667
