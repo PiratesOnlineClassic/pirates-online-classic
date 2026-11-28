@@ -19,9 +19,11 @@ from pirates.economy.AvatarAccessoriesManagerUD import (
     AccessoriesDB,
     AvatarAccessoriesManagerUD,
     packClothing,
+    unpackClothing,
 )
 from pirates.economy.AwardMakerUD import AwardMakerUD
 from pirates.makeapirate import ClothingGlobals
+from pirates.pirate.HumanDNA import HumanDNA
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 
@@ -47,6 +49,10 @@ class Wire:
         self.ai.air.doId2do = {}
         self.ai.context = 0
         self.ai.callbacks = {}
+        self.ai.clothing = {}
+        self.ai.jewelry = {}
+        self.ai.tattoos = {}
+        self.ai.acceptOnce = Mock()
 
         self.ai.sendUpdate = lambda fieldName, args: getattr(self.ud, fieldName)(*args)
         self.ud.sendUpdateToChannel = lambda channel, fieldName, args: getattr(self.ai, fieldName)(*args)
@@ -69,7 +75,7 @@ class AccessoriesTests(unittest.TestCase):
         self.wire.ai.removeClothing(5, [(uid, 3)], callback=results.append)
         self.wire.ai.removeClothing(5, [(uid, 3)], callback=results.append)
         self.wire.ai.getClothing(5, results.append)
-        self.assertEqual(results, [True, [[uid, 3]], True, False, []])
+        self.assertEqual(results, [True, [[uid, 3, 0]], True, False, []])
         self.assertEqual(self.wire.ai.callbacks, {})
 
     def test_clothing_type_limit(self):
@@ -98,6 +104,62 @@ class AccessoriesTests(unittest.TestCase):
     def test_pack_clothing(self):
         self.assertEqual(packClothing(300, 7) >> 8, 300)
         self.assertEqual(packClothing(300, 7) & 0xFF, 7)
+        self.assertEqual(unpackClothing(packClothing(160024, 20, 1)), (160024, 20, 1))
+        self.assertEqual(unpackClothing(packClothing(160024, 20)), (160024, 20, 0))
+        self.assertLess(packClothing(160024, 255, 1), 1 << 32)
+
+    def test_old_clothing_entries_are_not_original(self):
+        uid = clothingOfType(ClothingGlobals.SHIRT, 1)[0]
+        self.wire.ud.accessoriesDB.setWardrobe(5, {'clothing': [[uid, 3]], 'jewelry': [], 'tattoos': []})
+        results = []
+        self.wire.ai.getClothing(5, results.append)
+        self.assertEqual(results, [[[uid, 3, 0]]])
+
+    def test_starting_clothing_migrated_from_dna(self):
+        avatar = HumanDNA('f')
+        self.wire.ai.air.doId2do[5] = avatar
+        expected = self.wire.ai.getDNAClothing(avatar)
+        self.assertTrue(expected)
+        self.assertTrue(all(item[2] == 1 for item in expected))
+
+        results = []
+        self.wire.ai.getClothing(5, results.append)
+        self.assertEqual(results, [expected])
+
+        # the UberDOG now has them as starting items...
+        self.wire.ai.clothing = {}
+        self.wire.ai.getClothing(5, results.append)
+        self.assertEqual(results[1], expected)
+
+        # and will not migrate a second time.
+        self.wire.ud.migrateDNAElements(0, 5, 0, [packClothing(clothingOfType(ClothingGlobals.HAT, 1)[0], 0)], 0)
+        self.assertEqual(len(self.wire.ud.getClothingList(5)), len(expected))
+
+    def test_cache_follows_changes(self):
+        uid = clothingOfType(ClothingGlobals.HAT, 1)[0]
+        results = []
+        self.wire.ai.getClothing(5, results.append)
+        self.wire.ai.acceptOnce.assert_called_once()
+        self.wire.ai.addClothing(5, [(uid, 2)])
+        self.wire.ai.addJewelry(5, 12)
+        self.wire.ai.getClothing(5, results.append, useCache=True)
+        self.assertEqual(results, [[], [[uid, 2, 0]]])
+
+        self.wire.ai.removeClothing(5, [(uid, 2)])
+        self.wire.ai.getClothing(5, results.append, useCache=True)
+        self.assertEqual(results[-1], [])
+
+        # a failed change drops the cache so it is loaded again...
+        self.wire.ai.removeClothing(5, [(uid, 2)])
+        self.assertNotIn(5, self.wire.ai.clothing)
+
+        self.wire.ai.getTattoos(5, results.append)
+        self.wire.ai.addTattoo(5, 7)
+        self.wire.ai.getTattoos(5, results.append, useCache=True)
+        self.assertEqual(results[-1], [7])
+
+        self.wire.ai._AvatarAccessoriesManagerAI__handleAvatarExit(5)
+        self.assertEqual((self.wire.ai.clothing, self.wire.ai.jewelry, self.wire.ai.tattoos), ({}, {}, {}))
 
 
 class AwardTests(unittest.TestCase):
@@ -108,6 +170,10 @@ class AwardTests(unittest.TestCase):
         ai.air.getMsgSender.return_value = 1234
         ai.context = 0
         ai.callbacks = {}
+        ai.clothing = {}
+        ai.jewelry = {}
+        ai.tattoos = {}
+        ai.acceptOnce = Mock()
         ai.d_awardResult = Mock()
         return ai
 
@@ -125,6 +191,42 @@ class AwardTests(unittest.TestCase):
         ai = self.makeAI(avatar)
         ai.requestAward(1, AwardGlobals.GOLD, 5, 0, 100)
         inventory.b_setStackQuantity.assert_called_with(InventoryType.GoldInPocket, 150)
+        ai.d_awardResult.assert_called_with(1234, 1, True)
+
+    def test_clothing_award_lands_in_wardrobe(self):
+        avatar = types.SimpleNamespace(getGender=lambda: 'm', giveClothingMessage=Mock())
+        ai = self.makeAI(avatar)
+        ai.clothing[5] = []
+        ai.sendUpdate = Mock()
+        uid = clothingOfType(ClothingGlobals.HAT, 1)[0]
+        ai.requestAward(1, AwardGlobals.CLOTHING, 5, uid, 3)
+        fieldName, args = ai.sendUpdate.call_args[0]
+        self.assertEqual(fieldName, 'requestClothingAddDB')
+        self.assertEqual(args[3], [[uid, 3, 0]])
+        self.assertEqual(ai.clothing[5], [[uid, 3, 0]])
+
+        ai.responseClothingAddDB(args[0], 1, 5)
+        avatar.giveClothingMessage.assert_called_with(uid, 3)
+        ai.d_awardResult.assert_called_with(1234, 1, True)
+
+    def test_award_for_other_gender_fails(self):
+        avatar = types.SimpleNamespace(getGender=lambda: 'f', giveClothingMessage=Mock(), giveJewelryMessage=Mock())
+        ai = self.makeAI(avatar)
+        ai.sendUpdate = Mock()
+        ai.requestAward(1, AwardGlobals.CLOTHING, 5, clothingOfType(ClothingGlobals.HAT, 1)[0], 0)
+        ai.requestAward(2, AwardGlobals.JEWELRY, 5, 0, 1)
+        ai.sendUpdate.assert_not_called()
+        ai.d_awardResult.assert_any_call(1234, 1, False)
+        ai.d_awardResult.assert_any_call(1234, 2, False)
+
+    def test_tattoo_award_message(self):
+        avatar = types.SimpleNamespace(getGender=lambda: 'f', giveTattooMessage=Mock())
+        ai = self.makeAI(avatar)
+        ai.sendUpdate = Mock()
+        ai.requestAward(1, AwardGlobals.TATTOO, 5, 7, 1)
+        context = ai.sendUpdate.call_args[0][1][0]
+        ai.responseTattooAddDB(context, 1, 5, 7)
+        avatar.giveTattooMessage.assert_called_with(7)
         ai.d_awardResult.assert_called_with(1234, 1, True)
 
     def test_unsupported_award_fails(self):
@@ -167,6 +269,7 @@ class AwardTests(unittest.TestCase):
         dclass.aiFormatUpdate('responseClothingFromDB', 4710, 1, 2, [1, [packClothing(2000, 30)]])
         dclass.aiFormatUpdate('requestClothingAddDB', 4710, 4710, 1, [1, 5, 0, [[2000, 30, 0]], 0, 0])
         dclass.aiFormatUpdate('requestClothingDropDB', 4710, 4710, 1, [1, 5, 0, 'm', 3])
+        dclass.aiFormatUpdate('migrateDNAElements', 4710, 4710, 1, [0, 5, 0, [packClothing(160024, 20, 1)], 0])
         dcFile.getClassByName('AwardMaker').aiFormatUpdate('awardSuccess', 4702, 1, 2, [1])
 
 
