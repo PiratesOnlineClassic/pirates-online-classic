@@ -91,7 +91,7 @@ class BlackjackTableGUI(DirectFrame, TableGUI, SplitBase):
     
     def sliderValueToBid(self, value):
         bid = int(value * self.table.betMultiplier * 50)
-        bid = bid / 5
+        bid = bid // 5
         bid = bid * 5
         if bid < 2:
             bid = 2

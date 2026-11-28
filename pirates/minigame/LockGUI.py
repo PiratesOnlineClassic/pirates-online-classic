@@ -19,7 +19,7 @@ class LockGUI(DirectFrame):
         self.initialiseoptions(LockGUI)
         self.table = table
         self.difficulty = difficulty
-        self.numLayers = difficulty / 10
+        self.numLayers = difficulty // 10
         if self.numLayers < 1:
             self.numLayers = 1
         

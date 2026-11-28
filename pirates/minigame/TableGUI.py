@@ -355,7 +355,7 @@ class TableGUI:
         self.hideButtonArray(self.rankButtonArray)
         self.cancelButton.hide()
         self.table.card_id = card_id
-        suit = card_id / 13
+        suit = card_id // 13
         rank = card_id % 13
         card = -1
         hand = self.table.getLocalAvatarHand()
@@ -373,7 +373,7 @@ class TableGUI:
                     card = hand[6]
 
         if card >= 0 and card < 52:
-            original_suit = card / 13
+            original_suit = card // 13
             original_rank = card % 13
             string = PLocalizer.PokerSwapConfirmMessage % (PLocalizer.getPlayingCardName(original_suit, original_rank), PLocalizer.getPlayingCardName(suit, rank))
             self.swapDialog = PDialog.PDialog(text = string, style = OTPDialog.YesNo, giveMouse = False, command = self.swapCallback)

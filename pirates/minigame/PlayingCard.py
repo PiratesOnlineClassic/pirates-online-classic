@@ -32,7 +32,7 @@ class PlayingCardBase:
             self.rank = None
             self.turnDown()
         else:
-            self.suit = value / 13
+            self.suit = value // 13
             self.rank = value % 13
         self.setImage()
 
