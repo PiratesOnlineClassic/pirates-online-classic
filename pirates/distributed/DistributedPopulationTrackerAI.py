@@ -33,7 +33,9 @@ class DistributedPopulationTrackerAI(DistributedObjectAI):
 
     def b_setPopulation(self, population):
         self.setPopulation(population)
-        self.d_setPopulation(population)
+        # The population is never allowed to go below zero, which is what
+        # we want to broadcast as well (it's an unsigned field):
+        self.d_setPopulation(self.population)
 
     def getPopulation(self):
         return self.population
