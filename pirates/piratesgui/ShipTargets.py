@@ -68,6 +68,10 @@ class ShipTargets:
     def assignPrimary(self, target):
         if self.primary != target:
             targetPanel = target.ship.getTargetPanel()
+            if not targetPanel:
+                # ships don't load a target panel during the tutorial...
+                return
+
             targetPanel.reparentTo(base.a2dTopCenter)
             targetPanel.setPos(-0.2, 0, -0.1)
             targetPanel.setScale(1.0)
@@ -78,6 +82,10 @@ class ShipTargets:
     def assignSecondary(self, target):
         if self.secondary != target:
             targetPanel = target.ship.getTargetPanel()
+            if not targetPanel:
+                # ships don't load a target panel during the tutorial...
+                return
+
             targetPanel.reparentTo(base.a2dTopCenter)
             targetPanel.setPos(-0.16, 0, -0.28)
             targetPanel.setScale(0.8)
