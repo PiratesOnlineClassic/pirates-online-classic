@@ -5,6 +5,7 @@ from otp.avatar.DistributedAvatarAI import DistributedAvatarAI
 
 from pirates.battle.WeaponBaseBase import WeaponBaseBase
 from pirates.battle import WeaponGlobals
+from pirates.battle import EnemyGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 
@@ -12,12 +13,44 @@ from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 class WeaponBaseAI(WeaponBaseBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('WeaponBaseAI')
 
-    # the amount of seconds a projectile may be in the air before we assume the
-    # client is never going to suggest it's result, e.g. it flew off into the sky...
-    ProjectileTimeout = 15.0
+    # the client only warns it's player about targets beyond 4/3 of a skill's
+    # range (see CombatTray.trySkill), and the positions we know of lag behind
+    # the client's. targets are only out of range once they are well beyond that...
+    AttackRangeTolerance = 1.5
+    AttackRangeLeeway = 10.0
 
     def __init__(self, air):
         self.air = air
+
+    def isTargetInAttackRange(self, avatar, target, skillId, ammoSkillId):
+        if not hasattr(target, 'getParentObj') or not hasattr(target, 'getPos'):
+            return True
+
+        attackRange = self.air.battleMgr.getModifiedAttackRange(avatar, skillId, ammoSkillId)
+        if not attackRange or attackRange == WeaponGlobals.INF_RANGE:
+            return True
+
+        # big creatures (crabs, stumps...) can be hit anywhere along their battle tube,
+        # the client takes the size of the tube off the distance (BattleManager.targetInRange)...
+        tolerance = self.AttackRangeLeeway
+        if getattr(target, 'isNpc', False) and getattr(target, 'avatarType', None) is not None:
+            try:
+                tolerance += EnemyGlobals.getBattleTubeRadius(target.avatarType) or 0
+            except (KeyError, IndexError, TypeError, AttributeError):
+                pass
+
+        maxDistance = attackRange * self.AttackRangeTolerance + tolerance
+        return self.air.battleMgr.getRelativePosition(avatar, target) <= maxDistance
+
+    def syncCurrentTarget(self, avatar, target):
+        # the other clients play the avatar's attack against the avatar's current
+        # target (DistributedTargetableObject.useTargetedSkill), make sure they know
+        # which target the avatar is attacking before they hear of the attack...
+        if target is None or target is avatar or getattr(avatar, 'isNpc', True):
+            return
+
+        if avatar.getCurrentTarget() != target.doId:
+            avatar.b_setCurrentTarget(target.doId)
 
     def requestTargetedSkill(self, skillId, ammoSkillId, clientResult, targetId, areaIdList, timestamp, pos, charge):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
@@ -39,6 +72,17 @@ class WeaponBaseAI(WeaponBaseBase):
         # just requesting targeted skill for no target. the skill's result includes the result
         # for every target in the area of the skill, the client predicts all of them at once...
         target = self.air.doId2do.get(targetId) if targetId else None
+        if target is not None and self is avatar and not self.air.battleMgr.isPlayerSkillHandledElsewhere(skillId):
+            # never land an attack on a target the avatar couldn't have reached,
+            # the attack's swing is still shown to everyone...
+            if not self.isTargetInAttackRange(avatar, target, skillId, ammoSkillId):
+                self.notify.debug('Avatar %d target %d is out of range of skill %d!' % (
+                    avatar.doId, targetId, skillId))
+
+                clientResult = WeaponGlobals.RESULT_OUT_OF_RANGE
+
+            self.syncCurrentTarget(avatar, target)
+
         self.useTargetedSkill(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge, clientResult)
 
     def requestShipSkill(self, skillId, ammoSkillId, clientResult, targetId, timestamp):
@@ -67,26 +111,17 @@ class WeaponBaseAI(WeaponBaseBase):
         if not avatar:
             return
 
-        projectile = self.air.targetMgr.getProjectile(avatar.doId, skillId, ammoSkillId)
-        if projectile:
-            if globalClockDelta.localElapsedTime(projectile[2], bits=32) < self.ProjectileTimeout:
-                self.notify.debug('Avatar %d tried to request projectile skill for already used skill; '
-                    'skillId=%d ammoSkillId=%d!' % (avatar.doId, skillId, ammoSkillId))
-
-                return
-
-            # the previous projectile's result never arrived...
-            self.air.targetMgr.removeProjectile(avatar.doId, skillId, ammoSkillId)
-
         if self is avatar and not self.air.battleMgr.requestSkillUse(avatar, skillId, ammoSkillId):
             self.notify.debug('Avatar %d cannot use projectile skill %d, ammo skill %d!' % (
                 avatar.doId, skillId, ammoSkillId))
 
             return
 
-        # TODO FIXME: calculate the air time of the projectile and store the current,
-        # timestamp so we know when the projectile request expires...
+        # the skill's recharge (or the cannon's reload) limits how often a projectile
+        # may be used. an earlier one may still be in the air, or have landed in the
+        # water which the client never tells us about (WeaponBase.__waterHit)...
         timestamp = globalClockDelta.getRealNetworkTime(bits=32)
+        self.air.targetMgr.removeProjectile(avatar.doId, skillId, ammoSkillId)
         self.air.targetMgr.addProjectile(avatar.doId, skillId, ammoSkillId, timestamp)
 
         # send the projectile skill update so everyone in the same zone
