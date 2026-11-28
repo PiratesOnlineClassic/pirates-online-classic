@@ -14,6 +14,9 @@ if 'semidbm' not in sys.modules:
     except ImportError:
         sys.modules['semidbm'] = types.ModuleType('semidbm')
 
+from direct.distributed.PyDatagramIterator import PyDatagramIterator
+
+from otp.distributed.MsgTypes import CLIENTAGENT_DECLARE_OBJECT, CLIENTAGENT_UNDECLARE_OBJECT
 from otp.distributed.OtpDoGlobals import OTP_DO_ID_AVATAR_FRIENDS_MANAGER, OTP_DO_ID_PLAYER_FRIENDS_MANAGER
 from otp.otpbase import OTPGlobals
 from otp.uberdog.RejectCode import RejectCode
@@ -92,6 +95,7 @@ class FakeAir:
         self.dbInterface = FakeDatabase(self)
         self.updates = []
         self.datagrams = []
+        self.declares = []
         self.events = []
         self.sender = 0
 
@@ -109,6 +113,15 @@ class FakeAir:
         self.updates.append((channelId, fieldName, args))
 
     def send(self, datagram):
+        # Client Agent object declarations are kept apart from the rest:
+        dgi = PyDatagramIterator(datagram)
+        channels = [dgi.getUint64() for i in range(dgi.getUint8())]
+        dgi.getUint64()
+        msgType = dgi.getUint16()
+        if msgType in (CLIENTAGENT_DECLARE_OBJECT, CLIENTAGENT_UNDECLARE_OBJECT):
+            self.declares.append((channels[0], msgType == CLIENTAGENT_DECLARE_OBJECT, dgi.getUint32()))
+            return
+
         self.datagrams.append(datagram)
 
     def writeServerEvent(self, *args, **kwargs):
@@ -250,6 +263,9 @@ class AvatarFriendsManagerUDTests(unittest.TestCase):
 
     def test_invite_list_full(self):
         friends = list(range(200000000, 200000000 + OTPGlobals.MaxFriends))
+        for friendId in friends:
+            self.air.addPirate(friendId, 'Friend', friendId, friends=[100000001])
+
         self.air.addPirate(100000001, 'Jack', 1, friends=friends)
         self.air.addPirate(100000002, 'Will', 2)
         self.online(100000001, 1)

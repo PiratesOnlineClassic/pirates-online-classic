@@ -34,6 +34,7 @@ class AvatarOnlineFSM(AvatarFriendsOperationFSM):
     def enterStart(self, accountId):
         self.accountId = accountId
         self.pendingFriends = set()
+        self.deletedFriends = set()
         self.demand('QueryAvatar')
 
     def enterQueryAvatar(self):
@@ -79,11 +80,16 @@ class AvatarOnlineFSM(AvatarFriendsOperationFSM):
             self.mgr.d_updateAvatarFriend(self.avId, friendId)
         else:
             self.notify.warning('Friend %d of avatar %d no longer exists.' % (friendId, self.avId))
+            self.deletedFriends.add(friendId)
 
         if not self.pendingFriends:
             self.demand('NotifyFriends')
 
     def enterNotifyFriends(self):
+        if self.deletedFriends:
+            # The friend's avatar was deleted, take it off our list:
+            self.mgr.pruneFriends(self.avId, self.deletedFriends)
+
         # Let everybody who has us on their list know that we're here:
         for friendId in self.mgr.getFriendIds(self.avId):
             if friendId not in self.mgr.onlineAvatars:
@@ -213,6 +219,26 @@ class AvatarFriendsManagerUD(DistributedObjectGlobalUD):
     def isOnline(self, avId):
         return avId in self.onlineAvatars
 
+    def declareFriend(self, avId, friendId):
+        # Teleport queries and responses are sent straight to the friend's
+        # avatar object, which the client may not be able to see. Declare
+        # the friend's avatar to the client so the Client Agent lets those
+        # field updates through.
+        dclass = self.air.dclassesByName[self.getAvatarClassName()]
+        datagram = PyDatagram()
+        datagram.addServerHeader(self.GetPuppetConnectionChannel(avId),
+            self.air.ourChannel, CLIENTAGENT_DECLARE_OBJECT)
+        datagram.addUint32(friendId)
+        datagram.addUint16(dclass.getNumber())
+        self.air.send(datagram)
+
+    def undeclareFriend(self, avId, friendId):
+        datagram = PyDatagram()
+        datagram.addServerHeader(self.GetPuppetConnectionChannel(avId),
+            self.air.ourChannel, CLIENTAGENT_UNDECLARE_OBJECT)
+        datagram.addUint32(friendId)
+        self.air.send(datagram)
+
     # Friends lists:
 
     def getFriendIds(self, avId):
@@ -253,6 +279,13 @@ class AvatarFriendsManagerUD(DistributedObjectGlobalUD):
 
         self.d_setFriendsList(avId, friendsList)
 
+    def pruneFriends(self, avId, friendIds):
+        friendsList = [entry for entry in self.avatarId2Friends.get(avId, []) if entry[0] not in friendIds]
+        self.avatarId2Friends[avId] = friendsList
+        self.d_setFriendsList(avId, friendsList)
+        for friendId in friendIds:
+            self.air.writeServerEvent('avatarFriendPruned', avId=avId, friendId=friendId)
+
     def removeFriend(self, avId, friendId):
         if avId not in self.avatarId2Friends:
             self.runOperation(RemoveOfflineFriendFSM, avId, friendId)
@@ -276,8 +309,12 @@ class AvatarFriendsManagerUD(DistributedObjectGlobalUD):
         self.air.writeServerEvent('avatarFriendRemoved', avId=avId, friendId=otherAvId)
 
         self.d_removeAvatarFriend(avId, otherAvId)
+        if self.isOnline(avId):
+            self.undeclareFriend(avId, otherAvId)
+
         if self.isOnline(otherAvId):
             self.d_removeAvatarFriend(otherAvId, avId)
+            self.undeclareFriend(otherAvId, avId)
 
     # Client requests:
 
@@ -379,8 +416,13 @@ class AvatarFriendsManagerUD(DistributedObjectGlobalUD):
         self.sendUpdateToAvatarId(avId, 'rejectRemove', [otherAvId, reason])
 
     def d_updateAvatarFriend(self, avId, friendId):
-        if self.isOnline(avId):
-            self.sendUpdateToAvatarId(avId, 'updateAvatarFriend', [friendId, self.getFriendInfo(friendId)])
+        if not self.isOnline(avId):
+            return
+
+        if self.isOnline(friendId):
+            self.declareFriend(avId, friendId)
+
+        self.sendUpdateToAvatarId(avId, 'updateAvatarFriend', [friendId, self.getFriendInfo(friendId)])
 
     def d_removeAvatarFriend(self, avId, friendId):
         self.sendUpdateToAvatarId(avId, 'removeAvatarFriend', [friendId])

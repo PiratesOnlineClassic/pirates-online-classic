@@ -218,6 +218,26 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
     def isOnline(self, accountId):
         return accountId in self.account2avatar
 
+    def declareFriend(self, accountId, friendId):
+        # Teleport queries and responses are sent straight to the friend's
+        # avatar object, which the client may not be able to see. Declare
+        # the friend's avatar to the client so the Client Agent lets those
+        # field updates through.
+        dclass = self.air.dclassesByName[self.getAvatarClassName()]
+        datagram = PyDatagram()
+        datagram.addServerHeader(self.GetAccountConnectionChannel(accountId),
+            self.air.ourChannel, CLIENTAGENT_DECLARE_OBJECT)
+        datagram.addUint32(self.account2avatar[friendId])
+        datagram.addUint16(dclass.getNumber())
+        self.air.send(datagram)
+
+    def undeclareFriend(self, accountId, friendId):
+        datagram = PyDatagram()
+        datagram.addServerHeader(self.GetAccountConnectionChannel(accountId),
+            self.air.ourChannel, CLIENTAGENT_UNDECLARE_OBJECT)
+        datagram.addUint32(self.account2avatar[friendId])
+        self.air.send(datagram)
+
     def getFriendInfo(self, accountId):
         account = self.getAccount(accountId)
         online = self.isOnline(accountId)
@@ -260,6 +280,9 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
         self.air.writeServerEvent('playerFriendRemoved', accountId=accountId, friendId=otherAccountId)
         self.d_removePlayerFriend(accountId, otherAccountId)
         self.d_removePlayerFriend(otherAccountId, accountId)
+        if self.isOnline(accountId) and self.isOnline(otherAccountId):
+            self.undeclareFriend(accountId, otherAccountId)
+            self.undeclareFriend(otherAccountId, accountId)
 
     def getSenderAccountId(self):
         accountId = self.air.getAccountIdFromSender()
@@ -518,8 +541,13 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
         self.sendUpdateToAccountId(accountId, 'rejectUseSecret', [reason])
 
     def d_updatePlayerFriend(self, accountId, friendId):
-        if self.isOnline(accountId):
-            self.sendUpdateToAccountId(accountId, 'updatePlayerFriend', [friendId, self.getFriendInfo(friendId)])
+        if not self.isOnline(accountId):
+            return
+
+        if self.isOnline(friendId):
+            self.declareFriend(accountId, friendId)
+
+        self.sendUpdateToAccountId(accountId, 'updatePlayerFriend', [friendId, self.getFriendInfo(friendId)])
 
     def d_removePlayerFriend(self, accountId, friendId):
         if self.isOnline(accountId):
