@@ -121,6 +121,16 @@ class DistributedQuestAI(DistributedObjectAI, QuestBase, Quest):
         self.sendUpdateToAvatarId(self.ownerId, 'startFinalizeScene', [idx, giverId, endEvent])
 
     def doneFinalizeScene(self):
+        # the client sends this once the finalize scene has finished playing
+        # or has been skipped, only the owner of the quest may finish it...
+        avatarId = self.air.getAvatarIdFromSender()
+        if avatarId != self.ownerId:
+            self.air.writeServerEvent('suspicious', avId=avatarId,
+                message='Tried to finish the finalize scene of quest %d owned by %d!' % (
+                    self.doId, self.ownerId))
+
+            return
+
         messenger.send('quest-finalize-%d' % self.doId)
 
     def d_amFinalized(self):
