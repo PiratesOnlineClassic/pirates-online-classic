@@ -3,6 +3,7 @@ from otp.otpbase import OTPGlobals
 import sys
 from direct.gui.DirectGui import *
 from panda3d.core import *
+from libotp import CFSpeech, CFTimeout
 from otp.otpbase import OTPLocalizer
 
 class ChatInputTyped(DirectObject.DirectObject):
