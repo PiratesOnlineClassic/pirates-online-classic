@@ -6,3 +6,8 @@ class PCGuildManagerAI(GuildManagerAI):
 
     def __init__(self, air):
         GuildManagerAI.__init__(self, air)
+
+    def avatarOnline(self, av):
+        # Our guild mates see which crew we're in:
+        bandManagerId, bandId = av.getBandId()
+        self.d_recvAvatarOnline(av.doId, av.getName(), bandManagerId, bandId)

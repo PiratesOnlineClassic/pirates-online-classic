@@ -397,9 +397,9 @@ class GuildManagerAITests(unittest.TestCase):
         manager = object.__new__(PCGuildManagerAI)
         sent = []
         manager.sendUpdate = lambda fieldName, args: sent.append((fieldName, args))
-        av = types.SimpleNamespace(doId=42, getName=lambda: 'Jack')
+        av = types.SimpleNamespace(doId=42, getName=lambda: 'Jack', getBandId=lambda: (300, 7))
         manager.avatarOnline(av)
-        self.assertEqual(sent, [('recvAvatarOnline', [42, 'Jack', 0, 0])])
+        self.assertEqual(sent, [('recvAvatarOnline', [42, 'Jack', 300, 7])])
 
 
 if __name__ == '__main__':

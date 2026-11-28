@@ -129,6 +129,7 @@ class AvatarFriendsManagerUDTests(unittest.TestCase):
         self.air = FakeAir()
         self.mgr = PCAvatarFriendsManagerUD(self.air)
         self.mgr.doId = OTP_DO_ID_AVATAR_FRIENDS_MANAGER
+        self.air.avatarFriendsManager = self.mgr
 
     def online(self, avId, accountId):
         self.mgr.comingOnline(avId, accountId)
@@ -322,6 +323,8 @@ class PlayerFriendsManagerUDTests(unittest.TestCase):
         self.mgr = PCPlayerFriendsManagerUD(self.air)
         self.mgr.doId = OTP_DO_ID_PLAYER_FRIENDS_MANAGER
         self.mgr.dbm = FakeDBM()
+        self.air.playerFriendsManager = self.mgr
+        self.air.avatarFriendsManager = PCAvatarFriendsManagerUD(self.air)
 
     def online(self, avId, accountId):
         self.mgr.comingOnline(avId, accountId)

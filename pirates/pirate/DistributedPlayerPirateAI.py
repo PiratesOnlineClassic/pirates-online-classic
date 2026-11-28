@@ -4,6 +4,7 @@ from direct.directnotify import DirectNotifyGlobal
 
 from otp.ai.MagicWordGlobal import *
 from otp.avatar.DistributedPlayerAI import DistributedPlayerAI
+from otp.distributed.OtpDoGlobals import OTP_DO_ID_AVATAR_FRIENDS_MANAGER
 
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.pirate.HumanDNAAI import HumanDNAAI
@@ -208,9 +209,23 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return self.guildId
 
     def setBandId(self, bandManagerId, bandId):
+        changed = (bandManagerId, bandId) != (self.bandManagerId, self.bandId)
         self.bandManagerId = bandManagerId
         self.bandId = bandId
         messenger.send(self.getBandIdChangedEvent(), [bandManagerId, bandId])
+
+        if changed and self.isGenerated():
+            # Let our friends and guild mates know we've changed crew:
+            self.d_setFriendsBandId(bandManagerId, bandId)
+            self.air.guildManager.d_sendAvatarBandId(self.doId, bandManagerId, bandId)
+
+    def d_setFriendsBandId(self, bandManagerId, bandId):
+        # The district has no handle on the avatar friends manager UberDOG,
+        # so send the update to it directly:
+        dclass = self.air.dclassesByName['PCAvatarFriendsManager']
+        datagram = dclass.aiFormatUpdate('setBandId', OTP_DO_ID_AVATAR_FRIENDS_MANAGER,
+            OTP_DO_ID_AVATAR_FRIENDS_MANAGER, self.air.ourChannel, [self.doId, bandManagerId, bandId])
+        self.air.send(datagram)
 
     def getBandIdChangedEvent(self):
         return 'bandIdChanged-%d' % self.doId
