@@ -1,4 +1,7 @@
 import random
+import re
+
+from panda3d.core import NodePath, Point3, VBase3
 
 from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
@@ -16,6 +19,16 @@ from pirates.tutorial import TutorialGlobals
 from pirates.tutorial.DistributedPiratesTutorialWorldAI import DistributedPiratesTutorialWorldAI
 from pirates.treasuremap.TreasureMapBlackPearlAI import TreasureMapBlackPearlAI
 from pirates.pvp import PVPManagerAI
+
+# world data objects which other objects are placed relative to as a game area,
+# rather than as a prop within one...
+AREA_OBJECT_TYPES = [
+    ObjectList.AREA_TYPE_WORLD_REGION,
+    ObjectList.AREA_TYPE_ISLAND,
+    ObjectList.AREA_TYPE_ISLAND_REGION,
+    ObjectList.AREA_TYPE_SHIP_PART,
+    ObjectList.AREA_TYPE_BUILDING_INTERIOR,
+    'Cell Portal Area']
 
 
 class LinkManager(object):
@@ -389,6 +402,126 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
 
     def getIslandWorldDataByUid(self, uid):
         return self.worldDict['Objects'].get(uid, None)
+
+    def getObjectFileDataByUid(self, uid, parentUid=None):
+        # some objects are defined in more than one file (game areas copied from
+        # their island for example), prefer the file the object's parent is in...
+        found = None
+        for fileName, fileData in self.fileDicts.items():
+            objectPath = fileData.get('ObjectIds', {}).get(uid)
+            if objectPath is None:
+                continue
+
+            if not parentUid or '"%s"' % parentUid in objectPath or "'%s'" % parentUid in objectPath:
+                return fileData
+
+            found = found or fileData
+
+        return found
+
+    def getLinkedMovementNodes(self, uid, parentUid=None):
+        """
+        Returns the uid and object data of every AI node (such as a movement node)
+        an npc may walk to from the given node, as linked in the level editor...
+        """
+
+        fileData = self.getObjectFileDataByUid(uid, parentUid)
+        if not fileData:
+            return []
+
+        linkedNodes = []
+        for nodeLink in fileData.get(WorldDataGlobals.LINK_TYPE_AI_NODE, []):
+            if len(nodeLink) < 2 or uid not in nodeLink[:2]:
+                continue
+
+            direction = nodeLink[2] if len(nodeLink) > 2 else 'Bi-directional'
+            if nodeLink[0] == uid:
+                otherUid = nodeLink[1]
+                if direction == 'Direction 2':
+                    continue
+            else:
+                otherUid = nodeLink[0]
+                if direction == 'Direction 1':
+                    continue
+
+            objectPath = fileData['ObjectIds'].get(otherUid)
+            if not objectPath:
+                continue
+
+            try:
+                otherData = eval('fileData' + objectPath)
+            except:
+                otherData = None
+
+            if otherData is not None:
+                linkedNodes.append((otherUid, otherData))
+
+        return linkedNodes
+
+    def getObjectAncestorData(self, uid, parentUid=None):
+        """
+        Returns the object data of every object the given object is placed under
+        within it's world data file, starting with the outermost object...
+        """
+
+        fileData = self.getObjectFileDataByUid(uid, parentUid)
+        if not fileData:
+            return []
+
+        objectPath = fileData['ObjectIds'].get(uid, '')
+        ancestorUids = re.findall(r'\[[\'"]Objects[\'"]\]\[[\'"]([^\'"]+)[\'"]\]', objectPath)[:-1]
+
+        ancestors = []
+        objects = fileData.get('Objects', {})
+        for ancestorUid in ancestorUids:
+            ancestorData = objects.get(ancestorUid)
+            if not ancestorData:
+                return []
+
+            ancestors.append(ancestorData)
+            objects = ancestorData.get('Objects', {})
+
+        return ancestors
+
+    def getObjectAreaPosHpr(self, uid, objectData, parentUid=None):
+        """
+        Returns the position and rotation of a world data object relative to the
+        game area it belongs to. Objects placed underneath a prop, such as a fort
+        or a building exterior, store their transform relative to that prop.
+
+        Note: the level editor's GridPos is not used here, it is not kept up to date
+        when objects are moved or copied around in the editor...
+        """
+
+        pos = objectData.get('Pos', (0, 0, 0))
+        hpr = objectData.get('Hpr', (0, 0, 0))
+
+        props = []
+        for ancestorData in reversed(self.getObjectAncestorData(uid, parentUid)):
+            if ancestorData.get('Type') in AREA_OBJECT_TYPES:
+                break
+
+            props.insert(0, ancestorData)
+
+        if not props:
+            return Point3(*pos), VBase3(*hpr)
+
+        areaNode = NodePath('area')
+        parentNode = areaNode
+        for propData in props:
+            parentNode = parentNode.attachNewNode('prop')
+            parentNode.setPos(propData.get('Pos', (0, 0, 0)))
+            parentNode.setHpr(propData.get('Hpr', (0, 0, 0)))
+            parentNode.setScale(propData.get('Scale', (1, 1, 1)))
+
+        objectNode = parentNode.attachNewNode('object')
+        objectNode.setPos(pos)
+        objectNode.setHpr(hpr)
+
+        areaPos = objectNode.getPos(areaNode)
+        areaHpr = objectNode.getHpr(areaNode)
+        areaNode.removeNode()
+        return areaPos, areaHpr
 
     def loadObject(self, object, parent, parentUid, objKey, dynamic, zoneLevel=0, startTime=None, parentIsObj=False, fileName=None, actualParentObj=None):
         if object.get('Type') != 'Building Exterior' or not self.isObjectInCurrentGamePhase(object):

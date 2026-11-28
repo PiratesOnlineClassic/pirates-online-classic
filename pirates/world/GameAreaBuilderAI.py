@@ -305,8 +305,12 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
     def createSearchableContainer(self, parent, parentUid, objKey, objectData):
         container = DistributedSearchableContainerAI(self.air)
         container.setUniqueId(objKey)
-        container.setPos(objectData.get('GridPos', objectData.get('Pos', (0, 0, 0))))
-        container.setHpr(objectData.get('Hpr', (0, 0, 0)))
+
+        # containers are often placed on top of a prop, such as a fort,
+        # in which case their transform is relative to that prop...
+        pos, hpr = self.air.worldCreator.getObjectAreaPosHpr(objKey, objectData, parentUid)
+        container.setPos(pos)
+        container.setHpr(hpr)
         container.setScale(objectData.get('Scale', (1, 1, 1)))
         container.setType(objectData.get('type', 'Crate'))
 
