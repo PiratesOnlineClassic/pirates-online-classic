@@ -6,9 +6,9 @@ import sys
 import unittest
 import zlib
 from types import SimpleNamespace
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import ANY, MagicMock, Mock, patch
 
-from panda3d.core import (ExecutionEnvironment, NodePath, Filename, VirtualFileMountRamdisk,
+from panda3d.core import (ExecutionEnvironment, NodePath, Point3, Filename, VirtualFileMountRamdisk,
                           VirtualFileSystem, loadPrcFile, loadPrcFileData)
 
 loadPrcFile('config/dev.prc')
@@ -506,6 +506,228 @@ class ShipLoaderTests(unittest.TestCase):
 
         fsm._shippartQueryCallback(102, None, None)
         fsm.cleanup.assert_called_with(False)
+
+
+def trackGameState(ship):
+    def b_setGameState(stateName, avId, timeStamp=0):
+        ship.gameState = [stateName, avId, timeStamp]
+        ship.gameFSM.getCurrentOrNextState.return_value = stateName
+
+    ship.b_setGameState = Mock(side_effect=b_setGameState)
+
+
+def makeFSM(ship, state='Patrol'):
+    fsm = GameFSMShipAI(ship.air, ship)
+    fsm.state = state
+    fsm.oceanGrid = ship.getParentObj()
+    ship.gameFSM = fsm
+    return fsm
+
+
+class _TaskPatchedTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.taskMgr = Mock()
+        self.patches = [
+            patch.object(builtins, 'taskMgr', self.taskMgr, create=True),
+            patch.object(builtins, 'globalClock', Mock(getFrameTime=lambda: 100.0), create=True)]
+        for item in self.patches:
+            item.start()
+
+    def tearDown(self):
+        for item in self.patches:
+            item.stop()
+
+
+class GameFSMShipAITests(_TaskPatchedTestCase):
+
+    def makeShips(self):
+        air = makeAir(shipManager=SimpleNamespace(getPlayerShips=lambda: [self.target]))
+        grid = NodePath('grid')
+        self.ship = makeShip(cls=NPCShipAI, air=air, npcShip=1, baseTeam=ShipGlobals.NAVY_TEAM,
+            shipClass=ShipGlobals.NAVY_FERRET)
+        self.target = makeShip(doId=2000, air=air, baseTeam=ShipGlobals.PLAYER_TEAM)
+        for ship in (self.ship, self.target):
+            ship.reparentTo(grid)
+            ship.getParentObj = lambda: grid
+            ship.isDeleted = lambda: False
+
+        trackGameState(self.ship)
+        fsm = makeFSM(self.ship)
+        fsm.getCurrentOrNextState = lambda: 'Patrol'
+        fsm._islandSpheres = []
+        fsm.world = SimpleNamespace()
+        return fsm
+
+    def test_ship_sails_at_ai_speed_and_turns_at_turn_rate(self):
+        fsm = self.makeShips()
+        speeds, turnRates = ShipGlobals.getAIShipSpeed(ShipGlobals.NAVY_FERRET)
+        fsm._startMovementTo(Point3(5000, 0, 0), fsm._getShipSpeed())
+        fsm._moveTask(None)
+
+        self.assertAlmostEqual(abs(self.ship.getH()), turnRates[0] * fsm.MovePeriod, places=3)
+        self.assertAlmostEqual(self.ship.getPos().length(), speeds[1] * fsm.MovePeriod, places=3)
+
+    def test_ship_steers_around_islands(self):
+        fsm = self.makeShips()
+        fsm._islandSpheres = [(0, 1000, 500)]
+        fsm._startMovementTo(Point3(0, 5000, 0), fsm._getShipSpeed())
+        self.ship.setY(300)
+        self.assertNotAlmostEqual(fsm._getDesiredHeading(), 0.0)
+
+    def test_patrol_engages_player_ship_within_aggro_radius(self):
+        fsm = self.makeShips()
+        self.target.setPos(500, 0, 0)
+        self.assertIs(fsm._findNearestEnemy(), self.target)
+        fsm._GameFSMShipAI__patrolThink(None)
+        self.ship.b_setGameState.assert_called_once_with('AttackChase', 0)
+        self.assertIs(fsm.targetShip, self.target)
+
+        self.target.setPos(50000, 0, 0)
+        self.assertIsNone(fsm._findNearestEnemy())
+
+    def test_npc_ships_ignore_each_other(self):
+        fsm = self.makeShips()
+        self.target.baseTeam = ShipGlobals.NAVY_TEAM
+        self.assertFalse(fsm._isValidTarget(self.target))
+
+    def test_broadside_fires_when_target_is_abeam(self):
+        fsm = self.makeShips()
+        self.ship.broadside = Mock()
+        self.ship.broadside.fireAtTarget.return_value = True
+
+        self.target.setPos(0, 500, 0)
+        self.assertFalse(fsm._attemptBroadside(self.target))
+
+        self.target.setPos(500, 0, 0)
+        self.assertTrue(fsm._attemptBroadside(self.target))
+        self.ship.broadside.fireAtTarget.assert_called_once_with(self.target, ShipGlobals.BROADSIDE_RIGHT)
+        self.assertFalse(fsm._attemptBroadside(self.target))
+
+    def test_damage_engages_attacker(self):
+        fsm = self.makeShips()
+        fsm.onDamageReceived(self.target.doId, 50)
+        self.ship.b_setGameState.assert_called_once_with('AttackChase', 0)
+
+
+class FlagshipBoardingTests(_TaskPatchedTestCase):
+
+    def setUp(self):
+        _TaskPatchedTestCase.setUp(self)
+        air = makeAir(battleMgr=Mock())
+        grid = NodePath('grid')
+        self.flagship = makeShip(cls=NPCShipAI, air=air, npcShip=1, isFlagship=1, isBoardable=1,
+            baseTeam=ShipGlobals.NAVY_TEAM, shipClass=ShipGlobals.NAVY_FERRET, deckCrew=[], objectData={})
+        self.attacker = makeShip(doId=2000, air=air, captainId=42, crew=[42, 43])
+        for ship in (self.flagship, self.attacker):
+            ship.reparentTo(grid)
+            ship.getParentObj = lambda: grid
+            ship.getDeleteEvent = lambda ship=ship: 'delete-%d' % ship.doId
+            ship.accept = Mock()
+            ship.ignore = Mock()
+            trackGameState(ship)
+
+        makeFSM(self.flagship, 'AttackChase')
+        self.flagship.gameState = ['AttackChase', 0, 0]
+        self.flagship.gameFSM.getCurrentOrNextState = lambda: self.flagship.gameState[0]
+        self.captain = SimpleNamespace(doId=42, getCrewShipId=lambda: 2000)
+        air.doId2do[42] = self.captain
+
+    def cripple(self):
+        self.flagship.handleShipDamage(-5000, self.attacker)
+        self.assertEqual(self.flagship.gameState[0], 'WaitingForGrapple')
+
+    def test_crippled_flagship_waits_for_grapples(self):
+        self.cripple()
+        self.assertEqual(self.flagship.boardableShipId, self.attacker.doId)
+        self.assertEqual(self.attacker.boardableShipId, self.flagship.doId)
+        self.flagship.sendUpdate.assert_any_call('setSinkTimer', [int(self.flagship.CrippledTimeout), ANY])
+
+    def test_regular_ship_still_sinks(self):
+        self.flagship.isFlagship = 0
+        self.flagship.handleShipDamage(-5000, self.attacker)
+        self.assertEqual(self.flagship.gameState[0], 'Sinking')
+
+    def test_grapples_pull_the_flagship_into_position(self):
+        self.cripple()
+        stranger = SimpleNamespace(doId=99, getCrewShipId=lambda: 0)
+        self.flagship.handleGrappleHit(stranger, 1)
+        self.assertEqual(self.attacker.landedGrapples, [])
+
+        self.flagship.handleGrappleHit(self.captain, 1)
+        self.assertEqual(self.attacker.landedGrapples, [[self.flagship.doId, 1]])
+        self.assertEqual(self.flagship.gameState[0], 'GrappleLerping')
+        self.flagship.handleGrappleHit(self.captain, 2)
+        self.assertEqual(len(self.attacker.landedGrapples), 2)
+        self.assertEqual(self.flagship.grappleArriveTime, 100.0 + self.flagship.GrapplePullTime / 2)
+
+        self.flagship.setPos(500, 0, 0)
+        self.flagship.grappleArriveTime = 0
+        self.flagship._NPCShipAI__grappleLerpTask(None)
+        self.assertEqual(self.flagship.gameState[0], 'InPosition')
+        self.assertEqual(self.attacker.gameState[0], 'InBoardingPosition')
+        self.assertTrue(self.attacker.isInBoardingPosition)
+        self.assertAlmostEqual(self.flagship.getX(), self.flagship.BoardingOffset)
+
+    def test_captain_starts_boarding_and_crew_swing_over(self):
+        self.cripple()
+        self.flagship.gameState = ['InPosition', 0, 0]
+        self.flagship.spawnDeckCrew = Mock()
+        self.attacker.air.getAvatarIdFromSender.return_value = 42
+        self.attacker.requestBoardFlagship(self.flagship.doId)
+
+        self.assertEqual(self.flagship.gameState[0], 'Boarded')
+        self.flagship.spawnDeckCrew.assert_called_once_with()
+        self.attacker.sendUpdate.assert_any_call('setBoardingSuccess', [self.flagship.doId, ANY])
+
+        self.flagship.d_setMovie = Mock()
+        self.flagship.requestBoard(42)
+        self.flagship.d_setMovie.assert_called_once_with(ShipGlobals.SHIP_MOVIE_BOARD, 42, self.attacker.doId, 0)
+
+    def test_npc_ships_cannot_be_boarded_directly(self):
+        self.attacker.boardableShipId = 0
+        self.flagship.air.getAvatarIdFromSender.return_value = 42
+        self.flagship.d_setMovie = Mock()
+        self.flagship.requestBoard(42)
+        self.flagship.d_setMovie.assert_not_called()
+
+    def test_defeating_the_crew_sinks_the_flagship(self):
+        self.cripple()
+        self.flagship.gameState = ['Boarded', 0, 0]
+        self.flagship.crew = [42]
+        npc = SimpleNamespace(getHp=lambda: [0, 0], isDeleted=lambda: False)
+        self.flagship.deckCrew = [npc]
+        self.attacker.d_setMovie = Mock()
+        self.flagship._NPCShipAI__checkDeckCrew(None)
+
+        self.assertEqual(self.flagship.gameState[0], 'Defeated')
+        self.attacker.d_setMovie.assert_called_once_with(ShipGlobals.SHIP_MOVIE_BOARD, 42, self.flagship.doId, 0)
+
+        self.flagship._NPCShipAI__defeatedSink(None)
+        self.assertEqual(self.flagship.gameState[0], 'Sinking')
+        self.assertEqual(self.attacker.boardableShipId, 0)
+
+    def test_boarding_timeout_sinks_the_flagship(self):
+        self.cripple()
+        self.flagship._NPCShipAI__crippledTimeout(None)
+        self.assertEqual(self.flagship.gameState[0], 'Sinking')
+        self.assertEqual(self.attacker.landedGrapples, [])
+
+    def test_grapple_projectile_is_routed_to_the_flagship(self):
+        from pirates.battle.WeaponBaseAI import WeaponBaseAI
+        from pirates.uberdog.UberDogGlobals import InventoryType
+
+        weapon = WeaponBaseAI.__new__(WeaponBaseAI)
+        weapon.air = self.flagship.air
+        weapon.air.targetMgr = Mock()
+        weapon.air.getAvatarIdFromSender.return_value = 42
+        weapon.sendUpdate = Mock()
+        self.flagship.handleGrappleHit = Mock()
+        weapon.suggestProjectileSkillResult(InventoryType.CannonShoot, InventoryType.CannonGrappleHook,
+            0, self.flagship.doId, [], [0, 0, 0], [0, 0, 1], [0, 99, 3], 0)
+
+        self.flagship.handleGrappleHit.assert_called_once_with(self.captain, 3)
+        self.flagship.air.battleMgr.willWeaponHit.assert_not_called()
 
 
 if __name__ == '__main__':
