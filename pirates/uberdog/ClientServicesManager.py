@@ -11,6 +11,21 @@ from requests import get
 
 class ClientServicesManager(DistributedObjectGlobal):
     notify = directNotify.newCategory('ClientServicesManager')
+    AvatarSlots = 4
+
+    # The name states of the avatar list, see ClientServicesManagerUD:
+    NameStateClosed = 0
+    NameStateOpen = 1
+    NameStatePending = 2
+    NameStateApproved = 3
+    NameStateRejected = 4
+
+    # ...and the wish states the AvatarChooser knows them by:
+    NameState2WishState = {
+        NameStateOpen: 'OPEN',
+        NameStatePending: 'PENDING',
+        NameStateApproved: 'APPROVED',
+        NameStateRejected: 'DENIED'}
 
     def performLogin(self, doneEvent):
         self.doneEvent = doneEvent
@@ -37,24 +52,32 @@ class ClientServicesManager(DistributedObjectGlobal):
 
     def setAvatars(self, avatars):
         avatarList = {}
-        data = []
+        data = [OTPGlobals.AvatarSlotAvailable] * self.AvatarSlots
 
-        for avNum, avName, avDNA, avPosition, nameState in avatars:
-            nameOpen = int(nameState == 1)
+        for avNum, avName, avDNA, avPosition, nameState, wishName, defaultShard, lastLogout in avatars:
+            nameOpen = int(nameState == self.NameStateOpen)
             names = [avName, '', '', '']
-            if nameState == 2:  # PENDING
+            if nameState == self.NameStatePending:
                 names[1] = avName
-            elif nameState == 3:  # APPROVED
-                names[2] = avName
-            elif nameState == 4:  # REJECTED
+            elif nameState == self.NameStateApproved:
+                names[2] = wishName
+            elif nameState == self.NameStateRejected:
                 names[3] = avName
 
             dna = HumanDNA()
             dna.makeFromNetString(avDNA)
+            dna.setName(avName)
 
-            data.append(PotentialAvatar(avNum, names, dna, avPosition, nameOpen))
+            # The AvatarChooser shows each pirate in its own slot of the account:
+            if avPosition >= len(data):
+                self.notify.warning('Avatar %d is in invalid slot %d!' % (avNum, avPosition))
+                continue
 
-        avatarList[1] = data + [OTPGlobals.AvatarSlotAvailable] * (4 - len(data))
+            data[avPosition] = PotentialAvatar(avNum, names, dna, avPosition, nameOpen,
+                wishState=self.NameState2WishState.get(nameState, 'CLOSED'), wishName=wishName,
+                defaultShard=defaultShard, lastLogout=lastLogout)
+
+        avatarList[1] = data
         self.cr.handleAvatarsList(avatarList)
 
     def sendCreateAvatar(self, avDNA, _, index, name):
@@ -73,11 +96,14 @@ class ClientServicesManager(DistributedObjectGlobal):
             messenger.send('removeAvatarResponse', [avid, 0])
 
     def sendSetNameTyped(self, avId, name, callback):
-        self._callback = callback
+        self._nameTypedCallback = callback
         self.sendUpdate('setNameTyped', [avId, name])
 
     def setNameTypedResp(self, avId, status):
-        self._callback(avId, status)
+        callback = getattr(self, '_nameTypedCallback', None)
+        self._nameTypedCallback = None
+        if callback:
+            callback(avId, status)
 
     def sendSetNamePattern(self, avId, p1, f1, p2, f2, p3, f3, p4, f4, callback):
         self._callback = callback

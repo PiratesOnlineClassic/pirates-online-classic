@@ -1796,11 +1796,21 @@ class OTPClientRepository(ClientRepositoryBase):
             self.handleObjectLocation(di)
 
     def sendWishName(self, avId, name):
-        datagram = PyDatagram()
-        datagram.addUint16(CLIENT_SET_WISHNAME)
-        datagram.addUint32(avId)
-        datagram.addString(name)
-        self.send(datagram)
+        # Astron has no CLIENT_SET_WISHNAME message, typed names are submitted
+        # to the ClientServicesManager instead:
+        self.csm.sendSetNameTyped(avId, name, lambda avId, status: self.gotWishnameResult(avId, name, status))
+
+    def gotWishnameResult(self, avId, name, status):
+        WNR = self.WishNameResult
+        if status:
+            result = WNR.PendingApproval
+        else:
+            result = WNR.Failure
+
+        messenger.send(self.getWishNameResultMsg(), [
+            result,
+            avId,
+            name])
 
     def sendWishNameAnonymous(self, name):
         self.sendWishName(0, name)

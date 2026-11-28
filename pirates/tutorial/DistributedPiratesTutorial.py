@@ -471,8 +471,13 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             localAvatar.motionFSM.on()
             self.acceptOnce('avatarPopulated', self.avatarPopulated)
             if self.map.nameGui.customName:
+                # The CSM handles one request of ours at a time, populate the
+                # pirate once its typed name has been submitted:
+                def wishNameSubmitted(*args):
+                    base.cr.csm.sendPopulateAvatar(localAvatar.doId, localAvatar.style, 0, 0, 0, 0, 0)
+
+                self.acceptOnce(base.cr.getWishNameResultMsg(), wishNameSubmitted)
                 localAvatar.setWishName()
-                base.cr.csm.sendPopulateAvatar(localAvatar.doId, localAvatar.style, 0, 0, 0, 0, 0)
             else:
                 name = self.map.nameGui.getNumericName()
                 base.cr.csm.sendPopulateAvatar(localAvatar.doId, localAvatar.style, 1, name[0], name[1], name[2], name[3])
