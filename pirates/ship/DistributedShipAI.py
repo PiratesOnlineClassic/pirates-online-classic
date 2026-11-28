@@ -1365,6 +1365,9 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
     def d_setRespawnLocation(self, avatarId, parentId, zoneId):
         self.sendUpdateToAvatarId(avatarId, 'setRespawnLocation', [parentId, zoneId])
 
+    def d_notifyReceivedLoot(self, lootList):
+        self.sendUpdate('notifyReceivedLoot', [lootList])
+
     def setParentingRules(self, rule1, rule2):
         self.parentingRules = [rule1, rule2]
 
