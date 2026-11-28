@@ -12,11 +12,8 @@ from pirates.world import GameTypeGlobals
 
 
 class LookoutMatchSetup:
-    """
-    Book keeping for a match the UberDOG has asked this district to host,
-    the setup waits for any avatars on other districts to arrive here
-    before the game is created.
-    """
+    # a match the UberDOG has asked this district to host, the game is created
+    # once any avatars on other districts have arrived here...
 
     def __init__(self, matchId, gameCategory, gameType, options, teams):
         self.matchId = matchId
@@ -67,27 +64,18 @@ class DistributedMatchMakerAI(DistributedObjectGlobalAI):
         DistributedObjectGlobalAI.delete(self)
 
     def sendUpdateToAvatar(self, avatarId, fieldName, args):
-        """
-        Sends an update for a field of the avatar's own DistributedPlayerPirate,
-        the avatar does not need to be on this district to receive it.
-        """
-
+        # the avatar does not need to be on this district to receive it
         dclass = self.air.dclassesByName['DistributedPlayerPirateAI']
         datagram = dclass.aiFormatUpdate(fieldName, avatarId, self.GetPuppetConnectionChannel(avatarId),
             self.air.ourChannel, args)
 
         self.air.send(datagram)
 
-    # -------------------------------------------------------------------
-    # Requests
-    # -------------------------------------------------------------------
-
     def canRequestActivity(self, avatar, gameCategory):
         if avatar.doId in self.air.teleportMgr.avatar2fsm:
             return False
 
-        pvpManager = getattr(self.air, 'pvpManager', None)
-        if pvpManager and pvpManager.isAvatarInPVP(avatar):
+        if self.air.pvpManager.isAvatarInPVP(avatar):
             return False
 
         return True
@@ -126,10 +114,6 @@ class DistributedMatchMakerAI(DistributedObjectGlobalAI):
 
         self.searchingAvatarIds.remove(avatarId)
         self.air.netMessenger.send('matchMakerAvatarLeft', [avatarId, self.air.districtId])
-
-    # -------------------------------------------------------------------
-    # Invites
-    # -------------------------------------------------------------------
 
     def getInviteeIds(self, avatar, inviteModes, additionalAvs):
         inviteeIds = []
@@ -202,10 +186,6 @@ class DistributedMatchMakerAI(DistributedObjectGlobalAI):
     def d_requestLookoutInvite(self, inviteeId, inviterId, inviterName, activityCategory, activityType, options):
         self.sendUpdateToAvatar(inviteeId, 'requestLookoutInvite', [inviterId, inviterName,
             activityCategory, activityType, options])
-
-    # -------------------------------------------------------------------
-    # Match creation
-    # -------------------------------------------------------------------
 
     def getArrivalTaskName(self, matchId):
         return self.uniqueName('arrival-%d' % matchId)

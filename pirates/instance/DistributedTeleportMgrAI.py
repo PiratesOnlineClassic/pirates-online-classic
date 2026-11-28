@@ -382,12 +382,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             self.d_teleportFailed(avatar.doId)
 
     def requestTeleportToShard(self, avatar, shardId, instanceType, instanceName, locationUid, areaDoId=0):
-        """
-        Forwards a teleport request for an avatar to another district by way
-        of the travel agent; when an area on the remote district is requested,
-        that area's uniqueId is looked up from the state server first...
-        """
-
+        # a remote area's uniqueId is looked up from the state server first...
         if not areaDoId:
             self.air.travelAgent.d_requestTeleportToShardAItoUD(avatar.doId, shardId, instanceType,
                 instanceName, locationUid)
@@ -406,12 +401,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         self.air.getObject(areaDoId, _areaQueryCallback)
 
     def canTeleportToArea(self, avatar, area):
-        """
-        Mirrors LocalPirate.confirmIslandTeleport; an avatar may teleport to
-        an island when it owns the island's teleport token, or the island is
-        it's current or return location.
-        """
-
+        # see LocalPirate.confirmIslandTeleport
         from pirates.world.DistributedIslandAI import DistributedIslandAI
 
         if not isinstance(area, DistributedIslandAI):
@@ -433,11 +423,6 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         return bool(worldCreator and worldCreator.isPvpIslandByUid(areaUid))
 
     def teleportToArea(self, avatar, area, spawnPt=None):
-        """
-        Teleports the avatar to the given game area, this is the entry point used
-        when teleporting to a friend, crew or guild member standing in an area.
-        """
-
         if not self.getInstanceFromObject(area):
             self.notify.warning('Cannot teleport avatar %d to area %d, '
                 'area has no instance!' % (avatar.doId, area.doId))
@@ -448,11 +433,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             useReturnLocation=False, force=True)
 
     def teleportToShip(self, avatar, ship):
-        """
-        Teleports the avatar on board the given ship, the client places
-        the avatar on deck once it receives the ship as it's spawn parent.
-        """
-
+        # the client places the avatar on deck once the ship is it's spawn parent
         if avatar.doId in self.avatar2fsm:
             self.notify.warning('Cannot teleport avatar %d to ship %d, '
                 'already teleporting!' % (avatar.doId, ship.doId))
@@ -471,11 +452,6 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         return True
 
     def teleportToAvatar(self, avatar, targetAvatar):
-        """
-        Teleports the avatar to wherever the target avatar currently is on this
-        district. Returns False when the target's location cannot be teleported to.
-        """
-
         from pirates.ship.DistributedShipAI import DistributedShipAI
 
         targetParent = targetAvatar.getParentObj()
@@ -488,11 +464,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         return False
 
     def getAvatarTeleportLocation(self, avatar):
-        """
-        Returns the (shardId, instanceDoId, areaDoId) of an avatar, as expected by
-        the client's teleportResponse, or None when the avatar can not be visited.
-        """
-
+        # returns the (shardId, instanceDoId, areaDoId) the client's teleportResponse expects
         parentObj = avatar.getParentObj()
         instance = self.getInstanceFromObject(parentObj)
         if not parentObj or not instance or isinstance(instance, DistributedTeleportZoneAI):

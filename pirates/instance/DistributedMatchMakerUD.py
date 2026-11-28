@@ -58,10 +58,8 @@ def getIntOption(options, optionId, default=0):
 
 
 class LookoutRequest:
-    """
-    A single avatar's request to the lookout, the request stays in the
-    queue until the avatar is placed into a game or cancels the request.
-    """
+    # an avatar's request to the lookout, it stays in the queue until the
+    # avatar is placed into a game or cancels the request...
 
     def __init__(self, avatarId, gameType, gameCategory, options, shipIds, shardId, gameAccess):
         self.avatarId = avatarId
@@ -100,12 +98,7 @@ class LookoutRequest:
 
 
 class LookoutMatch(FSM):
-    """
-    A group of lookout requests which have been matched together, the
-    match waits for each avatar to join before the game is created on
-    the district hosting the match.
-    """
-
+    # the game is created on the hosting district once each avatar has joined
     notify = DirectNotifyGlobal.directNotify.newCategory('LookoutMatch')
 
     def __init__(self, mgr, matchId, gameCategory, gameType, requests):
@@ -322,10 +315,6 @@ class DistributedMatchMakerUD(DistributedObjectGlobalUD):
         self.requests = {}
         DistributedObjectGlobalUD.delete(self)
 
-    # -------------------------------------------------------------------
-    # Game styles
-    # -------------------------------------------------------------------
-
     def getStyleInfo(self, gameCategory, gameType):
         return MatchStyleInfo.get(gameCategory, {}).get(gameType, {})
 
@@ -362,10 +351,6 @@ class DistributedMatchMakerUD(DistributedObjectGlobalUD):
             return True
 
         return GameTypeGlobals.gameTypeAccessable(gameCategory, gameType, gameAccess)
-
-    # -------------------------------------------------------------------
-    # Requests
-    # -------------------------------------------------------------------
 
     def requestActivity(self, avatarId, gameType, gameCategory, options, shipIds, shardId, gameAccess):
         if not avatarId:
@@ -488,10 +473,6 @@ class DistributedMatchMakerUD(DistributedObjectGlobalUD):
         self.notify.debug('Avatar %d left district %d, removing lookout request.' % (avatarId, shardId))
         self.removeRequest(avatarId)
 
-    # -------------------------------------------------------------------
-    # Matching
-    # -------------------------------------------------------------------
-
     def __matchTask(self, task):
         self.findMatches()
         return Task.again
@@ -518,11 +499,7 @@ class DistributedMatchMakerUD(DistributedObjectGlobalUD):
         return sorted(requests, key=lambda request: request.timestamp)
 
     def getRequestBlocks(self, requests):
-        """
-        Groups the requests into blocks which must be placed in a match together,
-        an avatar on their own is a block of one, invited parties are kept together.
-        """
-
+        # invited parties are kept together in the same block
         now = globalClock.getRealTime()
         blocks = []
         parties = {}
@@ -674,10 +651,6 @@ class DistributedMatchMakerUD(DistributedObjectGlobalUD):
             request.lastChance = chance
             self.d_lookoutFeedback(request.avatarId, chance)
 
-    # -------------------------------------------------------------------
-    # Districts
-    # -------------------------------------------------------------------
-
     def d_createMatch(self, shardId, matchId, gameCategory, gameType, options, teams):
         self.air.netMessenger.send('matchMakerCreateMatch', [shardId, matchId, gameCategory,
             gameType, options, teams])
@@ -726,10 +699,6 @@ class DistributedMatchMakerUD(DistributedObjectGlobalUD):
             self.notify.info('  match %d: state=%s category=%d type=%d district=%d avatars=%r' % (
                 match.matchId, match.state, match.gameCategory, match.gameType,
                 match.hostShardId, match.getAvatarIds()))
-
-    # -------------------------------------------------------------------
-    # Avatar messages
-    # -------------------------------------------------------------------
 
     def sendUpdateToAvatar(self, avatarId, fieldName, args):
         dclass = self.air.dclassesByName['DistributedPlayerPirateUD']
