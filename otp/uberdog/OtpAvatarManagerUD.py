@@ -8,12 +8,6 @@ from otp.uberdog.RejectCode import RejectCode
 
 
 class AvatarManagerOperationFSM(FSM):
-    """
-    Base operation for all account based avatar manager requests. The account
-    is always retrieved first so that the requested avatar can be verified as
-    belonging to the sender before anything is touched in the database.
-    """
-
     notify = DirectNotifyGlobal.directNotify.newCategory('AvatarManagerOperationFSM')
     POST_ACCOUNT_STATE = 'Off'
 
@@ -48,13 +42,6 @@ class AvatarManagerOperationFSM(FSM):
 
 
 class OtpAvatarManagerUD(DistributedObjectGlobalUD):
-    """
-    The OTP avatar manager. Avatar listing, creation, deletion and selection have
-    been moved to the ClientServicesManager on this server, so the OTP level
-    requests are answered with a rejection pointing the client at the CSM.
-    Game specific managers extend this to add their own operations.
-    """
-
     notify = DirectNotifyGlobal.directNotify.newCategory('OtpAvatarManagerUD')
 
     def __init__(self, air):
@@ -99,9 +86,11 @@ class OtpAvatarManagerUD(DistributedObjectGlobalUD):
 
     # Client requests:
 
+    # avatar listing, creation, deletion and selection are handled
+    # by the ClientServicesManager, so these are always rejected...
+
     def requestAvatarList(self, todo0):
         sender = self.air.getAccountIdFromSender()
-        self.notify.debug('requestAvatarList from account %d, list is served by the CSM' % sender)
         self.d_rejectAvatarList(sender, RejectCode.MAY_NOT_LIST_AVATARS)
 
     def requestAvatarSlot(self, todo0, subId, slot):
@@ -128,29 +117,14 @@ class OtpAvatarManagerUD(DistributedObjectGlobalUD):
     def d_rejectAvatarSlot(self, accountId, reasonId, subId, slot):
         self.sendUpdateToAccountId(accountId, 'rejectAvatarSlot', [reasonId, subId, slot])
 
-    def d_avatarSlotResponse(self, accountId, subId, slot):
-        self.sendUpdateToAccountId(accountId, 'avatarSlotResponse', [subId, slot])
-
     def d_rejectPlayAvatar(self, accountId, reasonId, avatarId):
         self.sendUpdateToAccountId(accountId, 'rejectPlayAvatar', [reasonId, avatarId])
-
-    def d_playAvatarResponse(self, accountId, avatarId, subId, access, founder):
-        self.sendUpdateToAccountId(accountId, 'playAvatarResponse', [avatarId, subId, access, founder])
 
     def d_rejectCreateAvatar(self, accountId, result):
         self.sendUpdateToAccountId(accountId, 'rejectCreateAvatar', [result])
 
-    def d_createAvatarResponse(self, accountId, avatarId, subId, access, founder):
-        self.sendUpdateToAccountId(accountId, 'createAvatarResponse', [avatarId, subId, access, founder])
-
     def d_rejectRemoveAvatar(self, accountId, reasonId):
         self.sendUpdateToAccountId(accountId, 'rejectRemoveAvatar', [reasonId])
 
-    def d_removeAvatarResponse(self, accountId, avatarId, subId):
-        self.sendUpdateToAccountId(accountId, 'removeAvatarResponse', [avatarId, subId])
-
     def d_rejectShareAvatar(self, accountId, reasonId):
         self.sendUpdateToAccountId(accountId, 'rejectShareAvatar', [reasonId])
-
-    def d_shareAvatarResponse(self, accountId, avatarId, subId, shared):
-        self.sendUpdateToAccountId(accountId, 'shareAvatarResponse', [avatarId, subId, shared])
