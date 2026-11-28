@@ -129,6 +129,8 @@ class WorldCreatorBase:
             pfile = Filename(filename)
             found = vfs.resolveFilename(pfile, spfSearchPath)
             data = vfs.readFile(pfile, 1)
+            if isinstance(data, bytes):
+                data = data.decode('utf-8')
             data = data.replace('\r', '')
             
             try:

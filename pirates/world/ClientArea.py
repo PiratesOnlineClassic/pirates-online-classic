@@ -291,8 +291,8 @@ class ClientArea(DirectObject):
                             path = currData['ObjectIds'][currLink[1]]
                         else:
                             path = currData['ObjectIds'][currLink[0]]
-                        getDstPos = 'dstPos = currData' + path + '["Pos"]'
-                        exec(getDstPos)
+                        # exec() can no longer bind function locals in Python 3.
+                        dstPos = eval('currData' + path + '["Pos"]')
                         h0 = propAv.getH()
                         h1 = propAv.getH() + 180
                         p = propAv.getP()
