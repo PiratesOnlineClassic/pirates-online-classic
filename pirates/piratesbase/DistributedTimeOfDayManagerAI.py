@@ -15,6 +15,7 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
         self.startingState = TODGlobals.getStartingState(self.cycleType)
         self.startingTime = globalClockDelta.getFrameNetworkTime(bits=32)
         self.cycleDuration = config.GetFloat('tod-cycle-duration', PiratesGlobals.TOD_CYCLE_DURATION)
+        self.currentState = self.startingState
         self.stateTime = 0
         self.nextProcessStateChange = None
         self.timeOfDayStateMethodList = []
@@ -67,9 +68,7 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
         if self.cycleDuration == 0:
             return 0
 
-        nextStateId = TODGlobals.getNextStateId(self.cycleType, self.startingState)
-        nextStateName = TODGlobals.getStateName(nextStateId)
-        stateDuration = self.cycleDuration * TODGlobals.getStateDuration(self.cycleType, self.startingState)
+        stateDuration = self.cycleDuration * TODGlobals.getStateDuration(self.cycleType, self.currentState)
         delayTime = stateDuration - self.stateTime
 
         self.notify.debug('Delay until next state: %s' % delayTime)
@@ -83,13 +82,15 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
                 entry[2](self.cycleType, state, stateTime)
 
     def _processStateChange(self):
-        lastState = self.startingState
+        # note: the starting state and starting time are the anchor of the cycle
+        # that the clients compute their current state from (see sync), so they
+        # must never be replaced with the current state here...
         newState, stateTime = self._computeCurrentState()
         self.notify.debug('New State (%s) with remaining time: %s' % (newState, stateTime))
-        self._handleTimeOfDayStateMethods(newState, stateTime)
 
-        self.startingState = newState
+        self.currentState = newState
         self.stateTime = stateTime
+        self._handleTimeOfDayStateMethods(newState, stateTime)
         self._waitForNextState()
 
         return Task.done
@@ -115,10 +116,13 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
             return
 
         self.notify.debug('TimeOfDayManager cycle changing..')
-        startingState = TODGlobals.getStartingState(cycleType)
-        self._processStateChange()
 
-        self.b_sync(cycleType, startingState, self.startingTime, self.cycleDuration)
+        # restart the new cycle from it's starting state as of right now,
+        # then let the clients know about the new cycle...
+        startingState = TODGlobals.getStartingState(cycleType)
+        startingTime = globalClockDelta.getRealNetworkTime(bits=32)
+        self.b_sync(cycleType, startingState, startingTime, self.cycleDuration)
+        self._processStateChange()
 
     def isNight(self):
         nightStates = [
@@ -128,13 +132,16 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
             PiratesGlobals.TOD_STARS2DAWN
         ]
 
-        return self.startingState in nightStates
+        return self.currentState in nightStates
 
     def isDay(self):
-        return not isNight()
+        return not self.isNight()
+
+    def getCurrentState(self):
+        return self.currentState
 
     def isHalloweenMoon(self):
-        return self.startingState == PiratesGlobals.TOD_HALLOWEEN
+        return self.currentState == PiratesGlobals.TOD_HALLOWEEN
 
     def processHolidayChanged(self, holidayId):
         HolidayTODS = {
