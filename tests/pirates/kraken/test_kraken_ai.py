@@ -53,6 +53,9 @@ class FakeShip:
     def getShipClass(self):
         return self.shipClass
 
+    def hasSpawnBuff(self):
+        return False
+
     def getLevel(self):
         return self.level
 

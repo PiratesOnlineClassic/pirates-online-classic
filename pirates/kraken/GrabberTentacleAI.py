@@ -127,9 +127,6 @@ class GrabberTentacleAI(KrakenPartAI):
     def getGrabbedMast(self):
         return self.grabbedMast
 
-    def isBusy(self):
-        return bool(self.grabbedAvatarId or self.grabbedMast)
-
     def releaseAll(self):
         self.releaseAvatar()
         self.releaseMast()
