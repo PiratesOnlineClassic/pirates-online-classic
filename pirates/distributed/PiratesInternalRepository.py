@@ -59,6 +59,9 @@ class PiratesInternalRepository(OTPInternalRepository):
         self._registerInternalNetMessage('matchMakerCreateMatch')
         self._registerInternalNetMessage('matchMakerAvatarLeft')
 
+        # ClientServicesManager
+        self._registerInternalNetMessage('avatarDisconnected')
+
         # DistributedTravelAgent
         self._registerInternalNetMessage('unregisterShard')
 

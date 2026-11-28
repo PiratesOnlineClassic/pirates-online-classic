@@ -36,6 +36,39 @@ accountServerSecret = base.config.GetString('account-server-secret', '6163636f75
 http = HTTPClient()
 http.setVerifySsl(0)
 
+# The client creates a brand new pirate with this placeholder name as soon as
+# the player starts the tutorial, the pirate is only made and named later on
+# in the tutorial's Make-A-Pirate (see PiratesClientRepository.enterCreateAvatar):
+DefaultAvatarName = 'dbp'
+
+
+def isAvatarUnfinished(fields):
+    """
+    Returns True when the avatar is still the placeholder pirate the client
+    created for the tutorial, i.e. its owner never finished Make-A-Pirate and
+    never chose a name for it. Such a pirate is of no use to anybody and is
+    removed from the account once its owner leaves.
+    """
+
+    # Once the avatar has progressed any further into the tutorial than
+    # Make-A-Pirate it is a real pirate, no matter what its name is...
+    tutorial = fields.get('setTutorial', (PiratesGlobals.TUT_STARTED,))[0]
+    if tutorial > PiratesGlobals.TUT_MADE_PIRATE:
+        return False
+
+    # A pick-a-name pattern replaces the placeholder name, a typed name is
+    # kept as a wish name until it has been approved...
+    name = fields.get('setName', ('',))[0]
+    if name not in (DefaultAvatarName, ''):
+        return False
+
+    wishNameState = fields.get('WishNameState', ('',))[0]
+    wishName = fields.get('WishName', ('',))[0]
+    if wishNameState != 'OPEN' or wishName:
+        return False
+
+    return True
+
 
 def executeHttpRequest(url, **extras):
     timestamp = str(int(time.time()))
@@ -612,13 +645,44 @@ class GetAvatarsFSM(AvatarOperationFSM):
                     self.avatarFields[avId] = fields
                     self.pendingAvatars.remove(avId)
                     if not self.pendingAvatars:
-                        self.demand('SendAvatars')
+                        self.demand('RemoveUnfinishedAvatars')
 
                 self.csm.air.dbInterface.queryObject(
                     self.csm.air.dbId,
                     avId,
                     response)
 
+        if not self.pendingAvatars:
+            self.demand('RemoveUnfinishedAvatars')
+
+    def enterRemoveUnfinishedAvatars(self):
+        # Any pirate that was never finished in Make-A-Pirate, and is not being
+        # played right now, was left behind by a player who quit the tutorial
+        # (or by a server going down while they were in it). Get rid of it
+        # before showing the player their pirates...
+        self.pendingAvatars = set()
+        for avId, fields in list(self.avatarFields.items()):
+            if self.csm.isAvatarActive(avId):
+                continue
+
+            if isAvatarUnfinished(fields):
+                self.pendingAvatars.add(avId)
+
+        for avId in list(self.pendingAvatars):
+            self.csm.removeUnfinishedAvatar(self.target, avId,
+                lambda removed, avId=avId: self.__handleRemoved(avId, removed))
+
+        if not self.pendingAvatars:
+            self.demand('SendAvatars')
+
+    def __handleRemoved(self, avId, removed):
+        if self.state != 'RemoveUnfinishedAvatars':
+            return
+
+        if removed:
+            del self.avatarFields[avId]
+
+        self.pendingAvatars.discard(avId)
         if not self.pendingAvatars:
             self.demand('SendAvatars')
 
@@ -664,21 +728,35 @@ class GetAvatarsFSM(AvatarOperationFSM):
         self.csm.sendUpdateToAccountId(self.target, 'setAvatars', [potentialAvs])
         self.demand('Off')
 
-# This inherits from GetAvatarsFSM, because the delete operation ends in a
-# setAvatars message being sent to the client.
-class DeleteAvatarFSM(GetAvatarsFSM):
+class DeleteAvatarFSM(AvatarOperationFSM):
     notify = directNotify.newCategory('DeleteAvatarFSM')
-    POST_ACCOUNT_STATE = 'ProcessDelete'
+    POST_ACCOUNT_STATE = 'RetrieveAvatar'
 
     def enterStart(self, avId):
         self.avId = avId
-        GetAvatarsFSM.enterStart(self)
+        self.demand('RetrieveAccount')
 
-    def enterProcessDelete(self):
+    def enterRetrieveAvatar(self):
         if self.avId not in self.avList:
             self.demand('Kill', 'Tried to delete an avatar not in the account!')
             return
 
+        if self.csm.isAvatarActive(self.avId):
+            self.demand('Kill', 'Tried to delete an avatar that is being played!')
+            return
+
+        self.csm.air.dbInterface.queryObject(self.csm.air.dbId, self.avId,
+                                             self.__handleAvatar)
+
+    def __handleAvatar(self, dclass, fields):
+        if dclass != self.csm.air.dclassesByName['DistributedPlayerPirateUD']:
+            self.demand('Kill', "One of the account's avatars is invalid!")
+            return
+
+        self.avatarFields = fields
+        self.demand('ProcessDelete')
+
+    def enterProcessDelete(self):
         index = self.avList.index(self.avId)
         self.avList[index] = 0
 
@@ -694,7 +772,6 @@ class DeleteAvatarFSM(GetAvatarsFSM):
             {'ACCOUNT_AV_SET': self.account['ACCOUNT_AV_SET'],
              'ACCOUNT_AV_SET_DEL': self.account['ACCOUNT_AV_SET_DEL']},
             self.__handleDelete)
-        self.csm.accountDB.removeNameRequest(self.avId)
 
     def __handleDelete(self, fields):
         if fields:
@@ -703,11 +780,15 @@ class DeleteAvatarFSM(GetAvatarsFSM):
             self.demand('Kill', 'Database failed to mark the avatar as deleted!')
             return
 
-        self.csm.air.guildManager.avatarDeleted(self.avId)
+        self.csm.air.writeServerEvent('avatarDeleted', avId=self.avId, target=self.target)
+        self.csm.avatarDeleted(self.avId, self.target, self.avatarFields)
 
+        # The client asks for its avatar list again as soon as it hears back
+        # from us, so we are done here:
         status = True
         self.csm.sendUpdateToAccountId(self.target, 'acknowledgeDeleteAvatarResp', [self.avId, status])
-        self.demand('QueryAvatars')
+        self.demand('Off')
+
 
 class SetNameTypedFSM(AvatarOperationFSM):
     notify = directNotify.newCategory('SetNameTypedFSM')
@@ -972,6 +1053,21 @@ class LoadAvatarFSM(AvatarOperationFSM):
         datagram.addBlob(datagramCleanup.getMessage())
         self.csm.air.send(datagram)
 
+        # We also want to hear about them disconnecting, so that we can clean
+        # up after the avatar ourselves:
+        datagramCleanup = self.csm.air.netMessenger.prepare('avatarDisconnected',
+            [self.target, self.avId])
+
+        datagram = PyDatagram()
+        datagram.addServerHeader(
+            channel,
+            self.csm.air.ourChannel,
+            CLIENTAGENT_ADD_POST_REMOVE)
+        datagram.addBlob(datagramCleanup.getMessage())
+        self.csm.air.send(datagram)
+
+        self.csm.activeAvatars[self.avId] = self.target
+
         # get the doId of the avatar's inventory object that it will
         # be activated on by the DBSS...
         self.csm.air.inventoryManager.queryInventory(self.avId, self.inventoryQueryCallback)
@@ -1062,9 +1158,15 @@ class UnloadAvatarFSM(OperationFSM):
         self.csm.air.playerFriendsManager.goingOffline(self.avId)
         self.csm.air.guildManager.avatarOffline(self.avId)
 
+        self.csm.activeAvatars.pop(self.avId, None)
+
         # Done!
         self.csm.air.writeServerEvent('avatarUnload', avId=self.avId)
         self.demand('Off')
+
+        # Leaving the tutorial before the pirate was made in Make-A-Pirate
+        # leaves nothing worth keeping behind:
+        self.csm.removeUnfinishedAvatar(self.target, self.avId)
 
 
 class PopulateAvatarFSM(AvatarOperationFSM):
@@ -1217,6 +1319,206 @@ class PopulateAvatarFSM(AvatarOperationFSM):
         self.csm.air.send(dg)
 
 
+class RemoveUnfinishedAvatarFSM(FSM):
+    """
+    Removes a pirate that was never finished in Make-A-Pirate from its
+    account. This is not an account operation; it runs once the pirate's owner
+    has left the game (they may not even be connected anymore).
+    """
+    notify = directNotify.newCategory('RemoveUnfinishedAvatarFSM')
+    MAX_ACCOUNT_ATTEMPTS = 3
+
+    def __init__(self, csm, accountId, avId):
+        FSM.__init__(self, self.__class__.__name__)
+        self.csm = csm
+        self.accountId = accountId
+        self.avId = avId
+        self.avatarFields = None
+        self.account = None
+        self.attempts = 0
+        self.removed = False
+        self.callbacks = []
+
+    def enterStart(self):
+        self.demand('RetrieveAvatar')
+
+    def enterRetrieveAvatar(self):
+        self.csm.air.dbInterface.queryObject(self.csm.air.dbId, self.avId,
+                                             self.__handleAvatar)
+
+    def __handleAvatar(self, dclass, fields):
+        if self.state != 'RetrieveAvatar':
+            return
+
+        if dclass != self.csm.air.dclassesByName['DistributedPlayerPirateUD']:
+            self.demand('Off')
+            return
+
+        # Never touch a pirate that is finished, being played or that was not
+        # created for this account:
+        if not isAvatarUnfinished(fields) or self.csm.isAvatarActive(self.avId):
+            self.demand('Off')
+            return
+
+        if fields.get('setDISLid', (0,))[0] != self.accountId:
+            self.notify.warning('Unfinished avatar %d does not belong to account %d!' % (
+                self.avId, self.accountId))
+            self.demand('Off')
+            return
+
+        self.avatarFields = fields
+        self.demand('RetrieveAccount')
+
+    def enterRetrieveAccount(self):
+        self.csm.air.dbInterface.queryObject(self.csm.air.dbId, self.accountId,
+                                             self.__handleAccount)
+
+    def __handleAccount(self, dclass, fields):
+        if self.state != 'RetrieveAccount':
+            return
+
+        if dclass != self.csm.air.dclassesByName['AccountUD']:
+            self.notify.warning('Account %d of unfinished avatar %d was not found!' % (
+                self.accountId, self.avId))
+            self.demand('Off')
+            return
+
+        self.account = fields
+        if self.avId not in self.account.get('ACCOUNT_AV_SET', []):
+            # It never made it into the account, there is only the avatar
+            # object itself to get rid of:
+            self.demand('DeleteAvatar')
+            return
+
+        self.demand('UpdateAccount')
+
+    def enterUpdateAccount(self):
+        avList = list(self.account['ACCOUNT_AV_SET'])
+        avList[avList.index(self.avId)] = 0
+
+        self.csm.air.dbInterface.updateObject(
+            self.csm.air.dbId,
+            self.accountId,
+            self.csm.air.dclassesByName['AccountUD'],
+            {'ACCOUNT_AV_SET': avList},
+            {'ACCOUNT_AV_SET': self.account['ACCOUNT_AV_SET']},
+            self.__handleUpdate)
+
+    def __handleUpdate(self, fields):
+        if self.state != 'UpdateAccount':
+            return
+
+        if fields is not None:
+            # Somebody else changed the account in the meantime, try again:
+            self.attempts += 1
+            if self.attempts >= self.MAX_ACCOUNT_ATTEMPTS:
+                self.notify.warning('Failed to remove unfinished avatar %d from account %d!' % (
+                    self.avId, self.accountId))
+                self.demand('Off')
+                return
+
+            self.demand('RetrieveAccount')
+            return
+
+        self.demand('DeleteAvatar')
+
+    def enterDeleteAvatar(self):
+        self.removed = True
+        self.csm.air.writeServerEvent('unfinishedAvatarDeleted', avId=self.avId, accountId=self.accountId)
+        self.csm.avatarDeleted(self.avId, self.accountId, self.avatarFields)
+        self.demand('Off')
+
+    def enterOff(self):
+        if self.csm.avatar2removeFsm.get(self.avId) is self:
+            del self.csm.avatar2removeFsm[self.avId]
+
+        callbacks, self.callbacks = self.callbacks, []
+        for callback in callbacks:
+            callback(self.removed)
+
+
+class DeleteAvatarObjectsFSM(FSM):
+    """
+    Permanently removes a deleted avatar from the database, along with the
+    avatar's inventory and everything the inventory holds: ships (with their
+    own inventories and parts), quests, treasure maps and so on.
+    """
+    notify = directNotify.newCategory('DeleteAvatarObjectsFSM')
+
+    # Only ever remove objects that can belong to a single avatar:
+    OWNED_CLASS_NAMES = (
+        'DistributedInventory',
+        'PirateInventory',
+        'DistributedTreasureMap',
+        'DistributedGoldReceipt',
+        'DistributedQuest',
+        'PlayerShip',
+        'DistributedHull',
+        'DistributedMast')
+
+    def __init__(self, csm, avId):
+        FSM.__init__(self, self.__class__.__name__)
+        self.csm = csm
+        self.avId = avId
+        self.pendingObjects = set()
+        self.visitedObjects = set()
+        self.deletedObjects = []
+
+    def enterStart(self, fields):
+        self.visitedObjects.add(self.avId)
+        self.deletedObjects.append(self.avId)
+        self.demand('QueryObjects', fields)
+
+    def enterQueryObjects(self, fields):
+        self.queryOwnedObjects(fields)
+        if not self.pendingObjects:
+            self.demand('DeleteObjects')
+
+    def queryOwnedObjects(self, fields):
+        doIds = []
+
+        inventoryId = fields.get('setInventoryId', (0,))[0]
+        if inventoryId:
+            doIds.append(inventoryId)
+
+        for category, doId in fields.get('setDoIds', ([],))[0]:
+            doIds.append(doId)
+
+        for doId in doIds:
+            if not doId or doId in self.visitedObjects:
+                continue
+
+            self.visitedObjects.add(doId)
+            self.pendingObjects.add(doId)
+            self.csm.air.dbInterface.queryObject(self.csm.air.dbId, doId,
+                lambda dclass, fields, doId=doId: self.__handleObject(doId, dclass, fields))
+
+    def __handleObject(self, doId, dclass, fields):
+        if self.state != 'QueryObjects':
+            return
+
+        self.pendingObjects.discard(doId)
+        if dclass is None:
+            self.notify.warning('Object %d of avatar %d is already gone.' % (doId, self.avId))
+        elif dclass.getName() not in self.OWNED_CLASS_NAMES:
+            self.notify.warning('Not deleting %s object %d held by avatar %d!' % (
+                dclass.getName(), doId, self.avId))
+        else:
+            self.deletedObjects.append(doId)
+            self.queryOwnedObjects(fields)
+
+        if not self.pendingObjects:
+            self.demand('DeleteObjects')
+
+    def enterDeleteObjects(self):
+        for doId in self.deletedObjects:
+            self.csm.air.dbInterface.deleteObject(self.csm.air.dbId, doId)
+
+        self.csm.air.writeServerEvent('avatarObjectsDeleted', avId=self.avId,
+            objects=len(self.deletedObjects))
+        self.demand('Off')
+
+
 # --- CLIENT SERVICES MANAGER UBERDOG ---
 class ClientServicesManagerUD(DistributedObjectGlobalUD):
     notify = directNotify.newCategory('ClientServicesManagerUD')
@@ -1230,6 +1532,13 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
         # of race conditions.
         self.connection2fsm = {}
         self.account2fsm = {}
+
+        # These keep track of the avatars currently being played and the
+        # unfinished avatars waiting to be removed from their accounts:
+        self.activeAvatars = {}
+        self.avatar2removeFsm = {}
+
+        self.air.netMessenger.accept('avatarDisconnected', self, self.avatarDisconnected)
 
         # Temporary HMAC key:
         self.key = 'cd09ed406383f3d3ebb62b9ce23d41dd'
@@ -1286,6 +1595,43 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
         self.account2fsm[sender] = fsmtype(self, sender)
         self.account2fsm[sender].request('Start', *args)
+
+    def isAvatarActive(self, avId):
+        return avId in self.activeAvatars
+
+    def avatarDisconnected(self, accountId, avId):
+        # Sent to us by the Client Agent as a post remove; the avatar's owner
+        # disconnected while they were playing it.
+        if self.activeAvatars.get(avId) == accountId:
+            del self.activeAvatars[avId]
+
+        self.air.writeServerEvent('avatarDisconnected', avId=avId, accountId=accountId)
+        self.removeUnfinishedAvatar(accountId, avId)
+
+    def removeUnfinishedAvatar(self, accountId, avId, callback=None):
+        fsm = self.avatar2removeFsm.get(avId)
+        if fsm:
+            if callback:
+                fsm.callbacks.append(callback)
+
+            return
+
+        fsm = RemoveUnfinishedAvatarFSM(self, accountId, avId)
+        if callback:
+            fsm.callbacks.append(callback)
+
+        self.avatar2removeFsm[avId] = fsm
+        fsm.request('Start')
+
+    def avatarDeleted(self, avId, accountId, fields):
+        # Nobody should be left knowing a pirate that no longer exists:
+        friendsList = fields.get('setFriendsList', ([],))[0]
+        self.air.avatarFriendsManager.avatarDeleted(avId, friendsList)
+        self.air.playerFriendsManager.avatarDeleted(avId, accountId)
+        self.air.guildManager.avatarDeleted(avId)
+        self.accountDB.removeNameRequest(avId)
+
+        DeleteAvatarObjectsFSM(self, avId).request('Start', fields)
 
     def login(self, cookie, address, authKey):
         self.notify.debug('Received login cookie %r from %d' % (cookie, self.air.getMsgSender()))
