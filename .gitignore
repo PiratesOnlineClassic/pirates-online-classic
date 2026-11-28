@@ -145,8 +145,8 @@ nirai/
 cf2.txt
 errorcode
 
-# LibOTP
-libotp/
+# LibOTP (the link back to itself some checkouts have)
+libotp/libotp
 
 # Compiled modules
 *.pyd
