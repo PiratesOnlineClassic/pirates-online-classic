@@ -20,10 +20,8 @@ class ItemTypes:
 
 
 class CodeReward:
-    """
-    A redeemable code. Clothing differs between male and female pirates, so a
-    reward may carry a separate item for female avatars.
-    """
+    # clothing differs between male and female pirates, so a reward
+    # may carry a separate item for female avatars...
 
     def __init__(self, code, awardType, itemId, quantity=1, femaleItemId=None):
         self.code = code
@@ -54,13 +52,6 @@ class CodeReward:
 
 
 class CodeRedemptionUD(DistributedObjectGlobalUD):
-    """
-    Redeems codes typed by players with the ~code chat command. Codes come
-    from the code-redemption-code PRC list or, when configured, from a remote
-    verification endpoint. Each avatar may redeem a code once; the reward is
-    given out by the AwardMaker on the avatar's district.
-    """
-
     notify = DirectNotifyGlobal.directNotify.newCategory('CodeRedemptionUD')
 
     STATUS_FAILED = 0
@@ -99,8 +90,6 @@ class CodeRedemptionUD(DistributedObjectGlobalUD):
     def online(self):
         pass
 
-    # Redemption bookkeeping:
-
     def getRedeemedKey(self, code, avatarId):
         return '%s|%d' % (code, avatarId)
 
@@ -111,8 +100,6 @@ class CodeRedemptionUD(DistributedObjectGlobalUD):
         self.redeemedDB[self.getRedeemedKey(code, avatarId)] = '1'
         if getattr(self.redeemedDB, 'sync', None):
             self.redeemedDB.sync()
-
-    # Client requests:
 
     def sendCodeForRedemption(self, code, username):
         avatarId = self.air.getAvatarIdFromSender()
@@ -194,11 +181,7 @@ class CodeRedemptionUD(DistributedObjectGlobalUD):
         self.air.writeServerEvent('codeRedemption', avId=avatarId, code=code, success=success)
         self.d_notifyClientCodeRedeemStatus(avatarId, self.STATUS_SUCCESS if success else self.STATUS_FAILED)
 
-    # Responses:
-
     def recvAvatarGender(self, avatarId, gender, context):
-        # Remote avatar manager response; this UberDOG asks its local avatar
-        # manager directly through getAvatarGender.
         self.notify.debug('recvAvatarGender %d: %s' % (avatarId, gender))
 
     def d_notifyClientCodeRedeemStatus(self, avatarId, status):
