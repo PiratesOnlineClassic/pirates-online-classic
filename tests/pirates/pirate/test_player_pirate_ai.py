@@ -46,6 +46,7 @@ if not hasattr(builtins, 'base'):
 with patch.object(builtins.loader, 'loadFont', Mock()):
     from pirates.battle import BattleManagerAI
 
+from pirates.battle.Teamable import Teamable
 from pirates.piratesbase import PiratesGlobals
 from pirates.pirate import PlayerPirateGameFSMAI as fsm_module
 from pirates.pirate import DistributedPlayerPirateAI as player_pirate_module
@@ -75,6 +76,7 @@ class FakeInventory:
 def makePlayer(doId=100, stacks=None, hp=100, maxHp=100, mojo=50, maxMojo=100, state='LandRoam'):
     player = DistributedPlayerPirateAI.__new__(DistributedPlayerPirateAI)
     NodePath.__init__(player, 'player-%d' % doId)
+    Teamable.__init__(player)
     player.doId = doId
     player.isNpc = False
     player.currentWeaponId = 0
@@ -299,6 +301,16 @@ class DeathTests(unittest.TestCase):
         fsm.enterDeath()
         fsm.air.targetMgr.clearAttacker.assert_called_once_with(player)
         player.clearSkillEffects.assert_called_once_with()
+
+    def test_defeated_privateer_is_respawned_by_the_siege_manager(self):
+        player = makePlayer(hp=0)
+        player.setSiegeTeam(1)
+        fsm = self.makeFSM(player)
+        fsm.air.siegeManager = Mock(handleAvatarDefeated=Mock(return_value=True))
+        player.getParentObj = Mock()
+        fsm.enterDeath()
+        fsm.air.siegeManager.handleAvatarDefeated.assert_called_once_with(player)
+        player.getParentObj.assert_not_called()
 
     def test_jail_restores_avatar(self):
         player = makePlayer(stacks={InventoryType.Vitae_Level: 1}, hp=0, mojo=0)
