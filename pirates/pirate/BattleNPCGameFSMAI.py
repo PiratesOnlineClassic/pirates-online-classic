@@ -36,6 +36,9 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.__returnToSpawnTask = None
         self.__mojoRegenTask = None
 
+        # the targets our voodoo weapon has attuned to
+        self.attunedTargetIds = []
+
         # the movement node we are currently at on our patrol route,
         # None when we are at our spawn node...
         self.__waypointUid = None
@@ -508,7 +511,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
         # attune if we have a voodoo weapon and start our regen task
         if WeaponGlobals.isVoodooWeapon(self.avatar.currentWeaponId):
-            self.avatar.currentTarget.addSkillEffect(WeaponGlobals.C_ATTUNE, 0, self.avatar.doId)
+            self.attuneTarget(self.avatar.currentTarget)
             self.__mojoRegenTask = taskMgr.doMethodLater(2, self.__mojoRegen, self.getMojoRegenTaskName())
 
         # start attacking our target
@@ -526,11 +529,24 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             taskMgr.remove(self.__mojoRegenTask)
             self.__mojoRegenTask = None
 
-        # remove attune if we have a voodoo weapon
-        if WeaponGlobals.isVoodooWeapon(self.avatar.currentWeaponId) and self.avatar.currentTarget:
-            self.avatar.currentTarget.removeSkillEffect(WeaponGlobals.C_ATTUNE, self.avatar.doId)
+        # remove the attunes of our voodoo weapon, our current target may
+        # no longer be the target we have attuned...
+        self.unattuneTargets()
 
         self.avatar.stopLookAt()
+
+    def attuneTarget(self, target):
+        target.addSkillEffect(WeaponGlobals.C_ATTUNE, 0, self.avatar.doId)
+        if target.doId not in self.attunedTargetIds:
+            self.attunedTargetIds.append(target.doId)
+
+    def unattuneTargets(self):
+        for targetDoId in self.attunedTargetIds:
+            target = self.air.doId2do.get(targetDoId)
+            if target and hasattr(target, 'removeSkillEffect'):
+                target.removeSkillEffect(WeaponGlobals.C_ATTUNE, self.avatar.doId)
+
+        self.attunedTargetIds = []
 
     def enterAttackChase(self, *args, **kwargs):
         self.rememberPatrolOrigin()
