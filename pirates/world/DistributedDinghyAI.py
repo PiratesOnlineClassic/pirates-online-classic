@@ -50,7 +50,7 @@ class DistributedDinghyAI(DistributedInteractiveAI):
     def getOfferPublicOptions(self):
         publicOptions = []
         for ship in self.air.shipManager.getPlayerShips():
-            if not ship.getAllowPublicState():
+            if not ship.getAllowPublicState() or ship.getCaptainId() not in self.air.doId2do:
                 continue
 
             publicOptions.append(self.getPublicShipInfo(ship.doId))
@@ -59,6 +59,66 @@ class DistributedDinghyAI(DistributedInteractiveAI):
 
     def d_offerPublicOptions(self, avatarId, publicOptions):
         self.sendUpdateToAvatarId(avatarId, 'offerPublicOptions', [publicOptions])
+
+    def getBandMember(self, avatarId):
+        bandManager = getattr(self.air, 'bandManager', None)
+        band = bandManager.getBandFromAvatar(avatarId) if bandManager else None
+        return band.getMember(avatarId) if band else None
+
+    def isBandShip(self, ship, avatar):
+        # the ships captained by the avatar's crew (band) mates:
+        bandId = list(avatar.getBandId()) if hasattr(avatar, 'getBandId') else [0, 0]
+        if not bandId[1] or list(ship.getBandId()) != bandId:
+            return False
+
+        if not ship.getAllowCrewState() or ship.getCaptainId() == avatar.doId:
+            return False
+
+        return ship.getCaptainId() in self.air.doId2do
+
+    def getOfferBandOptions(self, avatar):
+        bandOptions = []
+        for ship in self.air.shipManager.getPlayerShips():
+            if not self.isBandShip(ship, avatar):
+                continue
+
+            # the client looks up the ship's name and class through the
+            # captain's band member (see ShipDeployPanel.addBandShip)...
+            bandMember = self.getBandMember(ship.getCaptainId())
+            if bandMember is None:
+                continue
+
+            captainId, shipId, hp, sp, cargo, crew, timeLeft, shipClass, shipName, siegeTeam, \
+                captainName = self.getPublicShipInfo(ship.doId)
+
+            bandOptions.append([bandMember.doId, shipId, hp, sp, cargo, crew, timeLeft,
+                siegeTeam, captainName])
+
+        return bandOptions
+
+    def d_offerBandOptions(self, avatarId, bandOptions):
+        self.sendUpdateToAvatarId(avatarId, 'offerBandOptions', [bandOptions])
+
+    def isGuildShip(self, ship, avatar):
+        guildId = avatar.getGuildId() if hasattr(avatar, 'getGuildId') else 0
+        if not guildId or not ship.getAllowGuildState() or ship.getCaptainId() == avatar.doId:
+            return False
+
+        captain = self.air.doId2do.get(ship.getCaptainId())
+        return captain is not None and captain.getGuildId() == guildId
+
+    def getOfferGuildOptions(self, avatar):
+        guildOptions = []
+        for ship in self.air.shipManager.getPlayerShips():
+            if not self.isGuildShip(ship, avatar):
+                continue
+
+            guildOptions.append(self.getPublicShipInfo(ship.doId))
+
+        return guildOptions
+
+    def d_offerGuildOptions(self, avatarId, guildOptions):
+        self.sendUpdateToAvatarId(avatarId, 'offerGuildOptions', [guildOptions])
 
     def isFriendShip(self, ship, friendIds):
         if not ship.getAllowFriendState() or ship.getCaptainId() not in friendIds:
@@ -102,6 +162,14 @@ class DistributedDinghyAI(DistributedInteractiveAI):
         return self.ACCEPT
 
     def handlePostRequestInteraction(self, avatar):
+        bandOptions = self.getOfferBandOptions(avatar)
+        if bandOptions:
+            self.d_offerBandOptions(avatar.doId, bandOptions)
+
+        guildOptions = self.getOfferGuildOptions(avatar)
+        if guildOptions:
+            self.d_offerGuildOptions(avatar.doId, guildOptions)
+
         self.d_offerPublicOptions(avatar.doId, self.getOfferPublicOptions())
         self.d_requestDinghyFriendsList(avatar)
 
@@ -179,6 +247,38 @@ class DistributedDinghyAI(DistributedInteractiveAI):
 
     def getSiegeTeam(self):
         return self.siegeTeam
+
+    def selectBandShip(self, shipDoId):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        ship = self.air.doId2do.get(shipDoId)
+        if not ship or not hasattr(ship, 'getAllowCrewState'):
+            self.d_sendAvatarToShip(avatar.doId, 0)
+            return
+
+        if not self.isBandShip(ship, avatar) or not self.canSelectShip(ship):
+            self.d_sendAvatarToShip(avatar.doId, 0)
+            return
+
+        self.sendAvatarToShip(avatar, ship)
+
+    def selectGuildShip(self, shipDoId):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        ship = self.air.doId2do.get(shipDoId)
+        if not ship or not hasattr(ship, 'getAllowGuildState'):
+            self.d_sendAvatarToShip(avatar.doId, 0)
+            return
+
+        if not self.isGuildShip(ship, avatar) or not self.canSelectShip(ship):
+            self.d_sendAvatarToShip(avatar.doId, 0)
+            return
+
+        self.sendAvatarToShip(avatar, ship)
 
     def selectFriendShip(self, shipDoId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
