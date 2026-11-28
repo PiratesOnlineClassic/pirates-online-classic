@@ -9,8 +9,10 @@ from pirates.ship import ShipGlobals
 from pirates.ship import ShipBalance
 from pirates.ship import FlagshipGlobals
 from pirates.battle import EnemyGlobals
+from pirates.battle import LootGlobals
 from pirates.pirate import AvatarTypes
 from pirates.piratesbase import PiratesGlobals
+from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class NPCShipAI(DistributedShipAI):
@@ -86,11 +88,40 @@ class NPCShipAI(DistributedShipAI):
         # the crew that sank this ship receive credit towards their quests
         if self.hp <= 0 < oldHp:
             self.air.questMgr.shipSunk(self, [attackerDoId])
+            self.plunderShip(attackerShip)
 
         if self.hp > 0:
             self.gameFSM.onDamageReceived(attackerDoId, damage)
 
         return self.hp
+
+    def plunderShip(self, attackerShip):
+        # the ship that sank us plunders our cargo, the containers are
+        # loaded into it's hold until they are sold at port...
+        if not isinstance(attackerShip, DistributedShipAI) or attackerShip.getNPCship():
+            return []
+
+        cargo = list(attackerShip.getCargo())
+        space = attackerShip.getMaxCargo() - len(cargo)
+        if space <= 0:
+            return []
+
+        loot = LootGlobals.getShipLoot(bool(self.isFlagship),
+            self.getTreasureSenseRank(attackerShip))[:space]
+
+        attackerShip.b_setCargo(cargo + loot)
+        attackerShip.d_notifyReceivedLoot(loot)
+        return loot
+
+    def getTreasureSenseRank(self, attackerShip):
+        # the captain's Treasure Sense skill improves the quality of the
+        # loot plundered, skill stacks hold the skill's rank plus one...
+        owner = self.air.doId2do.get(attackerShip.getOwnerId())
+        inventory = owner.getInventory() if owner and hasattr(owner, 'getInventory') else None
+        if not inventory:
+            return 0
+
+        return max(inventory.getStackQuantity(InventoryType.SailTreasureSense) - 1, 0)
 
     # Flagship grappling and boarding:
 
