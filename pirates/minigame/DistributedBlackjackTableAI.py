@@ -9,36 +9,25 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedBlackjackTableAI(DistributedGameTableAI):
-    """
-    Blackjack against the house dealer.  Every round runs through:
-    bidding, dealing, each seat playing it's hand(s), the dealer playing
-    and finally the payout.  Players bet with the gold in their pocket.
-    """
-
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBlackjackTableAI')
 
     CheatingFine = PlayingCardGlobals.CheatingFine
-    # Starting stack for AI seats so they can bid against the dealer.
+    # the stack AI seats bid against the dealer from
     AIStartingChips = 200
-    # The client bid slider tops out at 50 times the bet multiplier.
+    # the client bid slider tops out at 50 times the bet multiplier
     MaxBidMultiplier = 50
     DealerStandValue = 17
-    # Seconds the server waits past the client timers before acting for it.
+    # how long past the client timers we wait before acting for it
     TimeoutPadding = 3.0
     NextRoundDelay = 4.0
     AIThinkTime = (1.0, 2.0)
 
-    AIBustSpeech = ['Blast, too many!', 'Busted again...', 'Arr, the cards hate me.']
-    AIWinSpeech = ['Ha! Pay up, dealer!', 'That\'s more like it!', 'Gold for me!']
-
     def __init__(self, air):
-        # Original tables seat one AI pirate plus a separate dealer NPC.
         DistributedGameTableAI.__init__(self, air, numberAI=1)
         self.betMultiplier = 1
         self.DealerSeat = self._availableSeats
 
-        # Per-seat state: each seat has a list of hands (for splits), the
-        # last entry is the dealer's hand.
+        # each seat has a list of hands for splits, the last entry is the dealer's hand...
         self._allHands = [[[]] for _ in range(self._availableSeats + 1)]
         self._bids = {}             # seatIndex -> [bid per hand]
         self._chipsCount = [0] * (self._availableSeats + 1)
@@ -60,10 +49,6 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         taskMgr.remove(self.uniqueName('bj-action'))
         taskMgr.remove(self.uniqueName('bj-start'))
         DistributedGameTableAI.delete(self)
-
-    # ------------------------------------------------------------------
-    # DC field accessors
-    # ------------------------------------------------------------------
 
     def setBetMultiplier(self, multiplier):
         self.betMultiplier = max(1, multiplier)
@@ -90,22 +75,13 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         hands = [[list(hand) for hand in seatHands] for seatHands in self._allHands]
         return [hands, list(self._chipsCount)]
 
-    def _broadcastTableState(self):
-        self.d_setTableState()
-
     def d_setEvent(self, seatIndex, action, amount=0):
         self.sendUpdate('setEvent', [seatIndex, [action, amount]])
 
     def d_setHandResults(self, results):
         self.sendUpdate('setHandResults', [results])
 
-    def d_cheatResponse(self, seatIndex, cheatType, cheatTarget, success, hand):
-        if self.isPlayerSeat(seatIndex):
-            self.sendUpdateToAvatarId(self.seats[seatIndex].doId, 'cheatResponse',
-                [cheatType, cheatTarget, success, hand])
-
     def _normalizeChipsCount(self, chipsCount=None):
-        """Ensure chipsCount covers every player seat plus the dealer/pot slot."""
         needed = self._availableSeats + 1
         normalized = list(chipsCount or [])
         if len(normalized) < needed:
@@ -121,10 +97,6 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
                 self._chipsCount[seatIndex] = self.getSeatGold(seatIndex)
             elif not self.isAISeat(seatIndex):
                 self._chipsCount[seatIndex] = 0
-
-    # ------------------------------------------------------------------
-    # Seat lifecycle
-    # ------------------------------------------------------------------
 
     def avatarSit(self, avatar, seatIndex):
         DistributedGameTableAI.avatarSit(self, avatar, seatIndex)
@@ -158,10 +130,6 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         elif wasActing:
             self._nextPlayerAction()
 
-    # ------------------------------------------------------------------
-    # Deck
-    # ------------------------------------------------------------------
-
     def _buildDeck(self):
         self._deck = list(range(52))
         random.shuffle(self._deck)
@@ -184,9 +152,6 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
 
     def _getMaxBidAmount(self):
         return self.MaxBidMultiplier * self.betMultiplier
-
-    def _getOccupiedPlayerSeats(self):
-        return self.getOccupiedSeats()
 
     def getSeatChips(self, seatIndex):
         if self.isPlayerSeat(seatIndex):
@@ -216,18 +181,12 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
             self._chipsCount[seatIndex] += amount
 
     def _seedAIChips(self):
-        """Give AI seats a playable stack if they are empty or broke."""
         self._chipsCount = self._normalizeChipsCount(self._chipsCount)
         for seatIndex in self.getAIPlayers():
             if self._chipsCount[seatIndex] < self._getTableBidAmount():
                 self._chipsCount[seatIndex] = self.AIStartingChips * self.betMultiplier
 
-    # ------------------------------------------------------------------
-    # Game lifecycle
-    # ------------------------------------------------------------------
-
     def _scheduleRoundStart(self, delay=1.0):
-        """Start a round once a pirate is seated and no hand is running."""
         if self._roundActive:
             return
 
@@ -260,7 +219,7 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         self._collectBids()
 
     def _collectBids(self):
-        occupied = self._getOccupiedPlayerSeats()
+        occupied = self.getOccupiedSeats()
         if not occupied:
             self._roundActive = False
             return
@@ -271,7 +230,7 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
 
         for seatIndex in occupied:
             if self.isAISeat(seatIndex):
-                # AI bids the default amount, a little more when it's flush.
+                # the AI bids the default amount, a little more when it's flush...
                 bid = bidAmount
                 if self._chipsCount[seatIndex] > bidAmount * 20 and random.random() < 0.3:
                     bid = bidAmount * random.randint(2, 5)
@@ -280,7 +239,6 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
                 self._waitingBids.add(seatIndex)
                 self.d_setEvent(seatIndex, PlayingCardGlobals.AskForBid, 0)
 
-        # Start bid timeout
         taskMgr.doMethodLater(PlayingCardGlobals.BidTimeout + self.TimeoutPadding,
             self._bidTimeoutTask, self.uniqueName('bj-bid'), appendTask=True)
 
@@ -351,8 +309,7 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
     def _dealCards(self):
         bidders = self._getBiddingSeats()
 
-        # Deal two cards to each player and dealer, the dealer's second
-        # card is dealt face down.
+        # the dealer's second card is dealt face down...
         for i in range(2):
             for seatIndex in bidders:
                 self._allHands[seatIndex][0].append(self._dealCard())
@@ -434,11 +391,7 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         return Task.done
 
     def _advanceHand(self, seatIndex):
-        """
-        Marks the seat's current hand as finished, returns True if the seat
-        still has a split hand left to play.
-        """
-
+        # returns True if the seat still has a split hand left to play...
         self._finishedHands.setdefault(seatIndex, set()).add(self._currentHand.get(seatIndex, 0))
         hands = self._allHands[seatIndex]
         for handIndex in range(len(hands)):
@@ -449,7 +402,6 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         return False
 
     def _playerActionTimeoutTask(self, seatIndex, task=None):
-        # Auto-stay on timeout
         self._applyBlackjackAction(seatIndex, PlayingCardGlobals.Stay, 0)
         return Task.done
 
@@ -459,7 +411,6 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         dealerUp = self._handValue(self._allHands[self.DealerSeat][0][:1])
         bid = self._bids[seatIndex][self._currentHand[seatIndex]]
 
-        # Simple basic strategy
         if len(hand) == 2 and value in (10, 11) and dealerUp < value and \
                 self.getSeatChips(seatIndex) >= bid:
             self._applyBlackjackAction(seatIndex, PlayingCardGlobals.DoubleDown, bid)
@@ -508,13 +459,9 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
             self.d_setEvent(seatIndex, PlayingCardGlobals.Hit, 0)
             hand.append(self._dealCard())
             self.d_setTableState()
-            if self._handValue(hand) > 21:
-                self.aiSpeak(seatIndex, self.AIBustSpeech, 0.4)
-
             if self._handValue(hand) >= 21:
                 self._finishHand(seatIndex)
             else:
-                # Ask again
                 self._askAgain(seatIndex)
 
         elif actionCode == PlayingCardGlobals.DoubleDown:
@@ -537,7 +484,7 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
                 self._askAgain(seatIndex)
 
         else:
-            # Stay, AutoStay and anything we don't understand
+            # stay, auto stay and anything we don't understand...
             self.d_setEvent(seatIndex, PlayingCardGlobals.Stay, 0)
             self._finishHand(seatIndex)
 
@@ -560,10 +507,6 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
 
         return hands[handIndex]
 
-    # ------------------------------------------------------------------
-    # Dealer plays
-    # ------------------------------------------------------------------
-
     def _dealerPlayTask(self, task=None):
         self._dealerPlay()
         return Task.done
@@ -571,12 +514,11 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
     def _dealerPlay(self):
         taskMgr.remove(self.uniqueName('bj-action'))
 
-        # Reveal dealer hole card
         dealerHand = self._getDealerHand()
         self._allHands[self.DealerSeat][0] = dealerHand
         self._dealerHoleCard = None
 
-        # The dealer only draws when somebody is still standing
+        # the dealer only draws when somebody is still standing...
         live = False
         for seatIndex in self._bids:
             for hand in self._allHands[seatIndex]:
@@ -596,12 +538,7 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         self._payout()
         return Task.done
 
-    # ------------------------------------------------------------------
-    # Payout
-    # ------------------------------------------------------------------
-
     def _getHandPayout(self, hand, bid, split, dealerHand):
-        """Returns the total gold returned to the player for the hand."""
         playerValue = self._handValue(hand)
         dealerValue = self._handValue(dealerHand)
         playerBJ = self._isBlackjack(hand) and not split
@@ -614,7 +551,7 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         elif dealerBJ:
             return 0
         elif playerBJ:
-            # Blackjack pays 3:2
+            # blackjack pays 3:2...
             return bid + (bid * 3) // 2
         elif dealerValue > 21 or playerValue > dealerValue:
             return bid * 2
@@ -646,15 +583,11 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
             self._payChips(seatIndex, totalPayout)
             profit = totalPayout - totalBid
             results[seatIndex] = profit
-
-            if profit > 0:
-                self.aiSpeak(seatIndex, self.AIWinSpeech, 0.4)
-
             if profit > 0 and self.isPlayerSeat(seatIndex):
                 avatar = self.seats[seatIndex]
                 self.air.questMgr.blackjackHandWon(avatar, profit)
 
-                # Track the pirate's blackjack winnings for the rankings
+                # track the pirate's blackjack winnings for the rankings...
                 inventory = self.getSeatInventory(seatIndex)
                 if inventory:
                     current = inventory.getStackQuantity(InventoryType.BlackjackGame)
@@ -695,10 +628,6 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         self._allHands = [[[]] for _ in range(self._availableSeats + 1)]
         self._roundActive = False
         self.d_setTableState()
-
-    # ------------------------------------------------------------------
-    # Cheat handling
-    # ------------------------------------------------------------------
 
     def requestCheat(self, cheatType, cheatTarget):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
@@ -764,7 +693,6 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         return count > 1
 
     def _checkForCheaters(self):
-        """The dealer inspects the cards on the table before paying out."""
         for seatIndex, card in list(self._cheaters.items()):
             if seatIndex in self._caughtCheating:
                 continue
@@ -775,10 +703,6 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
                 if self.isPlayerSeat(seatIndex):
                     hand = self._getCurrentHand(seatIndex)
                     self.d_cheatResponse(seatIndex, PlayingCardGlobals.CaughtCheating, card, 0, list(hand))
-
-    # ------------------------------------------------------------------
-    # Helpers
-    # ------------------------------------------------------------------
 
     def _handValue(self, hand):
         return PlayingCardGlobals.getBlackjackHandValue(

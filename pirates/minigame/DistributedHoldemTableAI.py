@@ -13,17 +13,3 @@ class DistributedHoldemTableAI(DistributedPokerTableAI):
     def __init__(self, air):
         DistributedPokerTableAI.__init__(self, air)
         self.setTableType(1)
-
-    def getRoundDeal(self, round):
-        if round == 1:
-            return (2, 0)
-        elif round == 2:
-            return (0, 3)
-        elif round in (3, 4):
-            return (0, 1)
-
-        return (0, 0)
-
-    def isCardVisible(self, cardIndex):
-        # both pocket cards are dealt face down
-        return False

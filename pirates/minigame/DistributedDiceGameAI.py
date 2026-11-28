@@ -9,13 +9,6 @@ from pirates.piratesbase import PLocalizer
 
 
 class DistributedDiceGameAI(DistributedGameTableAI):
-    """
-    Base dice table.  Every pirate pays the ante and readies up, then each
-    seat takes it's turn rolling (the client rolls the dice with it's physics
-    and reports the faces).  The plain dice game pays the pot to the highest
-    roll; sub-classes replace _onAllRolled with their own rules.
-    """
-
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedDiceGameAI')
 
     NumDice = 5
@@ -36,10 +29,6 @@ class DistributedDiceGameAI(DistributedGameTableAI):
         taskMgr.remove(self.uniqueName('dice-roll'))
         DistributedGameTableAI.delete(self)
 
-    # ------------------------------------------------------------------
-    # DC senders
-    # ------------------------------------------------------------------
-
     def d_currentTurn(self, state, seatIndex):
         self.sendUpdate('currentTurn', [state, seatIndex, self._getPlayerName(seatIndex)])
 
@@ -48,10 +37,6 @@ class DistributedDiceGameAI(DistributedGameTableAI):
 
     def d_rollResults(self, seatIndex, dice):
         self.sendUpdate('rollResults', [seatIndex, dice])
-
-    # ------------------------------------------------------------------
-    # Seat lifecycle hooks
-    # ------------------------------------------------------------------
 
     def avatarStand(self, avatar, seatIndex):
         DistributedGameTableAI.avatarStand(self, avatar, seatIndex)
@@ -73,10 +58,6 @@ class DistributedDiceGameAI(DistributedGameTableAI):
             taskMgr.remove(self.uniqueName('dice-roll'))
             self._advanceRollPhase(seatIndex)
 
-    # ------------------------------------------------------------------
-    # Ready / round start
-    # ------------------------------------------------------------------
-
     def playerIsReady(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
@@ -94,21 +75,18 @@ class DistributedDiceGameAI(DistributedGameTableAI):
         self._readySeats.add(seatIndex)
         self._checkAllReady()
 
-    def _getHumanSeats(self):
-        return self.getPlayerSeats()
-
     def _checkAllReady(self):
         if self._roundActive:
             return
 
-        humanSeats = self._getHumanSeats()
+        humanSeats = self.getPlayerSeats()
         if not humanSeats:
             return
 
         if not all(s in self._readySeats for s in humanSeats):
             return
 
-        # AI players are always ready
+        # the AI players are always ready...
         for seatIndex in self.getAIPlayers():
             self._readySeats.add(seatIndex)
 
@@ -160,10 +138,6 @@ class DistributedDiceGameAI(DistributedGameTableAI):
         self._receiveDiceRoll(seatIndex, dice)
         return Task.done
 
-    # ------------------------------------------------------------------
-    # Client messages
-    # ------------------------------------------------------------------
-
     def _isValidDice(self, dice):
         if len(dice) != self.NumDice:
             return False
@@ -195,8 +169,7 @@ class DistributedDiceGameAI(DistributedGameTableAI):
         self._receiveDiceRoll(seatIndex, dice)
 
     def sendChat(self, chatType, avId):
-        # The client shows it's own chatter when the pirate fiddles with the
-        # dice, the AI pirates at the table chime in now and then.
+        # the AI pirates at the table chime in now and then...
         if chatType == DiceGlobals.CHAT_ROLL:
             phrases = PLocalizer.DiceText_Roll_Chat
         elif chatType == DiceGlobals.CHAT_DICEUP:
@@ -234,10 +207,6 @@ class DistributedDiceGameAI(DistributedGameTableAI):
         self._rolledDice[seatIndex] = list(dice)
         self.d_rollResults(seatIndex, list(dice))
 
-    # ------------------------------------------------------------------
-    # Internal helpers
-    # ------------------------------------------------------------------
-
     def _receiveDiceRoll(self, seatIndex, dice):
         self._rolledDice[seatIndex] = list(dice)
         self.d_rollResults(seatIndex, list(dice))
@@ -249,27 +218,17 @@ class DistributedDiceGameAI(DistributedGameTableAI):
             self._resetRound()
             return
 
-        for seatIndex in self._getSeatsAfter(justRolled, occupied):
+        for seatIndex in self.getSeatsAfter(justRolled, occupied):
             if seatIndex not in self._rolledDice:
                 self._activeSeat = seatIndex
                 self._requestRoll(seatIndex)
                 return
 
-        # Everyone has rolled
         self._activeSeat = -1
         self._onAllRolled()
 
-    def _getSeatsAfter(self, seatIndex, seats):
-        ordered = []
-        for offset in range(1, self._availableSeats + 1):
-            nextSeat = (seatIndex + offset) % self._availableSeats
-            if nextSeat in seats:
-                ordered.append(nextSeat)
-
-        return ordered
-
     def _onAllRolled(self):
-        # The plain dice game; the highest total takes the pot
+        # the highest total takes the pot...
         best = None
         winners = []
         for seatIndex, dice in self._rolledDice.items():
@@ -290,10 +249,6 @@ class DistributedDiceGameAI(DistributedGameTableAI):
             return
 
         self._payWinner(winners[0])
-
-    # ------------------------------------------------------------------
-    # Payout helpers shared by sub-classes
-    # ------------------------------------------------------------------
 
     def _payWinner(self, winnerSeat):
         totalPot = sum(self._pots.values())

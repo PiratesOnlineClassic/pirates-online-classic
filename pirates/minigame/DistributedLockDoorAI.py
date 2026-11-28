@@ -3,11 +3,6 @@ from pirates.minigame.DistributedLockAI import DistributedLockAI
 
 
 class DistributedLockDoorAI(DistributedLockAI):
-    """
-    A locked (jail) door.  Picking the lock swings the door open on every
-    client, which stashes the door's collisions so pirates can walk through.
-    """
-
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLockDoorAI')
 
     def __init__(self, air):

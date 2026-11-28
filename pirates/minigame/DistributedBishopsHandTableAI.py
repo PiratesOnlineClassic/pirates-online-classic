@@ -9,19 +9,13 @@ from pirates.minigame import BishopsHandGlobals
 
 
 class DistributedBishopsHandTableAI(DistributedGameTableAI):
-    """
-    Bishop's Hand, the knife game.  Pirates pay to join a game, then play
-    rounds where they must stab the knife between their fingers following
-    a sequence.  Anyone who doesn't finish the sequence in time is out, and
-    when everyone finishes the slowest is out.  The last pirate standing
-    may leave with the stakes or keep playing for more.
-    """
-
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBishopsHandTableAI')
 
-    EntryFee = 2  # gold to join a game, the client's join button says so
-    SequenceLength = 30  # steps in a round sequence
-    MissPenalty = 1.0  # seconds added to a pirate's time for each miss
+    # the gold to join a game, see BishopsHandGame's join button
+    EntryFee = 2
+    SequenceLength = 30
+    # seconds added to a pirate's time for each miss
+    MissPenalty = 1.0
 
     # seat states sent in setTableState
     SeatEmpty = -1
@@ -52,10 +46,6 @@ class DistributedBishopsHandTableAI(DistributedGameTableAI):
         taskMgr.remove(self.uniqueName('bh-round'))
         taskMgr.remove(self.uniqueName('bh-continue'))
         DistributedGameTableAI.delete(self)
-
-    # ------------------------------------------------------------------
-    # DC field accessors
-    # ------------------------------------------------------------------
 
     def setParentingRules(self, rule1, rule2):
         self._parentingRules = (rule1, rule2)
@@ -156,10 +146,6 @@ class DistributedBishopsHandTableAI(DistributedGameTableAI):
         return [seatIndex for seatIndex in range(self._availableSeats)
                 if self.isPlayerSeat(seatIndex) and self._seatStates[seatIndex] == state]
 
-    # ------------------------------------------------------------------
-    # Seat lifecycle
-    # ------------------------------------------------------------------
-
     def announceGenerate(self):
         DistributedGameTableAI.announceGenerate(self)
         self.d_setTableState()
@@ -194,10 +180,6 @@ class DistributedBishopsHandTableAI(DistributedGameTableAI):
         inv = self.air.inventoryManager.getInventory(avatar.doId)
         if inv and amount > 0:
             inv.setGoldInPocket(inv.getGoldInPocket() + amount)
-
-    # ------------------------------------------------------------------
-    # Client messages
-    # ------------------------------------------------------------------
 
     def clientAction(self, action):
         seatIndex = self.getSenderSeatIndex()
@@ -251,10 +233,6 @@ class DistributedBishopsHandTableAI(DistributedGameTableAI):
         if seatIndex is not None:
             self._playerResign(seatIndex)
 
-    # ------------------------------------------------------------------
-    # Internal game logic
-    # ------------------------------------------------------------------
-
     def _playerJoin(self, seatIndex):
         if self._seatStates[seatIndex] != self.SeatUnjoined:
             return
@@ -294,7 +272,6 @@ class DistributedBishopsHandTableAI(DistributedGameTableAI):
         if not self._getSeatsInState(self.SeatJoined) and not self._getSeatsInState(self.SeatPlaying):
             return
 
-        # Give a short window for others to join, then start
         taskMgr.remove(self.uniqueName('bh-start'))
         taskMgr.doMethodLater(BishopsHandGlobals.GameTimeDelay,
             self._startRoundTask, self.uniqueName('bh-start'), appendTask=True)
@@ -323,7 +300,7 @@ class DistributedBishopsHandTableAI(DistributedGameTableAI):
         self.d_setTableState()
         self.d_setProgressReport()
 
-        # Generate a random sequence of target positions 0-4
+        # a random sequence of target positions, see BishopsHandGlobals.TARGET_POS...
         self._roundSequence = [random.randint(0, 4) for _ in range(self.SequenceLength)]
         delay = BishopsHandGlobals.RoundTimeDelay
         for seatIndex in playing:
@@ -331,7 +308,6 @@ class DistributedBishopsHandTableAI(DistributedGameTableAI):
 
         self.d_setGameTimer(BishopsHandGlobals.RoundTimeLimit + delay)
 
-        # Schedule round end
         taskMgr.remove(self.uniqueName('bh-round'))
         taskMgr.doMethodLater(BishopsHandGlobals.RoundTimeLimit + delay,
             self._endRoundTask, self.uniqueName('bh-round'), appendTask=True)

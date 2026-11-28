@@ -23,6 +23,5 @@ class Distributed7StudTableAI(DistributedPokerTableAI):
         return (0, 0)
 
     def isCardVisible(self, cardIndex):
-        # third through sixth street are dealt face up; the first two
-        # cards and the river card are the pirate's hole cards.
+        # the first two cards and the river card are the pirate's hole cards...
         return 2 <= cardIndex <= 5

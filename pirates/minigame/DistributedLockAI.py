@@ -1,26 +1,21 @@
 from direct.directnotify import DirectNotifyGlobal
+from direct.task import Task
 from direct.task.TaskManagerGlobal import *
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedLockAI(DistributedInteractiveAI):
-    """
-    A lock (treasure chest by default) that is opened by solving the lockpick
-    minigame.  Only one pirate may work on the lock at a time; the client
-    plays the minigame and tells us when every layer has been picked.
-    """
-
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLockAI')
     MULTIUSE = False
 
-    # LockGUI uses difficulty / 10 layers, between 1 and 6 of them.
+    # LockGUI uses difficulty / 10 layers, between 1 and 6 of them
     MaxDifficulty = 60
-    # The quickest a single layer of the lock can realistically be picked.
+    # the quickest a single layer of the lock can be picked
     MinLayerTime = 0.5
-    # Reputation awarded for every layer of a lock that is picked.
+    # reputation awarded for every layer of a lock that is picked
     RepPerLayer = 10
-    # How long the solver sees the 'Unlocked by' message before getting up.
+    # how long the solver sees the unlocked message before getting up
     SolvedExitDelay = 3.0
 
     def __init__(self, air):
@@ -36,8 +31,8 @@ class DistributedLockAI(DistributedInteractiveAI):
         DistributedInteractiveAI.delete(self)
 
     def setDifficulty(self, difficulty):
-        # The client only ever opens the lock when the number of layers
-        # it calculates (difficulty / 10) is a whole number.
+        # the client only opens the lock when the number of layers
+        # it calculates (difficulty / 10) is a whole number...
         difficulty = max(1, min(int(difficulty), self.MaxDifficulty))
         if difficulty >= 10:
             difficulty -= difficulty % 10
@@ -70,10 +65,6 @@ class DistributedLockAI(DistributedInteractiveAI):
         DistributedInteractiveAI.announceGenerate(self)
         self.d_setOpen(self._open)
 
-    # ------------------------------------------------------------------
-    # Interaction
-    # ------------------------------------------------------------------
-
     def handleRequestInteraction(self, avatar, interactType, instant):
         if self._open or self._currentUser is not None:
             return self.DENY
@@ -85,8 +76,8 @@ class DistributedLockAI(DistributedInteractiveAI):
         self._startTime = globalClock.getRealTime()
         self.acceptOnce(avatar.getDeleteEvent(), self._releaseUser)
 
-        # The client builds the lockpick gui with the lock's difficulty;
-        # requestSeatResponse(1) would call localAvatarSatDown without it.
+        # the client builds the lockpick gui with the lock's difficulty,
+        # requestSeatResponse(1) would call localAvatarSatDown without it...
         self.d_localAvatarSatDown(avatar.doId)
 
     def handleRequestExit(self, avatar):
@@ -116,16 +107,10 @@ class DistributedLockAI(DistributedInteractiveAI):
         self.sendUpdateToAvatarId(avatarId, 'requestSeatResponse', [answer])
 
     def d_lockSolved(self, avatarId, name):
-        # lockSolved is broadcast in the dc, but only the solver has the
-        # lockpick gui to show it on.
+        # only the solver has the lockpick gui to show it on...
         self.sendUpdateToAvatarId(avatarId, 'lockSolved', [name])
 
-    # ------------------------------------------------------------------
-    # Solving
-    # ------------------------------------------------------------------
-
     def d_openLock(self, name, avId):
-        # Client sends this when it solves the lock
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
             return
@@ -160,7 +145,7 @@ class DistributedLockAI(DistributedInteractiveAI):
             self._releaseUser()
             self.d_requestSeatResponse(avatar.doId, 2)
 
-        return task.done if task else None
+        return Task.done
 
     def rewardSolver(self, avatar):
         inventory = self.air.inventoryManager.getInventory(avatar.doId)

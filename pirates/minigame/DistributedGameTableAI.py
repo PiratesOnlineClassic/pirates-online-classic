@@ -92,11 +92,6 @@ class DistributedGameTableAI(DistributedInteractiveAI):
         self.sendUpdateToAvatarId(avatar.doId, 'requestSeatResponse', [self.SeatResponseSit, seatIndex])
 
     def standPlayer(self, seatIndex):
-        """
-        Forces the player in the specified seat to get up from the table,
-        used when a player runs out of gold, times out or gets caught cheating.
-        """
-
         if not self.isPlayerSeat(seatIndex):
             return
 
@@ -157,16 +152,21 @@ class DistributedGameTableAI(DistributedInteractiveAI):
         return None
 
     def getSenderSeatIndex(self):
-        """
-        Returns the seat index of the avatar that sent the current field update,
-        or None if the sender is not seated at this table.
-        """
-
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
             return None
 
         return self.getAvatarSeatIndex(avatar)
+
+    def getSeatsAfter(self, seatIndex, seats):
+        # returns the seats in table order, starting after the seat specified...
+        ordered = []
+        for offset in range(1, self._availableSeats + 1):
+            nextSeat = (seatIndex + offset) % self._availableSeats
+            if nextSeat in seats:
+                ordered.append(nextSeat)
+
+        return ordered
 
     def getAvailableSeatIndexes(self):
         available = []
@@ -226,10 +226,7 @@ class DistributedGameTableAI(DistributedInteractiveAI):
 
         return result
 
-    # ------------------------------------------------------------------
-    # Gold helpers; table games are played with the gold in the
-    # avatar's pocket, which the client reads directly from it's inventory
-    # ------------------------------------------------------------------
+    # table games are played with the gold in the avatar's pocket...
 
     def getSeatInventory(self, seatIndex):
         if not self.isPlayerSeat(seatIndex):
@@ -245,11 +242,6 @@ class DistributedGameTableAI(DistributedInteractiveAI):
         return inventory.getGoldInPocket()
 
     def takeSeatGold(self, seatIndex, amount):
-        """
-        Removes up to amount gold from the player in the seat, returns the
-        amount of gold that was actually taken.
-        """
-
         inventory = self.getSeatInventory(seatIndex)
         if not inventory or amount <= 0:
             return 0
@@ -266,6 +258,11 @@ class DistributedGameTableAI(DistributedInteractiveAI):
         inventory.setGoldInPocket(inventory.getGoldInPocket() + amount)
         return True
 
+    def d_cheatResponse(self, seatIndex, cheatType, cheatTarget, success, hand):
+        if self.isPlayerSeat(seatIndex):
+            self.sendUpdateToAvatarId(self.seats[seatIndex].doId, 'cheatResponse',
+                [cheatType, cheatTarget, success, hand])
+
     def d_receiveAISpeech(self, seatIndex, message):
         self.sendUpdate('receiveAISpeech', [seatIndex, message])
 
@@ -273,11 +270,6 @@ class DistributedGameTableAI(DistributedInteractiveAI):
         self.sendUpdate('receiveAIThoughts', [seatIndex, message])
 
     def aiSpeak(self, seatIndex, phrases, chance=1.0):
-        """
-        Has the AI player sitting in the seat say a random phrase from the
-        list of phrases specified, when the random chance succeeds.
-        """
-
         if not phrases or not self.isAISeat(seatIndex):
             return
 

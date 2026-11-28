@@ -8,22 +8,11 @@ from pirates.minigame import DiceGlobals
 
 
 class DistributedLiarsDiceAI(DistributedDiceGameAI):
-    """
-    Liar's Dice.  After everyone has rolled, the seats take turns making
-    claims about how many dice of a value are on the table, each claim
-    raising the last.  A seat may instead call the last claim a bluff; the
-    dice are shown and whoever was wrong is eliminated.  Rounds repeat until
-    a single seat remains, who takes the pot.
-
-    Pirates may also cheat by jostling the table (or with mojo); a rough
-    attempt gives the other pirates a moment to catch them at it.
-    """
-
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedLiarsDiceAI')
 
-    # How many seconds other players have to press "catch" after a cheat fires
+    # how long the other pirates have to catch a cheater
     CatchWindow = 5
-    # cheatResult codes sent by the client
+    # the cheatResult codes, see DistributedLiarsDice.tryToCheat
     CheatClean = 0
     CheatRough = 2
     CheatBotched = 4
@@ -47,10 +36,6 @@ class DistributedLiarsDiceAI(DistributedDiceGameAI):
 
     def isSeatInGame(self, seatIndex):
         return seatIndex in self._readySeats and seatIndex not in self._eliminatedSeats
-
-    # ------------------------------------------------------------------
-    # Seat lifecycle
-    # ------------------------------------------------------------------
 
     def handleSeatLeft(self, seatIndex):
         self._activeCheat.pop(seatIndex, None)
@@ -83,10 +68,6 @@ class DistributedLiarsDiceAI(DistributedDiceGameAI):
         self._currentBetValue = 0
         self._lastBetSeat = -1
         DistributedDiceGameAI._resetRound(self)
-
-    # ------------------------------------------------------------------
-    # After all dice rolled, begin the betting phase
-    # ------------------------------------------------------------------
 
     def _onAllRolled(self):
         self._currentBetDice = 0
@@ -122,10 +103,6 @@ class DistributedLiarsDiceAI(DistributedDiceGameAI):
 
         return Task.done
 
-    # ------------------------------------------------------------------
-    # Seat helpers
-    # ------------------------------------------------------------------
-
     def _getNextActiveSeat(self, fromSeat):
         for i in range(1, self._availableSeats + 1):
             idx = (fromSeat + i) % self._availableSeats
@@ -141,10 +118,6 @@ class DistributedLiarsDiceAI(DistributedDiceGameAI):
                 count += 1
 
         return count
-
-    # ------------------------------------------------------------------
-    # Client messages
-    # ------------------------------------------------------------------
 
     def _getSenderSeat(self, mySeat):
         seatIndex = self.getSenderSeatIndex()
@@ -202,7 +175,6 @@ class DistributedLiarsDiceAI(DistributedDiceGameAI):
         if seatIndex is None:
             return
 
-        # Find the most recent cheat from someone other than this player
         cheaterSeat = None
         for cheatSeat in list(self._activeCheat.keys()):
             if cheatSeat != seatIndex:
@@ -235,10 +207,6 @@ class DistributedLiarsDiceAI(DistributedDiceGameAI):
             self._resolveWinner()
         elif wasActive:
             self._advanceBettingTurn()
-
-    # ------------------------------------------------------------------
-    # Internal game logic
-    # ------------------------------------------------------------------
 
     def _getMaxDice(self):
         return self.NumDice * self._getActiveSeatCount()
@@ -284,10 +252,8 @@ class DistributedLiarsDiceAI(DistributedDiceGameAI):
         taskMgr.remove(self.uniqueName('ld-turn'))
         actualCount = self._countDiceWithValue(claimedValue)
         if actualCount >= claimedDice:
-            # Claim was true - challenger loses
             loserSeat = challenger
         else:
-            # Bluff called correctly - claimer loses
             loserSeat = claimer
 
         loserName = self._getPlayerName(loserSeat)
@@ -344,15 +310,10 @@ class DistributedLiarsDiceAI(DistributedDiceGameAI):
         self._activeCheat.pop(seatIndex, None)
         return Task.done
 
-    # ------------------------------------------------------------------
-    # AI decision making
-    # ------------------------------------------------------------------
-
     def _aiTakeTurn(self, seatIndex, task=None):
         if self._activeSeat != seatIndex or not self._bettingActive:
             return Task.done
 
-        # Decide whether to challenge or make a new claim
         if self._lastBetSeat >= 0 and self._lastBetSeat != seatIndex and self._shouldAIChallenge(seatIndex):
             self._resolveChallenge(challenger=seatIndex, claimer=self._lastBetSeat,
                 claimedDice=self._currentBetDice, claimedValue=self._currentBetValue)
