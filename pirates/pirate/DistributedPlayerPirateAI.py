@@ -17,6 +17,7 @@ from pirates.piratesbase import PLocalizer
 from pirates.chat import PChatFilter
 from pirates.piratesbase import PiratesGlobals
 from pirates.pirate import AvatarTypes
+from pirates.pirate import TitleGlobals
 from pirates.quest.QuestConstants import LocationIds
 from pirates.quest import QuestDB
 from pirates.quest.QuestReward import CutlassReward
@@ -141,6 +142,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.lootCarried = 0
         self.maxLootCarried = 0
         self.skillRechargeTimes = {}
+        self.badgeIcon = (-1, -1)
+        self.shipBadgeIcon = (-1, -1)
+        self.onWelcomeWorld = False
+        self.areaSphereStack = []
 
     def announceGenerate(self):
         DistributedPlayerAI.announceGenerate(self)
@@ -1240,6 +1245,137 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def getConstructedShipDoId(self):
         return self.constructedShipDoId
+
+    def setOnWelcomeWorld(self, onWelcomeWorld):
+        self.onWelcomeWorld = onWelcomeWorld
+
+    def getOnWelcomeWorld(self):
+        return self.onWelcomeWorld
+
+    def enterAreaSphere(self, uniqueId, parentUid):
+        # the client tells us whenever its avatar walks into one of the named
+        # locations (location spheres) of an area, we echo the location back
+        # so that the client shows it on the radar...
+        if not self._isSenderSelf('enterAreaSphere', uniqueId=uniqueId):
+            return
+
+        if uniqueId not in PLocalizer.LocationNames:
+            return
+
+        # the spheres of the area the avatar was in before no longer apply...
+        self.areaSphereStack = [(sphereUid, sphereParentUid) for sphereUid, sphereParentUid in self.areaSphereStack
+                                if sphereParentUid == parentUid and sphereUid != uniqueId]
+        self.areaSphereStack.append((uniqueId, parentUid))
+        self.d_locationChange(uniqueId)
+
+    def leaveAreaSphere(self, uniqueId, parentUid):
+        if not self._isSenderSelf('leaveAreaSphere', uniqueId=uniqueId):
+            return
+
+        if (uniqueId, parentUid) not in self.areaSphereStack:
+            return
+
+        self.areaSphereStack.remove((uniqueId, parentUid))
+
+        # the avatar is back in the location it was in before, or in the area itself...
+        if self.areaSphereStack:
+            self.d_locationChange(self.areaSphereStack[-1][0])
+        elif parentUid in PLocalizer.LocationNames:
+            self.d_locationChange(parentUid)
+
+    def d_locationChange(self, locationName):
+        self.sendUpdateToAvatarId(self.doId, 'locationChange', [locationName])
+
+    def getAreaSphereUid(self):
+        if self.areaSphereStack:
+            return self.areaSphereStack[-1][0]
+
+        return ''
+
+    def setBadgeIcon(self, titleId, rank):
+        self.badgeIcon = (titleId, rank)
+
+    def d_setBadgeIcon(self, titleId, rank):
+        self.sendUpdate('setBadgeIcon', [titleId, rank])
+
+    def b_setBadgeIcon(self, titleId, rank):
+        self.setBadgeIcon(titleId, rank)
+        self.d_setBadgeIcon(titleId, rank)
+
+    def getBadgeIcon(self):
+        return self.badgeIcon
+
+    def setShipBadgeIcon(self, titleId, rank):
+        self.shipBadgeIcon = (titleId, rank)
+
+    def d_setShipBadgeIcon(self, titleId, rank):
+        self.sendUpdate('setShipBadgeIcon', [titleId, rank])
+
+    def b_setShipBadgeIcon(self, titleId, rank):
+        self.setShipBadgeIcon(titleId, rank)
+        self.d_setShipBadgeIcon(titleId, rank)
+
+    def getShipBadgeIcon(self):
+        return self.shipBadgeIcon
+
+    def __hasTitleRank(self, titleId, rank):
+        """
+        Returns True if the avatar has earned the title at least up to the rank,
+        the rank is worked out from the title's inventory stack as the client's
+        TitlesPage does it.
+        """
+
+        if titleId not in TitleGlobals.TitlesDict:
+            return False
+
+        if rank < 0 or rank > TitleGlobals.getMaxRank(titleId):
+            return False
+
+        inventoryType = TitleGlobals.getInventoryType(titleId)
+        inventory = self.getInventory()
+        if not inventoryType or not inventory:
+            return rank == 0
+
+        return rank <= TitleGlobals.getRank(titleId, inventory.getStackQuantity(inventoryType))
+
+    def requestBadgeIcon(self, titleId, rank):
+        if not self._isSenderSelf('requestBadgeIcon', titleId=titleId, rank=rank):
+            return
+
+        # a negative title or rank takes the badge off...
+        if titleId < 0 or rank < 0:
+            self.b_setBadgeIcon(-1, -1)
+            return
+
+        if not self.__hasTitleRank(titleId, rank):
+            self.air.logPotentialHacker(
+                message='Requested a badge for a title rank the avatar has not earned!',
+                targetAvId=self.doId,
+                titleId=titleId,
+                rank=rank)
+
+            return
+
+        self.b_setBadgeIcon(titleId, rank)
+
+    def requestShipBadgeIcon(self, titleId, rank):
+        if not self._isSenderSelf('requestShipBadgeIcon', titleId=titleId, rank=rank):
+            return
+
+        if titleId < 0 or rank < 0:
+            self.b_setShipBadgeIcon(-1, -1)
+            return
+
+        if not self.__hasTitleRank(titleId, rank):
+            self.air.logPotentialHacker(
+                message='Requested a ship badge for a title rank the avatar has not earned!',
+                targetAvId=self.doId,
+                titleId=titleId,
+                rank=rank)
+
+            return
+
+        self.b_setShipBadgeIcon(titleId, rank)
 
     def isPaid(self):
         return Freebooter.getPaidStatusAI(self.doId)
