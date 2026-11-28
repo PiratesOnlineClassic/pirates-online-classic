@@ -4,7 +4,7 @@ import types
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from pirates.piratesbase import PiratesGlobals
 
@@ -75,6 +75,33 @@ class MainWorldLookupTests(unittest.TestCase):
 
         self.assertIsNone(manager.getWorld(PiratesGlobals.INSTANCE_TUTORIAL, 'mainWorld'))
         self.assertIsNone(manager.getWorld(PiratesGlobals.INSTANCE_MAIN, 'mainWorld'))
+
+
+class TutorialLoginTeleportTests(unittest.TestCase):
+
+    def test_client_tutorial_teleport_is_handed_to_the_tutorial_manager(self):
+        # On login the client asks to teleport into the tutorial; the tutorial
+        # manager takes it over. Reporting a failure would make the client fall
+        # back on a mainWorld teleport that collides with the tutorial's jail teleport.
+        avatar = SimpleNamespace(doId=100000004, getTutorial=lambda: 0)
+        manager = teleport.DistributedTeleportMgrAI.__new__(teleport.DistributedTeleportMgrAI)
+        manager.avatar2fsm = {}
+        tutorialManager = SimpleNamespace(avatar2fsm={}, _requestTutorial=Mock())
+        manager.air = SimpleNamespace(
+            doId2do={avatar.doId: avatar}, districtId=1,
+            getAvatarIdFromSender=lambda: avatar.doId,
+            tutorialManager=tutorialManager)
+        manager.d_teleportFailed = Mock()
+
+        shipModule = types.ModuleType('pirates.ship.DistributedShipAI')
+        shipModule.DistributedShipAI = type('DistributedShipAI', (), {})
+        with patch.dict(sys.modules, {'pirates.ship.DistributedShipAI': shipModule}):
+            manager.initiateTeleport(PiratesGlobals.INSTANCE_TUTORIAL, 0, 0, '', 0,
+                'RambleshackWorld', -1, 0, 0)
+
+        tutorialManager._requestTutorial.assert_called_once_with(avatar)
+        manager.d_teleportFailed.assert_not_called()
+        self.assertEqual(manager.avatar2fsm, {})
 
 
 if __name__ == '__main__':

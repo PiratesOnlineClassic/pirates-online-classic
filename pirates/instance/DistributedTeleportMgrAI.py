@@ -201,8 +201,11 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             # Only the owning tutorial FSM may perform its internal jail teleport.
             if (tutorialFsm is None or
                     tutorialManager.avatar2fsm.get(avatar.doId) is not tutorialFsm):
+                # the tutorial manager now owns this teleport, this is not a failure;
+                # failing here would make the client fall back on a mainWorld teleport
+                # which then collides with the tutorial's own jail teleport...
                 tutorialManager._requestTutorial(avatar)
-                return False
+                return True
 
         if avatar.doId in self.avatar2fsm:
             self.notify.warning('Cannot initiate teleport for avatar %d, '
