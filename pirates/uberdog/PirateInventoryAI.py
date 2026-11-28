@@ -6,6 +6,7 @@ from pirates.reputation import ReputationGlobals
 from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.uberdog.TreasureMapInventoryAI import TreasureMapInventoryAI
+from pirates.uberdog import InventoryInit
 
 class PirateInventoryAI(DistributedInventoryAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('PirateInventoryAI')
@@ -26,62 +27,74 @@ class PirateInventoryAI(DistributedInventoryAI):
         if not avatar:
             return
 
+        limit = InventoryInit.AccumulatorLimits.get(repType)
+        if limit:
+            quantity = min(quantity, limit)
+
         totalRep = self.getReputation(repType)
         currentLevel, currentReputation = ReputationGlobals.getLevelFromTotalReputation(repType, totalRep)
         newLevel, newReputation = ReputationGlobals.getLevelFromTotalReputation(repType, quantity)
 
-        if newLevel > currentLevel:
-            # check to see if the type of reputation we're giving the avatar is
-            # their overall reputation/level, then set their level...
-            if repType == InventoryType.OverallRep:
-                avatar.b_setLevel(newLevel)
-                avatar.d_levelUpMsg(repType, avatar.getLevel(), 0)
+        # update the accumulator before announcing any level ups, the client
+        # reads the new reputation when showing the level up text...
+        self.b_setAccumulator(repType, quantity)
 
-                # Assign level up quests...
-                try:
-                    level_up_quests = RepChart.getLevelUpQuest(repType, newLevel)[0]
-                    if not self.air.questMgr.hasQuest(avatar, questId=level_up_quests):
-                        self.air.questMgr.createQuest(avatar, level_up_quests)
-                except IndexError:
-                    self.notify.debug('Failed to give level up quest for %s(Level: %s); '
-                        'They\'re not the proper level!' % (avatar.getName(), newLevel))
+        # a single reward may be large enough to earn several levels at once,
+        # each level is rewarded individually...
+        for level in range(currentLevel + 1, newLevel + 1):
+            self.handleLevelUp(avatar, repType, level)
 
-                avatar.b_setHp(avatar.getMaxHp())
-                avatar.b_setMojo(avatar.getMaxMojo())
-            else:
-                avatar.d_levelUpMsg(repType, newLevel, 0)
+    def handleLevelUp(self, avatar, repType, level):
+        # check to see if the type of reputation we're giving the avatar is
+        # their overall reputation/level, then set their level...
+        if repType == InventoryType.OverallRep:
+            avatar.b_setLevel(level)
 
-                # Give level up skills
-                earnedUnspent, earnedSkill = RepChart.getLevelUpSkills(repType, newLevel)
-                for unspent in earnedUnspent:
-                    self.b_setStackQuantity(unspent, 1)
+            # Assign level up quests...
+            for questId in RepChart.getLevelUpQuest(repType, level):
+                if not self.air.questMgr.hasQuest(avatar, questId=questId):
+                    self.air.questMgr.createQuest(avatar, questId)
+        else:
+            # Give level up skills, the first list holds the skill points
+            # earned and the second the skills unlocked at this level...
+            skills = RepChart.getLevelUpSkills(repType, level)
+            for unspent in skills[0]:
+                self.b_setStackQuantity(unspent, self.getStackQuantity(unspent) + 1)
 
-                for earnedSkill in earnedSkill:
+            for earnedSkill in skills[1]:
+                if InventoryType.begin_Unspent <= earnedSkill < InventoryType.end_Unspent:
+                    continue
+
+                if not self.getStackQuantity(earnedSkill):
                     self.b_setStackQuantity(earnedSkill, 1)
 
-                for unspent in RepChart.getLevelUpSkills(repType, 0)[1] + RepChart.getLevelUpSkills(repType, 1)[1]:
-                    if not self.getStackQuantity(unspent):
-                        self.b_setStackQuantity(unspent, 1)
+            for skillId in RepChart.getLevelUpSkills(repType, 0)[1] + RepChart.getLevelUpSkills(repType, 1)[1]:
+                if not self.getStackQuantity(skillId):
+                    self.b_setStackQuantity(skillId, 1)
 
-                # Give weapon level up quests...
-                try:
-                    weapon_quests = RepChart.getWeaponLevelUpQuest(repType, newLevel, avatar)[0]
-                    if not self.air.questMgr.hasQuest(avatar, questId=weapon_quests):
-                        self.air.questMgr.createQuest(avatar, weapon_quests)
-                except IndexError:
-                    self.notify.debug('Failed to give weapon level up quest for %s(Level: %s); '
-                        'They\'re not the proper level!' % (avatar.getName(), newLevel))
+            # Give weapon level up quests, these check the inventory
+            # for the prerequisite weapon...
+            for questId in RepChart.getWeaponLevelUpQuest(repType, level, self):
+                if not self.air.questMgr.hasQuest(avatar, questId=questId):
+                    self.air.questMgr.createQuest(avatar, questId)
 
-                maxMojo = avatar.getMaxMojo()
-                maxMojo += RepChart.getManaGain(repType)
+        # every reputation category raises the avatar's max hp and mojo,
+        # see GuiManager.showLevelUpText...
+        maxHp = avatar.getMaxHp() + RepChart.getHpGain(repType)
+        maxMojo = avatar.getMaxMojo() + RepChart.getManaGain(repType)
+        avatar.b_setMaxHp(maxHp)
+        avatar.b_setMaxMojo(maxMojo)
 
-                maxHp = avatar.getMaxHp()
-                maxHp += RepChart.getHpGain(repType)
+        # the client derives the local avatar's max hp and mojo from these
+        # stack limits, see DistributedInventory.stackLimit...
+        self.b_setStackLimit(InventoryType.Hp, maxHp)
+        self.b_setStackLimit(InventoryType.Mojo, maxMojo)
 
-                avatar.b_setMaxHp(maxHp)
-                avatar.b_setMaxMojo(maxMojo)
+        if repType == InventoryType.OverallRep:
+            avatar.b_setHp(maxHp)
+            avatar.b_setMojo(maxMojo)
 
-        self.b_setAccumulator(repType, quantity)
+        avatar.d_levelUpMsg(repType, level, 0)
 
     def getReputation(self, repType):
         return self.getAccumulator(repType)
