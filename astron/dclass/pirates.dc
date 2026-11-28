@@ -876,7 +876,7 @@ dclass DistributedShopKeeper {
   responseShipRepair(uint32) ownrecv;
   makeTattooResponse(uint16, uint16, bool) ownrecv;
   makeBarberResponse(uint32, uint8, bool) ownrecv;
-  responseClothingList(uint32, uint32[]) ownrecv;
+  responseClothingList(uint32, uint32 [][]) ownrecv;
   responseTattooList(uint32, int32 []) ownrecv;
   responseJewelryList(uint32, jewelryIdList) ownrecv;
 };
