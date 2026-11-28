@@ -401,6 +401,20 @@ class GuildManagerUD(DistributedObjectGlobalUD):
         if guild:
             self.removeMemberFromGuild(guildId, guild, avatarId)
 
+    def avatarNameChanged(self, avatarId, accountId, avatarName):
+        # Called once an avatar's new name has been written to the database.
+        guildId, guild = self.getAvatarGuild(avatarId)
+        if not guild:
+            return
+
+        member = self.getMember(guild, avatarId)
+        if member[1] == avatarName:
+            return
+
+        member[1] = avatarName
+        self.db.storeGuild(guildId, guild)
+        self.sendToOnlineMembers(guild, 'recvMemberUpdateName', [avatarId, avatarName])
+
     def sendAvatarBandId(self, avatarId, bandManagerId, bandId):
         info = self.onlineAvatars.get(avatarId)
         if not info:

@@ -118,6 +118,7 @@ class PatternNameFSM(AvatarOperationFSM):
              'setName': (name,)})
 
         self.mgr.air.writeServerEvent('avatarNamed', avId=self.avId, name=name, pattern=True)
+        self.mgr.air.avatarNameChanged(self.avId, self.target, name)
         self.mgr.d_patternNameResponse(self.target, True)
         self.demand('Off')
 
@@ -165,6 +166,8 @@ class FinalizeNameFSM(AvatarOperationFSM):
              'setName': self.avatarFields['setName']})
 
         self.mgr.air.writeServerEvent('avatarNameFinalized', avId=self.avId, name=name)
+        if name != self.avatarFields['setName'][0]:
+            self.mgr.air.avatarNameChanged(self.avId, self.target, name)
         self.demand('Off')
 
 

@@ -284,6 +284,18 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
             self.undeclareFriend(accountId, otherAccountId)
             self.undeclareFriend(otherAccountId, accountId)
 
+    def avatarNameChanged(self, avId, accountId, name):
+        # Called once an avatar's new name has been written to the database.
+        # The account remembers the name of the avatar it last played:
+        account = self.getAccount(accountId)
+        if account['avatarId'] != avId or account['avatarName'] == name:
+            return
+
+        account['avatarName'] = name
+        self.storeAccount(accountId, account)
+        for friendId in account['friends']:
+            self.d_updatePlayerFriend(friendId, accountId)
+
     def getSenderAccountId(self):
         accountId = self.air.getAccountIdFromSender()
         if accountId not in self.account2avatar:

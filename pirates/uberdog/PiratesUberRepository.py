@@ -67,6 +67,16 @@ class PiratesUberRepository(PiratesInternalRepository):
         self.guildManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_GUILD_MANAGER, 'PCGuildManager')
         self.matchMaker = self.generateGlobalObject(OTP_DO_ID_PIRATES_MATCH_MAKER, 'DistributedMatchMaker')
 
+    def avatarNameChanged(self, avId, accountId, name):
+        """
+        Called once an avatar's new name has been written to the database.
+        Lets everybody that keeps a copy of the avatar's name know about it.
+        """
+
+        self.avatarFriendsManager.avatarNameChanged(avId, accountId, name)
+        self.playerFriendsManager.avatarNameChanged(avId, accountId, name)
+        self.guildManager.avatarNameChanged(avId, accountId, name)
+
 @rpcservice(serviceName='cluster')
 class ClusterService(RPCServiceUD):
     """

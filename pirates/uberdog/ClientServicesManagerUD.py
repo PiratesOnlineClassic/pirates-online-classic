@@ -903,6 +903,7 @@ class SetNamePatternFSM(AvatarOperationFSM):
              'setName': (name,)})
 
         self.csm.air.writeServerEvent('avatarNamed', avId=self.avId, name=name)
+        self.csm.air.avatarNameChanged(self.avId, self.target, name)
         self.csm.sendUpdateToAccountId(self.target, 'setNamePatternResp', [self.avId, 1])
         self.demand('Off')
 
@@ -958,6 +959,9 @@ class AcknowledgeNameFSM(AvatarOperationFSM):
             {'WishNameState': fields['WishNameState'],
              'WishName': fields['WishName'],
              'setName': fields['setName']})
+
+        if name != fields['setName'][0]:
+            self.csm.air.avatarNameChanged(self.avId, self.target, name)
 
         self.csm.sendUpdateToAccountId(self.target, 'acknowledgeAvatarNameResp', [])
         self.demand('Off')

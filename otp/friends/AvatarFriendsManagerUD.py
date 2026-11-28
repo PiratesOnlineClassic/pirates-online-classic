@@ -316,6 +316,13 @@ class AvatarFriendsManagerUD(DistributedObjectGlobalUD):
             self.d_removeAvatarFriend(otherAvId, avId)
             self.undeclareFriend(otherAvId, avId)
 
+    def avatarNameChanged(self, avId, accountId, name):
+        # Called once an avatar's new name has been written to the database.
+        if self.avatarId2Name.get(avId) == name:
+            return
+
+        self.d_updateAvatarName(avId, name)
+
     # Client requests:
 
     def requestInvite(self, otherAvId):
@@ -428,8 +435,15 @@ class AvatarFriendsManagerUD(DistributedObjectGlobalUD):
         self.sendUpdateToAvatarId(avId, 'removeAvatarFriend', [friendId])
 
     def d_updateAvatarName(self, avId, name):
-        # Lets the friends of an avatar know they have a new name.
+        # Lets the friends of an avatar know they have a new name. Names are
+        # changed from the avatar chooser, so the avatar itself is usually
+        # offline and we look for it on the lists of the online avatars.
         self.avatarId2Name[avId] = name
-        for friendId in self.getFriendIds(avId):
-            if self.isOnline(friendId):
-                self.sendUpdateToAvatarId(friendId, 'updateAvatarName', [avId, name])
+        for friendId in list(self.onlineAvatars.keys()):
+            if friendId == avId or avId not in self.getFriendIds(friendId):
+                continue
+
+            self.sendUpdateToAvatarId(friendId, 'updateAvatarName', [avId, name])
+
+            # The client only shows names from the friend info:
+            self.d_updateAvatarFriend(friendId, avId)
