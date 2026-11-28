@@ -1227,6 +1227,16 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getActiveShipId(self):
         return self.activeShipId
 
+    @property
+    def ship(self):
+        # the ship the avatar is aboard, the battle formulas shared with the client
+        # look at the ship's buffs through it (see BattleManagerBase.getModifiedRechargeTime)...
+        crewShipId = getattr(self, 'crewShipId', 0)
+        if not crewShipId:
+            return None
+
+        return self.air.doId2do.get(crewShipId)
+
     def setCrewShipId(self, crewShipId):
         self.crewShipId = crewShipId
 
