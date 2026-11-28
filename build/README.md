@@ -37,8 +37,7 @@ Build each OS on that OS: Nuitka can't cross-compile.
   - Linux: gcc, plus `patchelf` (required for standalone builds) and
     optionally `ccache`. Build on the oldest distro you support: the binary
     needs a glibc at least as new as the build machine's.
-- **libotp/** in the checkout. It is gitignored and normally a link to the
-  nametag code; the client imports it, so it must be there when you build.
+- **libotp/** in the checkout (it's tracked in git); the client imports it.
 - **The resources checkout** (`../resources`) if you bundle resources.
 
 Do it in a venv:
@@ -48,6 +47,23 @@ python3.12 -m venv .venv-build
 . .venv-build/bin/activate          # Windows: .venv-build\Scripts\activate
 pip install -r requirements-build.txt
 ```
+
+## GitHub Actions
+
+`.github/workflows/build-client.yml` builds all three OSes on GitHub's
+runners (Windows Server 2022 with MSVC, macOS 14, Ubuntu 22.04 for an old
+enough glibc), each with Python 3.12 and `requirements-build.txt`.
+
+- **Pushing a tag like `v1.2.3`** builds version `1.2.3.0` and publishes a
+  GitHub Release with the three archives attached.
+- **Run workflow** in the Actions tab builds by hand (version
+  `0.0.0.<run number>`), optionally as a single executable. The archives
+  are attached to the run as artifacts.
+
+Archives are zips on Windows and macOS (`ditto` keeps the `.app` intact)
+and a `.tar.gz` on Linux (keeps the executable bits). Resources aren't
+bundled, and the builds aren't code signed. Nuitka's cache is kept between
+runs, so builds after the first are much faster.
 
 ## Commands
 
@@ -300,9 +316,9 @@ library: the `discord-*` prc settings have no client code behind them, and
 - `config/server.prc` (Discord bot token) and `dist_prod.prc` (analytics
   keys) have secrets in git. They aren't shipped, but rotate them if the
   repository is public.
-- The main checkout's `libotp/` contains a `libotp -> libotp` symlink to
-  itself. The collector skips it, and the build never walks into it because
-  libotp is only included through imports.
+- Some checkouts have a `libotp/libotp` symlink back to the folder itself
+  (it's gitignored). The collector skips it, and the build never walks into
+  it because libotp is only included through imports.
 
 ## Smoke test after a build
 

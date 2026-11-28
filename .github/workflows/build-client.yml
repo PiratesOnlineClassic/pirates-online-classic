@@ -1,0 +1,160 @@
+# Builds the release client with Nuitka on Windows, macOS and Linux
+# (build/nuitka_build.py, see build/README.md). Nuitka can't cross-compile,
+# so each OS builds on its own runner.
+#
+# Runs on a version tag (v1.2.3), which also publishes a GitHub Release,
+# and by hand from the Actions tab.
+name: Build client
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      onefile:
+        description: 'Single executable instead of a folder (Windows/Linux)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+env:
+  NUITKA_CACHE_DIR: ${{ github.workspace }}/.nuitka-cache
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 340
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows
+            runner: windows-2022
+          - os: macos
+            runner: macos-14
+          # the binary needs a glibc at least as new as the build machine's,
+          # so build on the oldest Ubuntu GitHub still offers
+          - os: linux
+            runner: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # BUILD-INFO.txt records the git revision
+          fetch-depth: 0
+
+      - name: Work out the version
+        id: version
+        shell: bash
+        run: |
+          # Nuitka wants four numbers: v1.2.3 -> 1.2.3.0, otherwise 0.0.0.<run>
+          if [[ "$GITHUB_REF_TYPE" == "tag" && "$GITHUB_REF_NAME" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.${BASH_REMATCH[3]}.0"
+            label="$GITHUB_REF_NAME"
+          else
+            version="0.0.0.$GITHUB_RUN_NUMBER"
+            label="build-$GITHUB_RUN_NUMBER"
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "label=$label" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          architecture: x64
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-build.txt
+
+      - name: Install Linux build tools
+        if: matrix.os == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y patchelf ccache
+
+      - name: Set up MSVC
+        if: matrix.os == 'windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Install Python packages
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-build.txt
+
+      # Nuitka keeps compiled C objects (and the downloads it makes) in its
+      # cache folder, which makes every build after the first much faster
+      - uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.nuitka-cache
+          key: nuitka-${{ matrix.os }}-${{ hashFiles('requirements-build.txt') }}-${{ github.sha }}
+          restore-keys: |
+            nuitka-${{ matrix.os }}-${{ hashFiles('requirements-build.txt') }}-
+
+      - name: Check the build
+        run: python build/nuitka_build.py --dry-run --version ${{ steps.version.outputs.version }}
+
+      - name: Build
+        shell: bash
+        run: |
+          args=(--version "${{ steps.version.outputs.version }}"
+                --jobs 4
+                --nuitka-arg=--assume-yes-for-downloads)
+          if [[ "${{ inputs.onefile }}" == "true" && "${{ matrix.os }}" != "macos" ]]; then
+            args+=(--onefile)
+          fi
+          python build/nuitka_build.py "${args[@]}"
+
+      - name: Package the release
+        id: package
+        shell: bash
+        run: |
+          cd dist/nuitka
+          name="PiratesOnlineClassic-${{ matrix.os }}-${{ steps.version.outputs.label }}"
+          release_dir=$(ls -d PiratesOnlineClassic-${{ matrix.os }}* | head -n 1)
+          case "${{ matrix.os }}" in
+            windows)
+              7z a -tzip "$name.zip" "$release_dir" > /dev/null
+              archive="$name.zip" ;;
+            macos)
+              # ditto keeps the .app bundle's symlinks and signature intact
+              ditto -c -k --keepParent "$release_dir" "$name.zip"
+              archive="$name.zip" ;;
+            linux)
+              # tar keeps the executable bits
+              tar -czf "$name.tar.gz" "$release_dir"
+              archive="$name.tar.gz" ;;
+          esac
+          echo "archive=dist/nuitka/$archive" >> "$GITHUB_OUTPUT"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.package.outputs.name }}
+          path: ${{ steps.package.outputs.archive }}
+          if-no-files-found: error
+          compression-level: 0
+
+  release:
+    name: Publish release
+    if: github.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: release
+          merge-multiple: true
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: release/*
+          generate_release_notes: true

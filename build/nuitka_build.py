@@ -175,7 +175,7 @@ def preflight(args, modules):
                             'CPython (Nuitka refuses it).')
     libotp = os.path.join(REPO_ROOT, 'libotp')
     if not os.path.isfile(os.path.join(libotp, 'Nametag.py')):
-        problems.append('libotp/ is missing or empty; it is gitignored, link or copy it in '
+        problems.append('libotp/ is missing or empty; check it out from git '
                         '(the client imports libotp.Nametag and friends)')
     for dc in DC_FILES:
         if not os.path.isfile(os.path.join(REPO_ROOT, dc)):
