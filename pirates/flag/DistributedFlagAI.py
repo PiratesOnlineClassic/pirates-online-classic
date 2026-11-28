@@ -7,11 +7,8 @@ from pirates.uberdog.UberDogGlobals import InventoryCategory
 
 
 def getValidatedFlagDNAString(dnaStr):
-    """
-    Parses the flag DNA string sent by a client, returning the re-packed DNA string
-    if every value is within the ranges the flag designer can produce, otherwise None.
-    """
-
+    # returns the repacked dna string when every value is one
+    # the flag designer is able to produce, otherwise None...
     dna = FlagDNA()
     try:
         dna.setDNAString(dnaStr)
