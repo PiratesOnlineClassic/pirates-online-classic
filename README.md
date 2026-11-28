@@ -26,8 +26,11 @@ You can run the whole thing on one computer and play: make a pirate, play the
 tutorial, sail, fight, quest and level up.
 
 <p align="center">
-  <img src="screenshots/Screenshot%202026-02-01%20at%209.07.34%E2%80%AFPM.png" alt="Screenshot 1" width="800">
+  <img src="screenshots/Screenshot%202026-11-28%20at%201.26.31%E2%80%AFAM.png" alt="Cannon practice in the tutorial" width="32%">
+  <img src="screenshots/Screenshot%202026-11-28%20at%201.26.57%E2%80%AFAM.png" alt="The Jolly Roger" width="32%">
+  <img src="screenshots/Screenshot%202026-11-28%20at%201.31.43%E2%80%AFAM.png" alt="Sailing for Devil's Anvil" width="32%">
 </p>
+<p align="center"><sub>More in <a href="#screenshots">Screenshots</a>.</sub></p>
 
 ## Quick start
 
@@ -100,6 +103,57 @@ Quick tips:
 | [Troubleshooting](docs/troubleshooting.md) | Fixes for common problems, and known issues |
 | [Architecture](docs/architecture.md) | How the client, Astron, the UberDOG and the AI fit together |
 | [Development](docs/development.md) | Code rules, tests, commits, branches, project layout |
+
+## Screenshots
+
+<details>
+<summary>Show all 20 screenshots: the tutorial, Port Royal, and the first voyage</summary>
+<br>
+
+<table>
+<tr>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.26.31%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.26.31%E2%80%AFAM.png" alt="Tutorial cannon practice: hit the wreck three times"></a><br><sub>Tutorial cannon practice: hit the wreck three times</sub></td>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.26.39%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.26.39%E2%80%AFAM.png" alt="The Jolly Roger rises out of the fog"></a><br><sub>The Jolly Roger rises out of the fog</sub></td>
+</tr>
+<tr>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.26.57%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.26.57%E2%80%AFAM.png" alt="The Jolly Roger"></a><br><sub>The Jolly Roger</sub></td>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.27.01%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.27.01%E2%80%AFAM.png" alt="Captain Bo Beck at the wheel"></a><br><sub>Captain Bo Beck at the wheel</sub></td>
+</tr>
+<tr>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.27.34%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.27.34%E2%80%AFAM.png" alt="The Jolly Roger boards Bo Beck's boat"></a><br><sub>The Jolly Roger boards Bo Beck's boat</sub></td>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.27.47%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.27.47%E2%80%AFAM.png" alt="The Jolly Roger's cutscene"></a><br><sub>The Jolly Roger's cutscene</sub></td>
+</tr>
+<tr>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.27.53%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.27.53%E2%80%AFAM.png" alt="&quot;Sink her! NOW!&quot;"></a><br><sub>&quot;Sink her! NOW!&quot;</sub></td>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.28.00%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.28.00%E2%80%AFAM.png" alt="Escaping the Jolly Roger"></a><br><sub>Escaping the Jolly Roger</sub></td>
+</tr>
+<tr>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.28.49%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.28.49%E2%80%AFAM.png" alt="Port Royal: the ray of light leads to Will Turner's warehouse"></a><br><sub>Port Royal: the ray of light leads to Will Turner's warehouse</sub></td>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.30.23%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.30.23%E2%80%AFAM.png" alt="The Port Royal docks"></a><br><sub>The Port Royal docks</sub></td>
+</tr>
+<tr>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.30.48%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.30.48%E2%80%AFAM.png" alt="Following the ray of light to the dinghy"></a><br><sub>Following the ray of light to the dinghy</sub></td>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.30.53%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.30.53%E2%80%AFAM.png" alt="Choosing a ship to launch"></a><br><sub>Choosing a ship to launch</sub></td>
+</tr>
+<tr>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.31.13%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.31.13%E2%80%AFAM.png" alt="Setting sail from Port Royal"></a><br><sub>Setting sail from Port Royal</sub></td>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.31.34%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.31.34%E2%80%AFAM.png" alt="Manning a cannon at sea"></a><br><sub>Manning a cannon at sea</sub></td>
+</tr>
+<tr>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.31.43%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.31.43%E2%80%AFAM.png" alt="Sailing for Devil's Anvil"></a><br><sub>Sailing for Devil's Anvil</sub></td>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.31.46%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.31.46%E2%80%AFAM.png" alt="Underway, with other ships on the horizon"></a><br><sub>Underway, with other ships on the horizon</sub></td>
+</tr>
+<tr>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.31.53%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.31.53%E2%80%AFAM.png" alt="Closing in on Devil's Anvil"></a><br><sub>Closing in on Devil's Anvil</sub></td>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.31.58%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.31.58%E2%80%AFAM.png" alt="Open water"></a><br><sub>Open water</sub></td>
+</tr>
+<tr>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.32.24%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.32.24%E2%80%AFAM.png" alt="Voyage results after docking"></a><br><sub>Voyage results after docking</sub></td>
+<td width="50%"><a href="screenshots/Screenshot%202026-11-28%20at%201.32.46%E2%80%AFAM.png"><img src="screenshots/Screenshot%202026-11-28%20at%201.32.46%E2%80%AFAM.png" alt="The ray of light points to Barbossa's cave on Devil's Anvil"></a><br><sub>The ray of light points to Barbossa's cave on Devil's Anvil</sub></td>
+</tr>
+</table>
+
+</details>
 
 ## Contributing
 
