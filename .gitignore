@@ -126,8 +126,13 @@ resources/
 # logs/screens
 logs/
 
-# Build
-build/
+# Build (build/ holds the Nuitka build scripts; anything else there is output)
+build/*
+!build/*.py
+!build/*.md
+!build/*.prc
+!build/*.env
+!build/icons/
 temp/
 direct/
 nirai/
