@@ -17,10 +17,12 @@ from direct.fsm.FSM import FSM
 
 from otp.distributed import OtpDoGlobals
 from otp.distributed.MsgTypes import *
+from otp.otpbase import OTPGlobals
 
 from pirates.pirate.HumanDNA import HumanDNA
 from pirates.quest.QuestConstants import LocationIds
 from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import MembershipGlobals
 from pirates.makeapirate.PCPickANamePattern import PCPickANamePattern
 from pirates.uberdog.DistributedAvatarManagerUD import makePatternName
 
@@ -35,6 +37,70 @@ if accountDBType == 'remote':
 minAccessLevel = base.config.GetInt('min-access-level', 100)
 accountServerEndpoint = base.config.GetString('account-server-endpoint', '')  # TODO
 accountServerSecret = base.config.GetString('account-server-secret', '6163636f756e7473')
+
+# Every account has the same number of pirate slots, a Freebooter may only
+# fill some of them (see MembershipGlobals.getMaxAvatars):
+AvatarSlots = MembershipGlobals.AvatarSlots
+
+# The names an account's access goes by in the config (default-account-access)
+# and account server tokens: FULL is Unlimited Access, VELVET is Basic Access
+# (a Freebooter). Access only matters with want-membership on, otherwise every
+# account has Unlimited Access:
+AccessNames = {
+    'FULL': OTPGlobals.AccessFull,
+    'PAID': OTPGlobals.AccessFull,
+    'VELVET': OTPGlobals.AccessVelvetRope,
+    'FREE': OTPGlobals.AccessVelvetRope,
+    'BASIC': OTPGlobals.AccessVelvetRope}
+
+
+def parseAccess(access):
+    """
+    Returns the OTPGlobals access level an account server or config value
+    stands for, AccessUnknown when it stands for none.
+    """
+
+    if isinstance(access, str):
+        access = access.strip().upper()
+        if access.isdigit():
+            access = int(access)
+        else:
+            return AccessNames.get(access, OTPGlobals.AccessUnknown)
+
+    if access in (OTPGlobals.AccessVelvetRope, OTPGlobals.AccessFull):
+        return access
+
+    return OTPGlobals.AccessUnknown
+
+
+def getDefaultAccess():
+    access = parseAccess(base.config.GetString('default-account-access', 'FULL'))
+    return access or OTPGlobals.AccessFull
+
+
+def getAccountAccess(paidLevel=OTPGlobals.AccessUnknown, override=OTPGlobals.AccessUnknown):
+    """
+    Decides an account's access: the account server's (or developer
+    override's) say for this login comes first, then the access stored on the
+    account object (PAID_LEVEL), then the config default.
+    """
+
+    if not MembershipGlobals.wantMembership():
+        return OTPGlobals.AccessFull
+
+    for access in (override, paidLevel):
+        access = parseAccess(access)
+        if access:
+            return access
+
+    return getDefaultAccess()
+
+
+def getFreebooterAccounts():
+    # usernames that log in as Freebooters with the developer and local
+    # account databases, e.g. freebooter-accounts alice bob...
+    return base.config.GetString('freebooter-accounts', '').split()
+
 
 http = HTTPClient()
 http.setVerifySsl(0)
@@ -254,6 +320,9 @@ class DeveloperAccountDB(AccountDB):
                 'accountId': int(self.dbm[str(username)]),
             }
 
+        if username in getFreebooterAccounts():
+            response['access'] = OTPGlobals.AccessVelvetRope
+
         callback(response)
 
 
@@ -265,6 +334,15 @@ class LocalAccountDB(AccountDB):
     notify = directNotify.newCategory('LocalAccountDB')
 
     def lookup(self, username, callback):
+        def handleResponse(response):
+            if username in getFreebooterAccounts():
+                response['access'] = OTPGlobals.AccessVelvetRope
+
+            callback(response)
+
+        return self.__lookup(username, handleResponse)
+
+    def __lookup(self, username, callback):
         # Let's check if this user's ID is in your account database bridge:
         if username.encode() not in self.dbm:
             # Nope. Let's associate them with a brand new Account object!
@@ -375,6 +453,10 @@ class RemoteAccountDB(AccountDB):
             callback(response)
             return response
 
+        # The account server may tell us the account's membership as well
+        # (FULL/VELVET or 2/1), it is stored on the account object:
+        paidLevel = parseAccess(token.get('access', OTPGlobals.AccessUnknown))
+
         # This token is valid. That's all we need to know. Next, let's check if
         # this user's ID is in your account database bridge:
         if str(token['userid']) not in self.dbm:
@@ -384,7 +466,8 @@ class RemoteAccountDB(AccountDB):
                 'success': True,
                 'userId': token['userid'],
                 'accountId': 0,
-                'accessLevel': max(int(token['accesslevel']), minAccessLevel)
+                'accessLevel': max(int(token['accesslevel']), minAccessLevel),
+                'paidLevel': paidLevel
             }
             callback(response)
             return response
@@ -396,10 +479,16 @@ class RemoteAccountDB(AccountDB):
                 'success': True,
                 'userId': token['userid'],
                 'accountId': int(self.dbm[str(token['userid'])]),
-                'accessLevel': max(int(token['accesslevel']), minAccessLevel)
+                'accessLevel': max(int(token['accesslevel']), minAccessLevel),
+                'paidLevel': paidLevel
             }
             callback(response)
             return response
+
+
+def sanitizeAvatarList(avList):
+    avList = list(avList)[:AvatarSlots]
+    return avList + [0] * (AvatarSlots - len(avList))
 
 
 # --- FSMs ---
@@ -446,7 +535,10 @@ class LoginAccountFSM(OperationFSM):
         self.userId = result.get('userId', 0)
         self.accountId = result.get('accountId', 0)
         self.accessLevel = result.get('accessLevel', 0)
-        self.paidLevel = 2 #TODO: write this
+        # the membership the account server gives the account is stored on
+        # the account object, a developer override only lasts this login...
+        self.paidLevel = parseAccess(result.get('paidLevel', OTPGlobals.AccessUnknown))
+        self.accessOverride = parseAccess(result.get('access', OTPGlobals.AccessUnknown))
         if self.accountId:
             self.demand('RetrieveAccount')
         else:
@@ -466,7 +558,7 @@ class LoginAccountFSM(OperationFSM):
 
     def enterCreateAccount(self):
         self.account = {
-            'ACCOUNT_AV_SET': [0] * 4,
+            'ACCOUNT_AV_SET': [0] * AvatarSlots,
             'ACCOUNT_AV_SET_DEL': [],
             'CREATED': time.ctime(),
             'LAST_LOGIN': time.ctime(),
@@ -521,7 +613,10 @@ class LoginAccountFSM(OperationFSM):
                 self.csm.air.dbId,
                 self.accountId,
                 self.csm.air.dclassesByName['AccountUD'],
-                {'PAID_LEVEL': self.paidLevel})        
+                {'PAID_LEVEL': self.paidLevel})
+
+        access = getAccountAccess(self.paidLevel or self.account.get('PAID_LEVEL', 0), self.accessOverride)
+        self.csm.setAccountAccess(self.accountId, access)
 
         # If there's anybody on the account, kill them for redundant login:
         datagram = PyDatagram()
@@ -583,7 +678,10 @@ class LoginAccountFSM(OperationFSM):
 
         # We're done.
         self.csm.air.writeServerEvent('accountLogin', target=self.target, accountId=self.accountId, userId=self.userId)
-        self.csm.sendUpdateToChannel(self.target, 'acceptLogin', [])
+        # the client needs the account's access before any avatar is chosen,
+        # just like the DISL token used to give it (see LoginScreen.handleLoginResponseMsg3)...
+        self.csm.sendUpdateToChannel(self.target, 'acceptLogin', [
+            access, MembershipGlobals.getMaxAvatars(access), AvatarSlots])
         self.demand('Off')
 
 
@@ -592,7 +690,7 @@ class CreateAvatarFSM(OperationFSM):
 
     def enterStart(self, dna, index, name):
         # Basic sanity-checking:
-        if index >= 4:
+        if index >= AvatarSlots:
             self.demand('Kill', 'Invalid index specified!')
             return
 
@@ -618,14 +716,21 @@ class CreateAvatarFSM(OperationFSM):
 
         self.account = fields
 
-        self.avList = self.account['ACCOUNT_AV_SET']
-        # Sanitize:
-        self.avList = self.avList[:4]
-        self.avList += [0] * (4-len(self.avList))
+        self.avList = sanitizeAvatarList(self.account['ACCOUNT_AV_SET'])
 
         # Make sure the index is open:
         if self.avList[self.index]:
             self.demand('Kill', 'This avatar slot is already taken by another avatar!')
+            return
+
+        # ...and that the account may fill it, a Freebooter's account has
+        # slots that are "Unlimited Access Only":
+        access = self.csm.getAccountAccess(self.target, self.account)
+        slots = MembershipGlobals.getAvatarSlotStates(
+            [index for index, avId in enumerate(self.avList) if avId],
+            MembershipGlobals.getMaxAvatars(access))
+        if slots[self.index] != OTPGlobals.AvatarSlotAvailable:
+            self.demand('Kill', 'This avatar slot requires Unlimited Access!')
             return
 
         # Okay, there's space. Let's create the avatar!
@@ -733,11 +838,7 @@ class AvatarOperationFSM(OperationFSM):
 
         self.account = fields
 
-        self.avList = self.account['ACCOUNT_AV_SET']
-
-        # Sanitize:
-        self.avList = self.avList[:4]
-        self.avList += [0] * (4-len(self.avList))
+        self.avList = sanitizeAvatarList(self.account['ACCOUNT_AV_SET'])
 
         self.demand(self.POST_ACCOUNT_STATE)
 
@@ -1197,10 +1298,11 @@ class LoadAvatarFSM(AvatarOperationFSM):
         adminAccess = self.account.get('ACCESS_LEVEL', 0)
         adminAccess = adminAccess - adminAccess % 100
 
-        paidLevel = self.account.get('PAID_LEVEL', 0)
+        # the avatar carries the account's membership, see Freebooter.getPaidStatus...
+        access = self.csm.getAccountAccess(self.target, self.account)
 
         self.csm.air.sendActivate(self.avId, 0, 0, self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
-            {'setAdminAccess': (adminAccess,), 'setInventoryId': (inventoryId,), 'setAccess': (paidLevel,)})
+            {'setAdminAccess': (adminAccess,), 'setInventoryId': (inventoryId,), 'setAccess': (access,)})
 
         # Next, add them to the avatar channel:
         datagram = PyDatagram()
@@ -1687,6 +1789,21 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
 
         self.account2fsm[sender] = fsmtype(self, sender)
         self.account2fsm[sender].request('Start', *args)
+
+    def setAccountAccess(self, accountId, access):
+        # the access decided when the account logged in, it is kept for as
+        # long as the CSM runs (a new login decides it again)...
+        if not hasattr(self, 'accountAccess'):
+            self.accountAccess = {}
+
+        self.accountAccess[accountId] = access
+
+    def getAccountAccess(self, accountId, account):
+        access = getattr(self, 'accountAccess', {}).get(accountId)
+        if access is None:
+            access = getAccountAccess(account.get('PAID_LEVEL', 0))
+
+        return access
 
     def isAvatarActive(self, avId):
         return avId in self.activeAvatars

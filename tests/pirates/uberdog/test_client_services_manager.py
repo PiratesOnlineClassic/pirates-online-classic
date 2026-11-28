@@ -11,6 +11,7 @@ from unittest.mock import Mock, patch
 from otp.otpbase.OTPUtil import Enum
 
 from otp.otpbase import OTPGlobals
+from otp.uberdog.AccountDetailRecord import AccountDetailRecord
 from pirates.pirate.HumanDNA import HumanDNA
 
 
@@ -56,9 +57,12 @@ ClientServicesManager = csmModule.ClientServicesManager
 OTPClientRepository = _loadWishNameRepository()
 
 
-def makeCSM():
+def makeCSM(maxAvatars=4, maxSlots=4):
     mgr = ClientServicesManager.__new__(ClientServicesManager)
     mgr.cr = Mock()
+    mgr.cr.accountDetailRecord = AccountDetailRecord()
+    mgr.cr.accountDetailRecord.maxAvatars = maxAvatars
+    mgr.cr.accountDetailRecord.maxAvatarSlots = maxSlots
     mgr.sendUpdate = Mock()
     return mgr
 
@@ -102,6 +106,38 @@ class SetAvatarsTests(unittest.TestCase):
         mgr.setAvatars([potentialPirate(5, 'Temp Five', 0, ClientServicesManager.NameStateRejected)])
         slots = mgr.cr.handleAvatarsList.call_args[0][0][1]
         self.assertEqual(slots[0].wishState, 'DENIED')
+
+
+class AccountAccessTests(unittest.TestCase):
+
+    def test_login_gives_the_client_its_access_and_slots(self):
+        mgr = makeCSM(maxAvatars=0, maxSlots=0)
+        mgr.doneEvent = 'loginDone'
+        sent = []
+        with patch.object(builtins, 'messenger', SimpleNamespace(
+                send=lambda event, args=[]: sent.append((event, args))), create=True):
+            mgr.acceptLogin(OTPGlobals.AccessVelvetRope, 2, 4)
+
+        mgr.cr.setIsPaid.assert_called_once_with(OTPGlobals.AccessVelvetRope)
+        record = mgr.cr.accountDetailRecord
+        self.assertEqual((record.piratesAccess, record.maxAvatars, record.maxAvatarSlots),
+            (OTPGlobals.AccessVelvetRope, 2, 4))
+        self.assertEqual(sent, [('loginDone', [{'mode': 'success'}])])
+
+    def test_freebooter_slots_are_unlimited_access_only(self):
+        mgr = makeCSM(maxAvatars=2)
+        mgr.setAvatars([potentialPirate(100000003, 'Bess', 3)])
+        slots = mgr.cr.handleAvatarsList.call_args[0][0][1]
+        self.assertEqual(slots[:3], [OTPGlobals.AvatarSlotAvailable, OTPGlobals.AvatarSlotUnavailable,
+            OTPGlobals.AvatarSlotUnavailable])
+        self.assertEqual(slots[3].id, 100000003)
+
+    def test_pirates_beyond_the_freebooter_limit_are_kept(self):
+        mgr = makeCSM(maxAvatars=2)
+        mgr.setAvatars([potentialPirate(avId, 'Pirate', avId) for avId in range(3)])
+        slots = mgr.cr.handleAvatarsList.call_args[0][0][1]
+        self.assertEqual([slot.id for slot in slots[:3]], [0, 1, 2])
+        self.assertEqual(slots[3], OTPGlobals.AvatarSlotUnavailable)
 
 
 class WishNameTests(unittest.TestCase):

@@ -123,7 +123,14 @@ support-threads #t
 empty-node-path future
 
 # Membership:
+# With want-membership off every account has Unlimited Access. Otherwise an
+# account's access comes from the account server (remote token "access"),
+# the account object (PAID_LEVEL) or default-account-access, in that order.
+# freebooter-accounts makes the listed developer/local logins Freebooters.
 want-membership #f
+#default-account-access FULL
+#freebooter-accounts
+#freebooter-max-avatars 2
 
 # Islands:
 want-island-barriers #t

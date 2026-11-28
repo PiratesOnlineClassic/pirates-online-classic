@@ -3,15 +3,15 @@ import hmac
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobal import DistributedObjectGlobal
 from otp.distributed.PotentialAvatar import PotentialAvatar
-from otp.otpbase import OTPGlobals
 from pirates.pirate.HumanDNA import HumanDNA
+from pirates.piratesbase import MembershipGlobals
 from pirates.piratesgui import PiratesGuiGlobals
 from requests import get
 
 
 class ClientServicesManager(DistributedObjectGlobal):
     notify = directNotify.newCategory('ClientServicesManager')
-    AvatarSlots = 4
+    AvatarSlots = MembershipGlobals.AvatarSlots
 
     # The name states of the avatar list, see ClientServicesManagerUD:
     NameStateClosed = 0
@@ -40,7 +40,13 @@ class ClientServicesManager(DistributedObjectGlobal):
 
         self.sendUpdate('login', [token, address, clientKey])
 
-    def acceptLogin(self):
+    def acceptLogin(self, access, maxAvatars, maxSlots):
+        # the account's membership and pirate slots, the DISL token used to
+        # carry these (see LoginScreen.handleLoginResponseMsg3)...
+        self.cr.setIsPaid(access)
+        self.cr.accountDetailRecord.piratesAccess = access
+        self.cr.accountDetailRecord.maxAvatars = maxAvatars
+        self.cr.accountDetailRecord.maxAvatarSlots = maxSlots
         messenger.send(self.doneEvent, [{'mode': 'success'}])
 
         # TODO?
@@ -52,7 +58,13 @@ class ClientServicesManager(DistributedObjectGlobal):
 
     def setAvatars(self, avatars):
         avatarList = {}
-        data = [OTPGlobals.AvatarSlotAvailable] * self.AvatarSlots
+
+        # the slots a Freebooter may not fill are "Unlimited Access Only",
+        # each pirate takes the place of its own slot below...
+        record = self.cr.accountDetailRecord
+        positions = [avatar[3] for avatar in avatars]
+        data = MembershipGlobals.getAvatarSlotStates(positions, record.maxAvatars,
+            record.maxAvatarSlots or self.AvatarSlots)
 
         for avNum, avName, avDNA, avPosition, nameState, wishName, defaultShard, lastLogout in avatars:
             nameOpen = int(nameState == self.NameStateOpen)
