@@ -3,6 +3,7 @@ import base64
 import hashlib
 import hmac
 import json
+import random
 import time
 import urllib.request, urllib.error, urllib.parse
 
@@ -20,6 +21,8 @@ from otp.distributed.MsgTypes import *
 from pirates.pirate.HumanDNA import HumanDNA
 from pirates.quest.QuestConstants import LocationIds
 from pirates.piratesbase import PiratesGlobals
+from pirates.makeapirate.PCPickANamePattern import PCPickANamePattern
+from pirates.uberdog.DistributedAvatarManagerUD import makePatternName
 
 # Import from PyCrypto only if we are using a database that requires it. This
 # allows local hosted and developer builds of the game to run without it:
@@ -40,6 +43,83 @@ http.setVerifySsl(0)
 # the player starts the tutorial, the pirate is only made and named later on
 # in the tutorial's Make-A-Pirate (see PiratesClientRepository.enterCreateAvatar):
 DefaultAvatarName = 'dbp'
+
+# The states of an avatar's typed (wish) name. An avatar with no wish name
+# state (or a LOCKED one) carries its final name:
+WishNameOpen = 'OPEN'
+WishNamePending = 'PENDING'
+WishNameApproved = 'APPROVED'
+WishNameRejected = 'REJECTED'
+WishNameLocked = 'LOCKED'
+
+# An avatar may be (re)named while it is in one of these states:
+NameableWishNameStates = (WishNameOpen, WishNameRejected)
+
+# The name states the client's avatar list (PotentialPirate.aname) carries:
+NameStateClosed = 0
+NameStateOpen = 1
+NameStatePending = 2
+NameStateApproved = 3
+NameStateRejected = 4
+
+WishNameState2NameState = {
+    WishNameOpen: NameStateOpen,
+    WishNamePending: NameStatePending,
+    WishNameApproved: NameStateApproved,
+    WishNameRejected: NameStateRejected,
+}
+
+
+def isNamePattern(name, gender):
+    """
+    Returns True when the name is made up from the pick-a-name lists, such a
+    name needs no approval.
+    """
+
+    if not name:
+        return False
+
+    return PCPickANamePattern(name, gender).hasNamePattern()
+
+
+def makeTemporaryName(gender):
+    """
+    Picks a random pick-a-name pattern name. A pirate goes by it until the
+    name its owner typed in has been approved (see PLocalizer.TempNameIssued).
+    """
+
+    if gender == 'f':
+        nameLists = PiratesGlobals.femaleNames
+    else:
+        nameLists = PiratesGlobals.maleNames
+
+    def pickIndex(nameList):
+        return random.choice([index for index, part in enumerate(nameList) if part.strip()])
+
+    return makePatternName(gender, pickIndex(nameLists[1]), pickIndex(nameLists[2]), pickIndex(nameLists[3]))
+
+
+def submitWishName(csm, avId, name):
+    """
+    Judges a typed name and hands it to the account server for approval. The
+    avatar's wish name is PENDING from then on. Returns True on success.
+    """
+
+    if not judgeName(name):
+        return False
+
+    if csm.accountDB.addNameRequest(avId, name) != 'Success':
+        return False
+
+    csm.air.dbInterface.updateObject(
+        csm.air.dbId,
+        avId,
+        csm.air.dclassesByName['DistributedPlayerPirateUD'],
+        {'WishNameState': (WishNamePending,),
+         'WishName': (name,)})
+
+    csm.air.writeServerEvent('avatarWishname', avId=avId, name=name)
+    return True
 
 
 def isAvatarUnfinished(fields):
@@ -72,7 +152,7 @@ def isAvatarUnfinished(fields):
 
 def executeHttpRequest(url, **extras):
     timestamp = str(int(time.time()))
-    signature = hmac.new(accountServerSecret, timestamp, hashlib.sha256)
+    signature = hmac.new(accountServerSecret.encode('utf-8'), timestamp.encode('utf-8'), hashlib.sha256)
     request = urllib.request.Request(accountServerEndpoint + url)
     request.add_header('User-Agent', 'POC-CSM')
     request.add_header('X-CSM-Timestamp', timestamp)
@@ -80,9 +160,14 @@ def executeHttpRequest(url, **extras):
     for k, v in list(extras.items()):
         request.add_header('X-CSM-' + k, v)
     try:
-        return urllib.request.urlopen(request).read()
+        response = urllib.request.urlopen(request).read()
     except:
         return None
+
+    if isinstance(response, bytes):
+        response = response.decode('utf-8', 'replace')
+
+    return response.strip()
 
 #blacklist = executeHttpRequest('names/blacklist.json')
 #if blacklist:
@@ -220,7 +305,7 @@ class RemoteAccountDB(AccountDB):
         # First, base64 decode the token:
         try:
             token = base64.b64decode(token)
-        except TypeError:
+        except (TypeError, ValueError):
             self.notify.warning('Could not decode the provided token!')
             response = {
                 'success': False,
@@ -241,7 +326,7 @@ class RemoteAccountDB(AccountDB):
 
         # Next, decrypt the token using AES-128 in CBC mode:
         accountServerSecret = base.config.GetString(
-            'account-server-secret', '6163636f756e7473')
+            'account-server-secret', '6163636f756e7473').encode('utf-8')
 
         # Ensure that our secret is the correct size:
         if len(accountServerSecret) > AES.block_size:
@@ -249,9 +334,9 @@ class RemoteAccountDB(AccountDB):
             accountServerSecret = accountServerSecret[:AES.block_size]
         elif len(accountServerSecret) < AES.block_size:
             self.notify.warning('account-server-secret is too small!')
-            accountServerSecret += '\x80'
+            accountServerSecret += b'\x80'
             while len(accountServerSecret) < AES.block_size:
-                accountServerSecret += '\x00'
+                accountServerSecret += b'\x00'
 
         # Take the initialization vector off the front of the token:
         iv = token[:AES.block_size]
@@ -262,7 +347,7 @@ class RemoteAccountDB(AccountDB):
         # Decrypt!
         cipher = AES.new(accountServerSecret, mode=AES.MODE_CBC, IV=iv)
         try:
-            token = json.loads(cipher.decrypt(cipherText).replace('\x00', ''))
+            token = json.loads(cipher.decrypt(cipherText).replace(b'\x00', b'').decode('utf-8'))
             if ('timestamp' not in token) or (not isinstance(token['timestamp'], int)):
                 raise ValueError
             if ('userid' not in token) or (not isinstance(token['userid'], int)):
@@ -567,10 +652,27 @@ class CreateAvatarFSM(OperationFSM):
         # The client's DNA blob carries a tutorial value too, a new avatar
         # always starts at the beginning of the tutorial...
         pirateFields['setTutorial'] = (PiratesGlobals.TUT_STARTED,)
-        pirateFields['setName'] = (self.name,)
-        pirateFields['WishNameState'] = ('OPEN',)
-        pirateFields['WishName'] = ('',)
         pirateFields['setDISLid'] = (self.target,)
+
+        # The tutorial's placeholder pirate is named later on in Make-A-Pirate.
+        # Outside of the tutorial (skip-tutorial) Make-A-Pirate hands us the
+        # final name: a pick-a-name pattern is taken as it is, a typed name
+        # has to be approved first and the pirate is given a temporary name
+        # until then...
+        self.wishName = ''
+        gender = humanDNA.getGender()
+        if self.name == DefaultAvatarName:
+            pirateFields['setName'] = (self.name,)
+            pirateFields['WishNameState'] = (WishNameOpen,)
+        elif isNamePattern(self.name, gender):
+            pirateFields['setName'] = (self.name,)
+            pirateFields['WishNameState'] = ('',)
+        else:
+            self.wishName = self.name
+            pirateFields['setName'] = (makeTemporaryName(gender),)
+            pirateFields['WishNameState'] = (WishNameOpen,)
+
+        pirateFields['WishName'] = ('',)
 
         if base.config.GetBool('skip-tutorial', False):
             pirateFields['setReturnLocation'] = (LocationIds.PORT_ROYAL_ISLAND,)
@@ -604,6 +706,11 @@ class CreateAvatarFSM(OperationFSM):
         if fields:
             self.demand('Kill', 'Database failed to associate the new avatar to your account!')
             return
+
+        # A rejected typed name leaves the pirate open for renaming from the
+        # avatar chooser:
+        if self.wishName:
+            submitWishName(self.csm, self.avId, self.wishName)
 
         # Otherwise, we're done!
         self.csm.air.writeServerEvent('avatarCreated', avId=self.avId, target=self.target, dna=self.dna.hex(), avatarSlot=self.index)
@@ -704,31 +811,30 @@ class GetAvatarsFSM(AvatarOperationFSM):
 
         for avId, fields in list(self.avatarFields.items()):
             index = self.avList.index(avId)
-            wishNameState = fields.get('WishNameState', [''])[0]
+            wishNameState = fields.get('WishNameState', ('',))[0]
+            wishName = fields.get('WishName', ('',))[0]
             name = fields['setName'][0]
-            nameState = 0
 
-            if wishNameState == 'OPEN':
-                nameState = 1
-            elif wishNameState == 'PENDING':
+            if wishNameState == WishNamePending:
+                # Find out whether the account server has made a decision
+                # on the typed name yet:
                 actualNameState = self.csm.accountDB.getNameStatus(avId)
-                self.csm.air.dbInterface.updateObject(
-                    self.csm.air.dbId,
-                    avId,
-                    self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
-                    {'WishNameState': [actualNameState]}
-                )
-                if actualNameState == 'PENDING':
-                    nameState = 2
-                if actualNameState == 'APPROVED':
-                    nameState = 3
-                    name = fields['WishName'][0]
-                elif actualNameState == 'REJECTED':
-                    nameState = 4
-            elif wishNameState == 'APPROVED':
-                nameState = 3
-            elif wishNameState == 'REJECTED':
-                nameState = 4
+                if actualNameState in (WishNamePending, WishNameApproved, WishNameRejected):
+                    if actualNameState != wishNameState:
+                        wishNameState = actualNameState
+                        self.csm.air.dbInterface.updateObject(
+                            self.csm.air.dbId,
+                            avId,
+                            self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
+                            {'WishNameState': (wishNameState,)})
+                else:
+                    self.notify.warning('Unknown name status %r for avatar %d!' % (actualNameState, avId))
+
+            nameState = WishNameState2NameState.get(wishNameState, NameStateClosed)
+            if nameState != NameStateApproved:
+                # The chooser only needs the wish name to finalize an
+                # approved name:
+                wishName = ''
 
             humanDNA = HumanDNA()
             for fieldName, fieldValue in list(fields.items()):
@@ -736,8 +842,10 @@ class GetAvatarsFSM(AvatarOperationFSM):
                     getattr(humanDNA, fieldName)(*fieldValue)
 
             potentialAvs.append([
-                avId, name, humanDNA.makeNetString(), index, nameState])
+                avId, name, humanDNA.makeNetString(), index, nameState, wishName,
+                fields.get('setDefaultShard', (0,))[0], fields.get('setLastLogout', (0,))[0]])
 
+        potentialAvs.sort(key=lambda potentialAv: potentialAv[3])
         self.csm.sendUpdateToAccountId(self.target, 'setAvatars', [potentialAvs])
         self.demand('Off')
 
@@ -831,33 +939,27 @@ class SetNameTypedFSM(AvatarOperationFSM):
             self.demand('Kill', "One of the account's avatars is invalid!")
             return
 
-        if fields['WishNameState'][0] != 'OPEN':
+        wishNameState = fields.get('WishNameState', ('',))[0]
+        if wishNameState not in NameableWishNameStates:
             self.demand('Kill', 'Avatar is not in a namable state!')
             return
+
+        if wishNameState == WishNameRejected:
+            # The rejected name makes room for the new one:
+            self.csm.accountDB.removeNameRequest(self.avId)
 
         self.demand('JudgeName')
 
     def enterJudgeName(self):
-        # Let's see if the name is valid:
-        status = judgeName(self.name)
-
-        if self.avId and status:
-            resp = self.csm.accountDB.addNameRequest(self.avId, self.name)
-            if resp != 'Success':
-                status = False
-            else:
-                self.csm.air.dbInterface.updateObject(
-                    self.csm.air.dbId,
-                    self.avId,
-                    self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
-                    {'WishNameState': ('PENDING',),
-                     'WishName': (self.name,)})
-
         if self.avId:
-            self.csm.air.writeServerEvent('avatarWishname', avId=self.avId, name=self.name)
+            status = submitWishName(self.csm, self.avId, self.name)
+        else:
+            # The client is only checking whether the name would do:
+            status = judgeName(self.name)
 
         self.csm.sendUpdateToAccountId(self.target, 'setNameTypedResp', [self.avId, status])
         self.demand('Off')
+
 
 class SetNamePatternFSM(AvatarOperationFSM):
     notify = directNotify.newCategory('SetNamePatternFSM')
@@ -870,7 +972,7 @@ class SetNamePatternFSM(AvatarOperationFSM):
         self.demand('RetrieveAccount')
 
     def enterRetrieveAvatar(self):
-        if self.avId and self.avId not in self.avList:
+        if self.avId not in self.avList:
             self.demand('Kill', 'Tried to name an avatar not in the account!')
             return
 
@@ -882,27 +984,26 @@ class SetNamePatternFSM(AvatarOperationFSM):
             self.demand('Kill', "One of the account's avatars is invalid!")
             return
 
-        if fields['WishNameState'][0] != 'OPEN':
+        wishNameState = fields.get('WishNameState', ('',))[0]
+        if wishNameState not in NameableWishNameStates:
             self.demand('Kill', 'Avatar is not in a namable state!')
             return
 
+        self.avatarFields = fields
         self.demand('SetName')
 
     def enterSetName(self):
-        # Render the pattern into a string:
-        parts = []
-        for p, f in self.pattern:
-            part = self.csm.nameGenerator.nameDictionary.get(p, ('', ''))[1]
-            if f:
-                part = part[:1].upper() + part[1:]
-            else:
-                part = part.lower()
-            parts.append(part)
+        # Render the pattern (nickname, first, last prefix, last suffix) into
+        # a string, the same way the client's NameGUI does:
+        gender = self.avatarFields.get('setGender', ('m',))[0]
+        name = makePatternName(gender, self.pattern[1][0], self.pattern[2][0], self.pattern[3][0])
+        if not name:
+            self.csm.sendUpdateToAccountId(self.target, 'setNamePatternResp', [self.avId, 0])
+            self.demand('Off')
+            return
 
-        parts[2] += parts.pop(3) # Merge 2&3 (the last name) as there should be no space.
-        while '' in parts:
-            parts.remove('')
-        name = ' '.join(parts)
+        if self.avatarFields.get('WishNameState', ('',))[0] == WishNameRejected:
+            self.csm.accountDB.removeNameRequest(self.avId)
 
         self.csm.air.dbInterface.updateObject(
             self.csm.air.dbId,
@@ -1176,6 +1277,7 @@ class UnloadAvatarFSM(OperationFSM):
         self.csm.air.guildManager.avatarOffline(self.avId)
 
         self.csm.activeAvatars.pop(self.avId, None)
+        self.csm.recordLastLogout(self.avId)
 
         # Done!
         self.csm.air.writeServerEvent('avatarUnload', avId=self.avId)
@@ -1247,48 +1349,21 @@ class PopulateAvatarFSM(AvatarOperationFSM):
             else:
                 updateFields[field.getName()] = (fieldValue,)
 
-        # Handle name pattern if requested
+        # Handle name pattern if requested (p1=nick, p2=first, p3=prefix, p4=suffix):
+        gender = humanDNA.getGender()
+        name = ''
         if self.usePattern:
-            # Get the name lists based on gender
-            gender = humanDNA.getGender()
-            if gender == 'f':
-                nameLists = PiratesGlobals.femaleNames
-            else:
-                nameLists = PiratesGlobals.maleNames
+            name = makePatternName(gender, self.p2, self.p3, self.p4)
 
-            # Pattern is (nick, first, prefix, suffix) indices
-            # nameLists[0] = nicknames (not used)
-            # nameLists[1] = first names
-            # nameLists[2] = prefixes
-            # nameLists[3] = suffixes
-            parts = []
-
-            # First name (self.p2 = first name index)
-            if self.p2 > 0 and self.p2 < len(nameLists[1]):
-                parts.append(nameLists[1][self.p2].strip())
-
-            # Last name = prefix + suffix
-            lastName = ''
-            if self.p3 > 0 and self.p3 < len(nameLists[2]):
-                prefix = nameLists[2][self.p3].strip()
-                lastName = prefix
-                # Check if prefix needs suffix to be capitalized
-                if prefix in PiratesGlobals.lastNamePrefixesCapped:
-                    if self.p4 > 0 and self.p4 < len(nameLists[3]):
-                        lastName += nameLists[3][self.p4].strip().capitalize()
-                else:
-                    if self.p4 > 0 and self.p4 < len(nameLists[3]):
-                        lastName += nameLists[3][self.p4].strip()
-
-            if lastName:
-                parts.append(lastName)
-
-            name = ' '.join(parts)
-
-            if name:
-                updateFields['WishNameState'] = ('',)
-                updateFields['WishName'] = ('',)
-                updateFields['setName'] = (name,)
+        if name:
+            updateFields['WishNameState'] = ('',)
+            updateFields['WishName'] = ('',)
+            updateFields['setName'] = (name,)
+        elif self.avatarFields.get('setName', ('',))[0] in (DefaultAvatarName, ''):
+            # The pirate was given a typed name (which the client has already
+            # submitted for approval, see DistributedPiratesTutorial), it goes
+            # by a temporary name until then rather than the placeholder one:
+            updateFields['setName'] = (makeTemporaryName(gender),)
 
         # The avatar's tutorial progress is owned by the AI, the client's
         # Make-A-Pirate DNA must never roll it back...
@@ -1623,7 +1698,17 @@ class ClientServicesManagerUD(DistributedObjectGlobalUD):
             del self.activeAvatars[avId]
 
         self.air.writeServerEvent('avatarDisconnected', avId=avId, accountId=accountId)
+        self.recordLastLogout(avId)
         self.removeUnfinishedAvatar(accountId, avId)
+
+    def recordLastLogout(self, avId):
+        # The avatar chooser offers to return a pirate to its last ocean if it
+        # logged out within the last hour, it keeps time in minutes:
+        self.air.dbInterface.updateObject(
+            self.air.dbId,
+            avId,
+            self.air.dclassesByName['DistributedPlayerPirateUD'],
+            {'setLastLogout': (int(time.time() / 60),)})
 
     def removeUnfinishedAvatar(self, accountId, avId, callback=None):
         fsm = self.avatar2removeFsm.get(avId)

@@ -40,6 +40,13 @@ def makePatternName(gender, firstIndex, prefixIndex, suffixIndex):
     return ' '.join(parts)
 
 
+def removeNameRequest(air, avId):
+    # The account server keeps track of typed names waiting for approval:
+    csm = getattr(air, 'csm', None)
+    if csm and hasattr(csm, 'accountDB'):
+        csm.accountDB.removeNameRequest(avId)
+
+
 class AvatarOperationFSM(AvatarManagerOperationFSM):
     """
     Retrieves the account and then the target avatar, making sure the avatar
@@ -94,8 +101,10 @@ class PatternNameFSM(AvatarOperationFSM):
         self.mgr.d_patternNameResponse(self.target, False)
 
     def enterSetName(self):
+        # Pirates are renamed from the avatar chooser when their name is still
+        # open or their typed name was rejected:
         wishNameState = self.avatarFields.get('WishNameState', ('',))[0]
-        if wishNameState != 'OPEN':
+        if wishNameState not in ('OPEN', 'REJECTED'):
             self.notify.warning('Avatar %d is not in a nameable state (%s)!' % (self.avId, wishNameState))
             self.reject(RejectCode.NOT_YOUR_AVATAR)
             self.demand('Off')
@@ -108,6 +117,9 @@ class PatternNameFSM(AvatarOperationFSM):
             self.reject(RejectCode.NOT_YOUR_AVATAR)
             self.demand('Off')
             return
+
+        if wishNameState == 'REJECTED':
+            removeNameRequest(self.mgr.air, self.avId)
 
         self.mgr.air.dbInterface.updateObject(
             self.mgr.air.dbId,
@@ -150,9 +162,7 @@ class FinalizeNameFSM(AvatarOperationFSM):
             self.demand('Off')
             return
 
-        csm = getattr(self.mgr.air, 'csm', None)
-        if csm and hasattr(csm, 'accountDB'):
-            csm.accountDB.removeNameRequest(self.avId)
+        removeNameRequest(self.mgr.air, self.avId)
 
         self.mgr.air.dbInterface.updateObject(
             self.mgr.air.dbId,

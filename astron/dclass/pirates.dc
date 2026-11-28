@@ -405,6 +405,9 @@ struct PotentialPirate {
   blob avDNA;
   uint8 avPosition;
   uint8 aname;
+  string wishName;
+  uint32 defaultShard;
+  uint32 lastLogout;
 };
 
 dclass ClientServicesManager : DistributedObjectGlobal {

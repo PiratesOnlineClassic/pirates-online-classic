@@ -86,6 +86,18 @@ class AvatarManagerUDTests(unittest.TestCase):
         self.assertEqual(mgr.air.dbInterface.updates, [])
         mgr.sendUpdateToAccountId.assert_called_with(ACCOUNT_ID, 'patternNameResponse', [False])
 
+    def test_pattern_name_renames_rejected_avatar(self):
+        mgr = makeManager({'WishNameState': ('REJECTED',), 'WishName': ('Bad',),
+                           'setName': ('Pirate',), 'setGender': ('f',)})
+        first = firstIndex(PiratesGlobals.femaleNames[1])
+        mgr.requestPatternName(0, AV_ID, 0, first, 0, 0)
+
+        _, fields, _ = mgr.air.dbInterface.updates[0]
+        self.assertEqual(fields['setName'], (PiratesGlobals.femaleNames[1][first].strip(),))
+        self.assertEqual(fields['WishNameState'], ('',))
+        mgr.air.csm.accountDB.removeNameRequest.assert_called_with(AV_ID)
+        mgr.sendUpdateToAccountId.assert_called_with(ACCOUNT_ID, 'patternNameResponse', [True])
+
     def test_foreign_avatar_kills_account(self):
         mgr = makeManager({'WishNameState': ('OPEN',)}, avSet=(1,))
         mgr.requestFinalize(0, AV_ID)
