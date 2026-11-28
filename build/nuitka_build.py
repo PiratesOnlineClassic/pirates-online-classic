@@ -1,0 +1,505 @@
+#!/usr/bin/env python3
+"""Compile the Pirates Online Classic client with Nuitka and lay out a release.
+
+    python build/nuitka_build.py --dry-run            # print the Nuitka command
+    python build/nuitka_build.py                      # build for this OS
+    python build/nuitka_build.py --onefile            # one executable (Windows/Linux)
+    python build/nuitka_build.py --resources-dir ../resources   # bundle the phase files
+
+Run it with the Python the client is built from: a python.org/CPython build
+(not Apple's /usr/bin/python3, which Nuitka refuses for standalone builds)
+with panda3d, requests and nuitka installed (requirements.txt and
+requirements-build.txt).  Nuitka cannot cross-compile: build each OS on that
+OS.  See build/README.md.
+
+The release it writes, under --output-dir:
+
+    PiratesOnlineClassic-<os>/
+      game/                 working directory of the client
+        PiratesOnlineClassic[.exe] and the files Nuitka bundled
+        config/general.prc, performance.prc, dev.prc (= build/release.prc), release.env
+        astron/dclass/otp.dc, pirates.dc
+      resources/            phase_2 .. phase_5 (copied with --resources-dir)
+      PiratesOnlineClassic.bat / .sh   convenience launcher
+
+On macOS it is "Pirates Online Classic.app" with game/ and resources/ under
+Contents/Resources/.
+"""
+
+import argparse
+import glob
+import os
+import platform
+import shlex
+import shutil
+import subprocess
+import sys
+import time
+
+BUILD_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(BUILD_DIR)
+sys.path.insert(0, BUILD_DIR)
+
+import collect_modules  # noqa: E402
+
+APP_NAME = 'PiratesOnlineClassic'
+PRODUCT_NAME = 'Pirates Online Classic'
+MAC_BUNDLE_NAME = PRODUCT_NAME + '.app'
+MAIN_SCRIPT = os.path.join(BUILD_DIR, 'client_main.py')
+DEFAULT_VERSION = '1.0.0.0'
+
+# Config the release ships.  dev.prc is replaced by build/release.prc (see
+# the header of that file); server.prc and release/dist_prod.prc are not shipped.
+CONFIG_FILES = {
+    'config/general.prc': 'config/general.prc',
+    'config/performance.prc': 'config/performance.prc',
+    'build/release.prc': 'config/dev.prc',
+    'build/release.env': 'config/release.env',
+}
+DC_FILES = collect_modules.DC_FILES
+
+# Panda3D plugins the client's prc asks for, by OS.  load-display pandagl,
+# aux-display pandadx9 (pandadx8 no longer exists in 1.10) and p3tinydisplay,
+# audio-library-name p3openal_audio, and p3ffmpeg from Confauto.prc for the
+# mp3 sounds.  Nuitka's own panda3d configuration copies these; the layout
+# step checks they arrived.
+REQUIRED_PLUGINS = {
+    'windows': ['libpandagl', 'libp3openal_audio', 'libp3ffmpeg', 'libp3tinydisplay'],
+    'macos': ['libpandagl', 'libp3openal_audio', 'libp3ffmpeg', 'libp3tinydisplay'],
+    'linux': ['libpandagl', 'libp3openal_audio', 'libp3ffmpeg', 'libp3tinydisplay'],
+}
+OPTIONAL_PLUGINS = {
+    'windows': ['libpandadx9', 'OpenAL32'],
+    'macos': [],
+    'linux': [],
+}
+# Plugins Nuitka's panda3d config copies but the client never uses: there
+# are no .obj/.fbx/.gltf models, so the Assimp loader is dead weight.
+EXCLUDED_DLLS = ['panda3d/libp3assimp.*', 'libp3assimp.*']
+
+# Not copied from the resources checkout.
+RESOURCE_IGNORE = ('.git', '.gitignore', '.gitattributes', '.DS_Store', 'Thumbs.db',
+                   '*.sample', '__pycache__', '*.psd', '*.blend', '*.blend1')
+
+ICON_CANDIDATES = {
+    'windows': ['build/icons/%s.ico' % APP_NAME, 'build/icons/%s.png' % APP_NAME],
+    'macos': ['build/icons/%s.icns' % APP_NAME, 'build/icons/%s.png' % APP_NAME],
+    'linux': ['build/icons/%s.png' % APP_NAME],
+}
+
+
+def host_os():
+    if sys.platform == 'win32':
+        return 'windows'
+    if sys.platform == 'darwin':
+        return 'macos'
+    return 'linux'
+
+
+def log(msg):
+    print('[nuitka_build] ' + msg, flush=True)
+
+
+def warn(msg):
+    print('[nuitka_build] WARNING: ' + msg, flush=True)
+
+
+# ------------------------------------------------------------------ preflight
+
+PROBE = r'''
+import json, sys, os
+info = {"python": sys.version.split()[0], "executable": sys.executable,
+        "prefix": sys.prefix, "base_prefix": getattr(sys, "base_prefix", sys.prefix)}
+for mod in ("panda3d", "requests", "nuitka"):
+    try:
+        m = __import__(mod)
+        info[mod] = getattr(m, "__version__", "") or "installed"
+    except Exception as e:
+        info[mod] = None
+try:
+    from panda3d.core import PandaSystem
+    info["panda3d"] = PandaSystem.getVersionString()
+except Exception:
+    pass
+try:
+    from nuitka.Version import getNuitkaVersion
+    info["nuitka"] = getNuitkaVersion()
+except Exception:
+    pass
+print(json.dumps(info))
+'''
+
+
+def probe_python(python):
+    import json
+    try:
+        out = subprocess.run([python, '-c', PROBE], stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE, timeout=120, check=True).stdout
+        return json.loads(out.decode().strip().splitlines()[-1])
+    except Exception as e:
+        return {'error': str(e)}
+
+
+def is_apple_python(info):
+    prefix = info.get('base_prefix') or info.get('prefix') or ''
+    return prefix.startswith(('/Library/Developer/CommandLineTools', '/Applications/Xcode',
+                              '/System/Library/Frameworks/Python.framework'))
+
+
+def preflight(args, modules):
+    problems, notes = [], []
+    if args.os != host_os():
+        problems.append('Nuitka cannot cross-compile: building for %s needs a %s machine '
+                        '(this is %s).' % (args.os, args.os, host_os()))
+    probe = probe_python(args.python)
+    if 'error' in probe:
+        problems.append('cannot run %s: %s' % (args.python, probe['error']))
+    else:
+        notes.append('build Python %s at %s' % (probe['python'], probe['executable']))
+        if not probe.get('panda3d'):
+            problems.append('panda3d is not installed in the build Python')
+        elif not str(probe['panda3d']).startswith('1.10.'):
+            problems.append('panda3d %s found; the client targets 1.10.x' % probe['panda3d'])
+        else:
+            notes.append('panda3d %s' % probe['panda3d'])
+        if not probe.get('requests'):
+            problems.append('requests is not installed in the build Python '
+                            '(pirates.uberdog.ClientServicesManager imports it)')
+        if not probe.get('nuitka'):
+            problems.append('nuitka is not installed in the build Python '
+                            '(pip install -r requirements-build.txt)')
+        else:
+            notes.append('nuitka %s' % probe['nuitka'])
+        if args.os == 'macos' and is_apple_python(probe):
+            problems.append("Apple's Python cannot make standalone builds; use a python.org "
+                            'CPython (Nuitka refuses it).')
+    libotp = os.path.join(REPO_ROOT, 'libotp')
+    if not os.path.isfile(os.path.join(libotp, 'Nametag.py')):
+        problems.append('libotp/ is missing or empty; it is gitignored, link or copy it in '
+                        '(the client imports libotp.Nametag and friends)')
+    for dc in DC_FILES:
+        if not os.path.isfile(os.path.join(REPO_ROOT, dc)):
+            problems.append('missing dc file %s' % dc)
+    if modules['dc_missing_modules']:
+        problems.append('dc files import modules that do not exist: %s'
+                        % ', '.join(modules['dc_missing_modules']))
+    if args.resources_dir and not os.path.isdir(os.path.join(args.resources_dir, 'phase_3')):
+        problems.append('--resources-dir %s has no phase_3 folder' % args.resources_dir)
+    return problems, notes
+
+
+# -------------------------------------------------------------------- command
+
+def find_icon(args):
+    if args.icon:
+        return os.path.abspath(args.icon)
+    for rel in ICON_CANDIDATES[args.os]:
+        path = os.path.join(REPO_ROOT, rel)
+        if os.path.isfile(path):
+            return path
+    return None
+
+
+def work_dir(args):
+    return os.path.join(args.output_dir, 'nuitka-work-%s%s' % (args.os, '-onefile' if args.onefile else ''))
+
+
+def nuitka_command(args, modules):
+    onefile = args.onefile and args.os != 'macos'
+    if args.os == 'macos':
+        mode = 'app-dist'          # an .app bundle with a standalone folder inside
+    elif onefile:
+        mode = 'onefile'
+    else:
+        mode = 'standalone'
+
+    cmd = [args.python, '-m', 'nuitka',
+           '--mode=' + mode,
+           '--output-dir=' + work_dir(args),
+           '--output-filename=' + APP_NAME,
+           '--jobs=%d' % args.jobs,
+           # Keep asserts and __debug__: several modules pick the
+           # ../resources/phase_N/etc search path under "if __debug__".
+           # Do not add --python-flag=-O / no_asserts.
+           '--deployment',
+           '--report=' + os.path.join(work_dir(args), 'nuitka-report.xml'),
+           '--product-name=' + PRODUCT_NAME,
+           '--file-description=' + PRODUCT_NAME,
+           '--company-name=' + PRODUCT_NAME,
+           '--file-version=' + args.version,
+           '--product-version=' + args.version,
+           ]
+    cmd += collect_modules.nuitka_flags(modules)
+    for pattern in EXCLUDED_DLLS:
+        cmd.append('--noinclude-dlls=' + pattern)
+
+    icon = find_icon(args)
+    if args.os == 'windows':
+        # attach: no console window when double-clicked, output still shows
+        # when started from a terminal.  client_main logs to a file otherwise.
+        cmd.append('--windows-console-mode=attach')
+        if icon:
+            cmd.append('--windows-icon-from-ico=' + icon)
+    elif args.os == 'macos':
+        cmd += ['--macos-app-name=' + PRODUCT_NAME,
+                '--macos-app-version=' + args.version,
+                '--macos-app-mode=gui']
+        if args.bundle_id:
+            cmd.append('--macos-signed-app-name=' + args.bundle_id)
+        if icon:
+            cmd.append('--macos-app-icon=' + icon)
+    elif args.os == 'linux' and onefile and icon:
+        cmd.append('--linux-icon=' + icon)
+
+    if onefile:
+        # Unpack once per version into the user cache instead of a new temp
+        # folder on every start (the bundle is a few hundred MB unpacked).
+        cmd.append('--onefile-tempdir-spec={CACHE_DIR}/%s/{VERSION}' % APP_NAME)
+
+    cmd += args.nuitka_arg or []
+    cmd.append(MAIN_SCRIPT)
+    return cmd, icon
+
+
+def format_command(cmd):
+    if host_os() == 'windows':
+        return subprocess.list2cmdline(cmd)
+    return ' \\\n    '.join(shlex.quote(c) for c in cmd)
+
+
+# --------------------------------------------------------------------- layout
+
+def copy_tree(src, dst, ignore=()):
+    shutil.copytree(src, dst, symlinks=False, ignore=shutil.ignore_patterns(*ignore),
+                    dirs_exist_ok=True)
+
+
+def find_one(patterns):
+    for pattern in patterns:
+        hits = sorted(glob.glob(pattern))
+        if hits:
+            return hits[0]
+    return None
+
+
+def check_plugins(dist_dir, os_name):
+    found, missing = {}, []
+    names = []
+    for dirpath, _dirnames, filenames in os.walk(dist_dir):
+        for f in filenames:
+            names.append((f, os.path.join(dirpath, f)))
+    for plugin in REQUIRED_PLUGINS[os_name] + OPTIONAL_PLUGINS[os_name]:
+        hit = next((p for f, p in names if f.lower().startswith(plugin.lower() + '.')), None)
+        if hit:
+            found[plugin] = os.path.relpath(hit, dist_dir)
+        elif plugin in REQUIRED_PLUGINS[os_name]:
+            missing.append(plugin)
+        else:
+            warn('optional plugin %s not in the build' % plugin)
+    prc = next((p for f, p in names if f == 'Config.prc'), None)
+    if not prc:
+        warn("Panda3D's Config.prc is not in the build; client_main sets the "
+             'p3ffmpeg loader itself, but check audio works')
+    return found, missing
+
+
+def write_launchers(release_dir, os_name):
+    if os_name == 'windows':
+        path = os.path.join(release_dir, APP_NAME + '.bat')
+        with open(path, 'w', newline='\r\n') as f:
+            f.write('@echo off\r\nstart "" "%%~dp0game\\%s.exe" %%*\r\n' % APP_NAME)
+    elif os_name == 'linux':
+        path = os.path.join(release_dir, APP_NAME + '.sh')
+        with open(path, 'w', newline='\n') as f:
+            f.write('#!/bin/sh\n# The client sets its own working directory.\n'
+                    'exec "$(dirname "$0")/game/%s" "$@"\n' % APP_NAME)
+        os.chmod(path, 0o755)
+
+
+def write_build_info(path, args, cmd):
+    rev = ''
+    try:
+        rev = subprocess.run(['git', '-C', REPO_ROOT, 'rev-parse', 'HEAD'], stdout=subprocess.PIPE,
+                             stderr=subprocess.DEVNULL).stdout.decode().strip()
+    except OSError:
+        pass
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write('Pirates Online Classic client %s\n' % args.version)
+        f.write('built %s on %s (%s)\n' % (time.strftime('%Y-%m-%d %H:%M:%S'), platform.platform(), args.os))
+        f.write('git %s\n' % (rev or 'unknown'))
+        f.write('resources %s\n' % ('bundled from ' + args.resources_dir if args.resources_dir else 'not bundled'))
+        f.write('\nnuitka command:\n%s\n' % subprocess.list2cmdline(cmd))
+
+
+def lay_out_game_dir(game_dir):
+    for src, dst in CONFIG_FILES.items():
+        target = os.path.join(game_dir, dst)
+        os.makedirs(os.path.dirname(target), exist_ok=True)
+        shutil.copy2(os.path.join(REPO_ROOT, src), target)
+    for dc in DC_FILES:
+        target = os.path.join(game_dir, dc)
+        os.makedirs(os.path.dirname(target), exist_ok=True)
+        shutil.copy2(os.path.join(REPO_ROOT, dc), target)
+
+
+def lay_out_resources(resources_dir, args):
+    if args.resources_dir:
+        log('copying resources from %s' % args.resources_dir)
+        copy_tree(args.resources_dir, resources_dir, RESOURCE_IGNORE)
+    else:
+        os.makedirs(resources_dir, exist_ok=True)
+        with open(os.path.join(resources_dir, 'README.txt'), 'w') as f:
+            f.write('Put the game resources (phase_2, phase_3, phase_4, phase_5) in this folder.\n')
+
+
+def lay_out_release(args, cmd):
+    work = work_dir(args)
+    suffix = '-onefile' if (args.onefile and args.os != 'macos') else ''
+    release_dir = os.path.join(args.output_dir, '%s-%s%s' % (APP_NAME, args.os, suffix))
+    if os.path.exists(release_dir):
+        shutil.rmtree(release_dir)
+    os.makedirs(release_dir)
+
+    if args.os == 'macos':
+        app = find_one([os.path.join(work, '*.app')])
+        if not app:
+            raise SystemExit('no .app bundle in %s' % work)
+        bundle = os.path.join(release_dir, MAC_BUNDLE_NAME)
+        shutil.copytree(app, bundle, symlinks=True)
+        dist_dir = os.path.join(bundle, 'Contents', 'MacOS')
+        game_dir = os.path.join(bundle, 'Contents', 'Resources', 'game')
+        resources_dir = os.path.join(bundle, 'Contents', 'Resources', 'resources')
+        os.makedirs(game_dir, exist_ok=True)
+    else:
+        game_dir = os.path.join(release_dir, 'game')
+        resources_dir = os.path.join(release_dir, 'resources')
+        if args.onefile:
+            exe = find_one([os.path.join(work, APP_NAME + '.exe'), os.path.join(work, APP_NAME + '.bin'),
+                            os.path.join(work, APP_NAME)])
+            if not exe:
+                raise SystemExit('no onefile executable in %s' % work)
+            os.makedirs(game_dir)
+            shutil.copy2(exe, os.path.join(game_dir, os.path.basename(exe).replace('.bin', '')))
+            dist_dir = None
+        else:
+            dist = find_one([os.path.join(work, '*.dist')])
+            if not dist:
+                raise SystemExit('no .dist folder in %s' % work)
+            shutil.copytree(dist, game_dir, symlinks=True)
+            dist_dir = game_dir
+
+    lay_out_game_dir(game_dir)
+    lay_out_resources(resources_dir, args)
+    write_launchers(release_dir, args.os)
+    write_build_info(os.path.join(release_dir, 'BUILD-INFO.txt'), args, cmd)
+
+    if dist_dir:
+        found, missing = check_plugins(dist_dir, args.os)
+        for plugin, where in sorted(found.items()):
+            log('plugin %-18s %s' % (plugin, where))
+        if missing:
+            warn('Panda3D plugins missing from the build: %s.  Copy them from the panda3d '
+                 'package folder next to libp3dtool and rebuild.' % ', '.join(missing))
+    else:
+        log('onefile build: plugins are inside the executable; check them in nuitka-report.xml')
+
+    if args.os == 'macos' and args.codesign_identity and shutil.which('codesign'):
+        # Adding game/ and resources/ after Nuitka signed the bundle broke the
+        # signature; sign it again (ad hoc with "-").
+        log('signing %s with identity %r' % (bundle, args.codesign_identity))
+        subprocess.run(['codesign', '--force', '--deep', '--sign', args.codesign_identity, bundle],
+                       check=False)
+    return release_dir
+
+
+# ----------------------------------------------------------------------- main
+
+def parse_args(argv):
+    parser = argparse.ArgumentParser(description=__doc__.split('\n\n')[0],
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('--os', choices=('windows', 'macos', 'linux'), default=host_os(),
+                        help='target OS (default: this one; Nuitka cannot cross-compile)')
+    parser.add_argument('--onefile', action='store_true',
+                        help='one executable instead of a folder (Windows/Linux; macOS always makes an .app)')
+    parser.add_argument('--output-dir', default=os.path.join(REPO_ROOT, 'dist', 'nuitka'),
+                        help='where the Nuitka work folder and the release go (default: dist/nuitka)')
+    parser.add_argument('--resources-dir', default=None,
+                        help='resources checkout to copy into the release; without it the '
+                             'release ships an empty resources/ folder')
+    parser.add_argument('--dry-run', action='store_true',
+                        help='print the Nuitka command and the module lists, build nothing')
+    parser.add_argument('--jobs', type=int, default=os.cpu_count() or 4,
+                        help='parallel C compiler jobs (default: CPU count)')
+    parser.add_argument('--python', default=sys.executable,
+                        help='Python that runs Nuitka and whose packages get bundled (default: this one)')
+    parser.add_argument('--version', default=DEFAULT_VERSION, help='file/product version, four numbers')
+    parser.add_argument('--icon', default=None,
+                        help='icon file (.ico on Windows, .icns or .png on macOS, .png on Linux); '
+                             'default build/icons/%s.*' % APP_NAME)
+    parser.add_argument('--bundle-id', default=None, help='macOS bundle identifier, e.g. com.example.pirates')
+    parser.add_argument('--codesign-identity', default='-',
+                        help='macOS codesign identity used after the layout ("-" = ad hoc, "" = skip)')
+    parser.add_argument('--layout-only', action='store_true',
+                        help='skip Nuitka and lay out the release from an earlier build')
+    parser.add_argument('--nuitka-arg', action='append', metavar='ARG',
+                        help='extra argument passed to Nuitka (repeatable), e.g. --nuitka-arg=--lto=no')
+    args = parser.parse_args(argv)
+    args.output_dir = os.path.abspath(args.output_dir)
+    if args.resources_dir:
+        args.resources_dir = os.path.abspath(args.resources_dir)
+    if args.python != sys.executable:
+        args.python = shutil.which(args.python) or args.python
+    return args
+
+
+def main(argv=None):
+    args = parse_args(argv)
+    modules = collect_modules.collect(REPO_ROOT)
+    cmd, icon = nuitka_command(args, modules)
+
+    problems, notes = preflight(args, modules)
+    for note in notes:
+        log(note)
+
+    c = modules['counts']
+    log('modules: %d dc client modules, %d localizer, %d panda dynamic, %d worldData (bytecode), '
+        '%d server modules left out' % (len(modules['dc_client_modules']), len(modules['localizer_modules']),
+                                        len(modules['direct_dynamic']), c['world_data'], c['excluded_server']))
+    if not icon:
+        warn('no icon found (looked for %s); the executable gets the default icon'
+             % ', '.join(ICON_CANDIDATES[args.os]))
+    if args.onefile and args.os == 'macos':
+        warn('--onefile is ignored on macOS; the build is an .app bundle')
+    if not args.resources_dir:
+        log('resources: not bundled (no --resources-dir); the release has an empty resources/ folder')
+
+    log('Nuitka command (%d arguments, %d characters):' % (len(cmd), len(subprocess.list2cmdline(cmd))))
+    print(format_command(cmd), flush=True)
+
+    if problems:
+        for p in problems:
+            warn(p)
+    if args.dry_run:
+        log('dry run: nothing built')
+        return 0
+    if problems:
+        raise SystemExit('[nuitka_build] fix the problems above first')
+
+    if not args.layout_only:
+        os.makedirs(work_dir(args), exist_ok=True)
+        env = dict(os.environ)
+        env['PYTHONPATH'] = REPO_ROOT + (os.pathsep + env['PYTHONPATH'] if env.get('PYTHONPATH') else '')
+        log('running Nuitka (this takes a long time)...')
+        started = time.time()
+        result = subprocess.run(cmd, cwd=REPO_ROOT, env=env)
+        if result.returncode:
+            raise SystemExit('[nuitka_build] Nuitka failed with exit code %d' % result.returncode)
+        log('Nuitka finished in %.0f minutes' % ((time.time() - started) / 60))
+
+    release = lay_out_release(args, cmd)
+    log('release ready: %s' % release)
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
