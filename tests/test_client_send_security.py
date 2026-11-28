@@ -130,6 +130,10 @@ class SetTutorialTests(unittest.TestCase):
 
 
 def makePirate(air, **attributes):
+    attributes.setdefault('gmNameTagState', 0)
+    attributes.setdefault('gmNameTagColor', '')
+    attributes.setdefault('gmNameTagString', '')
+    attributes.setdefault('defaultQuestGiven', False)
     av = SimpleNamespace(air=air, doId=AV_ID, notify=Mock(), sendUpdate=Mock(), **attributes)
     for name in ('_isSenderSelf', '_setGMNameTag', 'getGMNameTag', 'd_updateGMNameTag', 'hasWeapon'):
         setattr(av, name, getattr(DistributedPlayerPirateAI, name).__get__(av))
@@ -141,7 +145,7 @@ class GMNameTagTests(unittest.TestCase):
     def testClientWithoutGMNameTagIsReverted(self):
         av = makePirate(makeAir(), gmNameTagAllowed=False)
         DistributedPlayerPirateAI.updateGMNameTag(av, 1, 'red', 'Game Master')
-        self.assertFalse(hasattr(av, 'gmNameTagState'))
+        self.assertEqual(av.getGMNameTag(), [0, '', ''])
         av.sendUpdate.assert_called_once_with('updateGMNameTag', [0, '', ''])
         av.air.logPotentialHacker.assert_called_once()
 

@@ -116,6 +116,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.zombie = 0
         self.forcedZombie = 0
         self.gmNameTagAllowed = False
+        self.gmNameTagState = 0
+        self.gmNameTagColor = ''
+        self.gmNameTagString = ''
+        self.defaultQuestGiven = False
         self.stickyTargets = []
         self.defaultShard = 0
         self.defaultZone = 0
@@ -391,7 +395,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
             return
 
-        if getattr(self, '_defaultQuestGiven', False):
+        if self.defaultQuestGiven:
             self.notify.debug('Ignoring giveDefaultQuest for avatar %d, '
                 'the default quest was already given!' % self.doId)
 
@@ -420,7 +424,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         # the quest is created asynchronously, don't let a repeated request
         # hand out the cutlass reward again before it exists...
-        self._defaultQuestGiven = True
+        self.defaultQuestGiven = True
 
         # skipping the tutorial also skips Will Turner's sword lesson,
         # so give the avatar the cutlass they would have received there...
@@ -1154,8 +1158,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.gmNameTagString = gmNameTagString
 
     def getGMNameTag(self):
-        return [getattr(self, 'gmNameTagState', 0), getattr(self, 'gmNameTagColor', ''),
-            getattr(self, 'gmNameTagString', '')]
+        return [self.gmNameTagState, self.gmNameTagColor, self.gmNameTagString]
 
     def d_updateGMNameTag(self, gmNameTagState, gmNameTagColor, gmNameTagString):
         self.sendUpdate('updateGMNameTag', [gmNameTagState, gmNameTagColor, gmNameTagString])
