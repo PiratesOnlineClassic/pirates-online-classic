@@ -65,6 +65,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         DistributedPlayerAI.announceGenerate(self)
         DistributedBattleAvatarAI.announceGenerate(self)
 
+        # Let the guild manager know we've arrived on this district:
+        self.air.guildManager.avatarOnline(self)
+
     def generate(self):
         DistributedPlayerAI.generate(self)
         DistributedBattleAvatarAI.generate(self)
