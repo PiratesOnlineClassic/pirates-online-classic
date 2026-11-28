@@ -4,6 +4,23 @@ from direct.showbase.DirectObject import DirectObject
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from otp.otpbase import OTPRender
 
+# The water and swamp shaders ship as GLSL vertex/fragment pairs
+# (<name>.vert.glsl, <name>.frag.glsl) next to the original <name>.cg, since
+# this Panda3D build has no Cg support compiled in. A shader is named by its
+# base path; the .cg name or either .glsl name of the pair is accepted too.
+SHADER_FILE_EXTENSIONS = ('.vert.glsl', '.frag.glsl', '.cg')
+
+def getShaderBasePath(file_path):
+    for extension in SHADER_FILE_EXTENSIONS:
+        if file_path.endswith(extension):
+            return file_path[:-len(extension)]
+
+    return file_path
+
+def loadWaterShader(file_path):
+    base = getShaderBasePath(file_path)
+    return Shader.load(Shader.SL_GLSL, base + '.vert.glsl', base + '.frag.glsl')
+
 class Water(DirectObject):
     notify = directNotify.newCategory('water')
     water_array = []
@@ -434,14 +451,20 @@ class Water(DirectObject):
         if self.shader != None and unload_previous_shader:
             self.unload_shader()
 
-        self.shader_file_path = file_path.getFullpath()
-        shader = loader.loadShader(self.shader_file_path)
+        shader_file_path = getShaderBasePath(file_path.getFullpath())
+        shader = loadWaterShader(shader_file_path)
+        if shader == None:
+            self.notify.warning('Could not load water shader %r.' % (shader_file_path,))
+            return
+
+        self.shader_file_path = shader_file_path
         self.shader = shader
         self.seamodel.setShader(shader)
         shader = None
 
     def unload_shader(self):
-        loader.unloadShader(self.shader_file_path)
+        # Shader.load() keeps no pool to release from, unlike the old
+        # loader.loadShader(), so there is only the path to forget.
         self.shader_file_path = None
 
     def set_water_color_texture(self, input_file_path, unload_previous_texture = False, texture = None):

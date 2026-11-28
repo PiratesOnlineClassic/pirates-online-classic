@@ -662,7 +662,7 @@ class WaterPanel(AppShell):
     def select_shader(self):
         default_directory = base.config.GetString('water-panel-default-shader-path', '.')
         filename = askopenfilename(initialdir=default_directory, filetypes=[
-            ('CG', 'cg')], title='Select Shader')
+            ('GLSL', 'glsl')], title='Select Shader')
         if not filename:
             return None
         else:
