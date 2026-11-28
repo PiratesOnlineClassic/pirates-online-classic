@@ -1,4 +1,7 @@
+import math
 import random
+
+from panda3d.core import Point3, VBase3
 
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
@@ -24,18 +27,33 @@ from pirates.battle import EnemyGlobals
 from pirates.ai import HolidayGlobals
 from pirates.quest.QuestConstants import NPCIds
 
+# the level editor's default values for the spawn node properties,
+# see the 'Spawn Node' and 'Object Spawn Node' entries in ObjectList...
+SPAWN_DELAY_DEFAULT = 20
+MIN_POPULATION_DEFAULT = 1
+
+# spawn node types which may spawn more than one npc at once
+POPULATION_SPAWN_TYPES = ['Spawn Node', 'Dormant NPC Spawn Node']
+
+# how far away from the spawn node additional npcs of it's population spawn
+POPULATION_SPREAD_RADIUS = (2.0, 5.0)
+
 
 class SpawnNodeBase:
     notify = DirectNotifyGlobal.directNotify.newCategory('SpawnNodeBase')
 
-    def __init__(self, air, objType, objectData, parent, objKey):
+    def __init__(self, air, objType, objectData, parent, objKey, parentUid=None, populationIndex=0):
         self.air = air
 
         self._objType = objType
         self._objectData = objectData
         self._parent = parent
         self._objKey = objKey
+        self._parentUid = parentUid
+        self._populationIndex = populationIndex
         self._npc = None
+        self._spawnPosHpr = None
+        self._linkedWaypoints = {}
 
         # allow our logger to send notify messages...
         self.notify.setInfo(True)
@@ -60,6 +78,84 @@ class SpawnNodeBase:
     def npc(self):
         return self._npc
 
+    @property
+    def populationIndex(self):
+        return self._populationIndex
+
+    def getIntProperty(self, name, default=0):
+        try:
+            return int(float(self.objectData.get(name, default)))
+        except (TypeError, ValueError):
+            return default
+
+    def getFloatProperty(self, name, default=0.0):
+        try:
+            return float(self.objectData.get(name, default))
+        except (TypeError, ValueError):
+            return default
+
+    def getAreaPosHpr(self, uid, objectData):
+        worldCreator = getattr(self.air, 'worldCreator', None)
+        if not worldCreator:
+            return Point3(*objectData.get('Pos', (0, 0, 0))), VBase3(*objectData.get('Hpr', (0, 0, 0)))
+
+        return worldCreator.getObjectAreaPosHpr(uid, objectData, self._parentUid)
+
+    def getSpawnPosHpr(self):
+        if self._spawnPosHpr:
+            return self._spawnPosHpr
+
+        pos, hpr = self.getAreaPosHpr(self.objKey, self.objectData)
+
+        # the rest of the node's population spawns spread out around the node,
+        # rather than all on top of one another...
+        if self._populationIndex:
+            angle = random.uniform(0, math.pi * 2)
+            distance = random.uniform(*POPULATION_SPREAD_RADIUS)
+            pos = Point3(pos[0] + math.cos(angle) * distance, pos[1] + math.sin(angle) * distance, pos[2])
+
+        self._spawnPosHpr = (Point3(*pos), VBase3(*hpr))
+        return self._spawnPosHpr
+
+    def getSpawnHpr(self):
+        return self.getSpawnPosHpr()[1]
+
+    def getSpawnDelay(self):
+        return self.getFloatProperty('SpawnDelay', SPAWN_DELAY_DEFAULT)
+
+    def getSpawnLevel(self, avatarType):
+        level = self.getIntProperty('Level')
+        if level > 0:
+            return level
+
+        return EnemyGlobals.getRandomEnemyLevel(avatarType)
+
+    def getLinkedWaypoints(self, waypointUid=None):
+        """
+        Returns the uid and object data of each movement node linked to the given
+        waypoint, or to this spawn node, which our npcs patrol between...
+        """
+
+        waypointUid = waypointUid or self.objKey
+        if waypointUid not in self._linkedWaypoints:
+            worldCreator = getattr(self.air, 'worldCreator', None)
+            linkedWaypoints = []
+            if worldCreator:
+                linkedWaypoints = worldCreator.getLinkedMovementNodes(waypointUid, self._parentUid)
+
+            self._linkedWaypoints[waypointUid] = linkedWaypoints
+
+        return self._linkedWaypoints[waypointUid]
+
+    def hasWaypoints(self):
+        return len(self.getLinkedWaypoints()) > 0
+
+    def getWaypointPos(self, waypointUid, waypointData):
+        if waypointUid == self.objKey:
+            return self.getSpawnPosHpr()[0]
+
+        return self.getAreaPosHpr(waypointUid, waypointData)[0]
+
     def getAvatarType(self):
         raise NotImplementedError('%s does not extend getAvatarType!' % \
             self.__class__.__name__)
@@ -82,7 +178,13 @@ class SpawnNodeBase:
 
             return
 
-        taskMgr.doMethodLater(5, self.__respawn, 'perform-respawn-%s' % self.objKey)
+        taskMgr.doMethodLater(5, self.__respawn, self.getRespawnTaskName())
+
+    def getSpawnTaskName(self):
+        return 'perform-spawn-%s-%d' % (self.objKey, self._populationIndex)
+
+    def getRespawnTaskName(self):
+        return 'perform-respawn-%s-%d' % (self.objKey, self._populationIndex)
 
     def canRespawn(self):
 
@@ -133,9 +235,7 @@ class SpawnNodeBase:
             self.air.enemySpawner.removeSpawnNode(self.objType, self)
             return task.done
 
-        #TODO: Is this a constant?
-        spawnTimer = 20
-        taskMgr.doMethodLater(spawnTimer, self.__attemptSpawn, 'perform-spawn-%s' % self.objKey)
+        taskMgr.doMethodLater(self.getSpawnDelay(), self.__attemptSpawn, self.getSpawnTaskName())
 
         return task.done
 
@@ -189,9 +289,10 @@ class SpawnNodeBase:
         npc.setScale(self.objectData.get('Scale'))
         npc.setUniqueId('' if avatarType.getBoss() else self.objKey)
 
-        sx, sy, sz = self.objectData.get('GridPos', self.objectData.get('Pos', (0, 0, 0)))
+        spawnPos, spawnHpr = self.getSpawnPosHpr()
+        sx, sy, sz = spawnPos
         npc.setPos(sx, sy, sz)
-        npc.setHpr(self.objectData.get('Hpr', (0, 0, 0)))
+        npc.setHpr(spawnHpr)
 
         # Set collision mode
         npc.setCollisionMode(PiratesGlobals.COLL_MODE_FLOORS_CL)
@@ -248,9 +349,9 @@ class SpawnNodeBase:
 
         # Set NPC health
         if hasattr(npc, 'bossData'):
-            npc.setLevel(npc.bossData.get('Level', 0) or EnemyGlobals.getRandomEnemyLevel(avatarType))
+            npc.setLevel(npc.bossData.get('Level', 0) or self.getSpawnLevel(avatarType))
         else:
-            npc.setLevel(EnemyGlobals.getRandomEnemyLevel(avatarType))
+            npc.setLevel(self.getSpawnLevel(avatarType))
 
         npcHp, npcMp = EnemyGlobals.getEnemyStats(avatarType, npc.getLevel())
         if avatarType.getBoss() and hasattr(npc, 'bossData'):
@@ -267,7 +368,7 @@ class SpawnNodeBase:
         self.setNPCAttributes(npc)
 
         # Set NPC DNA if applicable
-        dnaId = self.objKey
+        dnaId = self.objectData.get('DNA', self.objKey)
         if hasattr(npc, 'setDNAId'):
             if self.objectData.get('CustomModel', 'None') != 'None':
                 npc.setDNAId(self.objectData.get('CustomModel', ''))
@@ -363,6 +464,15 @@ class TownfolkSpawnNode(SpawnNodeBase):
         if hasattr(PiratesGlobals, helpId):
             npc.setHelpId(getattr(PiratesGlobals, helpId, 0))
 
+    def getNPCTeam(self, avatarType):
+        # townsfolk are either on the villager or the player team,
+        # both of which are neutral towards the player...
+        team = self.objectData.get('Team', PiratesGlobals.VILLAGER_TEAM_STR)
+        if team not in (PiratesGlobals.VILLAGER_TEAM_STR, PiratesGlobals.PLAYER_TEAM_STR):
+            return SpawnNodeBase.getNPCTeam(self, avatarType)
+
+        return PiratesGlobals.teamStr2TeamId(team, PiratesGlobals.VILLAGER_TEAM)
+
     def getNPCClass(self, avatarType):
         return DistributedNPCTownfolkAI
 
@@ -400,6 +510,30 @@ class EnemySpawnNode(SpawnNodeBase):
                     avatarType = bossType
 
         return avatarType
+
+    def getNPCTeam(self, avatarType):
+        team = SpawnNodeBase.getNPCTeam(self, avatarType)
+
+        # the level editor allows a spawn node to override the team of the
+        # enemies it spawns, 'default' leaves it up to the avatar type...
+        teamId = self.objectData.get('Team', 'default')
+        if teamId == 'default':
+            return team
+
+        try:
+            teamId = int(teamId)
+        except (TypeError, ValueError):
+            return team
+
+        # never place an enemy on the player's team, and the french and spanish
+        # undead are both still part of the undead team...
+        if teamId not in (PiratesGlobals.UNDEAD_TEAM, PiratesGlobals.NAVY_TEAM, PiratesGlobals.TRADING_CO_TEAM):
+            return team
+
+        if teamId == PiratesGlobals.UNDEAD_TEAM and team in (PiratesGlobals.FRENCH_UNDEAD_TEAM, PiratesGlobals.SPANISH_UNDEAD_TEAM):
+            return team
+
+        return teamId
 
     def setNPCAttributes(self, npc):
         weapons = list(EnemyGlobals.getEnemyWeapons(npc.getAvatarType(), npc.getLevel()).keys())
@@ -578,8 +712,19 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         #if isPrivate:
         #    return
 
+        # spawn nodes may spawn more than one npc at once, each of them is
+        # handled by it's own spawn node so they can die and respawn on their own...
+        population = 1
+        if objType in POPULATION_SPAWN_TYPES:
+            try:
+                population = max(int(objectData.get('Min Population', MIN_POPULATION_DEFAULT)), 1)
+            except (TypeError, ValueError):
+                population = MIN_POPULATION_DEFAULT
+
         spawnClass = spawnClasses[objType]
-        spawnNode = spawnClass(self.air, objType, objectData, parent, objKey)
-        spawnNode.setup()
-        self.__registerSpawnNode(objType, spawnNode)
+        for populationIndex in range(population):
+            spawnNode = spawnClass(self.air, objType, objectData, parent, objKey, parentUid, populationIndex)
+            spawnNode.setup()
+            self.__registerSpawnNode(objType, spawnNode)
+
         return newObj
