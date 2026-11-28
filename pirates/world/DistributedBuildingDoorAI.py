@@ -9,6 +9,9 @@ from pirates.piratesbase import PiratesGlobals
 class DistributedBuildingDoorAI(DistributedDoorBaseAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBuildingDoorAI')
 
+    # the only building the Undead may enter during Jolly Roger's Curse...
+    ZombieBuildingUid = '1189479168.0sdnaik'
+
     def __init__(self, air):
         DistributedDoorBaseAI.__init__(self, air)
 
@@ -34,6 +37,11 @@ class DistributedBuildingDoorAI(DistributedDoorBaseAI):
         return [self.interiorDoId, self.interiorUid, self.interiorWorldParentId, self.interiorWorldZoneId]
 
     def handleRequestInteraction(self, avatar, interactType, instant):
+        # the doors are barricaded against the Undead, all but the Kingshead fort's,
+        # see DistributedBuildingDoor.requestInteraction...
+        if getattr(avatar, 'zombie', 0) and self.buildingUid != self.ZombieBuildingUid:
+            return self.DENY
+
         result = DistributedDoorBaseAI.handleRequestInteraction(self, avatar, interactType, instant)
         if not result:
             return self.DENY

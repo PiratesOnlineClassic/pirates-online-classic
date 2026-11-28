@@ -90,6 +90,11 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
         return NPC_DIALOG_GREETING
 
     def handleRequestInteraction(self, avatar, interactType, instant):
+        # the townsfolk will never serve the Undead,
+        # see DistributedNPCTownfolk.requestInteraction...
+        if getattr(avatar, 'zombie', 0):
+            return self.DENY
+
         if interactType != PiratesGlobals.INTERACT_TYPE_FRIENDLY:
             return self.DENY
 

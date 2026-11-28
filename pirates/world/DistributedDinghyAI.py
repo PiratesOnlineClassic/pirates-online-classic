@@ -159,6 +159,12 @@ class DistributedDinghyAI(DistributedInteractiveAI):
             self.d_offerFriendOptions(avatarId, friendOptions)
 
     def handleRequestInteraction(self, avatar, interactType, instant):
+        # Jolly Roger commands the Undead to attack the island,
+        # see DistributedDinghy.requestInteraction...
+        if avatar.getZombie():
+            self.d_denyAccess(avatar.doId, PiratesGlobals.ZombieNoBoats)
+            return self.DENY
+
         return self.ACCEPT
 
     def handlePostRequestInteraction(self, avatar):
