@@ -413,6 +413,10 @@ class Blur(DirectObject):
             tcard.setShaderInput(self.original_name, original.getTexture())
             if self.average:
                 tcard.setShaderInput(self.average_name, self.a1_rtt.getTextureBuffer().getTexture())
+            else:
+                # The tonemap shader only samples average when parameters.w
+                # is set, but GLSL still wants every sampler bound.
+                tcard.setShaderInput(self.average_name, original.getTexture())
             if self.hdr_output:
                 tcard.reparentTo(render2d)
             if self.debug_keys:
@@ -559,20 +563,20 @@ class Blur(DirectObject):
         self.luminance_shader = None
         if luminance:
             if add_glow:
-                self.luminance_shader = self.loadShader('luminance_plus_glow.cg')
+                self.luminance_shader = self.loadShader('luminance_plus_glow')
             else:
-                self.luminance_shader = self.loadShader('luminance.cg')
+                self.luminance_shader = self.loadShader('luminance')
             self.shader_array.append(self.luminance_shader)
-        self.blur_x_shader = self.loadShader('blur_x.cg')
+        self.blur_x_shader = self.loadShader('blur_x')
         self.shader_array.append(self.blur_x_shader)
-        self.blur_y_shader = self.loadShader('blur_y.cg')
+        self.blur_y_shader = self.loadShader('blur_y')
         self.shader_array.append(self.blur_y_shader)
         if base.config.GetInt('want-half-hdr', 0):
-            self.tonemap_shader = self.loadShader('half_tonemap.cg')
+            self.tonemap_shader = self.loadShader('half_tonemap')
         else:
-            self.tonemap_shader = self.loadShader('tonemap.cg')
+            self.tonemap_shader = self.loadShader('tonemap')
         self.shader_array.append(self.tonemap_shader)
-        self.average_shader = self.loadShader('average.cg')
+        self.average_shader = self.loadShader('average')
         self.shader_array.append(self.average_shader)
         if luminance:
             self.luminance_rtt = RenderToTexture('luminance', width, height, order - 3, format, dependency_array=dependency_array)
@@ -723,22 +727,27 @@ class Blur(DirectObject):
         self.update_factors()
 
     def loadShader(self, filepath):
-        shader = loader.loadShader('models/shaders/' + filepath)
+        shader = self.loadGlslShader('models/shaders/' + filepath)
         if shader:
             pass
         else:
-            shader = loader.loadShader('../shader/' + filepath)
+            shader = self.loadGlslShader('../shader/' + filepath)
             if shader:
                 pass
             else:
-                shader = loader.loadShader('src/shader/' + filepath)
+                shader = self.loadGlslShader('src/shader/' + filepath)
                 if shader:
                     pass
                 else:
-                    shader = loader.loadShader(filepath)
+                    shader = self.loadGlslShader(filepath)
                     if shader:
                         pass
         return shader
+
+    def loadGlslShader(self, path):
+        # This Panda3D build has no Cg support compiled in, so load the
+        # GLSL port of the .cg shader that lives next to it.
+        return Shader.load(Shader.SL_GLSL, path + '.vert.glsl', path + '.frag.glsl')
 
     def unloadShader(self, shader):
         if shader:
