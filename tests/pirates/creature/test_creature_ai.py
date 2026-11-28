@@ -126,7 +126,7 @@ class CreatureFSMTests(unittest.TestCase):
         target = Mock(doId=5)
         npc.currentTarget = target
         npc.useTargetedSkill = Mock()
-        npc.air.targetMgr.getAttackers.return_value = []
+        npc.air.targetMgr.getAttackers.return_value = [7, 8]
 
         npc.air.battleMgr.getTargetInRange.side_effect = \
             lambda attacker, tgt, skillId, ammo: skillId == EnemySkills.FLYTRAP_SPIT
@@ -135,6 +135,9 @@ class CreatureFSMTests(unittest.TestCase):
         npc.gameFSM._chooseNextAttack(task)
         npc.useTargetedSkill.assert_called_once()
         self.assertEqual(npc.useTargetedSkill.call_args[0][2], EnemySkills.FLYTRAP_SPIT)
+
+        # the attack only lands on our target, never on everyone attacking us...
+        self.assertEqual(npc.useTargetedSkill.call_args[0][4], [])
 
         # nothing in range: no attack, just wait a moment
         npc.useTargetedSkill.reset_mock()

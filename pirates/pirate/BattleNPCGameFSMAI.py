@@ -233,6 +233,18 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.avatar.b_setMojo(min(currentMojo + mojoRegen, maxMojo))
         return task.again
 
+    def getAttackSkills(self):
+        return EnemyGlobals.getBaseSkills(self.avatar.avatarType)[EnemyGlobals.SKILL_INDEX]
+
+    def getUsableSkills(self):
+        # some enemies know the skills of more than one weapon, but they only ever
+        # hold one of them. the skills of the other weapons would never land...
+        skillList = self.getAttackSkills()
+        weaponId = self.avatar.currentWeaponId
+        repId = WeaponGlobals.getRepId(weaponId)
+        usableSkills = [skillId for skillId in skillList if WeaponGlobals.isValidSkill(skillId, weaponId, repId)]
+        return usableSkills or skillList
+
     def _chooseNextAttack(self, task):
         # our target may have died or left the district since our last
         # attack, find someone else to fight or give up the battle...
@@ -246,9 +258,13 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             task.setDelay(self.StunnedAttackDelay)
             return task.again
 
-        # choose a random skill to attack the player with
-        baseSkills = EnemyGlobals.getBaseSkills(self.avatar.avatarType)
-        skillList = baseSkills[1]
+        # choose a random skill to attack the player with, some enemies
+        # (townsfolk, the mossman...) do not have any skills at all...
+        skillList = self.getUsableSkills()
+        if not skillList:
+            task.setDelay(WeaponGlobals.SHORT_DELAY)
+            return task.again
+
         skillId = random.choice(skillList)
 
         # wait until our target is within range of the skill, mobile enemies

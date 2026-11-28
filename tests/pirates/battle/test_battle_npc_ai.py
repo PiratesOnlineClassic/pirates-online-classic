@@ -175,6 +175,7 @@ class BattleNPCGameFSMAITests(unittest.TestCase):
         fsm = BattleNPCGameFSMAI.__new__(BattleNPCGameFSMAI)
         avatar = SimpleNamespace(doId=1000, currentTarget=None, isTargetValid=lambda target: bool(target and target.alive),
             getSkillEffectIds=lambda: [])
+        avatar.currentWeaponId = 0
         avatar.b_setCurrentTarget = Mock()
         avatar.getSpawnNode = Mock(return_value=None)
         avatar.uniqueName = lambda name: '%s-1000' % name
@@ -303,3 +304,74 @@ class BattleManagerRewardTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class EnemySkillSelectionTests(unittest.TestCase):
+    def makeFSM(self, fsmClass, avatarType, weaponId):
+        fsm = fsmClass.__new__(fsmClass)
+        target = SimpleNamespace(doId=42, alive=True)
+        avatar = SimpleNamespace(doId=1000, currentTarget=target, avatarType=avatarType, currentWeaponId=weaponId,
+            isTargetValid=lambda target: bool(target and target.alive), getSkillEffectIds=lambda: [])
+        avatar.useTargetedSkill = Mock()
+        avatar.getPos = Mock(return_value=(0, 0, 0))
+        fsm.avatar = avatar
+        fsm.air = SimpleNamespace(doId2do={}, targetMgr=Mock(), battleMgr=Mock())
+        fsm.air.battleMgr.getTargetInRange.return_value = True
+        fsm.demand = Mock()
+        return fsm
+
+    def test_enemies_only_use_the_skills_of_the_weapon_they_hold(self):
+        from pirates.battle import WeaponGlobals
+        from pirates.pirate import AvatarTypes
+
+        # the undead raider knows both cutlass and dagger skills...
+        fsm = self.makeFSM(BattleNPCGameFSMAI, AvatarTypes.Zombie, InventoryType.DaggerWeaponL1)
+        repId = WeaponGlobals.getRepId(InventoryType.DaggerWeaponL1)
+        skills = fsm.getUsableSkills()
+        self.assertTrue(skills)
+        self.assertTrue(all(WeaponGlobals.isValidSkill(skillId, InventoryType.DaggerWeaponL1, repId) for skillId in skills))
+        self.assertLess(len(skills), len(fsm.getAttackSkills()))
+
+        task = SimpleNamespace(again='again', setDelay=Mock())
+        for _ in range(10):
+            fsm._chooseNextAttack(task)
+
+        usedSkills = set(c[0][2] for c in fsm.avatar.useTargetedSkill.call_args_list)
+        self.assertTrue(usedSkills.issubset(set(skills)))
+
+        # enemy attacks never carry any area targets...
+        self.assertTrue(all(c[0][4] == [] for c in fsm.avatar.useTargetedSkill.call_args_list))
+
+    def test_enemies_without_skills_never_attack(self):
+        fsm = self.makeFSM(BattleNPCGameFSMAI, SimpleNamespace(), 0)
+        task = SimpleNamespace(again='again', setDelay=Mock())
+        with patch('pirates.pirate.BattleNPCGameFSMAI.EnemyGlobals.getBaseSkills', return_value=([], [])):
+            self.assertEqual(fsm._chooseNextAttack(task), 'again')
+
+        fsm.avatar.useTargetedSkill.assert_not_called()
+
+    def test_bosses_choose_attacks_like_every_other_enemy(self):
+        from pirates.npc.BossNPCGameFSMAI import BossNPCGameFSMAI
+
+        fsm = self.makeFSM(BossNPCGameFSMAI, SimpleNamespace(), 0)
+        fsm.avatar.getAttackSkills = Mock(return_value=[InventoryType.CutlassHack])
+        fsm.air.targetMgr.getAttackers.return_value = [7, 8]
+        task = SimpleNamespace(again='again', setDelay=Mock())
+
+        # bosses wait for their target to come within range of their skill...
+        fsm.air.battleMgr.getTargetInRange.return_value = False
+        fsm._chooseNextAttack(task)
+        fsm.avatar.useTargetedSkill.assert_not_called()
+
+        fsm.air.battleMgr.getTargetInRange.return_value = True
+        fsm._chooseNextAttack(task)
+        args = fsm.avatar.useTargetedSkill.call_args[0]
+        self.assertEqual(args[2], InventoryType.CutlassHack)
+        self.assertEqual(args[4], [])
+
+        # and look for a new target when their target is gone...
+        fsm.avatar.currentTarget.alive = False
+        fsm.air.targetMgr.findTargetableObject.return_value = None
+        fsm.avatar.b_setCurrentTarget = Mock()
+        fsm._chooseNextAttack(SimpleNamespace(done='done'))
+        fsm.demand.assert_called_once_with('BreakCombat')

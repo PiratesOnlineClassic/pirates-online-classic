@@ -4,7 +4,6 @@ from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.ClockDelta import globalClockDelta
 
 from pirates.pirate.BattleNPCGameFSMAI import BattleNPCGameFSMAI
-from pirates.battle import EnemyGlobals
 from pirates.battle import WeaponGlobals
 
 
@@ -57,15 +56,15 @@ class CreatureGameFSMAI(BattleNPCGameFSMAI):
         # since we cannot move closer to our target, we can only use the skills
         # that will actually reach it; if none do then just wait for the
         # target to move back into our range...
-        baseSkills = EnemyGlobals.getBaseSkills(self.avatar.avatarType)
-        skillList = self.getSkillsInRange(currentTarget, baseSkills[1])
+        skillList = self.getSkillsInRange(currentTarget, self.getUsableSkills())
         if not skillList:
             task.setDelay(WeaponGlobals.SHORT_DELAY)
             return task.again
 
         skillId = random.choice(skillList)
 
-        areaIdList = self.air.targetMgr.getAttackers(self.avatar.doId)
+        # enemy skills only hit our current target, see BattleNPCGameFSMAI._chooseNextAttack
+        areaIdList = []
         timestamp = globalClockDelta.getRealNetworkTime(bits=16)
         self.avatar.useTargetedSkill(self.avatar, currentTarget, skillId, 0, areaIdList, timestamp, self.avatar.getPos(), 0)
 
