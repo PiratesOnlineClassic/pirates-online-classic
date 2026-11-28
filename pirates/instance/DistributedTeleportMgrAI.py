@@ -117,6 +117,16 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             if object.getType() == instanceType and object.getFileName() == instanceName:
                 return object
 
+        # the client refers to the district's main world by the generic
+        # name "mainWorld", there is only ever one main world per district...
+        if instanceType == PiratesGlobals.INSTANCE_MAIN:
+            for object in list(self.air.doId2do.values()):
+                if not object or not isinstance(object, DistributedInstanceBaseAI):
+                    continue
+
+                if object.getType() == instanceType:
+                    return object
+
         return None
 
     def getWorldNames(self, instanceType):
