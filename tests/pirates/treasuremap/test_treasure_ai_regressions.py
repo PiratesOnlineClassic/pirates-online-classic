@@ -1,9 +1,11 @@
 import builtins
 import unittest
 from types import SimpleNamespace
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, call, patch
 
 from direct.showbase.MessengerGlobal import messenger
+from direct.task import Task
+from pirates.piratesbase import PiratesGlobals
 from tests.pirates.quest.test_quest_manager_ai_progression import manager_module
 from pirates.quest.DistributedQuestAI import DistributedQuestAI
 from pirates.quest.Quest import Quest
@@ -344,22 +346,84 @@ class SurfaceTreasureAITests(unittest.TestCase):
         self.assertEqual(treasure.getWithdrawType(), 3)
         treasure.sendUpdate.assert_called_once_with('setWithdrawType', [3])
 
-    def test_empty_treasure_denies_interaction(self):
+    def makeTreasure(self, withdrawType, value=0, maxCarry=20):
         treasure = DistributedSurfaceTreasureAI.__new__(DistributedSurfaceTreasureAI)
-        treasure.withdrawType = 1
-        treasure.value = 0
+        treasure.withdrawType = withdrawType
+        treasure.value = value
         treasure.belongToTeam = 0
+        treasure.looters = []
+        treasure.doId = 300
+        treasure.air = SimpleNamespace(doId2do={7: object()})
+        treasure.sendUpdate = Mock()
         treasure.sendUpdateToAvatarId = Mock()
+        carried = {}
+
+        def addLoot(avatarId, amount):
+            amount = max(0, min(amount, maxCarry - carried.get(avatarId, 0)))
+            carried[avatarId] = carried.get(avatarId, 0) + amount
+            return amount
+
+        treasure.gameRules = SimpleNamespace(getPlayers=lambda: {7: ['Jack', 2]},
+            getLootCarried=lambda avatarId: carried.get(avatarId, 0),
+            getMaxCarry=lambda: maxCarry, addLoot=addLoot)
+        return treasure, carried
+
+    def test_empty_treasure_denies_interaction(self):
+        treasure, carried = self.makeTreasure(PiratesGlobals.WITHDRAW_LUMP_SUM)
         avatar = SimpleNamespace(doId=7, getTeam=lambda: 1)
 
         self.assertEqual(treasure.handleRequestInteraction(avatar, 0, 0), treasure.DENY)
 
-        treasure.sendUpdate = Mock()
         treasure.b_setValue(50)
         treasure.sendUpdate.assert_called_once_with('setValue', [50])
         self.assertEqual(treasure.handleRequestInteraction(avatar, 0, 0), treasure.ACCEPT)
+
+        # pirates outside of the game cannot take the loot
+        outsider = SimpleNamespace(doId=8, getTeam=lambda: 1)
+        self.assertEqual(treasure.handleRequestInteraction(outsider, 0, 0), treasure.DENY)
+
+    def test_lump_sum_withdraw_takes_what_can_be_carried(self):
+        treasure, carried = self.makeTreasure(PiratesGlobals.WITHDRAW_LUMP_SUM, value=50)
+        avatar = SimpleNamespace(doId=7, getTeam=lambda: 1)
         treasure.handlePostRequestInteraction(avatar)
-        treasure.sendUpdateToAvatarId.assert_called_once_with(7, 'startLooting', [1])
+
+        self.assertEqual(carried[7], 20)
+        self.assertEqual(treasure.getValue(), 30)
+        self.assertEqual(treasure.sendUpdateToAvatarId.call_args_list,
+            [call(7, 'startLooting', [PiratesGlobals.WITHDRAW_LUMP_SUM]), call(7, 'stopLooting', [])])
+
+        # a pirate who cannot carry any more is not offered the treasure
+        self.assertEqual(treasure.handleRequestInteraction(avatar, 0, 0), treasure.DENY)
+
+    def test_incremental_withdraw_steals_until_empty(self):
+        treasure, carried = self.makeTreasure(PiratesGlobals.WITHDRAW_INCREMENTAL, value=2)
+        tasks = Mock()
+        treasure.uniqueName = lambda name: '%s-300' % name
+        avatar = SimpleNamespace(doId=7, getTeam=lambda: 1)
+        with patch.object(builtins, 'taskMgr', tasks, create=True):
+            treasure.handlePostRequestInteraction(avatar)
+            treasure.sendUpdateToAvatarId.assert_called_once_with(7, 'startLooting',
+                [PiratesGlobals.WITHDRAW_INCREMENTAL])
+
+            self.assertEqual(treasure.handleRequestInteraction(avatar, 0, 0), treasure.DENY)
+            args, kwargs = tasks.doMethodLater.call_args
+            self.assertEqual(args[2], 'loot-7-300')
+            self.assertEqual(kwargs['extraArgs'], [7])
+            callback = args[1]
+            self.assertEqual(callback(7, SimpleNamespace()), Task.again)
+            self.assertEqual(callback(7, SimpleNamespace()), Task.done)
+            tasks.remove.assert_called_with('loot-7-300')
+
+        self.assertEqual(carried[7], 2)
+        self.assertEqual(treasure.getValue(), 0)
+        treasure.sendUpdate.assert_any_call('setEmpty', [True])
+        treasure.sendUpdateToAvatarId.assert_called_with(7, 'stopLooting', [])
+        self.assertEqual(treasure.looters, [])
+
+    def test_withdraw_none_denies_interaction(self):
+        treasure, carried = self.makeTreasure(PiratesGlobals.WITHDRAW_NONE, value=50)
+        avatar = SimpleNamespace(doId=7, getTeam=lambda: 1)
+        self.assertEqual(treasure.handleRequestInteraction(avatar, 0, 0), treasure.DENY)
 
 
 if __name__ == '__main__':
