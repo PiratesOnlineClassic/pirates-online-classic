@@ -1,6 +1,7 @@
 import math
 
 from otp.otpbase.OTPUtil import pivotScalar, rad90, rad270, reduceAngle
+from direct.showbase.PythonUtil import clampScalar
 
 class ShipRockerOffState:
 

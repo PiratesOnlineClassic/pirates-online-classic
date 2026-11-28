@@ -261,7 +261,7 @@ class GameFSMShip(FSM.FSM):
             gStr = '**/grapple_left_*'
             xOffset = 5.0
 
-        locators = self.ship.locators.findAllMatches(gStr + ';+s').asList()
+        locators = list(self.ship.locators.findAllMatches(gStr + ';+s'))
         for locator in locators:
             target = loader.loadModelCopy('models/effects/selectionCursor')
             target.setColorScale(0, 1, 0, 1)
