@@ -437,6 +437,10 @@ class AnimalSpawnNode(SpawnNodeBase):
             return
         return getattr(AvatarTypes, species, AvatarTypes.Chicken)
 
+    def getNPCTeam(self, avatarType):
+        # animals are ambient townsfolk creatures, not undead enemies...
+        return PiratesGlobals.VILLAGER_TEAM
+
     def getNPCClass(self, avatarType):
         animalClass = DistributedAnimalAI
         #if avatarType == AvatarTypes.Seagull:
@@ -462,6 +466,11 @@ class BossEnemySpawnNode(EnemySpawnNode):
                 return
 
             avatarType = AvatarTypes.NPC_SPAWNABLES[self.spawnable][0]()
+
+            # creatures placed in the world are only bosses when flagged as one
+            if self.objType == 'Creature' and not self.objectData.get('Boss', False):
+                return avatarType
+
             return avatarType.getBossType()
 
         avatarType = AvatarType(faction=faction, track=avTrack, id=avId)
