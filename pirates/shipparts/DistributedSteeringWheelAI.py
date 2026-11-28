@@ -58,6 +58,9 @@ class DistributedSteeringWheelAI(DistributedInteractiveAI, DistributedShippartAI
         if not self.ship.isSailable() or self.ship.getCurrentGameState() == 'Pinned':
             return self.DENY
 
+        if not self.ship.canTakeWheel(avatar):
+            return self.DENY
+
         # the captain may always take the wheel back from whoever is steering:
         if avatar.doId != self.ship.captainId and self.userId > 0 and self.userId != avatar.doId:
             return self.DENY

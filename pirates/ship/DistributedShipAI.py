@@ -208,6 +208,28 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
 
         self._skillEffectTasks = {}
 
+    def sendCurrentPosition(self):
+        x, y, z = self.getPos()
+        h, p, r = self.getHpr()
+        timestamp = globalClockDelta.getRealNetworkTime(bits=16)
+        self.sendUpdate('setSmPosHpr', [x, y, z, h, p, r, timestamp])
+
+    def moveTo(self, pos, hpr):
+        """
+        Moves the ship to a new position on it's ocean grid. This even moves a ship that a
+        client is steering, as long as the helmsman's client has stopped sailing it
+        (a client that isn't smoothing the ship applies every position update it is
+        sent straight away, see DistributedSmoothNode.setComponentTLive).
+        """
+        oceanGrid = self.getParentObj()
+        zoneId = oceanGrid.getZoneFromXYZ(pos)
+        if zoneId != self.zoneId:
+            self.b_setLocation(oceanGrid.doId, zoneId)
+
+        self.setPosHpr(oceanGrid, pos[0], pos[1], pos[2], hpr[0], hpr[1], hpr[2])
+        self.sendUpdate('clearSmoothing', [0])
+        self.sendCurrentPosition()
+
     def generate(self):
         if not self.npcShip:
             self.air.inventoryManager.initiateShipInventory(self)
@@ -655,6 +677,10 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
 
     def getNPCship(self):
         return self.npcShip
+
+    def isCrewedByPlayers(self):
+        # NPC ships are crewed by NPCs, apart from the quest ships players sail (the Black Pearl):
+        return not self.npcShip
 
     def setIsBoardable(self, isBoardable):
         self.isBoardable = isBoardable
@@ -1414,6 +1440,9 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
         # we need to release the ship's controls so someone else can take the wheel...
         if avatar.doId == self.clientControllerDoId:
             self.releaseWheel(avatar.doId)
+
+    def canTakeWheel(self, avatar):
+        return True
 
     def releaseWheel(self, avatarId):
         if self.steeringWheel is not None and self.steeringWheel.userId == avatarId:

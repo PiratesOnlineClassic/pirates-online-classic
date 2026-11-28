@@ -8,12 +8,16 @@ from pirates.ship import ShipBalance
 class BlackPearlShipAI(DistributedShipAI):
     """
     The Black Pearl ship AI - Captain Jack Sparrow's legendary vessel.
-    
+
     This is a special ship used in the Black Pearl treasure map instance.
     It functions as a player-controlled ship but with special behaviors
     for the quest instance.
     """
     notify = DirectNotifyGlobal.directNotify.newCategory('BlackPearlShipAI')
+
+    # the Pearl belongs to the treasure map instance, it stays put once sunk
+    # until the instance is cleaned up and isn't put away when it's crew leave:
+    PutAwayWhenEmpty = False
 
     def __init__(self, air):
         DistributedShipAI.__init__(self, air)
@@ -50,6 +54,10 @@ class BlackPearlShipAI(DistributedShipAI):
     def getQuestInstance(self):
         return self.questInstance
 
+    def isCrewedByPlayers(self):
+        # the Pearl is an NPC ship to the client, but it's the players who sail her:
+        return True
+
     # =========================================================================
     # NPC Management (enemies on the ship deck)
     # =========================================================================
@@ -79,13 +87,18 @@ class BlackPearlShipAI(DistributedShipAI):
             if self.questInstance:
                 self.questInstance.handleNPCsKilledOnPearl()
 
+    def canTakeWheel(self, avatar):
+        # the Navy guards have to be cleared from the deck before the wheel
+        # can be taken (see TreasureMapBlackPearl.disablePearlInteractions):
+        return not self.npcsOnDeck
+
     # =========================================================================
     # Damage Handling
     # =========================================================================
 
     def takeDamage(self, damage, attackerId=0, applyModifiers=True):
         """Handle damage to the Black Pearl"""
-        if self.hasSpawnBuff():
+        if self.hasSpawnBuff() or not self.isSailable():
             return self.hp
 
         self.notify.debug('Black Pearl taking %d damage from %d' % (damage, attackerId))
@@ -96,25 +109,38 @@ class BlackPearlShipAI(DistributedShipAI):
                           ShipBalance.NPCArmorModifier.getValue())
         damage = int(damage * (1.0 - effectiveArmor))
 
-        oldHp = self.hp
-        newHp = max(0, self.hp - damage)
-        self.b_setHp(newHp)
+        if isinstance(self.air.doId2do.get(attackerId), DistributedShipAI):
+            self.recordAttacker(attackerId, damage)
 
-        if getattr(self, 'gameFSM', None):
+        # the Pearl going down is handled by handleHpDepleted:
+        self.b_setHp(max(0, self.hp - damage))
+
+        if self.hp > 0 and getattr(self, 'gameFSM', None):
             self.gameFSM.onDamageReceived(attackerId, damage)
 
-        # Check if destroyed
-        if oldHp > 0 and newHp <= 0:
-            self._handleDestroyed()
-        return newHp
+        return self.hp
+
+    def handleHpDepleted(self):
+        DistributedShipAI.handleHpDepleted(self)
+        self._handleDestroyed()
 
     def _handleDestroyed(self):
         """Black Pearl has been destroyed"""
-        self.notify.warning('The Black Pearl has been destroyed!')
+        self.notify.info('The Black Pearl has been destroyed!')
 
         # Notify the quest instance
         if self.questInstance:
             self.questInstance.handleBlackPearlDestroyed()
+
+    def handleShipSunk(self):
+        # the sunken Pearl is left where it went down, the treasure map
+        # instance deletes it once the players have left (see TreasureMapBlackPearlAI.delete)...
+        self.b_setGameState('Sunk', 0)
+
+    def requestClientAggro(self):
+        # the Pearl is sailed by the players, the enemy ships come for the Pearl
+        # (see TreasureMapBlackPearlAI), not the other way around:
+        pass
 
     # =========================================================================
     # Player Boarding
