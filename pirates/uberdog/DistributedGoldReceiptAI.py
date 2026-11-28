@@ -1,15 +1,8 @@
-import time
-
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
 
 class DistributedGoldReceiptAI(DistributedObjectAI):
-    """
-    A database backed record of gold an avatar has paid for something that
-    expires. The receipt keeps how much was paid and when the purchase runs out.
-    """
-
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedGoldReceiptAI')
 
     def __init__(self, air):
@@ -43,20 +36,3 @@ class DistributedGoldReceiptAI(DistributedObjectAI):
     def getExpirationDate(self):
         return self.expirationDate
 
-    def isExpired(self, now=None):
-        if not self.expirationDate:
-            return False
-
-        if now is None:
-            now = int(time.time())
-
-        return now >= self.expirationDate
-
-    def getTimeRemaining(self, now=None):
-        if not self.expirationDate:
-            return 0
-
-        if now is None:
-            now = int(time.time())
-
-        return max(0, self.expirationDate - now)
