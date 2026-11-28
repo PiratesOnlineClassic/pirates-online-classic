@@ -147,8 +147,7 @@ libotp/
 *.pyd
 *.dll
 
-# Documentation
-docs/
+# Documentation (the ~docs magic word writes docs/clientdocs.csv and docs/serverdocs.csv)
 *.csv
 *.xlsx
 
