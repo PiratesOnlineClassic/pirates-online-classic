@@ -83,9 +83,8 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         if not avatar:
             return
 
-        # the client tells us once our ambush intro (rising up out of the
-        # ground) has finished playing for them; spring the ambush on that
-        # avatar if they are still close enough to us...
+        # the ambush intro has finished playing on the client, spring
+        # the ambush if the avatar is still close enough to us...
         if self.gameFSM.state != 'Ambush':
             return
 
@@ -224,25 +223,13 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         return ''
 
     def isTargetValid(self, target):
-        if not target or target.isDeleted():
+        if not target or target.isDeleted() or target.doId not in self.air.doId2do:
             return False
 
-        if target.doId not in self.air.doId2do:
+        if target.getHp()[0] <= 0:
             return False
 
-        if hasattr(target, 'getHp'):
-            hp = target.getHp()
-            if isinstance(hp, (list, tuple)):
-                hp = hp[0]
-
-            if hp <= 0:
-                return False
-
-        gameFSM = getattr(target, 'gameFSM', None)
-        if gameFSM and gameFSM.getCurrentOrNextState() == 'Death':
-            return False
-
-        return True
+        return target.gameFSM.getCurrentOrNextState() != 'Death'
 
     def requestClientAggro(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())

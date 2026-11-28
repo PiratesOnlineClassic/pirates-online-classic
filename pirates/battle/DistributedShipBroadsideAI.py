@@ -83,15 +83,6 @@ class DistributedShipBroadsideAI(DistributedWeaponAI):
         # there is nothing for the AI to do with it...
         pass
 
-    def invitationResponce(self, avatarId, response):
-        pass
-
-    def requestRemove(self, avatarId):
-        pass
-
-    def requestCrewIconUpdate(self, iconId):
-        pass
-
     def setShipId(self, shipId):
         self.shipId = shipId
 
