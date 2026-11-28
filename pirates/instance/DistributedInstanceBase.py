@@ -53,7 +53,19 @@ class DistributedInstanceBase(DistributedObject, WorldNode):
     def announceGenerate(self):
         WorldNode.announceGenerate(self)
         DistributedObject.announceGenerate(self)
-    
+
+    def setBarrierData(self, data):
+        # the instances wait on their avatars with barriers, Panda3D 1.10 only finds
+        # the local avatar in a barrier through cr.isLocalId, which is never true for
+        # an avatar id the server gave us, look for the local avatar like the 2007
+        # client's Panda did, otherwise doneBarrier never answers the AI...
+        for context, name, avIds in data:
+            if self.cr.localAvatarDoId in avIds:
+                self._DistributedObject__barrierContext = (context, name)
+                return
+
+        self._DistributedObject__barrierContext = None
+
     def queryActiveQuests(self):
         
         def receiveActiveQuests(inventory):
