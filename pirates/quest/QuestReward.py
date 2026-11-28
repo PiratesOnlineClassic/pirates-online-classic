@@ -232,7 +232,10 @@ class ShipReward(QuestReward):
     def applyTo(self, trade, av):
         if av.constructedShipDoId:
             trade.giveShip(av.constructedShipDoId)
-            trade.giveNewShipToken()
+
+        # the token is what lets the shipwrights sell the avatar
+        # a ship, see EconomyGlobals.getItemTrainingReq...
+        trade.giveNewShipToken()
 
         av.constructedShipDoId = None
 
