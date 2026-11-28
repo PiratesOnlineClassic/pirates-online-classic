@@ -656,9 +656,8 @@ class RadarGui(GuiTray, FSM):
     def flashRadarObject(self, objId, duration = None, scaleMin = Point3(0.5, 0.5, 0.5), scaleMax = Point3(1.0, 1.0, 1.0)):
         if duration != None and objId in self.flashCleanupTasks:
             task = self.flashCleanupTasks[objId][0]
-            currentTime = taskMgr._TaskManager__getTime()
-            task.delayTime = duration
-            task.wakeTime = currentTime + duration
+            task.setDelay(duration)
+            task.recalcWakeTime()
             return True
         
         uItem = self.getRadarObjNode(objId)

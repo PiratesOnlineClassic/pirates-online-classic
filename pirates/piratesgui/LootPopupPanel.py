@@ -190,7 +190,7 @@ class LootPopupPanel(StackMessage, DirectObject.DirectObject):
             elif itemType == ItemId.GOLD:
                 textInfo = PLocalizer.LootGold % str(quantity)
                 if base.getHoliday(PiratesGlobals.DOUBLEGOLDHOLIDAYPAID) and Freebooter.getPaidStatus(base.localAvatar.getDoId()) or base.getHoliday(PiratesGlobals.DOUBLEGOLDHOLIDAY):
-                    textInfo = PLocalizer.LootGold % str(quantity / 2) + '\n + ' + PLocalizer.LootGoldDouble % str(quantity / 2)
+                    textInfo = PLocalizer.LootGold % str(quantity // 2) + '\n + ' + PLocalizer.LootGoldDouble % str(quantity // 2)
                 
                 lootIcon = self.icons.get(itemType)[0]
                 iconScale = 0.27

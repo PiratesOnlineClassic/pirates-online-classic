@@ -49,7 +49,7 @@ class OptionSpace:
         return float(s)
 
     def read_string(self, input_file):
-        return string.strip(input_file.readline())
+        return input_file.readline().strip()
 
     def write_integer(self, output_file, value):
         if output_file:

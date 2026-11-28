@@ -116,7 +116,10 @@ class PirateMemberButton(GuiButton.GuiButton):
         elif self.mode == MODE_FRIEND_AVATAR and other.mode == MODE_FRIEND_PLAYER:
             return 1
         else:
-            return cmp(self['text'].lower(), other['text'].lower())
+            return (self['text'].lower() > other['text'].lower()) - (self['text'].lower() < other['text'].lower())
+
+    def __lt__(self, other):
+        return self.__cmp__(other) < 0
 
     def updateGuild(self):
         if self.mode == MODE_GUILD:

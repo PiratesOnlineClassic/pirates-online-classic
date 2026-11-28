@@ -12,6 +12,7 @@ from pirates.minigame import PlayingCardGlobals
 from pirates.piratesbase import CollectionMap
 from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.reputation import ReputationGlobals
+from pirates.economy.EconomyGlobals import ItemId
 
 class StackMessage(BorderFrame):
     guiLoaded = False
@@ -54,9 +55,12 @@ class StackMessage(BorderFrame):
 
     def __cmp__(self, other):
         if other:
-            return cmp(other['priority'], self['priority'])
+            return (other['priority'] > self['priority']) - (other['priority'] < self['priority'])
         else:
             return -1
+
+    def __lt__(self, other):
+        return self.__cmp__(other) < 0
 
     def __hash__(self):
         return id(self)
