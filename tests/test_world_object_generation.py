@@ -43,6 +43,9 @@ class GeneratedObject:
     def setCurrentDepth(self, depth):
         self.currentDepth = depth
 
+    def setSiegeTeam(self, team):
+        self.siegeTeam = team
+
 
 class SurfaceTreasure(GeneratedObject):
     pass
@@ -85,6 +88,7 @@ class WorldObjectGenerationTests(unittest.TestCase):
             uidMgr=SimpleNamespace(addUid=self.addUid))
         self.parent = SimpleNamespace(
             getZoneFromXYZ=lambda pos: 20,
+            getSiegeTeam=lambda: 0,
             generateChildWithRequired=self.generate)
         self.builder = builder_methods()()
         self.builder.air = self.air

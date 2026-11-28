@@ -158,6 +158,9 @@ class StubUidManager:
     def addUid(self, uniqueId, doId):
         self.uids[uniqueId] = doId
 
+    def getDoId(self, uniqueId, deep=True):
+        return self.uids.get(uniqueId)
+
     def removeUid(self, uniqueId):
         self.uids.pop(uniqueId, None)
 
