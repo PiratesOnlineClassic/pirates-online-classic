@@ -113,7 +113,9 @@ class SpawnNodeBase:
             self.__died(self._npc)
 
     def __died(self, npc):
+        taskMgr.remove(npc.uniqueName('update-pos-task'))
         npc.requestDelete()
+        self._npc = None
 
     def __respawn(self, task):
         if not self._npc:
@@ -122,18 +124,18 @@ class SpawnNodeBase:
 
             return
 
+        taskMgr.remove(self._npc.uniqueName('update-pos-task'))
         self._npc.requestDelete()
         self._npc = None
 
         respawns = self.objectData.get('Respawns', True)
         if not respawns:
-            #TODO: is this the proper way of handling this?
-            removeSpawnNode(self.objType, self)
-            return
+            self.air.enemySpawner.removeSpawnNode(self.objType, self)
+            return task.done
 
         #TODO: Is this a constant?
         spawnTimer = 20
-        taskMgr.doMethodLater(spawnTimer, self.__spawn, 'perform-spawn-%s' % self.objKey)
+        taskMgr.doMethodLater(spawnTimer, self.__attemptSpawn, 'perform-spawn-%s' % self.objKey)
 
         return task.done
 
@@ -283,8 +285,11 @@ class SpawnNodeBase:
 
         if hasattr(npc, 'bossData'):
             name = npc.bossData.get('Name', PLocalizer.Unknown)
-        elif avatarType.getBoss() and bossID != '':
-            name = PLocalizer.BossNames[avatarType.faction][avatarType.track][avatarType.id][avatarType.boss]
+        elif avatarType.getBoss():
+            try:
+                name = PLocalizer.BossNames[avatarType.faction][avatarType.track][avatarType.id][avatarType.boss]
+            except (IndexError, KeyError, TypeError):
+                pass
 
         npc.setName(name)
 
@@ -315,6 +320,12 @@ class SpawnNodeBase:
         npc.setSpawnNode(self)
 
         npc.d_setInitZ(npc.getZ())
+
+        # setAmbush is not a required field, the client only checks for it's
+        # existance so only send it to the npcs that are actually ambushing...
+        if npc.getAmbush():
+            npc.d_setAmbush(True)
+
         npc.d_setSpawnIn()
         npc.b_setGameState(npc.getStartState())
 
@@ -345,7 +356,7 @@ class TownfolkSpawnNode(SpawnNodeBase):
     def setNPCAttributes(self, npc):
         shopId = self.objectData.get('ShopID', 'PORT_ROYAL_DEFAULTS')
         if not hasattr(PiratesGlobals, shopId):
-            self.notify.warning('Failed to spawn Townfolk (%s); Unknown shopId: %s' % (self.objKey, shopid))
+            self.notify.warning('Failed to spawn Townfolk (%s); Unknown shopId: %s' % (self.objKey, shopId))
         npc.setShopId(getattr(PiratesGlobals, shopId, 0))
 
         helpId = self.objectData.get('HelpID', 'NONE')
@@ -520,7 +531,7 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         spawns = self.getSpawnNodesFromType(type)
         found = None
         for spawn in spawns:
-            if spawn.objkey == key:
+            if spawn.objKey == key:
                 found = spawn
                 break
 
@@ -530,7 +541,8 @@ class DistributedEnemySpawnerAI(DistributedObjectAI):
         if not type in self.spawnNodes:
             return
 
-        self.spawnNodes[type].remove(spawnNode)
+        if spawnNode in self.spawnNodes[type]:
+            self.spawnNodes[type].remove(spawnNode)
 
     def __registerSpawnNode(self, type, spawnNode):
         if not self.getSpawnNodesFromType(type):
