@@ -54,7 +54,7 @@ ALLOWLIST = {
         'PlayerFriendsManager.whisperSCFrom': 'player (account) whispers are not supported, avatar whispers go through the avatars',
         'DistributedShip.damage': 'ship damage is shown from the projectile and broadside results',
         'DistributedShip.forceExitShip': 'the AI moves avatars off ships with teleports and setLocation instead',
-        'DistributedShip.swingLocalAvatarToGrappledShip': 'grappling and boarding enemy ships is not implemented yet',
+        'DistributedShip.swingLocalAvatarToGrappledShip': 'local client callback after setBoardingSuccess; boarding proceeds through requestBoard',
         'OtpAvatarManager.online': 'UberDOG start-up announcement, nothing in this client waits for it',
         'DistributedChatManager.online': 'UberDOG start-up announcement, the client handler is empty',
         'DistributedNode.setParent': 'objects are reparented with setLocation, never with setParent',
