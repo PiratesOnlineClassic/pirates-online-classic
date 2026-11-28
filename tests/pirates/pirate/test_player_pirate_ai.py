@@ -420,6 +420,7 @@ class DeathTests(unittest.TestCase):
         player.getWorld = Mock(return_value=None)
         player.testTeleportFlag = Mock(return_value=False)
         player.clearSkillEffects = Mock()
+        player.shipId = 0
         return fsm
 
     def test_alive_avatar_is_not_sent_to_jail(self):
@@ -436,6 +437,41 @@ class DeathTests(unittest.TestCase):
         fsm.enterDeath()
         fsm.air.targetMgr.clearAttacker.assert_called_once_with(player)
         player.clearSkillEffects.assert_called_once_with()
+
+    def test_death_aboard_a_ship_at_sea_is_jail_on_the_return_island(self):
+        from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
+        player = makePlayer(hp=0)
+        fsm = self.makeFSM(player)
+        world = DistributedInstanceBaseAI.__new__(DistributedInstanceBaseAI)
+        world.d_sendLocalAvatarToJail = Mock()
+        oceanGrid = SimpleNamespace(getParentObj=lambda: world)
+        ship = SimpleNamespace(doId=401004116, getParentObj=lambda: oceanGrid)
+        player.shipId = ship.doId
+        player.getParentObj = Mock(return_value=ship)
+        player.getReturnLocation = Mock(return_value='port_royal')
+        cellDoor = Mock(getCellIndex=Mock(return_value=2))
+        interior = SimpleNamespace(doId=900, parentId=800, zoneId=700, getCellDoor=lambda: cellDoor)
+        island = SimpleNamespace(getJailInterior=lambda: interior)
+        fsm.air.uidMgr.justGetMeMeObject.return_value = island
+
+        fsm.enterDeath()
+        fsm.air.uidMgr.justGetMeMeObject.assert_called_once_with('port_royal')
+        world.d_sendLocalAvatarToJail.assert_called_once_with(player.doId, 900, 800, 700)
+        self.assertEqual(player.getJailCellIndex(), 2)
+
+    def test_the_instance_hears_of_a_death_aboard_its_ships(self):
+        from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
+        world = DistributedInstanceBaseAI.__new__(DistributedInstanceBaseAI)
+        oceanGrid = SimpleNamespace(getParentObj=lambda: world)
+        ship = SimpleNamespace(doId=401004116, getParentObj=lambda: oceanGrid)
+        aboard = SimpleNamespace(getParentObj=lambda: ship, getShipId=lambda: ship.doId)
+        self.assertTrue(world.isAvatarAtSea(aboard))
+
+        # another instance's ship, or a ship the avatar isn't crew of...
+        otherWorld = DistributedInstanceBaseAI.__new__(DistributedInstanceBaseAI)
+        self.assertFalse(otherWorld.isAvatarAtSea(aboard))
+        stowaway = SimpleNamespace(getParentObj=lambda: ship, getShipId=lambda: 0)
+        self.assertFalse(world.isAvatarAtSea(stowaway))
 
     def test_defeated_privateer_is_respawned_by_the_siege_manager(self):
         player = makePlayer(hp=0)

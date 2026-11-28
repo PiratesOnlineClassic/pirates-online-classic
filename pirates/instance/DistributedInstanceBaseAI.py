@@ -153,6 +153,15 @@ class DistributedInstanceBaseAI(DistributedObjectAI, WorldNodeAI):
 
         return area
 
+    def isAvatarAtSea(self, avatar):
+        # returns True when the avatar is aboard it's ship sailing on this instance's ocean...
+        ship = avatar.getParentObj()
+        if ship is None or ship.doId != avatar.getShipId():
+            return False
+
+        oceanGrid = ship.getParentObj()
+        return oceanGrid is not None and oceanGrid.getParentObj() is self
+
     def requestSpawnLoc(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
@@ -174,7 +183,7 @@ class DistributedInstanceBaseAI(DistributedObjectAI, WorldNodeAI):
         if not avatar:
             return
 
-        if not self.getAvatarArea(avatar):
+        if not self.getAvatarArea(avatar) and not self.isAvatarAtSea(avatar):
             self.notify.warning('Received avatarDied for avatar %d, '
                 'avatar is not in instance %d!' % (avatar.doId, self.doId))
 

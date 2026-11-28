@@ -84,13 +84,21 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
             return
 
         parentObj = self.avatar.getParentObj()
-        if not isinstance(parentObj, DistributedGameAreaAI):
-            self.notify.warning('Cannot teleport avatar %d to jail, '
-                'parent object has invalid type: %r!' % (self.avatar.doId, parentObj))
+        if isinstance(parentObj, DistributedGameAreaAI):
+            interior = parentObj.getJailInterior()
+            parentWorld = parentObj.getParentObj()
+        else:
+            # an avatar defeated aboard it's ship at sea is thrown in the jail of
+            # it's return island, the client takes it off of the ship on it's way
+            # there, see DistributedInstanceBase.sendLocalAvatarToJail...
+            interior = None
+            parentWorld = self.getShipWorld(parentObj)
+            if parentWorld is None:
+                self.notify.warning('Cannot teleport avatar %d to jail, '
+                    'parent object has invalid type: %r!' % (self.avatar.doId, parentObj))
 
-            return
+                return
 
-        interior = parentObj.getJailInterior()
         if not interior:
             island = self.air.uidMgr.justGetMeMeObject(self.avatar.getReturnLocation())
             if island:
@@ -123,9 +131,21 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
 
         # tell the instance to send the avatar to the jail, and set it's interest
         # properly before we update their game state...
-        parentWorld = parentObj.getParentObj()
         parentWorld.d_sendLocalAvatarToJail(self.avatar.doId, interior.doId,
             interior.parentId, interior.zoneId)
+
+    def getShipWorld(self, ship):
+        # the world instance of the ship the avatar is aboard, the ship sails
+        # on it's world's ocean grid...
+        if ship is None or ship.doId != self.avatar.getShipId():
+            return None
+
+        oceanGrid = ship.getParentObj()
+        world = oceanGrid.getParentObj() if oceanGrid is not None else None
+        if not isinstance(world, DistributedInstanceBaseAI):
+            return None
+
+        return world
 
     def exitDeath(self):
         pass
