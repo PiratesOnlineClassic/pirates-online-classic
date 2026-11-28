@@ -105,7 +105,15 @@ class BuriedTreasureClientTests(unittest.TestCase):
         self.assert_reset()
         clock = ClockObject.getGlobalClock()
         original_mode = clock.getMode()
-        self.addCleanup(clock.setMode, original_mode)
+
+        def restore_clock():
+            # Rewind the advanced frame time before leaving non-real-time mode,
+            # otherwise the global clock stays seconds ahead of real time and
+            # later suites' doMethodLater tasks never come due.
+            clock.setFrameTime(clock.getRealTime())
+            clock.setMode(original_mode)
+
+        self.addCleanup(restore_clock)
         clock.setMode(ClockObject.MNonRealTime)
         clock.setDt(1.0)
         for _ in range(6):

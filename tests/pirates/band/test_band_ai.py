@@ -12,11 +12,13 @@ if not hasattr(builtins, 'base'):
     ShowBase(windowType='none')
 
 import sys
+_stubbedReputationGlobals = False
 try:
     from pirates.reputation import ReputationGlobals
 except (IOError, OSError):
     # game resources (WeaponGlobals.pkl) are not available
     sys.modules['pirates.reputation.ReputationGlobals'] = Mock()
+    _stubbedReputationGlobals = True
 
 from collections import defaultdict
 
@@ -26,6 +28,11 @@ from pirates.band import DistributedPirateBandManagerAI as bandModule
 from pirates.band.DistributedPirateBandManagerAI import DistributedPirateBandManagerAI
 from pirates.band.DistributedCrewMatchAI import DistributedCrewMatchAI, PVP_ISLAND_ONE
 from pirates.band.DistributedBandMemberAI import DistributedBandMemberAI
+
+if _stubbedReputationGlobals:
+    # the band modules hold their own reference to the stub; don't leak it to
+    # suites that import the real ReputationGlobals later in the same run
+    del sys.modules['pirates.reputation.ReputationGlobals']
 
 
 class FakeMember(DistributedBandMemberAI):
