@@ -15,10 +15,6 @@ class KrakenPartAI(DistributedCreatureAI):
 
         self.krakenId = 0
 
-    def createGameFSM(self):
-        raise NotImplementedError('%s does not extend createGameFSM!' % \
-            self.__class__.__name__)
-
     def setupPart(self, avatarType, level):
         self.setAvatarType(avatarType)
         self.setLevel(level)

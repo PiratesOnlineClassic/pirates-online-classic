@@ -12,8 +12,8 @@ class DistributedBossNavySailorAI(DistributedNPCNavySailorAI, BossAI):
         DistributedNPCNavySailorAI.__init__(self, air)
         BossAI.__init__(self, air)
 
-        self.gameFSM.destroy()
-        self.gameFSM = BossNPCGameFSMAI(self.air, self)
+    def createGameFSM(self):
+        return BossNPCGameFSMAI(self.air, self)
 
     def getMonsterDmg(self):
         return BossAI.getMonsterDmg(self)

@@ -17,11 +17,6 @@ class DistributedCreatureAI(DistributedBattleNPCAI):
     def __init__(self, air):
         DistributedBattleNPCAI.__init__(self, air)
 
-        # creatures have their own rules for which game states they
-        # can enter, replace the generic battle npc game fsm...
-        self.gameFSM.destroy()
-        self.gameFSM = self.createGameFSM()
-
     def createGameFSM(self):
         return CreatureGameFSMAI(self.air, self)
 
