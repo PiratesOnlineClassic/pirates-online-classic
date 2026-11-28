@@ -134,6 +134,10 @@ class PyVec3:
         self.z /= s
         return self
 
+    # Python 3 dispatches / and /= to __truediv__ and __itruediv__.
+    __truediv__ = __div__
+    __itruediv__ = __idiv__
+
     def addX(self, s):
         self.x += s
 
