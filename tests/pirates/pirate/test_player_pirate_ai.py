@@ -451,6 +451,20 @@ class DeathTests(unittest.TestCase):
         fsm.air.questMgr.shipPVPPirateDefeated.assert_called_once_with(player, ['attacker'])
         player.getParentObj.assert_not_called()
 
+        # the attackers were credited before they were cleared...
+        calls = [name for name, args, kwargs in fsm.air.targetMgr.mock_calls]
+        self.assertLess(calls.index('getAttackers'), calls.index('clearTarget'))
+        fsm.air.targetMgr.clearTarget.assert_called_once_with(player)
+
+    def test_defeat_in_a_pvp_instance_clears_the_attackers(self):
+        player = makePlayer(hp=0)
+        fsm = self.makeFSM(player)
+        world = Mock(getType=Mock(return_value=PiratesGlobals.INSTANCE_PVP))
+        player.getWorld = Mock(return_value=world)
+        fsm.enterDeath()
+        world.avatarDefeated.assert_called_once_with(player)
+        fsm.air.targetMgr.clearTarget.assert_called_once_with(player)
+
     def test_jail_restores_avatar(self):
         player = makePlayer(stacks={InventoryType.Vitae_Level: 1}, hp=0, mojo=0)
         fsm = self.makeFSM(player)
