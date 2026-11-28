@@ -109,6 +109,20 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
 
         self.air.questMgr.dropQuest(self, activeQuest)
 
+    def requestShareQuest(self, questId):
+        # quest sharing was never finished in this version of the game, the quest
+        # page never shows it's share button (see QuestItemGui.createGui) and there
+        # is no way for another pirate to accept a shared quest. the request is
+        # validated and then ignored, nobody is handed a quest without asking...
+        if not self.air.questMgr.hasQuest(self, questId=questId):
+            self.air.logPotentialHacker(message='Avatar requested to share a quest they do not have!',
+                questId=questId)
+
+            return
+
+        self.notify.debug('Ignoring avatar %d request to share quest %s, '
+            'quest sharing is not supported!' % (self.doId, questId))
+
     def requestQuestStep(self, questId):
         inventory = self.getInventory()
         if not inventory:
@@ -127,20 +141,10 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
         if self.activeQuest != questId:
             return
 
-        activeTask = self.air.questMgr.getActiveTask(activeQuest)
-        if not activeTask:
-            return
-
-        # attempt to get the quest step object in which,
-        # the ray of light will hover over...
-        goalUid = activeTask.getGoalUid()
-        stepType, goalObject = self.air.questMgr.getQuestStep(self, goalUid)
-        if not stepType or not goalObject:
-            self.sendUpdate('setQuestStep', [[self.doId, 0, 0, [0, 0, 0, 0], '']])
-            return
-
-        (x, y, z), (h, p, r) = goalObject.getPos(), goalObject.getHpr()
-        self.sendUpdate('setQuestStep', [[self.doId, goalObject.doId, stepType, [x, y, z, h], goalUid]])
+        # the step points towards the goal of the quest's active task, or
+        # towards the npc the quest is to be returned to once complete...
+        goalUid = self.air.questMgr.getQuestStepGoalUid(self, activeQuest)
+        self.sendUpdate('setQuestStep', [self.air.questMgr.getQuestStep(self, goalUid)])
 
     def _swapQuest(self, oldQuests=[], giverId=None, questIds=None, rewards=None):
         inventory = self.getInventory()

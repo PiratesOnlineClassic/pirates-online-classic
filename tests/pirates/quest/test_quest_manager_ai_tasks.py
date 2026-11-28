@@ -349,7 +349,8 @@ class QuestTaskTests(unittest.TestCase):
         mack = makeNPC(NPCIds.BLACK_MACK)
         self.manager.requestInteract(self.avatar, mack)
         mack.d_setQuestsCompleted.assert_called_once_with(
-            self.avatar.doId, completedQuestIds=['ccbm.1poker'], completedQuestDoIds=[quest.doId])
+            self.avatar.doId, completedContainerIds=[], completedQuestIds=['ccbm.1poker'],
+            completedQuestDoIds=[quest.doId])
         self.assertNotIn(19945, self.avatar.getQuestHistory())
         messenger.send(self.avatar.uniqueName('interact-canceled'))
         self.assertIn(19945, self.avatar.getQuestHistory())

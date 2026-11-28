@@ -18,14 +18,14 @@ from pirates.quest.QuestRewardStruct import QuestRewardStruct
 from pirates.quest import QuestEvent
 from pirates.quest import QuestDB
 from pirates.quest import QuestLadderDB
-from pirates.quest.QuestPath import QuestStep
+from pirates.quest.QuestPath import QuestStep, QuestGoal
 from pirates.quest.QuestLadderDNA import QuestLadderDNA, QuestContainerDNA
 from pirates.quest.QuestLadderDynMap import QuestLadderDynMap
 from pirates.quest.QuestLadderDependency import QuestLadderDependency
 from pirates.quest.QuestOffer import QuestOffer
 from pirates.quest.QuestLadderOffer import QuestLadderOffer
 from pirates.quest import QuestTaskDNA
-from pirates.quest.QuestConstants import PropIds, getPropList
+from pirates.quest.QuestConstants import PropIds, getPropList, getShipList
 from pirates.pirate import AvatarTypes
 from pirates.reputation.ReputationGlobals import getLevelFromTotalReputation
 from pirates.piratesbase import PiratesGlobals
@@ -790,6 +790,38 @@ class QuestManagerAI(DirectObject):
 
         self.whenQuestIdle(avatar, removeQuest)
 
+    def getCompletedContainerIds(self, avatar, quest):
+        """
+        Returns the name of the outermost quest container (quest ladder, chapter or
+        quest choice) that will be completed once the quest has been handed in, the
+        npc plays the container's dialog instead of the quest's and the whole main
+        story ladder also shows the main story reward panel (see
+        DistributedQuestGiver.setQuestsCompleted)
+        """
+
+        questStatus = getattr(avatar, 'questStatus', None)
+        questStub = questStatus.getQuestStub(quest.getQuestId()) if questStatus else None
+        if not questStub or questStub.quest is not quest or questStub.complete:
+            return []
+
+        # the stub is only treated as complete by it's containers once
+        # the quest has been processed, pretend it has been...
+        processed = questStub.processed
+        questStub.processed = True
+        try:
+            completedContainer = None
+            container = questStub.getParent()
+            while container is not None and container.isComplete():
+                completedContainer = container
+                container = container.getParent()
+        finally:
+            questStub.processed = processed
+
+        if completedContainer is None or not QuestLadderDB.getContainer(completedContainer.getName()):
+            return []
+
+        return [completedContainer.getName()]
+
     def handleLaddersComplete(self, avatar):
         # quest ladders the avatar has completed are no longer needed, a
         # repeatable quest ladder is rebuilt when it is offered again...
@@ -829,7 +861,16 @@ class QuestManagerAI(DirectObject):
                     return True
                 continue
 
+            isActiveQuest = quest.getQuestId() == avatar.getActiveQuest()
+            if isActiveQuest:
+                previousGoal = self.getQuestStepGoalKey(avatar, quest)
+
             quest.handleEvent(avatar, questEvent)
+
+            # the client only asks for a new quest step when it changes areas, let it
+            # know when the active quest's goal has moved on to another task or npc...
+            if isActiveQuest and self.getQuestStepGoalKey(avatar, quest) != previousGoal:
+                self.updateQuestStep(avatar, quest)
 
             # check to see if the quest event has been completed,
             # if so then handle the callback we set...
@@ -1036,9 +1077,9 @@ class QuestManagerAI(DirectObject):
 
         return self.completeTaskState(avatar, questEvent)
 
-    def shipSunk(self, ship, attackerIds):
-        # every member of the crews that took part in sinking the ship
-        # receives credit for it, just like a defeated enemy...
+    def getAttackerAvatars(self, attackerIds):
+        # attackers are either ships, in which case their whole crew takes
+        # part in the attack, or the avatars themselves...
         avatars = []
         for attackerId in attackerIds:
             attacker = self.air.doId2do.get(attackerId)
@@ -1052,8 +1093,185 @@ class QuestManagerAI(DirectObject):
                 if avatar and avatar not in avatars and avatar.doId in self.quests:
                     avatars.append(avatar)
 
-        for avatar in avatars:
+        return avatars
+
+    def getShipAttackerIds(self, ship):
+        # the ship that landed the final blow, followed by every
+        # other ship that has damaged the ship...
+        attackerIds = []
+        lastAttackerId = getattr(ship, 'lastAttackerShipId', 0)
+        if lastAttackerId:
+            attackerIds.append(lastAttackerId)
+
+        for attackerId in list(getattr(ship, 'attackerDamage', {}).keys()):
+            if attackerId and attackerId not in attackerIds:
+                attackerIds.append(attackerId)
+
+        return attackerIds
+
+    def shipSunk(self, ship, attackerIds):
+        # every member of the crews that took part in sinking the ship
+        # receives credit for it, just like every avatar that attacked a
+        # defeated enemy does (see BattleManagerAI.rewardAttackers)...
+        for avatar in self.getAttackerAvatars(attackerIds):
             self.shipDefeated(avatar, ship)
+
+    def shipSinking(self, ship):
+        """
+        Called by the ship once it's hp have been depleted and it begins sinking
+        """
+
+        if ship.getSiegeTeam():
+            self.shipPVPSunk(ship)
+
+        if ship.getNPCship():
+            self.shipSunk(ship, self.getShipAttackerIds(ship))
+
+    # =========================================================================
+    # Ship PVP (privateering)
+    # =========================================================================
+
+    SiegeTeam2ShipPVPClass = {
+        1: PiratesGlobals.ShipPVPFrench,
+        2: PiratesGlobals.ShipPVPSpanish,
+    }
+
+    def getShipPVPClass(self, teamId):
+        return self.SiegeTeam2ShipPVPClass.get(teamId)
+
+    def getShipPVPWeapon(self, skillId):
+        # cannon skills are the deck cannons manned by the avatar, everything
+        # else (broadsides and rams) is done using the ship itself...
+        if InventoryType.begin_WeaponSkillCannon <= skillId < InventoryType.end_ExtendedWeaponSkillCannon:
+            return PiratesGlobals.ShipPVPKillCannon
+
+        return PiratesGlobals.ShipPVPKillShip
+
+    def getShipPVPEnemyAvatars(self, attackers, enemyTeam):
+        # only avatars on the opposing siege team receive credit...
+        avatars = []
+        for attacker in attackers:
+            if attacker is None:
+                continue
+
+            if isinstance(attacker, DistributedShipAI):
+                if not attacker.getSiegeTeam() or attacker.getSiegeTeam() == enemyTeam:
+                    continue
+
+            for avatar in self.getAttackerAvatars([attacker.doId]):
+                if avatar not in avatars and avatar.getSiegeTeam() and avatar.getSiegeTeam() != enemyTeam:
+                    avatars.append(avatar)
+
+        return avatars
+
+    def handleShipPVPEvent(self, avatar, questEvent):
+        parentObj = avatar.getParentObj()
+        if parentObj and hasattr(parentObj, 'getUniqueId'):
+            questEvent.setLocation(parentObj.getUniqueId())
+
+        # sieges (privateering) are the only ship pvp game in this version...
+        if hasattr(questEvent, 'setGameType'):
+            questEvent.setGameType(PiratesGlobals.ShipPVPSiege)
+
+        return self.completeTaskState(avatar, questEvent)
+
+    def shipPVPSunk(self, ship):
+        """
+        A privateer ship has been sunk. The crew that landed the final blow is credited with
+        the weapon they used, every other enemy crew that damaged the ship is credited as well
+        (for tasks that do not require a specific weapon). The crew of the sunk ship loses the
+        progress of any tasks that have to be completed without sinking.
+        """
+
+        enemyTeam = ship.getSiegeTeam()
+        enemyClass = self.getShipPVPClass(enemyTeam)
+        for avatar in self.getAttackerAvatars([ship.doId]):
+            self.handleShipPVPEvent(avatar, QuestEvent.ShipPVPSink())
+
+        if enemyClass is None:
+            return
+
+        credited = []
+        lastAttackerId = getattr(ship, 'lastAttackerShipId', 0)
+        for attackerId in self.getShipAttackerIds(ship):
+            attacker = self.air.doId2do.get(attackerId)
+            killWeapon = None
+            if attackerId == lastAttackerId:
+                killWeapon = self.getShipPVPWeapon(getattr(ship, 'lastAttackSkillId', 0))
+
+            for avatar in self.getShipPVPEnemyAvatars([attacker], enemyTeam):
+                if avatar in credited:
+                    continue
+
+                credited.append(avatar)
+                questEvent = QuestEvent.ShipPVPEnemyDefeated()
+                questEvent.setEnemyClass(enemyClass)
+                questEvent.setNum(1)
+                questEvent.setKillType(PiratesGlobals.ShipPVPShip)
+                questEvent.setKillWeapon(killWeapon)
+                self.handleShipPVPEvent(avatar, questEvent)
+
+    def shipPVPSpawned(self, ship):
+        # a privateer ship has (re)joined the battle...
+        for avatar in self.getAttackerAvatars([ship.doId]):
+            self.handleShipPVPEvent(avatar, QuestEvent.ShipPVPSpawn())
+
+    def shipPVPShipDamaged(self, ship, attacker, damage, skillId=0):
+        """
+        A privateer ship took damage from an attacker, either an avatar (cannons and
+        broadsides) or a ship (rams).
+        """
+
+        enemyClass = self.getShipPVPClass(ship.getSiegeTeam())
+        if enemyClass is None or damage <= 0:
+            return
+
+        if isinstance(attacker, DistributedShipAI):
+            weapon = PiratesGlobals.ShipPVPKillShip
+        else:
+            weapon = self.getShipPVPWeapon(skillId)
+
+        for avatar in self.getShipPVPEnemyAvatars([attacker], ship.getSiegeTeam()):
+            questEvent = QuestEvent.ShipPVPShipDamage()
+            questEvent.setEnemyClass(enemyClass)
+            questEvent.setDamage(int(damage))
+            questEvent.setDamageWeapon(weapon)
+            self.handleShipPVPEvent(avatar, questEvent)
+
+    def shipPVPPlayerDamaged(self, target, attacker, damage, skillId=0):
+        enemyClass = self.getShipPVPClass(target.getSiegeTeam())
+        if enemyClass is None or damage <= 0:
+            return
+
+        for avatar in self.getShipPVPEnemyAvatars([attacker], target.getSiegeTeam()):
+            questEvent = QuestEvent.ShipPVPPlayerDamage()
+            questEvent.setEnemyClass(enemyClass)
+            questEvent.setDamage(int(damage))
+            questEvent.setDamageWeapon(self.getShipPVPWeapon(skillId))
+            self.handleShipPVPEvent(avatar, questEvent)
+
+    def shipPVPPirateDefeated(self, target, attackers):
+        """
+        A privateer has been defeated, every enemy privateer that attacked them is
+        credited, using the weapon of the last skill they have used.
+        """
+
+        enemyClass = self.getShipPVPClass(target.getSiegeTeam())
+        if enemyClass is None:
+            return
+
+        for avatar in self.getShipPVPEnemyAvatars(attackers, target.getSiegeTeam()):
+            killWeapon = None
+            diary = getattr(avatar, 'battleSkillDiary', None)
+            if diary and diary.getCurrentSkill():
+                killWeapon = self.getShipPVPWeapon(diary.getCurrentSkill())
+
+            questEvent = QuestEvent.ShipPVPEnemyDefeated()
+            questEvent.setEnemyClass(enemyClass)
+            questEvent.setNum(1)
+            questEvent.setKillType(PiratesGlobals.ShipPVPPirate)
+            questEvent.setKillWeapon(killWeapon)
+            self.handleShipPVPEvent(avatar, questEvent)
 
     def dockedAtPort(self, avatar, island):
         questEvent = QuestEvent.DockedAtPort()
@@ -1121,7 +1339,9 @@ class QuestManagerAI(DirectObject):
                     self.completeQuest(avatar, quest)
                 else:
                     self.acceptOnce(avatar.uniqueName('interact-canceled'), finalizeInteract)
-                    npc.d_setQuestsCompleted(avatar.doId, completedQuestIds=[quest.getQuestId()], completedQuestDoIds=[quest.doId])
+                    npc.d_setQuestsCompleted(avatar.doId,
+                        completedContainerIds=self.getCompletedContainerIds(avatar, quest),
+                        completedQuestIds=[quest.getQuestId()], completedQuestDoIds=[quest.doId])
 
                 return
             else:
@@ -1415,13 +1635,14 @@ class QuestManagerAI(DirectObject):
         if isinstance(goalObject, DistributedNPCTownfolkAI):
             stepType = QuestStep.STNPC
         elif isinstance(goalObject, DistributedBattleAvatarAI):
-            stepType = QuestStep.STNPCEnemy
-        elif isinstance(goalObject, DistributedGAInteriorAI):
+            # enemies use the same indicator as townfolk...
+            stepType = QuestStep.STNPC
+        elif isinstance(goalObject, DistributedInteriorDoorAI):
             stepType = QuestStep.STInteriorDoor
         elif isinstance(goalObject, DistributedBuildingDoorAI):
             stepType = QuestStep.STExteriorDoor
         elif isinstance(goalObject, DistributedDinghyAI):
-            stepType = QuestStep.STDinghy
+            stepType = QuestStep.STQuestNode
         elif isinstance(goalObject, DistributedGameAreaAI):
             stepType = QuestStep.STArea
         elif isinstance(goalObject, DistributedShipAI):
@@ -1431,9 +1652,127 @@ class QuestManagerAI(DirectObject):
 
         return stepType
 
-    def getQuestStepObject(self, avatar, goalObject):
-        if not goalObject:
+    def getQuestStepGoalUid(self, avatar, quest):
+        """
+        Returns the goal the avatar's quest step points to, either the goal of the
+        quest's active task, or the npc the quest is to be returned to once complete
+        """
+
+        questDNA = quest.getQuestDNA()
+        if questDNA is None:
             return None
+
+        if not quest.isComplete():
+            activeTask = self.getActiveTask(quest)
+            return activeTask.getGoalUid() if activeTask else None
+
+        if not quest.completeRequiresVisit():
+            return None
+
+        # the same order as Quest.canBeReturnedTo...
+        returnGiverIds = questDNA.getReturnGiverIds()
+        if returnGiverIds:
+            return returnGiverIds[0]
+
+        for task, taskState in zip(quest.getTasks(), quest.getTaskStates()):
+            returnGiverIds = task.getReturnGiverIds()
+            if taskState.isComplete() and returnGiverIds:
+                return returnGiverIds[0]
+
+        return quest.getGiverId() or None
+
+    def getQuestStepGoalKey(self, avatar, quest):
+        goal = self.getQuestStepGoalUid(avatar, quest)
+        if isinstance(goal, QuestGoal):
+            return goal._asString()
+
+        return goal
+
+    def updateQuestStep(self, avatar, quest):
+        if hasattr(avatar, 'requestQuestStep'):
+            avatar.requestQuestStep(quest.getQuestId())
+
+    def questGoalMatches(self, avatar, goal, obj):
+        goalData = goal._QuestGoal__goalData
+        level = goalData[0] if goalData else 0
+        if level > 0 and hasattr(obj, 'getLevel') and level > obj.getLevel():
+            return False
+
+        if goal.getTargetType() == 'ship':
+            if not isinstance(obj, DistributedShipAI) or not obj.getNPCship() or not obj.isSailable():
+                return False
+
+            if len(goalData) > 2 and goalData[2] is not None:
+                if not self.getShipFaction(obj).isA(goalData[2]):
+                    return False
+
+            if len(goalData) > 3 and goalData[3] is not None:
+                shipClassList = getShipList(goalData[3])
+                if shipClassList and obj.getShipClass() not in shipClassList:
+                    return False
+
+            if len(goalData) > 4 and goalData[4] is not None:
+                if bool(goalData[4]) != bool(obj.getIsFlagship()):
+                    return False
+
+            return True
+
+        if isinstance(obj, DistributedShipAI) or not isinstance(obj, DistributedBattleAvatarAI):
+            return False
+
+        if obj is avatar or obj.doId in self.quests or not hasattr(obj, 'getAvatarType'):
+            return False
+
+        hp = obj.getHp() if hasattr(obj, 'getHp') else 1
+        if isinstance(hp, (list, tuple)):
+            hp = hp[0]
+
+        if hp <= 0:
+            return False
+
+        avatarType = obj.getAvatarType()
+        return avatarType is not None and avatarType.isA(goalData[1])
+
+    def findQuestGoalObject(self, avatar, goal):
+        """
+        Finds the closest object that matches the custom quest goal (an enemy type or a
+        type of ship) in the area the avatar is currently in
+        """
+
+        area = avatar.getParentObj()
+        if goal.getTargetType() == 'ship' and isinstance(area, DistributedShipAI):
+            area = area.getParentObj()
+
+        if area is None:
+            return None
+
+        closest, closestDistance = None, None
+        for obj in list(self.air.doId2do.values()):
+            if getattr(obj, 'parentId', None) != area.doId:
+                continue
+
+            try:
+                if not self.questGoalMatches(avatar, goal, obj):
+                    continue
+            except Exception:
+                continue
+
+            pos = obj.getPos()
+            distance = (pos[0] - avatar.getX()) ** 2 + (pos[1] - avatar.getY()) ** 2
+            if closestDistance is None or distance < closestDistance:
+                closest, closestDistance = obj, distance
+
+        return closest
+
+    def getQuestStepObject(self, avatar, goalObject):
+        """
+        Returns the object the avatar's quest step leads to, and the object
+        it is placed relative to, the step leads the avatar towards the goal
+        through the area the avatar is currently in
+        """
+
+        if not goalObject:
+            return None, None
 
         def findObject(goalObject, otherObject):
             goalParent = goalObject.getParentObj()
@@ -1450,37 +1789,89 @@ class QuestManagerAI(DirectObject):
             return goalObject, otherObject
 
         # recurse through the scenegraph and find the target goal object...
-        goalObject, otherObject = findObject(goalObject, avatar)
+        stepObject, otherObject = findObject(goalObject, avatar)
+        if not stepObject:
+            return None, None
+
+        # the avatar is inside of an interior and the goal is not, the
+        # avatar has to leave the interior through it's door first...
+        if isinstance(otherObject, DistributedGAInteriorAI) and stepObject is not otherObject:
+            doorLocatorNode = otherObject.getInteriorFrontDoor() or otherObject.getInteriorBackDoor()
+            if not doorLocatorNode:
+                return None, None
+
+            return doorLocatorNode, otherObject
 
         # interiors are parented under the world instance object,
         # the avatar is parented under the island...
-        if isinstance(goalObject, DistributedGAInteriorAI) and isinstance(otherObject, DistributedIslandAI):
-            doorLocatorNode = goalObject.getExteriorFrontDoor()
+        if isinstance(stepObject, DistributedGAInteriorAI) and isinstance(otherObject, DistributedIslandAI):
+            doorLocatorNode = stepObject.getExteriorFrontDoor() or stepObject.getExteriorBackDoor()
             if not doorLocatorNode:
-                doorLocatorNode = goalObject.getExteriorBackDoor()
-
-            if not doorLocatorNode:
-                return None
+                return None, None
 
             # check to see if the door locator node's parent object is the
             # same parent object as the avatar's, if so return the door locator node
             # otherwise this means the avatar is located on a different island...
             doorLocatorNodeParent = doorLocatorNode.getParentObj()
-            if doorLocatorNodeParent.doId != otherObject.doId:
-                return doorLocatorNodeParent
-            else:
-                return doorLocatorNode
+            if doorLocatorNodeParent is None:
+                return None, None
 
-        return goalObject
+            if doorLocatorNodeParent.doId != otherObject.doId:
+                return doorLocatorNodeParent, doorLocatorNodeParent.getParentObj()
+
+            return doorLocatorNode, otherObject
+
+        return stepObject, stepObject.getParentObj()
+
+    def getQuestStepIslandUid(self, goalObject):
+        # the island the goal is located on, the client places the quest
+        # dart on it's world map at this island...
+        obj = goalObject
+        while obj is not None:
+            if isinstance(obj, DistributedIslandAI):
+                return obj.getUniqueId()
+
+            if isinstance(obj, DistributedGAInteriorAI):
+                door = obj.getExteriorFrontDoor() or obj.getExteriorBackDoor()
+                obj = door.getParentObj() if door else None
+                continue
+
+            obj = obj.getParentObj()
+
+        return ''
 
     def getQuestStep(self, avatar, goalUid):
-        goalObject = self.getQuestStepObject(avatar,
-            self.air.uidMgr.justGetMeMeObject(goalUid))
+        """
+        Returns the quest step of the avatar's quest goal as the
+        list of QuestStep fields the client expects
+        """
 
-        if not goalObject:
-            return None, None
+        nullStep = [avatar.doId, 0, 0, [0, 0, 0, 0], '']
+        if goalUid is None:
+            return nullStep
 
-        return self.getQuestStepType(goalObject), goalObject
+        if isinstance(goalUid, QuestGoal):
+            if goalUid.getType() == QuestGoal.Type_Custom:
+                goalObject = self.findQuestGoalObject(avatar, goalUid)
+            else:
+                goalObject = None
+        else:
+            goalObject = self.air.uidMgr.justGetMeMeObject(goalUid)
+
+        stepObject, originObject = self.getQuestStepObject(avatar, goalObject)
+        if not stepObject:
+            return nullStep
+
+        stepType = self.getQuestStepType(stepObject)
+        if not stepType:
+            return nullStep
+
+        # the step is positioned relative to the object it is parented to,
+        # the client uses this position until the step object has arrived...
+        x, y, z = stepObject.getPos()
+        h = stepObject.getHpr()[0]
+        originDoId = originObject.doId if originObject else 0
+        return [originDoId, stepObject.doId, stepType, [x, y, z, h], self.getQuestStepIslandUid(goalObject)]
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
