@@ -1982,10 +1982,10 @@ dclass DistributedBandMember : DistributedObject {
   setShipHasSpace(bool) required broadcast ram;
   setMessage(uint32, string) broadcast;
   setShipDeployMessage(uint32, string, string) broadcast;
-  setChat(string, uint8, uint32) broadcast ownsend;
-  setWLChat(string, uint8, uint32) broadcast ownsend;
-  setSpeedChat(uint32, uint16) broadcast ownsend;
-  setSCQuestChat(uint32, uint16, uint8, uint8) broadcast ownsend;
+  setChat(string, uint8, uint32) ownsend airecv;
+  setWLChat(string, uint8, uint32) ownsend airecv;
+  setSpeedChat(uint32, uint16) ownsend airecv;
+  setSCQuestChat(uint32, uint16, uint8, uint8) ownsend airecv;
   teleportQuery(uint32, uint32, uint32) clsend ownrecv;
   teleportResponse(uint32, int8, uint32, uint32, uint32) clsend ownrecv;
 };
