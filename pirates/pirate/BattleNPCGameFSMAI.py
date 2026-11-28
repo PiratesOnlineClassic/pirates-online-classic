@@ -26,6 +26,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.__updateBattleStateTask = None
         self.__nextAttackTask = None
         self.__chaseTargetTask = None
+        self.__attackChaseTask = None
         self.__returnToSpawnTask = None
         self.__mojoRegenTask = None
 
@@ -109,6 +110,22 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
         return self.air.doId2do.get(attackTargetDoId)
 
+    def findNewAttackTarget(self):
+        # remove any attackers that are no longer valid (dead or logged out)
+        # then attempt to switch over to one of our remaining attackers...
+        for attackerDoId in list(self.air.targetMgr.getAttackers(self.avatar.doId)):
+            attacker = self.air.doId2do.get(attackerDoId)
+            if attacker and not self.avatar.isTargetValid(attacker):
+                self.air.targetMgr.removeAttacker(attacker, self.avatar)
+
+        attackTarget = self.getNewAttackTarget()
+        if not attackTarget or not self.avatar.isTargetValid(attackTarget):
+            self.avatar.b_setCurrentTarget(0)
+            return None
+
+        self.avatar.b_setCurrentTarget(attackTarget.doId)
+        return attackTarget
+
     def getDistFromSpawnNode(self):
         spawnNodeNP = NodePath('spawnNode-%d' % self.avatar.doId)
         spawnNodeNP.setPos(*self.avatar.getSpawnPos())
@@ -132,12 +149,21 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         return task.again
 
     def _chooseNextAttack(self, task):
+        # our target may have died or left the district since our last
+        # attack, find someone else to fight or give up the battle...
+        if not self.avatar.isTargetValid(self.avatar.currentTarget):
+            if not self.findNewAttackTarget():
+                self.demand('BreakCombat')
+                return task.done
+
         # choose a random skill to attack the player with
         baseSkills = EnemyGlobals.getBaseSkills(self.avatar.avatarType)
         skillList = baseSkills[1]
         skillId = random.choice(skillList)
 
-        areaIdList = self.air.targetMgr.getAttackers(self.avatar.doId)
+        # enemy skills only hit our current target, we must not send our list
+        # of attackers here otherwise every client will play hit effects on them
+        areaIdList = []
         timestamp = globalClockDelta.getRealNetworkTime(bits=16)
         self.avatar.useTargetedSkill(self.avatar, self.avatar.currentTarget, skillId, 0, areaIdList, timestamp, self.avatar.getPos(), 0)
 
@@ -195,7 +221,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
                 extraArgs=[patrolPoint], appendTask=False)
         elif state == 'AttackChase':
             currentTarget = self.avatar.currentTarget
-            if not currentTarget:
+            if not self.avatar.isTargetValid(currentTarget):
                 self.demand('BreakCombat')
                 return
 
@@ -243,6 +269,23 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.__movementInterval.setDoneEvent(self.getWalkToPointDoneName())
         self.__movementInterval.start()
 
+    def _stopMovement(self):
+        # stop walking where we currently are; we do not finish the interval
+        # since that would warp us to the end point and send the done event
+        # while we are in the middle of a state transition...
+        self.ignore(self.getWalkToPointDoneName())
+        if self.__movementInterval:
+            self.__movementInterval.pause()
+            self.__movementInterval = None
+
+        if self.__pausedTask:
+            taskMgr.remove(self.__pausedTask)
+            self.__pausedTask = None
+
+        if self.__attackChaseTask:
+            taskMgr.remove(self.__attackChaseTask)
+            self.__attackChaseTask = None
+
     def enterOff(self):
         pass
 
@@ -267,28 +310,19 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.findNextWalkToPoint()
 
     def exitPatrol(self):
-        if self.__movementInterval:
-            self.__movementInterval.finish()
-            self.__movementInterval = None
-
-        if self.__pausedTask:
-            taskMgr.remove(self.__pausedTask)
-            self.__pausedTask = None
+        self._stopMovement()
 
     def enterWalk(self):
         self.findNextWalkToPoint()
 
     def exitWalk(self):
-        if self.__movementInterval:
-            self.__movementInterval.finish()
-            self.__movementInterval = None
-
-        if self.__pausedTask:
-            taskMgr.remove(self.__pausedTask)
-            self.__pausedTask = None
+        self._stopMovement()
 
     def __updateBattleState(self, task):
         currentTarget = self.avatar.currentTarget
+        if not self.avatar.isTargetValid(currentTarget):
+            currentTarget = self.findNewAttackTarget()
+
         if not currentTarget:
             self.demand('BreakCombat')
             return task.done
@@ -320,10 +354,11 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         pass
 
     def enterBattle(self):
-        if not self.avatar.currentTarget:
-            attackTarget = self.getNewAttackTarget()
-            assert(attackTarget is not None)
-            self.avatar.b_setCurrentTarget(attackTarget.doId)
+        if not self.avatar.isTargetValid(self.avatar.currentTarget):
+            if not self.findNewAttackTarget():
+                # there is nobody left for us to fight...
+                self.demand('BreakCombat')
+                return
 
         self.avatar.startLookAt()
 
@@ -354,8 +389,8 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             self.__mojoRegenTask = None
 
         # remove attune if we have a voodoo weapon
-        if WeaponGlobals.isVoodooWeapon(self.avatar.currentWeaponId):
-            self.avatar.currentTarget.removeSkillEffect(self.avatar.doId)
+        if WeaponGlobals.isVoodooWeapon(self.avatar.currentWeaponId) and self.avatar.currentTarget:
+            self.avatar.currentTarget.removeSkillEffect(WeaponGlobals.C_ATTUNE)
 
         self.avatar.stopLookAt()
 
@@ -380,9 +415,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             taskMgr.remove(self.__chaseTargetTask)
             self.__chaseTargetTask = None
 
-        if self.__movementInterval:
-            self.__movementInterval.finish()
-            self.__movementInterval = None
+        self._stopMovement()
 
         if self.__updateBattleStateTask:
             taskMgr.remove(self.__updateBattleStateTask)
@@ -426,12 +459,15 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             taskMgr.remove(self.__returnToSpawnTask)
             self.__returnToSpawnTask = None
 
+        self._stopMovement()
+
         # update our anim state
         spawnNode = self.avatar.getSpawnNode()
-        self.avatar.b_setAnimSet(spawnNode.objectData.get('AnimSet', 'default'))
+        if spawnNode:
+            self.avatar.b_setAnimSet(spawnNode.objectData.get('AnimSet', 'default'))
 
-        # set the rotation of the avatar to be that of it's initial spawn constants
-        self.avatar.setHpr(spawnNode.objectData.get('Hpr', (0, 0, 0)))
+            # set the rotation of the avatar to be that of it's initial spawn constants
+            self.avatar.setHpr(spawnNode.objectData.get('Hpr', (0, 0, 0)))
 
         # reset the avatar's mojo and health
         self.avatar.b_setHp(self.avatar.getMaxHp())
@@ -439,7 +475,15 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
     def enterDeath(self, *args, **kwargs):
         self.air.battleMgr.rewardAttackers(self.avatar)
-        self.avatar.spawnNode.processDeath()
+
+        # now that our attackers have been rewarded, clear them from the
+        # target mgr so that their skill diaries cannot be rewarded twice
+        self.air.targetMgr.clearTarget(self.avatar)
+        self.avatar.b_setCurrentTarget(0)
+
+        spawnNode = self.avatar.getSpawnNode()
+        if spawnNode:
+            spawnNode.processDeath()
 
     def exitDeath(self):
         pass

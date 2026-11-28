@@ -23,6 +23,7 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         self.collisionMode = 0
         self.initZ = 0
         self.ambush = False
+        self.vehicleDoId = 0
 
         self.spawnNode = None
 
@@ -46,18 +47,17 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     def getName(self):
         return self.name
 
-    def setSpawnPos(self, xxx_todo_changeme):
-        (x, y, z) = xxx_todo_changeme
+    def setSpawnPos(self, spawnPos):
+        (x, y, z) = spawnPos
         self.spawnPos = [x, y, z]
 
-    def d_setSpawnPos(self, xxx_todo_changeme1):
-        (x, y, z) = xxx_todo_changeme1
+    def d_setSpawnPos(self, spawnPos):
+        (x, y, z) = spawnPos
         self.sendUpdate('setSpawnPos', [x, y, z])
 
-    def b_setSpawnPos(self, xxx_todo_changeme2):
-        (x, y, z) = xxx_todo_changeme2
-        self.setSpawnPos(x, y, z)
-        self.d_setSpawnPos(x, y, z)
+    def b_setSpawnPos(self, spawnPos):
+        self.setSpawnPos(spawnPos)
+        self.d_setSpawnPos(spawnPos)
 
     def getSpawnPos(self):
         return self.spawnPos
@@ -69,11 +69,47 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         self.ambush = ambush
 
     def d_setAmbush(self, ambush):
-        self.ambush = ambush
+        self.sendUpdate('setAmbush', [ambush])
 
     def b_setAmbush(self, ambush):
         self.setAmbush(ambush)
         self.d_setAmbush(ambush)
+
+    def getAmbush(self):
+        return self.ambush
+
+    def ambushIntroDone(self):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        # the client tells us once our ambush intro (rising up out of the
+        # ground) has finished playing for them; spring the ambush on that
+        # avatar if they are still close enough to us...
+        if self.gameFSM.state != 'Ambush':
+            return
+
+        if not self.isTargetValid(avatar):
+            return
+
+        aggroRadius = max(self.getAggroRadius(), EnemyGlobals.INSTANT_AGGRO_RADIUS_DEFAULT)
+        if self.getDistance(avatar) > aggroRadius:
+            return
+
+        self.handleClientAggro(avatar)
+
+    def boardVehicle(self, vehicleDoId):
+        self.vehicleDoId = vehicleDoId
+
+    def d_boardVehicle(self, vehicleDoId):
+        self.sendUpdate('boardVehicle', [vehicleDoId])
+
+    def b_boardVehicle(self, vehicleDoId):
+        self.boardVehicle(vehicleDoId)
+        self.d_boardVehicle(vehicleDoId)
+
+    def getVehicleDoId(self):
+        return self.vehicleDoId
 
     def d_setChat(self, chatString, chatFlags=0):
         self.sendUpdate('setChat', [chatString, chatFlags])
@@ -187,6 +223,27 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
         return ''
 
+    def isTargetValid(self, target):
+        if not target or target.isDeleted():
+            return False
+
+        if target.doId not in self.air.doId2do:
+            return False
+
+        if hasattr(target, 'getHp'):
+            hp = target.getHp()
+            if isinstance(hp, (list, tuple)):
+                hp = hp[0]
+
+            if hp <= 0:
+                return False
+
+        gameFSM = getattr(target, 'gameFSM', None)
+        if gameFSM and gameFSM.getCurrentOrNextState() == 'Death':
+            return False
+
+        return True
+
     def requestClientAggro(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
@@ -197,10 +254,22 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
         if self.gameFSM.state == 'Death':
             return
 
+        if self.aggroMode == EnemyGlobals.AGGRO_MODE_NEVER:
+            return
+
+        if not self.isTargetValid(avatar):
+            return
+
+        # we are already fighting somebody, this avatar will become one of
+        # our targets as soon as they start attacking us...
+        if self.gameFSM.state in ('Battle', 'AttackChase') and self.isTargetValid(self.currentTarget):
+            return
+
         # if we are in ambush mode and an avatar just entered our aggro
         # sphere, ambush them and try to kill them.
         if self.gameFSM.state == 'Ambush':
             self.handleClientAggro(avatar)
+            return
 
         # check if we should auto aggro to the avatar that entered
         # our aggro sphere
@@ -209,10 +278,16 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
             self.handleClientAggro(avatar)
 
     def handleClientAggro(self, avatar):
+        # we cannot be aggro'd while we are dead or while we are
+        # walking back to our spawn point after breaking combat
+        if self.gameFSM.getCurrentOrNextState() in ('Death', 'BreakCombat'):
+            return
+
         self.b_setCurrentTarget(avatar.doId)
         self.b_setGameState('Battle')
         self.d_setChat(self.getAggroPhrase())
 
     def delete(self):
+        self.stopLookAt()
         self.air.targetMgr.removeTarget(self)
         DistributedBattleAvatarAI.delete(self)
