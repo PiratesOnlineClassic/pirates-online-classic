@@ -74,7 +74,11 @@ class DistributedHullAI(DistributedShippartAI, DistributedDestructibleArrayAI, D
 
     def projectileWeaponHit(self, skillId, ammoSkillId, skillResult, targetEffects, pos, normal, codes, attacker):
         cannonCode, hullCode, sailCode = codes
-        hullDamage = self.air.battleMgr.getModifiedHullDamage(attacker, self.ship, skillId, ammoSkillId)
+        ship = self.getShip()
+        if not ship or not ship.isSailable() or ship.hasSpawnBuff():
+            return
+
+        hullDamage = self.air.battleMgr.getModifiedHullDamage(attacker, ship, skillId, ammoSkillId)
 
         index = -1
         if hullCode == 255:
@@ -94,7 +98,7 @@ class DistributedHullAI(DistributedShippartAI, DistributedDestructibleArrayAI, D
         if index >= len(arrayHp):
             return
 
-        arrayHp[index] = max(arrayHp[index] + hullDamage, 0)
+        arrayHp[index] = int(max(arrayHp[index] + hullDamage, 0))
         self.b_setArrayHp(arrayHp)
 
         # now damage the ship, but absorbing some of the damage until our
@@ -102,4 +106,4 @@ class DistributedHullAI(DistributedShippartAI, DistributedDestructibleArrayAI, D
         left, rear, right = self.getArmorStatus()
         armorAsorb = (left + rear + right) / 3
         armorAsorb = min(armorAsorb, ShipBalance.ArmorAbsorb.getValue())
-        self.ship.b_setHp(self.ship.getHp() + (hullDamage - (armorAsorb * hullDamage)))
+        ship.handleShipDamage(hullDamage - (armorAsorb * hullDamage), attacker)

@@ -28,6 +28,9 @@ from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipAI')
 
+    SinkDuration = 60.0
+    MaxRamDistance = 1000.0
+
     def __init__(self, air):
         DistributedMovingObjectAI.__init__(self, air)
         DistributedCharterableObjectAI.__init__(self, air)
@@ -64,6 +67,16 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.deployState = 0
         self.skillEffects = []
         self._skillEffectTasks = {}
+        self.sinkTimer = [0, 0]
+        self.repairCount = 0
+        self.flagDNAString = b''
+        self.bandId = [0, 0]
+        self.guildId = 0
+        self.boardableShipId = 0
+        self.respectDeployBarriers = [False, 0]
+        self.parentingRules = ['', '']
+        self.lastAttackerShipId = 0
+        self.attackerDamage = {}
 
         self.cabin = None
         self.bowSprit = None
@@ -162,12 +175,11 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.skillEffects = []
         self.d_setSkillEffects(self.skillEffects)
 
-    def delete(self):
+    def clearSkillEffectTasks(self):
         for taskName in list(self._skillEffectTasks.keys()):
             taskMgr.remove(taskName)
 
         self._skillEffectTasks = {}
-        DistributedMovingObjectAI.delete(self)
 
     def sendCurrentPosition(self):
         x, y, z = self.getPos()
@@ -303,8 +315,8 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
                 getattr(self.cabin, key)(value)
 
             self.cabin.setMaxHp(cabinConfig['setMaxHp'][0])
-            self.cabin.setMaxHp(cabinConfig['setHp'][0])
-            self.cabin.setMaxHp(cabinConfig['setMaxCargo'][0])
+            self.cabin.setHp(cabinConfig['setHp'][0])
+            self.cabin.setMaxCargo(cabinConfig['setMaxCargo'][0])
             self.generateChildWithRequired(self.cabin, PiratesGlobals.ShipZoneSilhouette)
 
         #self.bowSprit = DistributedBowSpritAI(self.air)
@@ -398,7 +410,8 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.broadside.setRightBroadside(rightBroadsideConfig)
 
         self.broadside.setLeftBroadsideEnabledState([True] * len(leftBroadsideConfig))
-        self.broadside.setRightBroadsideEnabledState([True] * len(leftBroadsideConfig))
+        self.broadside.setRightBroadsideEnabledState([True] * len(rightBroadsideConfig))
+        self.broadside.setBaseTeam(shipTeam)
 
         self.broadside.setAmmoType(shipConfig['setBroadsideAmmo'])
         self.generateChildWithRequired(self.broadside, PiratesGlobals.ShipZoneSilhouette)
@@ -486,6 +499,11 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         DistributedCharterableObjectAI.setLocation(self, parentId, zoneId)
 
     def delete(self):
+        self.clearSkillEffectTasks()
+        taskMgr.remove(self.uniqueName('broadcast-pos'))
+        if hasattr(self, 'gameFSM'):
+            self.gameFSM.cleanup()
+
         if self.steeringWheel:
             self.steeringWheel.requestDelete()
             self.steeringWheel = None
@@ -687,14 +705,14 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
     def setHp(self, hp):
         oldHp = self.hp
-        self.hp = min(hp, self.maxHp)
-        self.hp = max(hp, 0)
+        self.hp = max(min(int(hp), self.maxHp), 0)
         DidChange = oldHp != self.hp
         if self.hp == 0 and DidChange:
             self.b_setGameState('Sinking', 0)
+            self.handleShipSinking()
 
     def d_setHp(self, hp):
-        self.sendUpdate('setHp', [hp])
+        self.sendUpdate('setHp', [int(hp)])
 
     def b_setHp(self, hp):
         self.setHp(hp)
@@ -717,7 +735,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         return self.maxSp
 
     def setSp(self, sp):
-        self.sp = sp
+        self.sp = max(int(sp), 0)
 
     def d_setSp(self, sp):
         self.sendUpdate('setSp', [sp])
@@ -837,6 +855,21 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
     def dropAnchor(self, islandDoId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
+            return
+
+        if avatar.doId not in self.crew:
+            self.air.writeServerEvent('suspicious', avId=avatar.doId,
+                issue='Tried to drop anchor on ship %d they are not crew of!' % self.doId)
+
+            return
+
+        if avatar.doId != self.clientControllerDoId and avatar.doId != self.captainId:
+            self.notify.debug('Cannot drop anchor for avatar: %d with ship: %d, '
+                'avatar is not steering the ship!' % (avatar.doId, self.doId))
+
+            return
+
+        if not self.isSailable():
             return
 
         island = self.air.doId2do.get(islandDoId)
@@ -1007,3 +1040,452 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
     def generateChildWithRequiredAndId(self, do, doId, parentId, zoneId, optionalFields=[]):
         do.generateWithRequiredAndId(doId, parentId, zoneId, optionalFields)
+
+    def getCurrentGameState(self):
+        if hasattr(self, 'gameFSM') and self.gameFSM.getCurrentOrNextState():
+            return self.gameFSM.getCurrentOrNextState()
+
+        return self.gameState[0]
+
+    def isSailable(self):
+        return self.getCurrentGameState() not in ('Sinking', 'Sunk', 'PutAway')
+
+    def getSinkDuration(self):
+        return self.SinkDuration
+
+    def handleShipSunk(self):
+        # NPC ships are simply removed from the world once they have finished
+        # sinking, player ships override this in order to keep their database object...
+        self.requestDelete()
+
+    def handleShipDamage(self, damage, attacker=None):
+        if not self.isSailable():
+            return
+
+        if self.hasSpawnBuff():
+            return
+
+        damage = int(damage)
+        if damage >= 0:
+            return
+
+        attackerShipId = 0
+        if attacker is not None:
+            if isinstance(attacker, DistributedShipAI):
+                attackerShipId = attacker.doId
+            elif hasattr(attacker, 'getCrewShipId'):
+                attackerShipId = attacker.getCrewShipId()
+
+        # record the attacker before applying the damage, so we know
+        # who landed the final blow if this damage sinks the ship...
+        self.recordAttacker(attackerShipId, -damage)
+        self.b_setHp(self.hp + damage)
+        self.shipAttacked(attackerShipId, -damage)
+
+    def recordAttacker(self, attackerShipId, damage):
+        if not attackerShipId or attackerShipId == self.doId:
+            return
+
+        self.lastAttackerShipId = attackerShipId
+        self.attackerDamage[attackerShipId] = self.attackerDamage.get(attackerShipId, 0) + damage
+
+    def clearAttackers(self):
+        self.lastAttackerShipId = 0
+        self.attackerDamage = {}
+
+    def getSinkAttackers(self):
+        # the attacker is the ship which landed the final blow, the assist is
+        # the ship which did the most damage out of all the other attackers...
+        attackerShip = self.air.doId2do.get(self.lastAttackerShipId)
+        assistShip = None
+        assistDamage = 0
+        for shipId, damage in list(self.attackerDamage.items()):
+            if shipId == self.lastAttackerShipId or damage <= assistDamage:
+                continue
+
+            ship = self.air.doId2do.get(shipId)
+            if ship is None:
+                continue
+
+            assistShip = ship
+            assistDamage = damage
+
+        return attackerShip, assistShip
+
+    def handleShipSinking(self):
+        siegeManager = getattr(self.air, 'siegeManager', None)
+        if siegeManager is not None and self.getSiegeTeam():
+            attackerShip, assistShip = self.getSinkAttackers()
+            siegeManager.handleShipSunk(self, attackerShip, assistShip)
+
+    def shipAttacked(self, attackerShipId, damage):
+        if self.npcShip and hasattr(self, 'gameFSM') and hasattr(self.gameFSM, 'onDamageReceived'):
+            if attackerShipId and self.hp > 0:
+                self.gameFSM.onDamageReceived(attackerShipId, damage)
+
+    def repairShip(self):
+        self.b_setHp(self.maxHp)
+        self.b_setSp(self.maxSp)
+
+        if self.hull:
+            self.hull.b_setArrayHp(list(self.hull.getMaxArrayHp()))
+
+        for mast in self.masts:
+            mast.b_setArrayHp(list(mast.getMaxArrayHp()))
+
+        for sail in self.sails:
+            sail.b_setHp(sail.getMaxHp())
+
+        if self.cabin:
+            self.cabin.b_setHp(self.cabin.getMaxHp())
+
+        if self.broadside:
+            self.broadside.b_setLeftBroadsideEnabledState([1] * len(self.broadside.getLeftBroadside()))
+            self.broadside.b_setRightBroadsideEnabledState([1] * len(self.broadside.getRightBroadside()))
+
+        self.b_setRepairCount(self.repairCount + 1)
+        self.clearAttackers()
+
+    def getRepairCost(self):
+        modelClass = ShipGlobals.getModelClass(self.shipClass)
+        return ShipGlobals.calcRepairCost(self.maxHp, self.hp, self.maxSp, self.sp, modelClass)
+
+    def fixSail(self):
+        # this request is never sent by the client, it was only ever used for debugging...
+        avatarId = self.air.getAvatarIdFromSender()
+        self.air.writeServerEvent('suspicious', avId=avatarId,
+            issue='Sent fixSail for ship %d!' % self.doId)
+
+    def purchaseRepairAll(self):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        if avatar.doId != self.captainId and avatar.doId != self.ownerId:
+            self.notify.warning('Avatar %d tried to purchase repairs for ship %d '
+                'they are not the captain of!' % (avatar.doId, self.doId))
+
+            return
+
+        if self.getCurrentGameState() == 'Sinking':
+            return
+
+        inventory = self.air.inventoryManager.getInventory(avatar.doId)
+        if not inventory:
+            self.notify.warning('Cannot purchase repairs for avatar %d, '
+                'avatar has no inventory!' % avatar.doId)
+
+            return
+
+        cost = self.getRepairCost()
+        if not cost:
+            return
+
+        currentGold = inventory.getGoldInPocket()
+        if currentGold < cost:
+            self.notify.debug('Avatar %d cannot afford to repair ship %d!' % (avatar.doId, self.doId))
+            return
+
+        inventory.setGoldInPocket(currentGold - cost)
+        self.repairShip()
+        self.air.writeServerEvent('ship-repair', avId=avatar.doId, shipId=self.doId, cost=cost)
+
+    def clearDockTimer(self):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        if avatar.doId != self.captainId:
+            return
+
+        self._clearDockTimer()
+
+    def _clearDockTimer(self):
+        pass
+
+    def leave(self, shipId):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        if shipId != self.doId:
+            return
+
+        if avatar.doId not in self.crew:
+            return
+
+        # the avatar is leaving the ship; if they were steering the ship
+        # we need to release the ship's controls so someone else can take the wheel...
+        if avatar.doId == self.clientControllerDoId:
+            if self.steeringWheel and self.steeringWheel.userId == avatar.doId:
+                self.steeringWheel.b_setUserId(0)
+
+            self.b_setClientController(0)
+            if self.isSailable():
+                self.b_setGameState('Adrift', 0)
+
+    def requestBoard(self, avId):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        if avId != avatar.doId:
+            self.air.writeServerEvent('suspicious', avId=avatar.doId,
+                issue='Tried to request boarding of ship %d for avatar %d!' % (self.doId, avId))
+
+            return
+
+        if avatar.doId in self.crew:
+            return
+
+        if not self.isSailable():
+            return
+
+        fromShipId = avatar.getCrewShipId()
+        fromShip = self.air.doId2do.get(fromShipId)
+        if isinstance(fromShip, DistributedShipAI) and fromShip.getBoardableShipId() == self.doId:
+            # the avatar is swinging over from their own ship onto the grappled ship...
+            self.d_setMovie(ShipGlobals.SHIP_MOVIE_BOARD, avatar.doId, fromShipId, 0)
+            return
+
+        if not self.isBoardable:
+            self.notify.debug('Avatar %d cannot board ship %d, '
+                'ship is not boardable!' % (avatar.doId, self.doId))
+
+            return
+
+        self.d_setMovie(ShipGlobals.SHIP_MOVIE_BOARD, avatar.doId, 0, 0)
+
+    def requestBoardFlagship(self, flagshipId):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        if avatar.doId not in self.crew:
+            return
+
+        if not flagshipId or flagshipId != self.boardableShipId:
+            self.notify.debug('Avatar %d cannot board flagship %d, '
+                'ship %d is not grappled to it!' % (avatar.doId, flagshipId, self.doId))
+
+            return
+
+        flagship = self.air.doId2do.get(flagshipId)
+        if not isinstance(flagship, DistributedShipAI):
+            return
+
+        if not flagship.getIsInBoardingPosition():
+            return
+
+        flagship.d_setMovie(ShipGlobals.SHIP_MOVIE_BOARD, avatar.doId, self.doId, 0)
+
+    def requestShipRam(self, targetId, pos, timestamp):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        if avatar.doId != self.clientControllerDoId:
+            self.notify.debug('Avatar %d cannot ram with ship %d, '
+                'avatar is not steering!' % (avatar.doId, self.doId))
+
+            return
+
+        if not self.hasSkillEffect(WeaponGlobals.C_RAM):
+            self.air.writeServerEvent('suspicious', avId=avatar.doId,
+                issue='Tried to ram with ship %d without ramming speed!' % self.doId)
+
+            return
+
+        target = self.air.doId2do.get(targetId)
+        if not isinstance(target, DistributedShipAI) or target is self:
+            return
+
+        if self.getParentObj() is not target.getParentObj():
+            return
+
+        if self.getDistance(target) > self.MaxRamDistance:
+            self.notify.debug('Avatar %d ram request rejected, ship %d is too far '
+                'away from target %d!' % (avatar.doId, self.doId, targetId))
+
+            return
+
+        # the ram buff is consumed by the ram:
+        self.removeSkillEffect(WeaponGlobals.C_RAM)
+
+        target.d_useShipRam(pos)
+        damage = self.air.battleMgr.getModifiedHullDamage(avatar, target,
+            InventoryType.SailRammingSpeed, 0)
+
+        if not damage:
+            damage = -int(target.getMaxHp() * ShipGlobals.BREAK_HP_LOSS)
+
+        target.handleShipDamage(damage, self)
+
+    def d_useShipRam(self, pos):
+        self.sendUpdate('useShipRam', [pos])
+
+    def requestClientAggro(self):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        if not self.npcShip or not self.isSailable():
+            return
+
+        targetShip = self.air.doId2do.get(avatar.getCrewShipId())
+        if not isinstance(targetShip, DistributedShipAI):
+            return
+
+        if hasattr(self.gameFSM, 'engageTarget'):
+            self.gameFSM.engageTarget(targetShip)
+
+    def relayTeleportInfo(self):
+        parentObj = self.getParentObj()
+        if parentObj is None:
+            return
+
+        world = parentObj.getParentObj()
+        if world is None:
+            return
+
+        self.d_sendTeleportInfo(self.air.districtId, world.doId)
+
+    def d_sendTeleportInfo(self, shardId, instanceDoId):
+        self.sendUpdate('sendTeleportInfo', [shardId, instanceDoId])
+
+    def clientReachedRespawnLocation(self):
+        pass
+
+    def d_setRespawnLocation(self, avatarId, parentId, zoneId):
+        self.sendUpdateToAvatarId(avatarId, 'setRespawnLocation', [parentId, zoneId])
+
+    def d_forceSteerShip(self, avatarId):
+        self.sendUpdateToAvatarId(avatarId, 'forceSteerShip', [self.doId])
+
+    def d_forceBoardShip(self, avatarId):
+        self.sendUpdateToAvatarId(avatarId, 'forceBoardShip', [])
+
+    def d_forceExitShip(self, avatarId):
+        self.sendUpdateToAvatarId(avatarId, 'forceExitShip', [])
+
+    def d_swingLocalAvatarToGrappledShip(self, avatarId, grappledShipId):
+        self.sendUpdateToAvatarId(avatarId, 'swingLocalAvatarToGrappledShip', [grappledShipId])
+
+    def d_notifyReceivedLoot(self, lootList):
+        self.sendUpdate('notifyReceivedLoot', [lootList])
+
+    def d_damage(self, damage, pos, attackerId):
+        self.sendUpdate('damage', [damage, pos, attackerId])
+
+    def setParentingRules(self, rule1, rule2):
+        self.parentingRules = [rule1, rule2]
+
+    def d_setParentingRules(self, rule1, rule2):
+        self.sendUpdate('setParentingRules', [rule1, rule2])
+
+    def b_setParentingRules(self, rule1, rule2):
+        self.setParentingRules(rule1, rule2)
+        self.d_setParentingRules(rule1, rule2)
+
+    def getParentingRules(self):
+        return self.parentingRules
+
+    def setBandId(self, bandManagerId, bandId):
+        self.bandId = [bandManagerId, bandId]
+
+    def d_setBandId(self, bandManagerId, bandId):
+        self.sendUpdate('setBandId', [bandManagerId, bandId])
+
+    def b_setBandId(self, bandManagerId, bandId):
+        self.setBandId(bandManagerId, bandId)
+        self.d_setBandId(bandManagerId, bandId)
+
+    def getBandId(self):
+        return self.bandId
+
+    def setGuildId(self, guildId):
+        self.guildId = guildId
+
+    def d_setGuildId(self, guildId):
+        self.sendUpdate('setGuildId', [guildId])
+
+    def b_setGuildId(self, guildId):
+        self.setGuildId(guildId)
+        self.d_setGuildId(guildId)
+
+    def getGuildId(self):
+        return self.guildId
+
+    def setBoardableShipId(self, boardableShipId):
+        self.boardableShipId = boardableShipId
+
+    def d_setBoardableShipId(self, boardableShipId):
+        self.sendUpdate('setBoardableShipId', [boardableShipId])
+
+    def b_setBoardableShipId(self, boardableShipId):
+        self.setBoardableShipId(boardableShipId)
+        self.d_setBoardableShipId(boardableShipId)
+
+    def getBoardableShipId(self):
+        return self.boardableShipId
+
+    def d_setBoardingSuccess(self, attackShipId, timestamp=0):
+        if not timestamp:
+            timestamp = globalClockDelta.getRealNetworkTime(bits=16)
+
+        self.sendUpdate('setBoardingSuccess', [attackShipId, timestamp])
+
+    def setRespectDeployBarriers(self, respect, barrierId):
+        self.respectDeployBarriers = [respect, barrierId]
+
+    def d_setRespectDeployBarriers(self, respect, barrierId):
+        self.sendUpdate('setRespectDeployBarriers', [respect, barrierId])
+
+    def b_setRespectDeployBarriers(self, respect, barrierId):
+        self.setRespectDeployBarriers(respect, barrierId)
+        self.d_setRespectDeployBarriers(respect, barrierId)
+
+    def getRespectDeployBarriers(self):
+        return self.respectDeployBarriers
+
+    def setSinkTimer(self, duration, timestamp):
+        self.sinkTimer = [duration, timestamp]
+
+    def d_setSinkTimer(self, duration, timestamp):
+        self.sendUpdate('setSinkTimer', [duration, timestamp])
+
+    def b_setSinkTimer(self, duration, timestamp=0):
+        if not timestamp:
+            timestamp = globalClockDelta.getRealNetworkTime(bits=16)
+
+        self.setSinkTimer(duration, timestamp)
+        self.d_setSinkTimer(duration, timestamp)
+
+    def getSinkTimer(self):
+        return self.sinkTimer
+
+    def setFlagDNAString(self, flagDNAString):
+        self.flagDNAString = flagDNAString
+
+    def d_setFlagDNAString(self, flagDNAString):
+        self.sendUpdate('setFlagDNAString', [flagDNAString])
+
+    def b_setFlagDNAString(self, flagDNAString):
+        self.setFlagDNAString(flagDNAString)
+        self.d_setFlagDNAString(flagDNAString)
+
+    def getFlagDNAString(self):
+        return self.flagDNAString
+
+    def setRepairCount(self, repairCount):
+        self.repairCount = min(repairCount, 255)
+
+    def d_setRepairCount(self, repairCount):
+        self.sendUpdate('setRepairCount', [repairCount])
+
+    def b_setRepairCount(self, repairCount):
+        self.setRepairCount(repairCount)
+        self.d_setRepairCount(self.repairCount)
+
+    def getRepairCount(self):
+        return self.repairCount

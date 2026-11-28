@@ -2664,11 +2664,9 @@ class GameFSMShipAI(FSM.FSM):
                 if totalDamage > 0:
                     # Apply damage to target
                     if hasattr(target, 'takeDamage'):
-                        target.takeDamage(self.ship.doId, totalDamage, 0)
-                    elif hasattr(target, 'hull') and target.hull:
-                        hull = target.hull
-                        if hasattr(hull, 'takeDamage'):
-                            hull.takeDamage(self.ship.doId, totalDamage, 0)
+                        target.takeDamage(totalDamage, self.ship.doId)
+                    elif hasattr(target, 'handleShipDamage'):
+                        target.handleShipDamage(-totalDamage, self.ship)
         except:
             pass
 
@@ -2737,10 +2735,11 @@ class GameFSMShipAI(FSM.FSM):
         self.targetShip = None
 
         def _shipSunk(task):
-            self.ship.requestDelete()
+            self._sinkingTask = None
+            self.ship.handleShipSunk()
             return Task.done
 
-        self._sinkingTask = taskMgr.doMethodLater(60, _shipSunk, 
+        self._sinkingTask = taskMgr.doMethodLater(self.ship.getSinkDuration(), _shipSunk,
                                                    self.ship.uniqueName('shipSunk'))
     def exitSinking(self):
         if self._sinkingTask is not None:

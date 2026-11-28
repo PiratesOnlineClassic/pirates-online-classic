@@ -48,6 +48,9 @@ class DistributedShippartAI(DistributedObjectAI):
         return self.shipId
 
     def getShip(self):
+        if self.ship is None and self.shipId:
+            self.ship = self.air.doId2do.get(self.shipId)
+
         return self.ship
 
     def setGeomParentId(self, geomParentId):

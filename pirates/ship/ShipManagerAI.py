@@ -94,6 +94,13 @@ class ShipManagerAI:
     def getPlayerShips(self):
         return list(self.playerShips)
 
+    def hasActiveShip(self, shipId):
+        for ship in self.playerShips:
+            if ship.doId == shipId:
+                return True
+
+        return False
+
     def hasShip(self, ship):
         assert(ship is not None)
         return ship in self.npcShips

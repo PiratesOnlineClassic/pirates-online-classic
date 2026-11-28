@@ -73,7 +73,7 @@ class NPCShipAI(DistributedShipAI):
             attackerDoId: DoId of attacking ship (for threat tracking)
             applyModifiers: Whether to apply NPC damage input modifier
         """
-        if self.hasSpawnBuff():
+        if self.hasSpawnBuff() or not self.isSailable():
             return self.hp
 
         # Apply NPC damage input modifier if requested
@@ -91,16 +91,17 @@ class NPCShipAI(DistributedShipAI):
         # Apply the damage
         damage = int(damage)
         newHp = max(0, self.hp - damage)
+        attackerShip = self.air.doId2do.get(attackerDoId)
+        if isinstance(attackerShip, DistributedShipAI):
+            self.recordAttacker(attackerDoId, damage)
+
         self.b_setHp(newHp)
         
         # Notify the AI FSM about the attack
-        if hasattr(self, 'gameFSM') and self.gameFSM:
+        if hasattr(self, 'gameFSM') and self.gameFSM and newHp > 0:
             self.gameFSM.onDamageReceived(attackerDoId, damage)
-        
-        # Check for sinking
-        if newHp <= 0:
-            self.b_setGameState('Sinking', 0)
-        
+
+        # sinking is handled by setHp once the ship's hp reaches zero.
         return newHp
 
     def handleCannonHit(self, attackerDoId, damage, hitPos):

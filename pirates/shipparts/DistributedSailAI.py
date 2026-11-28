@@ -39,11 +39,10 @@ class DistributedSailAI(DistributedShippartAI, DistributedDestructibleArrayAI, D
         return self.maxHp
 
     def setHp(self, hp):
-        self.hp = min(hp, self.maxHp)
-        self.hp = max(hp, 0)
+        self.hp = max(min(int(hp), self.maxHp), 0)
 
     def d_setHp(self, hp):
-        self.sendUpdate('setHp', [hp])
+        self.sendUpdate('setHp', [int(hp)])
 
     def b_setHp(self, hp):
         self.setHp(hp)
@@ -83,6 +82,16 @@ class DistributedSailAI(DistributedShippartAI, DistributedDestructibleArrayAI, D
         if not avatar:
             return
 
+        ship = self.getShip()
+        if not ship or not ship.hasCrewMember(avatar.doId):
+            self.notify.debug('Avatar %d cannot set the anim state of sail %d, '
+                'avatar is not crew of the ship!' % (avatar.doId, self.doId))
+
+            return
+
+        if self.hp <= 0:
+            return
+
         self.b_setAnimState(animState)
 
     def setAnimState(self, animState):
@@ -103,11 +112,15 @@ class DistributedSailAI(DistributedShippartAI, DistributedDestructibleArrayAI, D
         if self.hp == 0:
             return
 
-        sailDamage = self.air.battleMgr.getModifiedSailDamage(attacker, self.ship, skillId, ammoSkillId)
+        ship = self.getShip()
+        if not ship or not ship.isSailable() or ship.hasSpawnBuff():
+            return
+
+        sailDamage = self.air.battleMgr.getModifiedSailDamage(attacker, ship, skillId, ammoSkillId)
         self.b_setHp(self.getHp() + sailDamage)
 
         shipDamage = sailDamage - (ShipBalance.ArmorAbsorb.getValue() * sailDamage)
-        self.ship.b_setHp(self.ship.getHp() + shipDamage)
+        ship.handleShipDamage(shipDamage, attacker)
 
         # update the sail anim state
         if self.hp == 0:
