@@ -15,6 +15,7 @@ from pirates.instance.DistributedInstanceWorldAI import DistributedInstanceWorld
 from pirates.tutorial import TutorialGlobals
 from pirates.tutorial.DistributedPiratesTutorialWorldAI import DistributedPiratesTutorialWorldAI
 from pirates.treasuremap.TreasureMapBlackPearlAI import TreasureMapBlackPearlAI
+from pirates.pvp import PVPManagerAI
 
 
 class LinkManager(object):
@@ -421,6 +422,8 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
             self.world = TreasureMapBlackPearlAI(self.air)
         elif worldFileName == WorldGlobals.PiratesWorldSceneFileBase:
             self.world = DistributedMainWorldAI(self.air)
+        elif worldFileName in PVPManagerAI.PVPWorldClasses:
+            self.world = PVPManagerAI.PVPWorldClasses[worldFileName](self.air)
         elif 'Parlor' in worldFileName:
             self.world = DistributedInstanceWorldAI(self.air)
             self.world.setType(PiratesGlobals.INSTANCE_PG)

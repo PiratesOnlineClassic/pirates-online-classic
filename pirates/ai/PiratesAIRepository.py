@@ -35,6 +35,7 @@ from pirates.tutorial.PiratesTutorialManagerAI import PiratesTutorialManagerAI
 from pirates.world.WorldGridManagerAI import WorldGridManagerAI
 from pirates.ship.ShipManagerAI import ShipManagerAI
 from pirates.pvp.SiegeManagerAI import SiegeManagerAI
+from pirates.pvp.PVPManagerAI import PVPManagerAI
 from pirates.discord.DiscordNotificationsAI import DiscordNotificationsAI
 
 
@@ -175,6 +176,9 @@ class PiratesAIRepository(PiratesInternalRepository):
 
         self.siegeManager = SiegeManagerAI(self)
         self.siegeManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+
+        self.pvpManager = PVPManagerAI(self)
+        self.pvpManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
     def createWorlds(self):
         """
