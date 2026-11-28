@@ -436,6 +436,12 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         avatar.b_setCrewShipId(self.doId)
         avatar.b_setCurrentIsland('')
 
+        # a crew member that boarded without a dinghy (teleported on board or moved
+        # from another ship) still has to see the ocean cells around the ship...
+        parentObj = self.getParentObj()
+        if isinstance(parentObj, DistributedOceanGridAI):
+            self.air.worldGridManager.handleLocationChanged(parentObj, avatar, self.zoneId)
+
     def _playerDeparted(self, avatar):
         assert(isinstance(avatar, DistributedPlayerPirateAI))
         self.ignore(avatar.getDeleteEvent())
