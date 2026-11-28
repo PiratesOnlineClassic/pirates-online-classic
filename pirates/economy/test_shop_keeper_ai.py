@@ -3,6 +3,8 @@ import types
 import unittest
 from unittest.mock import Mock, patch
 
+import pirates.battle
+import pirates.reputation
 from otp.uberdog.RejectCode import RejectCode
 from pirates.economy import EconomyGlobals
 from pirates.economy.EconomyGlobals import ItemId
@@ -81,6 +83,11 @@ class ShopKeeperAITests(unittest.TestCase):
             'pirates.reputation.ReputationGlobals': repGlobals})
         self.modules.start()
         self.addCleanup(self.modules.stop)
+        for package, name, module in ((pirates.battle, 'WeaponGlobals', weaponGlobals),
+                                      (pirates.reputation, 'ReputationGlobals', repGlobals)):
+            patcher = patch.object(package, name, module, create=True)
+            patcher.start()
+            self.addCleanup(patcher.stop)
 
     def lastResponse(self):
         return self.shop.sendUpdateToAvatarId.call_args[0]
