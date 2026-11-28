@@ -1171,7 +1171,7 @@ dclass DistributedPlayerPirate : DistributedPlayer, DistributedBattleAvatar, Hum
   setTempDoubleXPReward(uint32) required db ram broadcast;
   setCrewHUDUpdate(uint8, HUDIcons []) ownrecv;
   setAllowGMNameTag(bool) required ram broadcast airecv;
-  updateGMNameTag(uint8, string, string) required ram broadcast ownsend;
+  updateGMNameTag(uint8, string, string) required ram broadcast ownsend airecv;
 };
 
 dclass PiratesMagicWordManager : MagicWordManager {

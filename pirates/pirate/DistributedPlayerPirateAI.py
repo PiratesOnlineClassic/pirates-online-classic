@@ -875,16 +875,36 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         return self.gmNameTagAllowed
 
     def updateGMNameTag(self, gmNameTagState, gmNameTagColor, gmNameTagString):
+        # updateGMNameTag is ownsend, the state server has already broadcast the
+        # client's value; only an avatar the AI allowed a GM nametag may set one...
+        if self.air.getAccountIdFromSender() and not self.gmNameTagAllowed:
+            self.air.logPotentialHacker(
+                message='Received updateGMNameTag from an avatar without a GM nametag!',
+                targetAvId=self.doId,
+                gmNameTagState=gmNameTagState,
+                gmNameTagColor=gmNameTagColor,
+                gmNameTagString=gmNameTagString)
+
+            self.d_updateGMNameTag(*self.getGMNameTag())
+            return
+
+        self._setGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
+
+    def _setGMNameTag(self, gmNameTagState, gmNameTagColor, gmNameTagString):
         self.gmNameTagState = gmNameTagState
         self.gmNameTagColor = gmNameTagColor
         self.gmNameTagString = gmNameTagString
+
+    def getGMNameTag(self):
+        return [getattr(self, 'gmNameTagState', 0), getattr(self, 'gmNameTagColor', ''),
+            getattr(self, 'gmNameTagString', '')]
 
     def d_updateGMNameTag(self, gmNameTagState, gmNameTagColor, gmNameTagString):
         self.sendUpdate('updateGMNameTag', [gmNameTagState, gmNameTagColor, gmNameTagString])
 
     def b_updateGMNameTag(self, gmNameTagState, gmNameTagColor, gmNameTagString):
         self.d_updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
-        self.updateGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
+        self._setGMNameTag(gmNameTagState, gmNameTagColor, gmNameTagString)
 
     def setTempDoubleXPReward(self, tempDoubleXPReward):
         self.tempDoubleXPReward = tempDoubleXPReward
