@@ -27,7 +27,7 @@ class GrabberTentacleAI(KrakenPartAI):
         self.numSqueezes = 0
 
     def createGameFSM(self):
-        self.gameFSM = GrabberGameFSMAI(self.air, self)
+        return GrabberGameFSMAI(self.air, self)
 
     def delete(self):
         self.stopSqueeze()

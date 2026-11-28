@@ -13,7 +13,7 @@ class HolderTentacleAI(KrakenPartAI):
         self.emerged = 0
 
     def createGameFSM(self):
-        self.gameFSM = HolderGameFSMAI(self.air, self)
+        return HolderGameFSMAI(self.air, self)
 
     def d_emerge(self, emerge):
         self.sendUpdate('emerge', [emerge])

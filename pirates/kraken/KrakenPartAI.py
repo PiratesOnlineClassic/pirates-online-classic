@@ -11,13 +11,9 @@ class KrakenPartAI(DistributedCreatureAI):
     HpScale = 1.0
 
     def __init__(self, air):
-        DistributedCreatureAI.__init__(self, air)
-
         # kraken parts are driven by the kraken itself and not by a spawn node,
-        # replace the generic battle npc fsm with our own.
-        self.gameFSM.destroy()
-        self.gameFSM = None
-        self.createGameFSM()
+        # DistributedCreatureAI will swap in our own game fsm from createGameFSM.
+        DistributedCreatureAI.__init__(self, air)
 
         self.krakenId = 0
 

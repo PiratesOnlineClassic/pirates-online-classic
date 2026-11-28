@@ -9,4 +9,4 @@ class KrakenBodyAI(KrakenPartAI):
     HpScale = 5.0
 
     def createGameFSM(self):
-        self.gameFSM = BodyGameFSMAI(self.air, self)
+        return BodyGameFSMAI(self.air, self)
