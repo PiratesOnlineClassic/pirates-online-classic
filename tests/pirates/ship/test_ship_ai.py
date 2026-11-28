@@ -1,4 +1,5 @@
 import builtins
+import math
 import importlib.abc
 import importlib.machinery
 import pickle
@@ -609,6 +610,49 @@ class GameFSMShipAITests(_TaskPatchedTestCase):
         fsm._startMovementTo(Point3(0, 5000, 0), fsm._getShipSpeed())
         self.ship.setY(300)
         self.assertNotAlmostEqual(fsm._getDesiredHeading(), 0.0)
+
+    def sailTo(self, fsm, destination, speed, steps=2000):
+        closest = {}
+        fsm._startMovementTo(destination, speed)
+        for _ in range(steps):
+            pos = self.ship.getPos()
+            for centerX, centerY, radius in fsm._islandSpheres:
+                dist = math.hypot(pos[0] - centerX, pos[1] - centerY)
+                closest[(centerX, centerY)] = min(closest.get((centerX, centerY), dist), dist)
+
+            if fsm._moveTask(None) == Task.done:
+                return True, closest
+
+        return False, closest
+
+    def test_ship_sails_around_an_island_in_its_way(self):
+        fsm = self.makeShips()
+        fsm._islandSpheres = [(0, 3000, 1000)]
+        arrived, closest = self.sailTo(fsm, Point3(0, 6000, 0), fsm._getShipSpeed(combatMode=True))
+        self.assertTrue(arrived)
+        self.assertGreater(closest[(0, 3000)], 1000)
+
+    def test_ship_threads_between_two_islands(self):
+        fsm = self.makeShips()
+        fsm._islandSpheres = [(-1600, 3000, 1000), (1600, 3000, 1000)]
+        arrived, closest = self.sailTo(fsm, Point3(0, 6000, 0), fsm._getShipSpeed())
+        self.assertTrue(arrived)
+        for dist in closest.values():
+            self.assertGreater(dist, 1000)
+
+    def test_ship_inside_an_islands_buffer_heads_back_out(self):
+        fsm = self.makeShips()
+        fsm._islandSpheres = [(0, 0, 1000)]
+        self.ship.setPos(0, -1100, 0)
+        fsm._startMovementTo(Point3(0, 5000, 0), fsm._getShipSpeed())
+        self.assertAlmostEqual(abs(fsm._normalizeAngle(fsm._getDesiredHeading())), 180.0, places=3)
+
+    def test_ship_never_sails_further_into_an_island(self):
+        fsm = self.makeShips()
+        fsm._islandSpheres = [(0, 0, 1000)]
+        self.ship.setPos(0, -900, 0)
+        self.assertTrue(fsm._isRunningAground(0, -900, 0, -850))
+        self.assertFalse(fsm._isRunningAground(0, -900, 0, -950))
 
     def test_patrol_engages_player_ship_within_aggro_radius(self):
         fsm = self.makeShips()

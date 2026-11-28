@@ -401,6 +401,89 @@ class GameFSMShipAI(FSM.FSM):
 
         return None
 
+    def _getTurningRadius(self):
+        # how wide a circle the ship sails when turning as hard as it can:
+        speed = max(self._movementSpeed, 1.0)
+        return speed / math.radians(max(self._getTurnRate(), 1.0))
+
+    def _getAvoidRange(self):
+        # far enough ahead to turn clear of an island at the ship's current speed...
+        return self.IslandBuffer + self._getTurningRadius() * 2.0
+
+    def _getAvoidSphere(self, x, y, heading, distance):
+        """
+        Returns the nearest island avoid sphere (grown by the island buffer) the ship sails
+        into within the distance along the heading, or the one the ship is already within.
+        """
+
+        if self.seaLane:
+            return None
+
+        dirX, dirY = -math.sin(math.radians(heading)), math.cos(math.radians(heading))
+        nearest = None
+        for centerX, centerY, radius in self._getIslandCollisionSpheres():
+            radius += self.IslandBuffer
+            offsetX, offsetY = centerX - x, centerY - y
+            distSq = offsetX * offsetX + offsetY * offsetY
+            if distSq < radius * radius:
+                return centerX, centerY, radius
+
+            along = offsetX * dirX + offsetY * dirY
+            perpSq = distSq - along * along
+            if along <= 0 or perpSq >= radius * radius:
+                continue
+
+            hitDist = along - math.sqrt(radius * radius - perpSq)
+            if hitDist <= distance and (nearest is None or hitDist < nearest[0]):
+                nearest = (hitDist, centerX, centerY, radius)
+
+        if nearest:
+            return nearest[1:]
+
+        return None
+
+    def _getAvoidHeading(self, heading):
+        """
+        Steers the ship around the island avoid spheres in it's path, the ship sails along
+        whichever tangent of the sphere turns it the least from the heading it wants...
+        """
+
+        x, y = self._getGridPos(self.ship).getXy()
+        avoidRange = self._getAvoidRange()
+        sphere = self._getAvoidSphere(x, y, heading, avoidRange)
+        if not sphere:
+            return heading
+
+        centerX, centerY, radius = sphere
+        dist = math.hypot(x - centerX, y - centerY)
+        awayHeading = -math.degrees(math.atan2(x - centerX, y - centerY))
+        if dist <= radius:
+            # already too close, get back out to open water first:
+            return awayHeading
+
+        toCenter = self._normalizeAngle(awayHeading + 180.0)
+        offset = math.degrees(math.asin(min(1.0, radius / dist)))
+        tangents = sorted((self._normalizeAngle(toCenter + offset), self._normalizeAngle(toCenter - offset)),
+            key=lambda tangent: abs(self._normalizeAngle(tangent - heading)))
+        for tangent in tangents:
+            blocking = self._getAvoidSphere(x, y, tangent, avoidRange)
+            if not blocking or blocking == sphere:
+                return tangent
+
+        return awayHeading
+
+    def _isRunningAground(self, fromX, fromY, toX, toY):
+        # a ship never sails any further into an island than it already is:
+        if self.seaLane:
+            return False
+
+        for centerX, centerY, radius in self._getIslandCollisionSpheres():
+            toDistSq = (toX - centerX) ** 2 + (toY - centerY) ** 2
+            if toDistSq < radius * radius and toDistSq < (fromX - centerX) ** 2 + (fromY - centerY) ** 2:
+                return True
+
+        return False
+
     def _isPositionSafe(self, pos):
         return self._isWithinGridBounds(pos[0], pos[1]) and not self._getBlockingIsland(pos[0], pos[1])
 
@@ -487,20 +570,7 @@ class GameFSMShipAI(FSM.FSM):
                                                    y + math.cos(math.radians(beamHeading)) * self.WaypointRadius):
                 heading = beamHeading
 
-        x, y = self._getGridPos(self.ship).getXy()
-        blocking = self._getBlockingIsland(x + -math.sin(math.radians(heading)) * self.IslandBuffer,
-            y + math.cos(math.radians(heading)) * self.IslandBuffer)
-        if blocking:
-            # steer around the island by sailing along it's edge:
-            awayHeading = -math.degrees(math.atan2(x - blocking[0], y - blocking[1]))
-            leftEdge = self._normalizeAngle(awayHeading + 90.0)
-            rightEdge = self._normalizeAngle(awayHeading - 90.0)
-            if abs(self._normalizeAngle(leftEdge - heading)) < abs(self._normalizeAngle(rightEdge - heading)):
-                heading = leftEdge
-            else:
-                heading = rightEdge
-
-        return heading
+        return self._getAvoidHeading(heading)
 
     def _moveTask(self, task):
         if self._currentDestination is None:
@@ -522,6 +592,8 @@ class GameFSMShipAI(FSM.FSM):
         y = shipY + math.cos(math.radians(heading)) * distance
         if self.seaLane and not self._isInLane(x, y) and self._isInLane(shipX, shipY):
             # don't run aground, turn without making way until the ship can carry on:
+            x, y = shipX, shipY
+        elif self._isRunningAground(shipX, shipY, x, y):
             x, y = shipX, shipY
 
         x, y = self._clampToGridBounds(x, y)
