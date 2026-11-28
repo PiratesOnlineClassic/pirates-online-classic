@@ -403,23 +403,50 @@ class BlackPearlAITests(unittest.TestCase):
         instance.sendUpdateToAvatarId.assert_called_once_with(
             42, 'setTMComplete', [[], []])
 
-    def test_pearl_damage_accepts_broadside_signature(self):
+    def make_pearl(self):
         ship = BlackPearlShipAI.__new__(BlackPearlShipAI)
+        ship.air = SimpleNamespace(doId2do={})
         ship.hp = 100
+        ship.maxHp = 100
         ship.hasSpawnBuff = lambda: False
-        ship.b_setHp = lambda hp: setattr(ship, 'hp', hp)
-        ship._handleDestroyed = Mock()
+        ship.isSailable = lambda: True
+        ship.b_setHp = ship.setHp
+        return ship
+
+    def test_pearl_damage_accepts_broadside_signature(self):
+        ship = self.make_pearl()
+        ship.handleHpDepleted = Mock()
+        ship.gameFSM = SimpleNamespace(onDamageReceived=Mock())
         with patch.object(ShipBalance.ArmorAbsorb, 'getValue', return_value=0), \
                 patch.object(ShipBalance.NPCArmorModifier, 'getValue', return_value=0):
             self.assertEqual(ship.takeDamage(40, 23, applyModifiers=False), 60)
             self.assertEqual(ship.takeDamage(60, 23, applyModifiers=False), 0)
-        ship._handleDestroyed.assert_called_once_with()
+        ship.handleHpDepleted.assert_called_once_with()
+
+    def test_sunk_pearl_reports_defeat_and_is_kept(self):
+        ship = self.make_pearl()
+        ship.questInstance = SimpleNamespace(handleBlackPearlDestroyed=Mock())
+        ship.b_setGameState = Mock()
+        ship.handleShipSinking = Mock()
+        ship.requestDelete = Mock()
+        ship.handleHpDepleted()
+        ship.b_setGameState.assert_called_once_with('Sinking', 0)
+        ship.questInstance.handleBlackPearlDestroyed.assert_called_once_with()
+
+        ship.handleShipSunk()
+        ship.b_setGameState.assert_called_with('Sunk', 0)
+        ship.requestDelete.assert_not_called()
+
+    def test_pearl_wheel_waits_for_the_guards(self):
+        ship = self.make_pearl()
+        ship.npcsOnDeck = [1]
+        self.assertFalse(ship.canTakeWheel(None))
+        ship.npcsOnDeck = []
+        self.assertTrue(ship.canTakeWheel(None))
+        self.assertTrue(ship.isCrewedByPlayers())
 
     def test_pearl_damage_applies_npc_modifiers_and_reports_attack(self):
-        ship = BlackPearlShipAI.__new__(BlackPearlShipAI)
-        ship.hp = 100
-        ship.hasSpawnBuff = lambda: False
-        ship.b_setHp = lambda hp: setattr(ship, 'hp', hp)
+        ship = self.make_pearl()
         ship.gameFSM = SimpleNamespace(onDamageReceived=Mock())
         with patch.object(ShipBalance.NPCDamageIn, 'getValue', return_value=2), \
                 patch.object(ShipBalance.ArmorAbsorb, 'getValue', return_value=0.5), \
@@ -500,6 +527,7 @@ class BlackPearlAITests(unittest.TestCase):
         fort.objKey = '1175907906.7kmuller'
         fort.destroyed = False
         fort.cannons = []
+        fort.stopAttacking = Mock()
         fort.treasureMapInstance = instance
         first = SimpleNamespace(isDestroyed=lambda: True)
         second = SimpleNamespace(isDestroyed=lambda: False)

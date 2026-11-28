@@ -10,6 +10,7 @@ from pirates.treasuremap.TreasureMapBlackPearlWorldBuilderAI import TreasureMapB
 from pirates.quest import QuestEvent
 from pirates.ship import ShipGlobals
 from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import PLocalizer
 from pirates.pirate import AvatarTypes
 from pirates.battle import EnemyGlobals
 
@@ -19,18 +20,17 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
     notify.setInfo(True)
 
     # Ship spawn positions
-    BLACK_PEARL_SPAWN_POS = (-350, -3800, 0)
-    BLACK_PEARL_SPAWN_HPR = (180, 0, 0)
-    GOLIATH_SPAWN_POS = (1200, -5500, 0)
-    GOLIATH_SPAWN_HPR = (200, 0, 0)
+    BLACK_PEARL_SPAWN_POS = TreasureMapBlackPearlGlobals.BLACK_PEARL_SPAWN_POS
+    BLACK_PEARL_SPAWN_HPR = TreasureMapBlackPearlGlobals.BLACK_PEARL_SPAWN_HPR
+    GOLIATH_SPAWN_POS = TreasureMapBlackPearlGlobals.GOLIATH_WAIT_POS
+    GOLIATH_SPAWN_HPR = TreasureMapBlackPearlGlobals.GOLIATH_WAIT_HPR
 
     # Attack ship spawn positions
-    ATTACK_SHIP_POSITIONS = [
-        ((-1400, -6100, 0), (45, 0, 0)),
-        ((-600, -6500, 0), (30, 0, 0)),
-        ((600, -6200, 0), (315, 0, 0)),
-        ((1400, -5800, 0), (290, 0, 0)),
-    ]
+    ATTACK_SHIP_POSITIONS = TreasureMapBlackPearlGlobals.ATTACK_SHIP_SPAWNS
+
+    # the attack ships come for the Pearl once the stage two camera move has shown them:
+    ATTACK_SHIP_HUNT_DELAY = 6.0
+    SEA_CHECK_PERIOD = 1.0
 
     # Navy guard positions on the Black Pearl deck (relative to ship)
     # These are positioned around the main deck for combat encounters
@@ -60,10 +60,6 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         AvatarTypes.Veteran,
         AvatarTypes.Officer,
     ]
-
-    # the bridges that close the pearl's way out of the harbor
-    BlockingBarricades = (0, 1, 4)
-    BARRICADE_WARNING_RADIUS = 700.0
 
     # Stage timing constants
     CUTSCENE_WAIT_TIME = 60.0  # Max time to wait for the clients to load
@@ -104,7 +100,8 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         self.attackShipsSunk = 0
         self.sunkAttackShipIds = set()
         self.barricadesDestroyed = []
-        self.barricadesWarned = []
+        self.barricadesWarned = set()
+        self.stageFourStarted = False
 
         # Barrier sync for multi-player
         self.barrierCallbacks = {}
@@ -184,7 +181,10 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         taskMgr.remove(self.uniqueName('waitClientsTimeout'))
         taskMgr.remove(self.uniqueName('moveToCompleted'))
         taskMgr.remove(self.uniqueName('refreshBlackPearlInterests'))
-        taskMgr.remove(self.uniqueName('barricadeWarnings'))
+        taskMgr.remove(self.uniqueName('huntBlackPearl'))
+        taskMgr.remove(self.uniqueName('checkStageThree'))
+        taskMgr.remove(self.uniqueName('moveShipsOutToSea'))
+        self._stopFortsAttacking()
         if self.readyBarrier is not None:
             self.ignoreBarrier(self.readyBarrier)
             self.readyBarrier = None
@@ -343,7 +343,7 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         self.blackPearl.setBaseTeam(ShipGlobals.PLAYER_TEAM)
         self.blackPearl.setLevel(50)
         self.blackPearl.setShipClass(ShipGlobals.BLACK_PEARL)
-        self.blackPearl.setName('Black Pearl')
+        self.blackPearl.setName(PLocalizer.TheBlackPearl)
         self.blackPearl.setNPCship(1)
         self.blackPearl.setIsBoardable(1)
         self.blackPearl.setIsFlagship(1)
@@ -394,10 +394,10 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         self.notify.info('Creating Goliath ship...')
 
         self.goliath = NPCShipAI(self.air)
-        self.goliath.setBaseTeam(ShipGlobals.UNDEAD_TEAM)
-        self.goliath.setLevel(50)
+        self.goliath.setBaseTeam(ShipGlobals.getShipTeam(ShipGlobals.GOLIATH))
+        self.goliath.setLevel(ShipGlobals.getShipLevel(ShipGlobals.GOLIATH))
         self.goliath.setShipClass(ShipGlobals.GOLIATH)
-        self.goliath.setName('Goliath')
+        self.goliath.setName(PLocalizer.ShipClassNames.get(ShipGlobals.GOLIATH))
         self.goliath.setNPCship(1)
         self.goliath.setIsBoardable(0)
         self.goliath.setIsFlagship(1)
@@ -430,8 +430,10 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
             self.goliath.setHpr(h, p, r)
             self.oceanGrid.addObjectToOceanGrid(self.goliath)
             self.goliath.sendCurrentPosition()
+            self.goliath.startPosHprBroadcast()
 
-            # Set game state to AISteering for enemy ship
+            # the Goliath lies in wait out at sea until stage four:
+            self.goliath.gameFSM.setSeaLane(TreasureMapBlackPearlGlobals.OPEN_SEA_LANE)
             self.goliath.b_setGameState('AISteering', 0)
         else:
             self.notify.error('No oceanGrid available to generate Goliath')
@@ -446,21 +448,16 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
 
         self.notify.info('Creating attack ships...')
 
-        attackShipClasses = [
-            ShipGlobals.NPC_WARSHIPL1,
-            ShipGlobals.NPC_WARSHIPL2,
-            ShipGlobals.NPC_WARSHIPL2,
-            ShipGlobals.NPC_WARSHIPL3,
-        ]
+        attackShipClasses = TreasureMapBlackPearlGlobals.ATTACK_SHIP_CLASSES
 
         for i, (pos, hpr) in enumerate(self.ATTACK_SHIP_POSITIONS):
-            shipClass = attackShipClasses[i] if i < len(attackShipClasses) else ShipGlobals.WARSHIP_L2
+            shipClass = attackShipClasses[i % len(attackShipClasses)]
 
             ship = NPCShipAI(self.air)
-            ship.setBaseTeam(ShipGlobals.NAVY_TEAM)
-            ship.setLevel(30 + i * 5)
+            ship.setBaseTeam(ShipGlobals.getShipTeam(shipClass))
+            ship.setLevel(ShipGlobals.getShipLevel(shipClass))
             ship.setShipClass(shipClass)
-            ship.setName('HMS Interceptor %d' % (i + 1))
+            ship.setName(PLocalizer.ShipClassNames.get(shipClass, ''))
             ship.setNPCship(1)
             ship.setIsBoardable(0)
 
@@ -489,8 +486,11 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
                 ship.setHpr(h, p, r)
                 self.oceanGrid.addObjectToOceanGrid(ship)
                 ship.sendCurrentPosition()
+                ship.startPosHprBroadcast()
 
-                # Set game state to AISteering for enemy ship
+                # the attack ships wait behind the drawbridges until stage two,
+                # the channel keeps them off the island when they come for the Pearl:
+                ship.gameFSM.setSeaLane(TreasureMapBlackPearlGlobals.CHANNEL_SEA_LANE)
                 ship.b_setGameState('AISteering', 0)
 
             self.attackShips.append(ship)
@@ -828,64 +828,111 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
 
     def _checkBarricadeProgress(self):
         """Check if enough barricades are destroyed to proceed to stage four"""
-        if self.state == 'StageThree' and self.getBlockingBarricade() is None:
-            self._moveToStageFour()
+        # the Pearl still has to sail past the last drawbridge (see _checkStageThree):
+        if self.state == 'StageThree':
+            self._checkStageThree()
 
-    def getBlockingBarricade(self):
-        # the harbor is closed by either of the first two bridges (0 and 1) and the
-        # way out to sea by the last bridge (4), bridges 2 and 3 never block the
-        # pearl (the client leaves their collisions off, see setupBarricades)...
-        if not (0 in self.barricadesDestroyed or 1 in self.barricadesDestroyed):
-            return 1
+    def isBarricadePassable(self, barricadeId):
+        # barricades 2 and 3 are left open, either of the drawbridges either
+        # side of the island fort lets the Pearl into the channel:
+        if barricadeId in self.barricadesDestroyed:
+            return True
 
-        if 4 not in self.barricadesDestroyed:
-            return 4
+        if barricadeId not in TreasureMapBlackPearlGlobals.BlockingBarricades:
+            return True
 
-        return None
+        if barricadeId in TreasureMapBlackPearlGlobals.ChannelEntranceBarricades:
+            return any(entranceId in self.barricadesDestroyed
+                       for entranceId in TreasureMapBlackPearlGlobals.ChannelEntranceBarricades)
 
-    def _getBarricadePos(self, barricadeId):
-        fortPositions = [self.forts[uid].getPos() for uid in
-                         TreasureMapBlackPearlGlobals.FortPairsDict[barricadeId] if uid in self.forts]
-        if not fortPositions:
-            return None
+        return False
 
-        return sum(fortPositions, Vec3(0, 0, 0)) / len(fortPositions)
+    def isChannelOpen(self):
+        return all(self.isBarricadePassable(barricadeId)
+                   for barricadeId in TreasureMapBlackPearlGlobals.BlockingBarricades)
 
-    def _checkBarricadeWarnings(self, task):
-        # warn the crew when the pearl sails up to a bridge that is still closed...
-        if self.state != 'StageThree' or not self.blackPearl:
+    def _getPearlDistance(self, pos):
+        pearlPos = self.blackPearl.getPos(self.oceanGrid)
+        return ((pearlPos[0] - pos[0]) ** 2 + (pearlPos[1] - pos[1]) ** 2) ** 0.5
+
+    def _checkStageThree(self, task=None):
+        if self.state != 'StageThree' or self.stageFourStarted or not self.blackPearl:
             return Task.done
 
-        pearlPos = self.blackPearl.getPos(self.oceanGrid)
-        pearlPos.setZ(0)
-        for barricadeId in self.BlockingBarricades:
-            if barricadeId in self.barricadesDestroyed or barricadeId in self.barricadesWarned:
+        # warn the Pearl about drawbridges that are still in it's way:
+        for barricadeId in TreasureMapBlackPearlGlobals.BlockingBarricades:
+            if barricadeId in self.barricadesWarned or self.isBarricadePassable(barricadeId):
                 continue
 
-            if barricadeId in (0, 1) and (0 in self.barricadesDestroyed or 1 in self.barricadesDestroyed):
-                continue
-
-            barricadePos = self._getBarricadePos(barricadeId)
-            if barricadePos is None:
-                continue
-
-            barricadePos.setZ(0)
-            if (pearlPos - barricadePos).length() <= self.BARRICADE_WARNING_RADIUS:
-                self.barricadesWarned.append(barricadeId)
+            if self._getPearlDistance(TreasureMapBlackPearlGlobals.BarricadePositions[barricadeId]) < \
+                    TreasureMapBlackPearlGlobals.BARRICADE_WARNING_RADIUS:
+                self.barricadesWarned.add(barricadeId)
                 self.d_barricadeWarning(barricadeId)
+
+        # with the drawbridges down, the Pearl sailing past the last one makes for the open sea:
+        if self.isChannelOpen() and self._getPearlDistance(TreasureMapBlackPearlGlobals.STAGE_FOUR_TRIGGER_POS) < \
+                TreasureMapBlackPearlGlobals.STAGE_FOUR_TRIGGER_RADIUS:
+            self._moveToStageFour()
+            return Task.done
 
         return Task.again
 
     def _moveToStageFour(self):
         """Move to stage four - final battle"""
+        if self.stageFourStarted:
+            return
+
+        self.stageFourStarted = True
         self.notify.info('Moving to Stage Four - Final Battle!')
+        taskMgr.remove(self.uniqueName('checkStageThree'))
+        self._stopFortsAttacking()
         self.d_startStageFourCutscene()
-        taskMgr.doMethodLater(20.0, self._startStageFour, self.uniqueName('stageFourCutscene'))
+
+        # the cutscene sails copies of the Pearl and the Goliath out of the channel,
+        # the real ships are moved out to sea while the screen is faded out:
+        taskMgr.doMethodLater(TreasureMapBlackPearlGlobals.STAGE_FOUR_MOVE_TIME, self._moveShipsOutToSea,
+            self.uniqueName('moveShipsOutToSea'))
+        taskMgr.doMethodLater(TreasureMapBlackPearlGlobals.STAGE_FOUR_CUTSCENE_TIME, self._startStageFour,
+            self.uniqueName('stageFourCutscene'))
+
+    def _moveShipsOutToSea(self, task=None):
+        if self.blackPearl and self.blackPearl.isSailable():
+            self.blackPearl.moveTo(TreasureMapBlackPearlGlobals.STAGE_FOUR_PEARL_POS,
+                TreasureMapBlackPearlGlobals.STAGE_FOUR_PEARL_HPR)
+
+        if self.goliath and self.goliath.isSailable():
+            self.goliath.moveTo(TreasureMapBlackPearlGlobals.STAGE_FOUR_GOLIATH_POS,
+                TreasureMapBlackPearlGlobals.STAGE_FOUR_GOLIATH_HPR)
+
+        return Task.done
 
     def _startStageFour(self, task):
+        # the helmsman's client may have still been sending the Pearl's
+        # old position when it was moved, make sure it's out at sea:
+        self._moveShipsOutToSea()
         self.d_stopStageFourCutscene()
         self.b_setState('StageFour')
         return Task.done
+
+    def _startFortsAttacking(self):
+        for fort in self.forts.values():
+            if not fort.isDestroyed():
+                fort.startAttacking(self.blackPearl)
+
+    def _stopFortsAttacking(self):
+        for fort in self.forts.values():
+            if hasattr(fort, 'stopAttacking'):
+                fort.stopAttacking()
+
+    def _huntBlackPearl(self, ships):
+        for ship in ships:
+            if ship and not ship.isDeleted() and ship.isSailable() and self.blackPearl:
+                ship.gameFSM.hunt(self.blackPearl)
+
+    def _stopHunting(self):
+        for ship in [self.goliath] + self.attackShips:
+            if ship and not ship.isDeleted() and hasattr(ship, 'gameFSM'):
+                ship.gameFSM.stopHunting()
 
     def handleGoliathDestroyed(self):
         """Called when the Goliath is destroyed - Victory!"""
@@ -895,7 +942,14 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
 
     def handleBlackPearlDestroyed(self):
         """Called when the Black Pearl is destroyed - Defeat!"""
+        if self.state not in ('StageOne', 'StageTwo', 'StageThree', 'StageFour'):
+            return
+
         self.notify.info('Black Pearl destroyed! Defeat!')
+        taskMgr.remove(self.uniqueName('stageFourCutscene'))
+        taskMgr.remove(self.uniqueName('moveShipsOutToSea'))
+        self._stopFortsAttacking()
+        self._stopHunting()
         self.b_setState('NotCompleted')
 
     # =========================================================================
@@ -974,6 +1028,10 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         taskMgr.doMethodLater(1.0, self._checkAttackShips,
             self.uniqueName('checkAttackShips'))
 
+        # the attack ships come out from behind the raised drawbridges for the Pearl:
+        taskMgr.doMethodLater(self.ATTACK_SHIP_HUNT_DELAY, self._huntBlackPearl,
+            self.uniqueName('huntBlackPearl'), extraArgs=[self.attackShips])
+
     def _checkAttackShips(self, task):
         for ship in self.attackShips:
             if ship.getHp() <= 0:
@@ -982,6 +1040,7 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
 
     def exitStageTwo(self):
         taskMgr.remove(self.uniqueName('checkAttackShips'))
+        taskMgr.remove(self.uniqueName('huntBlackPearl'))
 
     def enterStageThree(self):
         """Stage Three: Destroy the barricades/drawbridges"""
@@ -989,21 +1048,24 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         self.notify.info('Entering Stage Three - Destroy the barricades')
 
         # Enable barricade collisions
-        for barricadeId in self.BlockingBarricades:
+        for barricadeId in [0, 1, 4]:
             if barricadeId not in self.barricadesDestroyed:
                 self.d_enableBarricadeCollisions(barricadeId)
 
-        taskMgr.doMethodLater(1.0, self._checkBarricadeWarnings,
-            self.uniqueName('barricadeWarnings'))
-        self._checkBarricadeProgress()
+        # the forts open fire on the Pearl, the Pearl has to fight it's way past them:
+        self._startFortsAttacking()
+        taskMgr.doMethodLater(self.SEA_CHECK_PERIOD, self._checkStageThree,
+            self.uniqueName('checkStageThree'))
 
     def exitStageThree(self):
-        taskMgr.remove(self.uniqueName('barricadeWarnings'))
+        taskMgr.remove(self.uniqueName('checkStageThree'))
 
     def enterStageFour(self):
         """Stage Four: Final battle with Goliath"""
         DistributedTreasureMapInstanceAI.enterStageFour(self)
         self.notify.info('Entering Stage Four - Destroy the Goliath!')
+        self._stopFortsAttacking()
+        self._huntBlackPearl([self.goliath])
 
         # Start checking for victory/defeat
         taskMgr.doMethodLater(5.0, self._checkVictoryCondition,

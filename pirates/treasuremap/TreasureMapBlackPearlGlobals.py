@@ -6,6 +6,8 @@ Black Pearl treasure map instance, including fort pairs, drawbridge mappings,
 and collision dictionaries.
 """
 
+from pirates.ship import ShipGlobals
+
 # =============================================================================
 # Island and Region UIDs
 # =============================================================================
@@ -109,3 +111,101 @@ CUTSCENE_NODES = {
 # Pier UID on Black Pearl Island
 PIER_UID = '1171761787.95sdnaik'
 
+
+# =============================================================================
+# Sea Configuration
+# =============================================================================
+
+# The island is a ring around a lagoon, the Black Pearl is moored by the pier
+# in the lagoon (where cutscene 3.1 leaves it) and the only way out to sea is
+# the channel guarded by the forts' drawbridges. The channel's mouth is walled
+# off (col_shipcollide_7), the stage four cutscene sails the Pearl and the
+# Goliath out to sea (see TreasureMapBlackPearl.startPearlAndGoliathCopy).
+BLACK_PEARL_SPAWN_POS = (200.6, -639.0, 0)
+BLACK_PEARL_SPAWN_HPR = (242.9, 0, 0)
+
+# the ship models are turned around underneath a DistributedShip, these are the
+# positions the cutscene's copies of the ships end up at:
+STAGE_FOUR_PEARL_POS = (-815, -8200, 0)
+STAGE_FOUR_PEARL_HPR = (160, 0, 0)
+STAGE_FOUR_GOLIATH_POS = (-224, -8780, 0)
+STAGE_FOUR_GOLIATH_HPR = (148, 0, 0)
+
+# the Goliath waits out at sea where it's copy starts the stage four cutscene:
+GOLIATH_WAIT_POS = (1672, -6688, 0)
+GOLIATH_WAIT_HPR = (138, 0, 0)
+
+# the time into the stage four cutscene at which the screen has faded out and
+# the Pearl and the Goliath are moved out to sea:
+STAGE_FOUR_CUTSCENE_TIME = 20.0
+STAGE_FOUR_MOVE_TIME = 1.0
+
+# once the last drawbridge is down, the Pearl sailing past it starts stage four
+# (the Pearl's copy starts the cutscene just past the last drawbridge):
+STAGE_FOUR_TRIGGER_POS = (-483, -5813, 0)
+STAGE_FOUR_TRIGGER_RADIUS = 450
+
+# Navy attack ships, they wait in the channel behind the drawbridges and come
+# through them into the lagoon once the drawbridges are raised in stage two:
+ATTACK_SHIP_SPAWNS = [
+    ((1600, -2950, 0), (20, 0, 0)),
+    ((1600, -3300, 0), (5, 0, 0)),
+    ((1430, -3900, 0), (35, 0, 0)),
+    ((1180, -4200, 0), (40, 0, 0)),
+]
+
+ATTACK_SHIP_CLASSES = [
+    ShipGlobals.NAVY_PREDATOR,
+    ShipGlobals.NAVY_MAN_O_WAR,
+    ShipGlobals.NAVY_PREDATOR,
+    ShipGlobals.NAVY_COLOSSUS,
+]
+
+# sea lanes the AI ships sail along, (x, y, radius) points, the radius is how
+# far either side of the lane the ship may stray. The channel lane runs from
+# the pier out through the drawbridges (barricade 1, then 2, 3 and 4) to the
+# open sea past the channel's mouth:
+CHANNEL_SEA_LANE = [
+    (200, -639, 200),
+    (600, -1300, 650),
+    (1100, -1900, 300),
+    (1300, -2300, 70),
+    (1350, -2450, 40),
+    (1550, -2700, 200),
+    (1600, -3300, 200),
+    (1580, -3640, 40),
+    (1430, -3900, 150),
+    (1180, -4200, 150),
+    (1050, -4370, 100),
+    (800, -4600, 200),
+    (400, -4850, 180),
+    (0, -5100, 160),
+    (-300, -5350, 80),
+    (-450, -5600, 100),
+    (-520, -6000, 250),
+    (-540, -6400, 280),
+]
+
+# the open sea outside the channel's mouth where the Goliath is fought:
+OPEN_SEA_LANE = [
+    (-500, -8700, 1700),
+]
+
+# the middle of each drawbridge, the Pearl is warned about a drawbridge that is
+# still blocking it's way when it comes within the warning radius:
+BarricadePositions = {
+    0: (1755, -2265),
+    1: (1275, -2390),
+    2: (1587, -3646),
+    3: (1001, -4411),
+    4: (-372, -5410),
+}
+
+BARRICADE_WARNING_RADIUS = 500
+
+# the drawbridges that block the channel, barricades 2 and 3 stay open
+# (see TreasureMapBlackPearl.setupBarricades), either of the two drawbridges
+# either side of the island fort (0 or 1) opens the way into the channel:
+BlockingBarricades = (0, 1, 4)
+ChannelEntranceBarricades = (0, 1)
+ChannelExitBarricade = 4
