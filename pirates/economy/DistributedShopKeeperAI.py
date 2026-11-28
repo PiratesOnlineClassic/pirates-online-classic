@@ -45,10 +45,9 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         DistributedObjectAI.__init__(self, air)
 
     def getShopInventory(self):
-        # Mirrors the shelves the client builds in DistributedShopKeeper.announceGenerate,
-        # so the AI only ever sells what the shopkeeper is displaying.
+        # the shelves the client builds in DistributedShopKeeper.announceGenerate...
         avatarType = getattr(self, 'avatarType', None)
-        if avatarType is None or not hasattr(avatarType, 'isA'):
+        if avatarType is None:
             return []
 
         lowWeaponsOnly = ConfigVariableBool('low-weapons-only', False).getValue()
@@ -134,12 +133,8 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         return ReputationGlobals.getLevelFromTotalReputation(repId, inventory.getAccumulator(repId))[0]
 
     def __checkPurchase(self, avatar, inventory, itemId, pending, pendingShips):
-        """
-        Validates a single item of a makeSale buy request and returns a tuple of
-        (response, price, quantity). These are the same rules the client enforces
-        in StoreGUI.handleBuyItem and ShipStoreGUI.handleCommitPurchase.
-        """
-
+        # the same rules the client enforces in StoreGUI.handleBuyItem
+        # and ShipStoreGUI.handleCommitPurchase...
         itemCost = EconomyGlobals.getItemCost(itemId)
         if itemCost is None or itemId not in self.getShopInventory():
             self.air.logPotentialHacker(
@@ -160,7 +155,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
         itemCategory = EconomyGlobals.getItemCategory(itemId)
         if itemCategory == ItemType.SHIP:
-            if hasattr(avatar, 'isPaid') and not avatar.isPaid() and itemId not in self.FREE_SHIP_CLASSES:
+            if not avatar.isPaid() and itemId not in self.FREE_SHIP_CLASSES:
                 self.air.logPotentialHacker(
                     message='Received makeSale buy for a ship a Freebooter can not purchase!',
                     avatarId=avatar.doId,
@@ -234,12 +229,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
                 inventory.b_setStackLimit(ammoId, bonus)
 
     def __getShipName(self, names, index):
-        """
-        Returns the name the avatar chose for the index'th ship of a purchase,
-        the client sends a (typedName, nameIndices) pair per ship which comes
-        from NamePanelGui, either a typed name or a pick-a-name.
-        """
-
+        # the client sends a (typedName, nameIndices) pair per ship, see NamePanelGui...
         if index >= len(names):
             return ''
 
@@ -435,7 +425,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             return None, None
 
         # Freebooters can look but not touch, see the store GUIs' velvet rope...
-        if hasattr(avatar, 'isPaid') and not avatar.isPaid():
+        if not avatar.isPaid():
             self.air.logPotentialHacker(
                 message='Received %s from a Freebooter!' % handlerName,
                 avatarId=avatar.doId)
@@ -466,11 +456,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             inventory.b_setStackQuantity(currency, amount)
 
     def __handleWardrobeChanged(self, avatarId, success, currency, refund, handlerName):
-        """
-        The UberDOG answered a wardrobe change we have already charged or paid
-        the avatar for. Should it fail the money is given or taken back.
-        """
-
+        # the avatar has already been charged or paid, so give or take it back...
         if success:
             return
 
@@ -713,12 +699,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         TattooGlobals.ZONE4: 'TattooZone4'}
 
     def __getTattooDNA(self, gender, uid):
-        """
-        Returns the HumanDNA values of a tattoo, the same values
-        TattooStoreGUI.closePanel gives the avatar's DNA. An unknown uid
-        returns an empty zone.
-        """
-
+        # the same values TattooStoreGUI.closePanel gives the avatar's DNA...
         tattoo = TattooGlobals.tattoos.get(uid)
         if tattoo is not None:
             if gender == 'm':
@@ -883,8 +864,6 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         self.d_makeSaleResponse(avatarId, self.SALE_SUCCESS)
 
     def d_makeTattooResponse(self, avatarId, tattoo, zone, success):
-        # TattooStoreGUI has no tattooPurchase, the store GUI refreshes
-        # itself from the tattoo list instead...
         self.sendUpdateToAvatarId(avatarId, 'makeTattooResponse', [tattoo, zone, success])
 
     def requestTattooEquip(self, tattoos):
@@ -1279,8 +1258,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         # reconstruct the ship, this restores it (and all of it's parts)
         # to full health and takes it out of overhaul...
         ship.repairShip()
-        if hasattr(ship, 'getHullCondition'):
-            ship.b_setHullCondition(ship.getHullCondition() & ~self.OVERHAUL_BIT)
+        ship.b_setHullCondition(ship.getHullCondition() & ~self.OVERHAUL_BIT)
 
         # Log transaction for analytics and GM purposes
         self.logShopkeepTransaction(

@@ -1,5 +1,4 @@
-# Award types shared by the AwardMaker, CodeRedemption and the
-# AvatarAccessoriesManager which hands the awards out on the AI.
+# award types shared by the AwardMaker, CodeRedemption and the AvatarAccessoriesManager...
 STACK = 1
 CLOTHING = 2
 HAIR_BEARD = 3
@@ -11,5 +10,5 @@ TATTOO = 8
 
 AwardTypes = (STACK, CLOTHING, HAIR_BEARD, HAIR_HAIR, HAIR_MUSTACHE, JEWELRY, GOLD, TATTOO)
 
-# How long the UberDOG waits for an AI to claim an award before giving up.
+# how long the UberDOG waits for an AI to claim an award...
 AwardTimeout = 30.0

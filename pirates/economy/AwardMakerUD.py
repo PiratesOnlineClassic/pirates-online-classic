@@ -6,13 +6,6 @@ from pirates.economy import AwardGlobals
 
 
 class AwardMakerUD(DistributedObjectGlobalUD):
-    """
-    Hands out awards (gold, stackable items and accessories) to avatars. The
-    award is sent to every district through the AvatarAccessoriesManager; the
-    district hosting the avatar gives it out and reports back. If nobody
-    answers in time the avatar is assumed to be offline and the award fails.
-    """
-
     notify = DirectNotifyGlobal.directNotify.newCategory('AwardMakerUD')
 
     def __init__(self, air):
@@ -31,15 +24,9 @@ class AwardMakerUD(DistributedObjectGlobalUD):
         self.pendingAwards = {}
         DistributedObjectGlobalUD.delete(self)
 
-    def getAwardableAvatars(self, accountId, callback):
-        """
-        Calls back with (avIds, names) for the account, so a tool can choose
-        which pirate receives an award.
-        """
-
-        self.air.avatarManager.getAwardableAvatars(accountId, callback)
-
     def giveAward(self, avatarId, awardType, itemId, quantity=1, callback=None):
+        # the award is sent to every district, if nobody answers in time
+        # the avatar is not online and the award fails...
         if awardType not in AwardGlobals.AwardTypes:
             self.notify.warning('Tried to give unknown award type %s!' % awardType)
             if callback:
@@ -81,10 +68,7 @@ class AwardMakerUD(DistributedObjectGlobalUD):
         if callback:
             callback(success)
 
-    # Responses:
-
     def recvAwardableAvatars(self, context, avIds, names):
-        # Remote avatar manager response; local callers use getAwardableAvatars.
         self.notify.debug('recvAwardableAvatars %d: %s' % (context, avIds))
 
     def awardSuccess(self, context):

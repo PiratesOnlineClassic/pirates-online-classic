@@ -6,7 +6,7 @@ from pirates.economy import AwardGlobals
 from pirates.makeapirate import ClothingGlobals, JewelryGlobals, TattooGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 
-# Set on starting items, see AvatarAccessoriesManagerUD.
+# set on starting items, see AvatarAccessoriesManagerUD...
 ORIGINAL_BIT = 1 << 31
 
 
@@ -50,10 +50,7 @@ def getClothingUidFromDNA(gender, clothingType, modelId, texId):
 
 
 def getWornClothing(avatar, clothingType):
-    """
-    Returns the (modelId, texId, colorId) the avatar is wearing of a type.
-    """
-
+    # returns the (modelId, texId, colorId) the avatar is wearing of a type...
     clothes = avatar.clothes
     if clothingType == ClothingGlobals.HAT:
         return (clothes.hat, clothes.hatTexture, clothes.hatColor)
@@ -74,19 +71,6 @@ def getWornClothing(avatar, clothingType):
 
 
 class AvatarAccessoriesManagerAI(DistributedObjectGlobalAI):
-    """
-    AI side of the accessories database. Shops use it to read and change an
-    avatar's wardrobe on the UberDOG; every request carries a context so the
-    response can be handed back to the callback that asked for it.
-
-    The wardrobes of avatars on this district are cached so the shops can
-    validate a transaction as soon as it arrives. Changes are applied to the
-    cache straight away, and the UberDOG applies them in the order they were
-    sent, so a wardrobe list requested right after a purchase includes it.
-
-    It also hands out awards from the AwardMaker to avatars on this district.
-    """
-
     notify = DirectNotifyGlobal.directNotify.newCategory('AvatarAccessoriesManagerAI')
 
     def __init__(self, air):
@@ -113,8 +97,7 @@ class AvatarAccessoriesManagerAI(DistributedObjectGlobalAI):
     def handleResponse(self, context, *args):
         callback = self.callbacks.pop(context, None)
         if callback is None:
-            # Response meant for another district, or a request that was
-            # already answered.
+            # this response was meant for another district...
             return
 
         callback(*args)
@@ -140,10 +123,6 @@ class AvatarAccessoriesManagerAI(DistributedObjectGlobalAI):
     # Clothing:
 
     def getDNAClothing(self, avatar):
-        """
-        Returns the [uid, colorId, original] items the avatar is wearing.
-        """
-
         gender = avatar.getGender()
         items = []
         for clothingType in sorted(ClothingGlobals.CLOTHING_STRING):
@@ -155,12 +134,8 @@ class AvatarAccessoriesManagerAI(DistributedObjectGlobalAI):
         return items
 
     def getClothing(self, avatarId, callback, useCache=False):
-        """
-        Calls back with a list of [uid, colorId, original] items owned by the
-        avatar. An avatar whose wardrobe has never been loaded starts out with
-        the clothing it is wearing as its starting items.
-        """
-
+        # an avatar whose wardrobe has never been loaded starts out
+        # with the clothing it is wearing...
         if useCache and avatarId in self.clothing:
             callback([list(item) for item in self.clothing[avatarId]])
             return
@@ -184,14 +159,8 @@ class AvatarAccessoriesManagerAI(DistributedObjectGlobalAI):
         self.handleResponse(context, clothing)
 
     def addClothing(self, avatarId, items, cost=0, location=0, callback=None):
-        """
-        Adds (uid, colorId) pairs to the avatar's wardrobe and calls back with
-        whether they were all added.
-        """
-
         def handleAdded(success, avatarId):
             if not success:
-                # Our cache is out of date, load it again next time.
                 self.clothing.pop(avatarId, None)
 
             if callback:
@@ -231,11 +200,6 @@ class AvatarAccessoriesManagerAI(DistributedObjectGlobalAI):
         self.handleResponse(context, success, avatarId)
 
     def dropClothing(self, avatarId, gender, level, callback=None):
-        """
-        Gives the avatar a random clothing loot drop, calling back with the
-        (uid, colorId) given or None if the wardrobe had no room.
-        """
-
         def handleDrop(value, success):
             uid, colorId, original = unpackClothing(value)
             clothing = self.clothing.get(avatarId)
@@ -257,10 +221,6 @@ class AvatarAccessoriesManagerAI(DistributedObjectGlobalAI):
     # Jewelry:
 
     def getJewelry(self, avatarId, callback, useCache=False):
-        """
-        Calls back with the list of jewelry uids owned by the avatar.
-        """
-
         if useCache and avatarId in self.jewelry:
             callback(list(self.jewelry[avatarId]))
             return
@@ -314,10 +274,6 @@ class AvatarAccessoriesManagerAI(DistributedObjectGlobalAI):
     # Tattoos:
 
     def getTattoos(self, avatarId, callback, useCache=False):
-        """
-        Calls back with the list of tattoo uids owned by the avatar.
-        """
-
         if useCache and avatarId in self.tattoos:
             callback(list(self.tattoos[avatarId]))
             return
@@ -370,18 +326,9 @@ class AvatarAccessoriesManagerAI(DistributedObjectGlobalAI):
 
     # Awards:
 
-    def getAvatarGender(self, avatar):
-        if hasattr(avatar, 'getGender'):
-            return avatar.getGender()
-
-        return None
-
     def requestAward(self, context, awardType, avatarId, itemId, quantity):
-        """
-        Sent by the AwardMaker to every district. Only the district the avatar
-        is on hands the award out and answers.
-        """
-
+        # the AwardMaker sends this to every district, only the
+        # district the avatar is on answers...
         avatar = self.air.doId2do.get(avatarId)
         if not avatar:
             return
@@ -412,9 +359,9 @@ class AvatarAccessoriesManagerAI(DistributedObjectGlobalAI):
             respond(True)
 
         elif awardType == AwardGlobals.CLOTHING:
-            # The quantity of a clothing award is the color it comes in.
+            # the quantity of a clothing award is the color it comes in...
             if not ClothingGlobals.getItemById(itemId) or quantity not in ClothingGlobals.colorCostScaler or \
-                    getClothingGender(itemId) != self.getAvatarGender(avatar):
+                    getClothingGender(itemId) != avatar.getGender():
                 self.notify.warning('Invalid clothing award %d (color %d) for avatar %d!' % (itemId, quantity, avatarId))
                 respond(False)
                 return
@@ -428,7 +375,7 @@ class AvatarAccessoriesManagerAI(DistributedObjectGlobalAI):
             self.addClothing(avatarId, [(itemId, quantity)], callback=clothingAdded)
 
         elif awardType == AwardGlobals.JEWELRY:
-            if itemId not in JewelryGlobals.jewelry_id or getJewelryGender(itemId) != self.getAvatarGender(avatar):
+            if itemId not in JewelryGlobals.jewelry_id or getJewelryGender(itemId) != avatar.getGender():
                 self.notify.warning('Invalid jewelry award %d for avatar %d!' % (itemId, avatarId))
                 respond(False)
                 return
