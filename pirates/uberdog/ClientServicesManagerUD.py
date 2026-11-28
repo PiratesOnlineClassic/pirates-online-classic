@@ -702,6 +702,8 @@ class DeleteAvatarFSM(GetAvatarsFSM):
             self.demand('Kill', 'Database failed to mark the avatar as deleted!')
             return
 
+        self.csm.air.guildManager.avatarDeleted(self.avId)
+
         status = True
         self.csm.sendUpdateToAccountId(self.target, 'acknowledgeDeleteAvatarResp', [self.avId, status])
         self.demand('QueryAvatars')
@@ -1049,6 +1051,9 @@ class UnloadAvatarFSM(OperationFSM):
             STATESERVER_OBJECT_DELETE_RAM)
         datagram.addUint32(self.avId)
         self.csm.air.send(datagram)
+
+        # The post removes were cleared above, so tell the guild manager ourselves:
+        self.csm.air.guildManager.avatarOffline(self.avId)
 
         # Done!
         self.csm.air.writeServerEvent('avatarUnload', avId=self.avId)
