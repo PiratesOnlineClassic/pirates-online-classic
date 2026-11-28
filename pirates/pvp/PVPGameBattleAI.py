@@ -1,8 +1,15 @@
-from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
-class PVPGameBattleAI(DistributedObjectAI):
+from pirates.pvp import PVPGlobals
+from pirates.pvp.PVPGameBaseAI import PVPGameBaseAI
+
+
+class PVPGameBattleAI(PVPGameBaseAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('PVPGameBattleAI')
 
-    def __init__(self, air):
-        DistributedObjectAI.__init__(self, air)
+    TimeLimit = config.GetInt('pvp-battle-time-limit', 600)
+    ScoreLimit = config.GetInt('pvp-battle-score-limit', 15)
+
+    def handleDefeat(self, defeaterId, defeatedId):
+        if defeaterId != defeatedId:
+            self.addPlayerStat(defeaterId, PVPGlobals.SCORE, 1)

@@ -61,6 +61,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.questRewardFlags = 0
         self.bandManagerId = 0
         self.bandId = 0
+        self.lootCarried = 0
+        self.maxLootCarried = 0
 
     def announceGenerate(self):
         DistributedPlayerAI.announceGenerate(self)
@@ -637,6 +639,20 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def getDefaultZone(self):
         return self.defaultZone
+
+    def setLootCarried(self, lootCarried, maxCarry):
+        self.lootCarried = lootCarried
+        self.maxLootCarried = maxCarry
+
+    def d_setLootCarried(self, lootCarried, maxCarry):
+        self.sendUpdate('setLootCarried', [lootCarried, maxCarry])
+
+    def b_setLootCarried(self, lootCarried, maxCarry):
+        self.setLootCarried(lootCarried, maxCarry)
+        self.d_setLootCarried(lootCarried, maxCarry)
+
+    def getLootCarried(self):
+        return [self.lootCarried, self.maxLootCarried]
 
     def setZombie(self, zombie, cursed=False):
         self.zombie = zombie
