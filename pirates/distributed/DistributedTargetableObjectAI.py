@@ -19,6 +19,20 @@ class DistributedTargetableObjectAI(DistributedObjectAI):
     def getDamagable(self):
         return True
 
+    def setCombo(self, combo, teamCombo, comboDamage, attackerId=0):
+        # only battle avatars broadcast their combo (see DistributedBattleAvatarAI),
+        # any other targetable object just keeps it, like the client's...
+        self.combo = combo
+        self.teamCombo = teamCombo
+        self.comboDamage = comboDamage
+        self.attackerId = attackerId
+
+    def b_setCombo(self, combo, teamCombo, comboDamage, attackerId=0):
+        self.setCombo(combo, teamCombo, comboDamage, attackerId)
+
+    def resetComboLevel(self, args=None):
+        pass
+
     def requestTarget(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
