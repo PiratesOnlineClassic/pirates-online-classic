@@ -390,6 +390,35 @@ class WorldCreatorAI(WorldCreatorBase, DirectObject):
     def getIslandWorldDataByUid(self, uid):
         return self.worldDict['Objects'].get(uid, None)
 
+    def loadObject(self, object, parent, parentUid, objKey, dynamic, zoneLevel=0, startTime=None, parentIsObj=False, fileName=None, actualParentObj=None):
+        if object.get('Type') != 'Building Exterior' or not self.isObjectInCurrentGamePhase(object):
+            return WorldCreatorBase.loadObject(self, object, parent, parentUid, objKey, dynamic, zoneLevel,
+                startTime, parentIsObj, fileName, actualParentObj)
+
+        prevWorld = self.world
+        newObj, newActualParent = self.createObject(object, parent, parentUid, objKey, dynamic, zoneLevel,
+            startTime, parentIsObj, fileName, actualParentObj)
+
+        objDict = object.get('Objects')
+        if objDict and newObj is None:
+            newObj = parent
+            if hasattr(newObj, 'getUniqueId'):
+                objKey = newObj.getUniqueId()
+        elif objDict:
+            # a building exterior with an interior loads the objects placed on it into
+            # the exterior's game area itself (see GameAreaBuilderAI.createBuildingExterior),
+            # only it's door locators are shared with the interior, they are the
+            # interior's doors when the interior does not define any of it's own...
+            objDict = dict((uid, objData) for uid, objData in objDict.items()
+                if objData.get('Type') == ObjectList.DOOR_LOCATOR_NODE)
+
+        if objDict:
+            self.loadObjectDict(objDict, newObj, objKey, dynamic, zoneLevel=zoneLevel, startTime=startTime,
+                fileName=fileName, actualParentObj=newActualParent)
+
+        self._restoreWorld(prevWorld)
+        return newObj
+
     def createObject(self, object, parent, parentUid, objKey, dynamic, zoneLevel=0, startTime=None, parentIsObj=False, fileName=None, actualParentObj=None):
         objType = WorldCreatorBase.createObject(self, object, parent, parentUid, objKey, dynamic, zoneLevel,
             startTime, parentIsObj, fileName, actualParentObj)

@@ -41,20 +41,17 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
     def createDoorLocatorNode(self, parent, parentUid, objKey, objectData):
         from pirates.world.DistributedInteriorDoorAI import DistributedInteriorDoorAI
 
-        doorLocatorNode = DistributedInteriorDoorAI(self.air)
-        doorLocatorNode.setUniqueId(objKey)
-        doorLocatorNode.setPos(objectData.get('Pos', (0, 0, 0)))
-        doorLocatorNode.setHpr(objectData.get('Hpr', (0, 0, 0)))
-        doorLocatorNode.setScale(objectData.get('Scale', (1, 1, 1)))
-        doorLocatorNode.setInteriorId(self.parent.doId, self.parent.parentId, self.parent.zoneId)
-
+        # an interior only has a front and a back door, the exterior's door locators
+        # are only used as the interior's doors when it's file does not define them...
         if not self.parent.getInteriorFrontDoor():
-            self.parent.setInteriorFrontDoor(doorLocatorNode)
             exteriorDoor = self.parent.getExteriorFrontDoor()
-        else:
-            doorLocatorNode.setDoorIndex(1)
-            self.parent.setInteriorBackDoor(doorLocatorNode)
+        elif not self.parent.getInteriorBackDoor():
             exteriorDoor = self.parent.getExteriorBackDoor()
+        else:
+            self.notify.debug('Cannot generate interior door %s, '
+                'interior already has both of it\'s doors!' % objKey)
+
+            return
 
         if not exteriorDoor:
             self.notify.debug('Cannot generate interior door %s, '
@@ -75,6 +72,19 @@ class InteriorAreaBuilderAI(GameAreaBuilderAI):
                 'for exterior with no parent!' % objKey)
 
             return
+
+        doorLocatorNode = DistributedInteriorDoorAI(self.air)
+        doorLocatorNode.setUniqueId(objKey)
+        doorLocatorNode.setPos(objectData.get('Pos', (0, 0, 0)))
+        doorLocatorNode.setHpr(objectData.get('Hpr', (0, 0, 0)))
+        doorLocatorNode.setScale(objectData.get('Scale', (1, 1, 1)))
+        doorLocatorNode.setInteriorId(self.parent.doId, self.parent.parentId, self.parent.zoneId)
+
+        if not self.parent.getInteriorFrontDoor():
+            self.parent.setInteriorFrontDoor(doorLocatorNode)
+        else:
+            doorLocatorNode.setDoorIndex(1)
+            self.parent.setInteriorBackDoor(doorLocatorNode)
 
         doorLocatorNode.setBuildingUid(exteriorDoor.getBuildingUid())
         doorLocatorNode.setOtherDoor(exteriorDoor)
