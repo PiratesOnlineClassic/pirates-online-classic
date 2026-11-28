@@ -75,6 +75,7 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
         self.wishName = ''
         self.wishNameState = ''
         self.clientControllerDoId = 0
+        self.gridZoneId = 0
         self.captainId = 0
         self.deployState = 0
         self.skillEffects = []
@@ -471,7 +472,11 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
         # from another ship) still has to see the ocean cells around the ship...
         parentObj = self.getParentObj()
         if isinstance(parentObj, DistributedOceanGridAI):
-            self.air.worldGridManager.handleLocationChanged(parentObj, avatar, self.zoneId)
+            zoneId = parentObj.getZoneFromXYZ(self.getPos())
+            if not parentObj.isValidZone(zoneId):
+                zoneId = self.zoneId
+
+            self.air.worldGridManager.handleLocationChanged(parentObj, avatar, zoneId)
 
     def _playerDeparted(self, avatar):
         assert(isinstance(avatar, DistributedPlayerPirateAI))
@@ -957,15 +962,16 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
     def d_sendCrewToIsland(self, avatarId, islandDoId, posH):
         self.sendUpdateToAvatarId(avatarId, 'sendCrewToIsland', [islandDoId, posH])
 
-    # how often the zone of a ship steered by a client is checked against it's position...
+    # how often the crew's ocean interest is checked against the position of a ship steered by a client...
     GridZoneCheckPeriod = 1.0
 
     def setClientController(self, clientControllerDoId):
         self.clientControllerDoId = clientControllerDoId
 
-        # the helmsman's client only sends us the ship's position, so keep the ship
-        # in the ocean cell it has sailed into, this moves the crew's interest along with it...
+        # the helmsman's client only sends us the ship's position, so have the world
+        # grid manager open the ocean cells around wherever the ship has sailed to...
         taskMgr.remove(self.uniqueName('updateGridZone'))
+        self.gridZoneId = 0
         if clientControllerDoId:
             taskMgr.doMethodLater(self.GridZoneCheckPeriod, self.__updateGridZone,
                 self.uniqueName('updateGridZone'))
@@ -974,6 +980,18 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
         oceanGrid = self.getParentObj()
         if not isinstance(oceanGrid, DistributedOceanGridAI):
             return task.again
+
+        zoneId = oceanGrid.getZoneFromXYZ(self.getPos())
+        if zoneId == self.gridZoneId or not oceanGrid.isValidZone(zoneId):
+            return task.again
+
+        self.gridZoneId = zoneId
+        for avatarId in self.crew:
+            avatar = self.air.doId2do.get(avatarId)
+            if avatar is not None:
+                self.air.worldGridManager.handleLocationChanged(oceanGrid, avatar, zoneId)
+
+        return task.again
 
         zoneId = oceanGrid.getZoneFromXYZ(self.getPos())
         if zoneId != self.zoneId and oceanGrid.isValidZone(zoneId):

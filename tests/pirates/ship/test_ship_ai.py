@@ -854,9 +854,15 @@ class SteeredShipGridZoneTests(unittest.TestCase):
         oceanGrid.style = 'Cartesian'
         return oceanGrid
 
-    def test_steered_ship_follows_its_position_into_the_next_cell(self):
+    def test_steered_ship_moves_its_crews_ocean_interest_along(self):
         oceanGrid = self.makeOceanGrid()
-        ship = makeShip()
+        gridManager = Mock()
+        crew = [SimpleNamespace(doId=42), SimpleNamespace(doId=43)]
+        air = makeAir(worldGridManager=gridManager)
+        ship = makeShip(air=air, crew=[42, 43, 44])
+        for avatar in crew:
+            air.doId2do[avatar.doId] = avatar
+
         ship.reparentTo(oceanGrid)
         ship.getParentObj = lambda: oceanGrid
         ship.zoneId = oceanGrid.getZoneFromXYZ((0, 0, 0))
@@ -869,15 +875,46 @@ class SteeredShipGridZoneTests(unittest.TestCase):
         self.assertEqual(name, 'updateGridZone-1000')
         task = Mock()
 
-        # still in the same cell, nothing to do...
+        # the first check centers the crew's interest on the ship...
         self.assertIs(callback(task), task.again)
+        self.assertEqual(gridManager.handleLocationChanged.call_count, 2)
+
+        # sailed a full cell east, every crew member still aboard sees around the ship...
+        ship.setPos(oceanGrid.cellWidth, 0, 0)
+        gridManager.handleLocationChanged.reset_mock()
+        callback(task)
+        zoneId = oceanGrid.getZoneFromXYZ((oceanGrid.cellWidth, 0, 0))
+        self.assertEqual(gridManager.handleLocationChanged.call_args_list,
+            [((oceanGrid, crew[0], zoneId),), ((oceanGrid, crew[1], zoneId),)])
+
+        # the interest moves, the ship itself stays where the AI put it...
         ship.b_setLocation.assert_not_called()
 
-        # sailed a full cell east, the ship (and so it's crew's interest) moves along...
-        ship.setPos(oceanGrid.cellWidth, 0, 0)
+        # and nothing is reopened until it reaches another cell
+        gridManager.handleLocationChanged.reset_mock()
         callback(task)
-        ship.b_setLocation.assert_called_once_with(
-            oceanGrid.doId, oceanGrid.getZoneFromXYZ((oceanGrid.cellWidth, 0, 0)))
+        gridManager.handleLocationChanged.assert_not_called()
+
+    def test_boarding_at_sea_opens_the_cells_around_the_ship(self):
+        oceanGrid = self.makeOceanGrid()
+        gridManager = Mock()
+        air = makeAir(worldGridManager=gridManager)
+        ship = makeShip(air=air)
+        ship.reparentTo(oceanGrid)
+        ship.getParentObj = lambda: oceanGrid
+        ship.zoneId = oceanGrid.getZoneFromXYZ((0, 0, 0))
+        ship.setPos(oceanGrid.cellWidth * 2, 0, 0)
+        ship.addCrewMember = Mock()
+        avatar = Mock(spec=['doId', 'b_setShipId', 'b_setActiveShipId',
+            'b_setCrewShipId', 'b_setCurrentIsland'], doId=42)
+
+        with patch('pirates.ship.DistributedShipAI.isinstance',
+                   lambda obj, cls: True if obj is avatar else builtins.isinstance(obj, cls),
+                   create=True):
+            ship._playerBoarded(avatar)
+
+        gridManager.handleLocationChanged.assert_called_once_with(
+            oceanGrid, avatar, oceanGrid.getZoneFromXYZ((oceanGrid.cellWidth * 2, 0, 0)))
 
     def test_letting_go_of_the_wheel_stops_the_zone_checks(self):
         ship = makeShip()
