@@ -11,10 +11,7 @@ from direct.distributed.ClockDelta import *
 from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PiratesGlobals
 
-# how long a freshly deployed ship is covered by the protection dome (C_SPAWN).
-# The client's deploy fog alone takes ~11 seconds to fade the ship in
-# (see DistributedShip.startDeployEffect), the rest of the window gives the
-# captain time to get to the wheel before the ship can be attacked...
+# how long a freshly deployed ship is covered by the protection dome (C_SPAWN):
 SPAWN_PROTECTION_DURATION = ConfigVariableDouble('ship-spawn-protection-duration', 30.0).getValue()
 
 # the spacing used when an island's zone spheres leave no room
@@ -26,12 +23,8 @@ MAX_DEPLOY_SPHERES = 255
 
 
 def getDeploySpacing(minRadius, maxRadius):
-    """
-    The deploy spheres fill the band between the island's min radius
-    (the tangible reef sphere) and max radius (the deploy barrier), so a
-    ship is always deployed inside the barrier and outside the reef.
-    """
-
+    # the deploy spheres fill the band between the island's reef (min radius)
+    # and deploy barrier (max radius)...
     spacing = maxRadius - minRadius
     if spacing <= 0:
         spacing = DEFAULT_DEPLOY_SPACING
@@ -313,12 +306,6 @@ class DistributedShipDeployerAI(DistributedNodeAI):
     def getSphereRadius(self):
         return self.spacing / 2.0
 
-    def getRandomSphere(self):
-        if not self.getNumSpheres():
-            return (self.minRadius + self.spacing / 2.0, 0.0, 0.0)
-
-        return random.choice(self.deploySpheres)
-
     def getIslandSpherePos(self, sphereId):
         # the sphere's center relative to the island:
         sx, sy, sz = self.getSphere(sphereId)
@@ -330,12 +317,8 @@ class DistributedShipDeployerAI(DistributedNodeAI):
         return sphereId * (360.0 / self.getNumSpheres()) + self.heading
 
     def localToOceanPoint(self, localX, localY, localZ=0.0):
-        """
-        Converts an island-local point into ocean grid space using the island's
-        transform, the island's world pose is carried by setIslandTransform
-        (int32/10) rather than the DistributedNode position fields...
-        """
-
+        # the island's ocean pose is carried by setIslandTransform,
+        # not by the DistributedNode position fields...
         ix, iy, iz, ih = self.island.getIslandTransform()
         angle = math.radians(ih)
         cosH = math.cos(angle)
@@ -472,8 +455,7 @@ class DistributedShipDeployerAI(DistributedNodeAI):
         if not ship:
             return
 
-        # the ship has sailed out of the island's deploy area, it is no longer
-        # occupying a deploy sphere and the deploy protection ends here...
+        # the ship has sailed out of the island's deploy area, the deploy protection ends here...
         self.removeShipFromSpheres(shipId)
         self.unprotectShip(ship)
 

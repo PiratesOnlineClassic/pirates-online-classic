@@ -71,9 +71,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         # by the island's holiday objects and spawn nodes themselves, the island
         # has nothing of it's own to start...
 
-        # the ship deployer's rings share the island's zone sphere center, ships are
-        # deployed in the band between the inner zone sphere (the reef, minRadius)
-        # and the next zone sphere (the deploy barrier, maxRadius)...
+        # ships are deployed between the island's reef (minRadius) and deploy barrier (maxRadius)...
         self.shipDeployer = DistributedShipDeployerAI(self.air, self)
         minRadius = round(self.sphereRadii[0], 2)
         maxRadius = round(self.sphereRadii[1], 2)

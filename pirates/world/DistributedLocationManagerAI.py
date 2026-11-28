@@ -11,11 +11,6 @@ class DistributedLocationManagerAI(DistributedObjectAI):
         DistributedObjectAI.__init__(self, air)
 
     def getLocationCategories(self, avatar):
-        """
-        Returns the location categories (see WorldGlobals) that
-        describe where the avatar currently is in the world...
-        """
-
         from pirates.world.DistributedOceanGridAI import DistributedOceanGridAI
         from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
         from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI

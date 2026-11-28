@@ -165,10 +165,7 @@ class DistributedFortAI(DistributedBattleAvatarAI):
         self.takeDamage(self.getProjectileDamage(attackerId, skillId, ammoSkillId), attackerId)
 
     def getProjectileDamage(self, attackerId, skillId, ammoSkillId):
-        """
-        Forts take hull damage from cannon ammo, just like a ship hull does.
-        Falls back on the base cannonball damage when the attack has no hull damage.
-        """
+        # forts take hull damage from cannon ammo, just like a ship hull does
         attacker = self.air.doId2do.get(attackerId)
         damage = 0
         if attacker:
