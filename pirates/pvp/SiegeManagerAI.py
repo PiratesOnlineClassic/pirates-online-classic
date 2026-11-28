@@ -301,6 +301,12 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
 
         self._updateShipCrew(ship, teamId)
         self.updateTeamsJoinable()
+
+        # tasks that must be completed without sinking start over...
+        questMgr = getattr(self.air, 'questMgr', None)
+        if questMgr is not None:
+            questMgr.shipPVPSpawned(ship)
+
         return True
 
     def removeShipFromTeam(self, ship):

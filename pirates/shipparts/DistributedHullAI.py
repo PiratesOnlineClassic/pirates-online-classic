@@ -106,4 +106,4 @@ class DistributedHullAI(DistributedShippartAI, DistributedDestructibleArrayAI, D
         left, rear, right = self.getArmorStatus()
         armorAsorb = (left + rear + right) / 3
         armorAsorb = min(armorAsorb, ShipBalance.ArmorAbsorb.getValue())
-        ship.handleShipDamage(hullDamage - (armorAsorb * hullDamage), attacker)
+        ship.handleShipDamage(hullDamage - (armorAsorb * hullDamage), attacker, skillId)

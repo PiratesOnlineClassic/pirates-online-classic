@@ -88,20 +88,21 @@ class NPCShipAI(DistributedShipAI):
 
         return self.hp
 
-    def handleShipDamage(self, damage, attacker=None):
+    def handleShipDamage(self, damage, attacker=None, skillId=0):
         # remember which of the attacking crew hit us with their cannons,
         # they are rewarded with cannon reputation once we have been sunk...
         if attacker is not None and hasattr(attacker, 'getCrewShipId') and int(damage) < 0 and \
                 self.isSailable() and not self.hasSpawnBuff():
             self.cannonAttackerIds.add(attacker.doId)
 
-        DistributedShipAI.handleShipDamage(self, damage, attacker)
+        DistributedShipAI.handleShipDamage(self, damage, attacker, skillId)
 
     def handleShipSinking(self):
         DistributedShipAI.handleShipSinking(self)
 
         # the ship that landed the final blow plunders our cargo, both it's crew and the
-        # crew of the ship that assisted them receive credit for sinking us...
+        # crew of the ship that assisted them are rewarded for sinking us. quest credit
+        # is given to every crew that damaged us by DistributedShipAI.handleShipSinking...
         attackerShip, assistShip = self.getSinkAttackers()
         attackerShips = [ship for ship in (attackerShip, assistShip)
             if isinstance(ship, DistributedShipAI) and not ship.getNPCship()]
@@ -109,7 +110,6 @@ class NPCShipAI(DistributedShipAI):
         if not attackerShips:
             return
 
-        self.air.questMgr.shipSunk(self, [ship.doId for ship in attackerShips])
         if hasattr(attackerShip, 'addShipKill'):
             attackerShip.addShipKill()
 

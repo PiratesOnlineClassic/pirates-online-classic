@@ -84,6 +84,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.respectDeployBarriers = [False, 0]
         self.parentingRules = ['', '']
         self.lastAttackerShipId = 0
+        self.lastAttackSkillId = 0
         self.attackerDamage = {}
         self.skillRechargeTimes = {}
         self.pendingBroadsides = {}
@@ -1210,7 +1211,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         # sinking, player ships override this in order to keep their database object...
         self.requestDelete()
 
-    def handleShipDamage(self, damage, attacker=None):
+    def handleShipDamage(self, damage, attacker=None, skillId=0):
         if not self.isSailable():
             return
 
@@ -1231,6 +1232,15 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         # record the attacker before applying the damage, so we know
         # who landed the final blow if this damage sinks the ship...
         self.recordAttacker(attackerShipId, -damage)
+        if attackerShipId and attackerShipId != self.doId:
+            # rams are done by the ship itself, otherwise the skill tells
+            # us which weapon landed the blow (see QuestManagerAI.getShipPVPWeapon)...
+            self.lastAttackSkillId = 0 if isinstance(attacker, DistributedShipAI) else skillId
+
+        questMgr = getattr(self.air, 'questMgr', None)
+        if questMgr is not None and self.getSiegeTeam() and attacker is not None:
+            questMgr.shipPVPShipDamaged(self, attacker, -damage, skillId)
+
         self.b_setHp(self.hp + damage)
         self.shipAttacked(attackerShipId, -damage)
 
@@ -1267,6 +1277,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
     def clearAttackers(self):
         self.lastAttackerShipId = 0
+        self.lastAttackSkillId = 0
         self.attackerDamage = {}
 
     def getSinkAttackers(self):
@@ -1297,6 +1308,11 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         if siegeManager is not None and self.getSiegeTeam():
             attackerShip, assistShip = self.getSinkAttackers()
             siegeManager.handleShipSunk(self, attackerShip, assistShip)
+
+        # the crews that took part in sinking the ship receive quest credit...
+        questMgr = getattr(self.air, 'questMgr', None)
+        if questMgr is not None:
+            questMgr.shipSinking(self)
 
     def shipAttacked(self, attackerShipId, damage):
         if self.npcShip and attackerShipId and self.hp > 0:

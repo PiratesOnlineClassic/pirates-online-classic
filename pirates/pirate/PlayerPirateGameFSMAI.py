@@ -42,8 +42,14 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
 
         # privateers are respawned in place by their client rather than being
         # sent to jail, see LocalPirateGameFSM.enterDeath...
-        if self.avatar.getSiegeTeam() and self.air.siegeManager.handleAvatarDefeated(self.avatar):
-            return
+        if self.avatar.getSiegeTeam():
+            # enemy privateers that defeated the avatar are credited towards their quests...
+            attackers = [self.air.doId2do.get(attackerId) for attackerId in
+                         list(self.air.targetMgr.getAttackers(self.avatar.doId) or [])]
+            self.air.questMgr.shipPVPPirateDefeated(self.avatar, attackers)
+
+            if self.air.siegeManager.handleAvatarDefeated(self.avatar):
+                return
 
         inventory = self.avatar.getInventory()
         if not inventory:

@@ -128,7 +128,7 @@ class DistributedSailAI(DistributedShippartAI, DistributedDestructibleArrayAI, D
         else:
             # NPC ships have no sail points, their sails take damage from the hull instead:
             shipDamage = sailDamage - (ShipBalance.ArmorAbsorb.getValue() * sailDamage)
-            ship.handleShipDamage(shipDamage, attacker)
+            ship.handleShipDamage(shipDamage, attacker, skillId)
 
         # update the sail anim state
         if self.hp == 0:
