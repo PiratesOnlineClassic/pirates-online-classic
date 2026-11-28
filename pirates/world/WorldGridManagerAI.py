@@ -12,13 +12,46 @@ class GridInterestHandle(object):
         self.zoneId = zoneId
 
 
+class GridInterestContextAllocator(object):
+    """
+    Hands out the interest contexts we open on the behalf of a single client, the client's own
+    interest handles are masked to 0x7FFF so we use the upper half of the uint16 range for ours,
+    this way our grid interests never alter one of the client's interests or each other's when two
+    grids (an island and the ocean grid for example) share the same zone numbers...
+    """
+
+    MinContext = 0x8000
+    MaxContext = 0xFFFF
+
+    def __init__(self):
+        self.nextContext = self.MinContext
+        self.usedContexts = set()
+
+    def allocate(self):
+        for _ in range(self.MaxContext - self.MinContext + 1):
+            context = self.nextContext
+            self.nextContext += 1
+            if self.nextContext > self.MaxContext:
+                self.nextContext = self.MinContext
+
+            if context not in self.usedContexts:
+                self.usedContexts.add(context)
+                return context
+
+        return None
+
+    def free(self, context):
+        self.usedContexts.discard(context)
+
+
 class GridInterestHandler(object):
     notify = DirectNotifyGlobal.directNotify.newCategory('GridInterestHandler')
 
-    def __init__(self, air, parentObj, avatar):
+    def __init__(self, air, parentObj, avatar, contextAllocator=None):
         self.air = air
         self.parentObj = parentObj
         self.avatar = avatar
+        self.contextAllocator = contextAllocator or GridInterestContextAllocator()
 
         self.pendingCallbackContexts = set()
         self.pendingCallback = None
@@ -51,13 +84,21 @@ class GridInterestHandler(object):
         """
 
         if self.hasInterestHandleByZoneId(newZoneId):
-            return
+            return self.getInterestHandleFromZoneId(newZoneId)
 
-        interestHandle = GridInterestHandle(newZoneId, newZoneId)
+        context = self.contextAllocator.allocate()
+        if context is None:
+            self.notify.warning('Cannot add interest handle for avatar: %d in zone: %d, '
+                'no free interest contexts left!' % (self.avatar.doId, newZoneId))
+
+            return None
+
+        interestHandle = GridInterestHandle(context, newZoneId)
         self.interestHandles.add(interestHandle)
 
         clientChannel = self.avatar.GetPuppetConnectionChannel(self.avatar.doId)
         self.air.clientAddInterest(clientChannel, interestHandle.context, self.parentObj.doId, interestHandle.zoneId, False)
+        return interestHandle
 
     def removeInterestHandle(self, interestHandle):
         """
@@ -70,6 +111,7 @@ class GridInterestHandler(object):
         clientChannel = self.avatar.GetPuppetConnectionChannel(self.avatar.doId)
         self.air.clientRemoveInterest(clientChannel, interestHandle.context, False)
         self.interestHandles.remove(interestHandle)
+        self.contextAllocator.free(interestHandle.context)
 
     def removeInterestHandleByZoneId(self, zoneId):
         """
@@ -118,7 +160,6 @@ class GridInterestHandler(object):
             self._callbackInterestContext()
 
     def _setInterestContextDoneCallback(self, contexts, callback):
-        assert(len(contexts) > 0)
         assert(callback is not None)
 
         self.pendingCallbackContexts.update(contexts)
@@ -149,11 +190,16 @@ class GridInterestHandler(object):
             self.removeInterestHandle(interestHandle)
 
         newConcentricZones = newZones.difference(previousZones)
-        if callback is not None:
-            self._setInterestContextDoneCallback(newConcentricZones, callback)
-
+        newContexts = set()
         for newZoneId in newConcentricZones:
-            self.addInterestHandle(newZoneId)
+            interestHandle = self.addInterestHandle(newZoneId)
+            if interestHandle is not None:
+                newContexts.add(interestHandle.context)
+
+        # the callback is still called when we already had interest in every zone we
+        # can see from here, otherwise the caller (a tunnel or dinghy) would wait forever...
+        if callback is not None:
+            self._setInterestContextDoneCallback(newContexts, callback)
 
         previousZones.clear()
         newZones.clear()
@@ -171,6 +217,9 @@ class GridInterestHandler(object):
             self.removeInterestHandle(interestHandle)
 
         self.interestHandles.clear()
+
+        if self.pendingCallback is not None:
+            self.pendingCallback.destroy()
 
         self.pendingCallback = None
         self.pendingCallbackContexts.clear()
@@ -194,6 +243,7 @@ class WorldGridManagerAI(object):
     def __init__(self, air):
         self.air = air
         self.gridInterestHandlers = {}
+        self.contextAllocators = {}
 
     def handleInterestContextDone(self, avatarId, context):
         """
@@ -250,7 +300,7 @@ class WorldGridManagerAI(object):
         if not gridInterestHandler:
             return
 
-        gridInterestHandler.addInterestHandle(newZones)
+        gridInterestHandler.addInterestHandle(newZoneId)
 
     def removeInterestHandle(self, parentObj, avatar, interestHandle):
         """
@@ -312,7 +362,10 @@ class WorldGridManagerAI(object):
         gridInterests = self.gridInterestHandlers.setdefault(avatar.doId, {})
         gridInterestHandler = gridInterests.get(parentObj.doId)
         if not gridInterestHandler:
-            gridInterestHandler = GridInterestHandler(self.air, parentObj, avatar)
+            contextAllocator = self.contextAllocators.setdefault(avatar.doId,
+                GridInterestContextAllocator())
+
+            gridInterestHandler = GridInterestHandler(self.air, parentObj, avatar, contextAllocator)
             gridInterests[parentObj.doId] = gridInterestHandler
 
         assert(gridInterestHandler is not None)
@@ -345,14 +398,15 @@ class WorldGridManagerAI(object):
 
         assert(avatar is not None)
 
-        gridInterests = self.gridInterestHandlers.get(avatar.doId)
+        gridInterests = self.gridInterestHandlers.pop(avatar.doId, None)
+        self.contextAllocators.pop(avatar.doId, None)
         if not gridInterests:
             return
 
-        for parentId in dict(gridInterests):
-            parentObj = self.air.doId2do.get(parentId)
-            assert(parentObj is not None)
-            self.clearAvatarInterest(parentObj, avatar)
+        # the grid parent may already be gone by now (a deleted ship or instance),
+        # so clear the interest handlers directly rather than looking them up by parent...
+        for gridInterestHandler in list(gridInterests.values()):
+            gridInterestHandler.clearInterestZones()
+            gridInterestHandler.destroy()
 
-        assert(avatar.doId in self.gridInterestHandlers)
-        del self.gridInterestHandlers[avatar.doId]
+        gridInterests.clear()
