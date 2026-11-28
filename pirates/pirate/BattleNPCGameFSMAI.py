@@ -161,6 +161,12 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         skillList = baseSkills[1]
         skillId = random.choice(skillList)
 
+        # wait until our target is within range of the skill, mobile enemies
+        # will be chasing their target meanwhile...
+        if not self.air.battleMgr.getTargetInRange(self.avatar, self.avatar.currentTarget, skillId, 0):
+            task.setDelay(WeaponGlobals.SHORT_DELAY)
+            return task.again
+
         # enemy skills only hit our current target, we must not send our list
         # of attackers here otherwise every client will play hit effects on them
         areaIdList = []

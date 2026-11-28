@@ -152,6 +152,12 @@ class BattleNPCAITests(unittest.TestCase):
         npc.b_setCurrentTarget.assert_not_called()
         npc.b_setGameState.assert_not_called()
 
+    def test_refused_game_state_is_not_broadcast(self):
+        npc = self.makeNPC(state='BreakCombat')
+        npc.gameFSM = SimpleNamespace(request=Mock(), getCurrentOrNextState=lambda: 'BreakCombat')
+        npc.b_setGameState('Battle')
+        npc.sendUpdate.assert_not_called()
+
     def test_is_target_valid(self):
         npc = self.makeNPC()
         alive = makeTarget(doId=1)
@@ -184,6 +190,18 @@ class BattleNPCGameFSMAITests(unittest.TestCase):
         task = SimpleNamespace(done='done')
         self.assertEqual(fsm._chooseNextAttack(task), 'done')
         fsm.demand.assert_called_once_with('BreakCombat')
+
+    def test_choose_next_attack_waits_until_in_range(self):
+        fsm = self.makeFSM()
+        fsm.avatar.currentTarget = SimpleNamespace(doId=42, alive=True)
+        fsm.avatar.avatarType = SimpleNamespace()
+        fsm.avatar.useTargetedSkill = Mock()
+        fsm.air.battleMgr.getTargetInRange.return_value = False
+        task = SimpleNamespace(again='again', setDelay=Mock())
+        with patch('pirates.pirate.BattleNPCGameFSMAI.EnemyGlobals.getBaseSkills', return_value=([], [1])):
+            self.assertEqual(fsm._chooseNextAttack(task), 'again')
+
+        fsm.avatar.useTargetedSkill.assert_not_called()
 
     def test_find_new_attack_target_prunes_dead_attackers(self):
         fsm = self.makeFSM(attackers=[1, 2])

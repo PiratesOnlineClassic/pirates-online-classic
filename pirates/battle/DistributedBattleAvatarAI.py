@@ -122,7 +122,10 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
 
     def b_setGameState(self, gameState):
         self.setGameState(gameState)
-        self.d_setGameState(gameState)
+
+        # only broadcast the state when our FSM actually accepted it
+        if self.gameFSM.getCurrentOrNextState() == gameState:
+            self.d_setGameState(gameState)
 
     def getGameState(self):
         return self.gameFsm.getCurrentOrNextState()
