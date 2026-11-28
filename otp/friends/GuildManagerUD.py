@@ -1,5 +1,6 @@
 import json
 import random
+import time
 import semidbm
 
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
@@ -98,6 +99,17 @@ class GuildDB:
         self.guildCache.pop(guildId, None)
         self.__delete('guild-%d' % guildId)
 
+    def getGuildIds(self):
+        guildIds = []
+        for key in list(self.dbm.keys()):
+            if isinstance(key, bytes):
+                key = key.decode('utf-8')
+
+            if key.startswith('guild-'):
+                guildIds.append(int(key[len('guild-'):]))
+
+        return guildIds
+
     def getAvatarGuildId(self, avatarId):
         return self.__get('avatar-%d' % avatarId) or 0
 
@@ -152,6 +164,9 @@ class GuildManagerUD(DistributedObjectGlobalUD):
         # inviteeId -> (inviterId, guildId)
         self.pendingInvites = {}
 
+        # avatarId -> when the avatar last asked for the leaderboard
+        self.leaderboardRequests = {}
+
         self.db = None
         self.maxMembers = config.GetInt('guild-max-members', 500)
         self.maxNameLength = config.GetInt('guild-name-max-length', 30)
@@ -159,6 +174,10 @@ class GuildManagerUD(DistributedObjectGlobalUD):
         self.maxTokenUses = config.GetInt('guild-max-invite-token-uses', 100)
         self.tokenLength = config.GetInt('guild-invite-token-length', 8)
         self.inviteTimeout = config.GetFloat('guild-invite-timeout', 60.0)
+
+        # The client shows the leaderboard for 15 seconds, and can not cope
+        # with a second leaderboard arriving while the first one is shown.
+        self.leaderboardCooldown = config.GetFloat('guild-leaderboard-cooldown', 20.0)
 
     def announceGenerate(self):
         DistributedObjectGlobalUD.announceGenerate(self)
@@ -407,6 +426,7 @@ class GuildManagerUD(DistributedObjectGlobalUD):
 
     def avatarOffline(self, avatarId):
         info = self.onlineAvatars.pop(avatarId, None)
+        self.leaderboardRequests.pop(avatarId, None)
         if not info:
             return
 
@@ -647,8 +667,29 @@ class GuildManagerUD(DistributedObjectGlobalUD):
         if self.isOnline(avatarId):
             self.d_guildStatusUpdate(avatarId, guildId, guild['name'], rank)
 
+    def getLeaderboardTopTen(self):
+        """
+        Nothing in the guild records keeps a reputation for the guild, so the
+        guilds are ranked by the size of their crew.
+        """
+
+        records = []
+        for guildId in self.db.getGuildIds():
+            guild = self.db.getGuild(guildId)
+            if guild:
+                records.append([guildId, self.getGuildDisplayName(guildId, guild), len(guild['members'])])
+
+        records.sort(key=lambda record: (-record[2], record[0]))
+        return records[:10]
+
     def requestLeaderboardTopTen(self):
-        pass
+        avatarId = self.air.getAvatarIdFromSender()
+        now = time.time()
+        if now - self.leaderboardRequests.get(avatarId, 0) < self.leaderboardCooldown:
+            return
+
+        self.leaderboardRequests[avatarId] = now
+        self.sendUpdateToAvatarId(avatarId, 'leaderboardTopTen', [self.getLeaderboardTopTen()])
 
     # --- Chat ---
 
