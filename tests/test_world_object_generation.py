@@ -46,6 +46,9 @@ class GeneratedObject:
     def setSiegeTeam(self, team):
         self.siegeTeam = team
 
+    def setLocationId(self, locationId):
+        self.locationId = locationId
+
 
 class SurfaceTreasure(GeneratedObject):
     pass
@@ -108,6 +111,13 @@ class WorldObjectGenerationTests(unittest.TestCase):
             self.parent, 'island', 'dinghy-uid', {'Pos': (1, 2, 3)})
         self.assertEqual(self.generated, [('dinghy-uid', 20)])
         self.assertEqual(self.uidMap, {'dinghy-uid': obj.doId})
+
+    def test_dinghy_location_comes_from_the_world_data(self):
+        water = self.builder.createDinghy(self.parent, 'island', 'water-dinghy', {'Pos': (1, 2, 3)})
+        land = self.builder.createDinghy(self.parent, 'island', 'land-dinghy',
+            {'Pos': (1, 2, 3), 'Location': 'Land'})
+        self.assertEqual(water.locationId, 0)
+        self.assertEqual(land.locationId, 1)
 
     def test_treasure_uids_are_set_before_generation(self):
         for spawnable, cls in (

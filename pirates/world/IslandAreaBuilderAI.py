@@ -91,6 +91,10 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
         dinghy.setPos(objectData.get('Pos', (0, 0, 0)))
         dinghy.setHpr(objectData.get('Hpr', (0, 0, 0)))
         dinghy.setInteractRadius(float(objectData.get('Aggro Radius', 25)))
+
+        # the level editor's dinghy locations are 'Water' (0) and 'Land' (1), the client
+        # uses a larger interact disk floating on the water for dinghies in the water...
+        dinghy.setLocationId(int(objectData.get('Location', 'Water') == 'Land'))
         dinghy.setSiegeTeam(self.parent.getSiegeTeam())
 
         zoneId = self.parent.getZoneFromXYZ(dinghy.getPos())
