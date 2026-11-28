@@ -11,9 +11,19 @@ NPC_TOWNFOLK_MOVIE_START = 'start'
 NPC_TOWNFOLK_MOVIE_STOP = 'stop'
 NPC_TOWNFOLK_MOVIE_CLEAR = 'clear'
 
+# the dialog flag sent with offerOptions picks what the npc says as the menu opens,
+# the client falls back to the brushoff itself when it has nothing to offer...
+NPC_DIALOG_GREETING = 0
+NPC_DIALOG_ENCOURAGE = 1
+NPC_DIALOG_BRUSHOFF = 2
+
 
 class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedNPCTownfolkAI')
+
+    # every avatar talks to the npc on it's own, one avatar talking to the npc
+    # must not stop another from interacting with or leaving it...
+    MULTIUSE = True
 
     def __init__(self, air):
         DistributedBattleNPCAI.__init__(self, air)
@@ -70,14 +80,23 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
     def d_offerOptions(self, avatarId, options):
         self.sendUpdateToAvatarId(avatarId, 'offerOptions', options)
 
-    def handleRequestInteraction(self, avatar, interactType, instant):
-        self.air.questMgr.requestInteract(avatar, self)
-        if interactType == PiratesGlobals.INTERACT_TYPE_FRIENDLY:
-            self.d_triggerInteractShow(avatar.doId, 0)
-            self.d_offerOptions(avatar.doId, [InteractGlobals.TALK])
-            return self.ACCEPT
+    def getDialogFlag(self, avatar):
+        # an avatar still working on a quest this npc gave them is encouraged,
+        # anyone else is greeted...
+        for quest in list(self.air.questMgr.quests.get(avatar.doId, {}).values()):
+            if quest.getGiverId() == self.getUniqueId() and not quest.isComplete():
+                return NPC_DIALOG_ENCOURAGE
 
-        return self.DENY
+        return NPC_DIALOG_GREETING
+
+    def handleRequestInteraction(self, avatar, interactType, instant):
+        if interactType != PiratesGlobals.INTERACT_TYPE_FRIENDLY:
+            return self.DENY
+
+        self.air.questMgr.requestInteract(avatar, self)
+        self.d_triggerInteractShow(avatar.doId, 0)
+        self.d_offerOptions(avatar.doId, [self.getDialogFlag(avatar)])
+        return self.ACCEPT
 
     def selectOption(self, option):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
