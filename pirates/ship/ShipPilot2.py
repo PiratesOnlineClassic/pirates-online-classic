@@ -618,22 +618,21 @@ class ShipPilot2(PhysicsWalker):
         # How far did we move based on the amount of time elapsed?
         dt=ClockObject.getGlobalClock().getDt()
         
-        if reverse or turnLeft or turnRight:
+        if reverse or turnLeft or turnRight or not forward:
             # Reset Straight Sailing Bonus
             self.straightHeading = 0
             self.straightSailDt = 0.0
-            
+
         # Straight Sailing Acceleration Bonus
         self.straightSailDt += dt
         straightSailBonus = 0.0
         if self.straightSailDt > self.STRAIGHT_SAIL_BONUS_TIME / 2.0:
             straightSailBonus = (self.straightSailDt - (self.STRAIGHT_SAIL_BONUS_TIME / 2.0)) / self.STRAIGHT_SAIL_BONUS_TIME / 2.0
+            # the bonus ramps up to MAX_STRAIGHT_SAIL_BONUS, it does not grow forever:
+            straightSailBonus = min(straightSailBonus, 1.0)
         straightSailBonus *= self.MAX_STRAIGHT_SAIL_BONUS
         straightSailBonus += 1.0
 
-        print ("##################")
-        print (straightSailBonus)
-        
         # this was causing the boat to get stuck moving forward or back
         if 0:
             if not hasattr(self, "sailsDeployed"):
@@ -806,11 +805,14 @@ class ShipPilot2(PhysicsWalker):
                 or self.__speed
                 or self.__slideSpeed
                 or self.__rotationSpeed):
-            distance = dt * self.__speed
+            # the speeds are accelerations applied through base.controlForce,
+            # the physics manager integrates them over time so they must not
+            # be scaled by dt (doing so made the ships crawl along at ~1 ft/s):
+            distance = self.__speed
             goForward = True
             if (distance < 0):
                 goForward = False
-            slideDistance = dt * self.__slideSpeed
+            slideDistance = self.__slideSpeed
             rotation = dt * self.__rotationSpeed
 
             # update pos:
@@ -830,9 +832,11 @@ class ShipPilot2(PhysicsWalker):
             #newVector=Vec3(rotMat.xform(newVector))
             #maxLen = maxSpeed
             if (goForward):
-                maxLen = self.ship.acceleration
+                maxLen = self.ship.acceleration * straightSailBonus
             else:
                 maxLen = self.ship.reverseAcceleration
+            if debugRunning or base.localAvatar.getTurbo():
+                maxLen *= 4.0
             if newVector.length() > maxLen:
                 newVector.normalize()
                 newVector *= maxLen
@@ -871,22 +875,28 @@ class ShipPilot2(PhysicsWalker):
 
 
         #*#
+        # modify based on sail damage
+        sailRatio = 1.0
+        if self.ship.maxSp > 0:
+            sailRatio = max(0, self.ship.Sp) / float(self.ship.maxSp)
+
         speed = physVel
         if (goForward):
+            maxSpeed *= sailRatio
             if physVelLen > maxSpeed:
                 speed.normalize()
                 speed *= maxSpeed
         else:
-            if physVelLen > self.ship.maxReverseSpeed:
+            maxReverseSpeed = self.ship.maxReverseSpeed * sailRatio
+            if physVelLen > maxReverseSpeed:
                 speed.normalize()
-                speed *= self.ship.maxReverseSpeed
+                speed *= maxReverseSpeed
 
         #speed *= 1.0 - dt * 0.05
 
-        # modify based on sail damage
-        speed *= self.ship.Sp
-        speed /= self.ship.maxSp
-        ## physObject.setVelocity(speed)
+        # clamp the ship's velocity to it's max speed, without this the ship's
+        # max speed (and the sail damage penalty) would never be applied:
+        physObject.setVelocity(speed)
 
         #rotMat=Mat3.rotateMatNormaxis(self.avatarNodePath.getH(), Vec3.up())
         #speed=rotMat.xform(speed)
