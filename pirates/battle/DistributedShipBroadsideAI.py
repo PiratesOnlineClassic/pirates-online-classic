@@ -46,6 +46,17 @@ class DistributedShipBroadsideAI(DistributedWeaponAI):
         if not ship.isSailable():
             return
 
+        if side not in (ShipGlobals.BROADSIDE_LEFT, ShipGlobals.BROADSIDE_RIGHT):
+            return
+
+        # the broadside is fired by the helmsman's broadside skill, which
+        # recharges between each broadside (see DistributedShipAI.useShipSkill)...
+        if not ship.consumeBroadside(side):
+            self.notify.debug('Avatar %d requested broadside %d of ship %d without using '
+                'the broadside skill!' % (avatar.doId, side, ship.doId))
+
+            return
+
         timestamp = globalClockDelta.getRealNetworkTime(bits=16)
         self.sendUpdate('doBroadside', [side, delays, hitPosList, zoneId, flightTime, timestamp])
 

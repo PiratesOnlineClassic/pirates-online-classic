@@ -57,6 +57,23 @@ class WeaponBaseAI(WeaponBaseBase):
 
             self.useTargetedSkill(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
 
+    def requestShipSkill(self, skillId, ammoSkillId, clientResult, targetId, timestamp):
+        # the helmsman's sailing skills are sent by the avatar, the target
+        # is always the ship it is steering (see LocalPirate.composeRequestShipSkill)...
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar or avatar is not self:
+            return
+
+        from pirates.ship.DistributedShipAI import DistributedShipAI
+        ship = self.air.doId2do.get(targetId)
+        if not isinstance(ship, DistributedShipAI) or not ship.hasCrewMember(avatar.doId):
+            self.notify.debug('Avatar %d cannot use ship skill %d on ship %d they are not crew of!' % (
+                avatar.doId, skillId, targetId))
+
+            return
+
+        ship.useShipSkill(avatar, skillId, ammoSkillId)
+
     def requestProjectileSkill(self, skillId, ammoSkillId, posHpr, timestamp, power):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:

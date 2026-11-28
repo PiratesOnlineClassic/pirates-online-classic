@@ -117,10 +117,18 @@ class DistributedSailAI(DistributedShippartAI, DistributedDestructibleArrayAI, D
             return
 
         sailDamage = self.air.battleMgr.getModifiedSailDamage(attacker, ship, skillId, ammoSkillId)
+        if not sailDamage:
+            return
+
         self.b_setHp(self.getHp() + sailDamage)
 
-        shipDamage = sailDamage - (ShipBalance.ArmorAbsorb.getValue() * sailDamage)
-        ship.handleShipDamage(shipDamage, attacker)
+        if ship.getMaxSp() > 0:
+            # the sails make up the ship's sail points, damaging them slows the ship down:
+            ship.handleShipSailDamage(sailDamage, attacker)
+        else:
+            # NPC ships have no sail points, their sails take damage from the hull instead:
+            shipDamage = sailDamage - (ShipBalance.ArmorAbsorb.getValue() * sailDamage)
+            ship.handleShipDamage(shipDamage, attacker)
 
         # update the sail anim state
         if self.hp == 0:

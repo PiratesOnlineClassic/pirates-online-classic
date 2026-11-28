@@ -31,6 +31,14 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
     PutAwayWhenEmpty = True
     MaxRamDistance = 1000.0
 
+    # the client starts recharging a ship skill once it has been used locally,
+    # allow for some leeway before the skill's request reaches us...
+    ShipSkillRechargeTolerance = 1.0
+
+    # the amount of time the helmsman's client has to fire a broadside once
+    # the broadside skill has been used...
+    BroadsideRequestWindow = 10.0
+
     def __init__(self, air):
         DistributedMovingObjectAI.__init__(self, air)
         DistributedCharterableObjectAI.__init__(self, air)
@@ -77,6 +85,8 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.parentingRules = ['', '']
         self.lastAttackerShipId = 0
         self.attackerDamage = {}
+        self.skillRechargeTimes = {}
+        self.pendingBroadsides = {}
 
         self.cabin = None
         self.bowSprit = None
@@ -445,6 +455,11 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
     def _playerDeparted(self, avatar):
         assert(isinstance(avatar, DistributedPlayerPirateAI))
         self.ignore(avatar.getDeleteEvent())
+
+        # the helmsman left the ship without letting go of the wheel first:
+        if avatar.doId == self.clientControllerDoId:
+            self.releaseWheel(avatar.doId)
+
         self.removeCrewMember(avatar)
         avatar.b_setShipId(0)
         avatar.b_setActiveShipId(0)
@@ -488,6 +503,8 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
     def delete(self):
         self.clearSkillEffectTasks()
         taskMgr.remove(self.uniqueName('broadcast-pos'))
+        for effectId in (WeaponGlobals.C_OPENFIRE, WeaponGlobals.C_TAKECOVER):
+            taskMgr.remove(self.uniqueName('crew-skill-effect-%d' % effectId))
         if hasattr(self, 'gameFSM'):
             self.gameFSM.cleanup()
 
@@ -883,10 +900,20 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
             return
 
+        if not self.canDock():
+            self.notify.debug('Cannot drop anchor for avatar: %d with ship: %d, '
+                'the ship was attacked too recently!' % (avatar.doId, self.doId))
+
+            return
+
         # get a random spawn point
         parentObj = island.getParentObj()
         assert(parentObj is not None)
         spawnPt = parentObj.getSpawnPt(island.getUniqueId())
+
+        # the crew have made it into port, they divide up the voyage's plunder
+        # before going ashore (see PlayerShipAI.handleDockedAtPort)...
+        self.handleDockedAtPort(island)
 
         # send everyone on the ship to the island
         for avatarId in self.crew:
@@ -894,6 +921,12 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             assert(avatar is not None)
             self.d_sendCrewToIsland(avatar.doId, islandDoId, spawnPt)
             self.air.questMgr.dockedAtPort(avatar, island)
+
+    def canDock(self):
+        return True
+
+    def handleDockedAtPort(self, island):
+        pass
 
     def d_sendCrewToIsland(self, avatarId, islandDoId, posH):
         self.sendUpdateToAvatarId(avatarId, 'sendCrewToIsland', [islandDoId, posH])
@@ -1024,6 +1057,123 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
     def getDamageOutputModifier(self):
         return 1.0
 
+    def getShipSkillRechargeTime(self, avatar, skillId):
+        # mirrors BattleManagerBase.getModifiedRechargeTime for ship skills,
+        # power recharge speeds up the recharge of the ship's other skills...
+        rechargeTime = WeaponGlobals.getAttackRechargeTime(skillId)
+        if skillId != InventoryType.SailPowerRecharge and WeaponGlobals.C_RECHARGE in self.getSkillEffects():
+            rechargeTime *= WeaponGlobals.POWER_RECHARGE_RATE_REDUCTION
+
+        inventory = avatar.getInventory()
+        if inventory and skillId in (InventoryType.SailBroadsideLeft, InventoryType.SailBroadsideRight):
+            rechargeTime *= 1.0 - max(0, inventory.getStackQuantity(InventoryType.SailTaskmaster) - 1) * \
+                WeaponGlobals.getAttackRechargeTime(InventoryType.SailTaskmaster)
+
+        return rechargeTime
+
+    def isShipSkillRecharging(self, avatar, skillId):
+        lastUsed = self.skillRechargeTimes.get(skillId)
+        if lastUsed is None:
+            return False
+
+        rechargeTime = self.getShipSkillRechargeTime(avatar, skillId)
+        return globalClock.getRealTime() - lastUsed < rechargeTime - self.ShipSkillRechargeTolerance
+
+    def canUseShipSkill(self, avatar, skillId):
+        if avatar.doId != self.clientControllerDoId:
+            self.notify.debug('Avatar %d cannot use ship skill %d, avatar is not steering ship %d!' % (
+                avatar.doId, skillId, self.doId))
+
+            return False
+
+        if not self.isSailable():
+            return False
+
+        if not WeaponGlobals.getIsShipSkill(skillId) or skillId >= InventoryType.end_SkillSailing:
+            self.air.writeServerEvent('suspicious', avId=avatar.doId,
+                issue='Tried to use invalid ship skill %d!' % skillId)
+
+            return False
+
+        # passive skills (windcatcher, tacking, treasure sense, taskmaster) are never used:
+        if WeaponGlobals.getSkillTrack(skillId) == WeaponGlobals.PASSIVE_SKILL_INDEX:
+            return False
+
+        inventory = avatar.getInventory()
+        if not inventory or inventory.getStackQuantity(skillId) < 2:
+            self.notify.debug('Avatar %d cannot use ship skill %d, skill was never learned!' % (
+                avatar.doId, skillId))
+
+            return False
+
+        if not avatar.isPaid() and not WeaponGlobals.canFreeUse(skillId):
+            self.notify.debug('Freebooter %d cannot use paid ship skill %d!' % (avatar.doId, skillId))
+            return False
+
+        if self.isShipSkillRecharging(avatar, skillId):
+            self.notify.debug('Avatar %d cannot use ship skill %d, skill is still recharging!' % (
+                avatar.doId, skillId))
+
+            return False
+
+        return True
+
+    def useShipSkill(self, avatar, skillId, ammoSkillId):
+        # called when the helmsman uses one of their sailing skills from the combat tray,
+        # see LocalPirate.composeRequestShipSkill...
+        if not self.canUseShipSkill(avatar, skillId):
+            return False
+
+        self.skillRechargeTimes[skillId] = globalClock.getRealTime()
+        if skillId in (InventoryType.SailBroadsideLeft, InventoryType.SailBroadsideRight):
+            # the client fires the broadside once the skill has been used
+            # (see DistributedShip.useShipSkill), allow the broadside to be requested...
+            side = ShipGlobals.BROADSIDE_LEFT if skillId == InventoryType.SailBroadsideLeft else \
+                ShipGlobals.BROADSIDE_RIGHT
+
+            self.pendingBroadsides[side] = globalClock.getRealTime()
+            return True
+
+        effectId = WeaponGlobals.getSkillEffectFlag(skillId)
+        if not effectId:
+            return True
+
+        # each rank of the skill extends it's duration, see SkillButton.createHelpFrame...
+        rank = max(1, avatar.getInventory().getStackQuantity(skillId) - 1)
+        duration = WeaponGlobals.getAttackDuration(skillId)
+        duration = int(duration + duration * (rank - 1) / 4.0)
+        self.addSkillEffect(effectId, duration, avatar.doId)
+
+        if effectId in (WeaponGlobals.C_OPENFIRE, WeaponGlobals.C_TAKECOVER):
+            # the crew buffs are shown on, and used by, the crew's avatars too:
+            for avatarId in self.crew:
+                crewMember = self.air.doId2do.get(avatarId)
+                if crewMember is None or not hasattr(crewMember, 'addSkillEffect'):
+                    continue
+
+                if not crewMember.hasSkillEffect(effectId):
+                    crewMember.addSkillEffect(effectId, duration, avatar.doId)
+
+            taskMgr.doMethodLater(duration, self._removeCrewSkillEffect,
+                self.uniqueName('crew-skill-effect-%d' % effectId),
+                extraArgs=[effectId, list(self.crew)])
+
+        return True
+
+    def _removeCrewSkillEffect(self, effectId, avatarIds):
+        for avatarId in avatarIds:
+            crewMember = self.air.doId2do.get(avatarId)
+            if crewMember is not None and hasattr(crewMember, 'removeSkillEffect'):
+                crewMember.removeSkillEffect(effectId)
+
+    def consumeBroadside(self, side):
+        # broadsides may only be fired once per use of the broadside skill...
+        usedTime = self.pendingBroadsides.pop(side, None)
+        if usedTime is None:
+            return False
+
+        return globalClock.getRealTime() - usedTime < self.BroadsideRequestWindow
+
     def requestSkillEvent(self, skillId, ammoSkillId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
@@ -1082,6 +1232,30 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         # who landed the final blow if this damage sinks the ship...
         self.recordAttacker(attackerShipId, -damage)
         self.b_setHp(self.hp + damage)
+        self.shipAttacked(attackerShipId, -damage)
+
+    def handleShipSailDamage(self, damage, attacker=None):
+        # damage to the sails and masts lowers the ship's sail points (SP)
+        # rather than it's hull, a ship with torn sails sails slower
+        # (see DistributedShip.calcModifiedStats)...
+        if not self.isSailable():
+            return
+
+        if self.hasSpawnBuff():
+            return
+
+        damage = int(damage)
+        if damage >= 0:
+            return
+
+        attackerShipId = 0
+        if attacker is not None:
+            if isinstance(attacker, DistributedShipAI):
+                attackerShipId = attacker.doId
+            elif hasattr(attacker, 'getCrewShipId'):
+                attackerShipId = attacker.getCrewShipId()
+
+        self.b_setSp(max(0, min(self.sp + damage, self.maxSp)))
         self.shipAttacked(attackerShipId, -damage)
 
     def recordAttacker(self, attackerShipId, damage):
@@ -1222,12 +1396,21 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         # the avatar is leaving the ship; if they were steering the ship
         # we need to release the ship's controls so someone else can take the wheel...
         if avatar.doId == self.clientControllerDoId:
-            if self.steeringWheel and self.steeringWheel.userId == avatar.doId:
-                self.steeringWheel.b_setUserId(0)
+            self.releaseWheel(avatar.doId)
 
-            self.b_setClientController(0)
-            if self.isSailable():
-                self.b_setGameState('Adrift', 0)
+    def releaseWheel(self, avatarId):
+        if self.steeringWheel is not None and self.steeringWheel.userId == avatarId:
+            self.steeringWheel.b_setUserId(0)
+
+        if self.clientControllerDoId != avatarId:
+            return
+
+        self.b_setClientController(0)
+
+        # only a ship that was being steered drifts once the helmsman lets go,
+        # a sinking or grappled ship has to stay in it's current state...
+        if self.getCurrentGameState() == 'ClientSteering':
+            self.b_setGameState('Adrift', 0)
 
     def requestBoard(self, avId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
