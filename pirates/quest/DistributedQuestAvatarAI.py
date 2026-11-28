@@ -143,8 +143,7 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
 
         # the step points towards the goal of the quest's active task, or
         # towards the npc the quest is to be returned to once complete...
-        goalUid = self.air.questMgr.getQuestStepGoalUid(self, activeQuest)
-        self.sendUpdate('setQuestStep', [self.air.questMgr.getQuestStep(self, goalUid)])
+        self.sendUpdate('setQuestStep', [self.air.questMgr.getQuestStep(self, activeQuest)])
 
     def _swapQuest(self, oldQuests=[], giverId=None, questIds=None, rewards=None):
         inventory = self.getInventory()

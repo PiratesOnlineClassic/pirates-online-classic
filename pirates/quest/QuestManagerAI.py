@@ -26,7 +26,7 @@ from pirates.quest.QuestLadderDependency import QuestLadderDependency
 from pirates.quest.QuestOffer import QuestOffer
 from pirates.quest.QuestLadderOffer import QuestLadderOffer
 from pirates.quest import QuestTaskDNA
-from pirates.quest.QuestConstants import PropIds, QuestItems, getPropList, getShipList
+from pirates.quest.QuestConstants import PropIds, QuestItems, getPropList, getShipList, getTreasureList, getLocationList
 from pirates.piratesbase import CollectionMap
 from pirates.pirate import AvatarTypes
 from pirates.reputation.ReputationGlobals import getLevelFromTotalReputation
@@ -38,6 +38,9 @@ from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 from pirates.world.DistributedBuildingDoorAI import DistributedBuildingDoorAI
 from pirates.world.DistributedInteriorDoorAI import DistributedInteriorDoorAI
 from pirates.world.DistributedDinghyAI import DistributedDinghyAI
+from pirates.world.DistributedGATunnelAI import DistributedGATunnelAI
+from pirates.interact.DistributedSearchableContainerAI import DistributedSearchableContainerAI
+from pirates.treasuremap.DistributedBuriedTreasureAI import DistributedBuriedTreasureAI
 from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
 from pirates.uberdog import InventoryInit
 from pirates.tutorial import TutorialGlobals
@@ -1733,22 +1736,24 @@ class QuestManagerAI(DirectObject):
             if child.isContainer():
                 self.__getQuestInts(child, questInts)
 
-    def getQuestStepType(self, goalObject):
-        if isinstance(goalObject, DistributedNPCTownfolkAI):
-            stepType = QuestStep.STNPC
-        elif isinstance(goalObject, DistributedBattleAvatarAI):
-            # enemies use the same indicator as townfolk...
-            stepType = QuestStep.STNPC
-        elif isinstance(goalObject, DistributedInteriorDoorAI):
-            stepType = QuestStep.STInteriorDoor
-        elif isinstance(goalObject, DistributedBuildingDoorAI):
+    def getQuestStepType(self, stepObject):
+        if isinstance(stepObject, DistributedBuildingDoorAI):
             stepType = QuestStep.STExteriorDoor
-        elif isinstance(goalObject, DistributedDinghyAI):
+        elif isinstance(stepObject, DistributedInteriorDoorAI):
+            stepType = QuestStep.STInteriorDoor
+        elif isinstance(stepObject, DistributedGATunnelAI):
+            stepType = QuestStep.STTunnel
+        elif isinstance(stepObject, DistributedDinghyAI):
             stepType = QuestStep.STQuestNode
-        elif isinstance(goalObject, DistributedGameAreaAI):
+        elif isinstance(stepObject, DistributedGameAreaAI):
             stepType = QuestStep.STArea
-        elif isinstance(goalObject, DistributedShipAI):
+        elif isinstance(stepObject, DistributedShipAI):
             stepType = QuestStep.STShip
+        elif isinstance(stepObject, (DistributedNPCTownfolkAI, DistributedBattleAvatarAI,
+                                     DistributedSearchableContainerAI, DistributedBuriedTreasureAI)):
+            # townfolk, enemies, containers and buried treasure all use the npc indicator,
+            # the client places the beam on the object once it has been generated...
+            stepType = QuestStep.STNPC
         else:
             stepType = QuestStep.NullStep
 
@@ -1785,10 +1790,20 @@ class QuestManagerAI(DirectObject):
 
     def getQuestStepGoalKey(self, avatar, quest):
         goal = self.getQuestStepGoalUid(avatar, quest)
-        if isinstance(goal, QuestGoal):
-            return goal._asString()
+        goalKey = goal._asString() if isinstance(goal, QuestGoal) else goal
 
-        return goal
+        # the step of an enemy, container or treasure goal points at the closest one,
+        # which is another one once the avatar has made progress on the task...
+        activeTask = self.getActiveTask(quest) if not quest.isComplete() else None
+        closestGoal = isinstance(goal, QuestGoal) or isinstance(activeTask, (
+            QuestTaskDNA.RecoverContainerItemTaskDNA, QuestTaskDNA.RecoverTreasureItemTaskDNA))
+        if not closestGoal and isinstance(goal, str):
+            closestGoal = isinstance(self.air.uidMgr.justGetMeMeObject(goal), DistributedGameAreaAI)
+
+        if closestGoal:
+            return goalKey, tuple(taskState.getProgress() for taskState in quest.getTaskStates())
+
+        return goalKey
 
     def updateQuestStep(self, avatar, quest):
         if hasattr(avatar, 'requestQuestStep'):
@@ -1835,19 +1850,26 @@ class QuestManagerAI(DirectObject):
         avatarType = obj.getAvatarType()
         return avatarType is not None and avatarType.isA(goalData[1])
 
-    def findQuestGoalObject(self, avatar, goal):
+    def findQuestGoalObject(self, avatar, goal, area=None):
         """
         Finds the closest object that matches the custom quest goal (an enemy type or a
         type of ship) in the area the avatar is currently in
         """
 
-        area = avatar.getParentObj()
-        if goal.getTargetType() == 'ship' and isinstance(area, DistributedShipAI):
-            area = area.getParentObj()
+        if area is None:
+            area = self.getQuestStepArea(avatar)
+            if goal.getTargetType() == 'ship' and isinstance(area, DistributedShipAI):
+                area = area.getParentObj()
 
         if area is None:
             return None
 
+        # an avatar sailing it's ship is as far away as it's ship...
+        avatarObj = avatar
+        if avatar.parentId != area.doId and isinstance(avatar.getParentObj(), DistributedShipAI):
+            avatarObj = avatar.getParentObj()
+
+        avatarPos = self.getQuestStepPos(avatarObj, area)
         closest, closestDistance = None, None
         for obj in list(self.air.doId2do.values()):
             if getattr(obj, 'parentId', None) != area.doId:
@@ -1859,121 +1881,348 @@ class QuestManagerAI(DirectObject):
             except Exception:
                 continue
 
-            pos = obj.getPos()
-            distance = (pos[0] - avatar.getX()) ** 2 + (pos[1] - avatar.getY()) ** 2
+            distance = self.getQuestStepDistance(avatarPos, self.getQuestStepPos(obj, area))
             if closestDistance is None or distance < closestDistance:
                 closest, closestDistance = obj, distance
 
         return closest
 
-    def getQuestStepObject(self, avatar, goalObject):
+    def getQuestStepArea(self, obj):
         """
-        Returns the object the avatar's quest step leads to, and the object
-        it is placed relative to, the step leads the avatar towards the goal
-        through the area the avatar is currently in
+        Returns the game area (an island, interior or cave) or the
+        ship the object is in, this is where the object's quest step starts from
         """
 
-        if not goalObject:
-            return None, None
-
-        def findObject(goalObject, otherObject):
-            goalParent = goalObject.getParentObj()
-            if not goalParent:
-                return None, None
-
-            otherParent = otherObject.getParentObj()
-            if not otherParent:
-                return None, None
-
-            if goalParent.doId != otherParent.doId:
-                return findObject(goalParent, otherParent)
-
-            return goalObject, otherObject
-
-        # recurse through the scenegraph and find the target goal object...
-        stepObject, otherObject = findObject(goalObject, avatar)
-        if not stepObject:
-            return None, None
-
-        # the avatar is inside of an interior and the goal is not, the
-        # avatar has to leave the interior through it's door first...
-        if isinstance(otherObject, DistributedGAInteriorAI) and stepObject is not otherObject:
-            doorLocatorNode = otherObject.getInteriorFrontDoor() or otherObject.getInteriorBackDoor()
-            if not doorLocatorNode:
-                return None, None
-
-            return doorLocatorNode, otherObject
-
-        # interiors are parented under the world instance object,
-        # the avatar is parented under the island...
-        if isinstance(stepObject, DistributedGAInteriorAI) and isinstance(otherObject, DistributedIslandAI):
-            doorLocatorNode = stepObject.getExteriorFrontDoor() or stepObject.getExteriorBackDoor()
-            if not doorLocatorNode:
-                return None, None
-
-            # check to see if the door locator node's parent object is the
-            # same parent object as the avatar's, if so return the door locator node
-            # otherwise this means the avatar is located on a different island...
-            doorLocatorNodeParent = doorLocatorNode.getParentObj()
-            if doorLocatorNodeParent is None:
-                return None, None
-
-            if doorLocatorNodeParent.doId != otherObject.doId:
-                return doorLocatorNodeParent, doorLocatorNodeParent.getParentObj()
-
-            return doorLocatorNode, otherObject
-
-        return stepObject, stepObject.getParentObj()
-
-    def getQuestStepIslandUid(self, goalObject):
-        # the island the goal is located on, the client places the quest
-        # dart on it's world map at this island...
-        obj = goalObject
         while obj is not None:
-            if isinstance(obj, DistributedIslandAI):
-                return obj.getUniqueId()
-
-            if isinstance(obj, DistributedGAInteriorAI):
-                door = obj.getExteriorFrontDoor() or obj.getExteriorBackDoor()
-                obj = door.getParentObj() if door else None
-                continue
+            if isinstance(obj, (DistributedGameAreaAI, DistributedShipAI)):
+                return obj
 
             obj = obj.getParentObj()
 
-        return ''
+        return None
 
-    def getQuestStep(self, avatar, goalUid):
+    def getQuestStepPos(self, obj, area):
         """
-        Returns the quest step of the avatar's quest goal as the
-        list of QuestStep fields the client expects
+        Returns the position of the object relative to the area, the client places
+        the quest indicator relative to the area until the step's object arrives
         """
 
-        nullStep = [avatar.doId, 0, 0, [0, 0, 0, 0], '']
+        # objects in the zones of a grid (islands and the ocean) are parented
+        # to the origin of their grid cell, as they are on the client...
+        if not obj.isEmpty() and not area.isEmpty() and area.isAncestorOf(obj):
+            return obj.getPos(area)
+
+        return obj.getPos()
+
+    def getQuestStepDistance(self, pos, otherPos):
+        return (pos[0] - otherPos[0]) ** 2 + (pos[1] - otherPos[1]) ** 2
+
+    def getQuestStepLinks(self, area, connectors):
+        """
+        Returns a list of (connector, area) pairs of the doors and tunnels
+        leading out of the area, and the area each of them leads to
+        """
+
+        links = []
+        for connector in connectors.get(area.doId, []):
+            if isinstance(connector, DistributedBuildingDoorAI):
+                otherAreas = [self.air.doId2do.get(connector.interiorDoId)]
+            elif isinstance(connector, DistributedInteriorDoorAI):
+                otherDoor = connector.otherDoor
+                otherAreas = [otherDoor.getParentObj() if otherDoor else None]
+            else:
+                otherAreas = [self.air.doId2do.get(link[1]) for link in connector.getLinks()[2]]
+
+            for otherArea in otherAreas:
+                if otherArea is None or otherArea is area:
+                    continue
+
+                if (connector, otherArea) not in links:
+                    links.append((connector, otherArea))
+
+        return links
+
+    def getQuestStepConnectors(self):
+        # the doors and tunnels of every game area, by the doId of the area they are in...
+        connectors = collections.defaultdict(list)
+        for obj in list(self.air.doId2do.values()):
+            if isinstance(obj, (DistributedBuildingDoorAI, DistributedInteriorDoorAI, DistributedGATunnelAI)):
+                connectors[obj.parentId].append(obj)
+
+        return connectors
+
+    def getQuestStepPath(self, area, isGoal, connectors):
+        """
+        Returns the connectors the avatar has to go through to get from the
+        area to the first area that isGoal accepts, the same breadth first search
+        the client's QuestPath does through each area's exit links
+        """
+
+        paths = {area.doId: []}
+        needToVisit = [area]
+        while needToVisit:
+            nextArea = needToVisit.pop(0)
+            if isGoal(nextArea):
+                return nextArea, paths[nextArea.doId]
+
+            for connector, otherArea in self.getQuestStepLinks(nextArea, connectors):
+                if otherArea.doId in paths:
+                    continue
+
+                paths[otherArea.doId] = paths[nextArea.doId] + [connector]
+                needToVisit.append(otherArea)
+
+        return None, None
+
+    def getQuestStepIsland(self, area, connectors):
+        # the island the area is on, interiors and caves lead out onto their island...
+        if isinstance(area, DistributedIslandAI):
+            return area
+
+        island, path = self.getQuestStepPath(area, lambda other: isinstance(other, DistributedIslandAI), connectors)
+        return island
+
+    def getQuestStepTargetNode(self, uid):
+        """
+        Returns the game area and the position of a quest node (or a dinghy) defined
+        in the world data, quest nodes are only markers and have no object of their own
+        """
+
+        worldCreator = getattr(self.air, 'worldCreator', None)
+        if not worldCreator:
+            return None
+
+        for fileName, fileData in list(worldCreator.fileDicts.items()):
+            objectPath = fileData.get('ObjectIds', {}).get(uid)
+            if not objectPath:
+                continue
+
+            objectInfo = worldCreator.getObjectDataFromFileByUid(uid, fileName)
+            if not objectInfo or objectInfo.get('Type') not in ('Quest Node', 'Dinghy'):
+                continue
+
+            # the node is placed relative to the game area it is defined in...
+            parentUids = [part.strip('"\'') for part in objectPath.replace('][', '|').strip('[]').split('|')]
+            parentUids = [parentUid for parentUid in parentUids[:-1] if parentUid != 'Objects']
+            area = self.air.uidMgr.justGetMeMeObject(parentUids[-1]) if parentUids else None
+            if isinstance(area, DistributedGameAreaAI):
+                pos, hpr = objectInfo['Pos'], objectInfo.get('Hpr', (0, 0, 0))
+                return area, [pos[0], pos[1], pos[2], hpr[0]]
+
+        return None
+
+    def getQuestStepTargets(self, avatar, quest, goalUid):
+        """
+        Returns the objects (or quest nodes) the avatar's quest step may lead to,
+        a target is a (area, object, posH) tuple where the object may be None
+        """
+
+        def objectTarget(obj):
+            if isinstance(obj, DistributedGameAreaAI):
+                area = obj
+            elif isinstance(obj, DistributedShipAI):
+                # ships sail the ocean grid...
+                area = obj.getParentObj()
+            else:
+                area = self.getQuestStepArea(obj.getParentObj())
+
+            if area is None:
+                return None
+
+            pos = self.getQuestStepPos(obj, area) if area is not obj else (0, 0, 0)
+            h = obj.getH() if area is not obj else 0
+            return area, obj, [pos[0], pos[1], pos[2], h]
+
+        def uidTargets(uids):
+            targets = []
+            for uid in uids:
+                obj = self.air.uidMgr.justGetMeMeObject(uid)
+                if obj is not None:
+                    target = objectTarget(obj)
+                else:
+                    node = self.getQuestStepTargetNode(uid)
+                    target = (node[0], None, node[1]) if node else None
+
+                if target:
+                    targets.append(target)
+
+            return targets
+
         if goalUid is None:
-            return nullStep
+            # containers and treasure are searched for by their uid, or the name
+            # of a group of them, the step leads to one that is yet to be searched...
+            activeTask = self.getActiveTask(quest) if not quest.isComplete() else None
+            if isinstance(activeTask, QuestTaskDNA.RecoverContainerItemTaskDNA):
+                taskState = quest.getTaskStates()[quest.getTasks().index(activeTask)]
+                containerId = activeTask.getContainerId()
+                if containerId == PropIds.ANY_PROP:
+                    return []
+
+                containerIds = getPropList(containerId) or [containerId]
+                return uidTargets([uid for uid in containerIds if not taskState.hasSearchedContainer(uid)])
+
+            return []
 
         if isinstance(goalUid, QuestGoal):
-            if goalUid.getType() == QuestGoal.Type_Custom:
-                goalObject = self.findQuestGoalObject(avatar, goalUid)
-            else:
-                goalObject = None
-        else:
-            goalObject = self.air.uidMgr.justGetMeMeObject(goalUid)
+            if goalUid.getType() != QuestGoal.Type_Custom:
+                return []
 
-        stepObject, originObject = self.getQuestStepObject(avatar, goalObject)
-        if not stepObject:
+            # custom goals lead to the closest matching enemy (or ship) around the avatar...
+            goalObject = self.findQuestGoalObject(avatar, goalUid)
+            if goalObject is None:
+                return []
+
+            target = objectTarget(goalObject)
+            return [target] if target else []
+
+        treasureIds = getTreasureList(goalUid)
+        if treasureIds:
+            return uidTargets(treasureIds)
+
+        # a task's location may be any of a list of areas (an island and it's caves),
+        # the step leads to the closest of them...
+        activeTask = self.getActiveTask(quest) if not quest.isComplete() else None
+        if activeTask is not None and not activeTask.getGoalLocation():
+            locationIds = getLocationList(activeTask.getLocation())
+            if locationIds and goalUid in locationIds:
+                return uidTargets(locationIds)
+
+        return uidTargets([goalUid])
+
+    def getQuestStepTaskGoal(self, quest):
+        # the custom goal (the type of enemy) of the active task, ignoring it's
+        # location, used once the avatar has arrived at the task's location...
+        activeTask = self.getActiveTask(quest) if not quest.isComplete() else None
+        if activeTask is None:
+            return None
+
+        task = activeTask.makeCopy()
+        task.setLocation(QuestTaskDNA.LocationIds.ANY_LOCATION)
+        task.setGoalLocation(None)
+        try:
+            goal = task.getGoalUid()
+        except Exception:
+            return None
+
+        if isinstance(goal, QuestGoal) and goal.getType() == QuestGoal.Type_Custom:
+            return goal
+
+        return None
+
+    def getQuestStep(self, avatar, quest):
+        """
+        Returns the quest step of the avatar's active quest as the list of QuestStep
+        fields the client expects, the step leads from the area the avatar is in
+        (originDoId) to the next object (stepDoId) on the way to the quest's goal
+        """
+
+        nullStep = [0, 0, 0, [0, 0, 0, 0], '']
+        if quest is None:
             return nullStep
+
+        area = self.getQuestStepArea(avatar)
+        if area is None:
+            return nullStep
+
+        goalUid = self.getQuestStepGoalUid(avatar, quest)
+        targets = self.getQuestStepTargets(avatar, quest, goalUid)
+        if not targets:
+            return nullStep
+
+        # ships are pointed at across the ocean grid they sail,
+        # the client's ship indicator is placed relative to the grid...
+        if isinstance(targets[0][1], DistributedShipAI):
+            oceanGrid, ship, posH = targets[0]
+            return [oceanGrid.doId, ship.doId, QuestStep.STShip, posH, '']
+
+        connectors = self.getQuestStepConnectors()
+        avatarPos = self.getQuestStepPos(avatar, area)
+        targetAreaIds = set(target[0].doId for target in targets)
+
+        # the avatar has arrived at the area the goal is in...
+        if area.doId in targetAreaIds:
+            areaTargets = [target for target in targets if target[0].doId == area.doId]
+            if all(target[1] is area for target in areaTargets):
+                # the goal is the area itself (the location of a defeat or recover task),
+                # lead the avatar to the closest enemy that counts towards the task...
+                taskGoal = self.getQuestStepTaskGoal(quest)
+                goalObject = self.findQuestGoalObject(avatar, taskGoal, area) if taskGoal else None
+                if goalObject is None:
+                    return nullStep
+
+                pos = self.getQuestStepPos(goalObject, area)
+                areaTargets = [(area, goalObject, [pos[0], pos[1], pos[2], goalObject.getH()])]
+
+            areaTargets.sort(key=lambda target: self.getQuestStepDistance(avatarPos, target[2]))
+            targetArea, stepObject, posH = areaTargets[0]
+            if stepObject is None:
+                # a quest node, the indicator is placed at the node's position...
+                stepType, stepDoId = QuestStep.STQuestNode, 0
+            else:
+                stepType, stepDoId = self.getQuestStepType(stepObject), stepObject.doId
+                if not stepType:
+                    return nullStep
+
+            return [area.doId, stepDoId, stepType, posH, self.getQuestStepIslandUid(targetArea, connectors)]
+
+        # find the shortest way through the doors and tunnels to the goal...
+        targetArea, path = None, None
+        if not isinstance(area, DistributedShipAI):
+            targetArea, path = self.getQuestStepPath(area, lambda other: other.doId in targetAreaIds, connectors)
+
+        if targetArea is None:
+            # the goal is on another island, an island is pointed at from the island or
+            # ship the avatar is on, from anywhere else the avatar has to go out first...
+            targetIslands = []
+            for target in targets:
+                island = self.getQuestStepIsland(target[0], connectors)
+                if island is not None and island not in targetIslands:
+                    targetIslands.append(island)
+
+            if not targetIslands:
+                return nullStep
+
+            if isinstance(area, (DistributedIslandAI, DistributedShipAI)):
+                island = targetIslands[0]
+                return [area.doId, island.doId, QuestStep.STArea, [0, 0, 0, 0], island.getUniqueId()]
+
+            targetArea, path = self.getQuestStepPath(area, lambda other: isinstance(other, DistributedIslandAI), connectors)
+            if targetArea is None:
+                return nullStep
+
+            islandUid = targetIslands[0].getUniqueId()
+        else:
+            islandUid = self.getQuestStepIslandUid(targetArea, connectors)
+
+        if not path:
+            return nullStep
+
+        # of the doors leading the same way, lead the avatar to the closest one...
+        stepObject = path[0]
+        nextArea = None
+        for connector, otherArea in self.getQuestStepLinks(area, connectors):
+            if connector is stepObject:
+                nextArea = otherArea
+                break
+
+        sameWay = [connector for connector, otherArea in self.getQuestStepLinks(area, connectors)
+                   if otherArea is nextArea and type(connector) is type(stepObject)]
+        sameWay.sort(key=lambda connector: self.getQuestStepDistance(avatarPos, self.getQuestStepPos(connector, area)))
+        if sameWay:
+            stepObject = sameWay[0]
 
         stepType = self.getQuestStepType(stepObject)
-        if not stepType:
-            return nullStep
+        pos = self.getQuestStepPos(stepObject, area)
+        return [area.doId, stepObject.doId, stepType, [pos[0], pos[1], pos[2], stepObject.getH()], islandUid]
 
-        # the step is positioned relative to the object it is parented to,
-        # the client uses this position until the step object has arrived...
-        x, y, z = stepObject.getPos()
-        h = stepObject.getHpr()[0]
-        originDoId = originObject.doId if originObject else 0
-        return [originDoId, stepObject.doId, stepType, [x, y, z, h], self.getQuestStepIslandUid(goalObject)]
+    def getQuestStepIslandUid(self, area, connectors=None):
+        # the island the goal is located on, the client places the quest
+        # dart on it's world map at this island...
+        if connectors is None:
+            connectors = self.getQuestStepConnectors()
+
+        island = self.getQuestStepIsland(area, connectors) if area is not None else None
+        return island.getUniqueId() if island is not None else ''
 
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str])
