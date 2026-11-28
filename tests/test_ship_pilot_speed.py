@@ -94,10 +94,15 @@ class ShipPilotSpeedTest(unittest.TestCase):
         self.pilot = pilot
 
         self.clock = ClockObject.getGlobalClock()
+        self.clockMode = self.clock.getMode()
         self.clock.setMode(ClockObject.MNonRealTime)
 
     def tearDown(self):
-        self.clock.setMode(ClockObject.MNormal)
+        # sailing ticks the global clock well ahead of real time, rewind it
+        # before leaving non-real-time mode or later suites' doMethodLater
+        # tasks never come due...
+        self.clock.setFrameTime(self.clock.getRealTime())
+        self.clock.setMode(self.clockMode)
         for name in ('forward', 'reverse', 'debugRunning'):
             self.inputState.set(name, False)
 
