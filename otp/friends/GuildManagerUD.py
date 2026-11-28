@@ -51,6 +51,8 @@ class GuildDB:
         self.guildCache = {}
 
     def __get(self, key):
+        # semidbm keeps it's keys as bytes, a str key is never found in it:
+        key = key.encode('utf-8')
         if key not in self.dbm:
             return None
 
@@ -61,10 +63,11 @@ class GuildDB:
         return json.loads(value)
 
     def __set(self, key, value):
-        self.dbm[key] = json.dumps(value)  # semidbm only allows strings.
+        self.dbm[key.encode('utf-8')] = json.dumps(value).encode('utf-8')
         self.__sync()
 
     def __delete(self, key):
+        key = key.encode('utf-8')
         if key in self.dbm:
             del self.dbm[key]
             self.__sync()

@@ -17,7 +17,8 @@ class AccessoriesDB:
         self.dbm = semidbm.open(filename, 'c')
 
     def getWardrobe(self, avatarId):
-        key = str(avatarId)
+        # semidbm keeps it's keys as bytes, a str key is never found in it:
+        key = str(avatarId).encode('utf-8')
         if key not in self.dbm:
             return {'clothing': [], 'jewelry': [], 'tattoos': []}
 
@@ -36,7 +37,7 @@ class AccessoriesDB:
         return wardrobe
 
     def setWardrobe(self, avatarId, wardrobe):
-        self.dbm[str(avatarId)] = json.dumps(wardrobe)
+        self.dbm[str(avatarId).encode('utf-8')] = json.dumps(wardrobe).encode('utf-8')
         self.dbm.sync()
 
     def close(self):

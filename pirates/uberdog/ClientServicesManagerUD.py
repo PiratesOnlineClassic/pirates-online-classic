@@ -459,7 +459,7 @@ class RemoteAccountDB(AccountDB):
 
         # This token is valid. That's all we need to know. Next, let's check if
         # this user's ID is in your account database bridge:
-        if str(token['userid']) not in self.dbm:
+        if str(token['userid']).encode() not in self.dbm:
 
             # Nope. Let's associate them with a brand new Account object!
             response = {

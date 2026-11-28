@@ -59,8 +59,10 @@ class DiscordNotificationsUD(DiscordNotificationsBase):
         Retrieves the holiday state from the local db
         """
 
-        if str(holidayId) in self.holidayDb:
-            return bool(self.holidayDb[str(holidayId)])
+        # semidbm keeps it's keys as bytes, and the state is stored as 'True' or 'False':
+        key = str(holidayId).encode('utf-8')
+        if key in self.holidayDb:
+            return self.holidayDb[key] == b'True'
         else:
             return False
 
@@ -69,7 +71,7 @@ class DiscordNotificationsUD(DiscordNotificationsBase):
         Stores the holiday state in the local db
         """
 
-        self.holidayDb[str(holidayId)] = str(state)
+        self.holidayDb[str(holidayId).encode('utf-8')] = str(bool(state)).encode('utf-8')
         if getattr(self.holidayDb, 'sync', None):
             self.holidayDb.sync()
         else:

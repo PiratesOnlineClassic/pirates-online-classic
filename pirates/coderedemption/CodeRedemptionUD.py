@@ -91,13 +91,14 @@ class CodeRedemptionUD(DistributedObjectGlobalUD):
         pass
 
     def getRedeemedKey(self, code, avatarId):
-        return '%s|%d' % (code, avatarId)
+        # semidbm keeps it's keys as bytes, a str key is never found in it:
+        return ('%s|%d' % (code, avatarId)).encode('utf-8')
 
     def hasRedeemed(self, code, avatarId):
         return self.getRedeemedKey(code, avatarId) in self.redeemedDB
 
     def setRedeemed(self, code, avatarId):
-        self.redeemedDB[self.getRedeemedKey(code, avatarId)] = '1'
+        self.redeemedDB[self.getRedeemedKey(code, avatarId)] = b'1'
         if getattr(self.redeemedDB, 'sync', None):
             self.redeemedDB.sync()
 
