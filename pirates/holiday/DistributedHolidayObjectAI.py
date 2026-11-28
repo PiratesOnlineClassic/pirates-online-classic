@@ -4,7 +4,7 @@ from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveA
 from pirates.ai import HolidayGlobals
 
 class DistributedHolidayObjectAI(DistributedInteractiveAI):
-    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInteractiveAI')
+    notify = DirectNotifyGlobal.directNotify.newCategory('DistributedHolidayObjectAI')
 
     INTERACT_NONE = 0
     INTERACT_ALL = 1
@@ -27,7 +27,11 @@ class DistributedHolidayObjectAI(DistributedInteractiveAI):
         DistributedInteractiveAI.announceGenerate(self)
 
         self.accept('HolidayStarted', self.serverHolidayStart)
-        self.accept('HolidayEnd', self.serverHolidayEnd)
+        self.accept('HolidayEnded', self.serverHolidayEnd)
+
+        # The holiday may already be running when the object is created.
+        if self.isHolidayActive():
+            self.serverHolidayStart(None)
 
     def delete(self):
         DistributedInteractiveAI.delete(self)
@@ -38,7 +42,7 @@ class DistributedHolidayObjectAI(DistributedInteractiveAI):
     def setHoliday(self, holiday):
         self.holiday = holiday
 
-    def getHoliday(self, holiday):
+    def getHoliday(self):
         return self.holiday
 
     def isObjectActive(self):
@@ -59,8 +63,7 @@ class DistributedHolidayObjectAI(DistributedInteractiveAI):
             return
 
         if self.isHolidayActive():
-            interactMode = self.INTERACT_MODES.get(self.activeInteractMode, 'None')  
-            self.b_setInteractMode(interactMode)
+            self.b_setInteractMode(self.getActiveInteractModeId())
             self.holidayStart()
             
     def holidayStart(self):
@@ -71,8 +74,8 @@ class DistributedHolidayObjectAI(DistributedInteractiveAI):
         if not self.isObjectActive():
             return
 
-        if self.isHolidayActive():
-            self.b_setInteractMode(self.DENY_INTERACT)
+        if not self.isHolidayActive():
+            self.b_setInteractMode(self.INTERACT_NONE)
             self.holidayEnd()
 
     def holidayEnd(self):
@@ -108,8 +111,15 @@ class DistributedHolidayObjectAI(DistributedInteractiveAI):
     def setActiveInteractMode(self, mode):
         self.activeInteractMode = mode
 
-    def getActiveInteractMode(self, mode):
+    def getActiveInteractMode(self):
         return self.activeInteractMode
+
+    def getActiveInteractModeId(self):
+        # World data stores the mode by name ('All', 'GM' or 'None').
+        if isinstance(self.activeInteractMode, int):
+            return self.activeInteractMode
+
+        return self.INTERACT_MODES.get(self.activeInteractMode, self.INTERACT_NONE)
 
     def handleHolidayInteract(self, avatar, interactType, instant):
         self.notify.warning('%s does not implement handleHolidayInteract' % self.__class__.__name__)
@@ -130,3 +140,5 @@ class DistributedHolidayObjectAI(DistributedInteractiveAI):
 
         if canInteract:
             return self.handleHolidayInteract(avatar, interactType, instant)
+
+        return self.DENY

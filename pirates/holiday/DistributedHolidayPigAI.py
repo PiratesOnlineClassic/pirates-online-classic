@@ -55,7 +55,8 @@ class DistributedHolidayPigAI(DistributedHolidayObjectAI):
 
         inventory = avatar.getInventory()
         if not inventory:
-            return
+            self.d_makeTradeResponse(avatar.doId, self.ROAST_ERROR)
+            return self.DENY
 
         porkQuantity = inventory.getStackQuantity(InventoryType.PorkChunk)
         porkMaxQuantity = inventory.getStackLimit(InventoryType.PorkChunk)
@@ -66,7 +67,7 @@ class DistributedHolidayPigAI(DistributedHolidayObjectAI):
             return self.ACCEPT
 
         if porkQuantity != porkMaxQuantity:
-            inventory.b_setStackQuantity(InventoryType.PorkChunk, 10)
+            inventory.b_setStackQuantity(InventoryType.PorkChunk, porkMaxQuantity or 10)
             self.d_makeTradeResponse(avatar.doId, self.ROAST_GIVEN)
         else:
             self.d_makeTradeResponse(avatar.doId, self.ROAST_ERROR)
