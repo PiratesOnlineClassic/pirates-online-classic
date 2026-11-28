@@ -240,7 +240,7 @@ class AwardTests(unittest.TestCase):
         with patch.object(builtins, 'taskMgr', taskMgr, create=True):
             maker = AwardMakerUD.__new__(AwardMakerUD)
             maker.air = Mock()
-            maker.air.dclassesByName = {'AvatarAccessoriesManager': Mock()}
+            maker.air.dclassesByName = {'AvatarAccessoriesManagerUD': Mock()}
             maker.doId = 4702
             maker.context = 0
             maker.pendingAwards = {}

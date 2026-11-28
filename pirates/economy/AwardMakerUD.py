@@ -40,7 +40,7 @@ class AwardMakerUD(DistributedObjectGlobalUD):
         taskMgr.doMethodLater(AwardGlobals.AwardTimeout, self.__awardTimeout,
             self.uniqueName('awardTimeout-%d' % context), extraArgs=[context])
 
-        dclass = self.air.dclassesByName['AvatarAccessoriesManager']
+        dclass = self.air.getDcFile().getClassByName('AvatarAccessoriesManager')
         datagram = dclass.aiFormatUpdate('requestAward', OTP_DO_ID_PIRATES_AVATAR_ACCESSORIES_MANAGER,
             OTP_DO_ID_PIRATES_AVATAR_ACCESSORIES_MANAGER, self.air.ourChannel,
             [context, awardType, avatarId, itemId, quantity])

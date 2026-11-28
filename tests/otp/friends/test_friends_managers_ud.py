@@ -99,6 +99,9 @@ class FakeAir:
         self.events = []
         self.sender = 0
 
+    def getDcFile(self):
+        return getDcFile()
+
     def getAvatarIdFromSender(self):
         return self.sender & 0xFFFFFFFF
 

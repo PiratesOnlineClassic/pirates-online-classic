@@ -14,7 +14,9 @@ class FriendsTestBase(unittest.TestCase):
 
     def setUp(self):
         self.air = FakeAir()
-        self.air.dclassesByName['DistributedDinghy'] = getDcFile().getClassByName('DistributedDinghy')
+        # The UD keys a class that has no UD view by its AI name, so the
+        # dinghy must be found through the dc file rather than by name.
+        self.air.dclassesByName['DistributedDinghyAI'] = getDcFile().getClassByName('DistributedDinghy')
         self.air.msgSender = 0
         self.air.getMsgSender = lambda: self.air.msgSender
 
