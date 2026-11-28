@@ -104,6 +104,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.questStatus = None
         self.isNpc = False
 
+        # players are always on the player team, the client's TeamUtils and the
+        # pvp damage rules of BattleManagerBase depend on it...
+        self.setTeam(PiratesGlobals.PLAYER_TEAM)
+
         self.avatarType = AvatarTypes.Pirate
         self.inventoryId = 0
         self.guildId = 0

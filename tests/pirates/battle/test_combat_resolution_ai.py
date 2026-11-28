@@ -125,5 +125,16 @@ class SkillEffectIdTests(unittest.TestCase):
         self.assertEqual(covered, -1)
 
 
+class PlayerTeamTests(unittest.TestCase):
+
+    def test_players_are_on_the_player_team(self):
+        player = DistributedPlayerPirateAI(MagicMock())
+        self.assertEqual(player.getTeam(), PiratesGlobals.PLAYER_TEAM)
+
+        other = DistributedPlayerPirateAI(MagicMock())
+        manager = BattleManagerAI.__new__(BattleManagerAI)
+        self.assertTrue(manager.isPVP(player, other))
+
+
 if __name__ == '__main__':
     unittest.main()
