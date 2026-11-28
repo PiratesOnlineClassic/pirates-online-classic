@@ -67,6 +67,7 @@ from pirates.flag.FlagDNA import FlagDNA
 from pirates.ship import ShipGlobals
 from pirates.ship.DistributedShipAI import DistributedShipAI
 from pirates.ship.GameFSMShipAI import GameFSMShipAI
+from direct.task import Task
 from pirates.ship.NPCShipAI import NPCShipAI
 from pirates.ship.PlayerShipAI import PlayerShipAI
 from pirates.ship.ShipManagerAI import ShipManagerAI
@@ -568,6 +569,26 @@ class GameFSMShipAITests(_TaskPatchedTestCase):
 
         self.assertAlmostEqual(abs(self.ship.getH()), turnRates[0] * fsm.MovePeriod, places=3)
         self.assertAlmostEqual(self.ship.getPos().length(), speeds[1] * fsm.MovePeriod, places=3)
+
+    def test_ship_sails_in_ocean_grid_space_from_a_cell_origin(self):
+        # like DistributedNodeAI.setLocation, the ship sits under the cell origin of
+        # it's grid zone, so it's own position is relative to that cell...
+        fsm = self.makeShips()
+        grid = self.ship.getParentObj()
+        cellOrigin = grid.attachNewNode('cellOrigin-1234')
+        cellOrigin.setPos(20000, -14000, 0)
+        self.ship.reparentTo(cellOrigin)
+        self.ship.setPos(grid, 20000, -14000, 0)
+        fsm.oceanGrid = grid
+
+        fsm._startMovementTo(Point3(20000, -13000, 0), 100.0)
+        for _ in range(200):
+            if fsm._moveTask(None) == Task.done:
+                break
+
+        pos = self.ship.getPos(grid)
+        self.assertLess((pos - Point3(20000, -13000, 0)).length(), fsm.WaypointRadius)
+        self.assertIsNone(fsm._currentDestination)
 
     def test_ship_steers_around_islands(self):
         fsm = self.makeShips()

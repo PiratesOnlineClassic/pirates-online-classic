@@ -83,6 +83,15 @@ class GameFSMShipAI(FSM.FSM):
         if self.world is None and self.oceanGrid:
             self.world = self.oceanGrid.getParentObj()
 
+    def _getGridPos(self, obj):
+        # ships sit under the ocean grid's cell origins, so their own position is
+        # relative to the cell they're in. The ai works in ocean grid space...
+        self._initWorldRefs()
+        if self.oceanGrid is not None and not self.oceanGrid.isEmpty():
+            return obj.getPos(self.oceanGrid)
+
+        return obj.getPos()
+
     def cleanup(self):
         self._stopAllTasks()
         self.targetShip = None
@@ -143,7 +152,7 @@ class GameFSMShipAI(FSM.FSM):
     # Targeting:
 
     def _getDistanceToTarget(self, target):
-        return (target.getPos() - self.ship.getPos()).length()
+        return (self._getGridPos(target) - self._getGridPos(self.ship)).length()
 
     def _isValidTarget(self, target):
         # NPC ships only ever fight player ships, they leave each other alone...
@@ -284,7 +293,7 @@ class GameFSMShipAI(FSM.FSM):
         return Point3(homeX, homeY, 0)
 
     def _calculateHeadingTo(self, destination):
-        pos = self.ship.getPos()
+        pos = self._getGridPos(self.ship)
         return -math.degrees(math.atan2(destination[0] - pos[0], destination[1] - pos[1]))
 
     def _normalizeAngle(self, angle):
@@ -333,7 +342,7 @@ class GameFSMShipAI(FSM.FSM):
         if target and self._isValidTarget(target) and self._getDistanceToTarget(target) < self.BroadsideRange:
             # once in range the ship sails alongside the target, putting
             # whichever beam needs the least amount of turning toward it:
-            bearing = self._calculateHeadingTo(target.getPos())
+            bearing = self._calculateHeadingTo(self._getGridPos(target))
             leftBeam = self._normalizeAngle(bearing - 90.0)
             rightBeam = self._normalizeAngle(bearing + 90.0)
             if abs(self._normalizeAngle(leftBeam - self.ship.getH())) < abs(self._normalizeAngle(rightBeam - self.ship.getH())):
@@ -341,7 +350,8 @@ class GameFSMShipAI(FSM.FSM):
             else:
                 heading = rightBeam
 
-        x, y = self.ship.getX(), self.ship.getY()
+        pos = self._getGridPos(self.ship)
+        x, y = pos[0], pos[1]
         blocking = self._getBlockingIsland(x + -math.sin(math.radians(heading)) * self.IslandBuffer,
             y + math.cos(math.radians(heading)) * self.IslandBuffer)
         if blocking:
@@ -368,10 +378,14 @@ class GameFSMShipAI(FSM.FSM):
         heading += max(-maxTurn, min(maxTurn, turn))
 
         distance = self._movementSpeed * dt
-        x = self.ship.getX() + -math.sin(math.radians(heading)) * distance
-        y = self.ship.getY() + math.cos(math.radians(heading)) * distance
+        pos = self._getGridPos(self.ship)
+        x = pos[0] + -math.sin(math.radians(heading)) * distance
+        y = pos[1] + math.cos(math.radians(heading)) * distance
         x, y = self._clampToGridBounds(x, y)
-        self.ship.setPosHpr(x, y, 0, heading, 0, 0)
+        if self.oceanGrid is not None and not self.oceanGrid.isEmpty():
+            self.ship.setPosHpr(self.oceanGrid, x, y, 0, heading, 0, 0)
+        else:
+            self.ship.setPosHpr(x, y, 0, heading, 0, 0)
 
         if self._broadsideTarget is None:
             if (self._currentDestination - Point3(x, y, 0)).length() < self.WaypointRadius:
@@ -431,7 +445,7 @@ class GameFSMShipAI(FSM.FSM):
     def enterPatrol(self):
         self._initWorldRefs()
         if self.homePos is None:
-            self.homePos = self.ship.getPos()
+            self.homePos = self._getGridPos(self.ship)
 
         self.targetShip = None
         self.targetDoId = 0
@@ -471,7 +485,7 @@ class GameFSMShipAI(FSM.FSM):
 
             self.targetDoId = self.targetShip.doId
 
-        self._startMovementTo(self.targetShip.getPos(), self._getShipSpeed(combatMode=True))
+        self._startMovementTo(self._getGridPos(self.targetShip), self._getShipSpeed(combatMode=True))
         self._broadsideTarget = self.targetShip
         self._attemptBroadside(self.targetShip)
         return Task.again
