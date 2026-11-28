@@ -7,6 +7,7 @@ import time
 import urllib.request, urllib.error, urllib.parse
 
 from panda3d.core import *
+from panda3d.direct import DCPacker
 
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
@@ -1100,6 +1101,11 @@ class PopulateAvatarFSM(AvatarOperationFSM):
             self.demand('Kill', "One of the account's avatars is invalid!")
             return
 
+        # Make-A-Pirate is only ever shown at the very start of the tutorial...
+        if fields.get('setTutorial', (PiratesGlobals.TUT_STARTED,))[0] > PiratesGlobals.TUT_STARTED:
+            self.demand('Kill', 'Tried to populate an avatar that has already been made!')
+            return
+
         self.avatarFields = fields
         self.demand('UpdateAvatar')
 
@@ -1165,6 +1171,10 @@ class PopulateAvatarFSM(AvatarOperationFSM):
                 updateFields['WishName'] = ('',)
                 updateFields['setName'] = (name,)
 
+        # The avatar's tutorial progress is owned by the AI, the client's
+        # Make-A-Pirate DNA must never roll it back...
+        updateFields.pop('setTutorial', None)
+
         # Update the avatar in the database
         self.csm.air.dbInterface.updateObject(
             self.csm.air.dbId,
@@ -1172,9 +1182,39 @@ class PopulateAvatarFSM(AvatarOperationFSM):
             self.csm.air.dclassesByName['DistributedPlayerPirateUD'],
             updateFields)
 
+        # The avatar is populated from inside of the tutorial while it is already
+        # active on the state server, update the live object as well so the AI
+        # and other clients see the new pirate without having to log out first...
+        self.sendLiveAvatarFields(updateFields)
+
         self.csm.air.writeServerEvent('avatarPopulated', avId=self.avId, target=self.target)
         self.csm.sendUpdateToAccountId(self.target, 'populateAvatarResp', [True])
         self.demand('Off')
+
+    def sendLiveAvatarFields(self, fields):
+        dclass = self.csm.air.dclassesByName['DistributedPlayerPirateUD']
+        fieldPacker = DCPacker()
+        fieldCount = 0
+        for fieldName, value in list(fields.items()):
+            field = dclass.getFieldByName(fieldName)
+            if field is None:
+                continue
+
+            fieldPacker.rawPackUint16(field.getNumber())
+            fieldPacker.beginPack(field)
+            field.packArgs(fieldPacker, value)
+            fieldPacker.endPack()
+            fieldCount += 1
+
+        if not fieldCount:
+            return
+
+        dg = PyDatagram()
+        dg.addServerHeader(self.avId, self.csm.air.ourChannel, STATESERVER_OBJECT_SET_FIELDS)
+        dg.addUint32(self.avId)
+        dg.addUint16(fieldCount)
+        dg.appendData(fieldPacker.getBytes())
+        self.csm.air.send(dg)
 
 
 # --- CLIENT SERVICES MANAGER UBERDOG ---
