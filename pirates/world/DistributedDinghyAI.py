@@ -162,6 +162,16 @@ class DistributedDinghyAI(DistributedInteractiveAI):
             self.d_sendAvatarToShip(avatar.doId, 0)
             return
 
+        # privateer dinghys put the deployed ship on a siege team, the client
+        # requests the other team (teamSpec) when its own team is full...
+        siegeTeam = 0
+        if self.siegeTeam and self.air.siegeManager.getPvpEnabled():
+            siegeTeam = teamSpec or self.siegeTeam
+            denyReason = self.air.siegeManager.getJoinDenialCode(siegeTeam)
+            if denyReason is not None:
+                self.d_denyAccess(avatar.doId, denyReason)
+                return
+
         def deployShipCallback(success):
             if not success:
                 self.d_sendAvatarToShip(avatar.doId, 0)
@@ -174,6 +184,9 @@ class DistributedDinghyAI(DistributedInteractiveAI):
 
                 self.d_sendAvatarToShip(avatar.doId, 0)
                 return
+
+            if siegeTeam:
+                self.air.siegeManager.addShipToTeam(ship, siegeTeam)
 
             self.sendAvatarToShip(avatar, ship)
 
@@ -189,6 +202,9 @@ class DistributedDinghyAI(DistributedInteractiveAI):
 
         self.air.worldGridManager.handleLocationChanged(ship.getParentObj(), avatar, ship.zoneId,
             callback=_interestDoneCallback)
+
+    def d_denyAccess(self, avatarId, reason):
+        self.sendUpdateToAvatarId(avatarId, 'denyAccess', [reason])
 
     def d_sendAvatarToShip(self, avatarId, shipId):
         self.sendUpdateToAvatarId(avatarId, 'sendAvatarToShip', [shipId])

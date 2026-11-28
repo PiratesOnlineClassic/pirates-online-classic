@@ -6,6 +6,7 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.interact.DistributedSearchableContainerAI import DistributedSearchableContainerAI
 from pirates.world.DistributedDinghyAI import DistributedDinghyAI
+from pirates.battle.DistributedIslandCannonAI import DistributedIslandCannonAI
 from pirates.treasuremap.DistributedBuriedTreasureAI import DistributedBuriedTreasureAI
 from pirates.treasuremap.DistributedSurfaceTreasureAI import DistributedSurfaceTreasureAI
 
@@ -17,12 +18,16 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
         GameAreaBuilderAI.__init__(self, air, parent)
 
         self.wantDinghys = config.GetBool('want-dinghys', True)
+        self.wantIslandCannons = config.GetBool('want-island-cannons', True)
+        self.cannonIndex = 0
 
     def createObject(self, objType, objectData, parent, parentUid, objKey, dynamic, parentIsObj=False, fileName=None, actualParentObj=None):
         if objType == ObjectList.AREA_TYPE_ISLAND_REGION:
             newObj = self.createGameArea(objectData, parent, parentUid, objKey, dynamic)
         elif objType == 'Dinghy' and self.wantDinghys:
             newObj = self.createDinghy(parent, parentUid, objKey, objectData)
+        elif objType == 'Cannon' and self.wantIslandCannons:
+            newObj = self.createIslandCannon(parent, parentUid, objKey, objectData)
         else:
             newObj = GameAreaBuilderAI.createObject(self, objType, objectData, parent, parentUid,
                 objKey, dynamic, parentIsObj, fileName, actualParentObj)
@@ -77,9 +82,33 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
         dinghy.setPos(objectData.get('Pos', (0, 0, 0)))
         dinghy.setHpr(objectData.get('Hpr', (0, 0, 0)))
         dinghy.setInteractRadius(float(objectData.get('Aggro Radius', 25)))
+        dinghy.setSiegeTeam(self.parent.getSiegeTeam())
 
         zoneId = self.parent.getZoneFromXYZ(dinghy.getPos())
         parent.generateChildWithRequired(dinghy, zoneId)
         self.parentObjectToCell(dinghy, zoneId)
         self.addObject(dinghy)
         return dinghy
+
+    def createIslandCannon(self, parent, parentUid, objKey, objectData):
+        # cannons mounted on a fort are owned by that fort (see TreasureMapBlackPearlWorldBuilderAI)
+        parentData = self.air.worldCreator.getObjectDataByUid(parentUid)
+        if parentData and parentData.get('Type') == 'Simple Fort':
+            return None
+
+        cannon = DistributedIslandCannonAI(self.air)
+        cannon.setUniqueId(objKey)
+        cannon.setPos(objectData.get('GridPos', objectData.get('Pos', (0, 0, 0))))
+        cannon.setHpr(objectData.get('Hpr', (0, 0, 0)))
+        cannon.setCannonIndex(self.cannonIndex)
+        cannon.setIslandId(self.parent.doId)
+
+        # cannons on a privateer island can be knocked out by the enemy team
+        cannon.setIsDestructable(int(bool(self.parent.getSiegeTeam())))
+        self.cannonIndex += 1
+
+        zoneId = self.parent.getZoneFromXYZ(cannon.getPos())
+        self.parent.generateChildWithRequired(cannon, zoneId)
+        self.parentObjectToCell(cannon, zoneId)
+        self.addObject(cannon)
+        return cannon

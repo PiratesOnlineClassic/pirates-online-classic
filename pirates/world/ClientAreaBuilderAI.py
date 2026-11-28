@@ -261,6 +261,7 @@ class ClientAreaBuilderAI(DirectObject):
         island.setModelPath(islandWorldData['Visual']['Model'])
         island.setScale(objectData.get('Scale', (1, 1, 1)))
         island.setUndockable(objectData.get('Undockable', False))
+        island.setSiegeTeam(int(objectData.get('PVPTeam', islandWorldData.get('PVPTeam', 0))))
 
         portCollisionSpheres = []
         if 'Objects' in islandWorldData:
