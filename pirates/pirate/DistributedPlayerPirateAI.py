@@ -58,6 +58,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.activeShipId = 0
         self.crewShipId = 0
         self.questRewardFlags = 0
+        self.bandManagerId = 0
+        self.bandId = 0
 
     def announceGenerate(self):
         DistributedPlayerAI.announceGenerate(self)
@@ -164,6 +166,30 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def getGuildId(self):
         return self.guildId
+
+    def setBandId(self, bandManagerId, bandId):
+        self.bandManagerId = bandManagerId
+        self.bandId = bandId
+
+    def d_setBandId(self, bandManagerId, bandId):
+        self.sendUpdate('setBandId', [bandManagerId, bandId])
+
+    def b_setBandId(self, bandManagerId, bandId):
+        self.setBandId(bandManagerId, bandId)
+        self.d_setBandId(bandManagerId, bandId)
+
+    def getBandId(self):
+        return (self.bandManagerId, self.bandId)
+
+    def setHp(self, hp, quietly=False):
+        DistributedBattleAvatarAI.setHp(self, hp, quietly)
+        if self.isGenerated():
+            self.air.bandManager.updateAvatarHp(self)
+
+    def setMaxHp(self, maxHp):
+        DistributedBattleAvatarAI.setMaxHp(self, maxHp)
+        if self.isGenerated():
+            self.air.bandManager.updateAvatarHp(self)
 
     def setGuildName(self, guildName):
         self.guildName = guildName
@@ -680,6 +706,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
     def setActiveShipId(self, activeShipId):
         self.activeShipId = activeShipId
+        if self.isGenerated():
+            self.air.bandManager.updateAvatarShipInfo(self)
 
     def d_setActiveShipId(self, activeShipId):
         self.sendUpdate('setActiveShipId', [activeShipId])

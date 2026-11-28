@@ -50,6 +50,11 @@ class PiratesInternalRepository(OTPInternalRepository):
         self._registerInternalNetMessage('activateShip')
         self._registerInternalNetMessage('activateShipResponse')
 
+        # DistributedPirateBandManager
+        self._registerInternalNetMessage('bandRequest')
+        self._registerInternalNetMessage('bandRelayToAvatar')
+        self._registerInternalNetMessage('bandAvatarBandId')
+
     def logPotentialHacker(self, message, kickChannel=False, **kwargs):
         self.notify.warning(message)
 
