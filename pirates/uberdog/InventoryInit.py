@@ -427,6 +427,20 @@ for i in range(52):
 for i in range(InventoryType.begin_Songs, InventoryType.end_Songs):
     StackLimits[i] = 1
 
+AmmoPouches = (
+    InventoryType.PistolPouchL1,
+    InventoryType.PistolPouchL2,
+    InventoryType.PistolPouchL3,
+    InventoryType.DaggerPouchL1,
+    InventoryType.DaggerPouchL2,
+    InventoryType.DaggerPouchL3,
+    InventoryType.GrenadePouchL1,
+    InventoryType.GrenadePouchL2,
+    InventoryType.GrenadePouchL3,
+    InventoryType.CannonPouchL1,
+    InventoryType.CannonPouchL2,
+    InventoryType.CannonPouchL3)
+
 StartingStacks = {
     # Weapons
     InventoryType.CutlassWeaponL1: 0, # Given by Will Turner during the 2.1 cutscene
@@ -458,7 +472,7 @@ StartingStacks = {
 
     # Weapon Tokens
     InventoryType.CutlassToken: 0, # Given by Will Turner during the 2.1 cutscene
-    InventoryType.FirstDeathToken: 1,
+    InventoryType.FirstDeathToken: 0, # Set once the client has shown the first defeat message
 
     # Teleport Tokens
     InventoryType.TortugaTeleportToken: 0,

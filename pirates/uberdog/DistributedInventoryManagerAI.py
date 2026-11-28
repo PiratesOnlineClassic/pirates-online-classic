@@ -152,6 +152,8 @@ class LoadInventoryFSM(InventoryOperationFSM):
         if not self.inventory or not self.avatar:
             return
         try:
+            self.inventory.updateStackLimits()
+            self.inventory.updateSkillUnlocks()
             self.inventory.b_setStackLimit(InventoryType.Hp, self.avatar.getMaxHp())
             self.inventory.b_setStackLimit(InventoryType.Mojo, self.avatar.getMaxMojo())
         except Exception:

@@ -7,6 +7,7 @@ from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.uberdog.TreasureMapInventoryAI import TreasureMapInventoryAI
 from pirates.uberdog import InventoryInit
+from pirates.economy import EconomyGlobals
 
 class PirateInventoryAI(DistributedInventoryAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('PirateInventoryAI')
@@ -99,6 +100,41 @@ class PirateInventoryAI(DistributedInventoryAI):
     def getReputation(self, repType):
         return self.getAccumulator(repType)
 
+    def updateStackLimits(self):
+        # inventories are only given the stack limits known when they were
+        # created, give older inventories any limits added since. The client
+        # will not let the avatar train a skill that has no stack limit...
+        stackLimits = dict(self.stackLimits)
+        for stackType, limit in list(InventoryInit.StackLimits.items()):
+            stackLimits.setdefault(stackType, limit)
+
+        # the ammo pouches owned raise the limits of the ammo they carry...
+        for pouchId in InventoryInit.AmmoPouches:
+            if not self.getStackQuantity(pouchId):
+                continue
+
+            ammoList = EconomyGlobals.getPouchAmmoList(EconomyGlobals.getItemType(pouchId)) or []
+            for ammoId, limit in zip(ammoList, EconomyGlobals.getInventoryBonus(pouchId) or []):
+                stackLimits[ammoId] = max(stackLimits.get(ammoId, 0), limit)
+
+        if stackLimits == self.stackLimits:
+            return
+
+        self.b_setStackLimits(list(stackLimits.items()))
+
+    def updateSkillUnlocks(self):
+        # make sure every skill unlocked by the avatar's weapon levels has
+        # been given, the client only shows unlocked skills on the skill page...
+        for repType in ReputationGlobals.getReputationCategories():
+            level, _ = ReputationGlobals.getLevelFromTotalReputation(repType, self.getReputation(repType))
+            for unlockLevel in range(level + 1):
+                for skillId in RepChart.getLevelUpSkills(repType, unlockLevel)[1]:
+                    if InventoryType.begin_Unspent <= skillId < InventoryType.end_Unspent:
+                        continue
+
+                    if not self.getStackQuantity(skillId):
+                        self.b_setStackQuantity(skillId, 1)
+
     def setOverallRep(self, quantity):
         self.setReputation(InventoryType.OverallRep, quantity)
 
@@ -112,7 +148,8 @@ class PirateInventoryAI(DistributedInventoryAI):
         return self.getReputation(InventoryType.GeneralRep)
 
     def setGoldInPocket(self, quantity):
-        self.b_setStackQuantity(InventoryType.GoldInPocket, min(quantity, 65000))
+        # the gold carried is capped by it's stack limit, see InventoryInit...
+        self.b_setStackQuantity(InventoryType.GoldInPocket, max(0, quantity))
 
     def addGoldInPocket(self, quantity):
         newsManager = self.air.newsManager
