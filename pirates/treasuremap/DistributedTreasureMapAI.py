@@ -116,34 +116,46 @@ class DistributedTreasureMapAI(DistributedInventoryAI):
         self.notify.info('Avatar %d requests to start treasure map %d (type=%d)' % (
             avatarId, self.mapId, instanceType))
 
+        self.startInstance(avatar)
+
+    def startInstance(self, avatar, participantIds=[]):
+        """
+        Starts the treasure map instance for the owner, any participants (the owner's
+        crew, gathered by the lookout) are sent along to the instance with them.
+        """
+
         if not self.isEnabled:
             self.notify.warning('Treasure map %d is not enabled' % self.mapId)
-            return
+            return False
 
         if self.startPending:
-            return
+            return False
         if (self.activeInstance and
                 self.air.doId2do.get(self.activeInstance.doId) is self.activeInstance and
-                avatarId in self.activeInstance.participants):
-            return
+                avatar.doId in self.activeInstance.participants):
+            return False
 
         # Get the treasure map style info
         mapStyle = PiratesGlobals.DYNAMIC_GAME_STYLE_PROPS[PiratesGlobals.GAME_TYPE_TM].get(self.mapId)
         if not mapStyle or not mapStyle.get('MapName'):
             self.notify.warning('Unknown treasure map style %d' % self.mapId)
-            return
+            return False
         mapName = mapStyle['MapName']
 
         self.notify.info('Starting treasure map instance: %s' % mapName)
 
         # Request creation of the treasure map instance world
+        self.participants = [avatarId for avatarId in participantIds if avatarId != avatar.doId]
         self.startPending = True
         try:
             if not self._createTreasureMapInstance(avatar, mapName):
                 self.startPending = False
+                return False
         except Exception:
             self.startPending = False
             raise
+
+        return True
 
     def _createTreasureMapInstance(self, avatar, mapName):
         """Create the treasure map instance and teleport the player there"""
@@ -206,6 +218,17 @@ class DistributedTreasureMapAI(DistributedInventoryAI):
         self.notify.info('Treasure map instance created: %d, teleporting avatar %d' % (
             instanceDoId, avatar.doId))
 
+        participants = [avatar]
+        for participantId in self.participants:
+            participant = self.air.doId2do.get(participantId)
+            if participant:
+                participants.append(participant)
+
+        self.participants = []
+        for participant in participants:
+            self._sendAvatarToInstance(instance, participant)
+
+    def _sendAvatarToInstance(self, instance, avatar):
         instance.addParticipant(avatar.doId)
         air = self.air
 
