@@ -399,10 +399,14 @@ class HeldEnemyMovementTests(unittest.TestCase):
             self.assertEqual(fakeTaskMgr.doMethodLater.call_args[0][0], fsm.StunnedAttackDelay)
 
     def test_free_enemies_chase(self):
+        # a chasing enemy walks up to within reach of it's target (getChasePoint),
+        # not onto the very spot it is standing on...
         fsm, _ = self.makeFSM([])
         target = Mock()
+        fsm.getChasePoint = Mock(return_value='chase-point')
         fsm._walkToPoint(target)
-        fsm.walkToPoint.assert_called_once_with(target.getPos(), target.getParent())
+        fsm.getChasePoint.assert_called_once_with(target)
+        fsm.walkToPoint.assert_called_once_with('chase-point', target.getParent())
 
 
 class NPCPositionBroadcastTests(unittest.TestCase):
