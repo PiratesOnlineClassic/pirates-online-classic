@@ -44,7 +44,7 @@ def checkName(name, otherCheckFuncs = []):
                 return OTPLocalizer.NCGeneric
 
     def badCharacters(name):
-        okChars = ".,'-" + string.letters + string.whitespace
+        okChars = ".,'-" + string.ascii_letters + string.whitespace
         allowUtf8Name = base.config.GetBool('allow-utf8-name', 1)
         for char in name:
             if ord(char) >= 128:
@@ -73,7 +73,7 @@ def checkName(name, otherCheckFuncs = []):
                 if ord(char) >= 128:
                     hasUtf8 = 1
 
-            letters = filterString(word, string.letters)
+            letters = filterString(word, string.ascii_letters)
             if len(letters) == 0 and not hasUtf8:
                 notify.info('word "%s" has no letters' % word)
                 return OTPLocalizer.NCNeedLetters
@@ -88,7 +88,7 @@ def checkName(name, otherCheckFuncs = []):
                 if ord(char) >= 128:
                     return None
 
-            letters = filterString(word, string.letters)
+            letters = filterString(word, string.ascii_letters)
             if len(letters) > 2:
                 vowels = filterString(letters, 'aeiouyAEIOUY')
                 if len(vowels) == 0:
@@ -107,7 +107,7 @@ def checkName(name, otherCheckFuncs = []):
                 if ord(char) >= 128:
                     return None
 
-            letters = filterString(word, string.letters)
+            letters = filterString(word, string.ascii_letters)
             letters = TextEncoder.lower(letters)
             if len(letters) > 2:
                 filtered = filterString(letters, letters[0])
@@ -126,10 +126,10 @@ def checkName(name, otherCheckFuncs = []):
             if index == 0 or i == len(name) - 1:
                 return 0
 
-            if name[i - 1] not in string.letters:
+            if name[i - 1] not in string.ascii_letters:
                 return 0
 
-            if name[i + 1] not in string.letters:
+            if name[i + 1] not in string.ascii_letters:
                 return 0
 
             return 1
@@ -180,7 +180,7 @@ def checkName(name, otherCheckFuncs = []):
             numPeriods = word.count('.')
             if not numPeriods:
                 continue
-            letters = filterString(word, string.letters)
+            letters = filterString(word, string.ascii_letters)
             numLetters = len(letters)
             if word[-1] != '.':
                 notify.info('word "%s" does not end in a period' % word)
@@ -214,7 +214,7 @@ def checkName(name, otherCheckFuncs = []):
             return OTPLocalizer.NCTooManyWords
 
     def allCaps(name):
-        letters = filterString(name, string.letters)
+        letters = filterString(name, string.ascii_letters)
         if len(letters) > 2:
             if TextEncoder.upper(letters) == letters:
                 notify.info('name is all caps')
@@ -224,7 +224,7 @@ def checkName(name, otherCheckFuncs = []):
         words = wordList(name)
         for word in words:
             if len(word) > 2:
-                capitals = filterString(word, string.uppercase)
+                capitals = filterString(word, string.ascii_uppercase)
                 if len(capitals) > 2:
                     notify.info('name has mixed case')
                     return OTPLocalizer.NCMixedCase
