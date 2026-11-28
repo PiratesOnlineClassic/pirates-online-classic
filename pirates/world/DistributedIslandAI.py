@@ -1,6 +1,7 @@
 from direct.distributed.DistributedCartesianGridAI import DistributedCartesianGridAI
 from direct.directnotify import DirectNotifyGlobal
 
+from pirates.quest.QuestConstants import LocationIds
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.battle.Teamable import Teamable
 from pirates.world import WorldGlobals
@@ -165,7 +166,14 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         return self.collisionSpheres
 
     def requestEntryToIsland(self):
-        pass
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        # only paid members may sail into Kingshead, the client checks this
+        # as well but we cannot trust it to do so...
+        if self.getUniqueId() == LocationIds.KINGSHEAD_ISLAND and not avatar.isPaid():
+            self.d_deniedEntryToIsland(avatar.doId)
 
     def d_deniedEntryToIsland(self, avatarId):
         self.sendUpdateToAvatarId(avatarId, 'deniedEntryToIsland', [])

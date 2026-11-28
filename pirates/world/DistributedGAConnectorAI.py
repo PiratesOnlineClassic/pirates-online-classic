@@ -113,5 +113,11 @@ class DistributedGAConnectorAI(DistributedNodeAI):
         self.air.worldGridManager.handleLocationChanged(otherConnector.getParentObj(), avatar,
             otherConnector.zoneId, _connectorInterestCallback)
 
+    def setPrivateArea(self, worldId, worldZoneId, areaDoId, autoFadeIn):
+        # the private area is only ever assigned by the AI in response to requestPrivateArea,
+        # a client should never be sending this field to us...
+        self.air.logPotentialHacker(message='Received setPrivateArea from a client!',
+            connectorId=self.doId)
+
     def d_setPrivateArea(self, avatarId, worldId, worldZoneId, areaDoId, autoFadeIn):
         self.sendUpdateToAvatarId(avatarId, 'setPrivateArea', [worldId, worldZoneId, areaDoId, autoFadeIn])
