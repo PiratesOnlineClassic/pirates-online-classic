@@ -409,6 +409,9 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.__movementInterval.setDoneEvent(self.getWalkToPointDoneName())
         self.__movementInterval.start()
 
+        # broadcast the walk until we come to rest again:
+        self.avatar.kickPosHprBroadcast()
+
     def _stopMovement(self):
         # stop walking where we currently are; we do not finish the interval
         # since that would warp us to the end point and send the done event
@@ -632,6 +635,8 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
                 self.avatar.setHpr(spawnNode.getSpawnHpr())
             else:
                 self.avatar.setHpr(spawnNode.objectData.get('Hpr', (0, 0, 0)))
+
+            self.avatar.kickPosHprBroadcast()
 
         # reset the avatar's mojo and health
         self.avatar.b_setHp(self.avatar.getMaxHp())

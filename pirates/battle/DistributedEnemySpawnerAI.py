@@ -215,7 +215,6 @@ class SpawnNodeBase:
             self.__died(self._npc)
 
     def __died(self, npc):
-        taskMgr.remove(npc.uniqueName('update-pos-task'))
         npc.requestDelete()
         self._npc = None
 
@@ -226,7 +225,6 @@ class SpawnNodeBase:
 
             return
 
-        taskMgr.remove(self._npc.uniqueName('update-pos-task'))
         self._npc.requestDelete()
         self._npc = None
 
@@ -264,26 +262,6 @@ class SpawnNodeBase:
 
         self.__spawn()
         return Task.done
-
-    def __updateNPC(self, task):
-        if not self._npc:
-            return task.done
-
-        x, y, z = self._npc.getPos()
-        h, p, r = self._npc.getHpr()
-
-        # setSmPosHpr's components are ram fields, so the state server already holds
-        # the npc's last position for anyone gaining interest. Only broadcast it when
-        # the npc actually moved, thousands of idle npcs re-sending their position
-        # every tick floods the message director until the AI's connection drops...
-        posHpr = (x, y, z, h, p, r)
-        if posHpr == getattr(self._npc, '_lastBroadcastPosHpr', None):
-            return task.again
-
-        self._npc._lastBroadcastPosHpr = posHpr
-        timestamp = globalClockDelta.getRealNetworkTime(bits=16)
-        self._npc.sendUpdate('setSmPosHpr', [x, y, z, h, p, r, timestamp])
-        return task.again
 
     def __spawn(self, task=None):
         # Create the npc class
@@ -423,14 +401,15 @@ class SpawnNodeBase:
         npc.setPos(self.parent, (sx, sy, sz))
         npc.setZ(sz)
 
-        # TODO FIXME!
-        #npc.startPosHprBroadcast()
-
         # Save a copy of the npc and tell it about myself. This will come in handy
         self._npc = npc
         npc.setSpawnNode(self)
 
         npc.d_setInitZ(npc.getZ())
+
+        # the npc only broadcasts it's position while it moves (see PosHprBroadcasterAI),
+        # the state server holds it's spawn position for anyone gaining interest...
+        npc.sendCurrentPosition()
 
         # setAmbush is not a required field, the client only checks for it's
         # existance so only send it to the npcs that are actually ambushing...
@@ -439,8 +418,6 @@ class SpawnNodeBase:
 
         npc.d_setSpawnIn()
         npc.b_setGameState(npc.getStartState())
-
-        taskMgr.doMethodLater(0.2, self.__updateNPC, npc.uniqueName('update-pos-task'))
 
         # Print out useful debugging information
         locationName = self.parent.getLocalizerName()

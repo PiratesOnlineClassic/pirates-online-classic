@@ -45,6 +45,7 @@ with patch.object(builtins.loader, 'loadFont', Mock()):
     from pirates.battle.BattleManagerAI import BattleManagerAI
 
 from pirates.battle import EnemyGlobals
+from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
 from pirates.battle.DistributedBattleNPCAI import DistributedBattleNPCAI
 from pirates.battle.DistributedEnemySpawnerAI import SpawnNodeBase, DistributedEnemySpawnerAI
 from pirates.pirate.BattleNPCGameFSMAI import BattleNPCGameFSMAI
@@ -302,8 +303,6 @@ class BattleManagerRewardTests(unittest.TestCase):
         npcAttacker.getInventory.assert_not_called()
 
 
-if __name__ == '__main__':
-    unittest.main()
 
 
 class EnemySkillSelectionTests(unittest.TestCase):
@@ -404,3 +403,53 @@ class HeldEnemyMovementTests(unittest.TestCase):
         target = Mock()
         fsm._walkToPoint(target)
         fsm.walkToPoint.assert_called_once_with(target.getPos(), target.getParent())
+
+
+class NPCPositionBroadcastTests(unittest.TestCase):
+    def makeNPC(self):
+        npc = DistributedBattleNPCAI.__new__(DistributedBattleNPCAI)
+        npc._posHprBroadcastTask = None
+        npc.kickPosHprBroadcast = Mock()
+        return npc
+
+    def test_looking_at_a_target_broadcasts_the_turn(self):
+        npc = self.makeNPC()
+        npc.currentTarget = Mock()
+        npc.headsUp = Mock()
+        task = SimpleNamespace(cont='cont', done='done')
+
+        self.assertEqual(npc.lookAtTarget(task), 'cont')
+        npc.kickPosHprBroadcast.assert_called_once_with()
+
+        # a running broadcast already picks up every turn...
+        npc._posHprBroadcastTask = object()
+        npc.lookAtTarget(task)
+        npc.kickPosHprBroadcast.assert_called_once_with()
+
+    def test_changing_cells_broadcasts_the_new_relative_position(self):
+        npc = self.makeNPC()
+        npc.isGenerated = Mock(return_value=True)
+        with patch.object(DistributedBattleAvatarAI, 'setLocation') as setLocation:
+            npc.setLocation(1, 2)
+
+        setLocation.assert_called_once_with(npc, 1, 2)
+        npc.kickPosHprBroadcast.assert_called_once_with()
+
+    def test_walking_broadcasts_until_at_rest(self):
+        fsm = BattleNPCGameFSMAI.__new__(BattleNPCGameFSMAI)
+        interval = Mock()
+        avatar = Mock(doId=1000)
+        avatar.getSkillEffectIds.return_value = []
+        avatar.getParentObj.return_value = NodePath('parent')
+        avatar.posInterval.return_value = interval
+        fsm.avatar = avatar
+        fsm.acceptOnce = Mock()
+
+        fsm.walkToPoint((10, 0, 0))
+
+        interval.start.assert_called_once_with()
+        avatar.kickPosHprBroadcast.assert_called_once_with()
+
+
+if __name__ == '__main__':
+    unittest.main()

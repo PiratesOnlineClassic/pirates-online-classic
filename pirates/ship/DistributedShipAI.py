@@ -9,6 +9,7 @@ from pirates.ship import ShipGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.world.DistributedOceanGridAI import DistributedOceanGridAI
 from pirates.movement.DistributedMovingObjectAI import DistributedMovingObjectAI
+from pirates.movement.PosHprBroadcasterAI import PosHprBroadcasterAI
 from pirates.distributed.DistributedCharterableObjectAI import DistributedCharterableObjectAI
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
 from pirates.shipparts.DistributedSteeringWheelAI import DistributedSteeringWheelAI
@@ -26,7 +27,7 @@ from pirates.ship.GameFSMShipAI import GameFSMShipAI
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 
-class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectAI, Teamable):
+class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, DistributedCharterableObjectAI, Teamable):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipAI')
 
     SinkDuration = 60.0
@@ -45,6 +46,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         DistributedMovingObjectAI.__init__(self, air)
         DistributedCharterableObjectAI.__init__(self, air)
         Teamable.__init__(self)
+        PosHprBroadcasterAI.__init__(self)
 
         self.uniqueId = ''
         self.baseTeam = ShipGlobals.INVALID_TEAM
@@ -205,24 +207,6 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             taskMgr.remove(taskName)
 
         self._skillEffectTasks = {}
-
-    def sendCurrentPosition(self):
-        x, y, z = self.getPos()
-        h, p, r = self.getHpr()
-        timestamp = globalClockDelta.getRealNetworkTime(bits=16)
-        self.sendUpdate('setSmPosHpr', [x, y, z, h, p, r, timestamp])
-
-    def startPosHprBroadcast(self):
-
-        def _broadcast(task):
-            try:
-                self.sendCurrentPosition()
-            except:
-                pass
-
-            return task.again
-
-        taskMgr.doMethodLater(0.2, _broadcast, self.uniqueName('broadcast-pos'))
 
     def generate(self):
         if not self.npcShip:
@@ -517,7 +501,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
     def delete(self):
         self.clearSkillEffectTasks()
-        taskMgr.remove(self.uniqueName('broadcast-pos'))
+        self.stopPosHprBroadcast()
         for effectId in (WeaponGlobals.C_OPENFIRE, WeaponGlobals.C_TAKECOVER):
             taskMgr.remove(self.uniqueName('crew-skill-effect-%d' % effectId))
         if hasattr(self, 'gameFSM'):

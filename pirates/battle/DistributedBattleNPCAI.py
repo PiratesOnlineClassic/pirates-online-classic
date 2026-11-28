@@ -3,17 +3,19 @@ from direct.distributed.ClockDelta import globalClockDelta
 from direct.fsm.FSM import FSM
 
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
+from pirates.movement.PosHprBroadcasterAI import PosHprBroadcasterAI
 from pirates.pirate.BattleNPCGameFSMAI import BattleNPCGameFSMAI
 from pirates.piratesbase import PLocalizer
 from pirates.pirate import AvatarTypes
 from pirates.battle import EnemyGlobals
 
 
-class DistributedBattleNPCAI(DistributedBattleAvatarAI):
+class DistributedBattleNPCAI(PosHprBroadcasterAI, DistributedBattleAvatarAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBattleNPCAI')
 
     def __init__(self, air):
         DistributedBattleAvatarAI.__init__(self, air)
+        PosHprBroadcasterAI.__init__(self)
 
         self.name = ''
         self.spawnPos = [0, 0, 0]
@@ -159,9 +161,20 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
     def getSpawnNode(self):
         return self.spawnNode
 
+    def setLocation(self, parentId, zoneId):
+        DistributedBattleAvatarAI.setLocation(self, parentId, zoneId)
+
+        # changing cells reparents us to the new cell's origin, our position relative
+        # to it is what the state server has to hold for anyone seeing us from now on...
+        if self.isGenerated():
+            self.kickPosHprBroadcast()
+
     def lookAtTarget(self, task):
         if self.currentTarget:
             self.headsUp(self.currentTarget)
+            if not self.posHprBroadcastStarted():
+                self.kickPosHprBroadcast()
+
             return task.cont
 
         return task.done
@@ -277,5 +290,6 @@ class DistributedBattleNPCAI(DistributedBattleAvatarAI):
 
     def delete(self):
         self.stopLookAt()
+        self.stopPosHprBroadcast()
         self.air.targetMgr.removeTarget(self)
         DistributedBattleAvatarAI.delete(self)
