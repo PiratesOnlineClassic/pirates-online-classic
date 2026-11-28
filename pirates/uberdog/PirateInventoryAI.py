@@ -149,6 +149,16 @@ class PirateInventoryAI(DistributedInventoryAI):
         avatar.giveCardMessage(cardId)
         self.b_setStackQuantity(cardId, self.getStackQuantity(cardId) + amount)
 
+    def giveCollectionItem(self, itemId, amount=1):
+        avatar = self.air.doId2do.get(self.ownerId)
+        if not avatar:
+            return
+
+        # itemId is the collection item's InventoryType, the client looks
+        # up the item's rarity and value from it, see LootPopupPanel.showLoot...
+        self.b_setStackQuantity(itemId, self.getStackQuantity(itemId) + amount)
+        avatar.d_sendLootMessage(itemId)
+
     def setShipDoIdList(self, shipList):
         return self.b_setDoIdListCategory(InventoryCategory.SHIPS, shipList)
 

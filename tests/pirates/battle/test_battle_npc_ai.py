@@ -270,6 +270,8 @@ class BattleManagerRewardTests(unittest.TestCase):
         inventory = Mock()
         inventory.getReputation.return_value = 0
         inventory.getOverallRep.return_value = 0
+        # no treasure collections have been started...
+        inventory.getStackQuantity.return_value = 0
         attacker = DistributedPlayerPirateAI.__new__(DistributedPlayerPirateAI)
         attacker.doId = 42
         attacker.getInventory = Mock(return_value=inventory)

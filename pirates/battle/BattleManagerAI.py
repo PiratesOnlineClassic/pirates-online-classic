@@ -11,6 +11,7 @@ from pirates.battle.BattleManagerBase import BattleManagerBase
 from pirates.piratesbase import PiratesGlobals
 from pirates.battle import WeaponGlobals
 from pirates.battle import EnemyGlobals
+from pirates.battle import LootGlobals
 from pirates.battle import WeaponConstants
 from pirates.uberdog import UberDogGlobals
 from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
@@ -751,9 +752,16 @@ class BattleManagerAI(BattleManagerBase):
             reputationList = [min(reputationCategories[categoryId], 65535) for categoryId in categories]
             attacker.d_sendReputationMessage(target.doId, categories, reputationList, 0, 0, 0, 0)
 
-        if random.random() >= 0.8:
+        if random.random() < LootGlobals.CARD_DROP_CHANCE:
             cardId = random.randint(InventoryType.begin_Cards, InventoryType.end_Cards - 1)
             inventory.giveCards(cardId, 1)
+
+        # enemies also carry the pieces of the treasure collections the
+        # avatar has started, see CollectionMap.Collection_Found...
+        if random.random() < LootGlobals.COLLECTION_DROP_CHANCE:
+            itemId = LootGlobals.getCollectionDrop(target.getAvatarType(), inventory)
+            if itemId:
+                inventory.giveCollectionItem(itemId)
 
         # attempt to update the avatar's active task progress...
         self.air.questMgr.enemyDefeated(attacker, target)

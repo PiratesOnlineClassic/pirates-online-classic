@@ -111,6 +111,8 @@ class BossAITests(unittest.TestCase):
         battleMgr.air = makeAir()
         inventory = Mock()
         inventory.getOverallRep.return_value = 0
+        # no treasure collections have been started...
+        inventory.getStackQuantity.return_value = 0
         attacker = Mock()
         attacker.getInventory.return_value = inventory
         attacker.battleSkillDiary.getSkills.return_value = []
