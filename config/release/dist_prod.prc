@@ -274,7 +274,7 @@ want-new-avatar 1
 async-request-timeout 80.0
 async-request-break-on-timeout 0
 notify-timestamp 1
-enforce-clean-exit 1
+enforce-clean-exit 0
 restore-initial-pose 0
 empty-node-path future
 crash-on-proactive-leak-detect 0

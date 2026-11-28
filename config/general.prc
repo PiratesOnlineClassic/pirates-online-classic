@@ -196,7 +196,7 @@ want-magic-words 1
 want-map-flavor-anims 1
 low-weapons-only 1
 want-running 0
-enforce-clean-exit 1
+enforce-clean-exit 0
 want-ships 1
 game-phase 1
 
