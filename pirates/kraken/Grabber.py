@@ -14,7 +14,7 @@ class Grabber(Creature, TentacleUtils):
         'pain': 'sfx_crab_pain.mp3',
         'death': 'sfx_crab_death.mp3'})
     sfx = {}
-    AnimList = (('idle_d', 'idle'), ('idle_a', 'idleA'), ('idle_a_to_b', 'idle_a_to_b'), ('idle_b', 'idleB'), ('idle_b_to_c', 'idle_b_to_c'), ('idle_c', 'idleC'), ('idle_c_to_a', 'idle_c_to_a'), ('grab_avatar', 'grab'), ('grab_avatar_idle', 'grab_idle'), ('lift_avatar', 'lift_player'), ('lift_avatar_idle', 'lift_player_idle'), ('lower_avatar', 'lower_player'), ('release_avatar', 'release_player'), ('emerge', 'emerge'), ('grab_mast', 'grab_mast'), ('grab_mast_idle', 'grab_mast_idle'), ('death', 'death'), ('hit_react', 'hit_reaction'), ('smackdown_avatar', 'smackdown_player'))
+    AnimList = (('idle_d', 'idle'), ('idle_a', 'idleA'), ('idle_a_to_b', 'idle_alt_a_to_b'), ('idle_b', 'idleB'), ('idle_b_to_c', 'idle_alt_b_to_c'), ('idle_c', 'idleC'), ('idle_c_to_a', 'idle_alt_c_to_a'), ('grab_avatar', 'grab'), ('grab_avatar_idle', 'grab_idle'), ('lift_avatar', 'lift_player'), ('lift_avatar_idle', 'lift_player_idle'), ('lower_avatar', 'lower_player'), ('release_avatar', 'release_player'), ('emerge', 'emerge'), ('grab_mast', 'grab_mast'), ('grab_mast_idle', 'grab_mast_idle'), ('death', 'death'), ('hit_react', 'hit_reaction'), ('smackdown_avatar', 'smackdown_player'))
     
     class AnimationMixer(Creature.AnimationMixer):
         notify = DirectNotifyGlobal.directNotify.newCategory('CrabAnimationMixer')
@@ -59,12 +59,15 @@ class Grabber(Creature, TentacleUtils):
         self.iTask = None
         self.uniqueNameFunc = uniqueNameFunc
         self.generateCreature()
-        self.target = loader.loadModel('models/misc/smiley')
-        self.target.reparentTo(self.getGrabTargetNode())
+        self.target = None
+        if __dev__:
+            self.target = loader.loadModel('models/misc/smiley', okMissing = True)
+            if self.target:
+                self.target.reparentTo(self.getGrabTargetNode())
     
     def generateCreature(self):
         filePrefix = self.ModelInfo[1]
-        if loader.loadModelCopy(filePrefix + '1000') != None:
+        if loader.loadModel(filePrefix + '1000', okMissing = True) != None:
             hasLOD = True
             self.setLODs()
             self.loadModel(filePrefix + '2000', 'modelRoot', 'hi', copy = 1)
@@ -98,7 +101,7 @@ class Grabber(Creature, TentacleUtils):
     
     def getJoints(self):
         if not self.joints:
-            self.joints = self.findAllMatches('**/def_tent_*').asList()
+            self.joints = list(self.findAllMatches('**/def_tent_*'))
             self.joints.sort(key = NodePath.getName)
         
         return self.joints

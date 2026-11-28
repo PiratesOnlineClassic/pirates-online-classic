@@ -27,7 +27,17 @@ class Holder(Creature, TentacleUtils):
         if not Holder.sfx:
             for name in Holder.SfxNames:
                 Holder.sfx[name] = loader.loadSfx('audio/' + Holder.SfxNames[name])
-            
+        
+        self.generateCreature()
+
+    def generateCreature(self):
+        self.loadModel(self.ModelInfo[0], copy = 1)
+        CreatureAnimDict = {}
+        for anim in self.AnimList:
+            CreatureAnimDict[anim[0]] = self.ModelInfo[1] + anim[1]
+        
+        self.loadAnims(CreatureAnimDict)
+
     @classmethod
     def setupAnimInfo(cls):
         cls.setupAnimInfoState('LandRoam', (('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', -1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0), ('idle', 1.0)))

@@ -12,7 +12,7 @@ class TentacleUtils:
     
     def initStatusTable(self):
         self.statusTable = []
-        joints = self.findAllMatches('**/def_ten*').asList()
+        joints = list(self.findAllMatches('**/def_ten*'))
         for i in range(len(joints) - 1):
             self.statusTable.append([
                 joints[i],

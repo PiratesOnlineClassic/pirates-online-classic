@@ -25,6 +25,16 @@ class Body(Creature):
         if not Body.sfx:
             for name in Body.SfxNames:
                 Body.sfx[name] = loader.loadSfx('audio/' + Body.SfxNames[name])
+        
+        self.generateCreature()
+
+    def generateCreature(self):
+        self.loadModel(self.ModelInfo[0], copy = 1)
+        CreatureAnimDict = {}
+        for anim in self.AnimList:
+            CreatureAnimDict[anim[0]] = self.ModelInfo[1] + anim[1]
+        
+        self.loadAnims(CreatureAnimDict)
 
     @classmethod
     def setupAnimInfo(cls):
