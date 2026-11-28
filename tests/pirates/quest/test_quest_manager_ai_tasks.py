@@ -400,6 +400,19 @@ class QuestTaskTests(unittest.TestCase):
         self.assertEqual(self.manager.getShipFaction(ship), AvatarTypes.Undead)
         self.assertIsNotNone(before)
 
+    def test_ship_sunk_on_the_ocean_grid_is_credited_to_its_world(self):
+        quest = self.harness.addQuest('c3r1.1sinkNavyShips')
+        attacker = manager_module.DistributedShipAI()
+        attacker.getCrew = lambda: [self.avatar.doId]
+        self.harness.air.doId2do[50] = attacker
+        world = types.SimpleNamespace(getUniqueId=lambda: 'world')
+        oceanGrid = types.SimpleNamespace(getParentObj=lambda: world)
+        ship = types.SimpleNamespace(getBaseTeam=lambda: PiratesGlobals.NAVY_TEAM, getShipClass=lambda: 0,
+                                     getIsFlagship=lambda: 0, getLevel=lambda: 10,
+                                     getParentObj=lambda: oceanGrid)
+        self.manager.shipSunk(ship, [50])
+        self.assertTrue(quest.isComplete())
+
     def test_docking_at_port_maroons_npcs(self):
         quest = self.harness.addQuest('c3r2r1.10maroonSteadman')
         island = types.SimpleNamespace(getUniqueId=lambda: 'not-a-wild-island')

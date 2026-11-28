@@ -1165,6 +1165,12 @@ class QuestManagerAI(DirectObject):
         # the ship's location is where the battle took place, the
         # avatar itself is most likely parented to their own ship...
         parentObj = ship.getParentObj() or avatar.getParentObj()
+
+        # ships at sea are parented to the ocean grid which has no uid of it's
+        # own, the battle took place in the world the ocean belongs to...
+        while parentObj and not hasattr(parentObj, 'getUniqueId'):
+            parentObj = parentObj.getParentObj()
+
         if not parentObj:
             return
 
