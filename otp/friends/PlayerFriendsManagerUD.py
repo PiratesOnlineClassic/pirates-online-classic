@@ -200,6 +200,20 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
             if friendId in self.account2avatar:
                 self.d_updatePlayerFriend(friendId, accountId)
 
+    def avatarDeleted(self, avId, accountId):
+        # Called by the ClientServicesManager once an avatar has been deleted,
+        # the player's friends should no longer see it as the last avatar
+        # they played:
+        self.goingOffline(avId)
+
+        account = self.getAccount(accountId)
+        if account['avatarId'] != avId:
+            return
+
+        account['avatarId'] = 0
+        account['avatarName'] = ''
+        self.storeAccount(accountId, account)
+
     def isOnline(self, accountId):
         return accountId in self.account2avatar
 

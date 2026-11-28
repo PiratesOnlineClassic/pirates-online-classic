@@ -199,6 +199,17 @@ class AvatarFriendsManagerUD(DistributedObjectGlobalUD):
 
         self.avatarId2Friends.pop(avId, None)
 
+    def avatarDeleted(self, avId, friendsList):
+        # Called by the ClientServicesManager once an avatar has been deleted,
+        # none of its friends should have it on their list anymore:
+        self.goingOffline(avId)
+        for friendId in [entry[0] for entry in friendsList]:
+            self.removeFriend(friendId, avId)
+            if self.isOnline(friendId):
+                self.d_removeAvatarFriend(friendId, avId)
+
+        self.avatarId2Name.pop(avId, None)
+
     def isOnline(self, avId):
         return avId in self.onlineAvatars
 
