@@ -1,8 +1,12 @@
-from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
+from pirates.kraken.KrakenPartAI import KrakenPartAI
+from pirates.kraken.BodyGameFSMAI import BodyGameFSMAI
 
-class KrakenBodyAI(DistributedObjectAI):
+
+class KrakenBodyAI(KrakenPartAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('KrakenBodyAI')
 
-    def __init__(self, air):
-        DistributedObjectAI.__init__(self, air)
+    HpScale = 5.0
+
+    def createGameFSM(self):
+        self.gameFSM = BodyGameFSMAI(self.air, self)
