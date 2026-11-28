@@ -77,7 +77,8 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
 
             return
 
-        if not self.air.questMgr.hasQuest(self, questId=activeQuest):
+        # an empty quest id means the avatar has stopped tracking their quest...
+        if activeQuest and not self.air.questMgr.hasQuest(self, questId=activeQuest):
             self.notify.debug('Failed to set active quest %s for avatar %d, '
                 'quest not found in the avatar\'s questList!' % (activeQuest, self.doId))
 
@@ -153,6 +154,9 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
             return
         self._questSwapPending = True
         oldQuests = list(oldQuests)
+        if isinstance(questIds, str):
+            questIds = [questIds]
+
         questIds = list(questIds or [])
 
         def _questsCreatedCallback():
@@ -165,6 +169,12 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
                 if self.air.questMgr.hasQuest(self, questDoId=quest.doId):
                     messenger.send(quest.getCompleteEventString())
                     self.air.questMgr.dropQuest(self, quest, completed=True)
+
+            # quests handed out together belong to a quest choice,
+            # remember the choice so the avatar may return to it...
+            if len(questIds) > 1:
+                for questId in questIds:
+                    self.air.questMgr.registerQuestChoiceContainer(self, questId)
 
             if questIds and questIds[0] in (
                     'Chapter1.rung1', 'Chapter1.rung2', 'Chapter1.rung3',
@@ -182,6 +192,12 @@ class DistributedQuestAvatarAI(QuestAvatarBase, QuestHolder):
                 _questsCreatedCallback()
 
         self.air.questMgr.whenQuestIdle(self, _startCreation)
+
+    def _dropQuest(self, quest):
+        # the quest's ladder has chosen to remove the dropped quest rather than
+        # replacing it, the quest manager removes the quest from the avatar once
+        # the ladder has finished handling the drop...
+        self.notify.debug('Avatar %d ladder released dropped quest %s.' % (self.doId, quest.getQuestId()))
 
     def _acceptQuest(self, nextQuestId, giverId, rewards):
         inventory = self.getInventory()

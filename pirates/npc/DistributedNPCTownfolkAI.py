@@ -115,16 +115,24 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
         elif option == InteractGlobals.BRIBE:
             self.air.questMgr.attemptBribeNPC(avatar, self)
         elif option == InteractGlobals.QUEST:
-            finalOffers, container, numAssignedIncomplete = avatar.questStatus.getQuestOffersFromGiver(self.dnaId)
-            if not finalOffers:
-                finalOffers = []
-
-            if numAssignedIncomplete == 0:
-                self.d_setQuestOffer(avatar.doId, finalOffers)
-            else:
-                self.d_setQuestLadderOffer(avatar.doId, finalOffers, 1)
+            self.offerQuests(avatar)
         elif option == InteractGlobals.BACK:
             pass
+
+    def offerQuests(self, avatar):
+        # check to see if the avatar is in the middle of a quest choice
+        # given by this npc, if so let them choose from the remaining quests...
+        finalOffers, container, numAssignedIncomplete = avatar.questStatus.getQuestOffersFromGiver(self.getUniqueId())
+        if finalOffers:
+            offers = self.air.questMgr.getQuestLadderOffers(avatar, finalOffers)
+            self.d_setQuestLadderOffer(avatar.doId, offers, int(numAssignedIncomplete > 0))
+            return
+
+        offers = self.air.questMgr.getQuestOffers(avatar, self.getUniqueId())
+        self.d_setQuestOffer(avatar.doId, offers)
+
+    def handleOfferResponse(self, avatar, offer, ladder):
+        self.air.questMgr.acceptQuestOffer(avatar, self, offer, offer.isLadder())
 
     def handleRequestExit(self, avatar):
         return self.ACCEPT

@@ -20,8 +20,16 @@ from pirates.quest import QuestDB
 from pirates.quest import QuestLadderDB
 from pirates.quest.QuestPath import QuestStep
 from pirates.quest.QuestLadderDNA import QuestLadderDNA, QuestContainerDNA
+from pirates.quest.QuestLadderDynMap import QuestLadderDynMap
+from pirates.quest.QuestLadderDependency import QuestLadderDependency
+from pirates.quest.QuestOffer import QuestOffer
+from pirates.quest.QuestLadderOffer import QuestLadderOffer
 from pirates.quest import QuestTaskDNA
+from pirates.quest.QuestConstants import PropIds, getPropList
+from pirates.pirate import AvatarTypes
+from pirates.reputation.ReputationGlobals import getLevelFromTotalReputation
 from pirates.piratesbase import PiratesGlobals
+from pirates.ship import ShipGlobals
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world.DistributedIslandAI import DistributedIslandAI
 from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
@@ -71,12 +79,30 @@ class CreateQuestsFSM(QuestOperationFSM):
 
             return False
 
+        # the quest giver is the npc the avatar was talking to when the
+        # quest was handed to them, this is who the quest is returned to...
+        giverId = self.air.questMgr.getQuestGiverId(self.avatar)
+
+        # quests accepted from an offer keep the tasks and rewards the avatar
+        # was shown, randomized quests would otherwise roll new ones...
+        offer = self.air.questMgr.popQuestOffer(self.avatar, questId)
+        if offer:
+            taskStates = list(offer.getInitialTaskStates())
+            rewardStructs = list(offer.getRewardStructs())
+        else:
+            taskStates = questDNA.getInitialTaskStates(self.avatar)
+            rewards = questDNA.getRewards()
+            if not rewards:
+                rewards = questDNA.computeRewards(taskStates, self.avatar)
+
+            rewardStructs = [reward.getQuestRewardStruct() for reward in rewards]
+
         fields = {
             'setQuestId': (questId,),
-            'setGiverId': ('',),
+            'setGiverId': (giverId,),
             'setCombineOp': (questDNA.getCombineOp(),),
-            'setTaskStates': (questDNA.getInitialTaskStates(self.avatar),),
-            'setRewardStructs': ([reward.getQuestRewardStruct() for reward in questDNA.getRewards()],),
+            'setTaskStates': (taskStates,),
+            'setRewardStructs': (rewardStructs,),
         }
 
         self.air.dbInterface.createObject(self.air.dbId,
@@ -263,6 +289,27 @@ class QuestManagerAI(DirectObject):
         self.completingQuests = set()
         self.tutorialJollyReady = set()
         self.tutorialJollyWaiters = {}
+        self.avatar2questGiver = {}
+        self.avatar2questOffer = {}
+        self.questDynMap = QuestLadderDynMap()
+        self.questDependency = QuestLadderDependency()
+
+    def setQuestOffer(self, avatar, offer):
+        self.avatar2questOffer[avatar.doId] = offer
+
+    def popQuestOffer(self, avatar, questId):
+        offer = self.avatar2questOffer.get(avatar.doId)
+        if not offer or offer.getQuestId() != questId:
+            return None
+
+        del self.avatar2questOffer[avatar.doId]
+        return offer
+
+    def setQuestGiverId(self, avatar, giverId):
+        self.avatar2questGiver[avatar.doId] = giverId or ''
+
+    def getQuestGiverId(self, avatar):
+        return self.avatar2questGiver.get(avatar.doId, '')
 
     def tutorialJROnStage(self, avatar):
         quest = self.getQuest(avatar, questId='Chapter1.rung3')
@@ -362,11 +409,46 @@ class QuestManagerAI(DirectObject):
 
     def activateQuests(self, avatar, callback=None):
         def activated():
+            self.restoreQuestChoiceContainers(avatar)
             self.resumeCompletedTutorialQuest(avatar)
             if callback:
                 callback()
 
         self.runQuestFSM(ActivateQuestsFSM, avatar, callback=activated)
+
+    def restoreQuestChoiceContainers(self, avatar):
+        # the avatar's quest ladders are only built once their quests have
+        # been activated, so the choice containers the avatar was offered
+        # before they logged out must be restored afterwards...
+        questStatus = avatar.questStatus
+        if not questStatus:
+            return
+
+        choiceInts = avatar.getCurrentQuestChoiceContainers()
+        choiceContainers = []
+        for ladder in list(questStatus.ladders.values()):
+            ladder.getChoiceContainers(choiceContainers)
+
+        for container in choiceContainers:
+            if container.getQuestInt() in choiceInts:
+                questStatus.choiceContainers[container.getName()] = container
+
+    def registerQuestChoiceContainer(self, avatar, questId):
+        questStub = avatar.questStatus.getQuestStub(questId)
+        if not questStub:
+            return
+
+        container = questStub.getParent()
+        if not container or not container.isChoice():
+            return
+
+        if container.getQuestInt() in avatar.getQuestLadderHistory():
+            return
+
+        if container.getQuestInt() in avatar.getCurrentQuestChoiceContainers():
+            avatar.questStatus.choiceContainers[container.getName()] = container
+        else:
+            avatar.questStatus.addCurrentQuestChoiceContainer(container)
 
     def resumeCompletedTutorialQuest(self, avatar):
         for quest in list(self.quests.get(avatar.doId, {}).values()):
@@ -407,6 +489,8 @@ class QuestManagerAI(DirectObject):
     def deactivateQuests(self, avatar):
         self.deferredQuestCompletions.pop(avatar.doId, None)
         self.questIdleCallbacks.pop(avatar.doId, None)
+        self.avatar2questGiver.pop(avatar.doId, None)
+        self.avatar2questOffer.pop(avatar.doId, None)
         if avatar.doId not in self.quests:
             return
 
@@ -434,22 +518,25 @@ class QuestManagerAI(DirectObject):
 
             return
 
+        if not completed:
+            # let the quest's ladder know the quest is being dropped while the
+            # quest is still in the avatar's quest list, the ladder may decide
+            # to hand the avatar a revisit quest in it's place...
+            messenger.send(quest.getDroppedEventString(), [quest])
+            if not self.hasQuest(avatar, quest.doId):
+                return
+
+        # a dropped quest does not count towards the avatar's quest history,
+        # so the quest may be offered to the avatar again...
         questStub = avatar.questStatus.getQuestStub(quest.getQuestId())
-        if completed:
-            if questStub and questStub.quest is quest:
-                questStub.unlinkQuest(quest.getQuestId())
-        else:
-            avatar.questStatus.handleQuestDropped(quest, questStub)
+        if questStub and questStub.quest is quest:
+            questStub.unlinkQuest(quest.getQuestId())
 
         # update the player's quest list on their inventory...
-        questList.remove(quest.doId)
-        inventory.setQuestList(questList)
-
-        # update the player's quest history so that we will not ever give
-        # the player the same quest again...
-        questHistory = avatar.getQuestHistory()
-        if quest.questDNA.getQuestInt() not in questHistory:
-            avatar.b_setQuestHistory(questHistory + [quest.questDNA.getQuestInt()])
+        questList = inventory.getDoIdListCategory(InventoryCategory.QUESTS)
+        if quest.doId in questList:
+            questList.remove(quest.doId)
+            inventory.setQuestList(questList)
 
         # check to see if this quest is the avatar's active quest,
         # if so then let's clear their active quest...
@@ -457,8 +544,6 @@ class QuestManagerAI(DirectObject):
             avatar.b_setActiveQuest('')
 
         # finally, deactivate the old quest.
-        if not completed:
-            messenger.send(quest.getDroppedEventString())
         self.deactivateQuest(avatar, quest.doId)
 
     def dropQuests(self, avatar):
@@ -528,12 +613,15 @@ class QuestManagerAI(DirectObject):
         quests = self.getQuestsFromTaskDNAType(avatar, QuestTaskDNA.BribeNPCTaskDNA)
         for quest in quests:
             assert(quest is not None)
+            if quest.isComplete():
+                continue
+
             questDNA = quest.getQuestDNA()
             assert(questDNA is not None)
 
             for taskDNA in questDNA.getTaskDNAs():
                 assert(taskDNA is not None)
-                if taskDNA.getNpcId() == npcId:
+                if isinstance(taskDNA, QuestTaskDNA.BribeNPCTaskDNA) and taskDNA.getNpcId() == npcId:
                     return taskDNA.getGold()
 
         return -1
@@ -556,6 +644,11 @@ class QuestManagerAI(DirectObject):
                     trade.giveCutlassTraining()
                 if not inventory.getStackQuantity(InventoryType.CutlassWeaponL1):
                     trade.giveStack(InventoryType.CutlassWeaponL1, 1)
+            elif isinstance(reward, (LuckReward, SwiftnessReward)):
+                # these attributes were never implemented by the game,
+                # there is nothing to give the avatar...
+                self.notify.warning('Cannot give unsupported quest reward %s to avatar %d!' % (
+                    reward.__class__.__name__, avatar.doId))
             else:
                 reward.applyTo(trade, avatar)
         return True
@@ -588,9 +681,15 @@ class QuestManagerAI(DirectObject):
 
         questStub = avatar.questStatus.getQuestStub(quest.getQuestId())
         if not questStub:
-            self.notify.warning('Failed to handle complete quest for avatar %d, '
-                'quest %s does not have a questStub!' % (avatar.doId, quest.getQuestId()))
+            if QuestLadderDB.getFamePath(quest.getQuestId()) or QuestLadderDB.getFortunePath(quest.getQuestId()):
+                self.notify.warning('Failed to handle complete quest for avatar %d, '
+                    'quest %s does not have a questStub!' % (avatar.doId, quest.getQuestId()))
 
+                return
+
+            # this quest does not belong to a quest ladder (level up, revisit quests),
+            # there is no ladder to advance so simply reward the avatar for it...
+            self.completeSingleQuest(avatar, quest)
             return
 
         if (questStub.complete or avatar.questStatus.getNPCInteractMode() or
@@ -621,6 +720,8 @@ class QuestManagerAI(DirectObject):
                 if checkpoint != -1 and avatar.getTutorial() < checkpoint:
                     avatar.b_setTutorial(checkpoint)
                 questStub.handleQuestComplete(quest, questHistory)
+                self.handleChoiceQuestComplete(avatar, quest, questStub)
+                self.handleLaddersComplete(avatar)
             finally:
                 self.completingQuests.discard(quest.doId)
 
@@ -641,11 +742,58 @@ class QuestManagerAI(DirectObject):
             self.completingQuests.discard(quest.doId)
             raise
 
+    def completeSingleQuest(self, avatar, quest):
+        if quest.doId in self.completingQuests:
+            return
+
+        questDNA = quest.getQuestDNA()
+        rewards = [reward for reward in quest.getRewards() if not isinstance(reward, TreasureMapReward)]
+        self.completingQuests.add(quest.doId)
+        try:
+            if not self._giveRewards(avatar, rewards):
+                return
+
+            questHistory = avatar.getQuestHistory()
+            if questDNA.getQuestInt() not in questHistory:
+                avatar.b_setQuestHistory(questHistory + [questDNA.getQuestInt()])
+
+            messenger.send(quest.getCompleteEventString())
+            self.dropQuest(avatar, quest, completed=True)
+        finally:
+            self.completingQuests.discard(quest.doId)
+
+    def handleChoiceQuestComplete(self, avatar, quest, questStub):
+        # quests handed out by a quest choice are completed one at a time,
+        # the choice only advances the ladder once all of it's quests have
+        # been completed, so remove the finished quest from the avatar now...
+        container = getattr(questStub, 'parent', None)
+        if not container or not container.isChoice() or container.isComplete():
+            return
+
+        def removeQuest():
+            if self.getQuest(avatar, questDoId=quest.doId) is quest:
+                messenger.send(quest.getCompleteEventString())
+                self.dropQuest(avatar, quest, completed=True)
+
+        self.whenQuestIdle(avatar, removeQuest)
+
+    def handleLaddersComplete(self, avatar):
+        # quest ladders the avatar has completed are no longer needed, a
+        # repeatable quest ladder is rebuilt when it is offered again...
+        ladderDeleteList = getattr(avatar.questStatus, 'ladderDeleteList', None)
+        if not ladderDeleteList:
+            return
+
+        for ladderName in list(ladderDeleteList):
+            ladderDeleteList.remove(ladderName)
+            avatar.questStatus.deleteLadder(ladderName)
+
     def completeTaskState(self, avatar, questEvent, callback=None):
         questObjects = list(self.quests.get(avatar.doId, {}).values())
         if not questObjects:
             return False
 
+        completed = False
         for quest in questObjects:
             if quest.getQuestDNA() is None:
                 continue
@@ -675,12 +823,21 @@ class QuestManagerAI(DirectObject):
             if quest.isComplete():
                 if callback is not None:
                     callback(quest)
-                else:
-                    self.completeQuest(avatar, quest)
+                    return True
 
-                return True
+                # quests completed out in the world are handed in to the npc
+                # that gave the quest, unless the quest says otherwise...
+                if not quest.completeRequiresVisit():
+                    self.setQuestGiverId(avatar, '')
+                    finalizeInfo = quest.getQuestDNA().getFinalizeInfo()
+                    if finalizeInfo and all(info.get('type') == 'cutscene' for info in finalizeInfo):
+                        self.finalizeCutscene(avatar, quest)
+                    else:
+                        self.completeQuest(avatar, quest)
 
-        return False
+                completed = True
+
+        return completed
 
     def treasureChestOpened(self, avatar, treasureChest, callback=None):
         parentObj = avatar.getParentObj()
@@ -735,17 +892,73 @@ class QuestManagerAI(DirectObject):
 
         return int(madeProgress)
 
-    def containerSearched(self, avatar, container, callback=None):
+    def getContainerSearchTasks(self, avatar, questEvent):
+        """
+        Returns a list of (quest, taskState) pairs of the avatar's incomplete
+        container search tasks that the searched container applies to
+        """
+
+        searchTasks = []
+        for quest in list(self.quests.get(avatar.doId, {}).values()):
+            questDNA = quest.getQuestDNA()
+            if questDNA is None or quest.isComplete():
+                continue
+
+            for taskDNA, taskState in zip(questDNA.getTasks(), quest.getTaskStates()):
+                if not isinstance(taskDNA, QuestTaskDNA.RecoverContainerItemTaskDNA):
+                    continue
+
+                if taskState.isComplete() or not taskDNA.locationMatches(questEvent):
+                    continue
+
+                if taskState.hasSearchedContainer(questEvent.getContainerId()):
+                    continue
+
+                containerId = taskDNA.getContainerId()
+                if containerId != PropIds.ANY_PROP:
+                    propList = getPropList(containerId)
+                    if propList:
+                        if questEvent.getContainerId() not in propList:
+                            continue
+                    elif containerId != questEvent.getContainerId():
+                        continue
+
+                searchTasks.append((quest, taskState))
+
+        return searchTasks
+
+    def makeContainerSearchedEvent(self, avatar, container):
         parentObj = avatar.getParentObj()
         if not parentObj:
-            return
+            return None
 
         questEvent = QuestEvent.ContainerSearched()
         questEvent.setLocation(parentObj.getUniqueId())
         questEvent.setContainerId(container.getUniqueId())
         questEvent.setContainerType(container.getType())
+        return questEvent
 
-        return self.completeTaskState(avatar, questEvent, callback=callback)
+    def canSearchContainer(self, avatar, container):
+        questEvent = self.makeContainerSearchedEvent(avatar, container)
+        if not questEvent:
+            return False
+
+        return len(self.getContainerSearchTasks(avatar, questEvent)) > 0
+
+    def containerSearched(self, avatar, container):
+        questEvent = self.makeContainerSearchedEvent(avatar, container)
+        if not questEvent:
+            return False
+
+        searchTasks = self.getContainerSearchTasks(avatar, questEvent)
+        if not searchTasks:
+            return False
+
+        previousProgress = [taskState.getProgress() for quest, taskState in searchTasks]
+        self.completeTaskState(avatar, questEvent)
+
+        return any(taskState.getProgress() > progress
+                   for (quest, taskState), progress in zip(searchTasks, previousProgress))
 
     def deployedShip(self, avatar):
         parentObj = avatar.getParentObj()
@@ -767,6 +980,83 @@ class QuestManagerAI(DirectObject):
         questEvent.setEnemyType(enemy.getAvatarType())
         questEvent.setLevel(enemy.getLevel())
         questEvent.setWeaponType(enemy.getCurrentWeapon()[0])
+
+        madeProgress = self.completeTaskState(avatar, questEvent)
+
+        # named enemies are also tracked by their unique id, these
+        # are used by the defeat npc tasks...
+        npcId = enemy.getUniqueId() if hasattr(enemy, 'getUniqueId') else ''
+        if npcId:
+            questEvent = QuestEvent.NPCDefeated()
+            questEvent.setLocation(parentObj.getUniqueId())
+            questEvent.setNpcId(npcId)
+            madeProgress = self.completeTaskState(avatar, questEvent) or madeProgress
+
+        return madeProgress
+
+    def getShipFaction(self, ship):
+        team = ship.getBaseTeam() if hasattr(ship, 'getBaseTeam') else PiratesGlobals.INVALID_TEAM
+        if team in (PiratesGlobals.INVALID_TEAM, PiratesGlobals.PLAYER_TEAM):
+            team = ShipGlobals.getShipTeam(ship.getShipClass())
+
+        return {
+            PiratesGlobals.UNDEAD_TEAM: AvatarTypes.Undead,
+            PiratesGlobals.NAVY_TEAM: AvatarTypes.Navy,
+            PiratesGlobals.TRADING_CO_TEAM: AvatarTypes.TradingCo,
+            PiratesGlobals.FRENCH_UNDEAD_TEAM: AvatarTypes.French,
+            PiratesGlobals.SPANISH_UNDEAD_TEAM: AvatarTypes.Spanish,
+        }.get(team, AvatarTypes.Pirate)
+
+    def shipDefeated(self, avatar, ship):
+        # the ship's location is where the battle took place, the
+        # avatar itself is most likely parented to their own ship...
+        parentObj = ship.getParentObj() or avatar.getParentObj()
+        if not parentObj:
+            return
+
+        questEvent = QuestEvent.ShipDefeated()
+        questEvent.setLocation(parentObj.getUniqueId())
+        questEvent.setFaction(self.getShipFaction(ship))
+        questEvent.setHull(ship.getShipClass())
+        questEvent.setIsFlagship(bool(ship.getIsFlagship()))
+        questEvent.setLevel(ship.getLevel())
+
+        return self.completeTaskState(avatar, questEvent)
+
+    def shipSunk(self, ship, attackerIds):
+        # every member of the crews that took part in sinking the ship
+        # receives credit for it, just like a defeated enemy...
+        avatars = []
+        for attackerId in attackerIds:
+            attacker = self.air.doId2do.get(attackerId)
+            if isinstance(attacker, DistributedShipAI):
+                avatarIds = attacker.getCrew()
+            else:
+                avatarIds = [attackerId]
+
+            for avatarId in avatarIds:
+                avatar = self.air.doId2do.get(avatarId)
+                if avatar and avatar not in avatars and avatar.doId in self.quests:
+                    avatars.append(avatar)
+
+        for avatar in avatars:
+            self.shipDefeated(avatar, ship)
+
+    def dockedAtPort(self, avatar, island):
+        questEvent = QuestEvent.DockedAtPort()
+        questEvent.setLocation(island.getUniqueId())
+
+        return self.completeTaskState(avatar, questEvent)
+
+    def objectVisited(self, avatar, obj):
+        parentObj = avatar.getParentObj()
+        if not parentObj:
+            return
+
+        questEvent = QuestEvent.ObjectVisited()
+        questEvent.setLocation(parentObj.getUniqueId())
+        questEvent.setObjectId(obj.getUniqueId())
+        questEvent.setAvId(avatar.doId)
 
         return self.completeTaskState(avatar, questEvent)
 
@@ -914,19 +1204,23 @@ class QuestManagerAI(DirectObject):
 
             return
 
+        # any quest handed to the avatar during this interaction
+        # will be returned to this npc...
+        self.setQuestGiverId(avatar, npc.getUniqueId())
+
         def interactCallback(quest):
             self.finalizeCutscene(avatar, quest, npc=npc)
 
         if self.completeTaskState(avatar, questEvent, callback=interactCallback):
             return True
 
+        # finally, check to see if the avatar has any completed
+        # quests that are to be handed in to this npc...
         for quest in list(self.quests.get(avatar.doId, {}).values()):
             dna = quest.getQuestDNA()
             if (dna is None or not quest.isComplete() or not quest.completeRequiresVisit() or
                     quest.doId in self.finalizingQuests or
-                    dna.getQuestInt() in avatar.getQuestHistory() or
-                    not any(isinstance(task, QuestTaskDNA.RecoverTreasureItemTaskDNA)
-                            for task in dna.getTasks())):
+                    dna.getQuestInt() in avatar.getQuestHistory()):
                 continue
             if quest.canBeReturnedTo(npc.getUniqueId()):
                 self.finalizeCutscene(avatar, quest, npc=npc)
@@ -945,23 +1239,164 @@ class QuestManagerAI(DirectObject):
 
             return
 
-        bribeAmount = self.getTaskBribeAmountFromNPC(avatar, npc.getDNAId())
+        bribeAmount = self.getTaskBribeAmountFromNPC(avatar, npc.getUniqueId())
         if bribeAmount < 0:
             self.notify.warning('Failed to get quest bribe amount for avatar %d, '
                 'task was not found!' % avatar.doId)
 
             return
 
+        if bribeAmount > inventory.getGoldInPocket():
+            self.notify.debug('Avatar %d cannot afford to bribe npc %s for %d gold!' % (
+                avatar.doId, npc.getUniqueId(), bribeAmount))
+
+            return
+
         questEvent = QuestEvent.NPCBribed()
         questEvent.setLocation(parentObj.getUniqueId())
-        questEvent.setNpcId(npc.getDNAId())
+        questEvent.setNpcId(npc.getUniqueId())
         questEvent.setGold(bribeAmount)
 
         def _bribeCallback(quest):
             inventory.setGoldInPocket(inventory.getGoldInPocket() - bribeAmount)
-            self.completeQuest(avatar, quest)
+            self.finalizeCutscene(avatar, quest, npc=npc)
 
         return self.completeTaskState(avatar, questEvent, callback=_bribeCallback)
+
+    def canOfferQuest(self, avatar, questId, questDNA, giverId):
+        """
+        Returns True if the quest giver is able to offer the quest to the avatar,
+        these checks mirror DistributedQuestGiver.hasQuestOffers on the client
+        """
+
+        if not any(prereq.giverMatters() and prereq.giverCanGive(giverId)
+                   for prereq in questDNA.getPrereqs()):
+            return False
+
+        if not questDNA.vetAv(avatar):
+            return False
+
+        if questDNA.getMinLevel() > avatar.getLevel():
+            return False
+
+        ladderHistory = avatar.getQuestLadderHistory()
+        if not self.questDependency.checkDependency(questId, ladderHistory, 1):
+            return False
+
+        inventory = avatar.getInventory()
+        if questDNA.getWeapLvlType() is not None and questDNA.getMinWeapLevel() > 0:
+            weaponLevel = getLevelFromTotalReputation(questDNA.getWeapLvlType(),
+                inventory.getReputation(questDNA.getWeapLvlType()))[0]
+
+            if questDNA.getMinWeapLevel() > weaponLevel:
+                return False
+
+        if questDNA.getAcquireOnce():
+            try:
+                questLadderInt = self.questDynMap.findQuestLadderInt(questId)
+            except KeyError:
+                questLadderInt = questDNA.getQuestInt()
+
+            if questLadderInt in ladderHistory:
+                return False
+
+        # the avatar must not already be working on this quest,
+        # or any other quest from the same quest ladder...
+        if self.hasQuest(avatar, questId=questId):
+            return False
+
+        if avatar.questStatus.hasLadderQuestId(questId):
+            return False
+
+        return True
+
+    def getQuestOffers(self, avatar, giverId):
+        inventory = avatar.getInventory()
+        if not inventory:
+            return []
+
+        offers = []
+        for questId, questDNA in list(QuestDB.QuestDict.items()):
+            if self.canOfferQuest(avatar, questId, questDNA, giverId):
+                offers.append(QuestOffer.create(questId, avatar))
+
+        return offers
+
+    def getQuestLadderOffers(self, avatar, containers):
+        offers = []
+        for container in containers:
+            offers.append(QuestLadderOffer(container.getName(), container.getTitle(),
+                container.getRewards()))
+
+        return offers
+
+    def acceptQuestOffer(self, avatar, giver, offer, ladder):
+        giverId = giver.getUniqueId()
+        questId = offer.getQuestId()
+        if ladder:
+            # the avatar chose a container from one of their quest choices,
+            # give them the first quest of the chosen container...
+            container = avatar.questStatus.getContainer(questId)
+            if not container:
+                self.notify.warning('Avatar %d accepted unknown quest container %s from %s!' % (
+                    avatar.doId, questId, giverId))
+
+                return
+
+            choice = container.getParent()
+            if choice and choice.getGiverId():
+                giverId = choice.getGiverId()
+
+            questId = container.getFirstQuestId()
+        else:
+            questDNA = QuestDB.QuestDict.get(questId)
+            if not questDNA or not self.canOfferQuest(avatar, questId, questDNA, giverId):
+                self.air.logPotentialHacker(message='Avatar accepted a quest that cannot be offered to them!',
+                    questId=questId, giverId=giverId)
+
+                return
+
+            self.resetRepeatableQuestLadder(avatar, questId)
+            self.setQuestOffer(avatar, offer)
+
+        if self.hasQuest(avatar, questId=questId):
+            self.notify.debug('Avatar %d already has offered quest %s!' % (avatar.doId, questId))
+            return
+
+        self.setQuestGiverId(avatar, giverId)
+        self.createQuest(avatar, questId)
+
+    def resetRepeatableQuestLadder(self, avatar, questId):
+        # quest ladders that can be acquired more than once must have their
+        # quests removed from the avatar's history, otherwise the ladder would
+        # believe it's quests were already completed when it's taken again...
+        path = QuestLadderDB.getFortunePath(questId)
+        if not path:
+            return
+
+        ladderDNA = path[0]
+        if ladderDNA.getName() in avatar.questStatus.ladders:
+            return
+
+        questInts = []
+        self.__getQuestInts(ladderDNA, questInts)
+
+        questHistory = avatar.getQuestHistory()
+        newQuestHistory = [questInt for questInt in questHistory if questInt not in questInts]
+        if newQuestHistory != questHistory:
+            avatar.b_setQuestHistory(newQuestHistory)
+
+        ladderHistory = avatar.getQuestLadderHistory()
+        newLadderHistory = [questInt for questInt in ladderHistory
+                            if questInt not in questInts or questInt == ladderDNA.getQuestInt()]
+        if newLadderHistory != ladderHistory:
+            avatar.b_setQuestLadderHistory(newLadderHistory)
+
+    def __getQuestInts(self, container, questInts):
+        for child in container.getContainers():
+            questInts.append(child.getQuestInt())
+            if child.isContainer():
+                self.__getQuestInts(child, questInts)
 
     def getQuestStepType(self, goalObject):
         if isinstance(goalObject, DistributedNPCTownfolkAI):

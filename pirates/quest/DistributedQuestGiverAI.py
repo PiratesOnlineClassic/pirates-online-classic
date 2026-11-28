@@ -44,7 +44,10 @@ class DistributedQuestGiverAI(DistributedObjectAI):
 
             return
 
-        questId = offers[index].getQuestId()
+        self.handleOfferResponse(avatar, offers[index], ladder)
+
+    def handleOfferResponse(self, avatar, offer, ladder):
+        questId = offer.getQuestId()
         if self.air.questMgr.hasQuest(avatar, questId=questId):
             self.notify.debug('Avatar %d already has offered quest %s!' % (avatar.doId, questId))
             return
