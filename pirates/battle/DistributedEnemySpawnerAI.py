@@ -271,6 +271,16 @@ class SpawnNodeBase:
 
         x, y, z = self._npc.getPos()
         h, p, r = self._npc.getHpr()
+
+        # setSmPosHpr's components are ram fields, so the state server already holds
+        # the npc's last position for anyone gaining interest. Only broadcast it when
+        # the npc actually moved, thousands of idle npcs re-sending their position
+        # every tick floods the message director until the AI's connection drops...
+        posHpr = (x, y, z, h, p, r)
+        if posHpr == getattr(self._npc, '_lastBroadcastPosHpr', None):
+            return task.again
+
+        self._npc._lastBroadcastPosHpr = posHpr
         timestamp = globalClockDelta.getRealNetworkTime(bits=16)
         self._npc.sendUpdate('setSmPosHpr', [x, y, z, h, p, r, timestamp])
         return task.again
