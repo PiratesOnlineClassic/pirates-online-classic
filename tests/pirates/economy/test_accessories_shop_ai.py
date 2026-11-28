@@ -17,7 +17,7 @@ except ImportError:
 
 from otp.uberdog.RejectCode import RejectCode
 from pirates.distributed import InteractGlobals
-from pirates.economy.AvatarAccessoriesManagerAI import AvatarAccessoriesManagerAI
+from pirates.economy.AvatarAccessoriesManagerAI import AvatarAccessoriesManagerAI, getClothingGender
 from pirates.economy.AvatarAccessoriesManagerUD import AccessoriesDB, AvatarAccessoriesManagerUD
 from pirates.economy.DistributedShopKeeperAI import DistributedShopKeeperAI
 from pirates.makeapirate import ClothingGlobals, JewelryGlobals, TattooGlobals
@@ -29,7 +29,7 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 SHOP_ID = PiratesGlobals.PORT_ROYAL_DEFAULTS
 
 
-def storeClothing(clothingType, gender='m', count=1):
+def storeClothing(clothingType, gender='m', count=1, holidays=False):
     """
     Returns (uid, colorId) pairs the Port Royal tailor sells.
     """
@@ -38,7 +38,8 @@ def storeClothing(clothingType, gender='m', count=1):
     items = []
     for uid, colors in sorted(ClothingGlobals.stores[SHOP_ID].items()):
         item = ClothingGlobals.UNIQUE_ID.get(uid)
-        if item and item[0] == clothingType and (uid >= ClothingGlobals.HAT_START_RANGE_FEMALE) == female:
+        if item and item[0] == clothingType and (uid >= ClothingGlobals.HAT_START_RANGE_FEMALE) == female and \
+                (holidays or item[8] is None):
             items.append((uid, colors[0]))
 
     return items[:count]
@@ -51,12 +52,14 @@ def clothingPrice(uid, colorId):
 def storeJewelry(jewelryType, gender='m', count=1):
     female = gender == 'f'
     uids = [uid for uid in JewelryGlobals.stores[SHOP_ID] if uid in JewelryGlobals.jewelry_id and
-        JewelryGlobals.jewelry_id[uid][1] == jewelryType and (uid >= JewelryGlobals.FEMALE_RBROW) == female]
+        JewelryGlobals.jewelry_id[uid][1] == jewelryType and (uid >= JewelryGlobals.FEMALE_RBROW) == female and
+        JewelryGlobals.jewelry_id[uid][6] is None]
     return uids[:count]
 
 
 def storeTattoos(shopId, zone, count=1):
-    uids = [uid for uid in TattooGlobals.stores[shopId] if TattooGlobals.tattoos[uid][0] == zone]
+    uids = [uid for uid in TattooGlobals.stores[shopId] if TattooGlobals.tattoos[uid][0] == zone and
+        TattooGlobals.tattoos[uid][7] is None]
     return uids[:count]
 
 
@@ -111,6 +114,8 @@ class AccessoriesShopTests(unittest.TestCase):
         self.inventory = FakeInventory()
         self.air = Mock()
         self.air.getAvatarIdFromSender.return_value = self.avatar.doId
+        self.holidays = set()
+        self.air.newsManager.isHolidayActive.side_effect = lambda holidayId: holidayId in self.holidays
         self.air.doId2do = {self.avatar.doId: self.avatar}
         self.air.inventoryManager.getInventory.side_effect = lambda avId: self.inventory
 
@@ -257,9 +262,21 @@ class TailorTests(AccessoriesShopTests):
         self.assertEqual(self.lastSaleResponse(), DistributedShopKeeperAI.SALE_SUCCESS)
         self.assertIn(uid, [entry[0] for entry in self.openTailor()])
 
+    def test_half_off_customization_for_members(self):
+        self.openTailor()
+        uid, colorId = storeClothing(ClothingGlobals.HAT)[0]
+        self.holidays.add(PiratesGlobals.HALFOFFCUSTOMIZATION)
+
+        self.shop.requestAccessories([[uid, colorId, ClothingGlobals.HAT]], [])
+
+        # the base price is halved before the color is priced, as the client does
+        expected = int(int(ClothingGlobals.UNIQUE_ID[uid][5] / 2) * ClothingGlobals.colorCostScaler[colorId])
+        self.assertEqual(self.inventory.getGoldInPocket(), 10000 - expected)
+
     def test_wardrobe_limit(self):
         self.openTailor()
-        hats = storeClothing(ClothingGlobals.HAT, count=PiratesGlobals.WARDROBE_LIMIT_TAILOR + 1)
+        hats = storeClothing(ClothingGlobals.HAT, count=PiratesGlobals.WARDROBE_LIMIT_TAILOR + 1, holidays=True)
+        self.holidays.update(ClothingGlobals.UNIQUE_ID[uid][8] for uid, colorId in hats)
         self.assertEqual(len(hats), PiratesGlobals.WARDROBE_LIMIT_TAILOR + 1)
         purchases = [[uid, colorId, ClothingGlobals.HAT] for uid, colorId in hats]
         self.shop.requestAccessories(purchases, [])

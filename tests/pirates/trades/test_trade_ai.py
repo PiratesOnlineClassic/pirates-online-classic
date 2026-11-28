@@ -84,6 +84,10 @@ class TradeAITests(unittest.TestCase):
         self.trade.sendUpdateToAvatarId.assert_called_with(1, 'rejectChangeGiving', [RejectCode.CONTENT_TYPE_NOT_ALLOWED])
         self.assertEqual(self.trade.firstAvatarGiving, [])
 
+    def test_pouches_can_not_be_traded(self):
+        self.assertFalse(self.trade.isTradableType(InventoryType.PistolPouchL1))
+        self.assertTrue(self.trade.isTradableType(InventoryType.Potion1))
+
     def test_outsiders_cannot_change_the_trade(self):
         self.sendAs(3, 'requestChangeGiving', [[InventoryType.GoldInPocket, 1]])
         self.sendAs(3, 'requestChangeStatus', 1)
