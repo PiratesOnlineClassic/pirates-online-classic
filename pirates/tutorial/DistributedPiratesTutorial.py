@@ -749,7 +749,9 @@ class DistributedPiratesTutorial(DistributedObject.DistributedObject, FSM.FSM):
             localAvatar.setH(-90)
             self.stageStumpyPositionOnBoat()
             self.acceptOnce('usedCannon', self.startShipMovement)
-            list(stumpyBoat.cannons.values())[0][1].setIgnoreProximity(False)
+            # Python 2 listed the cannon indices in order, the tutorial's cannon
+            # is index 0 no matter which cannon happened to generate first...
+            stumpyBoat.cannons[min(stumpyBoat.cannons)][1].setIgnoreProximity(False)
             dialogue = base.loader.loadSfx('audio/beck_cs12_4_4c_tell_to_shoot.mp3')
             localAvatar.guiMgr.subtitler.showText(PLocalizer.QuestScriptTutorialStumpy_1, sfx = dialogue, timeout = dialogue.length() + 1.0)
             localAvatar.guiMgr.subtitler.clearTextOverride = True
