@@ -17,6 +17,10 @@ class GrabberTentacleAI(KrakenPartAI):
     # how many squeezes before we let the avatar go
     MaxSqueezes = 5
 
+    # the crew free a grabbed shipmate by hacking at the tentacle holding them,
+    # it lets go once it has taken this much of it's max hp since the grab...
+    ReleaseDamageFraction = 0.15
+
     def __init__(self, air):
         KrakenPartAI.__init__(self, air)
 
@@ -25,6 +29,7 @@ class GrabberTentacleAI(KrakenPartAI):
         self.grabbedAvatarId = 0
         self.grabbedMast = 0
         self.numSqueezes = 0
+        self.damageSinceGrab = 0
 
     def createGameFSM(self):
         return GrabberGameFSMAI(self.air, self)
@@ -75,10 +80,21 @@ class GrabberTentacleAI(KrakenPartAI):
 
         self.d_grabAvatar(avId)
         self.b_setGrabbedAvatar(avId)
+        self.damageSinceGrab = 0
         if avId:
             self.startSqueeze()
         else:
             self.stopSqueeze()
+
+    def setHp(self, hp, quietly=False):
+        damage = self.hp - hp
+        KrakenPartAI.setHp(self, hp, quietly)
+        if damage <= 0 or not self.grabbedAvatarId or self.isDead():
+            return
+
+        self.damageSinceGrab += damage
+        if self.damageSinceGrab >= self.getMaxHp() * self.ReleaseDamageFraction:
+            self.releaseAvatar()
 
     def releaseAvatar(self):
         if self.grabbedAvatarId:

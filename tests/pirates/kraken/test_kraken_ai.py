@@ -183,6 +183,24 @@ class KrakenAITests(unittest.TestCase):
         self.assertEqual(grabber.getGrabbedAvatar(), 0)
         self.assertIn((grabber, 'grabAvatar', [0]), self.sent)
 
+    def test_hacking_at_a_grabber_frees_the_avatar_it_holds(self):
+        kraken = self.spawn()
+        avatar = FakeAvatar(900, self.ship.doId)
+        self.air.doId2do[avatar.doId] = avatar
+        grabber = kraken.grabberTentacles[0]
+        grabber.grabAvatar(avatar.doId)
+
+        maxHp = grabber.getMaxHp()
+        step = int(maxHp * grabber.ReleaseDamageFraction / 2) + 1
+        grabber.setHp(grabber.hp - step)
+        self.assertEqual(grabber.getGrabbedAvatar(), avatar.doId)
+        grabber.setHp(grabber.hp - step)
+        self.assertEqual(grabber.getGrabbedAvatar(), 0)
+
+        # healing or damage while not holding anyone does nothing
+        grabber.setHp(grabber.hp - step)
+        self.assertEqual(grabber.getGrabbedAvatar(), 0)
+
     def test_masts_damage_ship(self):
         kraken = self.spawn()
         kraken.GrabAvatarChance = 0
