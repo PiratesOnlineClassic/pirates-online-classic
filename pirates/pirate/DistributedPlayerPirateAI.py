@@ -174,6 +174,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def setBandId(self, bandManagerId, bandId):
         self.bandManagerId = bandManagerId
         self.bandId = bandId
+        messenger.send(self.getBandIdChangedEvent(), [bandManagerId, bandId])
+
+    def getBandIdChangedEvent(self):
+        return 'bandIdChanged-%d' % self.doId
 
     def d_setBandId(self, bandManagerId, bandId):
         self.sendUpdate('setBandId', [bandManagerId, bandId])
