@@ -124,45 +124,35 @@ class StubNPCShip:
         self.deleted = True
 
 
+class FakeShipManager:
+
+    def __init__(self):
+        self.requests = []
+
+    def spawnTutorialShip(self, oceanGrid, shipClass, level, hp, pos, h, uniqueId=''):
+        self.requests.append((oceanGrid, shipClass, level, hp, pos, h, uniqueId))
+        return StubNPCShip(None)
+
+
 class TutorialTargetShipTests(unittest.TestCase):
 
     def setUp(self):
-        import sys
-        from unittest.mock import patch
-
-        npcModule = SimpleNamespace(NPCShipAI=StubNPCShip)
-        localizer = SimpleNamespace(ShipClassNames={})
-        self.patcher = patch.dict(sys.modules, {
-            'pirates.ship.NPCShipAI': npcModule,
-            'pirates.piratesbase.PLocalizer': localizer,
-        })
-        self.patcher.start()
-        self.addCleanup(self.patcher.stop)
-
         shipClass = _load_tutorial_ship_class()
-        self.ship = shipClass(SimpleNamespace())
-        self.grid = SimpleNamespace(
-            getZoneFromXYZ=lambda pos: 2399,
-            generateChildWithRequired=lambda child, zoneId: setattr(child, 'generated', zoneId),
-            addObjectToOceanGrid=lambda child: setattr(child, 'onGrid', True))
+        self.shipManager = FakeShipManager()
+        self.ship = shipClass(SimpleNamespace(shipManager=self.shipManager))
+        self.grid = SimpleNamespace(name='tutorial ocean grid')
         self.ship.tutorialOceanGrid = self.grid
 
-    def test_undead_ship_is_spawned_once_as_a_passive_level_one_target(self):
+    def test_undead_ship_is_requested_once_from_the_ship_manager(self):
         from pirates.ship import ShipGlobals
         from pirates.tutorial import TutorialGlobals
 
         target = self.ship.spawnTutorialTarget()
 
-        self.assertIsInstance(target, StubNPCShip)
         self.assertIs(self.ship.spawnTutorialTarget(), target)
-        self.assertEqual(target.generated, 2399)
-        self.assertTrue(target.onGrid)
-        self.assertEqual(target.values['setUniqueId'], (TutorialGlobals.UNDEAD_SHIP_UID,))
-        self.assertEqual(target.values['setShipClass'], (ShipGlobals.SKEL_PHANTOM,))
-        self.assertEqual(target.values['setLevel'], (1,))
-        self.assertEqual(target.values['setHp'], (self.ship.TargetShipHp,))
-        # the AI never engages from Idle, a new pirate can't be sunk by it...
-        self.assertEqual(target.values['b_setGameState'], ('Idle', 0))
+        self.assertEqual(self.shipManager.requests, [(
+            self.grid, ShipGlobals.SKEL_PHANTOM, 1, self.ship.TargetShipHp,
+            self.ship.TargetShipPos, self.ship.TargetShipH, TutorialGlobals.UNDEAD_SHIP_UID)])
         self.assertFalse(self.ship.isTutorialTargetSunk())
 
     def test_target_practice_ends_when_the_undead_ship_sinks(self):

@@ -6,6 +6,7 @@ from direct.showbase.DirectObject import DirectObject
 from pirates.ship.DistributedShipAI import DistributedShipAI
 from pirates.ship.PlayerShipAI import PlayerShipAI
 from pirates.ship.NPCShipAI import NPCShipAI
+from pirates.ship.TutorialShipAI import TutorialShipAI
 from pirates.ship import ShipGlobals
 from pirates.ship import FlagshipGlobals
 from pirates.world import OceanZone
@@ -328,6 +329,42 @@ class ShipManagerAI:
         if isFlagship or FlagshipGlobals.isFlagship(shipClass):
             self.addFlagship(ship)
         
+        return ship
+
+    def spawnTutorialShip(self, oceanGrid, shipClass, level, hp, pos, h, uniqueId=''):
+        """
+        Spawns a ship for the new pirate tutorial. These are TutorialShips rather than
+        NPCShips, they're never part of the ocean's ship population and the AI never
+        engages from Idle, so the ship just sits there and takes it...
+        """
+        shipConfig = ShipGlobals.getShipConfig(shipClass)
+        hullConfig = ShipGlobals.getHullConfig(shipClass)
+        if shipConfig is None or hullConfig is None:
+            self.notify.warning('Failed to get config for tutorial shipClass %s' % shipClass)
+            return None
+
+        ship = TutorialShipAI(self.air)
+        ship.setUniqueId(uniqueId)
+        ship.setBaseTeam(ShipGlobals.getShipTeam(shipClass))
+        ship.setLevel(level)
+        ship.setShipClass(shipClass)
+        ship.setName(ShipClassNames.get(shipClass, ''))
+        ship.setNPCship(1)
+        ship.setIsBoardable(0)
+        ship.setMaxHp(hp)
+        ship.setHp(hp)
+        ship.setMaxSp(hullConfig['setMaxSp'][0])
+        ship.setSp(hullConfig['setSp'][0])
+        ship.setHullCondition(1 << 7)
+
+        zoneId = oceanGrid.getZoneFromXYZ(pos)
+        oceanGrid.generateChildWithRequired(ship, zoneId)
+        ship.setPos(oceanGrid, *pos)
+        ship.setHpr(oceanGrid, h, 0, 0)
+        oceanGrid.addObjectToOceanGrid(ship)
+        ship.sendCurrentPosition()
+        ship.startPosHprBroadcast()
+        ship.b_setGameState('Idle', 0)
         return ship
 
     def _spawnFlagship(self, shipClass=None):

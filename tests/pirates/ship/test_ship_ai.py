@@ -806,5 +806,38 @@ class FlagshipBoardingTests(_TaskPatchedTestCase):
         self.flagship.air.battleMgr.willWeaponHit.assert_not_called()
 
 
+class ShipManagerTutorialShipTests(unittest.TestCase):
+
+    def test_tutorial_ships_are_passive_level_one_tutorial_ships(self):
+        from unittest.mock import patch
+
+        from pirates.ship import ShipGlobals, ShipManagerAI as shipManagerModule
+        from tests.pirates.ship.test_tutorial_ship_ai import StubNPCShip
+        from pirates.tutorial import TutorialGlobals
+
+        grid = SimpleNamespace(
+            getZoneFromXYZ=lambda pos: 2399,
+            generateChildWithRequired=lambda child, zoneId: setattr(child, 'generated', zoneId),
+            addObjectToOceanGrid=lambda child: setattr(child, 'onGrid', True))
+        shipManager = shipManagerModule.ShipManagerAI.__new__(shipManagerModule.ShipManagerAI)
+        shipManager.air = SimpleNamespace()
+        with patch.object(shipManagerModule, 'TutorialShipAI', StubNPCShip):
+            ship = shipManager.spawnTutorialShip(grid, ShipGlobals.SKEL_PHANTOM, 1, 1000,
+                (110, 540, 0), 80, uniqueId=TutorialGlobals.UNDEAD_SHIP_UID)
+
+        # a TutorialShip, not an NPCShip, and never part of the ship population...
+        self.assertIsInstance(ship, StubNPCShip)
+        self.assertNotIn(ship, getattr(shipManager, 'npcShips', set()))
+        self.assertEqual(ship.generated, 2399)
+        self.assertTrue(ship.onGrid)
+        self.assertEqual(ship.values['setUniqueId'], (TutorialGlobals.UNDEAD_SHIP_UID,))
+        self.assertEqual(ship.values['setShipClass'], (ShipGlobals.SKEL_PHANTOM,))
+        self.assertEqual(ship.values['setLevel'], (1,))
+        self.assertEqual(ship.values['setHp'], (1000,))
+        self.assertEqual(ship.values['setIsBoardable'], (0,))
+        # the AI never engages from Idle, a new pirate can't be sunk by it...
+        self.assertEqual(ship.values['b_setGameState'], ('Idle', 0))
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -200,41 +200,12 @@ class TutorialShipAI(DistributedShipAI):
             self.notify.warning('Cannot spawn the tutorial target without an ocean grid!')
             return None
 
-        from pirates.piratesbase.PLocalizer import ShipClassNames
-        from pirates.ship.NPCShipAI import NPCShipAI
-
-        shipClass = self.TargetShipClass
-        shipConfig = ShipGlobals.getShipConfig(shipClass)
-        hullConfig = ShipGlobals.getHullConfig(shipClass)
-        if not shipConfig or not hullConfig:
-            self.notify.warning('Cannot spawn the tutorial target without ship configuration!')
+        ship = self.air.shipManager.spawnTutorialShip(oceanGrid, self.TargetShipClass,
+            self.TargetShipLevel, self.TargetShipHp, self.TargetShipPos, self.TargetShipH,
+            uniqueId=TutorialGlobals.UNDEAD_SHIP_UID)
+        if not ship:
+            self.notify.warning('Cannot spawn the tutorial target ship!')
             return None
-
-        ship = NPCShipAI(self.air)
-        ship.setUniqueId(TutorialGlobals.UNDEAD_SHIP_UID)
-        ship.setBaseTeam(ShipGlobals.getShipTeam(shipClass))
-        ship.setLevel(self.TargetShipLevel)
-        ship.setShipClass(shipClass)
-        ship.setName(ShipClassNames.get(shipClass, ''))
-        ship.setNPCship(1)
-        ship.setIsBoardable(0)
-        ship.setMaxHp(self.TargetShipHp)
-        ship.setHp(self.TargetShipHp)
-        ship.setMaxSp(hullConfig['setMaxSp'][0])
-        ship.setSp(hullConfig['setSp'][0])
-        ship.setHullCondition(1 << 7)
-
-        zoneId = oceanGrid.getZoneFromXYZ(self.TargetShipPos)
-        oceanGrid.generateChildWithRequired(ship, zoneId)
-        ship.setPos(oceanGrid, *self.TargetShipPos)
-        ship.setHpr(oceanGrid, self.TargetShipH, 0, 0)
-        oceanGrid.addObjectToOceanGrid(ship)
-        ship.sendCurrentPosition()
-        ship.startPosHprBroadcast()
-
-        # Idle isn't one of the states the ship's AI engages from, so it
-        # just sits there and takes it...
-        ship.b_setGameState('Idle', 0)
 
         self.tutorialTarget = ship
         self.tutorialTargetSunk = False
