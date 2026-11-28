@@ -12,11 +12,16 @@ class DistrictTrackerUD:
         self.shards = {}
 
         self.air.netMessenger.accept('districtStatus', self, self.handleDistrictStatus)
+        self.air.netMessenger.accept('unregisterShard', self, self.handleDistrictGone)
         self.requestStatus()
 
     def handleDistrictStatus(self, channel, status):
         self.notify.debug('Received update for channel %d; %s' % (channel, str(status)))
         self.shards.setdefault(channel, {}).update(status)
+
+    def handleDistrictGone(self, channel, shardId):
+        self.notify.info('District %d (channel %d) has gone down.' % (shardId, channel))
+        self.shards.pop(channel, None)
 
     def getShards(self):
         return self.shards

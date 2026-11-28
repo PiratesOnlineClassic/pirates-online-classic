@@ -59,6 +59,9 @@ class PiratesInternalRepository(OTPInternalRepository):
         self._registerInternalNetMessage('matchMakerCreateMatch')
         self._registerInternalNetMessage('matchMakerAvatarLeft')
 
+        # DistributedTravelAgent
+        self._registerInternalNetMessage('unregisterShard')
+
     def logPotentialHacker(self, message, kickChannel=False, **kwargs):
         self.notify.warning(message)
 

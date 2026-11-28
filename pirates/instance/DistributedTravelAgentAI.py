@@ -16,6 +16,10 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
         self.air.netMessenger.send('registerShard', [self.air.ourChannel,
             self.air.districtId])
 
+        # Should we ever go down, the UberDOG must stop sending avatars here:
+        self.air.addPostRemove(self.air.netMessenger.prepare('unregisterShard',
+            [self.air.ourChannel, self.air.districtId]))
+
     def requestInitLocUDtoAI(self, avatarId):
         if not avatarId:
             return
