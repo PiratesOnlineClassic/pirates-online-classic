@@ -93,6 +93,14 @@ class DistributedGAConnectorAI(DistributedNodeAI):
         if not isinstance(area, DistributedGameAreaAI):
             return
 
+        # only the game areas this connector links together may be requested
+        linkedAreaIds = [link[1] for link in self.links[2]]
+        if area.doId not in linkedAreaIds:
+            self.air.logPotentialHacker(message='Requested a private area the connector does not link to!',
+                targetAvId=avatar.doId, connectorId=self.doId, areaDoId=areaDoId)
+
+            return
+
         areaWorld = area.getParentObj()
         if not areaWorld:
             return
@@ -100,8 +108,15 @@ class DistributedGAConnectorAI(DistributedNodeAI):
         if not isinstance(areaWorld, DistributedInstanceBaseAI):
             return
 
-        otherConnector = self.air.uidMgr.justGetMeMeObject(self.otherLinkUid)
-        if not otherConnector:
+        # the avatar arrives in the requested area at the connector that lays within it,
+        # which is usually the connector on the other side of the tunnel, unless the avatar
+        # turned around and is heading back into the area it came from...
+        if area is self.getParentObj():
+            areaConnector = self
+        else:
+            areaConnector = self.air.uidMgr.justGetMeMeObject(self.otherLinkUid)
+
+        if not areaConnector:
             self.notify.warning('Cannot handle request private area for avatar: %d, '
                 'unknown other side connector with uid: %s' % (avatar.doId, self.otherLinkUid))
 
@@ -110,8 +125,8 @@ class DistributedGAConnectorAI(DistributedNodeAI):
         def _connectorInterestCallback():
             self.d_setPrivateArea(avatar.doId, areaWorld.doId, area.zoneId, area.doId, True)
 
-        self.air.worldGridManager.handleLocationChanged(otherConnector.getParentObj(), avatar,
-            otherConnector.zoneId, _connectorInterestCallback)
+        self.air.worldGridManager.handleLocationChanged(areaConnector.getParentObj(), avatar,
+            areaConnector.zoneId, _connectorInterestCallback)
 
     def setPrivateArea(self, worldId, worldZoneId, areaDoId, autoFadeIn):
         # the private area is only ever assigned by the AI in response to requestPrivateArea,
