@@ -458,6 +458,29 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         return inventory.getStackQuantity(weaponId) > 0
 
+    def setSCEmote(self, emoteId):
+        # Broadcast straight from the client; every other client looks the
+        # emote up when it logs the message, so a made up one breaks them.
+        if emoteId not in PLocalizer.EmoteMessagesThirdPerson:
+            self.chatViolation('invalid SpeedChat emote %d' % emoteId, eject=True)
+
+    def setSpeedChatQuest(self, questInt, msgType, taskNum):
+        if not self.isValidSpeedChatQuest(questInt, msgType, taskNum):
+            self.chatViolation('invalid SpeedChat quest message (%d, %d, %d)' % (
+                questInt, msgType, taskNum), eject=True)
+
+    def isValidSpeedChatQuest(self, questInt, msgType, taskNum):
+        if msgType not in (0, 1, 2):
+            return False
+
+        questId = QuestDB.questIntDict.get(questInt)
+        questDNA = QuestDB.QuestDict.get(questId)
+        if questDNA is None:
+            return False
+
+        numTasks = len(questDNA.getTasks())
+        return numTasks == 1 or 0 <= taskNum < numTasks
+
     def requestCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
         avatarId = self.air.getAvatarIdFromSender()
         if avatarId != self.doId:
