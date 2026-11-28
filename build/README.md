@@ -31,8 +31,12 @@ Build each OS on that OS: Nuitka can't cross-compile.
   the icon is a `.png` (Nuitka converts it).
 - **A C compiler**
   - Windows: Visual Studio 2022 Build Tools with "Desktop development with
-    C++". (Nuitka can download MinGW-w64 itself, but MSVC is what the
-    python.org build uses.)
+    C++" and "C++ Clang tools for Windows", and pass
+    `--nuitka-arg=--clang`. MSVC itself runs out of heap on the code
+    Nuitka generates for the big data modules (`C1002` on
+    `pirates.quest.QuestDB`); clang-cl compiles it and still links with
+    Visual Studio's tools. (Nuitka can download MinGW-w64 itself, but
+    Visual Studio is what the python.org build uses.)
   - macOS: Xcode Command Line Tools (`xcode-select --install`), clang.
   - Linux: gcc, plus `patchelf` (required for standalone builds) and
     optionally `ccache`. Build on the oldest distro you support: the binary
@@ -51,7 +55,7 @@ pip install -r requirements-build.txt
 ## GitHub Actions
 
 `.github/workflows/build-client.yml` builds all three OSes on GitHub's
-runners (Windows Server 2022 with MSVC, macOS 15 on Apple Silicon, Ubuntu 22.04 for an old
+runners (Windows Server 2022 with Visual Studio's clang-cl, macOS 15 on Apple Silicon, Ubuntu 22.04 for an old
 enough glibc), each with Python 3.12 and `requirements-build.txt`.
 
 - **Pushing a tag like `v1.2.3`** builds version `1.2.3.0` and publishes a

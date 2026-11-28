@@ -34,6 +34,10 @@ jobs:
         include:
           - os: windows
             runner: windows-2022
+            # MSVC runs out of heap compiling the module code Nuitka makes for the
+            # big data modules (C1002 on pirates.quest.QuestDB), clang-cl from the
+            # runner's Visual Studio compiles them, still linking with MSVC's tools
+            nuitka-args: --nuitka-arg=--clang
           - os: macos
             runner: macos-15
           # the binary needs a glibc at least as new as the build machine's,
@@ -106,6 +110,9 @@ jobs:
           args=(--version "${{ steps.version.outputs.version }}"
                 --jobs 4
                 --nuitka-arg=--assume-yes-for-downloads)
+          if [[ -n "${{ matrix.nuitka-args }}" ]]; then
+            args+=(${{ matrix.nuitka-args }})
+          fi
           if [[ "${{ inputs.onefile }}" == "true" && "${{ matrix.os }}" != "macos" ]]; then
             args+=(--onefile)
           fi
