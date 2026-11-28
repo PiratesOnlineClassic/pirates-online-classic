@@ -887,6 +887,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             avatar = self.air.doId2do.get(avatarId)
             assert(avatar is not None)
             self.d_sendCrewToIsland(avatar.doId, islandDoId, spawnPt)
+            self.air.questMgr.dockedAtPort(avatar, island)
 
     def d_sendCrewToIsland(self, avatarId, islandDoId, posH):
         self.sendUpdateToAvatarId(avatarId, 'sendCrewToIsland', [islandDoId, posH])

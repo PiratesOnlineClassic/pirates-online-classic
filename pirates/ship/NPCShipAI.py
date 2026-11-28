@@ -80,7 +80,13 @@ class NPCShipAI(DistributedShipAI):
             self.recordAttacker(attackerDoId, damage)
 
         # sinking is handled by setHp once the ship's hp reaches zero.
+        oldHp = self.hp
         self.b_setHp(max(0, self.hp - damage))
+
+        # the crew that sank this ship receive credit towards their quests
+        if self.hp <= 0 < oldHp:
+            self.air.questMgr.shipSunk(self, [attackerDoId])
+
         if self.hp > 0:
             self.gameFSM.onDamageReceived(attackerDoId, damage)
 
