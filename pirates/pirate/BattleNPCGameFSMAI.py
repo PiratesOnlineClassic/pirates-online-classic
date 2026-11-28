@@ -18,6 +18,9 @@ from pirates.pirate import AvatarTypes
 class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
     notify = directNotify.newCategory('BattleNPCGameFSMAI')
 
+    # how fast npcs walk between the movement nodes of their patrol route
+    WAYPOINT_WALK_SPEED = 8.0
+
     def __init__(self, air, avatar):
         BattleAvatarGameFSMAI.__init__(self, air, avatar)
 
@@ -30,6 +33,16 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.__returnToSpawnTask = None
         self.__mojoRegenTask = None
 
+        # the movement node we are currently at on our patrol route,
+        # None when we are at our spawn node...
+        self.__waypointUid = None
+        self.__waypointData = None
+        self.__lastWaypointUid = None
+        self.__walkingRoute = False
+
+        # where we left our patrol route to fight, when we were walking one
+        self.__routeOrigin = None
+
         # update our game state as we change it
         self.setBroadcastStateChanges(True)
         self.accept(self.getStateChangeEvent(), self.__updateGameState)
@@ -40,11 +53,56 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
     def getPatrolRadius(self):
         return float(self.avatar.spawnNode.objectData.get('Patrol Radius', 1.0))
 
+    def getPatrolNodeData(self):
+        # the pause properties come from the node we're currently standing at,
+        # which is either our spawn node or a movement node on our patrol route...
+        if self.__waypointData is not None:
+            return self.__waypointData
+
+        return self.avatar.spawnNode.objectData
+
     def getPauseChance(self):
-        return float(self.avatar.spawnNode.objectData.get('Pause Chance', 50.0))
+        return float(self.getPatrolNodeData().get('Pause Chance', 100.0))
 
     def getPauseDuration(self):
-        return float(self.avatar.spawnNode.objectData.get('Pause Duration', 15.0))
+        # movement nodes use the level editor's default pause duration
+        defaultDuration = 30.0 if self.__waypointData is not None else 15.0
+        return float(self.getPatrolNodeData().get('Pause Duration', defaultDuration))
+
+    def getNextPauseDuration(self):
+        if random.random() * 100.0 >= self.getPauseChance():
+            return 0
+
+        return random.uniform(1.0, max(self.getPauseDuration(), 1.0))
+
+    def resetWaypoint(self):
+        self.__waypointUid = None
+        self.__waypointData = None
+        self.__lastWaypointUid = None
+
+    def getNextWaypoint(self):
+        spawnNode = self.avatar.getSpawnNode()
+        if not spawnNode or not hasattr(spawnNode, 'getLinkedWaypoints'):
+            return None
+
+        linkedWaypoints = spawnNode.getLinkedWaypoints(self.__waypointUid)
+        if not linkedWaypoints:
+            return None
+
+        # don't turn back the way we came unless we've reached a dead end
+        choices = [waypoint for waypoint in linkedWaypoints if waypoint[0] != self.__lastWaypointUid]
+        waypointUid, waypointData = random.choice(choices or linkedWaypoints)
+
+        previousWaypointUid = self.__waypointUid or spawnNode.objKey
+        if waypointUid == spawnNode.objKey:
+            self.__waypointUid = None
+            self.__waypointData = None
+        else:
+            self.__waypointUid = waypointUid
+            self.__waypointData = waypointData
+
+        self.__lastWaypointUid = previousWaypointUid
+        return spawnNode.getWaypointPos(waypointUid, waypointData)
 
     def shouldFollowTarget(self, attackTarget):
         if not attackTarget:
@@ -62,6 +120,13 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         parentObj = self.avatar.getParentObj()
         if not parentObj:
             return None
+
+        # npcs with a patrol route walk along the movement nodes linked
+        # to their spawn node, rather than around their spawn node...
+        waypointPos = self.getNextWaypoint()
+        self.__walkingRoute = waypointPos is not None
+        if self.__walkingRoute:
+            return Point3(*waypointPos)
 
         patrolRadius = self.getPatrolRadius()
         if patrolRadius == 0.0:
@@ -126,9 +191,26 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.avatar.b_setCurrentTarget(attackTarget.doId)
         return attackTarget
 
+    def getPatrolOrigin(self):
+        if self.__routeOrigin is not None:
+            return self.__routeOrigin
+
+        return Point3(*self.avatar.getSpawnPos())
+
+    def rememberPatrolOrigin(self):
+        # npcs walking a patrol route may be far away from their spawn node when
+        # they get into a fight, they fight around and return to where they left
+        # their route instead of their spawn node...
+        if self.__routeOrigin is not None or not self.__walkingRoute:
+            return
+
+        parentObj = self.avatar.getParentObj()
+        if parentObj:
+            self.__routeOrigin = self.avatar.getPos(parentObj)
+
     def getDistFromSpawnNode(self):
         spawnNodeNP = NodePath('spawnNode-%d' % self.avatar.doId)
-        spawnNodeNP.setPos(*self.avatar.getSpawnPos())
+        spawnNodeNP.setPos(*self.getPatrolOrigin())
         return self.avatar.getDistance(spawnNodeNP)
 
     def _drawWeapon(self):
@@ -202,7 +284,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.__chaseTargetTask = taskMgr.add(self._chaseTarget, self.getChaseTargetTaskName())
 
     def _returnToSpawn(self, task):
-        self.walkToPoint(Point3(*self.avatar.getSpawnPos()))
+        self.walkToPoint(self.getPatrolOrigin())
         return task.done
 
     def doReturnToSpawn(self):
@@ -222,9 +304,12 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
                 self.demand(self.avatar.getStartState())
                 return
 
-            pauseDuration = random.uniform(1.0, self.getPauseDuration())
+            # we may pause at our current node before walking on to the next one
+            pauseDuration = self.getNextPauseDuration()
+
+            walkSpeed = self.WAYPOINT_WALK_SPEED if self.__walkingRoute else None
             self.__pausedTask = taskMgr.doMethodLater(pauseDuration, self.walkToPoint, self.getWalkToPointPausedName(),
-                extraArgs=[patrolPoint], appendTask=False)
+                extraArgs=[patrolPoint, None, walkSpeed], appendTask=False)
         elif state == 'AttackChase':
             currentTarget = self.avatar.currentTarget
             if not self.avatar.isTargetValid(currentTarget):
@@ -256,7 +341,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
     def _walkToPoint(self, currentTarget):
         self.walkToPoint(currentTarget.getPos(), currentTarget.getParent())
 
-    def walkToPoint(self, walkPoint, parent=None):
+    def walkToPoint(self, walkPoint, parent=None, walkSpeed=None):
         if not parent or parent.isEmpty():
             parent = self.avatar.getParentObj()
 
@@ -269,9 +354,14 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.avatar.lookAt(walkPointNode)
 
         self.acceptOnce(self.getWalkToPointDoneName(), self.findNextWalkToPoint)
-        walkSpeed = MotionFSM.WALK_CUTOFF * 2
 
-        self.__movementInterval = self.avatar.posInterval(walkSpeed, walkPoint, other=parent)
+        # walks along a patrol route take as long as the distance requires,
+        # otherwise we're only walking a short distance around our spawn node...
+        walkDuration = MotionFSM.WALK_CUTOFF * 2
+        if walkSpeed:
+            walkDuration = max(self.avatar.getDistance(walkPointNode) / walkSpeed, walkDuration)
+
+        self.__movementInterval = self.avatar.posInterval(walkDuration, walkPoint, other=parent)
         self.__movementInterval.setDoneEvent(self.getWalkToPointDoneName())
         self.__movementInterval.start()
 
@@ -360,6 +450,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         pass
 
     def enterBattle(self):
+        self.rememberPatrolOrigin()
         if not self.avatar.isTargetValid(self.avatar.currentTarget):
             if not self.findNewAttackTarget():
                 # there is nobody left for us to fight...
@@ -401,6 +492,7 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.avatar.stopLookAt()
 
     def enterAttackChase(self, *args, **kwargs):
+        self.rememberPatrolOrigin()
         assert(self.avatar.currentTarget is not None)
         self.avatar.startLookAt()
         self.avatar.d_setChat(self.avatar.getTauntPhrase())
@@ -448,7 +540,11 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         # clear our attackers from the target mgr
         self.air.targetMgr.clearTarget(self.avatar)
 
-        # walk us back to our spawn point then set our default state.
+        # walk us back to our spawn point then set our default state,
+        # or back to our patrol route if we left it to fight...
+        if self.__routeOrigin is None:
+            self.resetWaypoint()
+
         self.doReturnToSpawn()
 
     def filterBreakCombat(self, request, args=[]):
@@ -461,6 +557,8 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         return self.defaultFilter(request, args)
 
     def exitBreakCombat(self):
+        self.__routeOrigin = None
+
         if self.__returnToSpawnTask:
             taskMgr.remove(self.__returnToSpawnTask)
             self.__returnToSpawnTask = None
@@ -473,7 +571,10 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
             self.avatar.b_setAnimSet(spawnNode.objectData.get('AnimSet', 'default'))
 
             # set the rotation of the avatar to be that of it's initial spawn constants
-            self.avatar.setHpr(spawnNode.objectData.get('Hpr', (0, 0, 0)))
+            if hasattr(spawnNode, 'getSpawnHpr'):
+                self.avatar.setHpr(spawnNode.getSpawnHpr())
+            else:
+                self.avatar.setHpr(spawnNode.objectData.get('Hpr', (0, 0, 0)))
 
         # reset the avatar's mojo and health
         self.avatar.b_setHp(self.avatar.getMaxHp())
