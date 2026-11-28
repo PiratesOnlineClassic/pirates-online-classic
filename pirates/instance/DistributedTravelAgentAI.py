@@ -20,9 +20,6 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
         if not avatarId:
             return
 
-        if avatarId in self.air.doId2do:
-            return
-
         def avatarArrived(avatar):
             if not avatar:
                 self.notify.warning('Cannot initialize teleport loc for avatar %d, '
@@ -31,6 +28,13 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
                 return
 
             avatar.d_relayTeleportLoc(self.air.districtId, self.air.distributedDistrict.zoneId, self.air.teleportMgr.doId)
+
+        # the avatar is already being managed by this district,
+        # there is no need to wait for it to arrive here...
+        avatar = self.air.doId2do.get(avatarId)
+        if avatar:
+            avatarArrived(avatar)
+            return
 
         self.__getAvatarArrival(avatarId, avatarArrived)
 
@@ -62,10 +66,26 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
                     'invalid generate!' % avatarId)
 
                 return
-        
-            print ('d_initiateTeleport', avatarId, shardId, instanceType, instanceName, locationUid)
 
-            self.air.teleportMgr.d_initiateTeleport(avatar, instanceType, instanceName, locationUid)
+            self.notify.debug('Avatar %d arrived from another district, teleporting to: '
+                'instanceType=%r instanceName=%r locationUid=%r' % (avatarId, instanceType,
+                instanceName, locationUid))
+
+            # only fall back on the avatar's return location when the
+            # other district did not ask for a specific location...
+            self.air.teleportMgr.d_initiateTeleport(avatar, instanceType, instanceName,
+                locationUid, useReturnLocation=not locationUid)
+
+        if shardId != self.air.districtId:
+            self.notify.warning('Cannot teleport avatar %d to shard %d, '
+                'request was received by district %d!' % (avatarId, shardId, self.air.districtId))
+
+            return
+
+        avatar = self.air.doId2do.get(avatarId)
+        if avatar:
+            avatarArrived(avatar)
+            return
 
         self.__getAvatarArrival(avatarId, avatarArrived)
 

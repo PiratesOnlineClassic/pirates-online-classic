@@ -21,7 +21,13 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
 
     def _getDestinationInstance(self):
         gameArea = self.teleportFsm.gameArea
-        instance = gameArea.getParentObj()
+        if getattr(self.teleportFsm, 'ship', None):
+            # when teleporting on board a ship, the ship's world is the destination
+            # instance; the ship itself is merely the avatar's spawn parent...
+            instance = self.teleportFsm.world
+        else:
+            instance = gameArea.getParentObj()
+
         if not instance:
             self.notify.warning('Cannot teleport avatar %d: destination area %d has no instance' %
                 (self.avatar.doId, gameArea.doId))
@@ -47,6 +53,15 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
             return
         xPos, yPos, zPos, h = self.teleportFsm.spawnPt
 
+        if getattr(self.teleportFsm, 'ship', None):
+            # the client places the avatar on deck when the spawn parent is a ship,
+            # so there is no spawn position or grid zone to validate here...
+            destination.d_setSpawnInfo(self.avatar.doId, xPos, yPos, zPos, h, 0, [gameArea.doId,
+                gameArea.zoneId, gameArea.parentId])
+
+            self.sendUpdateToAvatarId(self.avatar.doId, 'teleportToInstanceCleanup', [])
+            return
+
         # ensure the zoneId we've just calculated is indeed valid,
         # and not some random zone outside the cartesian grid...
         zoneId = gameArea.getZoneFromXYZ((xPos, yPos, zPos))
@@ -64,6 +79,12 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
         self.sendUpdateToAvatarId(self.avatar.doId, 'teleportToInstanceCleanup', [])
 
     def teleportToInstanceFinal(self, avatarId):
+        if self.air.getAvatarIdFromSender() != self.avatar.doId:
+            self.notify.warning('Received teleportToInstanceFinal for avatar %d '
+                'from another avatar %d!' % (self.avatar.doId, self.air.getAvatarIdFromSender()))
+
+            return
+
         self.avatar.b_setGameState('Spawn')
         self.teleportFsm.cleanup()
         messenger.send('teleportDone-%d' % self.avatar.doId)
@@ -84,6 +105,9 @@ class DistributedTeleportHandlerAI(DistributedObjectAI):
         Called by the client when the avatar leaves during teleport (e.g., teleport aborted).
         This should clean up the teleport FSM and associated objects.
         """
+        if self.air.getAvatarIdFromSender() != self.avatar.doId:
+            return
+
         self.notify.debug('Avatar %d left during teleport, cleaning up...' % self.avatar.doId)
         self.teleportFsm.cleanup()
 

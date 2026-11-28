@@ -1,12 +1,14 @@
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from direct.fsm.FSM import FSM
+from direct.task import Task
 
 from otp.ai.MagicWordGlobal import *
 
 from pirates.quest.QuestConstants import LocationIds
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
+from pirates.uberdog.UberDogGlobals import InventoryType
 from pirates.instance.DistributedInstanceBaseAI import DistributedInstanceBaseAI
 from pirates.instance.DistributedTeleportZoneAI import DistributedTeleportZoneAI
 from pirates.instance.DistributedTeleportHandlerAI import DistributedTeleportHandlerAI
@@ -44,6 +46,7 @@ class TeleportOperationFSM(FSM):
         self.demand('Off')
 
 class TeleportFSM(TeleportOperationFSM):
+    notify = DirectNotifyGlobal.directNotify.newCategory('TeleportFSM')
 
     def __teleportZoneArrivedCallback(self, teleportZone):
         if not teleportZone:
@@ -74,14 +77,30 @@ class TeleportFSM(TeleportOperationFSM):
         self.avatar.d_forceTeleportStart(self.world.getFileName(), self.teleportZone.doId,
             self.teleportHandler.doId, 0, self.teleportZone.parentId, self.teleportZone.zoneId)
 
+    def __teleportTimedOut(self, task):
+        self.notify.warning('Teleport for avatar %d timed out, aborting!' % self.avatar.doId)
+        if self.teleportHandler:
+            self.teleportHandler.d_abortTeleport()
+
+        self.cleanup()
+        return Task.done
+
+    def getFromInstanceType(self):
+        fromInstance = self.air.teleportMgr.getInstanceFromObject(self.avatar.getParentObj())
+        if not fromInstance:
+            return PiratesGlobals.INSTANCE_NONE
+
+        return fromInstance.getType()
+
     def enterTeleporting(self):
         # Notify the client that teleport is beginning (triggers loading screen and startedCallback)
-        self.avatar.d_beginningTeleport(
-            self.world.getType(),
-            0,  # fromInstanceType - will be set properly by client
-            self.world.getFileName(),
-            -1  # gameType
-        )
+        self.avatar.d_beginningTeleport(self.world.getType(), self.getFromInstanceType(),
+            self.world.getFileName(), -1)
+
+        # don't let a client that never finishes the teleport process
+        # hold onto it's teleport zone and handler forever...
+        taskMgr.doMethodLater(config.GetFloat('teleport-timeout', 300.0), self.__teleportTimedOut,
+            self.avatar.uniqueName('teleport-timeout'))
 
         teleportZoneDoId = self.air.allocateChannel()
         self.acceptOnce('generate-%d' % teleportZoneDoId,
@@ -92,6 +111,7 @@ class TeleportFSM(TeleportOperationFSM):
             self.air.districtId, self.air.allocateZone())
 
     def exitTeleporting(self):
+        taskMgr.remove(self.avatar.uniqueName('teleport-timeout'))
         if self.teleportZone:
             self.teleportZone.requestDelete()
             self.teleportZone = None
@@ -99,6 +119,17 @@ class TeleportFSM(TeleportOperationFSM):
         if self.teleportHandler:
             self.teleportHandler.requestDelete()
             self.teleportHandler = None
+
+
+class TeleportShipFSM(TeleportFSM):
+    notify = DirectNotifyGlobal.directNotify.newCategory('TeleportShipFSM')
+
+    def __init__(self, air, avatar, world, ship):
+        TeleportFSM.__init__(self, air, avatar, world, ship, (0, 0, 0, 0))
+
+        # the teleport handler spawns the avatar on board this ship,
+        # rather than at a spawn point of a game area...
+        self.ship = ship
 
 
 class DistributedTeleportMgrAI(DistributedObjectAI):
@@ -110,22 +141,43 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         self.avatar2fsm = {}
 
     def getWorld(self, instanceType, instanceName):
+        worlds = []
         for object in list(self.air.doId2do.values()):
             if not object or not isinstance(object, DistributedInstanceBaseAI):
                 continue
 
-            if object.getType() == instanceType and object.getFileName() == instanceName:
+            if isinstance(object, DistributedTeleportZoneAI):
+                continue
+
+            if object.getType() != instanceType:
+                continue
+
+            if object.getFileName() == instanceName:
                 return object
 
-        # the client refers to the district's main world by the generic
-        # name "mainWorld", there is only ever one main world per district...
-        if instanceType == PiratesGlobals.INSTANCE_MAIN:
-            for object in list(self.air.doId2do.values()):
-                if not object or not isinstance(object, DistributedInstanceBaseAI):
-                    continue
+            worlds.append(object)
 
-                if object.getType() == instanceType:
-                    return object
+        # the client refers to the shard's main and welcome worlds by generic names
+        # such as "mainWorld" or "Welcome World", rather than by the world's file name...
+        if instanceType in (PiratesGlobals.INSTANCE_MAIN, PiratesGlobals.INSTANCE_WELCOME):
+            for world in worlds:
+                if world.getFileName().lower() == (instanceName or '').lower():
+                    return world
+
+            if worlds:
+                return worlds[0]
+
+            if instanceType == PiratesGlobals.INSTANCE_WELCOME:
+                return self.getWorld(PiratesGlobals.INSTANCE_MAIN, instanceName)
+
+        return None
+
+    def getInstanceFromObject(self, object):
+        while object is not None:
+            if isinstance(object, DistributedInstanceBaseAI):
+                return object
+
+            object = object.getParentObj()
 
         return None
 
@@ -142,7 +194,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
 
     def d_initiateTeleport(self, avatar, instanceType=None, instanceName=None,
                            locationUid=None, spawnPt=None, tutorialFsm=None,
-                           targetWorld=None):
+                           targetWorld=None, useReturnLocation=True, force=False):
         if (instanceType == PiratesGlobals.INSTANCE_TUTORIAL and
                 avatar.getTutorial() < PiratesGlobals.TUT_MET_JOLLY_ROGER):
             tutorialManager = self.air.tutorialManager
@@ -150,13 +202,13 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             if (tutorialFsm is None or
                     tutorialManager.avatar2fsm.get(avatar.doId) is not tutorialFsm):
                 tutorialManager._requestTutorial(avatar)
-                return
+                return False
 
         if avatar.doId in self.avatar2fsm:
             self.notify.warning('Cannot initiate teleport for avatar %d, '
                 'already teleporting!' % avatar.doId)
 
-            return
+            return False
 
         returnLocation = avatar.getReturnLocation()
         currentIsland = avatar.getCurrentIsland()
@@ -164,29 +216,31 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         # check to see which island the avatar exited last at,
         # then ensure this is their login teleport; not a normal teleport request...
         # The tutorial FSM supplies its own jail spawn location.
-        if (returnLocation and not currentIsland and
+        if (useReturnLocation and returnLocation and not currentIsland and
                 instanceType != PiratesGlobals.INSTANCE_TUTORIAL and
                 targetWorld is None):
             locationUid = returnLocation
 
         gameArea = avatar.getParentObj()
-        if (isinstance(gameArea, DistributedGameAreaAI) and
+        if (not force and isinstance(gameArea, DistributedGameAreaAI) and
                 gameArea.getUniqueId() == locationUid and
                 (targetWorld is None or
                  targetWorld.builder.getObject(uniqueId=locationUid) is gameArea)):
             self.notify.warning('Cannot initiate teleport for %d, '
                 'already there, locationUid=%s!' % (avatar.doId, locationUid))
 
-            return
+            return False
 
         if targetWorld is not None:
             world = targetWorld
             if self.air.doId2do.get(world.doId) is not world:
                 self.notify.warning('Cannot initiate teleport for avatar %d: target world is unavailable' %
                     avatar.doId)
-                return
+                return False
         elif not instanceType and not instanceName:
-            world = gameArea.getParentObj()
+            world = self.getInstanceFromObject(gameArea)
+            if not world and locationUid:
+                world = self.getInstanceFromObject(self.air.uidMgr.justGetMeMeObject(locationUid))
         else:
             world = self.getWorld(instanceType, instanceName)
 
@@ -194,12 +248,12 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             if instanceType == PiratesGlobals.INSTANCE_TUTORIAL:
                 self.notify.warning('Cannot initiate tutorial teleport for avatar %d: '
                     'tutorial world unavailable or tutorial already completed' % avatar.doId)
-                return
+                return False
 
             self.notify.warning('Cannot initiate teleport for unknown world: '
                 'instanceType=%r instanceName=%r' % (instanceType, instanceName))
 
-            return
+            return False
 
         gameArea = world.builder.getObject(uniqueId=locationUid)
         if not gameArea and targetWorld is None:
@@ -213,7 +267,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         if not gameArea and targetWorld is not None:
             self.notify.warning('Cannot initiate teleport for avatar %d: location %r '
                 'is not in target world %d' % (avatar.doId, locationUid, world.doId))
-            return
+            return False
 
         if not gameArea:
             # Attempt to select a default island if no area was supplied
@@ -222,7 +276,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
                 self.notify.warning('Cannot initiate teleport for unknown '
                     'gameArea: locationUid=%r' % locationUid)
 
-                return
+                return False
 
             # Locate the first explorable island in the requested world
             for island in islands:
@@ -235,12 +289,12 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
                 self.notify.warning('Cannot initiate teleport for unknown '
                     'gameArea: locationUid=%r' % locationUid)
 
-                return
+                return False
 
         # check for paid status when trying to teleport to kingshead
         if gameArea.getUniqueId() == LocationIds.KINGSHEAD_ISLAND and not avatar.isPaid():
             gameArea.d_deniedEntryToIsland(avatar.doId)
-            return
+            return False
 
         if not spawnPt:
             # TODO FIXME!
@@ -254,10 +308,11 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             self.notify.warning('Cannot initiate teleport for avatar %d, no available spawn points '
                 'for gameArea, locationUid=%r!' % (avatar.doId, locationUid))
 
-            return
+            return False
 
         self.avatar2fsm[avatar.doId] = TeleportFSM(self.air, avatar, world, gameArea, spawnPt)
         self.avatar2fsm[avatar.doId].request('Teleporting')
+        return True
 
     def initiateTeleport(self, instanceType, fromInstanceType, shardId, locationUid, instanceDoId, instanceName, gameType, friendDoId, friendAreaDoId):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
@@ -265,8 +320,8 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             return
 
         if shardId and shardId != self.air.districtId:
-            self.air.travelAgent.d_requestTeleportToShardAItoUD(avatar.doId, shardId, instanceType,
-                instanceName, locationUid)
+            self.requestTeleportToShard(avatar, shardId, instanceType, instanceName,
+                locationUid, friendAreaDoId)
 
             return
 
@@ -276,35 +331,198 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         # If friendDoId is set, we're teleporting to a friend - get their location
         if friendDoId:
             friend = self.air.doId2do.get(friendDoId)
-            if friend:
-                friendParent = friend.getParentObj()
-                if friendParent:
-                    # Check if the friend is on a ship
-                    if isinstance(friendParent, DistributedShipAI):
-                        # Teleport to the ship instead
-                        friendAreaDoId = friendParent.doId
-                    elif hasattr(friendParent, 'getUniqueId'):
-                        locationUid = friendParent.getUniqueId()
+            if not friend:
+                self.notify.debug('Cannot teleport avatar %d to friend %d, '
+                    'friend is not on this district!' % (avatar.doId, friendDoId))
+
+                self.d_teleportFailed(avatar.doId)
+                return
+
+            friendParent = friend.getParentObj()
+            if not friendParent:
+                self.d_teleportFailed(avatar.doId)
+                return
+
+            friendAreaDoId = friendParent.doId
 
         # If friendAreaDoId is set (e.g., teleporting to a ship), handle ship teleport
         if friendAreaDoId:
             areaObj = self.air.doId2do.get(friendAreaDoId)
-            if areaObj:
-                if isinstance(areaObj, DistributedShipAI):
-                    # Ship teleport - send the client the ship's location so they can board
-                    self.d_localTeleportToIdResponse(avatar.doId, areaObj.parentId, areaObj.zoneId)
-                    return
-                elif hasattr(areaObj, 'getUniqueId'):
-                    locationUid = areaObj.getUniqueId()
+            if isinstance(areaObj, DistributedShipAI):
+                if not self.teleportToShip(avatar, areaObj):
+                    self.d_teleportFailed(avatar.doId)
 
-        self.d_initiateTeleport(avatar, instanceType, instanceName, locationUid)
+                return
+
+            if not isinstance(areaObj, DistributedGameAreaAI):
+                self.notify.warning('Cannot teleport avatar %d to area %d, '
+                    'invalid area object: %r!' % (avatar.doId, friendAreaDoId, areaObj))
+
+                self.d_teleportFailed(avatar.doId)
+                return
+
+            # teleporting directly to an island (and not to a friend) requires
+            # the avatar to own that island's teleport token...
+            if not friendDoId and not self.canTeleportToArea(avatar, areaObj):
+                self.notify.warning('Cannot teleport avatar %d to area %s, '
+                    'avatar has no teleport token!' % (avatar.doId, areaObj.getUniqueId()))
+
+                self.d_teleportFailed(avatar.doId)
+                return
+
+            if not self.teleportToArea(avatar, areaObj):
+                self.d_teleportFailed(avatar.doId)
+
+            return
+
+        if not self.d_initiateTeleport(avatar, instanceType, instanceName, locationUid):
+            self.d_teleportFailed(avatar.doId)
+
+    def requestTeleportToShard(self, avatar, shardId, instanceType, instanceName, locationUid, areaDoId=0):
+        """
+        Forwards a teleport request for an avatar to another district by way
+        of the travel agent; when an area on the remote district is requested,
+        that area's uniqueId is looked up from the state server first...
+        """
+
+        if not areaDoId:
+            self.air.travelAgent.d_requestTeleportToShardAItoUD(avatar.doId, shardId, instanceType,
+                instanceName, locationUid)
+
+            return
+
+        def _areaQueryCallback(doId, parentId, zoneId, dclass, fields):
+            areaUid = (fields.get('setUniqueId') or [locationUid])[0]
+            if not areaUid:
+                self.notify.warning('Cannot resolve remote area %d for avatar %d, '
+                    'using default location!' % (doId, avatar.doId))
+
+            self.air.travelAgent.d_requestTeleportToShardAItoUD(avatar.doId, shardId, instanceType,
+                instanceName, areaUid or '')
+
+        self.air.getObject(areaDoId, _areaQueryCallback)
+
+    def canTeleportToArea(self, avatar, area):
+        """
+        Mirrors LocalPirate.confirmIslandTeleport; an avatar may teleport to
+        an island when it owns the island's teleport token, or the island is
+        it's current or return location.
+        """
+
+        from pirates.world.DistributedIslandAI import DistributedIslandAI
+
+        if not isinstance(area, DistributedIslandAI):
+            return True
+
+        areaUid = area.getUniqueId()
+        if areaUid in (avatar.getReturnLocation(), avatar.getCurrentIsland()):
+            return True
+
+        if config.GetBool('teleport-all', False):
+            return True
+
+        token = InventoryType.getIslandTeleportToken(areaUid)
+        inventory = avatar.getInventory()
+        if token and inventory and inventory.getStackQuantity(token):
+            return True
+
+        worldCreator = getattr(self.air, 'worldCreator', None)
+        return bool(worldCreator and worldCreator.isPvpIslandByUid(areaUid))
+
+    def teleportToArea(self, avatar, area, spawnPt=None):
+        """
+        Teleports the avatar to the given game area, this is the entry point used
+        when teleporting to a friend, crew or guild member standing in an area.
+        """
+
+        if not self.getInstanceFromObject(area):
+            self.notify.warning('Cannot teleport avatar %d to area %d, '
+                'area has no instance!' % (avatar.doId, area.doId))
+
+            return False
+
+        return self.d_initiateTeleport(avatar, locationUid=area.getUniqueId(), spawnPt=spawnPt,
+            useReturnLocation=False, force=True)
+
+    def teleportToShip(self, avatar, ship):
+        """
+        Teleports the avatar on board the given ship, the client places
+        the avatar on deck once it receives the ship as it's spawn parent.
+        """
+
+        if avatar.doId in self.avatar2fsm:
+            self.notify.warning('Cannot teleport avatar %d to ship %d, '
+                'already teleporting!' % (avatar.doId, ship.doId))
+
+            return False
+
+        world = self.getInstanceFromObject(ship)
+        if not world or not getattr(world, 'oceanGrid', None):
+            self.notify.warning('Cannot teleport avatar %d to ship %d, '
+                'ship is not in a world!' % (avatar.doId, ship.doId))
+
+            return False
+
+        self.avatar2fsm[avatar.doId] = TeleportShipFSM(self.air, avatar, world, ship)
+        self.avatar2fsm[avatar.doId].request('Teleporting')
+        return True
+
+    def teleportToAvatar(self, avatar, targetAvatar):
+        """
+        Teleports the avatar to wherever the target avatar currently is on this
+        district. Returns False when the target's location cannot be teleported to.
+        """
+
+        from pirates.ship.DistributedShipAI import DistributedShipAI
+
+        targetParent = targetAvatar.getParentObj()
+        if isinstance(targetParent, DistributedShipAI):
+            return self.teleportToShip(avatar, targetParent)
+
+        if isinstance(targetParent, DistributedGameAreaAI):
+            return self.teleportToArea(avatar, targetParent)
+
+        return False
+
+    def getAvatarTeleportLocation(self, avatar):
+        """
+        Returns the (shardId, instanceDoId, areaDoId) of an avatar, as expected by
+        the client's teleportResponse, or None when the avatar can not be visited.
+        """
+
+        parentObj = avatar.getParentObj()
+        instance = self.getInstanceFromObject(parentObj)
+        if not parentObj or not instance or isinstance(instance, DistributedTeleportZoneAI):
+            return None
+
+        return (self.air.districtId, instance.doId, parentObj.doId)
+
+    def d_teleportFailed(self, avatarId):
+        # an empty location response causes the client to fail it's pending
+        # teleport, and clear it's in teleport flag...
+        self.d_localTeleportToIdResponse(avatarId, 0, 0)
 
     def requestTeleportToIsland(self, locationUid):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
             return
 
-        self.d_initiateTeleport(avatar, locationUid=locationUid)
+        island = self.air.uidMgr.justGetMeMeObject(locationUid)
+        if not isinstance(island, DistributedGameAreaAI):
+            self.notify.warning('Cannot teleport avatar %d to island, '
+                'unknown island %r!' % (avatar.doId, locationUid))
+
+            self.d_teleportToIslandResponse(avatar.doId, 0, 0)
+            return
+
+        world = self.getInstanceFromObject(island)
+        if not world or not self.canTeleportToArea(avatar, island):
+            self.d_teleportToIslandResponse(avatar.doId, 0, 0)
+            return
+
+        # the client follows up with initiateTeleport, using
+        # the island as the area it wishes to teleport to...
+        self.d_teleportToIslandResponse(avatar.doId, world.doId, island.doId)
 
     def requestCrossShardDeploy(self, shardId, islandUid, shipId):
         """
@@ -378,6 +596,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             self.notify.debug('Cannot send target location for avatar %d, '
                 'unknown target object %d!' % (avatar.doId, locationId))
 
+            self.d_teleportFailed(avatar.doId)
             return
 
         self.d_localTeleportToIdResponse(avatar.doId, target.parentId, target.zoneId)
