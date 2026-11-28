@@ -1052,7 +1052,7 @@ def dropQuest(questId):
     if not activeQuest:
         return 'Could not find active quest: %s!' % questId
 
-    base.air.questMgr.dropQuest(invoker, activeQuest.doId)
+    base.air.questMgr.dropQuest(invoker, activeQuest)
     return 'Dropped active quest: %s!' % questId
 
 
@@ -1072,6 +1072,9 @@ def skipQuest(questId=''):
         return 'You did not provide a valid questId!'
 
     quest = base.air.questMgr.getQuest(invoker, questId=questId)
+    if not quest:
+        return 'Could not find active quest: %s!' % questId
+
     for taskState in quest.getTaskStates():
         taskState.forceComplete()
 

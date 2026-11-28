@@ -532,7 +532,7 @@ def gold(amount):
 def removeGold(amount):
     invoker = spellbook.getInvoker()
     inventory = base.air.inventoryManager.getInventory(invoker.doId)
-    inventory.setGoldInPocket(inventory.getGoldInPocket() - min(amount, 65000))
+    inventory.setGoldInPocket(max(0, inventory.getGoldInPocket() - min(amount, 65000)))
     return 'Removed Gold Amount: %s' % amount
 
 

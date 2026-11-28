@@ -649,6 +649,7 @@ def tp(locationName):
     """
 
     locationUid = None
+    locationName = locationName.lower().replace("'", '')
     for uid, name in list(PLocalizer.LocationNames.items()):
         name = name.lower()
         name = name.replace("'", '')
