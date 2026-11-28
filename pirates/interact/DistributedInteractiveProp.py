@@ -198,6 +198,9 @@ class DistributedInteractiveProp(DistributedInteractive.DistributedInteractive, 
     def getSkillEffects(self):
         return []
 
+    def getSkillEffectIds(self):
+        return []
+
     def getEnterDeathTrack(self):
         animName = self.getDeathAnimName()
         frames = self.getNumFrames(animName)

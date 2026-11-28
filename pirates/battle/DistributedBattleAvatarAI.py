@@ -469,6 +469,16 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
     def getSkillEffects(self):
         return self.skillEffects
 
+    def getSkillEffectIds(self):
+        # getSkillEffects is the getter of the required BuffList field, the battle
+        # formulas need the ids of the active effects (see BattleManagerBase)...
+        effectIds = []
+        for skillEffect in self.skillEffects:
+            if skillEffect[0] not in effectIds:
+                effectIds.append(skillEffect[0])
+
+        return effectIds
+
     def setEnsnaredTargetId(self, ensnaredTargetId):
         self.ensnaredTargetId = ensnaredTargetId
 

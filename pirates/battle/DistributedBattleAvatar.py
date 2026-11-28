@@ -1263,8 +1263,12 @@ class DistributedBattleAvatar(DistributedReputationAvatar, WeaponBase, Teamable)
             buffId = self.skillEffects[buffKeyId][0]
             if buffId not in buffIds:
                 buffIds.append(buffId)
-        
+
         return buffIds
+
+    def getSkillEffectIds(self):
+        # see BattleManagerBase.getSkillEffectIds
+        return self.getSkillEffects()
 
     def addStatusEffect(self, effectId, attackerId, duration):
         attacker = self.cr.doId2do.get(attackerId)

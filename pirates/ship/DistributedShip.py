@@ -3060,6 +3060,10 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
 
         return buffIds
 
+    def getSkillEffectIds(self):
+        # see BattleManagerBase.getSkillEffectIds
+        return self.getSkillEffects()
+
     def addStatusEffect(self, effectId, attackerId):
         if not self.mainPartsBuilt:
             self.registerMainBuiltFunction(self.addStatusEffect, extraArgs = [

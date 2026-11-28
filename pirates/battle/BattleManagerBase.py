@@ -31,6 +31,15 @@ class BattleManagerBase:
         
         return True
 
+    def getSkillEffectIds(self, av):
+        # the ids of the skill effects active on the avatar. the AI's getSkillEffects
+        # is the getter of the avatar's required BuffList field, so both the client
+        # and the AI provide the effect ids through getSkillEffectIds instead...
+        if hasattr(av, 'getSkillEffectIds'):
+            return av.getSkillEffectIds()
+
+        return []
+
     def willWeaponHit(self, attacker, target, skillId, ammoSkillId, charge):
         if not attacker.getWorld():
             return WeaponGlobals.RESULT_NOT_AVAILABLE
@@ -46,7 +55,7 @@ class BattleManagerBase:
         chanceOfParry = 0.0
         chanceOfDodge = 0.0
         chanceOfResist = 0.0
-        skillEffects = attacker.getSkillEffects()
+        skillEffects = self.getSkillEffectIds(attacker)
         for targetEffect in skillEffects:
             if targetEffect == WeaponGlobals.C_BLIND or targetEffect == WeaponGlobals.C_DIRT:
                 chanceOfHit *= WeaponGlobals.BLIND_PERCENT
@@ -244,8 +253,8 @@ class BattleManagerBase:
                 tHealth += tHealth * charge * 1.0
                 aHealth += aHealth * charge * 1.0
 
-        if hasattr(attacker, 'getSkillEffects') and skillId != InventoryType.UseItem:
-            skillEffects = attacker.getSkillEffects()
+        if hasattr(attacker, 'getSkillEffectIds') and skillId != InventoryType.UseItem:
+            skillEffects = attacker.getSkillEffectIds()
             if WeaponGlobals.C_OPENFIRE in skillEffects:
                 if WeaponGlobals.getAttackClass(skillId) == WeaponGlobals.AC_CANNON:
                     tHealth *= WeaponGlobals.OPEN_FIRE_BONUS
@@ -257,8 +266,8 @@ class BattleManagerBase:
                     aHealth = min(-1, aHealth - aHealth * WeaponGlobals.WEAKEN_PENALTY)
 
         if target and skillId != InventoryType.UseItem:
-            if hasattr(target, 'getSkillEffects'):
-                skillEffects = target.getSkillEffects()
+            if hasattr(target, 'getSkillEffectIds'):
+                skillEffects = target.getSkillEffectIds()
                 if WeaponGlobals.C_CURSE in skillEffects:
                     if WeaponGlobals.getAttackClass(skillId) != WeaponGlobals.AC_MAGIC:
                         tHealth += int(tHealth * WeaponGlobals.CURSED_DAM_AMP)
@@ -404,12 +413,12 @@ class BattleManagerBase:
             if inv:
                 tDamage *= max(0, inv.getStackQuantity(skillId) - 2) * WeaponGlobals.LEVELUP_DAMAGE_MULTIPLIER + 1
                 tDamage *= max(0, inv.getStackQuantity(InventoryType.DaggerBladeInstinct) - 1) * WeaponGlobals.getAttackTargetHP(InventoryType.DaggerBladeInstinct) + 1
-        if hasattr(attacker, 'getSkillEffects'):
-            skillEffects = attacker.getSkillEffects()
+        if hasattr(attacker, 'getSkillEffectIds'):
+            skillEffects = attacker.getSkillEffectIds()
             if WeaponGlobals.C_WEAKEN in skillEffects:
                 tDamage = min(-1, tDamage - tDamage * WeaponGlobals.WEAKEN_PENALTY)
-        if hasattr(target, 'getSkillEffects'):
-            skillEffects = target.getSkillEffects()
+        if hasattr(target, 'getSkillEffectIds'):
+            skillEffects = target.getSkillEffectIds()
             if WeaponGlobals.C_CURSE in skillEffects:
                 tDamage += int(tDamage * WeaponGlobals.CURSED_DAM_AMP)
             if WeaponGlobals.C_TAKECOVER in skillEffects:
@@ -524,14 +533,14 @@ class BattleManagerBase:
                     amt += 1.0
                     damage *= amt
 
-        if hasattr(attacker, 'getSkillEffects'):
-            skillEffects = attacker.getSkillEffects()
+        if hasattr(attacker, 'getSkillEffectIds'):
+            skillEffects = attacker.getSkillEffectIds()
             for buff in skillEffects:
                 if buff == WeaponGlobals.C_OPENFIRE:
                     damage = damage * WeaponGlobals.OPEN_FIRE_BONUS
 
-        if hasattr(target, 'getSkillEffects'):
-            skillEffects = target.getSkillEffects()
+        if hasattr(target, 'getSkillEffectIds'):
+            skillEffects = target.getSkillEffectIds()
             for buff in skillEffects:
                 if buff == WeaponGlobals.C_TAKECOVER:
                     damage = damage * WeaponGlobals.TAKE_COVER_BONUS
@@ -565,8 +574,8 @@ class BattleManagerBase:
                     inv = av.getInventory()
                     if inv:
                         if WeaponGlobals.getIsShipSkill(skillId):
-                            if hasattr(av.ship, 'getSkillEffects'):
-                                skillEffects = av.ship.getSkillEffects()
+                            if hasattr(av.ship, 'getSkillEffectIds'):
+                                skillEffects = av.ship.getSkillEffectIds()
                                 for buff in skillEffects:
                                     if buff == WeaponGlobals.C_RECHARGE:
                                         if skillId != InventoryType.SailPowerRecharge:
@@ -594,8 +603,8 @@ class BattleManagerBase:
                     inv = av.getInventory()
                     if inv:
                         if WeaponGlobals.getIsCannonSkill(skillId):
-                            if hasattr(av.ship, 'getSkillEffects'):
-                                skillEffects = av.ship.getSkillEffects()
+                            if hasattr(av.ship, 'getSkillEffectIds'):
+                                skillEffects = av.ship.getSkillEffectIds()
                                 for buff in skillEffects:
                                     if buff == WeaponGlobals.C_RECHARGE:
                                         rechargeTime *= WeaponGlobals.POWER_RECHARGE_RATE_REDUCTION

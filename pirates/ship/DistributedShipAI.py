@@ -127,6 +127,10 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
         return buffIds
 
+    def getSkillEffectIds(self):
+        # see BattleManagerBase.getSkillEffectIds
+        return self.getSkillEffects()
+
     def addSkillEffect(self, effectId, duration, attackerId):
         timestamp = globalClockDelta.getRealNetworkTime(bits=16)
         for skillEffect in self.skillEffects:
