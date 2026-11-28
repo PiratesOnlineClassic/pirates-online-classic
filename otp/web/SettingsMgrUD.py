@@ -28,7 +28,7 @@ class SettingsMgrUD(DistributedObjectGlobalUD, SettingsMgrBase):
 
     def handleUberDOGSettingsRequest(self, channel):
         for settingName in self._settings:
-            valueStr = str(self._settings[settingName].getValue())
+            valueStr = self._getCurrentValueRepr(settingName)
             self.d_settingChangeToChannel(channel, settingName, valueStr)
 
     def d_settingChange(self, settingName, valueStr):

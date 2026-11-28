@@ -23,10 +23,17 @@ class SettingsMgrAI(DistributedObjectGlobalAI, SettingsMgrBase):
             return 
         
         for settingName in self._settings:
-            valueStr = self._getSetting(settingName)
+            if not self._isSettingModified(settingName):
+                continue
+
+            valueStr = self._getCurrentValueRepr(settingName)
             self.sendUpdateToAvatarId(avatar.doId, 'settingChange', [settingName, valueStr])
     
     def settingChange(self, settingName, valueStr):
+        if settingName not in self._settings:
+            self.notify.warning('Received change for unknown setting %s' % settingName)
+            return
+
         if valueStr == self._getCurrentValueRepr(settingName):
             return
         
