@@ -18,15 +18,6 @@ class ShipInfoAI(DistributedObjectAI):
         self.locationName = 0
         self.activity = 0
 
-    def updateFromShip(self, ship, avatar):
-        self.b_setShipId(ship.doId)
-        self.b_setAvatarId(avatar.doId)
-        self.b_setName(avatar.getName())
-        self.b_setMaxHp(ship.getMaxHp())
-        self.b_setHp(ship.getHp())
-        self.b_setMaxSp(ship.getMaxSp())
-        self.b_setSp(ship.getSp())
-
     def setShipId(self, shipId):
         self.shipId = shipId
 

@@ -1125,9 +1125,8 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             siegeManager.handleShipSunk(self, attackerShip, assistShip)
 
     def shipAttacked(self, attackerShipId, damage):
-        if self.npcShip and hasattr(self, 'gameFSM') and hasattr(self.gameFSM, 'onDamageReceived'):
-            if attackerShipId and self.hp > 0:
-                self.gameFSM.onDamageReceived(attackerShipId, damage)
+        if self.npcShip and attackerShipId and self.hp > 0:
+            self.gameFSM.onDamageReceived(attackerShipId, damage)
 
     def repairShip(self):
         self.b_setHp(self.maxHp)
@@ -1344,8 +1343,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         if not isinstance(targetShip, DistributedShipAI):
             return
 
-        if hasattr(self.gameFSM, 'engageTarget'):
-            self.gameFSM.engageTarget(targetShip)
+        self.gameFSM.engageTarget(targetShip)
 
     def relayTeleportInfo(self):
         parentObj = self.getParentObj()
@@ -1366,24 +1364,6 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
     def d_setRespawnLocation(self, avatarId, parentId, zoneId):
         self.sendUpdateToAvatarId(avatarId, 'setRespawnLocation', [parentId, zoneId])
-
-    def d_forceSteerShip(self, avatarId):
-        self.sendUpdateToAvatarId(avatarId, 'forceSteerShip', [self.doId])
-
-    def d_forceBoardShip(self, avatarId):
-        self.sendUpdateToAvatarId(avatarId, 'forceBoardShip', [])
-
-    def d_forceExitShip(self, avatarId):
-        self.sendUpdateToAvatarId(avatarId, 'forceExitShip', [])
-
-    def d_swingLocalAvatarToGrappledShip(self, avatarId, grappledShipId):
-        self.sendUpdateToAvatarId(avatarId, 'swingLocalAvatarToGrappledShip', [grappledShipId])
-
-    def d_notifyReceivedLoot(self, lootList):
-        self.sendUpdate('notifyReceivedLoot', [lootList])
-
-    def d_damage(self, damage, pos, attackerId):
-        self.sendUpdate('damage', [damage, pos, attackerId])
 
     def setParentingRules(self, rule1, rule2):
         self.parentingRules = [rule1, rule2]

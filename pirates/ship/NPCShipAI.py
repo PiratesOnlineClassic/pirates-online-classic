@@ -34,13 +34,9 @@ class NPCShipAI(DistributedShipAI):
     def __init__(self, air):
         DistributedShipAI.__init__(self, air)
 
+        self.isNpc = True
         self.deckCrew = []
-        self.objectData = {}
         self.grappleArriveTime = 0.0
-
-    @property
-    def isNpc(self):
-        return True
 
     def generate(self):
         self.air.shipManager.addShip(self)
@@ -278,11 +274,7 @@ class NPCShipAI(DistributedShipAI):
 
     def __checkDeckCrew(self, task):
         for npc in list(self.deckCrew):
-            hp = npc.getHp()
-            if isinstance(hp, (list, tuple)):
-                hp = hp[0]
-
-            if hp <= 0 or npc.isDeleted():
+            if npc.isDeleted() or npc.getHp()[0] <= 0:
                 self.deckCrew.remove(npc)
 
         if not self.deckCrew and self.getCurrentGameState() == 'Boarded':

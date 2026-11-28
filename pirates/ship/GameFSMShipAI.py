@@ -134,24 +134,6 @@ class GameFSMShipAI(FSM.FSM):
 
         return target.getLevel()
 
-    def _getLevelBasedDamageModifier(self, defender):
-        threshold = EnemyGlobals.ENEMY_LEVEL_THRESHOLD
-        levelDiff = self._getShipLevel() - self._getTargetLevel(defender)
-        if levelDiff > 0:
-            modifier = max(0, levelDiff - threshold) * EnemyGlobals.MAX_COMPARATIVE_SHIP_LEVEL_DAMAGE_MOD + 1.0
-        else:
-            modifier = min(0, levelDiff + threshold) * EnemyGlobals.MAX_COMPARATIVE_SHIP_LEVEL_DAMAGE_MOD + 1.0
-
-        return max(0.0, modifier)
-
-    def _calculateDamageFalloff(self, distance):
-        falloffShift = ShipBalance.FalloffShift.getValue()
-        if distance <= falloffShift:
-            return 1.0
-
-        falloff = 1.0 - (distance - falloffShift) * ShipBalance.FalloffMultiplier.getValue()
-        return max(0.1, min(1.0, falloff))
-
     def _getAggroRadius(self, target):
         # this matches the aggro sphere the client uses for NPC ships (DistributedShip.getAggroSphereSize):
         levelDiff = max(1, abs(self._getTargetLevel(target) - self._getShipLevel()) - EnemyGlobals.AGGRO_RADIUS_LEVEL_BUFFER)
