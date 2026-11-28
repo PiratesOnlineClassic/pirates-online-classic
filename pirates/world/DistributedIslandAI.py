@@ -61,9 +61,9 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         DistributedCartesianGridAI.generate(self)
         DistributedGameAreaAI.generate(self)
 
-        # Process startup holidays
-        for holidayId in self.air.newsManager.holidayList:
-            self.holidayStart(holidayId)
+        # note: holidays already running when the island generates are picked up
+        # by the island's holiday objects and spawn nodes themselves, the island
+        # has nothing of it's own to start...
 
         # the ship deployer's rings share the island's zone sphere center, ships are
         # deployed in the band between the inner zone sphere (the reef, minRadius)
