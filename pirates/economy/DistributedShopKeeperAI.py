@@ -15,7 +15,7 @@ from pirates.pirate.HumanDNA import availableHairColors
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.ship import ShipGlobals
-from pirates.uberdog.UberDogGlobals import InventoryType, InventoryCategory
+from pirates.uberdog.UberDogGlobals import InventoryType, InventoryCategory, getNumRespecType
 
 # the barber's saint patrick's day green, see BarberStoreGUI.setPage
 SAINT_PATRICKS_HAIR_COLOR = 8
@@ -24,9 +24,14 @@ SAINT_PATRICKS_HAIR_COLOR = 8
 class DistributedShopKeeperAI(DistributedObjectAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShopKeeperAI')
 
-    # The client treats this response as a completed store transaction,
-    # see DistributedShopKeeper.makeSaleResponse.
+    # The client refreshes the balance of a store that is still open on this
+    # response, the tailor, jeweler and tattoo parlor stay open after a sale,
+    # see DistributedShopKeeper.makeSaleResponse...
     SALE_SUCCESS = 2
+
+    # ...the item store, ship store and musician close as the sale is sent,
+    # this response refreshes the skill tray's ammo and the tonic buttons.
+    SALE_COMPLETE = 1
 
     # Ships a Freebooter (unpaid) account may purchase, matching the check
     # in ShipStoreGUI.handleCommitPurchase.
@@ -48,6 +53,17 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         # the shelves the client builds in DistributedShopKeeper.announceGenerate...
         avatarType = getattr(self, 'avatarType', None)
         if avatarType is None:
+            return []
+
+        # any shopkeeper offering the ships option opens the ship store with
+        # the full ship shelf, see DistributedShopKeeper.startShopping...
+        menu = InteractGlobals.getNPCInteractMenu(avatarType)
+        options = menu[1] if menu else []
+        if InteractGlobals.SHIPS in options:
+            return EconomyGlobals.SHIP_SHELF
+
+        # the bartender stocks a shelf but has no store option to open it...
+        if InteractGlobals.STORE not in options:
             return []
 
         lowWeaponsOnly = ConfigVariableBool('low-weapons-only', False).getValue()
@@ -94,12 +110,6 @@ class DistributedShopKeeperAI(DistributedObjectAI):
                 EconomyGlobals.MISSILE_SHELF_L1
         elif avatarType.isA(AvatarTypes.MedicineMan):
             return EconomyGlobals.TONIC_SHELF_L1 + EconomyGlobals.TONIC_SHELF_L2
-
-        # any shopkeeper offering the ships option opens the ship store with
-        # the full ship shelf, see DistributedShopKeeper.startShopping...
-        menu = InteractGlobals.getNPCInteractMenu(avatarType)
-        if menu and InteractGlobals.SHIPS in menu[1]:
-            return EconomyGlobals.SHIP_SHELF
 
         return []
 
@@ -155,7 +165,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
         itemCategory = EconomyGlobals.getItemCategory(itemId)
         if itemCategory == ItemType.SHIP:
-            if not avatar.isPaid() and itemId not in self.FREE_SHIP_CLASSES:
+            if not self.isAvatarPaid(avatar) and itemId not in self.FREE_SHIP_CLASSES:
                 self.air.logPotentialHacker(
                     message='Received makeSale buy for a ship a Freebooter can not purchase!',
                     avatarId=avatar.doId,
@@ -168,6 +178,23 @@ class DistributedShopKeeperAI(DistributedObjectAI):
                 return RejectCode.OVERFLOW, 0, 0
 
             return self.SALE_SUCCESS, int(itemCost), 1
+
+        # Freebooters may only buy tonics and ammo, see InventoryItemGui.checkFreebooter...
+        if itemCategory not in (ItemType.CONSUMABLE, ItemType.AMMO) and not self.isAvatarPaid(avatar):
+            self.air.logPotentialHacker(
+                message='Received makeSale buy for an item a Freebooter can not purchase!',
+                avatarId=avatar.doId,
+                itemId=itemId)
+
+            return RejectCode.TIMEOUT, 0, 0
+
+        # ammo is only sold for a learned skill, see InventoryItemGui.checkSkillReq...
+        if itemCategory == ItemType.AMMO:
+            from pirates.battle import WeaponGlobals
+
+            skillId = WeaponGlobals.getSkillIdForAmmoSkillId(itemId)
+            if skillId and inventory.getStackQuantity(skillId) < 2:
+                return RejectCode.TIMEOUT, 0, 0
 
         minLevel = EconomyGlobals.getItemMinLevel(itemId)
         if minLevel and minLevel > self.__getItemLevel(inventory, itemId):
@@ -194,8 +221,9 @@ class DistributedShopKeeperAI(DistributedObjectAI):
     def __checkSale(self, avatar, inventory, itemId, itemQuantity, pending):
         itemCost = EconomyGlobals.getItemCost(itemId)
         currentStack = inventory.getStackQuantity(itemId) or 0
+        # the ammo capacity a pouch gave is kept, so pouches are never bought back...
         if itemCost is None or itemQuantity <= 0 or currentStack < pending + itemQuantity or \
-                EconomyGlobals.getItemCategory(itemId) == ItemType.SHIP:
+                EconomyGlobals.getItemCategory(itemId) in (ItemType.SHIP, ItemType.POUCH):
             self.air.logPotentialHacker(
                 message='Received makeSale sell for an item the avatar does not have!',
                 avatarId=avatar.doId,
@@ -356,11 +384,21 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             gain=totalGain,
             purchaser=avatar.doId)
 
-        self.d_makeSaleResponse(avatar.doId, self.SALE_SUCCESS)
+        self.d_makeSaleResponse(avatar.doId, self.SALE_COMPLETE)
 
     def requestMusic(self, songId):
         avatar, inventory = self.__getAvatarAndInventory('requestMusic')
         if not inventory:
+            return
+
+        menu = InteractGlobals.getNPCInteractMenu(getattr(self, 'avatarType', None))
+        if not menu or InteractGlobals.MUSICIAN not in menu[1]:
+            self.air.logPotentialHacker(
+                message='Received requestMusic for a shopkeeper that is not a musician!',
+                avatarId=avatar.doId,
+                songId=songId)
+
+            self.d_makeSaleResponse(avatar.doId, RejectCode.TIMEOUT)
             return
 
         if songId not in EconomyGlobals.MUSIC_SHELF:
@@ -398,7 +436,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             purchaser=avatar.doId)
 
         self.d_playMusic(songId)
-        self.d_makeSaleResponse(avatar.doId, self.SALE_SUCCESS)
+        self.d_makeSaleResponse(avatar.doId, self.SALE_COMPLETE)
 
     def d_playMusic(self, songId):
         self.sendUpdate('playMusic', [songId])
@@ -425,7 +463,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             return None, None
 
         # Freebooters can look but not touch, see the store GUIs' velvet rope...
-        if not avatar.isPaid():
+        if not self.isAvatarPaid(avatar):
             self.air.logPotentialHacker(
                 message='Received %s from a Freebooter!' % handlerName,
                 avatarId=avatar.doId)
@@ -467,6 +505,18 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         if inventory:
             self.__setCurrency(inventory, currency, self.__getCurrency(inventory, currency) + refund)
 
+    def isAvatarPaid(self, avatar):
+        # everyone is a member during the all access weekend, see NewsManager.startHoliday...
+        return avatar.isPaid() or self.air.newsManager.isHolidayActive(PiratesGlobals.ALLACCESSWEEKEND)
+
+    def getCustomizationCost(self, avatar, cost):
+        # members pay half at the tailor, jeweler, tattoo parlor and barber during
+        # the half off holiday, see NewsManager.divideAllAccessories...
+        if avatar.isPaid() and self.air.newsManager.isHolidayActive(PiratesGlobals.HALFOFFCUSTOMIZATION):
+            return int(cost / 2)
+
+        return cost
+
     def __isHolidayItemAvailable(self, holidayId):
         # holiday items are only offered by the stores while their holiday
         # is running, see NewsManager.startHoliday...
@@ -474,9 +524,9 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
     # Tailor:
 
-    def __getClothingPrice(self, uid, colorId):
+    def __getClothingPrice(self, avatar, uid, colorId):
         # colors cost more the rarer they are, see AccessoriesStoreGUI.setPage...
-        cost = ClothingGlobals.UNIQUE_ID[uid][5]
+        cost = self.getCustomizationCost(avatar, ClothingGlobals.UNIQUE_ID[uid][5])
         scaler = ClothingGlobals.colorCostScaler.get(colorId)
         if scaler:
             cost = int(cost * scaler)
@@ -574,7 +624,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             sold.append([uid, colorId])
 
             # clothing is bought back at a quarter of its value...
-            totalGain += int(self.__getClothingPrice(uid, colorId) * 0.25)
+            totalGain += int(self.__getClothingPrice(avatar, uid, colorId) * 0.25)
 
         bought = []
         totalCost = 0
@@ -589,7 +639,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
                 return
 
             bought.append([uid, colorId])
-            totalCost += self.__getClothingPrice(uid, colorId)
+            totalCost += self.__getClothingPrice(avatar, uid, colorId)
 
         for clothingType in set([ClothingGlobals.UNIQUE_ID[uid][0] for uid, colorId in bought]):
             remaining = [item for item in clothing if item[:2] not in sold]
@@ -821,8 +871,8 @@ class DistributedShopKeeperAI(DistributedObjectAI):
                 return
 
         # tattoos are bought back at a quarter of their value, see TattooStoreGUI.setPage...
-        prices = dict([(uid, TattooGlobals.tattoos[uid][4]) for uid in bought])
-        gains = dict([(uid, int(TattooGlobals.tattoos[uid][4] * 0.25)) for uid in sold])
+        prices = dict([(uid, self.getCustomizationCost(avatar, TattooGlobals.tattoos[uid][4])) for uid in bought])
+        gains = dict([(uid, int(self.getCustomizationCost(avatar, TattooGlobals.tattoos[uid][4]) * 0.25)) for uid in sold])
         totalCost = sum(prices.values())
         totalGain = sum(gains.values())
         currentMoney = self.__getCurrency(inventory, currency)
@@ -1010,8 +1060,8 @@ class DistributedShopKeeperAI(DistributedObjectAI):
                 return
 
         # jewelry is bought back at a quarter of its value, see JewelryStoreGUI.setPage...
-        prices = dict([(uid, JewelryGlobals.jewelry_id[uid][3]) for uid in bought])
-        gains = dict([(uid, int(JewelryGlobals.jewelry_id[uid][3] * 0.25)) for uid in sold])
+        prices = dict([(uid, self.getCustomizationCost(avatar, JewelryGlobals.jewelry_id[uid][3])) for uid in bought])
+        gains = dict([(uid, int(self.getCustomizationCost(avatar, JewelryGlobals.jewelry_id[uid][3]) * 0.25)) for uid in sold])
         totalCost = sum(prices.values())
         totalGain = sum(gains.values())
         currentGold = inventory.getGoldInPocket()
@@ -1097,7 +1147,7 @@ class DistributedShopKeeperAI(DistributedObjectAI):
         avatar.d_setJewelry()
 
     def requestBarber(self, idx, color):
-        avatar, inventory = self.__getAvatarAndInventory('requestBarber')
+        avatar, inventory = self.__getStoreAvatar('requestBarber', InteractGlobals.BARBER_STORE)
         if not inventory:
             return
 
@@ -1109,8 +1159,20 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             self.d_makeBarberResponse(avatar.doId, idx, color, False)
             return
 
+        # the barber only offers it's store's styles for the avatar's gender,
+        # see BarberStoreGUI.setPage...
+        if idx not in BarberGlobals.stores.get(self.getShopId(), []) or \
+                (idx >= BarberGlobals.FEMALE_HAIR) != (avatar.getGender() == 'f'):
+            self.air.logPotentialHacker(
+                message='Received requestBarber for a style this barber does not offer!',
+                avatarId=avatar.doId,
+                idx=idx)
+
+            self.d_makeBarberResponse(avatar.doId, idx, color, False)
+            return
+
         itemId = item[0]
-        itemPrice = item[4]
+        itemPrice = self.getCustomizationCost(avatar, item[4])
         itemType = item[1]
         if itemPrice > currentGold:
             self.air.logPotentialHacker(
@@ -1170,12 +1232,12 @@ class DistributedShopKeeperAI(DistributedObjectAI):
     def d_makeBarberResponse(self, avatarId, uid, color, success):
         self.sendUpdateToAvatarId(avatarId, 'makeBarberResponse', [uid, color, success])
 
-    def __getOwnedShip(self, avatarId, shipId, handlerName):
+    def __getOwnedShip(self, avatarId, shipId, handlerName, states=('Off',)):
         inventory = self.air.inventoryManager.getInventory(avatarId)
         ship = self.air.doId2do.get(shipId)
         if (not inventory or not ship or
                 shipId not in inventory.getShipDoIdList() or
-                ship.getGameState()[0] != 'Off'):
+                ship.getGameState()[0] not in states):
             self.notify.warning('Avatar %d requested %s for unavailable ship %d' %
                 (avatarId, handlerName, shipId))
             self.d_makeSaleResponse(avatarId, RejectCode.TIMEOUT)
@@ -1191,7 +1253,9 @@ class DistributedShopKeeperAI(DistributedObjectAI):
                 (shipId, avatarId))
             return
 
-        inventory, ship = self.__getOwnedShip(avatarId, shipId, 'repair')
+        # a sunk ship stays sunk until it is repaired, the client offers a
+        # repair for any damaged ship (DistributedNPCTownfolk.computeOptions)...
+        inventory, ship = self.__getOwnedShip(avatarId, shipId, 'repair', states=('Off', 'Sunk'))
         if not ship:
             return
 
@@ -1302,6 +1366,89 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             price=int(shipPrice / 2),
             purchaser=avatarId)
         ship.requestDelete()
+
+    # Trainer respecs, see DistributedNPCTownfolk.showRespecMenu:
+
+    RespecSkills = {
+        InteractGlobals.RESPEC_CUTLASS: (InventoryType.CutlassRep, InventoryType.begin_WeaponSkillCutlass,
+            InventoryType.end_WeaponSkillCutlass, InventoryType.UnspentCutlass),
+        InteractGlobals.RESPEC_PISTOL: (InventoryType.PistolRep, InventoryType.begin_WeaponSkillPistol,
+            InventoryType.end_WeaponSkillPistol, InventoryType.UnspentPistol),
+        InteractGlobals.RESPEC_DAGGER: (InventoryType.DaggerRep, InventoryType.begin_WeaponSkillDagger,
+            InventoryType.end_WeaponSkillDagger, InventoryType.UnspentDagger),
+        InteractGlobals.RESPEC_DOLL: (InventoryType.DollRep, InventoryType.begin_WeaponSkillDoll,
+            InventoryType.end_WeaponSkillDoll, InventoryType.UnspentDoll),
+        InteractGlobals.RESPEC_GRENADE: (InventoryType.GrenadeRep, InventoryType.begin_WeaponSkillGrenade,
+            InventoryType.end_WeaponSkillGrenade, InventoryType.UnspentGrenade),
+        InteractGlobals.RESPEC_STAFF: (InventoryType.WandRep, InventoryType.begin_WeaponSkillWand,
+            InventoryType.end_WeaponSkillWand, InventoryType.UnspentWand),
+        InteractGlobals.RESPEC_SAILING: (InventoryType.SailingRep, InventoryType.begin_SkillSailing,
+            InventoryType.end_SkillSailing, InventoryType.UnspentSailing),
+        InteractGlobals.RESPEC_CANNON: (InventoryType.CannonRep, InventoryType.begin_WeaponSkillCannon,
+            InventoryType.end_WeaponSkillCannon, InventoryType.UnspentCannon)}
+
+    def isRespecOption(self, option):
+        return option in self.RespecSkills
+
+    def handleRespec(self, avatar, inventory, option):
+        # resets a weapon's skills back to their starting rank and returns the
+        # spent points, every respec of a weapon costs more than the last...
+        menu = InteractGlobals.getNPCInteractMenu(getattr(self, 'avatarType', None))
+        if not menu or InteractGlobals.RESPEC not in menu[1] or option not in self.RespecSkills:
+            self.air.logPotentialHacker(
+                message='Received a respec for a shopkeeper that is not a trainer!',
+                avatarId=avatar.doId,
+                option=option)
+
+            return False
+
+        weaponRep, begin, end, unspentId = self.RespecSkills[option]
+        numRespecType = getNumRespecType(weaponRep)
+        numRespecs = inventory.getStackQuantity(numRespecType)
+        cost = EconomyGlobals.getRespecCost(numRespecs)
+        currentGold = inventory.getGoldInPocket()
+        if cost > currentGold:
+            self.air.logPotentialHacker(
+                message='Received a respec the avatar can not afford!',
+                avatarId=avatar.doId,
+                currentGold=currentGold,
+                cost=cost)
+
+            return False
+
+        # a skill's stack is it's rank plus one, the starting skills are learned
+        # with the weapon, see DistributedNPCTownfolk.isRespecAvailable...
+        resets = []
+        refund = 0
+        for skillId in range(begin, end):
+            if skillId in InventoryType.DontResetSkills:
+                continue
+
+            resetAmount = 2 if skillId in InventoryType.StartingSkills else 1
+            skillAmount = inventory.getStackQuantity(skillId)
+            if skillAmount > resetAmount:
+                resets.append((skillId, resetAmount))
+                refund += skillAmount - resetAmount
+
+        if not resets:
+            return False
+
+        inventory.setGoldInPocket(currentGold - cost)
+        for skillId, resetAmount in resets:
+            inventory.b_setStackQuantity(skillId, resetAmount)
+
+        inventory.b_setStackQuantity(unspentId, inventory.getStackQuantity(unspentId) + refund)
+        inventory.b_setStackQuantity(numRespecType, numRespecs + 1)
+
+        # Log transaction for analytics and GM purposes
+        self.logShopkeepTransaction(
+            type='respec',
+            weaponRep=weaponRep,
+            refund=refund,
+            price=cost,
+            purchaser=avatar.doId)
+
+        return True
 
     def d_makeSaleResponse(self, avatarId, results):
         self.sendUpdateToAvatarId(avatarId, 'makeSaleResponse', [results])
