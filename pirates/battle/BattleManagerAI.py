@@ -293,6 +293,21 @@ class BattleManagerAI(BattleManagerBase):
 
             return self._otherSkillResult(avatar, None, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
 
+        # the cannon the avatar is using has fired the shot (see DistributedPCCannonAI.requestProjectileSkill),
+        # cannon ammo that isn't a projectile (grape shot) is sent by the avatar as a targeted
+        # skill (see Cannon.playAttack) and never with the avatar's own weapon...
+        if WeaponGlobals.getIsCannonSkill(skillId) and isinstance(avatar, DistributedPlayerPirateAI):
+            if not self.air.targetMgr.hasProjectile(avatar.doId, skillId, ammoSkillId):
+                self.notify.debug('Cannot get skill result for avatar %d, '
+                    'cannon skill %d, ammo skill %d was never fired!' % (avatar.doId, skillId, ammoSkillId))
+
+                return None
+
+            if not WeaponGlobals.isProjectileSkill(skillId, ammoSkillId):
+                self.air.targetMgr.removeProjectile(avatar.doId, skillId, ammoSkillId)
+
+            return self._skillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge, clientResult)
+
         currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
         if not isWeaponDrawn:
             self.notify.debug('Cannot get skill result for avatar %d, '
@@ -426,19 +441,21 @@ class BattleManagerAI(BattleManagerBase):
         WeaponGlobals.RESULT_AGAINST_PIRATE_CODE)
 
     def _skillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge, clientResult=None):
-        currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
-        if not isWeaponDrawn:
-            self.notify.debug('Cannot get skill result for avatar %d, '
-                'weapon %d was never drawn!' % (avatar.doId, currentWeaponId))
+        # cannon skills are used with the cannon, not the avatar's weapon...
+        if not WeaponGlobals.getIsCannonSkill(skillId):
+            currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
+            if not isWeaponDrawn:
+                self.notify.debug('Cannot get skill result for avatar %d, '
+                    'weapon %d was never drawn!' % (avatar.doId, currentWeaponId))
 
-            return None
+                return None
 
-        # ensure the user has access to the requested weapon before
-        # running result calculations
-        repId = WeaponGlobals.getRepId(currentWeaponId)
-        if not FreebooterAI.canUseWeapon(avatar, repId):
-            self.notify.warning('Freebooter (%d) attempted to use paid weapon (%d)' % (avatar.doId, currentWeaponId))
-            return None
+            # ensure the user has access to the requested weapon before
+            # running result calculations
+            repId = WeaponGlobals.getRepId(currentWeaponId)
+            if not FreebooterAI.canUseWeapon(avatar, repId):
+                self.notify.warning('Freebooter (%d) attempted to use paid weapon (%d)' % (avatar.doId, currentWeaponId))
+                return None
 
         if target is not None and not self.canAttackTarget(avatar, target, skillId, ammoSkillId):
             return None
