@@ -673,6 +673,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
         self.b_setCurrentAmmo(skillId)
 
+        # the combat tray readies a new grenade whenever it's ammo is changed...
+        if WeaponGlobals.getWeaponCategory(self.currentWeaponId) == WeaponGlobals.GRENADE:
+            self.air.battleMgr.resetVolley(self)
+
     def interrupted(self, effectId):
         # the client lets us know their charged attack was interrupted by
         # an enemy's attack, the charge is never tracked by the AI...

@@ -14,6 +14,7 @@ from pirates.battle import LootGlobals
 from pirates.uberdog import UberDogGlobals
 from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
 from pirates.battle.ComboDiaryAI import ComboDiaryAI
+from pirates.battle.EnemySkills import EnemySkills
 from pirates.pirate import AvatarTypes
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
@@ -46,8 +47,44 @@ class BattleManagerAI(BattleManagerBase):
     # the combat tray uses these without the skill ever being learned...
     UnrankedSkills = (InventoryType.MeleePunch,)
 
+    # the skills the client never counts towards the volley of it's firearm
+    # or grenade, see CombatTray.NO_VOLLEY_PROJECTILES...
+    NoVolleySkills = (
+        EnemySkills.STAFF_WITHER_CHARGE,
+        EnemySkills.STAFF_SOULFLAY_CHARGE,
+        EnemySkills.STAFF_HELLFIRE_CHARGE,
+        EnemySkills.STAFF_PESTILENCE_CHARGE,
+        EnemySkills.STAFF_BANISH_CHARGE,
+        EnemySkills.STAFF_DESOLATION_CHARGE,
+        EnemySkills.PISTOL_CHARGE,
+        EnemySkills.PISTOL_RELOAD,
+        EnemySkills.GRENADE_CHARGE,
+        EnemySkills.GRENADE_RELOAD,
+        InventoryType.UseItem)
+
+    # the weapons which shoot volleys, and the skill the client uses to
+    # reload them once the volley is spent (see CombatTray.reloadWeapon)...
+    ReloadSkills = {
+        WeaponGlobals.FIREARM: EnemySkills.PISTOL_RELOAD,
+        WeaponGlobals.GRENADE: EnemySkills.GRENADE_RELOAD}
+
+    # the client may only fire again once it's reload animation has finished
+    # (see CombatAnimations.getPistolReloadAnim), allow for some latency...
+    ReloadTolerance = 0.5
+
+    # the client only continues a combo chain while it's previous attack is
+    # still playing, afterwards the chain starts over (see CombatTray.__skillFinishedTimer).
+    # attacks used too early in the attack are mistimed and always miss...
+    ComboChainTolerance = 1.0
+    COMBO_CHAIN_NONE = 0
+    COMBO_CHAIN_TIMED = 1
+    COMBO_CHAIN_BROKEN = 2
+
     def __init__(self, air):
         self.air = air
+
+    def getBattleTime(self):
+        return globalClock.getRealTime()
 
     def getTargetInRange(self, attacker, target, skillId, ammoSkillId):
         tolerance = 0
@@ -125,6 +162,17 @@ class BattleManagerAI(BattleManagerBase):
 
             return False
 
+        # reloading is not a skill of the weapon itself, the combat tray
+        # reloads the weapon once it's volley has been spent...
+        if self.isReloadSkill(avatar, skillId):
+            if avatar.isSkillRecharging(skillId, ammoSkillId):
+                self.notify.debug('Avatar %d cannot reload weapon %d, still reloading!' % (
+                    avatar.doId, currentWeaponId))
+
+                return False
+
+            return True
+
         repId = WeaponGlobals.getRepId(currentWeaponId)
         if not WeaponGlobals.isValidSkill(skillId, currentWeaponId, repId) or \
                 not WeaponGlobals.isValidAttack(skillId, ammoSkillId, currentWeaponId, repId):
@@ -174,7 +222,82 @@ class BattleManagerAI(BattleManagerBase):
 
             return False
 
+        # the weapon cannot be used again until it has been reloaded, once
+        # it's volley has been spent, see CombatTray.trySkill...
+        weaponVolley = WeaponGlobals.getWeaponVolley(currentWeaponId)
+        if weaponVolley > 0 and self.getVolleyShots(avatar) >= weaponVolley:
+            self.notify.debug('Avatar %d cannot use skill %d, weapon %d must be reloaded!' % (
+                avatar.doId, skillId, currentWeaponId))
+
+            return False
+
         return True
+
+    def isReloadSkill(self, avatar, skillId):
+        reloadSkillId = self.ReloadSkills.get(WeaponGlobals.getWeaponCategory(avatar.currentWeaponId))
+        return bool(reloadSkillId) and skillId == reloadSkillId
+
+    def isVolleySkill(self, avatar, skillId):
+        weaponMode = WeaponGlobals.getWeaponCategory(avatar.currentWeaponId)
+        return weaponMode in self.ReloadSkills and skillId not in self.NoVolleySkills
+
+    def getVolleyShots(self, avatar):
+        shotsFired, reloadTime, reloadDuration = getattr(avatar, 'weaponVolley', (0, None, 0))
+        if reloadTime is not None and self.getBattleTime() - reloadTime >= reloadDuration - self.ReloadTolerance:
+            # the weapon has finished reloading, see CombatTray.finishReload...
+            shotsFired = 0
+            avatar.weaponVolley = (0, None, 0)
+
+        return shotsFired
+
+    def useVolley(self, avatar, skillId):
+        if self.isReloadSkill(avatar, skillId):
+            # the weapon is reloaded once the reload animation finishes...
+            avatar.weaponVolley = (self.getVolleyShots(avatar), self.getBattleTime(),
+                WeaponGlobals.getAnimTime(skillId))
+        elif self.isVolleySkill(avatar, skillId):
+            avatar.weaponVolley = (self.getVolleyShots(avatar) + 1, None, 0)
+
+    def resetVolley(self, avatar):
+        # changing the grenade's ammo readies a new grenade, see CombatTray.changeHandheld...
+        avatar.weaponVolley = (0, None, 0)
+
+    def getComboChain(self, skillId):
+        repId = WeaponGlobals.getSkillReputationCategoryId(skillId)
+        comboChain = ComboDiaryAI.COMBO_ORDER.get(repId)
+        if comboChain and skillId in comboChain:
+            return comboChain
+
+        return None
+
+    def updateComboChain(self, avatar, skillId):
+        # the client continues it's combo chain with every attack made while it's previous
+        # attack is still playing, see CombatTray.processInput. a chain attack that does not
+        # follow the attack before it in the chain was never sent by the combat tray...
+        now = self.getBattleTime()
+        lastSkillId, lastTime = getattr(avatar, 'lastAttack', (0, None))
+        avatar.lastAttack = (skillId, now)
+
+        comboState = self.COMBO_CHAIN_NONE
+        comboChain = self.getComboChain(skillId)
+        if comboChain and comboChain.index(skillId) > 0:
+            requisiteAttack = comboChain[comboChain.index(skillId) - 1]
+            if lastTime is None or lastSkillId != requisiteAttack:
+                comboState = self.COMBO_CHAIN_BROKEN
+            elif now - lastTime > WeaponGlobals.getAnimTime(lastSkillId) + self.ComboChainTolerance:
+                comboState = self.COMBO_CHAIN_BROKEN
+            else:
+                comboState = self.COMBO_CHAIN_TIMED
+
+        avatar.comboChainState = (skillId, comboState)
+
+    def getComboChainState(self, avatar, skillId):
+        chainSkillId, comboState = getattr(avatar, 'comboChainState', (0, self.COMBO_CHAIN_NONE))
+        if chainSkillId != skillId:
+            return self.COMBO_CHAIN_NONE
+
+        avatar.comboChainState = (0, self.COMBO_CHAIN_NONE)
+        return comboState
 
     def getSkillMojoCost(self, avatar, skillId, ammoSkillId):
         mojo = WeaponGlobals.getAttackEffects(skillId, ammoSkillId)[0][3]
@@ -215,6 +338,8 @@ class BattleManagerAI(BattleManagerBase):
             avatar.b_setMojo(max(0, avatar.getMojo() - mojoCost))
 
         avatar.startSkillRecharge(skillId)
+        self.useVolley(avatar, skillId)
+        self.updateComboChain(avatar, skillId)
 
     def requestSkillUse(self, avatar, skillId, ammoSkillId):
         # only player avatars have their skill usage validated, enemies
@@ -314,6 +439,10 @@ class BattleManagerAI(BattleManagerBase):
                 'weapon %d was never drawn!' % (avatar.doId, currentWeaponId))
 
             return None
+
+        # the other clients play the avatar's reload, it has no effects...
+        if self.isReloadSkill(avatar, skillId):
+            return self._otherSkillResult(avatar, None, skillId, ammoSkillId, [], timestamp, pos, charge)
 
         repId = WeaponGlobals.getRepId(currentWeaponId)
         if not WeaponGlobals.isValidSkill(skillId, currentWeaponId, repId):
@@ -504,9 +633,20 @@ class BattleManagerAI(BattleManagerBase):
             areaIdEffects.append(areaEffects)
             areaHits.append((areaTarget, areaEffects))
 
-        if clientResult in self.RolledResults and skillResult in self.RolledResults and clientResult != skillResult:
+        rolledResult = skillResult
+        comboState = self.getComboChainState(avatar, skillId)
+        if comboState == self.COMBO_CHAIN_BROKEN:
+            # the combat tray never sent this attack of the combo chain...
+            self.notify.debug('Avatar %d used combo skill %d out of it\'s chain!' % (avatar.doId, skillId))
+            skillResult = WeaponGlobals.RESULT_MISS
+        elif comboState == self.COMBO_CHAIN_TIMED and clientResult == WeaponGlobals.RESULT_MISS:
+            # the client misses every combo attack it's player has mistimed after
+            # rolling the attack, see BattleManager.doAttack...
+            skillResult = rolledResult = WeaponGlobals.RESULT_MISS
+
+        if clientResult in self.RolledResults and rolledResult in self.RolledResults and clientResult != rolledResult:
             self.notify.debug('Avatar %d rolled %d for skill %d, we rolled %d!' % (
-                avatar.doId, clientResult, skillId, skillResult))
+                avatar.doId, clientResult, skillId, rolledResult))
 
             self.resyncBattleRandom(avatar)
         elif clientResult in self.ClientMissedResults:
