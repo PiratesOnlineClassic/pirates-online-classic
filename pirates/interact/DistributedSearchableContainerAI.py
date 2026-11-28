@@ -5,6 +5,9 @@ from direct.directnotify import DirectNotifyGlobal
 class DistributedSearchableContainerAI(DistributedInteractiveAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedSearchableContainerAI')
 
+    # each avatar searches the container for it's own quest items
+    MULTIUSE = True
+
     def __init__(self, air):
         DistributedInteractiveAI.__init__(self, air)
 
@@ -18,17 +21,18 @@ class DistributedSearchableContainerAI(DistributedInteractiveAI):
             return self.DENY
 
         self.d_startSearching(avatar.doId)
+        taskMgr.remove(self.uniqueName('avatarSearchTask-%d' % avatar.doId))
         taskMgr.doMethodLater(self.searchTime, self.__finishSearching,
             self.uniqueName('avatarSearchTask-%d' % avatar.doId), extraArgs=[avatar.doId])
 
         return self.ACCEPT
 
     def __finishSearching(self, avatarId):
-        self.b_setUserId(0)
-
         avatar = self.air.doId2do.get(avatarId)
         if not avatar:
             return
+
+        self.sendUpdateToAvatarId(avatar.doId, 'setUserId', [0])
 
         questProgress = self.air.questMgr.containerSearched(avatar, self)
         self.d_stopSearching(avatar.doId, int(questProgress))

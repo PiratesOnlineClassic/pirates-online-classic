@@ -58,8 +58,17 @@ class DistributedSearchableContainerAITests(unittest.TestCase):
         self.questMgr.containerSearched.assert_not_called()
         self.taskMgr.run('avatarSearchTask-42-300')
         self.questMgr.containerSearched.assert_called_once_with(self.avatar, self.container)
+        self.container.sendUpdateToAvatarId.assert_any_call(42, 'setUserId', [0])
         self.container.sendUpdateToAvatarId.assert_called_with(42, 'stopSearching', [1])
-        self.container.b_setUserId.assert_called_once_with(0)
+
+        # every avatar searches on it's own, the user is never broadcast
+        self.assertTrue(self.container.MULTIUSE)
+        self.container.b_setUserId.assert_not_called()
+
+    def test_searching_again_restarts_the_search(self):
+        self.container.handleRequestInteraction(self.avatar, 0, False)
+        self.container.handleRequestInteraction(self.avatar, 0, False)
+        self.assertEqual(list(self.taskMgr.tasks), ['avatarSearchTask-42-300'])
 
     def test_leaving_cancels_the_search(self):
         self.container.handleRequestInteraction(self.avatar, 0, False)
