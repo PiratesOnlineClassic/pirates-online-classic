@@ -224,7 +224,7 @@ want-infamy 0
 
 # Options:
 # Ship visibility from islands for a fresh game_options.txt: 0 off, 1 low (flat ships), 2 high.
-ocean-visibility 1
+ocean-visibility 2
 
 # GUI
 hide-gui #f
