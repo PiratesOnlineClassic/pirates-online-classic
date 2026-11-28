@@ -35,6 +35,10 @@ uberdogs:
       id: 4686
       anonymous: false
 
+    - class: PlayerFriendsManager
+      id: 4687
+      anonymous: false
+
     - class: GuildManager
       id: 4701
       anonymous: false
