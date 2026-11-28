@@ -42,6 +42,7 @@ class FakeShip:
         self.masts = [object(), object()]
         self.hp = 1000
         self.level = 30
+        self.spawnBuff = False
         self.children = []
         self.nextDoId = doId + 1
         air.doId2do[doId] = self
@@ -60,6 +61,9 @@ class FakeShip:
 
     def getHp(self):
         return self.hp
+
+    def hasSpawnBuff(self):
+        return self.spawnBuff
 
     def b_setHp(self, hp):
         self.hp = hp
@@ -181,6 +185,17 @@ class KrakenAITests(unittest.TestCase):
         hp = self.ship.hp
         kraken._KrakenAI__attack(SimpleNamespace())
         self.assertLess(self.ship.hp, hp)
+
+    def test_spawn_protected_ship_is_not_attacked(self):
+        kraken = self.spawn()
+        kraken.GrabAvatarChance = 0
+        kraken.GrabMastChance = 1
+        self.ship.spawnBuff = True
+        with patch('random.random', return_value=0.0):
+            kraken._KrakenAI__attack(SimpleNamespace())
+
+        self.assertEqual(kraken.getGrabbedMasts(), [])
+        self.assertEqual(self.ship.hp, 1000)
 
     def test_ship_sunk_makes_kraken_retreat(self):
         kraken = self.spawn()
