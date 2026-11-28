@@ -242,6 +242,13 @@ class GuildManagerUD(DistributedObjectGlobalUD):
 
         return True
 
+    def checkGuildAccess(self, avatarId, callback):
+        """
+        Calls back with whether or not the avatar may start and name a guild.
+        """
+
+        callback(True)
+
     def generateToken(self):
         while True:
             token = ''.join(random.choice(TOKEN_CHARACTERS) for x in range(self.tokenLength))
@@ -454,6 +461,16 @@ class GuildManagerUD(DistributedObjectGlobalUD):
             self.notify.warning('Avatar %d tried to create a guild while in guild %d!' % (avatarId, guildId))
             return
 
+        self.checkGuildAccess(avatarId, lambda allowed: self.__handleCreateGuildAccess(avatarId, allowed))
+
+    def __handleCreateGuildAccess(self, avatarId, allowed):
+        if not allowed:
+            self.notify.warning('Avatar %d tried to create a guild without access!' % avatarId)
+            return
+
+        if self.getAvatarGuild(avatarId)[1]:
+            return
+
         guildId = self.db.allocateGuildId()
         guild = {
             'name': '',
@@ -479,6 +496,23 @@ class GuildManagerUD(DistributedObjectGlobalUD):
         newName = newName.strip()
         if not self.isValidGuildName(newName):
             self.d_guildNameChange(avatarId, newName, GUILD_NAME_REJECTED)
+            return
+
+        if self.db.getGuildIdByName(newName):
+            self.d_guildNameReject(avatarId, guildId)
+            return
+
+        self.checkGuildAccess(avatarId, lambda allowed: self.__handleNameGuildAccess(avatarId, guildId, newName, allowed))
+
+    def __handleNameGuildAccess(self, avatarId, guildId, newName, allowed):
+        if not allowed:
+            self.notify.warning('Avatar %d tried to name guild %d without access!' % (avatarId, guildId))
+            self.d_guildNameChange(avatarId, newName, GUILD_NAME_REJECTED)
+            return
+
+        # Make sure nothing changed while we were waiting:
+        guild = self.db.getGuild(guildId)
+        if not guild or guild['name'] or self.getAvatarRank(guild, avatarId) != GUILDRANK_GM:
             return
 
         if self.db.getGuildIdByName(newName):
