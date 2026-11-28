@@ -56,6 +56,53 @@ class HumanDNAAI(HumanDNA):
     def d_setHair(self):
         self.sendUpdate('setHair', [self.getHairHair(), self.getHairBeard(), self.getHairMustache(), self.getHairColor()])
 
+    def sendMolecularUpdate(self, fieldName, atomics):
+        # Every atomic field is sent so the database stores the change, the
+        # molecular field then has the clients rebuild the avatar once...
+        args = []
+        for atomicName, values in atomics:
+            values = list(values)
+            self.sendUpdate(atomicName, values)
+            args.extend(values)
+
+        self.sendUpdate(fieldName, args)
+
+    def d_setClothes(self):
+        self.sendMolecularUpdate('setClothes', [
+            ('setHatIdx', [self.getHatIdx()]),
+            ('setHatTexture', [self.getHatTexture()]),
+            ('setHatColor', [self.getHatColor()]),
+            ('setClothesShirt', self.getClothesShirt()),
+            ('setClothesVest', self.getClothesVest()),
+            ('setClothesCoat', self.getClothesCoat()),
+            ('setClothesBelt', self.getClothesBelt()),
+            ('setClothesPant', self.getClothesPant()),
+            ('setClothesShoe', self.getClothesShoe()),
+            ('setClothesTopColor', self.getClothesTopColor()),
+            ('setClothesBotColor', self.getClothesBotColor())])
+
+    def d_setJewelry(self):
+        self.sendMolecularUpdate('setJewelry', [
+            ('setJewelryZone1', self.getJewelryZone1()),
+            ('setJewelryZone2', self.getJewelryZone2()),
+            ('setJewelryZone3', self.getJewelryZone3()),
+            ('setJewelryZone4', self.getJewelryZone4()),
+            ('setJewelryZone5', self.getJewelryZone5()),
+            ('setJewelryZone6', self.getJewelryZone6()),
+            ('setJewelryZone7', self.getJewelryZone7()),
+            ('setJewelryZone8', self.getJewelryZone8())])
+
+    def d_setTattoos(self):
+        self.sendMolecularUpdate('setTattoos', [
+            ('setTattooChest', self.getTattooChest()),
+            ('setTattooZone2', self.getTattooZone2()),
+            ('setTattooZone3', self.getTattooZone3()),
+            ('setTattooZone4', self.getTattooZone4()),
+            ('setTattooZone5', self.getTattooZone5()),
+            ('setTattooZone6', self.getTattooZone6()),
+            ('setTattooZone7', self.getTattooZone7()),
+            ('setTattooZone8', self.getTattooZone8())])
+
 
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[str, int])
 def dna(dnaType, val=0):
