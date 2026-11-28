@@ -1,6 +1,8 @@
 from direct.distributed.DistributedCartesianGridAI import DistributedCartesianGridAI
 from direct.directnotify import DirectNotifyGlobal
 
+from otp.avatar.DistributedPlayerAI import DistributedPlayerAI
+
 from pirates.quest.QuestConstants import LocationIds
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.battle.Teamable import Teamable
@@ -46,16 +48,20 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         self.removeObjectFromGrid(av)
 
     def handleChildArrive(self, childObj, zoneId):
-        if isinstance(childObj, DistributedMovingObjectAI):
+        # players move themselves from cell to cell, the client hands it's grid zone changes
+        # back to us with a setLocation, so only the objects we move are kept on our grid,
+        # otherwise we would recompute a player's zone from a stale position...
+        if isinstance(childObj, DistributedMovingObjectAI) and not isinstance(childObj, DistributedPlayerAI):
             self.addObjectToIslandGrid(childObj)
-    
-        DistributedCartesianGridAI.handleChildArrive(self, childObj, zoneId)
+
+        # the game area opens the player's interest in the cells surrounding it
+        DistributedGameAreaAI.handleChildArrive(self, childObj, zoneId)
 
     def handleChildLeave(self, childObj, zoneId):
         if isinstance(childObj, DistributedMovingObjectAI):
             self.removeObjectFromIslandGrid(childObj)
 
-        DistributedCartesianGridAI.handleChildLeave(self, childObj, zoneId)
+        DistributedGameAreaAI.handleChildLeave(self, childObj, zoneId)
 
     def generate(self):
         DistributedCartesianGridAI.generate(self)
@@ -80,7 +86,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         self.generateChildWithRequired(self.shipDeployer, PiratesGlobals.IslandShipDeployerZone)
 
     def setLocation(self, parentId, zoneId):
-        DistributedGameArea.DistributedGameArea.setLocation(self, parentId, zoneId)
+        DistributedGameAreaAI.setLocation(self, parentId, zoneId)
         world = self.air.doId2do.get(parentId)
         if world:
             self.reparentTo(world)
