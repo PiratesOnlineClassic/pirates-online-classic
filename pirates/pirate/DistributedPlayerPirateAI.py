@@ -196,6 +196,12 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def setLocation(self, parentId, zoneId):
         from pirates.world.DistributedIslandAI import DistributedIslandAI
 
+        # leaving the area we were fighting in (a door, a teleport...) leaves
+        # every battle we were in, our targets are no longer around us...
+        previousParentId = self.parentId
+        if previousParentId and previousParentId != parentId and self.isGenerated():
+            self.air.targetMgr.clearAttacker(self)
+
         DistributedPlayerAI.setLocation(self, parentId, zoneId)
         DistributedBattleAvatarAI.setLocation(self, parentId, zoneId)
 
