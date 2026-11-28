@@ -89,7 +89,11 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
             return
 
         attackers.append(attacker.doId)
-        if len(attackers) == 1 and not target.currentTarget and target.gameFSM.state != 'Battle':
+
+        # enemies being attacked join the battle, players being attacked by
+        # another player decide for themselves when to draw their weapon...
+        if getattr(target, 'isNpc', True) and len(attackers) == 1 and not target.currentTarget and \
+                target.gameFSM.state != 'Battle':
             target.b_setGameState('Battle')
 
         attacker.b_setCurrentTarget(target.doId)
@@ -154,6 +158,10 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
         if targetSwitchType == EnemyGlobals.TARGET_SWITCH_TYPE_RANDOM:
             return random.choice(attackers)
         elif targetSwitchType == EnemyGlobals.TARGET_SWITCH_TYPE_DAMAGE:
+            # the target's combo diary records the recent attacks of every attacker...
+            target = self.air.doId2do.get(targetDoId)
+            comboDiary = getattr(target, 'comboDiary', None)
+
             weights = {}
             for attackTargetDoId in list(attackers):
                 attacker = self.air.doId2do.get(attackTargetDoId)
@@ -161,7 +169,7 @@ class TargetManagerAI(DistributedObjectAI, TargetManagerBase):
                     continue
 
                 totalDamageDone = 0
-                recordedAttacks = attacker.comboDiary.getCombos(attacker.doId)
+                recordedAttacks = comboDiary.getCombos(attacker.doId) if comboDiary else []
                 for recordedAttack in list(recordedAttacks):
                     totalDamageDone += recordedAttack[2]
 

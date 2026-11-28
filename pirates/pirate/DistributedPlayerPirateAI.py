@@ -207,6 +207,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         previousParentId = self.parentId
         if previousParentId and previousParentId != parentId and self.isGenerated():
             self.air.targetMgr.clearAttacker(self)
+            self.air.targetMgr.clearTarget(self)
 
         DistributedPlayerAI.setLocation(self, parentId, zoneId)
         DistributedBattleAvatarAI.setLocation(self, parentId, zoneId)
@@ -1425,6 +1426,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                 target.removeSkillEffect(WeaponGlobals.C_ATTUNE, self.doId)
 
         self.air.targetMgr.clearAttacker(self)
+        self.air.targetMgr.removeTarget(self)
         self.air.worldGridManager.clearAvatarInterests(self)
         inventory = self.getInventory()
         if inventory:

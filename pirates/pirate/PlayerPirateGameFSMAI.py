@@ -41,6 +41,7 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
         world = self.avatar.getWorld()
         if world and world.getType() == PiratesGlobals.INSTANCE_PVP:
             world.avatarDefeated(self.avatar)
+            self.air.targetMgr.clearTarget(self.avatar)
             return
 
         # the avatar is no longer fighting anything, clear it from all of
@@ -56,8 +57,11 @@ class PlayerPirateGameFSMAI(BattleAvatarGameFSMAI):
                          list(self.air.targetMgr.getAttackers(self.avatar.doId) or [])]
             self.air.questMgr.shipPVPPirateDefeated(self.avatar, attackers)
 
-            if self.air.siegeManager.handleAvatarDefeated(self.avatar):
-                return
+        # the avatar's attackers have been credited, they are no longer fighting it...
+        self.air.targetMgr.clearTarget(self.avatar)
+
+        if self.avatar.getSiegeTeam() and self.air.siegeManager.handleAvatarDefeated(self.avatar):
+            return
 
         inventory = self.avatar.getInventory()
         if not inventory:

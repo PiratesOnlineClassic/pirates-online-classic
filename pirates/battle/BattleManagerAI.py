@@ -499,30 +499,29 @@ class BattleManagerAI(BattleManagerBase):
         timestamp = globalClockDelta.getRealNetworkTime(bits=32)
         hitTargets = [target] if target is not None else []
         hitTargets += [areaTarget for areaTarget, areaEffects in areaHits]
+        hitTargets = [hitTarget for hitTarget in hitTargets if hitTarget is not avatar and
+                      not isinstance(hitTarget, DistributedInteractivePropAI)]
+
         for hitTarget in hitTargets:
             # check to see if our dictionary of target to attacker data contains this attacker,
             # if not we will assume this is a new attacker to the target and assign them accordingly...
-            if hitTarget is avatar or isinstance(hitTarget, DistributedInteractivePropAI):
-                continue
+            self.registerAttacker(avatar, hitTarget, skillId, ammoSkillId)
 
-            if not self.air.targetMgr.hasTarget(avatar.doId) and not self.air.targetMgr.hasAttacker(avatar.doId, hitTarget.doId):
-                self.air.targetMgr.addAttacker(avatar, hitTarget)
+            # add the skill info to the attackers battle skill diary to track what skills
+            # they have used against each of their targets and when...
+            avatar.battleSkillDiary.addSkill(timestamp, skillId, ammoSkillId, hitTarget.doId)
 
-        # add the skill info to the attackers battle skill diary to track
-        # what skills they have used and when...
-        if not avatar.battleSkillDiary.hasSkill(skillId):
-            avatar.battleSkillDiary.addSkill(timestamp, skillId, ammoSkillId)
+        # only update the experience for avatar's, enemies do not need experience...
+        if skillResult in (WeaponGlobals.RESULT_HIT, WeaponGlobals.RESULT_PARRY, WeaponGlobals.RESULT_RESIST) and \
+                isinstance(avatar, DistributedPlayerPirateAI):
+            for hitTarget in hitTargets:
+                # update this skills current reputation against the target, this will eventually
+                # add up and all skills used will be rewarded once the target is defeated...
+                skillData = avatar.battleSkillDiary.getSkill(skillId, hitTarget.doId)
+                if not skillData:
+                    continue
 
-        if skillResult in (WeaponGlobals.RESULT_HIT, WeaponGlobals.RESULT_PARRY, WeaponGlobals.RESULT_RESIST):
-            # update this skills current reputation, this will eventually add up
-            # and all skills used will be rewarded reputation...
-            skillData = avatar.battleSkillDiary.getSkill(skillId)
-            if not skillData:
-                return None
-
-            # only update the experience for avatar's, enemies do not need experience...
-            if isinstance(avatar, DistributedPlayerPirateAI) and hitTargets:
-                experience = self.getModifiedAttackReputation(avatar, hitTargets[0], skillId, ammoSkillId)
+                experience = self.getModifiedAttackReputation(avatar, hitTarget, skillId, ammoSkillId)
                 if self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEXPHOLIDAY) or avatar.hasTempDoubleXPReward():
                     experience *= 2
                 elif self.air.newsManager.isHolidayActive(PiratesGlobals.DOUBLEXPHOLIDAYPAID) and avatar.isPaid():
@@ -532,23 +531,19 @@ class BattleManagerAI(BattleManagerBase):
 
         if skillResult == WeaponGlobals.RESULT_HIT:
             if target is not None:
-                # check to see if the avatar knows of any skills that are valid combos,
-                # recent attacks are measured within a certain time frame...
-                totalCombo, totalDamage, numAttackers = avatar.comboDiary.getCombo()
-                if totalCombo and numAttackers > 1:
-                    # apply the combo damage including the combo bonus damage to the
-                    # target, then broadcast the combo info to all targets with interest...
-                    targetEffects[0] = totalDamage + WeaponGlobals.getComboBonus(numAttackers)
-                    target.b_setCombo(totalCombo, numAttackers, targetEffects[0], avatar.doId)
+                # the target keeps the combo diary of every attacker attacking it (see
+                # DistributedTargetableObject.addCombo), check to see if the recent attacks
+                # made by it's attackers are a team combo...
+                comboDiary = getattr(target, 'comboDiary', None)
+                if comboDiary is not None:
+                    totalCombo, totalDamage, numAttackers = comboDiary.getCombo()
+                    if totalCombo and numAttackers > 1:
+                        # apply the combo damage including the combo bonus damage to the
+                        # target, then broadcast the combo info to all targets with interest...
+                        targetEffects[0] = totalDamage + WeaponGlobals.getComboBonus(numAttackers)
+                        target.b_setCombo(totalCombo, numAttackers, targetEffects[0], avatar.doId)
 
-                # update the avatar's combo diary so we can determine if any other attacks
-                # made by avatars attacking the avatar's current target is a combo...
-                for attackerDoId in self.air.targetMgr.getAttackers(target.doId):
-                    attacker = self.air.doId2do.get(attackerDoId)
-                    if not attacker:
-                        continue
-
-                    attacker.comboDiary.recordAttack(avatar.doId, skillId, targetEffects[0])
+                    comboDiary.recordAttack(avatar.doId, skillId, targetEffects[0])
 
                 self.applySkillHit(avatar, target, targetEffects, skillId, ammoSkillId)
 
@@ -567,6 +562,25 @@ class BattleManagerAI(BattleManagerBase):
 
         return [skillId, ammoSkillId, skillResult, target.doId if target is not None else 0, resultAreaIdList,
             attackerEffects, targetEffects, areaIdEffects, timestamp, pos, charge]
+
+    def registerAttacker(self, avatar, target, skillId, ammoSkillId):
+        # enemies choose who they fight themselves (see BattleNPCGameFSMAI.findNewAttackTarget),
+        # only players are tracked as the attackers of their targets...
+        if avatar.isNpc:
+            return
+
+        if isinstance(target, DistributedPlayerPirateAI):
+            # healing or buffing another player never makes us their attacker...
+            if WeaponGlobals.isFriendlyFire(skillId, ammoSkillId):
+                return
+
+            # players are only targets once another player attacks them, the players
+            # that defeat them are credited for it (see PlayerPirateGameFSMAI.enterDeath)...
+            if not self.air.targetMgr.hasTarget(target.doId):
+                self.air.targetMgr.addTarget(target)
+
+        if not self.air.targetMgr.hasAttacker(avatar.doId, target.doId):
+            self.air.targetMgr.addAttacker(avatar, target)
 
     def applySkillHit(self, avatar, target, targetEffects, skillId, ammoSkillId):
         # handle interactive props
@@ -834,26 +848,27 @@ class BattleManagerAI(BattleManagerBase):
             self.__checkAttacker(attacker, target)
 
     def __checkAttacker(self, attacker, target):
-        # check to see if the avatar's recent recorded combos are expired,
-        # if they are removed them from the combo diary...
-        combos = attacker.comboDiary.getCombos(attacker.doId)
-        for combo in combos:
-            skillId = combo[ComboDiaryAI.SKILLID_INDEX]
-            if attacker.comboDiary.checkComboExpired(attacker.doId, skillId):
-                attacker.comboDiary.removeCombo(attacker.doId, skillId)
+        # check to see if the avatar's recent recorded combos against the target
+        # are expired, if they are removed them from the target's combo diary...
+        comboDiary = getattr(target, 'comboDiary', None)
+        if comboDiary is not None:
+            for combo in list(comboDiary.getCombos(attacker.doId)):
+                skillId = combo[ComboDiaryAI.SKILLID_INDEX]
+                if comboDiary.checkComboExpired(attacker.doId, skillId):
+                    comboDiary.removeCombo(attacker.doId, skillId)
 
-        # check to see if the avatar doesn't have anymore combos
-        # that are not expired, if so clear the combo diary...
-        if len(combos) == 0:
-            attacker.comboDiary.clear()
+            # check to see if the avatar doesn't have anymore combos that
+            # are not expired, if so remove the avatar from the combo diary...
+            if not comboDiary.getCombos(attacker.doId):
+                comboDiary.removeCombos(attacker.doId)
 
-        # check the current weapon skill and determine if the avatar is still in
-        # range that they may still be able to use that weapon in battle...
-        skillId = attacker.battleSkillDiary.getCurrentSkill()
+        # check the skill last used against the target and determine if the avatar is
+        # still in range that they may still be able to use that weapon in battle...
+        skillId = attacker.battleSkillDiary.getCurrentSkill(target.doId)
         if not skillId:
             return
 
-        skillData = attacker.battleSkillDiary.getSkill(skillId)
+        skillData = attacker.battleSkillDiary.getSkill(skillId, target.doId)
         if not skillData:
             return
 
@@ -877,9 +892,12 @@ class BattleManagerAI(BattleManagerBase):
         if hasattr(attacker, 'hasStickyTarget') and attacker.hasStickyTarget(target.doId):
             self.unattuneTarget(attacker, target.doId)
 
-        # clear the avatar's skill diaries
-        attacker.battleSkillDiary.clear()
-        attacker.comboDiary.clear()
+        # clear the avatar's skill diaries for this target only, the reputation
+        # the avatar has built against it's other targets is still rewarded...
+        attacker.battleSkillDiary.clear(target.doId)
+        comboDiary = getattr(target, 'comboDiary', None)
+        if comboDiary is not None:
+            comboDiary.removeCombos(attacker.doId)
 
     def rewardAttackers(self, target):
         attackers = self.air.targetMgr.getAttackers(target.doId)
@@ -915,8 +933,9 @@ class BattleManagerAI(BattleManagerBase):
 
         goldReward = EnemyGlobals.getGoldDrop(target.getAvatarType(), target.getLevel(), dropMultiplier)
 
-        for skillId in attacker.battleSkillDiary.getSkills():
-            ammoSkillId, timestamp, reputation = attacker.battleSkillDiary.getSkill(skillId)
+        skills = attacker.battleSkillDiary.getSkills(target.doId)
+        for skillId in list(skills):
+            ammoSkillId, timestamp, reputation = attacker.battleSkillDiary.getSkill(skillId, target.doId)
             reputationCategoryId = WeaponGlobals.getSkillReputationCategoryId(skillId)
             reputation = int(reputation)
 
