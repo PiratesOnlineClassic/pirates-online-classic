@@ -592,12 +592,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             self.d_setSpeedChatQuest(questInt, msgType, taskNum, self.air.getMsgSender())
 
     def requestCurrentWeapon(self, currentWeaponId, isWeaponDrawn):
-        avatarId = self.air.getAvatarIdFromSender()
-        if avatarId != self.doId:
-            self.air.logPotentialHacker(
-                message='Attempted to change the weapon of another avatar',
-                targetAvId=self.doId)
-
+        if not self._isSenderSelf('requestCurrentWeapon', weaponId=currentWeaponId):
             return
 
         isWeaponDrawn = bool(isWeaponDrawn)

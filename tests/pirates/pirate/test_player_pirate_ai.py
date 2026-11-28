@@ -98,6 +98,7 @@ def makePlayer(doId=100, stacks=None, hp=100, maxHp=100, mojo=50, maxMojo=100, s
     player.isNpc = False
     player.currentWeaponId = 0
     player.isWeaponDrawn = False
+    player._siegeTeam = 0
     player.currentAmmo = 0
     player.currentTarget = None
     player.hp = hp
