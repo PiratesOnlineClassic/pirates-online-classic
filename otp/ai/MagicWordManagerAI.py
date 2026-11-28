@@ -14,14 +14,6 @@ class MagicWordManagerAI(DistributedObjectAI):
         invokerId = self.air.getAvatarIdFromSender()
         invoker = self.air.doId2do.get(invokerId)
 
-        if invoker.getAdminAccess() <= MINIMUM_MAGICWORD_ACCESS:
-            self.air.writeServerEvent(
-                'suspicious',
-                invokerId,
-                'Attempted to issue magic word: %s' %
-                word)
-            return
-
         if not invoker:
             self.sendUpdateToAvatarId(
                 invokerId,
@@ -29,8 +21,20 @@ class MagicWordManagerAI(DistributedObjectAI):
                 ['missing invoker'])
             return
 
+        if invoker.getAdminAccess() < MINIMUM_MAGICWORD_ACCESS:
+            self.air.writeServerEvent(
+                'suspicious',
+                invokerId,
+                'Attempted to issue magic word: %s' %
+                word)
+            return
+
+        # a target of zero is the invoker themself...
+        if not targetId:
+            targetId = invokerId
+
         target = self.air.doId2do.get(targetId)
-        if not target:
+        if not target or not hasattr(target, 'getAdminAccess'):
             self.sendUpdateToAvatarId(
                 invokerId,
                 'sendMagicWordResponse',
@@ -59,7 +63,7 @@ def docs():
     for magicwordKey in spellbook.words:
         magicword = spellbook.words[magicwordKey]
         access = magicword.access if magicword.access else '0'
-        doc = magicword.doc.strip() if magicword.doc else 'N\A'
+        doc = magicword.doc.strip() if magicword.doc else 'N/A'
         rows.append([magicword.name, doc, magicword.types, access])
 
     with open('docs/serverdocs.csv', 'w') as docsFile:

@@ -9,9 +9,9 @@ class MagicError(Exception):
     pass
 
 
-def ensureAccess(access):
+def ensureAccess(access, msg='Insufficient access'):
     if spellbook.getInvokerAccess() < access:
-        raise MagicError
+        raise MagicError(msg)
 
 
 class Spellbook:
@@ -36,12 +36,15 @@ class Spellbook:
         self.currentManager = manager
         self.currentInvoker = invoker
         self.currentTarget = target
+        # words may arrive with their ~ prefix still attached, e.g. when they
+        # are sent directly to the server by a client side magic word...
+        incantation = incantation.strip().lstrip('~')
         word, args = (incantation.split(' ', 1) + [''])[:2]
 
         try:
             return self.doWord(word, args)
         except MagicError as e:
-            return e.message
+            return str(e)
         except Exception:
             return describeException(backTrace=1)
         finally:
@@ -56,7 +59,7 @@ class Spellbook:
 
         ensureAccess(word.access)
         if self.getTarget() and self.getTarget() != self.getInvoker():
-            if self.getInvokerAccess().access < self.getTarget().getAdminAccess():
+            if self.getInvokerAccess() < self.getTarget().getAdminAccess():
                 raise MagicError('Target must have lower or equal access')
 
         result = word.run(args)
@@ -78,11 +81,9 @@ class Spellbook:
         return self.currentTarget
 
     def getInvokerAccess(self):
-        if self.isRemote():
-            return CATEGORY_SYSTEM_ADMIN.access
         if not self.currentInvoker:
             return 0
-        return self.currentInvoker.getAdminAccess().acccess
+        return self.currentInvoker.getAdminAccess()
 
     def __repr__(self):
         r = ''
@@ -133,8 +134,11 @@ class MagicWord:
                 'Magic word %s requires at least %d arguments' %
                 (self.name, minArgs))
 
+        # arguments without an explicit type are passed along as strings...
+        types = list(self.types) + [str] * (len(args) - len(self.types))
+
         output = []
-        for i, (type, arg) in enumerate(zip(self.types, args)):
+        for i, (type, arg) in enumerate(zip(types, args)):
             try:
                 targ = type(arg)
             except (TypeError, ValueError):
