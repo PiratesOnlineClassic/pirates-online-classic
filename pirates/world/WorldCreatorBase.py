@@ -223,6 +223,24 @@ class WorldCreatorBase:
         
         return list(fileList)
 
+    def getObjectAuthoredParentUid(self, uid, fileDict = None):
+        # the uid of the object this object is authored under, objects loaded under
+        # an object that was not generated (e.g. a fort) are loaded with the parent's
+        # parent uid, the authored one is still known from the object's path...
+        if fileDict is None:
+            fileDict = self.fileDicts
+
+        for name in fileDict:
+            path = fileDict[name]['ObjectIds'].get(uid)
+            if not path:
+                continue
+
+            keys = re.findall('\\[[\'"]([^\'"]*)[\'"]\\]', path)
+            if len(keys) >= 3:
+                return keys[-3]
+
+        return None
+
     def getObjectIslandUid(self, objUid, fileDict = None):
         if not fileDict:
             fileDict = self.fileDicts

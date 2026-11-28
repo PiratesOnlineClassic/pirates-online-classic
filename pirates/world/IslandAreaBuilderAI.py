@@ -105,7 +105,8 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
 
     def createIslandCannon(self, parent, parentUid, objKey, objectData):
         # cannons mounted on a fort are owned by that fort (see TreasureMapBlackPearlWorldBuilderAI)
-        parentData = self.air.worldCreator.getObjectDataByUid(parentUid)
+        worldCreator = self.air.worldCreator
+        parentData = worldCreator.getObjectDataByUid(worldCreator.getObjectAuthoredParentUid(objKey) or parentUid)
         if parentData and parentData.get('Type') == 'Simple Fort':
             return None
 
