@@ -55,6 +55,10 @@ class PiratesInternalRepository(OTPInternalRepository):
         self._registerInternalNetMessage('bandRelayToAvatar')
         self._registerInternalNetMessage('bandAvatarBandId')
 
+        # DistributedMatchMaker
+        self._registerInternalNetMessage('matchMakerCreateMatch')
+        self._registerInternalNetMessage('matchMakerAvatarLeft')
+
     def logPotentialHacker(self, message, kickChannel=False, **kwargs):
         self.notify.warning(message)
 

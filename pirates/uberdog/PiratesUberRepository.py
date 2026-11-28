@@ -65,6 +65,7 @@ class PiratesUberRepository(PiratesInternalRepository):
         self.avatarFriendsManager = self.generateGlobalObject(OTP_DO_ID_AVATAR_FRIENDS_MANAGER, 'PCAvatarFriendsManager')
         self.playerFriendsManager = self.generateGlobalObject(OTP_DO_ID_PLAYER_FRIENDS_MANAGER, 'PCPlayerFriendsManager')
         self.guildManager = self.generateGlobalObject(OTP_DO_ID_PIRATES_GUILD_MANAGER, 'PCGuildManager')
+        self.matchMaker = self.generateGlobalObject(OTP_DO_ID_PIRATES_MATCH_MAKER, 'DistributedMatchMaker')
 
 @rpcservice(serviceName='cluster')
 class ClusterService(RPCServiceUD):
