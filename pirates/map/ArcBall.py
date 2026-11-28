@@ -583,7 +583,7 @@ class ArcBall(NodePath, DirectObject):
                 color_writer.addData4f(0, 1, 0, 1)
             
             numPts = len(pts[1:])
-            for x in range(numPts / 2):
+            for x in range(numPts // 2):
                 texture_writer.addData2f(1, 1)
                 texture_writer.addData2f(0, 1)
                 texture_writer.addData2f(1, 0)
