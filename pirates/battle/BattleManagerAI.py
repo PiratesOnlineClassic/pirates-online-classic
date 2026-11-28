@@ -496,7 +496,11 @@ class BattleManagerAI(BattleManagerBase):
                 return
 
         overallReputation = 0
-        goldReward = EnemyGlobals.getGoldDrop(target.getAvatarType(), target.getLevel())
+        dropMultiplier = 1
+        if hasattr(target, 'getGoldScale'):
+            dropMultiplier = target.getGoldScale()
+
+        goldReward = EnemyGlobals.getGoldDrop(target.getAvatarType(), target.getLevel(), dropMultiplier)
 
         for skillId in attacker.battleSkillDiary.getSkills():
             ammoSkillId, timestamp, reputation = attacker.battleSkillDiary.getSkill(skillId)

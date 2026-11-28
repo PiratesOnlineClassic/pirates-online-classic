@@ -1,5 +1,6 @@
 from pirates.npc.DistributedNPCSkeletonAI import DistributedNPCSkeletonAI
 from pirates.npc.BossAI import BossAI
+from pirates.npc.BossNPCGameFSMAI import BossNPCGameFSMAI
 from direct.directnotify import DirectNotifyGlobal
 
 class DistributedBossSkeletonAI(DistributedNPCSkeletonAI, BossAI):
@@ -8,3 +9,9 @@ class DistributedBossSkeletonAI(DistributedNPCSkeletonAI, BossAI):
     def __init__(self, air):
         DistributedNPCSkeletonAI.__init__(self, air)
         BossAI.__init__(self, air)
+
+        self.gameFSM.destroy()
+        self.gameFSM = BossNPCGameFSMAI(self.air, self)
+
+    def getMonsterDmg(self):
+        return BossAI.getMonsterDmg(self)

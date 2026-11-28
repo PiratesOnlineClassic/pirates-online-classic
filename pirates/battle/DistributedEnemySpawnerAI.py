@@ -217,6 +217,9 @@ class SpawnNodeBase:
                 self.notify.warning('Failed to load boss data for boss (%s): %s' % (str(npc.getAvatarType()), self.objKey))
                 bossId = ''
 
+            # named bosses need their unique id so the client can load the same boss data
+            npc.setUniqueId(bossId)
+
         avType = self.objectData.get('Type', '')
 
         # In special cases, we may need to check the 'type' string in the worlddata,
@@ -389,6 +392,8 @@ class EnemySpawnNode(SpawnNodeBase):
 
     def setNPCAttributes(self, npc):
         weapons = list(EnemyGlobals.getEnemyWeapons(npc.getAvatarType(), npc.getLevel()).keys())
+        if hasattr(npc, 'getBossWeapons'):
+            weapons = npc.getBossWeapons() or weapons
 
         animSet = self.objectData.get('AnimSet', '')
         drawnAnimSets = ['attention', 'bayonet_drill']
