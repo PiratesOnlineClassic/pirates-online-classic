@@ -15,6 +15,9 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedInventoryAI')
     registerWithInventoryManager = True
 
+    # stack quantities are sent to the client as uint16 values...
+    MaxStackQuantity = 0xFFFF
+
     def __init__(self, air):
         DistributedObjectAI.__init__(self, air)
         DistributedInventoryBase.__init__(self, air)
@@ -82,7 +85,9 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.d_setStacks(self.getStacks())
 
     def getStacks(self):
-        return [[stackType, quantity] for stackType, quantity in list(self.stacks.items())]
+        # empty stacks are left out, the client treats a missing stack as
+        # an empty one and drops them from it's categories as well...
+        return [[stackType, quantity] for stackType, quantity in list(self.stacks.items()) if quantity]
 
     def setAccumulator(self, accumulatorType, quantity):
         # Local state update only.  The targeted network send is done by
@@ -96,6 +101,10 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.setAccumulator(accumulatorType, quantity)
         self.d_setAccumulator(accumulatorType, quantity)
 
+        # the targeted accumulator update is not a database field, store
+        # the avatar's accumulators so they are kept across logins...
+        self.d_setAccumulators(self.getAccumulators())
+
     def setStackLimit(self, stackType, limit):
         # Local state update only.  The targeted network send is done by
         # d_setStackLimit; b_setStackLimit combines both.
@@ -108,6 +117,10 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         self.setStackLimit(stackType, limit)
         self.d_setStackLimit(stackType, limit)
 
+        # store the stack limits, they may be raised by quest rewards
+        # and purchases such as ammo pouches...
+        self.d_setStackLimits(self.getStackLimits())
+
     def setStackQuantity(self, stackType, quantity):
         # Apply the stack cap only when a positive limit exists.  A missing
         # limit defaults to 0, which would otherwise silently zero every stack
@@ -115,6 +128,10 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
         limit = self.getStackLimit(stackType)
         if limit > 0:
             quantity = min(quantity, limit)
+
+        # stacks are sent as unsigned values, never let one go negative
+        # or overflow when the stack has no limit...
+        quantity = max(0, min(quantity, self.MaxStackQuantity))
         self.stacks[stackType] = quantity
         # Keep stacksInCategory in sync so getStacksInCategory / getWeapons
         # etc. return current values after individual stack changes.
@@ -127,7 +144,11 @@ class DistributedInventoryAI(DistributedObjectAI, DistributedInventoryBase):
 
     def b_setStackQuantity(self, stackType, quantity):
         self.setStackQuantity(stackType, quantity)
-        self.d_setStackQuantity(stackType, quantity)
+        self.d_setStackQuantity(stackType, self.stacks[stackType])
+
+        # the targeted stack update is not a database field, store the
+        # avatar's stacks so they are kept across logins...
+        self.d_setStacks(self.getStacks())
 
     def setStacksInCategory(self, stackType, quantity):
         category = InventoryId.getCategory(stackType)
