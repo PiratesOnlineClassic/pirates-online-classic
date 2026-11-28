@@ -124,6 +124,42 @@ class WorldGridManagerTests(unittest.TestCase):
         taskMgr.step()
         callback.assert_called_once_with()
 
+    def test_area_interest_waits_for_the_client_agent(self):
+        world = FakeWorld(3000)
+        world.doId = 3000
+        callback = Mock()
+        self.manager.handleAreaInterest(world, self.avatar, 720, callback)
+
+        # the client agent has not sent the area to the client yet...
+        contexts = addedContexts(self.air, world.doId)
+        self.assertEqual(len(contexts), 1)
+        self.assertEqual(self.air.clientAddInterest.call_args[0][3], 720)
+        taskMgr.step()
+        taskMgr.step()
+        callback.assert_not_called()
+
+        self.manager.handleInterestContextDone(self.avatar.doId, contexts[0])
+        callback.assert_called_once_with()
+
+    def test_area_interest_already_open_calls_back_right_away(self):
+        world = FakeWorld(3000)
+        self.manager.handleAreaInterest(world, self.avatar, 720, Mock())
+        callback = Mock()
+        self.manager.handleAreaInterest(world, self.avatar, 720, callback)
+        callback.assert_called_once_with()
+        self.assertEqual(len(addedContexts(self.air, world.doId)), 1)
+
+    def test_area_interest_cleared(self):
+        world = FakeWorld(3000)
+        self.manager.handleAreaInterest(world, self.avatar, 720, Mock())
+        self.manager.clearAreaInterest(world, self.avatar, 720)
+        self.assertFalse(self.manager.hasInterestHandleByZoneId(world, self.avatar, 720))
+        self.air.clientRemoveInterest.assert_called_once()
+
+        # clearing an area we never opened is harmless...
+        self.manager.clearAreaInterest(world, self.avatar, 721)
+        self.air.clientRemoveInterest.assert_called_once()
+
     def test_explicit_add_interest_handle(self):
         island = FakeGrid(self.air, 1000)
         self.manager.handleLocationChanged(island, self.avatar, 610)
@@ -197,6 +233,17 @@ class IslandGridTests(unittest.TestCase):
         self.assertFalse(self.air.worldGridManager.hasInterestHandleByZoneId(self.island, player, 610))
         self.assertEqual(len(self.air.clientRemoveInterest.call_args_list),
             len(self.air.clientAddInterest.call_args_list))
+
+    def test_leaving_an_area_closes_the_interest_in_it(self):
+        world = FakeWorld(3000)
+        island = makeIsland(self.air, doId=1001, world=world)
+        player = makePlayer(self.air, doId=101)
+        self.air.worldGridManager.handleAreaInterest(world, player, island.zoneId, Mock())
+        island.handleChildArrive(player, 610)
+        island.handleChildLeave(player, 610)
+
+        self.assertFalse(self.air.worldGridManager.hasInterestHandleByZoneId(world, player, island.zoneId))
+        island.stopUpdateGridTask()
 
     def test_ai_moving_objects_are_kept_on_the_grid(self):
         npc = DistributedMovingObjectAI.__new__(DistributedMovingObjectAI)

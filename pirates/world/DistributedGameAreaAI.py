@@ -53,6 +53,9 @@ class DistributedGameAreaAI(DistributedNodeAI):
             # Skip world grid manager for Black Pearl instances
             if not self._isBlackPearlInstance():
                 self.air.worldGridManager.clearAvatarInterest(self, childObj)
+                areaWorld = self.getParentObj()
+                if areaWorld:
+                    self.air.worldGridManager.clearAreaInterest(areaWorld, childObj, self.zoneId)
 
         DistributedNodeAI.handleChildLeave(self, childObj, zoneId)
 

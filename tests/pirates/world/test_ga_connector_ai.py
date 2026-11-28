@@ -25,6 +25,7 @@ def makeArea(air, doId, world):
     area.parentId = world.doId
     area.zoneId = 700 + doId
     area.cr = air
+    area.air = air
     air.doId2do[doId] = area
     return area
 
@@ -49,7 +50,7 @@ class ConnectorPrivateAreaTests(unittest.TestCase):
     def setUp(self):
         self.avatar = SimpleNamespace(doId=42)
         self.air = SimpleNamespace(doId2do={42: self.avatar}, getAvatarIdFromSender=lambda: 42,
-            worldGridManager=SimpleNamespace(handleLocationChanged=Mock()),
+            worldGridManager=SimpleNamespace(handleLocationChanged=Mock(), handleAreaInterest=Mock()),
             logPotentialHacker=Mock())
 
         world = DistributedInstanceBaseAI.__new__(DistributedInstanceBaseAI)
@@ -68,8 +69,15 @@ class ConnectorPrivateAreaTests(unittest.TestCase):
         uids = {'cave-tunnel': self.caveTunnel, 'island-tunnel': self.islandTunnel}
         self.air.uidMgr = SimpleNamespace(justGetMeMeObject=uids.get)
 
+    def showArea(self):
+        # the client agent has sent the requested area to the client...
+        areaWorld, avatar, zoneId, callback = self.air.worldGridManager.handleAreaInterest.call_args[0]
+        callback()
+        return areaWorld, avatar, zoneId
+
     def test_request_opens_interest_at_the_connector_in_the_requested_area(self):
         self.islandTunnel.requestPrivateArea(self.cave.doId)
+        self.showArea()
         parentObj, avatar, zoneId, callback = self.air.worldGridManager.handleLocationChanged.call_args[0]
         self.assertIs(parentObj, self.cave)
         self.assertIs(avatar, self.avatar)
@@ -81,6 +89,7 @@ class ConnectorPrivateAreaTests(unittest.TestCase):
 
     def test_turning_back_opens_interest_in_the_area_we_came_from(self):
         self.islandTunnel.requestPrivateArea(self.island.doId)
+        self.showArea()
         parentObj, avatar, zoneId, callback = self.air.worldGridManager.handleLocationChanged.call_args[0]
         self.assertIs(parentObj, self.island)
         self.assertEqual(zoneId, self.islandTunnel.zoneId)
@@ -89,6 +98,25 @@ class ConnectorPrivateAreaTests(unittest.TestCase):
         self.islandTunnel.requestPrivateArea(self.stranger.doId)
         self.air.worldGridManager.handleLocationChanged.assert_not_called()
         self.air.logPotentialHacker.assert_called_once()
+
+    def test_the_area_reaches_the_client_before_anything_in_its_grid(self):
+        # Barbossa's grotto: the npcs within the area's grid were sent before the area
+        # itself, so the client never parented them and the cutscene crashed hiding him...
+        self.islandTunnel.requestPrivateArea(self.cave.doId)
+        self.air.worldGridManager.handleLocationChanged.assert_not_called()
+        self.islandTunnel.sendUpdateToAvatarId.assert_not_called()
+
+        areaWorld, avatar, zoneId = self.showArea()
+        self.assertEqual(areaWorld.doId, 5000)
+        self.assertIs(avatar, self.avatar)
+        self.assertEqual(zoneId, self.cave.zoneId)
+        self.air.worldGridManager.handleLocationChanged.assert_called_once()
+
+    def test_no_grid_interest_once_the_avatar_has_gone(self):
+        self.islandTunnel.requestPrivateArea(self.cave.doId)
+        del self.air.doId2do[42]
+        self.showArea()
+        self.air.worldGridManager.handleLocationChanged.assert_not_called()
 
 
 if __name__ == '__main__':

@@ -125,8 +125,18 @@ class DistributedGAConnectorAI(DistributedNodeAI):
         def _connectorInterestCallback():
             self.d_setPrivateArea(avatar.doId, areaWorld.doId, area.zoneId, area.doId, True)
 
-        self.air.worldGridManager.handleLocationChanged(areaConnector.getParentObj(), avatar,
-            areaConnector.zoneId, _connectorInterestCallback)
+        def _areaInterestCallback():
+            if self.air.doId2do.get(avatar.doId) is not avatar or area.isDeleted():
+                return
+
+            self.air.worldGridManager.handleLocationChanged(areaConnector.getParentObj(), avatar,
+                areaConnector.zoneId, _connectorInterestCallback)
+
+        # the client must have the area before we show it anything within the area's grid,
+        # otherwise the objects there (Barbossa in his grotto for example) arrive before
+        # their parent does and the client never parents them to the area...
+        self.air.worldGridManager.handleAreaInterest(areaWorld, avatar, area.zoneId,
+            _areaInterestCallback)
 
     def setPrivateArea(self, worldId, worldZoneId, areaDoId, autoFadeIn):
         # the private area is only ever assigned by the AI in response to requestPrivateArea,

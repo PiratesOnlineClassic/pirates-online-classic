@@ -159,11 +159,12 @@ class GridInterestHandler(object):
         if len(self.pendingCallbackContexts) == 0:
             self._callbackInterestContext()
 
-    def _setInterestContextDoneCallback(self, contexts, callback):
+    def _setInterestContextDoneCallback(self, contexts, callback, frames=None):
         assert(callback is not None)
 
         self.pendingCallbackContexts.update(contexts)
-        self.pendingCallback = PythonUtil.FrameDelayedCall('interest-context-callback-%d' % self.avatar.doId, callback)
+        self.pendingCallback = PythonUtil.FrameDelayedCall('interest-context-callback-%d' % self.avatar.doId,
+            callback, frames=frames)
 
     def handleLocationChanged(self, zoneId, callback):
         """
@@ -370,6 +371,57 @@ class WorldGridManagerAI(object):
 
         assert(gridInterestHandler is not None)
         gridInterestHandler.handleLocationChanged(zoneId, callback)
+
+    # how many frames we wait on the client agent to tell us an area interest is done
+    # before we carry on without it, it should never take anywhere near this long...
+    AreaInterestTimeoutFrames = 300
+
+    def handleAreaInterest(self, areaWorld, avatar, zoneId, callback):
+        """
+        Opens interest in the zone a game area lays in within it's world and calls back once the
+        client agent has sent the area to the client. The area has to be generated on the client
+        before any of the objects within it's grid, the client only parents an object to it's grid
+        when the grid already exists, otherwise the object is left floating outside of the scene...
+        """
+
+        assert(areaWorld is not None)
+        assert(avatar is not None)
+        assert(callback is not None)
+
+        gridInterests = self.gridInterestHandlers.setdefault(avatar.doId, {})
+        gridInterestHandler = gridInterests.get(areaWorld.doId)
+        if not gridInterestHandler:
+            contextAllocator = self.contextAllocators.setdefault(avatar.doId,
+                GridInterestContextAllocator())
+
+            gridInterestHandler = GridInterestHandler(self.air, areaWorld, avatar, contextAllocator)
+            gridInterests[areaWorld.doId] = gridInterestHandler
+
+        if gridInterestHandler.hasInterestHandleByZoneId(zoneId):
+            # the client can already see the area...
+            callback()
+            return
+
+        interestHandle = gridInterestHandler.addInterestHandle(zoneId)
+        if interestHandle is None:
+            callback()
+            return
+
+        gridInterestHandler._setInterestContextDoneCallback([interestHandle.context], callback,
+            frames=self.AreaInterestTimeoutFrames)
+
+    def clearAreaInterest(self, areaWorld, avatar, zoneId):
+        """
+        Closes the interest opened by handleAreaInterest once the avatar has left the area
+        """
+
+        assert(areaWorld is not None)
+        assert(avatar is not None)
+
+        if not self.hasInterestHandleByZoneId(areaWorld, avatar, zoneId):
+            return
+
+        self.removeInterestHandleByZoneId(areaWorld, avatar, zoneId)
 
     def clearAvatarInterest(self, parentObj, avatar):
         """
