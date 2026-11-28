@@ -7,6 +7,7 @@ from direct.distributed.PyDatagram import PyDatagram
 from direct.directnotify import DirectNotifyGlobal
 
 from otp.distributed.MsgTypes import *
+from otp.chat import ChatFilter
 from otp.uberdog.RejectCode import RejectCode
 
 GUILDRANK_GM = 3
@@ -589,19 +590,23 @@ class GuildManagerUD(DistributedObjectGlobalUD):
     def sendChat(self, msgText, chatFlags, senderDISLid):
         avatarId = self.air.getAvatarIdFromSender()
         guildId, guild = self.getAvatarGuild(avatarId)
-        if guild:
-            self.sendToOnlineMembers(guild, 'recvChat', [avatarId, msgText, chatFlags, 0])
+        msgText = ChatFilter.cleanMessage(msgText)
+        if guild and msgText:
+            self.sendToOnlineMembers(guild, 'recvChat', [avatarId, msgText, ChatFilter.cleanChatFlags(chatFlags), 0])
 
     def sendWLChat(self, msgText, chatFlags, senderDISLid):
         avatarId = self.air.getAvatarIdFromSender()
         guildId, guild = self.getAvatarGuild(avatarId)
-        if guild:
-            self.sendToOnlineMembers(guild, 'recvWLChat', [avatarId, msgText, chatFlags, 0])
+        msgText = ChatFilter.cleanMessage(msgText)
+        if guild and msgText:
+            msgText = ChatFilter.filterWhiteList(msgText)
+            self.sendToOnlineMembers(guild, 'recvWLChat', [avatarId, msgText, ChatFilter.cleanChatFlags(chatFlags), 0])
 
     def sendSC(self, msgIndex):
         avatarId = self.air.getAvatarIdFromSender()
         guildId, guild = self.getAvatarGuild(avatarId)
-        if guild:
+        # The client looks the phrase up without checking it exists.
+        if guild and ChatFilter.isValidSpeedChat(msgIndex):
             self.sendToOnlineMembers(guild, 'recvSC', [avatarId, msgIndex])
 
     # --- Teleport ---

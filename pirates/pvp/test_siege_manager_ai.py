@@ -239,13 +239,13 @@ class SiegeManagerAITests(unittest.TestCase):
         manager.air.getAvatarIdFromSender.return_value = 10
 
         manager.sendChat('ahoy', 0, 0)
-        manager.sendSC(5)
+        manager.sendSC(100)
 
         self.assertEqual(manager.sendUpdateToAvatarId.call_args_list, [
             call(10, 'recvChat', [10, 'ahoy', 0, 1010, 'Jack']),
             call(11, 'recvChat', [10, 'ahoy', 0, 1010, 'Jack']),
-            call(10, 'recvSpeedChat', [10, 5, 'Jack']),
-            call(11, 'recvSpeedChat', [10, 5, 'Jack'])])
+            call(10, 'recvSpeedChat', [10, 100, 'Jack']),
+            call(11, 'recvSpeedChat', [10, 100, 'Jack'])])
 
     def test_chat_without_team_is_ignored(self):
         sender = FakeAvatar(10)

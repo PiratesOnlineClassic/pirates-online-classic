@@ -5,6 +5,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.fsm.StatePush import FunctionCall
 from direct.task import Task
 
+from otp.chat import ChatFilter
 from pirates.pvp.SiegeManagerBase import SiegeManagerBase
 from pirates.pvp.SiegeAnnouncerAI import SiegeAnnouncerAI
 from pirates.pvp import PVPGlobals
@@ -170,23 +171,30 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
 
     def sendChat(self, message, chatFlags, DISLid):
         avatar, teamId = self._getChatSender()
-        if not avatar:
+        message = ChatFilter.cleanMessage(message)
+        if not avatar or not message:
             return
+
+        chatFlags = ChatFilter.cleanChatFlags(chatFlags)
 
         for avatarId in self.getTeamAvatars(teamId):
             self.d_recvChat(avatarId, avatar.doId, message, chatFlags, avatar.getDISLid(), avatar.getName())
 
     def sendWLChat(self, message, chatFlags, DISLid):
         avatar, teamId = self._getChatSender()
-        if not avatar:
+        message = ChatFilter.cleanMessage(message)
+        if not avatar or not message:
             return
+
+        message = ChatFilter.filterWhiteList(message)
+        chatFlags = ChatFilter.cleanChatFlags(chatFlags)
 
         for avatarId in self.getTeamAvatars(teamId):
             self.d_recvWLChat(avatarId, avatar.doId, message, chatFlags, avatar.getDISLid(), avatar.getName())
 
     def sendSC(self, msgIndex):
         avatar, teamId = self._getChatSender()
-        if not avatar:
+        if not avatar or not ChatFilter.isValidSpeedChat(msgIndex):
             return
 
         for avatarId in self.getTeamAvatars(teamId):

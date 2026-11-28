@@ -11,6 +11,7 @@ from direct.fsm.FSM import FSM
 
 from otp.distributed.MsgTypes import *
 from otp.otpbase import OTPGlobals
+from otp.chat import ChatFilter
 from otp.uberdog.RejectCode import RejectCode
 
 
@@ -458,12 +459,15 @@ class PlayerFriendsManagerUD(DistributedObjectGlobalUD):
 
     def whisperTo(self, senderId, playerId, message):
         accountId = self.__getWhisperTarget(playerId)
-        if accountId:
+        message = ChatFilter.cleanMessage(message)
+        if accountId and message:
             self.sendUpdateToAccountId(playerId, 'whisperFrom', [accountId, message])
 
     def whisperWLTo(self, senderId, playerId, message):
         accountId = self.__getWhisperTarget(playerId)
-        if accountId:
+        message = ChatFilter.cleanMessage(message)
+        if accountId and message:
+            message = ChatFilter.filterWhiteList(message)
             self.sendUpdateToAccountId(playerId, 'whisperWLFrom', [accountId, message])
 
     def __whisperSpeedChat(self, playerId, fieldName, msgIndex):
