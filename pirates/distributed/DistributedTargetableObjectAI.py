@@ -18,3 +18,28 @@ class DistributedTargetableObjectAI(DistributedObjectAI):
 
     def getDamagable(self):
         return True
+
+    def requestTarget(self):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        # only objects that are registered with the target manager
+        # can be targeted by an attacker...
+        if not self.air.targetMgr.hasTarget(self.doId):
+            self.notify.debug('Avatar %d requested target on non-targetable object %d!' % (
+                avatar.doId, self.doId))
+
+            return
+
+        self.air.targetMgr.addAttacker(avatar, self)
+
+    def removeTarget(self):
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        if not self.air.targetMgr.hasAttacker(avatar.doId, self.doId):
+            return
+
+        self.air.targetMgr.removeAttacker(avatar, self)

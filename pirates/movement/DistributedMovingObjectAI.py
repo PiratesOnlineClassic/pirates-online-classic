@@ -60,7 +60,7 @@ class DistributedMovingObjectAI(DistributedSmoothNodeAI, DistributedTargetableOb
         self.aggroMode = aggroMode
 
     def d_setAggroMode(self, aggroMode):
-        self.sendUpdate('setAggro', [aggroMode])
+        self.sendUpdate('setAggroMode', [aggroMode])
 
     def b_setAggroMode(self, aggroMode):
         self.setAggroMode(aggroMode)
