@@ -1,6 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import globalClockDelta
 from direct.task import Task
+from panda3d.core import Vec3
 
 from otp.ai import AIInterestHandles
 from pirates.treasuremap.DistributedTreasureMapInstanceAI import DistributedTreasureMapInstanceAI
@@ -53,16 +54,20 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
     # Number of guards to spawn
     NUM_NAVY_GUARDS = 10
 
-    # Navy guard avatar types to use (mix of soldiers and marksmen)
+    # Navy guard avatar types to use, only the common navy (the marksmen) have
+    # enemy stats, the client cannot generate the soldier tracks...
     NAVY_GUARD_TYPES = [
-        AvatarTypes.Veteran,       # Level 30+ marksman
-        AvatarTypes.Officer,       # Level 40+ marksman
-        AvatarTypes.RoyalGuard,    # Level 30+ soldier
-        AvatarTypes.MasterSwordsman,  # Level 40+ soldier
+        AvatarTypes.Veteran,
+        AvatarTypes.Officer,
     ]
 
+    # the bridges that close the pearl's way out of the harbor
+    BlockingBarricades = (0, 1, 4)
+    BARRICADE_WARNING_RADIUS = 700.0
+
     # Stage timing constants
-    CUTSCENE_WAIT_TIME = 60.0  # Max time to wait for cutscene sync
+    CUTSCENE_WAIT_TIME = 60.0  # Max time to wait for the clients to load
+    CUTSCENE_TIMEOUT = 120.0  # Max time to wait for the crew to watch cutscene 3.1
     STAGE_TWO_DELAY = 5.0  # Delay before moving to stage two
 
     def __init__(self, air):
@@ -99,6 +104,7 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         self.attackShipsSunk = 0
         self.sunkAttackShipIds = set()
         self.barricadesDestroyed = []
+        self.barricadesWarned = []
 
         # Barrier sync for multi-player
         self.barrierCallbacks = {}
@@ -178,6 +184,7 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         taskMgr.remove(self.uniqueName('waitClientsTimeout'))
         taskMgr.remove(self.uniqueName('moveToCompleted'))
         taskMgr.remove(self.uniqueName('refreshBlackPearlInterests'))
+        taskMgr.remove(self.uniqueName('barricadeWarnings'))
         if self.readyBarrier is not None:
             self.ignoreBarrier(self.readyBarrier)
             self.readyBarrier = None
@@ -255,6 +262,13 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         """Keep the encounter ships and forts visible to a participant."""
         if not self.blackPearl or not self.oceanGrid:
             self.notify.warning('Cannot add Black Pearl interest: ship or oceanGrid not available')
+            return
+
+        # the client hides the pearl it knows of while cutscene 3.1 plays (see
+        # TreasureMapBlackPearl.enterStageOne) and only shows it again in stage two,
+        # the crew boards the pearl by teleporting to it once the cutscene ends,
+        # which brings the pearl in, so the ships are kept out until then...
+        if not self.cutsceneFinished and self.state in ('Off', 'WaitClientsReady', 'StageOne'):
             return
 
         island = self._getBlackPearlIsland()
@@ -507,8 +521,7 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
             guard.setTeam(PiratesGlobals.NAVY_TEAM)
             guard.setCollisionMode(PiratesGlobals.COLL_MODE_FLOORS_CL)
 
-            # Set level based on avatar type (soldiers/marksmen levels)
-            level = 30 + (i % 4) * 5  # Levels 30, 35, 40, 45
+            level = EnemyGlobals.getRandomEnemyLevel(avatarType)
             guard.setLevel(level)
 
             # Get HP/MP from EnemyGlobals based on avatar type and level
@@ -741,8 +754,20 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
             return
 
         self.notify.info('Avatar %d finished cutscene' % avatarId)
+        if avatarId in self.cutsceneEndedAvatars:
+            return
+
         self.cutsceneEndedAvatars.add(avatarId)
         self._finishCutsceneIfReady()
+        if self.cutsceneFinished:
+            return
+
+        # the crew boards the pearl together, let the avatar know it is waiting
+        # on the rest of the crew, and the crew still watching that it is waiting...
+        self.d_displayCutsceneMessage(avatarId, 1)
+        for watchingId in self.participants:
+            if watchingId not in self.cutsceneEndedAvatars:
+                self.d_displayCutsceneMessage(watchingId, 0)
 
     def _finishCutsceneIfReady(self):
         if (not self.cutsceneFinished and self.state == 'StageOne' and self.participants and
@@ -750,6 +775,7 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
             taskMgr.remove(self.uniqueName('cutsceneTimeout'))
             self.cutsceneFinished = True
             self.d_endCutscene()
+            self._addBlackPearlInterestForAllParticipants()
 
     def handleNPCsKilledOnPearl(self):
         """Called when all NPCs on the Black Pearl are killed"""
@@ -802,14 +828,53 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
 
     def _checkBarricadeProgress(self):
         """Check if enough barricades are destroyed to proceed to stage four"""
-        # Need barricades 0 or 1 destroyed, and 2 or 3 or 4 destroyed
-        pathOneOpen = 0 in self.barricadesDestroyed or 1 in self.barricadesDestroyed
-        pathTwoOpen = (2 in self.barricadesDestroyed or
-                       3 in self.barricadesDestroyed or
-                       4 in self.barricadesDestroyed)
-
-        if pathOneOpen and pathTwoOpen and self.state == 'StageThree':
+        if self.state == 'StageThree' and self.getBlockingBarricade() is None:
             self._moveToStageFour()
+
+    def getBlockingBarricade(self):
+        # the harbor is closed by either of the first two bridges (0 and 1) and the
+        # way out to sea by the last bridge (4), bridges 2 and 3 never block the
+        # pearl (the client leaves their collisions off, see setupBarricades)...
+        if not (0 in self.barricadesDestroyed or 1 in self.barricadesDestroyed):
+            return 1
+
+        if 4 not in self.barricadesDestroyed:
+            return 4
+
+        return None
+
+    def _getBarricadePos(self, barricadeId):
+        fortPositions = [self.forts[uid].getPos() for uid in
+                         TreasureMapBlackPearlGlobals.FortPairsDict[barricadeId] if uid in self.forts]
+        if not fortPositions:
+            return None
+
+        return sum(fortPositions, Vec3(0, 0, 0)) / len(fortPositions)
+
+    def _checkBarricadeWarnings(self, task):
+        # warn the crew when the pearl sails up to a bridge that is still closed...
+        if self.state != 'StageThree' or not self.blackPearl:
+            return Task.done
+
+        pearlPos = self.blackPearl.getPos(self.oceanGrid)
+        pearlPos.setZ(0)
+        for barricadeId in self.BlockingBarricades:
+            if barricadeId in self.barricadesDestroyed or barricadeId in self.barricadesWarned:
+                continue
+
+            if barricadeId in (0, 1) and (0 in self.barricadesDestroyed or 1 in self.barricadesDestroyed):
+                continue
+
+            barricadePos = self._getBarricadePos(barricadeId)
+            if barricadePos is None:
+                continue
+
+            barricadePos.setZ(0)
+            if (pearlPos - barricadePos).length() <= self.BARRICADE_WARNING_RADIUS:
+                self.barricadesWarned.append(barricadeId)
+                self.d_barricadeWarning(barricadeId)
+
+        return Task.again
 
     def _moveToStageFour(self):
         """Move to stage four - final battle"""
@@ -887,7 +952,7 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         self.notify.info('Entering Stage One - Board the Black Pearl')
 
         # Start cutscene timeout
-        taskMgr.doMethodLater(self.CUTSCENE_WAIT_TIME, self._cutsceneTimeout,
+        taskMgr.doMethodLater(self.CUTSCENE_TIMEOUT, self._cutsceneTimeout,
             self.uniqueName('cutsceneTimeout'))
 
     def _cutsceneTimeout(self, task):
@@ -896,6 +961,7 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
             self.notify.info('Cutscene timeout, forcing end')
             self.cutsceneFinished = True
             self.d_endCutscene()
+            self._addBlackPearlInterestForAllParticipants()
         return Task.done
 
     def exitStageOne(self):
@@ -923,11 +989,16 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
         self.notify.info('Entering Stage Three - Destroy the barricades')
 
         # Enable barricade collisions
-        for barricadeId in [0, 1, 4]:
-            self.d_enableBarricadeCollisions(barricadeId)
+        for barricadeId in self.BlockingBarricades:
+            if barricadeId not in self.barricadesDestroyed:
+                self.d_enableBarricadeCollisions(barricadeId)
+
+        taskMgr.doMethodLater(1.0, self._checkBarricadeWarnings,
+            self.uniqueName('barricadeWarnings'))
+        self._checkBarricadeProgress()
 
     def exitStageThree(self):
-        pass
+        taskMgr.remove(self.uniqueName('barricadeWarnings'))
 
     def enterStageFour(self):
         """Stage Four: Final battle with Goliath"""

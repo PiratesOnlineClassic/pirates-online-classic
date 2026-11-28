@@ -109,8 +109,23 @@ class BlackPearlAITests(unittest.TestCase):
         air.teleportMgr.d_initiateTeleport.assert_called_once()
         instance.removeParticipant.assert_called_once_with(42)
 
+    def test_ships_are_kept_out_of_interest_until_the_cutscene_ends(self):
+        instance = self.make_instance()
+        instance.air.doId2do[42] = SimpleNamespace(
+            GetPuppetConnectionChannel=lambda avatar_id: avatar_id + 1000)
+        instance.participants = [42]
+        instance.readyAvatars = [42]
+        instance.state = 'StageOne'
+        instance._addBlackPearlInterestForAllParticipants()
+        instance.air.clientAddInterestMultiple.assert_not_called()
+        instance.cutsceneFinished = True
+        instance._addBlackPearlInterestForAllParticipants()
+        instance.air.clientAddInterestMultiple.assert_any_call(
+            1042, AIInterestHandles.PIRATES_TREASUREMAP, 200, (2400, 2500, 2600), False)
+
     def test_interest_is_reserved_idempotent_and_removed(self):
         instance = self.make_instance()
+        instance.cutsceneFinished = True
         avatar = SimpleNamespace(GetPuppetConnectionChannel=lambda avatar_id: avatar_id + 1000)
         instance.air.doId2do[42] = avatar
         instance.readyAvatars = [42]
@@ -135,6 +150,7 @@ class BlackPearlAITests(unittest.TestCase):
 
     def test_interests_wait_for_ready_and_remove_empty_fort_interest(self):
         instance = self.make_instance()
+        instance.cutsceneFinished = True
         instance.air.doId2do[42] = SimpleNamespace(
             GetPuppetConnectionChannel=lambda avatar_id: avatar_id + 1000)
         instance.addParticipant(42)
@@ -166,10 +182,13 @@ class BlackPearlAITests(unittest.TestCase):
         sender = [1]
         instance.air.getAvatarIdFromSender = lambda: sender[0]
         instance.d_endCutscene = Mock()
+        instance.d_displayCutsceneMessage = Mock()
         with patch.object(builtins, 'taskMgr') as tasks:
             instance.requestEndCutscene()
             instance.requestEndCutscene()
             instance.d_endCutscene.assert_not_called()
+            # the avatar waits on the crew, the crew still watching is told so once...
+            self.assertEqual(instance.d_displayCutsceneMessage.mock_calls, [call(1, 1), call(2, 0)])
             sender[0] = 3
             instance.requestEndCutscene()
             instance.d_endCutscene.assert_not_called()
@@ -177,7 +196,7 @@ class BlackPearlAITests(unittest.TestCase):
             instance.requestEndCutscene()
             instance.requestEndCutscene()
             instance.d_endCutscene.assert_called_once_with()
-            tasks.remove.assert_called_once_with('cutsceneTimeout')
+            tasks.remove.assert_any_call('cutsceneTimeout')
 
     def test_wait_clients_uses_client_ready_barrier(self):
         instance = self.make_instance()
