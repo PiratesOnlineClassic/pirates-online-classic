@@ -81,6 +81,16 @@ class TimeManagerAI(DistributedObjectAI.DistributedObjectAI):
             self.notify.info('Client %s signature: %s' % (requesterId, info))
             self.air.writeServerEvent('client-signature', requesterId, info)
 
+            # a release client reports a hash of it's own executable as the
+            # signature (see build/client_main.executable_signature); if the
+            # server is told what the current release's hash should be, a
+            # client reporting anything else is flagged.  This is a tripwire,
+            # not a guarantee: a modified client can report whatever it likes.
+            expected = base.config.GetString('expected-client-signature', '')
+            if expected and signature != expected:
+                self.air.writeServerEvent('suspicious', requesterId,
+                    'client signature %s does not match the expected release' % signature)
+
         pycHash = HashVal()
         pycHash.setFromBin(pyc)
         if pycHash != HashVal():

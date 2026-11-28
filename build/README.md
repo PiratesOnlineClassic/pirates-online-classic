@@ -287,6 +287,40 @@ library: the `discord-*` prc settings have no client code behind them, and
   settings (`want-water-panel`, sea patch keys, the time of day editor) and
   would raise `ImportError` if a player turned those on.
 
+## Hardening the client
+
+The compiled release client has some tamper deterrents. **None of them make
+the client safe to trust.** A player owns the machine it runs on and can take
+any binary apart, so these only raise the effort for casual tampering. The
+boundary that actually holds is the server: the AI and UberDOG must validate
+every `clsend` field and never trust what the client sends.
+
+- **Config and dc files are compiled in** (see [Config](#config)): they are
+  not loose files a player can edit, and a `config/personal.prc` on disk is
+  ignored.
+- **Symbols stripped.** The layout step runs `strip` on the main executable
+  on macOS and Linux (`strip_executable`). Windows deployment builds carry no
+  PDB.
+- **Anti-debug** (`client_main.apply_anti_debug`, release builds only, never a
+  source checkout): macOS `ptrace(PT_DENY_ATTACH)` and Linux
+  `ptrace(PTRACE_TRACEME)` ask the kernel to refuse a debugger from attaching;
+  Windows `IsDebuggerPresent` / `CheckRemoteDebuggerPresent` exit if one is
+  already there. Every call fails open, so it can never stop the game from
+  starting. It is patched out trivially by anyone reading the binary.
+- **Self-signature.** A release client hashes its own executable (SHA-256) and
+  reports it as its signature at startup (`client_main.executable_signature`
+  → the `signature` prc variable → `OTPClientRepository.uberZoneInterestComplete`
+  → `TimeManagerAI.setSignature`, logged as the `client-signature` server
+  event). Set `expected-client-signature` in the server config to the current
+  release's hash and a client reporting anything else is logged as
+  `suspicious`. A modified client can report whatever hash it likes, so this
+  is a tripwire for a population of altered clients, not proof.
+
+What is deliberately **not** changed: asserts and docstrings stay in (several
+modules pick their resource path under `if __debug__`, and the magic words and
+`~docs` read docstrings), so do not add `--python-flag=-O` / `no_asserts` /
+`no_docstrings`.
+
 ## Known risks
 
 - **The working directory must be writable.** In a release

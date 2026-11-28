@@ -412,6 +412,26 @@ def lay_out_game_dir(game_dir, dist_dir):
                     os.remove(os.path.join(dirpath, name))
 
 
+def strip_executable(path, os_name):
+    """Remove the symbol table from the compiled executable so a release
+    gives less away.  Best effort: a failure only warns.  Windows deployment
+    builds carry no PDB, so there is nothing to strip there; macOS is stripped
+    before the bundle is re-signed."""
+    if os_name == 'windows' or not path or not os.path.isfile(path):
+        return
+    strip = shutil.which('strip')
+    if not strip:
+        warn('strip not found; the executable keeps it\'s symbols')
+        return
+    # -x on macOS removes local symbols but keeps what the loader needs
+    cmd = [strip, '-x', path] if os_name == 'macos' else [strip, path]
+    result = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    if result.returncode:
+        warn('could not strip %s: %s' % (path, result.stderr.decode().strip()))
+    else:
+        log('stripped symbols from %s' % os.path.basename(path))
+
+
 def lay_out_resources(resources_dir, args):
     if args.resources_dir:
         log('copying resources from %s' % args.resources_dir)
@@ -472,6 +492,15 @@ def lay_out_release(args, cmd):
                  'package folder next to libp3dtool and rebuild.' % ', '.join(missing))
     else:
         log('onefile build: plugins are inside the executable; check them in nuitka-report.xml')
+
+    # strip the main executable's symbols (before any macOS re-sign)
+    if args.os == 'macos':
+        main_exe = os.path.join(dist_dir, APP_NAME)
+    elif args.os == 'windows':
+        main_exe = os.path.join(game_dir, APP_NAME + '.exe')
+    else:
+        main_exe = os.path.join(game_dir, APP_NAME)
+    strip_executable(main_exe, args.os)
 
     if args.os == 'macos' and args.codesign_identity and shutil.which('codesign'):
         # Adding game/ and resources/ after Nuitka signed the bundle broke the

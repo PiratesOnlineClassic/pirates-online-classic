@@ -58,6 +58,69 @@ def embedded_files():
     return None
 
 
+def is_release():
+    """True only for a Nuitka-compiled release build.  The anti-debug and
+    integrity measures below are off for a source checkout (they would get in
+    a developer's way, and there is nothing to protect there)."""
+    return '__compiled__' in globals()
+
+
+def apply_anti_debug():
+    """Best effort: make a debugger harder to attach to the release client.
+    On macOS and Linux this asks the kernel to refuse a tracer; on Windows it
+    bows out if one is already present.  This only deters casual tampering -
+    anyone determined can patch it out of the binary - so it never replaces
+    the server validating what the client sends.  Every call is wrapped so a
+    failure here can never stop the game from starting."""
+    if not is_release():
+        return
+    try:
+        import ctypes
+        if sys.platform == 'darwin':
+            # PT_DENY_ATTACH (31): the kernel refuses any debugger from here on.
+            libc = ctypes.CDLL('libc.dylib', use_errno=True)
+            libc.ptrace(31, 0, 0, 0)
+        elif sys.platform.startswith('linux'):
+            # PTRACE_TRACEME (0): a process can only be traced once, so tracing
+            # ourselves stops a debugger from attaching later.  If it returns
+            # an error one is already attached.
+            libc = ctypes.CDLL('libc.so.6', use_errno=True)
+            if libc.ptrace(0, 0, 0, 0) == -1:
+                show_error('Pirates Online Classic cannot run under a debugger.')
+                os._exit(1)
+        elif sys.platform == 'win32':
+            if ctypes.windll.kernel32.IsDebuggerPresent():
+                show_error('Pirates Online Classic cannot run under a debugger.')
+                os._exit(1)
+            present = ctypes.c_int(0)
+            ctypes.windll.kernel32.CheckRemoteDebuggerPresent(
+                ctypes.windll.kernel32.GetCurrentProcess(), ctypes.byref(present))
+            if present.value:
+                show_error('Pirates Online Classic cannot run under a debugger.')
+                os._exit(1)
+    except Exception:
+        pass
+
+
+def executable_signature():
+    """A SHA-256 of the running executable, for the client to report to the
+    server (see OTPClientRepository.uberZoneInterestComplete).  The server
+    only logs it - a modified client can report whatever it likes - so it is a
+    tripwire for a population of altered clients, not a guarantee."""
+    if not is_release():
+        return None
+    try:
+        import hashlib
+        path = sys.executable or sys.argv[0]
+        h = hashlib.sha256()
+        with open(path, 'rb') as f:
+            for chunk in iter(lambda: f.read(1 << 20), b''):
+                h.update(chunk)
+        return h.hexdigest()
+    except Exception:
+        return None
+
+
 def _compiled_containing_dir():
     compiled = globals().get('__compiled__')
     if compiled is not None:
@@ -274,6 +337,8 @@ def main():
     if not console or opts.get('--log'):
         log_path = redirect_output_to_log()
 
+    apply_anti_debug()
+
     game_dir = find_game_dir(opts.get('--game-dir'))
     if game_dir is None:
         show_error('Pirates Online Classic could not find its game folder '
@@ -320,6 +385,13 @@ def main():
         load_embedded_panda_prc(files)
         mount_embedded_game_files(game_dir, files)
     add_plugin_path()
+
+    # the client reports this to the server as it's signature, see
+    # OTPClientRepository.uberZoneInterestComplete / TimeManagerAI.setSignature
+    signature = executable_signature()
+    if signature:
+        from panda3d.core import loadPrcFileData
+        loadPrcFileData('poc-signature', 'signature %s' % signature)
 
     # Runs the whole game; returns when the window closes.
     import pirates.piratesbase.PiratesStart  # noqa: F401
