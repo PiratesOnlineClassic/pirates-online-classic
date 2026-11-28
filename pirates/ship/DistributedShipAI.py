@@ -75,7 +75,6 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
         self.wishName = ''
         self.wishNameState = ''
         self.clientControllerDoId = 0
-        self.gridZoneId = 0
         self.captainId = 0
         self.deployState = 0
         self.skillEffects = []
@@ -468,16 +467,6 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
         avatar.b_setCrewShipId(self.doId)
         avatar.b_setCurrentIsland('')
 
-        # a crew member that boarded without a dinghy (teleported on board or moved
-        # from another ship) still has to see the ocean cells around the ship...
-        parentObj = self.getParentObj()
-        if isinstance(parentObj, DistributedOceanGridAI):
-            zoneId = parentObj.getZoneFromXYZ(self.getPos())
-            if not parentObj.isValidZone(zoneId):
-                zoneId = self.zoneId
-
-            self.air.worldGridManager.handleLocationChanged(parentObj, avatar, zoneId)
-
     def _playerDeparted(self, avatar):
         assert(isinstance(avatar, DistributedPlayerPirateAI))
         self.ignore(avatar.getDeleteEvent())
@@ -516,14 +505,6 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
         DistributedCharterableObjectAI.handleChildLeave(self, childObj, zoneId)
 
     def setLocation(self, parentId, zoneId):
-        parentObj = self.air.doId2do.get(parentId)
-        if parentObj is not None and isinstance(parentObj, DistributedOceanGridAI):
-            self.gridZoneId = zoneId
-            for avatarId in self.crew:
-                avatar = self.air.doId2do.get(avatarId)
-                assert(avatar is not None)
-                self.air.worldGridManager.handleLocationChanged(parentObj, avatar, zoneId)
-
         DistributedMovingObjectAI.setLocation(self, parentId, zoneId)
         DistributedCharterableObjectAI.setLocation(self, parentId, zoneId)
 
@@ -963,16 +944,15 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
     def d_sendCrewToIsland(self, avatarId, islandDoId, posH):
         self.sendUpdateToAvatarId(avatarId, 'sendCrewToIsland', [islandDoId, posH])
 
-    # how often the crew's ocean interest is checked against the position of a ship steered by a client...
+    # how often the cell of a ship steered by a client is checked against it's position...
     GridZoneCheckPeriod = 1.0
 
     def setClientController(self, clientControllerDoId):
         self.clientControllerDoId = clientControllerDoId
 
-        # the helmsman's client only sends us the ship's position, so have the world
-        # grid manager open the ocean cells around wherever the ship has sailed to...
+        # the helmsman's client only sends us the ship's position, keep the ship
+        # in the ocean cell it has sailed into so everyone sees it where it is...
         taskMgr.remove(self.uniqueName('updateGridZone'))
-        self.gridZoneId = 0
         if clientControllerDoId:
             taskMgr.doMethodLater(self.GridZoneCheckPeriod, self.__updateGridZone,
                 self.uniqueName('updateGridZone'))
@@ -983,20 +963,7 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
             return task.again
 
         zoneId = oceanGrid.getZoneFromXYZ(self.getPos())
-        if zoneId == self.gridZoneId or not oceanGrid.isValidZone(zoneId):
-            return task.again
-
-        # open the cells around the ship for it's crew first, the cell the ship is leaving
-        # is still within that radius, so the ship never drops out of anyone's interest...
-        self.gridZoneId = zoneId
-        for avatarId in self.crew:
-            avatar = self.air.doId2do.get(avatarId)
-            if avatar is not None:
-                self.air.worldGridManager.handleLocationChanged(oceanGrid, avatar, zoneId)
-
-        # then move the ship itself into the cell it sailed into, so everyone else on the
-        # ocean sees it where it really is rather than in the cell it was launched in...
-        if zoneId != self.zoneId:
+        if zoneId != self.zoneId and oceanGrid.isValidZone(zoneId):
             self.b_setLocation(oceanGrid.doId, zoneId)
 
         return task.again
