@@ -110,12 +110,75 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         self.__lastWaypointUid = previousWaypointUid
         return spawnNode.getWaypointPos(waypointUid, waypointData)
 
+    # how close an npc walks up to it's target, as a part of it's weapon's reach,
+    # so that the npcs fighting someone stand around them rather than on them...
+    ChaseReachRatio = 0.75
+    MinChaseReach = 2.0
+
+    def getAttackRange(self):
+        ranges = [self.air.battleMgr.getModifiedAttackRange(self.avatar, skillId, 0)
+            for skillId in self.getUsableSkills()]
+        ranges = [attackRange for attackRange in ranges if attackRange and attackRange != WeaponGlobals.INF_RANGE]
+        return min(ranges) if ranges else 0
+
+    def getGuardRadius(self):
+        # guards (on a ship's deck) hold their post, stepping no further than
+        # this from it to fight someone (see TreasureMapBlackPearlAI.NavyGuardPost)...
+        spawnNode = self.avatar.getSpawnNode()
+        objectData = getattr(spawnNode, 'objectData', None) or {}
+        return objectData.get('Guard Radius')
+
+    def getChasePoint(self, attackTarget):
+        # the target's position is relative to it's parent, an npc standing on a ship's
+        # deck (not on a cartesian grid) is kept relative to the same parent object...
+        frame = attackTarget.getParent()
+        if frame.isEmpty() or self.avatar.getParent().isEmpty():
+            frame = None
+
+        targetPos = attackTarget.getPos()
+        ourPos = self.avatar.getPos(frame) if frame is not None else self.avatar.getPos()
+
+        # walk up to within reach along the way we're coming in,
+        # not onto the very spot the target is standing on...
+        reach = max(self.getAttackRange() * self.ChaseReachRatio, self.MinChaseReach)
+        approach = ourPos - targetPos
+        approach.setZ(0)
+        if approach.length() > reach:
+            approach.normalize()
+            chasePoint = targetPos + approach * reach
+        else:
+            chasePoint = Point3(ourPos)
+
+        guardRadius = self.getGuardRadius()
+        if guardRadius:
+            post = self.getPatrolOrigin()
+            fromPost = chasePoint - post
+            fromPost.setZ(0)
+            if fromPost.length() > guardRadius:
+                fromPost.normalize()
+                chasePoint = post + fromPost * guardRadius
+                chasePoint.setZ(targetPos[2])
+
+        return chasePoint
+
     def shouldFollowTarget(self, attackTarget):
         if not attackTarget:
             return False
 
+        # close in until the target is within reach of our weapon...
         distance = self.avatar.getDistance(attackTarget)
-        return distance > EnemyGlobals.INSTANT_AGGRO_RADIUS_DEFAULT / 2
+        if distance <= (self.getAttackRange() or EnemyGlobals.INSTANT_AGGRO_RADIUS_DEFAULT / 2):
+            return False
+
+        # ...unless there is no ground left to gain, a guard that has stepped as far
+        # from it's post as it may holds it's ground until the target comes closer
+        frame = attackTarget.getParent()
+        if frame.isEmpty() or self.avatar.getParent().isEmpty():
+            ourPos = self.avatar.getPos()
+        else:
+            ourPos = self.avatar.getPos(frame)
+
+        return (self.getChasePoint(attackTarget) - ourPos).length() > 1.0
 
     def getPointInRadius(self, cx, cy, cz, radius):
         x = random.uniform(cx - radius, cx + radius)
@@ -380,17 +443,24 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
 
             return
 
-        self.walkToPoint(currentTarget.getPos(), currentTarget.getParent())
+        self.walkToPoint(self.getChasePoint(currentTarget), currentTarget.getParent())
 
     def walkToPoint(self, walkPoint, parent=None, walkSpeed=None):
-        if not parent or parent.isEmpty():
+        if self.avatar.getParent().isEmpty():
+            # an npc that isn't on a cartesian grid (standing on a ship's deck) is kept
+            # relative to it's parent object, as is anyone it is fighting there...
+            parent = None
+        elif not parent or parent.isEmpty():
             parent = self.avatar.getParentObj()
 
         # setup a node applying the walkPoint relative to the parent
         # parameter provided by this function, this allows us to properly
         # face towards the correct location even across the cartesian grid...
         walkPointNode = NodePath('walkPoint-%d' % self.avatar.doId)
-        walkPointNode.setPos(parent, walkPoint)
+        if parent is not None:
+            walkPointNode.setPos(parent, walkPoint)
+        else:
+            walkPointNode.setPos(walkPoint)
 
         self.avatar.lookAt(walkPointNode)
 

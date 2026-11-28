@@ -100,18 +100,16 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
                     self.weapon.b_setLocation(parentId, zoneId)
 
     def getWorld(self):
+        # the instance we're in, from the game area we stand in or the ship (on
+        # it's ocean grid) whose deck we're on, a fight on deck is still in the world...
         parentObj = self.getParentObj()
-        if parentObj:
-            if isinstance(parentObj, DistributedGameAreaAI):
-                parentObj = parentObj.getParentObj()
+        while parentObj is not None and not isinstance(parentObj, DistributedInstanceBaseAI):
+            if not isinstance(parentObj, DistributedGameAreaAI) and not hasattr(parentObj, 'getParentObj'):
+                return None
 
-        if not parentObj:
-            return None
+            parentObj = parentObj.getParentObj()
 
-        if isinstance(parentObj, DistributedInstanceBaseAI):
-            return parentObj
-
-        return None
+        return parentObj
 
     def setAvatarType(self, avatarType):
         self.avatarType = avatarType

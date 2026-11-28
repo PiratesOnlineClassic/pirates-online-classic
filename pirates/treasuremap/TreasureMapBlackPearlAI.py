@@ -15,6 +15,35 @@ from pirates.pirate import AvatarTypes
 from pirates.battle import EnemyGlobals
 
 
+class NavyGuardPost:
+    """
+    The spot on the Black Pearl's deck a Navy guard stands guard at, the guard's
+    spawn node as far as it's gameFSM is concerned (see BattleNPCGameFSMAI)...
+    """
+
+    # a guard steps no further than this from it's post to fight the crew, far enough
+    # to reach anyone it aggros on the deck without chasing them off of it...
+    GuardRadius = 25.0
+
+    def __init__(self, instance, index, pos, hpr):
+        self.instance = instance
+        self.objKey = 'navyGuardPost-%d' % index
+        self.objectData = {
+            'Pos': pos,
+            'Hpr': hpr,
+            'AnimSet': 'default',
+            'Start State': 'Idle',
+            'Patrol Radius': 1.0,
+            'Guard Radius': self.GuardRadius,
+        }
+
+    def getSpawnHpr(self):
+        return self.objectData['Hpr']
+
+    def processDeath(self):
+        self.instance.processDeath()
+
+
 class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('TreasureMapBlackPearlAI')
     notify.setInfo(True)
@@ -524,6 +553,11 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
             level = EnemyGlobals.getRandomEnemyLevel(avatarType)
             guard.setLevel(level)
 
+            # armed like any other enemy of their type and level (see EnemySpawnNode),
+            # the guard draws it's weapon once it goes into battle...
+            weapons = list(EnemyGlobals.getEnemyWeapons(avatarType, level).keys())
+            guard.setCurrentWeapon(random.choice(weapons), config.GetBool('want-enemy-weapons', False))
+
             # Get HP/MP from EnemyGlobals based on avatar type and level
             npcHp, npcMp = EnemyGlobals.getEnemyStats(avatarType, level)
             guard.setMaxHp(npcHp)
@@ -534,6 +568,12 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
             # Set name based on avatar type
             guard.setName(avatarType.getName())
 
+            # the guards go after the crew boarding the Pearl like any other enemy
+            # without an aggro radius of their own (see EnemySpawnNode)...
+            aggroMode, aggroRadius = EnemyGlobals.determineAggroInfo(None)
+            guard.setAggroMode(aggroMode)
+            guard.setAggroRadius(aggroRadius)
+
             # Set spawn position
             sx, sy, sz = pos
             guard.setSpawnPos((sx, sy, sz))
@@ -543,9 +583,9 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
             guard.setAnimSet('default')
             guard.setStartState('Idle')
 
-            # Set up a dummy spawn node reference to prevent crashes in gameFSM
-            # The gameFSM's enterDeath calls spawnNode.processDeath()
-            guard.setSpawnNode(self)
+            # the guard's post on deck is it's spawn node, the gameFSM returns
+            # the guard to it after a fight and reports it's death through it...
+            guard.setSpawnNode(NavyGuardPost(self, i, pos, hpr))
 
             # Generate the guard as a child of the Black Pearl ship
             # This makes the guard move with the ship
