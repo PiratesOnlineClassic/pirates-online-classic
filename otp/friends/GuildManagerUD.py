@@ -158,6 +158,7 @@ class GuildManagerUD(DistributedObjectGlobalUD):
         self.maxTokens = config.GetInt('guild-max-invite-tokens', 25)
         self.maxTokenUses = config.GetInt('guild-max-invite-token-uses', 100)
         self.tokenLength = config.GetInt('guild-invite-token-length', 8)
+        self.inviteTimeout = config.GetFloat('guild-invite-timeout', 60.0)
 
     def announceGenerate(self):
         DistributedObjectGlobalUD.announceGenerate(self)
@@ -346,7 +347,19 @@ class GuildManagerUD(DistributedObjectGlobalUD):
         self.air.writeServerEvent('guildDeleted', guildId=guildId)
 
     def clearInvite(self, inviteeId):
+        taskMgr.remove(self.uniqueName('invite-timeout-%d' % inviteeId))
         return self.pendingInvites.pop(inviteeId, None)
+
+    def __inviteTimeout(self, inviteeId, inviterId):
+        invite = self.pendingInvites.get(inviteeId)
+        if not invite or invite[0] != inviterId:
+            return
+
+        # The client has no way of taking the invitation off the invitee's
+        # screen, accepting it from here on is ignored. The inviter is told
+        # the invitee is busy and to try again later.
+        self.clearInvite(inviteeId)
+        self.d_guildRejectInvite(inviterId, inviteeId, RejectCode.INVITEE_NOT_ONLINE)
 
     def clearInvitesFor(self, avatarId):
         invite = self.clearInvite(avatarId)
@@ -356,7 +369,7 @@ class GuildManagerUD(DistributedObjectGlobalUD):
 
         for inviteeId, (inviterId, guildId) in list(self.pendingInvites.items()):
             if inviterId == avatarId:
-                del self.pendingInvites[inviteeId]
+                self.clearInvite(inviteeId)
 
     # --- District/UberDOG messages ---
 
@@ -555,13 +568,17 @@ class GuildManagerUD(DistributedObjectGlobalUD):
             return
 
         self.pendingInvites[inviteeId] = (inviterId, guildId)
+        taskMgr.doMethodLater(self.inviteTimeout, self.__inviteTimeout,
+            self.uniqueName('invite-timeout-%d' % inviteeId), extraArgs=[inviteeId, inviterId])
+
         self.d_invitationFrom(inviteeId, inviterId, self.getAvatarName(inviterId), guildId, guild['name'])
 
     def acceptInvite(self):
         inviteeId = self.air.getAvatarIdFromSender()
         invite = self.clearInvite(inviteeId)
         if not invite:
-            self.notify.warning('Avatar %d accepted a guild invite they never got!' % inviteeId)
+            # The invitation may have timed out while it was on the screen.
+            self.notify.debug('Avatar %d accepted a guild invite they do not have.' % inviteeId)
             return
 
         inviterId, guildId = invite

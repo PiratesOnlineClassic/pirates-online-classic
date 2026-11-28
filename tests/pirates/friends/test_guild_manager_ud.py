@@ -7,8 +7,13 @@ import unittest
 from direct.showbase import DConfig
 from tests import REPO_ROOT
 
+from direct.task.TaskManagerGlobal import taskMgr
+
 if not hasattr(builtins, 'config'):
     builtins.config = DConfig
+
+if not hasattr(builtins, 'taskMgr'):
+    builtins.taskMgr = taskMgr
 
 # semidbm is only needed on a real UberDOG, the tests use a plain dict:
 sys.modules.setdefault('semidbm', types.ModuleType('semidbm'))
