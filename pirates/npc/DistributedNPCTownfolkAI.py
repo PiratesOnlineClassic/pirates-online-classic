@@ -6,6 +6,9 @@ from pirates.economy.DistributedShopKeeperAI import DistributedShopKeeperAI
 from pirates.piratesbase import PiratesGlobals
 from pirates.distributed import InteractGlobals
 from pirates.economy import EconomyGlobals
+from pirates.reputation import ReputationGlobals
+from pirates.ship import ShipGlobals
+from pirates.uberdog.UberDogGlobals import InventoryType
 
 NPC_TOWNFOLK_MOVIE_START = 'start'
 NPC_TOWNFOLK_MOVIE_STOP = 'stop'
@@ -31,6 +34,7 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
         self.dnaId = ''
         self.shopId = 0
         self.helpId = 0
+        self.tutorialShipAvIds = set()
 
     def setDNAId(self, dnaId):
         self.dnaId = dnaId
@@ -164,3 +168,67 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
 
     def handleRequestExit(self, avatar):
         return self.ACCEPT
+
+    def __getTutorialAvatar(self, fieldName, avId):
+        """
+        The quest movies (QuestScripts) call FUNCTION npc "..." on the
+        client, which sends the avatar's own doId along with the request...
+        """
+
+        senderId = self.air.getAvatarIdFromSender()
+        if avId != senderId:
+            self.air.logPotentialHacker(
+                message='Received %s for another avatar!' % fieldName,
+                targetAvId=avId)
+
+            return None
+
+        return self.air.doId2do.get(avId)
+
+    def levelUpCutlass(self, avId):
+        # Will Turner's sword lesson ends (or is skipped) by leveling the
+        # avatar's cutlass up, which earns the skill point for Sweep...
+        avatar = self.__getTutorialAvatar('levelUpCutlass', avId)
+        if not avatar or avatar.getTutorial() > PiratesGlobals.TUT_GOT_CUTLASS:
+            return
+
+        inventory = avatar.getInventory()
+        if not inventory:
+            return
+
+        reputation = inventory.getReputation(InventoryType.CutlassRep)
+        level, _ = ReputationGlobals.getLevelFromTotalReputation(InventoryType.CutlassRep, reputation)
+        if level >= 2:
+            return
+
+        trade = self.air.tradeMgr.createTrade(avatar.doId)
+        if not trade:
+            return
+
+        trade.giveReputation(InventoryType.CutlassRep,
+            ReputationGlobals.getTotalReputation(InventoryType.CutlassRep, 2) - reputation)
+
+    def shipTutorialPt1(self, avId, nameHolder):
+        # Darby Drydock builds the avatar's first ship with the name they picked,
+        # the quest's ShipReward then hands the constructed ship over...
+        avatar = self.__getTutorialAvatar('shipTutorialPt1', avId)
+        if not avatar or avatar.getTutorial() >= PiratesGlobals.TUT_GOT_SHIP:
+            return
+
+        inventory = avatar.getInventory()
+        if not inventory or inventory.getShipDoIdList() or avatar.getConstructedShipDoId():
+            return
+
+        if avId in self.tutorialShipAvIds:
+            return
+
+        typedName, nameIndices = nameHolder
+        shipName = self._DistributedShopKeeperAI__getShipName([(typedName, nameIndices)], 0)
+
+        def _shipCreatedCallback(shipId):
+            self.tutorialShipAvIds.discard(avId)
+            if shipId:
+                avatar.setConstructedShipDoId(shipId)
+
+        self.tutorialShipAvIds.add(avId)
+        self.air.shipLoader.createShip(avatar, ShipGlobals.INTERCEPTORL1, shipName, callback=_shipCreatedCallback)
