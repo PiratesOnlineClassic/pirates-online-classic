@@ -12,6 +12,9 @@ from pirates.piratesbase import Freebooter
 class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedDoorBaseAI')
 
+    # any number of avatars may walk through a door at the same time
+    MULTIUSE = True
+
     def __init__(self, air):
         DistributedInteractiveAI.__init__(self, air)
         FSM.__init__(self, self.__class__.__name__)
