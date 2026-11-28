@@ -223,7 +223,8 @@ want-privateering 1
 want-infamy 0
 
 # Options:
-ocean-visibility #t
+# Ship visibility from islands for a fresh game_options.txt: 0 off, 1 low (flat ships), 2 high.
+ocean-visibility 1
 
 # GUI
 hide-gui #f
