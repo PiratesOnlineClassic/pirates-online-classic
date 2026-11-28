@@ -126,7 +126,7 @@ class PlayingCardTier0Reward(QuestReward):
 
     def applyTo(self, trade, av):
         card = PlayingCardDropper.dropTier0()
-        trade.givePlayingCard(card)
+        trade.givePlayingCard(card - InventoryType.begin_Cards)
         av.giveCardMessage(card)
 
     def getDescriptionText(self):
@@ -137,7 +137,7 @@ class PlayingCardTier1Reward(QuestReward):
 
     def applyTo(self, trade, av):
         card = PlayingCardDropper.dropTier1()
-        trade.givePlayingCard(card)
+        trade.givePlayingCard(card - InventoryType.begin_Cards)
         av.giveCardMessage(card)
 
     def getDescriptionText(self):
@@ -148,7 +148,7 @@ class PlayingCardTier2Reward(QuestReward):
 
     def applyTo(self, trade, av):
         card = PlayingCardDropper.dropTier2()
-        trade.givePlayingCard(card)
+        trade.givePlayingCard(card - InventoryType.begin_Cards)
         av.giveCardMessage(card)
 
     def getDescriptionText(self):
@@ -159,7 +159,7 @@ class PlayingCardTier3Reward(QuestReward):
 
     def applyTo(self, trade, av):
         card = PlayingCardDropper.dropTier3()
-        trade.givePlayingCard(card)
+        trade.givePlayingCard(card - InventoryType.begin_Cards)
         av.giveCardMessage(card)
 
     def getDescriptionText(self):
