@@ -122,6 +122,7 @@ class DistributedShipLoaderAI(DistributedObjectGlobalAI):
         DistributedObjectGlobalAI.__init__(self, air)
 
         self.avatar2fsm = {}
+        self.avatar2pendingShips = {}
 
     def announceGenerate(self):
         DistributedObjectGlobalAI.announceGenerate(self)
@@ -146,12 +147,13 @@ class DistributedShipLoaderAI(DistributedObjectGlobalAI):
 
         def _shipCreatedCallback(shipId):
             if not shipId:
+                self._activateNextPendingShip(avatar)
                 return
 
             # we've just created this ship object, the avatar will have expected
             # that we automatically activate their ship. This is only done after creation of
             # a new ship object, the Uberdog will activate the avatar's ships object on login...
-            self.sendActivateShip(avatar.doId, shipId)
+            self.activateShip(avatar, shipId)
 
         self.runShipLoaderFSM(CreateShipFSM, avatar, shipClass, callback=_shipCreatedCallback)
 
@@ -178,11 +180,38 @@ class DistributedShipLoaderAI(DistributedObjectGlobalAI):
         fsm.demand('Finish', shipId)
 
     def activateShip(self, avatar, shipId):
+        # an avatar may own several ships, all of which are activated on login.
+        # Only one loader operation may run per avatar, so queue up the rest...
+        if avatar.doId in self.avatar2fsm:
+            pendingShips = self.avatar2pendingShips.setdefault(avatar.doId, [])
+            if shipId not in pendingShips:
+                pendingShips.append(shipId)
+
+            return
 
         def _shipActivatedCallback(success):
-            pass
+            if not success:
+                self.notify.warning('Failed to activate ship %d for avatar %d!' % (shipId, avatar.doId))
+
+            self._activateNextPendingShip(avatar)
 
         self.runShipLoaderFSM(ActivateShipFSM, avatar, shipId, callback=_shipActivatedCallback)
+
+    def _activateNextPendingShip(self, avatar):
+        pendingShips = self.avatar2pendingShips.get(avatar.doId)
+        if not pendingShips:
+            self.avatar2pendingShips.pop(avatar.doId, None)
+            return
+
+        shipId = pendingShips.pop(0)
+        if not pendingShips:
+            del self.avatar2pendingShips[avatar.doId]
+
+        if avatar.isDeleted():
+            self.avatar2pendingShips.pop(avatar.doId, None)
+            return
+
+        self.activateShip(avatar, shipId)
 
     def sendActivateShip(self, avatarId, shipId):
         self.air.netMessenger.send('activateShip', [avatarId, shipId])

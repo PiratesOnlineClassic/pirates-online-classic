@@ -218,7 +218,7 @@ class CreateShipFSM(ShipLoaderOperationFSM):
     def _shipInventoryQueryCallback(self, dclass, fields):
         if not dclass and not fields:
             self.notify.warning('Failed to query inventory %d for ship %d!' % (
-                self.inventory, self.shipId))
+                self.inventoryId, self.shipId))
 
             self.cleanup(0)
             return
@@ -303,9 +303,13 @@ class ActivateShipFSM(ShipLoaderOperationFSM):
             self._shipInventoryActivatedCallback)
 
     def _shipInventoryActivatedCallback(self, inventoryId):
+        # the ship's crew permissions are not stored in the database, the client
+        # expects crew and friends to be allowed aboard by default...
         self.air.sendActivate(self.shipId, 0, 0,
             self.air.dclassesByName['PlayerShipUD'],
-            {'setInventoryId': (inventoryId,)})
+            {'setInventoryId': (inventoryId,),
+             'setAllowCrewState': (1,),
+             'setAllowFriendState': (1,)})
 
         channel = self.accountId << 32 | self.avatarId
         self.air.setOwner(self.shipId, channel)
@@ -344,16 +348,25 @@ class ActivateShipFSM(ShipLoaderOperationFSM):
         doIdsInCategory, = fields['setDoIds']
         for category, shippartDoId in doIdsInCategory:
             if category == InventoryCategory.SHIP_MAINPARTS:
-                self.loadShippart(shippartDoId)
+                self.pendingShipparts.append(shippartDoId)
+
+        if not self.pendingShipparts:
+            self.notify.warning('Activated ship %d for avatar %d, '
+                'but the ship has no shipparts!' % (self.shipId, self.avatarId))
+
+            self.cleanup(True)
+            return
+
+        for shippartDoId in list(self.pendingShipparts):
+            self.loadShippart(shippartDoId)
 
     def loadShippart(self, shippartDoId):
-        self.pendingShipparts.append(shippartDoId)
         self.air.dbInterface.queryObject(self.air.dbId,
             shippartDoId,
             lambda dclass, fields: self._shippartQueryCallback(shippartDoId, dclass, fields))
 
     def _shippartQueryCallback(self, shippartDoId, dclass, fields):
-        if not dclass and fields:
+        if not dclass or not fields:
             self.notify.warning('Failed to activate ship %d for avatar %d, '
                 'failed to query shippart %d!' % (self.shipId, self.avatarId, shippartDoId))
 
@@ -379,10 +392,13 @@ class ActivateShipFSM(ShipLoaderOperationFSM):
             channel,
             self.air.ourChannel,
             CLIENTAGENT_ADD_POST_REMOVE)
-        msg = datagramCleanup.getMessage()
         # CLIENTAGENT_ADD_POST_REMOVE takes a blob nested datagram. Keep the
         # raw bytes from getMessage(); latin-1/addString corrupts high bytes.
         datagram.addBlob(datagramCleanup.getMessage())
+        self.air.send(datagram)
+
+        if shippartDoId not in self.pendingShipparts:
+            return
 
         self.pendingShipparts.remove(shippartDoId)
         if not self.pendingShipparts:
@@ -431,4 +447,34 @@ class DistributedShipLoaderUD(DistributedObjectGlobalUD):
         def _shipActivatedCallback(success):
             self.air.netMessenger.send('activateShipResponse', [avatarId, shipId, success])
 
+        if avatarId in self.avatar2fsm:
+            # we can only run one operation per avatar at once, let the AI know
+            # this ship could not be activated so it can try again...
+            _shipActivatedCallback(False)
+            return
+
         self.runShipLoaderFSM(ActivateShipFSM, avatarId, shipId, callback=_shipActivatedCallback)
+
+    def requestCreateShip(self, context, shipClass, name, flagDNA, flagId):
+        # ships are only ever purchased through a shipwright on the AI...
+        avatarId = self.air.getAvatarIdFromSender()
+        self.air.writeServerEvent('suspicious', avId=avatarId,
+            issue='Sent requestCreateShip to the ship loader!')
+
+        self.sendUpdateToAvatarId(avatarId, 'rejectCreateShip', [context])
+
+    def requestCreateShippart(self, context, shippartType, shippartClass, team, shipId):
+        avatarId = self.air.getAvatarIdFromSender()
+        self.air.writeServerEvent('suspicious', avId=avatarId,
+            issue='Sent requestCreateShippart to the ship loader!')
+
+        self.sendUpdateToAvatarId(avatarId, 'rejectCreateShippart', [context])
+
+    def requestLoadOwnerview(self, context, avatarId, shipId):
+        # player ships are loaded for their owners by the AI when their inventory is populated...
+        senderId = self.air.getAvatarIdFromSender()
+        self.sendUpdateToAvatarId(senderId, 'rejectLoadOwnerview', [context])
+
+    def requestDeleteOwnerview(self, context, avatarId, shipId):
+        senderId = self.air.getAvatarIdFromSender()
+        self.sendUpdateToAvatarId(senderId, 'rejectDeleteOwnerview', [context])
