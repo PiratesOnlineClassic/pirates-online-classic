@@ -71,7 +71,7 @@ class BlackPearlAITests(unittest.TestCase):
         treasure_map._createTreasureMapInstance.assert_called_once_with(
             avatar, 'BlackpearlWorld')
 
-    def test_instance_teleport_waits_for_world_setup(self):
+    def make_created_instance(self, teleportResult=True):
         avatar = SimpleNamespace(doId=42)
         island = SimpleNamespace(getUniqueId=lambda: 'island')
         instance = SimpleNamespace(
@@ -82,10 +82,16 @@ class BlackPearlAITests(unittest.TestCase):
             getType=lambda: PiratesGlobals.INSTANCE_TM,
             getFileName=lambda: 'BlackpearlWorld')
         air = SimpleNamespace(doId2do={42: avatar, 100: instance},
-                              teleportMgr=SimpleNamespace(d_initiateTeleport=Mock()))
+                              teleportMgr=SimpleNamespace(
+                                  d_initiateTeleport=Mock(return_value=teleportResult)))
         treasure_map = DistributedTreasureMapAI.__new__(DistributedTreasureMapAI)
         treasure_map.doId = 99
         treasure_map.air = air
+        treasure_map.participants = []
+        return avatar, instance, air, treasure_map
+
+    def test_instance_teleport_waits_for_world_setup(self):
+        avatar, instance, air, treasure_map = self.make_created_instance()
         treasure_map._onInstanceCreated(100, avatar)
         air.teleportMgr.d_initiateTeleport.assert_not_called()
         instance.pendingTeleportCallbacks.pop()()
@@ -93,6 +99,15 @@ class BlackPearlAITests(unittest.TestCase):
             avatar, instanceType=PiratesGlobals.INSTANCE_TM,
             instanceName='BlackpearlWorld', locationUid='island',
             spawnPt=(1, 2, 3, 4), targetWorld=instance)
+        instance.addParticipant.assert_called_once_with(42)
+        instance.removeParticipant.assert_not_called()
+
+    def test_failed_instance_teleport_removes_participant(self):
+        avatar, instance, air, treasure_map = self.make_created_instance(teleportResult=False)
+        instance.isReady = True
+        treasure_map._onInstanceCreated(100, avatar)
+        air.teleportMgr.d_initiateTeleport.assert_called_once()
+        instance.removeParticipant.assert_called_once_with(42)
 
     def test_interest_is_reserved_idempotent_and_removed(self):
         instance = self.make_instance()
