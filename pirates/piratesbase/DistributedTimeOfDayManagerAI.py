@@ -123,6 +123,7 @@ class DistributedTimeOfDayManagerAI(DistributedObjectAI):
         startingTime = globalClockDelta.getRealNetworkTime(bits=32)
         self.b_sync(cycleType, startingState, startingTime, self.cycleDuration)
         self._processStateChange()
+        messenger.send('timeOfDayCycleChanged', [cycleType])
 
     def isNight(self):
         nightStates = [

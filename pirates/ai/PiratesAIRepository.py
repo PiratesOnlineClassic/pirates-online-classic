@@ -19,6 +19,7 @@ from pirates.distributed.PiratesDistrictAI import PiratesDistrictAI
 from pirates.distributed.DistrictTrackerAI import DistrictTrackerAI
 from pirates.world import WorldGlobals
 from pirates.ai.NewsManagerAI import NewsManagerAI
+from pirates.ai.JollyCurseManagerAI import JollyCurseManagerAI
 from pirates.quest.QuestManagerAI import QuestManagerAI
 from pirates.piratesbase.UniqueIdManager import UniqueIdManager
 from pirates.distributed.DistributedPopulationTrackerAI import DistributedPopulationTrackerAI
@@ -130,6 +131,9 @@ class PiratesAIRepository(PiratesInternalRepository):
 
         self.newsManager = NewsManagerAI(self)
         self.newsManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
+
+        self.jollyCurseMgr = JollyCurseManagerAI(self)
+        self.jollyCurseMgr.start()
 
         self.questMgr = QuestManagerAI(self)
 

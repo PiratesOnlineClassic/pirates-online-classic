@@ -197,6 +197,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                 # (where we are jailed and respawn), the client also requests this...
                 self.updateReturnLocation(parentObj)
 
+        jollyCurseMgr = getattr(self.air, 'jollyCurseMgr', None)
+        if jollyCurseMgr:
+            jollyCurseMgr.avatarChangedLocation(self, parentObj)
+
     def getInventory(self):
         return self.air.inventoryManager.getInventory(self.doId)
 
@@ -669,6 +673,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def setCurseStatus(self, curseStat):
         pass
 
+    def d_setCurseStatus(self, curseStat):
+        self.sendUpdate('setCurseStatus', [curseStat])
+
     def giveClothingMessage(self, clothingId, colorId):
         self.sendUpdate('sendClothingMessage', [clothingId, colorId])
 
@@ -1123,6 +1130,19 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def getZombie(self):
         return self.zombie
 
+    def isUndead(self):
+        # see DistributedPlayerPirate.isUndead and TeamUtils.friendOrFoe...
+        return bool(self.zombie)
+
+    def attemptToSetCursedZombie(self):
+        # avatars stay zombies while the zombie magic word forces them to be one,
+        # or while Jolly Roger's Curse has them cursed...
+        jollyCurseMgr = getattr(self.air, 'jollyCurseMgr', None)
+        cursed = bool(jollyCurseMgr and jollyCurseMgr.isAvatarCursed(self.doId))
+        zombie = int(bool(self.forcedZombie or cursed))
+        if zombie != self.zombie:
+            self.b_setZombie(zombie, zombie)
+
     def setAllowGMNameTag(self, gmNameTagAllowed):
         self.gmNameTagAllowed = gmNameTagAllowed
 
@@ -1283,6 +1303,10 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         DistributedBattleAvatarAI.disable(self)
 
     def delete(self):
+        jollyCurseMgr = getattr(self.air, 'jollyCurseMgr', None)
+        if jollyCurseMgr:
+            jollyCurseMgr.avatarLeft(self)
+
         self.air.targetMgr.clearAttacker(self)
         self.air.worldGridManager.clearAvatarInterests(self)
         inventory = self.getInventory()
