@@ -109,7 +109,21 @@ jobs:
           if [[ "${{ inputs.onefile }}" == "true" && "${{ matrix.os }}" != "macos" ]]; then
             args+=(--onefile)
           fi
-          python build/nuitka_build.py "${args[@]}"
+          # keep the output, so a failure can be reported below
+          set -o pipefail
+          python build/nuitka_build.py "${args[@]}" 2>&1 | tee build-output.log
+
+      # build logs are only shown to signed in users, annotations are public,
+      # so a failed build posts the end of it's output as one
+      - name: Report the build failure
+        if: failure()
+        shell: bash
+        run: |
+          if [[ -f build-output.log ]]; then
+            tail -n 60 build-output.log > build-tail.log
+            message=$(tr -d '\r' < build-tail.log | sed -e 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+            echo "::error title=Build failed (${{ matrix.os }})::$message"
+          fi
 
       - name: Package the release
         id: package
