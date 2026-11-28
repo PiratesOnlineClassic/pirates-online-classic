@@ -153,15 +153,20 @@ class ShipLootTests(unittest.TestCase):
         npcShip, playerShip = self.makeShips()
         npcShip.air.questMgr = Mock()
         npcShip.hp = 10
-        npcShip.hasSpawnBuff = lambda: False
-        npcShip.isSailable = lambda: True
+        npcShip.cannonAttackerIds = set()
         npcShip.getDamageInputModifier = lambda: 1.0
         npcShip.getArmorModifier = lambda: 0.0
         npcShip.plunderShip = Mock()
-        npcShip.b_setHp = lambda hp: setattr(npcShip, 'hp', hp)
+        npcShip.rewardCrew = Mock()
+        npcShip.handleShipSinking = Mock(wraps=npcShip.handleShipSinking)
+        npcShip.gameFSM.request.side_effect = lambda state: npcShip.gameFSM.getCurrentOrNextState.configure_mock(
+            return_value=state)
 
         npcShip.takeDamage(50, playerShip.doId)
+        npcShip.takeDamage(50, playerShip.doId)
+        npcShip.handleShipSinking.assert_called_once_with()
         npcShip.plunderShip.assert_called_once_with(playerShip)
+        npcShip.rewardCrew.assert_called_once_with(playerShip)
         npcShip.air.questMgr.shipSunk.assert_called_once_with(npcShip, [playerShip.doId])
 
 

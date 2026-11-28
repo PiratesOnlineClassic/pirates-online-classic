@@ -107,7 +107,8 @@ def makeShip(cls=PlayerShipAI, doId=1000, air=None, **kwargs):
         cannons=[], broadside=None, steeringWheel=None, ownerId=0,
         allowCrewState=True, allowFriendState=True, allowGuildState=False,
         allowPublicState=False, siegeBounty=0, lastAttacked=0, pendingRespawnCrew=set(),
-        repairSpots=[]))
+        repairSpots=[], skillRechargeTimes={}, pendingBroadsides={}, missionStartTime=0,
+        shipKills=0, cannonAttackerIds=set()))
     ship.__dict__.update(kwargs)
     ship.gameFSM = Mock()
     ship.gameFSM.getCurrentOrNextState.return_value = ship.gameState[0]
@@ -641,7 +642,7 @@ class FlagshipBoardingTests(_TaskPatchedTestCase):
 
     def setUp(self):
         _TaskPatchedTestCase.setUp(self)
-        air = makeAir(battleMgr=Mock())
+        air = makeAir(battleMgr=Mock(), questMgr=Mock())
         grid = NodePath('grid')
         self.flagship = makeShip(cls=NPCShipAI, air=air, npcShip=1, isFlagship=1, isBoardable=1,
             baseTeam=ShipGlobals.NAVY_TEAM, shipClass=ShipGlobals.NAVY_FERRET, deckCrew=[], objectData={})
