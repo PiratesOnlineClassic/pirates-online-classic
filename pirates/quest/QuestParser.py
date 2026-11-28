@@ -6,6 +6,7 @@ import io
 from direct.showbase.ShowBaseGlobal import *
 from direct.interval.IntervalGlobal import *
 from libotp.NametagGlobals import *
+from libotp import CFSpeech, CFTimeout
 from panda3d.core import *
 from direct.gui.DirectGui import *
 from direct.directnotify import DirectNotifyGlobal

@@ -62,7 +62,7 @@ class QuestGoal:
         if self.__goalData == None:
             resultStr = ''
         
-        if self.__goalType == bytes:
+        if self.__goalType == str:
             resultStr = self.__goalData
         else:
             strRep = ''
@@ -90,6 +90,22 @@ class QuestGoal:
         
         return 0
 
+    # Python 3 ignores __cmp__, goals compare (and hash) by their string form.
+    def __eq__(self, other):
+        if not isinstance(other, QuestGoal):
+            return NotImplemented
+        return self._asString() == other._asString()
+
+    def __ne__(self, other):
+        if not isinstance(other, QuestGoal):
+            return NotImplemented
+        return self._asString() != other._asString()
+
+    def __lt__(self, other):
+        if not isinstance(other, QuestGoal):
+            return NotImplemented
+        return self._asString() < other._asString()
+
     def __hash__(self):
         result = hash(self._asString())
         return result
@@ -116,8 +132,21 @@ class QuestStep:
     def __repr__(self):
         return 'QuestStep(%d, %d, %d, %s, %s)' % (self.getOriginDoId(), self.getStepDoId(), self.getStepType(), repr(self.getPosH()), self.islandId)
     
-    def __cmp__(self, other):
-        return not isinstance(other, QuestStep) or cmp(self.originDoId, other.originDoId) or cmp(self.stepDoId, other.stepDoId) or cmp(self.stepType, other.stepType) or cmp(self.posH, other.posH) or cmp(self.islandId, other.islandId)
+    def _compareKey(self):
+        posH = tuple(self.posH) if self.posH is not None else None
+        return (self.originDoId, self.stepDoId, self.stepType, posH, self.islandId)
+
+    # Python 3 has no cmp() and ignores __cmp__, steps compare by value.
+    def __eq__(self, other):
+        if not isinstance(other, QuestStep):
+            return False
+        return self._compareKey() == other._compareKey()
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash(self._compareKey())
     
     def getOriginDoId(self):
         return self.originDoId
