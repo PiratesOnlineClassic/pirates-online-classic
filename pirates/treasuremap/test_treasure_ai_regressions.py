@@ -344,6 +344,23 @@ class SurfaceTreasureAITests(unittest.TestCase):
         self.assertEqual(treasure.getWithdrawType(), 3)
         treasure.sendUpdate.assert_called_once_with('setWithdrawType', [3])
 
+    def test_empty_treasure_denies_interaction(self):
+        treasure = DistributedSurfaceTreasureAI.__new__(DistributedSurfaceTreasureAI)
+        treasure.withdrawType = 1
+        treasure.value = 0
+        treasure.belongToTeam = 0
+        treasure.sendUpdateToAvatarId = Mock()
+        avatar = SimpleNamespace(doId=7, getTeam=lambda: 1)
+
+        self.assertEqual(treasure.handleRequestInteraction(avatar, 0, 0), treasure.DENY)
+
+        treasure.sendUpdate = Mock()
+        treasure.b_setValue(50)
+        treasure.sendUpdate.assert_called_once_with('setValue', [50])
+        self.assertEqual(treasure.handleRequestInteraction(avatar, 0, 0), treasure.ACCEPT)
+        treasure.handlePostRequestInteraction(avatar)
+        treasure.sendUpdateToAvatarId.assert_called_once_with(7, 'startLooting', [1])
+
 
 if __name__ == '__main__':
     unittest.main()
