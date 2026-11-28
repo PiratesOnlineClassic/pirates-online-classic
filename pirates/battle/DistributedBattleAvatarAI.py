@@ -55,7 +55,7 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.teamCombo = 0
         self.comboDamage = 0
         self.skillEffects = []
-        self.ensaredTargetId = 0
+        self.ensnaredTargetId = 0
         self.level = 0
 
         self.currentTarget = None
@@ -301,10 +301,10 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
         self.maxSwiftness = maxSwiftness
 
     def d_setMaxSwiftness(self, maxSwiftness):
-        self.sendUpdate('setMaxSwiftnes', [maxSwiftness])
+        self.sendUpdate('setMaxSwiftness', [maxSwiftness])
 
     def b_setMaxSwiftness(self, maxSwiftness):
-        self.setMaxSwiftnes(maxSwiftness)
+        self.setMaxSwiftness(maxSwiftness)
         self.d_setMaxSwiftness(maxSwiftness)
 
     def getMaxSwiftness(self):
@@ -457,20 +457,20 @@ class DistributedBattleAvatarAI(DistributedReputationAvatarAI, WeaponBaseAI, Tea
     def getSkillEffects(self):
         return self.skillEffects
 
-    def setEnsaredTargetId(self, ensaredTargetId):
-        self.ensaredTargetId = ensaredTargetId
+    def setEnsnaredTargetId(self, ensnaredTargetId):
+        self.ensnaredTargetId = ensnaredTargetId
 
-    def d_setEnsaredTargetId(self, ensaredTargetId):
-        self.sendUpdate('setEnsaredTargetId', [ensaredTargetId])
+    def d_setEnsnaredTargetId(self, ensnaredTargetId):
+        self.sendUpdate('setEnsnaredTargetId', [ensnaredTargetId])
 
-    def b_setEnsaredTargetId(self, ensaredTargetId):
-        self.setEnsaredTargetId(ensaredTargetId)
-        self.d_setEnsaredTargetId(ensaredTargetId)
+    def b_setEnsnaredTargetId(self, ensnaredTargetId):
+        self.setEnsnaredTargetId(ensnaredTargetId)
+        self.d_setEnsnaredTargetId(ensnaredTargetId)
 
     def getEnsnaredTargetId(self):
-        return self.ensaredTargetId
+        return self.ensnaredTargetId
 
-    def interupted(self, todo):
+    def interrupted(self, todo):
         pass
 
     def setLevel(self, level):
