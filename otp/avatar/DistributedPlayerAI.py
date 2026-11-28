@@ -3,6 +3,7 @@ from otp.avatar import DistributedAvatarAI
 from otp.avatar import PlayerBase
 from otp.otpbase import OTPGlobals
 from otp.otpbase import OTPLocalizer
+from otp.chat import ChatFilter
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.PyDatagram import PyDatagram
 from otp.distributed.MsgTypes import CLIENTAGENT_EJECT
@@ -12,6 +13,10 @@ from otp.ai.MagicWordGlobal import *
 
 class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI, PlayerBase.PlayerBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerAI')
+
+    # Shared by every avatar on the district, since a whisper is handled by
+    # the AI of the avatar receiving it rather than the one sending it.
+    chatFlood = ChatFilter.ChatFlood()
 
     def __init__(self, air):
         DistributedAvatarAI.DistributedAvatarAI.__init__(self, air)
@@ -34,6 +39,7 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI, PlayerBase.Pl
         self.air.writeServerEvent('avatarExit', self.doId, '')
 
     def delete(self):
+        self.chatFlood.clear(self.doId)
         self._doPlayerExit()
         if __dev__:
             GarbageReport.checkForGarbageLeaks()
@@ -70,15 +76,168 @@ class DistributedPlayerAI(DistributedAvatarAI.DistributedAvatarAI, PlayerBase.Pl
     def decrementPopulation(self):
         self.air.decrementPopulation()
 
-    def b_setChat(self, chatString, chatFlags):
-        self.setChat(chatString, chatFlags)
-        self.d_setChat(chatString, chatFlags)
+    # Chat:
+    #
+    # Typed chat and whispers are not broadcast by the State Server; the
+    # client sends them to us and we relay them once they've been checked,
+    # which is what the original game server did when it scrubbed chat.
 
-    def d_setChat(self, chatString, chatFlags):
-        self.sendUpdate('setChat', [chatString, chatFlags])
+    def sendUpdateToLocation(self, fieldName, args, senderChannel=None):
+        """
+        Sends a field update to every client with interest in our location,
+        the same as the State Server does for a broadcast field. The update
+        goes out as if sent from senderChannel, so the client agent of the
+        avatar who chatted doesn't echo it back to them.
+        """
 
-    def setChat(self, chatString, chatFlags):
-        pass
+        if not self.parentId and not self.zoneId:
+            return
+
+        if senderChannel is None:
+            senderChannel = self.air.ourChannel
+
+        field = self.dclass.getFieldByName(fieldName)
+        locationChannel = (self.parentId << 32) | self.zoneId
+        dg = field.aiFormatUpdate(self.doId, locationChannel, senderChannel, args)
+        self.air.send(dg)
+
+    def chatViolation(self, issue, eject=False):
+        self.notify.warning('Avatar %s: %s' % (self.air.getAvatarIdFromSender(), issue))
+        self.air.writeServerEvent('suspicious', avId=self.air.getAvatarIdFromSender(), issue=issue)
+        if eject:
+            self.air.kickChannel(self.air.getMsgSender(), ChatFilter.ChatBootCode,
+                'Chat violation: %s' % issue)
+
+    def _getChatSender(self, fieldName):
+        avatarId = self.air.getAvatarIdFromSender()
+        if avatarId != self.doId:
+            self.chatViolation('%s sent on avatar %d' % (fieldName, self.doId))
+            return 0
+
+        return avatarId
+
+    def _isFlooding(self, avatarId):
+        if not self.chatFlood.isFlooding(avatarId):
+            return False
+
+        if self.chatFlood.shouldWarn(avatarId):
+            self.air.writeServerEvent('chat-flood', avId=avatarId)
+            self.notify.info('Dropping chat from %d, too many messages.' % avatarId)
+
+        return True
+
+    def _cleanTypedChat(self, avatarId, fieldName, chatString):
+        message = ChatFilter.cleanMessage(chatString)
+        if message is None:
+            if chatString.strip():
+                self.chatViolation('%s too long (%d)' % (fieldName, len(chatString)))
+
+            return None
+
+        if self._isFlooding(avatarId):
+            return None
+
+        return message
+
+    def d_setChat(self, chatString, chatFlags, senderChannel=None):
+        self.sendUpdateToLocation('setChat', [chatString, chatFlags, self.DISLid], senderChannel)
+
+    def setChat(self, chatString, chatFlags, DISLid):
+        avatarId = self._getChatSender('setChat')
+        if not avatarId:
+            return
+
+        message = self._cleanTypedChat(avatarId, 'setChat', chatString)
+        if message is None:
+            return
+
+        self.air.writeServerEvent('chat-said', avId=avatarId, chatFlags=chatFlags, message=message)
+        self.d_setChat(message, ChatFilter.cleanChatFlags(chatFlags), self.air.getMsgSender())
+
+    def d_setWLChat(self, chatString, chatFlags, senderChannel=None):
+        self.sendUpdateToLocation('setWLChat', [chatString, chatFlags, self.DISLid], senderChannel)
+
+    def setWLChat(self, chatString, chatFlags, DISLid):
+        avatarId = self._getChatSender('setWLChat')
+        if not avatarId:
+            return
+
+        message = self._cleanTypedChat(avatarId, 'setWLChat', chatString)
+        if message is None:
+            return
+
+        # The client only sends whitelisted words, and the avatars receiving
+        # whitelist chat display it without filtering it again.
+        message = ChatFilter.filterWhiteList(message)
+        self.air.writeServerEvent('chat-said-wl', avId=avatarId, chatFlags=chatFlags, message=message)
+        self.d_setWLChat(message, ChatFilter.cleanChatFlags(chatFlags), self.air.getMsgSender())
+
+    def setSC(self, msgIndex):
+        # SpeedChat is broadcast straight from the client, all we can do is
+        # make sure nobody gets away with a phrase the menu doesn't have.
+        if not ChatFilter.isValidSpeedChat(msgIndex):
+            self.chatViolation('invalid SpeedChat index %d' % msgIndex, eject=True)
+
+    def setSCCustom(self, msgIndex):
+        if not ChatFilter.isValidSpeedChatCustom(msgIndex):
+            self.chatViolation('invalid SpeedChat custom index %d' % msgIndex, eject=True)
+
+    # Whispers come to the AI of the avatar being whispered, from whoever
+    # sent them, so all we know about the sender is their channel.
+
+    def _getWhisperSender(self, fieldName, fromId):
+        avatarId = self.air.getAvatarIdFromSender()
+        if not avatarId:
+            return 0
+
+        if fromId != avatarId:
+            self.chatViolation('%s to %d claiming to be from %d' % (fieldName, self.doId, fromId))
+            return 0
+
+        if avatarId == self.doId or self._isFlooding(avatarId):
+            return 0
+
+        return avatarId
+
+    def setWhisperFrom(self, fromId, chatString, senderDISLid):
+        avatarId = self._getWhisperSender('setWhisperFrom', fromId)
+        if not avatarId:
+            return
+
+        message = ChatFilter.cleanMessage(chatString)
+        if message is None:
+            return
+
+        self.air.writeServerEvent('whisper-said', avId=avatarId, toId=self.doId, message=message)
+        self.sendUpdateToAvatarId(self.doId, 'setWhisperFrom', [avatarId, message, senderDISLid])
+
+    def setWhisperWLFrom(self, fromId, chatString, senderDISLid):
+        avatarId = self._getWhisperSender('setWhisperWLFrom', fromId)
+        if not avatarId:
+            return
+
+        message = ChatFilter.cleanMessage(chatString)
+        if message is None:
+            return
+
+        message = ChatFilter.filterWhiteList(message)
+        self.air.writeServerEvent('whisper-said-wl', avId=avatarId, toId=self.doId, message=message)
+        self.sendUpdateToAvatarId(self.doId, 'setWhisperWLFrom', [avatarId, message, senderDISLid])
+
+    def setWhisperSCFrom(self, fromId, msgIndex):
+        avatarId = self._getWhisperSender('setWhisperSCFrom', fromId)
+        if avatarId and ChatFilter.isValidSpeedChat(msgIndex):
+            self.sendUpdateToAvatarId(self.doId, 'setWhisperSCFrom', [avatarId, msgIndex])
+
+    def setWhisperSCCustomFrom(self, fromId, msgIndex):
+        avatarId = self._getWhisperSender('setWhisperSCCustomFrom', fromId)
+        if avatarId and ChatFilter.isValidSpeedChatCustom(msgIndex):
+            self.sendUpdateToAvatarId(self.doId, 'setWhisperSCCustomFrom', [avatarId, msgIndex])
+
+    def setWhisperSCEmoteFrom(self, fromId, emoteId):
+        avatarId = self._getWhisperSender('setWhisperSCEmoteFrom', fromId)
+        if avatarId and ChatFilter.isValidSpeedChatEmote(emoteId):
+            self.sendUpdateToAvatarId(self.doId, 'setWhisperSCEmoteFrom', [avatarId, emoteId])
 
     def d_setSystemMessage(self, aboutId, chatString):
         self.sendUpdate('setSystemMessage', [aboutId, chatString])

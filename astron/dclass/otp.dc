@@ -170,13 +170,13 @@ struct FriendEntry {
 dclass DistributedPlayer : DistributedAvatar {
   arrivedOnDistrict(uint32) ownrecv ram;
   setAccountName(string="") required ownrecv db;
-  setChat(string, uint8, uint32) broadcast ownsend;
-  setWLChat(string, uint8, uint32) broadcast ownsend;
-  setWhisperFrom(uint32, string, uint32) ownrecv clsend;
-  setWhisperWLFrom(uint32, string, uint32) ownrecv clsend;
-  setWhisperSCFrom(uint32, uint16) ownrecv clsend;
-  setWhisperSCCustomFrom(uint32, uint16) ownrecv clsend;
-  setWhisperSCEmoteFrom(uint32, uint16) ownrecv clsend;
+  setChat(string, uint8, uint32) ownsend airecv;
+  setWLChat(string, uint8, uint32) ownsend airecv;
+  setWhisperFrom(uint32, string, uint32) airecv clsend;
+  setWhisperWLFrom(uint32, string, uint32) airecv clsend;
+  setWhisperSCFrom(uint32, uint16) airecv clsend;
+  setWhisperSCCustomFrom(uint32, uint16) airecv clsend;
+  setWhisperSCEmoteFrom(uint32, uint16) airecv clsend;
   setSystemMessage(uint32, string) ownrecv;
   setCommonChatFlags(uint8) broadcast ownrecv ram;
   setSC(uint16) broadcast ownsend airecv;
