@@ -49,6 +49,7 @@ class DistributedSurfaceTreasureAI(DistributedInteractiveAI):
 
     def getWithdrawType(self):
         return self.withdrawType
+
     def setOpen(self, opened):
         self.opened = opened
 
@@ -106,8 +107,7 @@ class DistributedSurfaceTreasureAI(DistributedInteractiveAI):
         if self.withdrawType == PiratesGlobals.WITHDRAW_NONE:
             return self.DENY
 
-        if self.belongToTeam != PiratesGlobals.INVALID_TEAM and \
-                hasattr(avatar, 'getTeam') and avatar.getTeam() == self.belongToTeam:
+        if self.belongToTeam != PiratesGlobals.INVALID_TEAM and avatar.getTeam() == self.belongToTeam:
             return self.DENY
 
         # the loot is carried by the pirates taking part in the game,
