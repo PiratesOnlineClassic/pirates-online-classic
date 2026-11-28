@@ -875,20 +875,25 @@ class SteeredShipGridZoneTests(unittest.TestCase):
         self.assertEqual(name, 'updateGridZone-1000')
         task = Mock()
 
-        # the first check centers the crew's interest on the ship...
+        # the first check centers the crew's interest on the ship, which is already in it's cell...
         self.assertIs(callback(task), task.again)
         self.assertEqual(gridManager.handleLocationChanged.call_count, 2)
+        ship.b_setLocation.assert_not_called()
 
         # sailed a full cell east, every crew member still aboard sees around the ship...
         ship.setPos(oceanGrid.cellWidth, 0, 0)
         gridManager.handleLocationChanged.reset_mock()
+        order = Mock()
+        order.attach_mock(gridManager.handleLocationChanged, 'interest')
+        order.attach_mock(ship.b_setLocation, 'move')
         callback(task)
         zoneId = oceanGrid.getZoneFromXYZ((oceanGrid.cellWidth, 0, 0))
+        self.assertEqual([name for name, args, kwargs in order.mock_calls], ['interest', 'interest', 'move'])
         self.assertEqual(gridManager.handleLocationChanged.call_args_list,
             [((oceanGrid, crew[0], zoneId),), ((oceanGrid, crew[1], zoneId),)])
 
-        # the interest moves, the ship itself stays where the AI put it...
-        ship.b_setLocation.assert_not_called()
+        # and only then does the ship move into that cell, so it never leaves the crew's interest...
+        ship.b_setLocation.assert_called_once_with(oceanGrid.doId, zoneId)
 
         # and nothing is reopened until it reaches another cell
         gridManager.handleLocationChanged.reset_mock()

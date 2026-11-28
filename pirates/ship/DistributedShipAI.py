@@ -518,6 +518,7 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
     def setLocation(self, parentId, zoneId):
         parentObj = self.air.doId2do.get(parentId)
         if parentObj is not None and isinstance(parentObj, DistributedOceanGridAI):
+            self.gridZoneId = zoneId
             for avatarId in self.crew:
                 avatar = self.air.doId2do.get(avatarId)
                 assert(avatar is not None)
@@ -985,11 +986,18 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
         if zoneId == self.gridZoneId or not oceanGrid.isValidZone(zoneId):
             return task.again
 
+        # open the cells around the ship for it's crew first, the cell the ship is leaving
+        # is still within that radius, so the ship never drops out of anyone's interest...
         self.gridZoneId = zoneId
         for avatarId in self.crew:
             avatar = self.air.doId2do.get(avatarId)
             if avatar is not None:
                 self.air.worldGridManager.handleLocationChanged(oceanGrid, avatar, zoneId)
+
+        # then move the ship itself into the cell it sailed into, so everyone else on the
+        # ocean sees it where it really is rather than in the cell it was launched in...
+        if zoneId != self.zoneId:
+            self.b_setLocation(oceanGrid.doId, zoneId)
 
         return task.again
 
