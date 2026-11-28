@@ -243,12 +243,15 @@ class DistributedTreasureMapAI(DistributedInventoryAI):
                 return
             island = islands[0]
             spawnPt = instance.getSpawnPt(island.getUniqueId(), 0)
-            air.teleportMgr.d_initiateTeleport(avatar,
-                instanceType=instance.getType(),
-                instanceName=instance.getFileName(),
-                locationUid=island.getUniqueId(),
-                spawnPt=spawnPt,
-                targetWorld=instance)
+            if not air.teleportMgr.d_initiateTeleport(avatar,
+                    instanceType=instance.getType(),
+                    instanceName=instance.getFileName(),
+                    locationUid=island.getUniqueId(),
+                    spawnPt=spawnPt,
+                    targetWorld=instance):
+                self.notify.warning('Failed to teleport avatar %d to treasure map instance %d' % (
+                    avatar.doId, instance.doId))
+                instance.removeParticipant(avatar.doId)
 
         if instance.isReady:
             teleport()
