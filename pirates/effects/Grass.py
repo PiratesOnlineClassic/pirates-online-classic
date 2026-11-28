@@ -118,8 +118,8 @@ class Grass(DirectObject, NodePath):
             found = vfs.resolveFilename(pfile, spfSearchPath)
         else:
             found = pfile.resolveFilename(spfSearchPath)
-        dataFile = open(pfile.toOsSpecific(), 'r')
-        grassSamples = pickle.load(dataFile)
+        dataFile = open(pfile.toOsSpecific(), 'rb')
+        grassSamples = pickle.load(dataFile, encoding = 'latin-1')
         dataFile.close()
         (self._numDivX, self._numDivY, self._dx, self._dy, self._minX, self._minY, self._grassDensity, self.sampleDict) = grassSamples
         print(self._numDivX, self._numDivY, self._dx, self._dy, self._minX, self._minY)
