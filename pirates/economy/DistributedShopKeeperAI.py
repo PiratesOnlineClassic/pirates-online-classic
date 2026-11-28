@@ -227,8 +227,11 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             self.notify.warning('Invalid pouch ammo metadata for item %s' % itemId)
             return
 
+        # the pouch bonus is the ammo's new stack limit, not an amount
+        # added onto it, see the starting limits in InventoryInit...
         for ammoId, bonus in zip(ammoList, stackBonus):
-            inventory.b_setStackLimit(ammoId, inventory.getStackLimit(ammoId) + bonus)
+            if bonus > inventory.getStackLimit(ammoId):
+                inventory.b_setStackLimit(ammoId, bonus)
 
     def __getShipName(self, names, index):
         """

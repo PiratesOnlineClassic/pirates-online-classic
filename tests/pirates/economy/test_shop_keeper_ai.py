@@ -164,7 +164,7 @@ class ShopKeeperAITests(unittest.TestCase):
         self.shop.requestMakeSale([[ItemId.PISTOL_POUCH_L1, 1]], [], [])
 
         self.assertEqual(self.lastResponse()[2], [2])
-        self.assertEqual(self.inventory.getStackLimit(ItemId.VENOMSHOT), 225)
+        self.assertEqual(self.inventory.getStackLimit(ItemId.VENOMSHOT), 125)
 
     def test_ship_purchase_checks_limit_before_creating(self):
         self.shop.avatarType = AvatarTypes.Shipwright
