@@ -37,8 +37,8 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
     def createGameArea(self, objectData, parent, parentUid, objKey, dynamic):
         from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
 
-        parent = self.parent.getParentObj()
-        if not parent:
+        world = self.parent.getParentObj()
+        if not world:
             return
 
         areaName = PLocalizer.LocationNames.get(objKey, '')
@@ -55,9 +55,18 @@ class IslandAreaBuilderAI(GameAreaBuilderAI):
         gameArea.setFileName(areaFile)
         gameArea.setModelPath(objectData['Visual']['Model'])
 
-        # create a new instance object that lays under the main world instance
-        # this allows us to load the game area file data and set the correct values...
-        parent = self.air.worldCreator.createWorldInstance({}, self.air.worldCreator.world, '', objKey, False)
+        if world.getType() == PiratesGlobals.INSTANCE_PVP:
+            # the pvp client expects it's active world to remain the pvp instance
+            # for the whole match, so the game area must live within the instance
+            # itself rather than within a sub instance of it...
+            parent = world
+        else:
+            # create a new instance object that lays under the main world instance
+            # this allows us to load the game area file data and set the correct values...
+            parent = self.air.worldCreator.createWorldInstance({}, self.air.worldCreator.world, '', objKey, False)
+            parent.setParentInstance(world)
+            world.addSubInstance(parent)
+
         parent.generateChildWithRequired(gameArea, self.air.allocateZone())
         parent.builder.addObject(gameArea)
         self.air.worldCreator.linkManager.registerLinkData(objKey)

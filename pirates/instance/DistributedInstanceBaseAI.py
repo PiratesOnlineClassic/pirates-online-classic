@@ -22,15 +22,44 @@ class DistributedInstanceBaseAI(DistributedObjectAI, WorldNodeAI):
         self.canBePrivate = False
         self.spawnPts = {}
         self.builder = ClientAreaBuilderAI(self.air, self)
+        self.parentInstance = None
+        self.subInstances = []
+
+    def delete(self):
+        # sub instances are generated beside us rather than beneath us,
+        # so they would otherwise outlive this instance...
+        for subInstance in list(self.subInstances):
+            self.removeSubInstance(subInstance)
+            if self.air.doId2do.get(subInstance.doId) is subInstance:
+                subInstance.requestDelete()
+
+        if self.parentInstance:
+            self.parentInstance.removeSubInstance(self)
+
+        DistributedObjectAI.delete(self)
 
     def getParentingRules(self):
         return ['', '']
 
+    def setParentInstance(self, parentInstance):
+        self.parentInstance = parentInstance
+
     def getParentInstance(self):
-        return None
+        return self.parentInstance
+
+    def addSubInstance(self, subInstance):
+        if subInstance not in self.subInstances:
+            self.subInstances.append(subInstance)
+
+    def removeSubInstance(self, subInstance):
+        if subInstance in self.subInstances:
+            self.subInstances.remove(subInstance)
+
+        if subInstance.getParentInstance() is self:
+            subInstance.setParentInstance(None)
 
     def getSubInstances(self):
-        return []
+        return list(self.subInstances)
 
     def setUniqueId(self, uniqueId):
         self.uniqueId = uniqueId
