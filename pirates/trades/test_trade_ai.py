@@ -196,6 +196,29 @@ class LocalTradeTests(unittest.TestCase):
 
         self.assertEqual(inventory.reputation, {InventoryType.GeneralRep: 50, InventoryType.OverallRep: 50})
 
+    def test_quest_gold_cards_and_ships_are_given(self):
+        inventory = FakeInventory({InventoryType.GoldInPocket: 10})
+        inventory.getGoldInPocket = lambda: inventory.getStackQuantity(InventoryType.GoldInPocket)
+        inventory.setGoldInPocket = lambda quantity: inventory.b_setStackQuantity(
+            InventoryType.GoldInPocket, quantity)
+        inventory.ships = [5]
+        inventory.getShipDoIdList = lambda: list(inventory.ships)
+        inventory.setShipDoIdList = lambda ships: setattr(inventory, 'ships', ships)
+        air = types.SimpleNamespace(doId2do={1: makeAvatar(1, inventory)})
+        trade = LocalTrade(air)
+        trade.setAvatarId(1)
+
+        trade.giveGoldInPocket(25)
+        trade.givePlayingCard(3)
+        trade.giveShip(6)
+        trade.giveShip(6)
+        trade.giveNewShipToken()
+
+        self.assertEqual(inventory.getGoldInPocket(), 35)
+        self.assertEqual(inventory.getStackQuantity(InventoryType.begin_Cards + 3), 1)
+        self.assertEqual(inventory.ships, [5, 6])
+        self.assertEqual(inventory.getStackQuantity(InventoryType.NewShipToken), 1)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -76,6 +76,34 @@ class LocalTrade(TradeBase):
         if reputationType != InventoryType.OverallRep:
             inventory.setOverallRep(inventory.getOverallRep() + reputation)
 
+    def giveGoldInPocket(self, amount):
+        inventory = self.avatar.getInventory()
+        if not inventory:
+            self.notify.warning('Failed to give %d gold to avatar %d, '
+                'avatar has no inventory!' % (amount, self.avatar.doId))
+
+            return
+
+        inventory.setGoldInPocket(inventory.getGoldInPocket() + amount)
+
+    def givePlayingCard(self, cardId):
+        self.giveStack(InventoryType.begin_Cards + cardId, 1)
+
+    def giveShip(self, shipDoId):
+        inventory = self.avatar.getInventory()
+        if not inventory:
+            self.notify.warning('Failed to give ship %d to avatar %d, '
+                'avatar has no inventory!' % (shipDoId, self.avatar.doId))
+
+            return
+
+        shipList = inventory.getShipDoIdList()
+        if shipDoId not in shipList:
+            inventory.setShipDoIdList(shipList + [shipDoId])
+
+    def giveNewShipToken(self):
+        self.giveStack(InventoryType.NewShipToken, 1)
+
     def giveTeleportToken(self, tokenType):
         inventory = self.avatar.getInventory()
         if not inventory:
