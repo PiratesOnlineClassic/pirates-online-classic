@@ -513,6 +513,12 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             self.notify.warning('Avatar %d requested weapon %d which is not in their inventory!' % (
                 self.doId, currentWeaponId))
 
+            # the client only draws the weapons in it's inventory (LocalPirate.setEquippedWeapons)...
+            if isWeaponDrawn:
+                self.air.logPotentialHacker(
+                    message='Received requestCurrentWeapon for a weapon the avatar does not have!',
+                    currentWeaponId=currentWeaponId)
+
             # put away whichever weapon the avatar was using, so the
             # avatar cannot attack with a weapon it does not own...
             currentWeaponId = self.currentWeaponId if self.hasWeapon(self.currentWeaponId) else 0
