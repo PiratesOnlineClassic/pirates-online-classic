@@ -6,6 +6,7 @@ from pirates.uberdog import InventoryInit
 from otp.ai.MagicWordGlobal import *
 
 from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import FreebooterAI
 
 
 class DistributedTreasureMapAI(DistributedInventoryAI):
@@ -126,6 +127,11 @@ class DistributedTreasureMapAI(DistributedInventoryAI):
 
         if not self.isEnabled:
             self.notify.warning('Treasure map %d is not enabled' % self.mapId)
+            return False
+
+        # only members may sail off on a treasure map, see QuestPage.startTreasureMap...
+        if not FreebooterAI.canStartTreasureMap(avatar):
+            self.notify.warning('Freebooter %d cannot start treasure map %d!' % (avatar.doId, self.mapId))
             return False
 
         if self.startPending:

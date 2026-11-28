@@ -2,6 +2,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
 
 from pirates.battle.Teamable import Teamable
+from pirates.piratesbase import FreebooterAI
 from pirates.battle import WeaponGlobals
 from pirates.ship import ShipGlobals
 from pirates.piratesbase import PiratesGlobals
@@ -1111,7 +1112,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
             return False
 
-        if not avatar.isPaid() and not WeaponGlobals.canFreeUse(skillId):
+        if not FreebooterAI.canUseSkill(avatar, skillId):
             self.notify.debug('Freebooter %d cannot use paid ship skill %d!' % (avatar.doId, skillId))
             return False
 

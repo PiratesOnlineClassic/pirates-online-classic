@@ -4,6 +4,7 @@ from direct.distributed.ClockDelta import globalClockDelta
 
 from pirates.world.DistributedDoorBaseAI import DistributedDoorBaseAI
 from pirates.piratesbase import PiratesGlobals
+from pirates.piratesbase import FreebooterAI
 
 
 class DistributedBuildingDoorAI(DistributedDoorBaseAI):
@@ -40,6 +41,18 @@ class DistributedBuildingDoorAI(DistributedDoorBaseAI):
         # the doors are barricaded against the Undead, all but the Kingshead fort's,
         # see DistributedBuildingDoor.requestInteraction...
         if getattr(avatar, 'zombie', 0) and self.buildingUid != self.ZombieBuildingUid:
+            return self.DENY
+
+        # only members may enter the Kingshead fort. The client means to check
+        # this in DistributedDoorBase.requestInteraction, but compares the door's
+        # building uid (the fort's Building Exterior, '1189479168.0sdnaik') to
+        # KINGSHEAD_DOOR, the uid of the fort's interior area the door leads to
+        # ('1189479168.0sdnaik0', the exterior's ExtUid), so the check is made
+        # here on the area behind the door. Leaving the fort is always allowed...
+        if not FreebooterAI.canEnterArea(avatar, self.interiorUid):
+            self.notify.warning('Freebooter %d attempted to enter paid area %s!' % (
+                avatar.doId, self.interiorUid))
+
             return self.DENY
 
         result = DistributedDoorBaseAI.handleRequestInteraction(self, avatar, interactType, instant)

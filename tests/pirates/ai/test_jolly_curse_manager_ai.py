@@ -230,6 +230,7 @@ class UndeadInteractionTests(unittest.TestCase):
 
         door = DistributedBuildingDoorAI.__new__(DistributedBuildingDoorAI)
         door.buildingUid = 'some-tavern'
+        door.interiorUid = 'some-tavern-interior'
         with patch.object(DistributedDoorBaseAI, 'handleRequestInteraction', return_value=0) as base:
             self.assertEqual(door.handleRequestInteraction(self.makeZombie(), 0, 0), door.DENY)
             base.assert_not_called()

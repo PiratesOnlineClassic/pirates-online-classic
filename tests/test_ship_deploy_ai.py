@@ -68,9 +68,13 @@ class FakeShip(NodePath):
         self.crew = []
         self.skillEffects = []
         self.inventoryId = 0
+        self.shipClass = 1
 
     def getHp(self):
         return self.hp
+
+    def getShipClass(self):
+        return self.shipClass
 
     def getParentObj(self):
         return self.parentObj
@@ -166,8 +170,8 @@ class ShipDeployerTests(unittest.TestCase):
         self.shipManager.playerShips.append(ship)
         self.assertIn(self.deployer.chooseDeploySphere(self.oceanGrid, preferredPos=dinghyPos), (2, 4))
 
-    def makeFSM(self, ship, allowSunk=False, preferredPos=None):
-        avatar = SimpleNamespace(doId=10)
+    def makeFSM(self, ship, allowSunk=False, preferredPos=None, paid=True):
+        avatar = SimpleNamespace(doId=10, isPaid=lambda: paid)
         inventory = SimpleNamespace(getShipMainpartsDoIdList=lambda: [70])
         shippart = SimpleNamespace(doId=70, b_setLocation=Mock())
         ship.inventoryId = 80
@@ -206,6 +210,20 @@ class ShipDeployerTests(unittest.TestCase):
         ship.b_setLocation.assert_not_called()
         self.assertFalse(ship.hasSpawnBuff())
         self.assertEqual(self.deployer.avatar2fsm, {})
+
+    def test_freebooter_only_deploys_free_ship_classes(self):
+        from pirates.ship import ShipGlobals
+
+        ship = FakeShip(95)
+        ship.shipClass = ShipGlobals.WARSHIPL1
+        callback = self.makeFSM(ship, paid=False)
+        callback.assert_called_once_with(False)
+        ship.b_setLocation.assert_not_called()
+
+        ship = FakeShip(96)
+        ship.shipClass = ShipGlobals.MERCHANTL1
+        callback = self.makeFSM(ship, paid=False)
+        callback.assert_called_once_with(True)
 
     def test_sunk_siege_ship_is_repaired_on_deploy(self):
         ship = FakeShip(92, hp=0)

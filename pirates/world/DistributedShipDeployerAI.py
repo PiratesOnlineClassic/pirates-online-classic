@@ -9,6 +9,7 @@ from direct.fsm.FSM import FSM
 from direct.distributed.ClockDelta import *
 
 from pirates.battle import WeaponGlobals
+from pirates.piratesbase import FreebooterAI
 from pirates.piratesbase import PiratesGlobals
 
 # how long a freshly deployed ship is covered by the protection dome (C_SPAWN):
@@ -111,6 +112,14 @@ class DeployShipFSM(ShipDeployerOperationFSM):
         if ship.getHp() <= 0 and not self.allowSunk:
             self.notify.warning('Cannot deploy ship %d for avatar %d, '
                 'the ship is sunk!' % (ship.doId, self.avatar.doId))
+
+            return False
+
+        # a Freebooter may only captain the free ship classes,
+        # see ShipFrameDeploy.enableStats...
+        if not FreebooterAI.canUseShipClass(self.avatar, ship.getShipClass()):
+            self.notify.warning('Cannot deploy ship %d for freebooter %d, '
+                'ship class %d requires Unlimited Access!' % (ship.doId, self.avatar.doId, ship.getShipClass()))
 
             return False
 

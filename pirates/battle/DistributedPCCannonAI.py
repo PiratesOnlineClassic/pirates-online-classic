@@ -1,6 +1,7 @@
 from direct.directnotify import DirectNotifyGlobal
 
 from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
+from pirates.piratesbase import FreebooterAI
 from pirates.battle import WeaponGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 
@@ -49,7 +50,7 @@ class DistributedPCCannonAI(DistributedWeaponAI):
 
             return False
 
-        if hasattr(avatar, 'isPaid') and not avatar.isPaid() and not WeaponGlobals.canFreeUse(ammoSkillId):
+        if not FreebooterAI.canUseSkill(avatar, ammoSkillId):
             self.notify.debug('Freebooter %d cannot fire paid ammo %d!' % (avatar.doId, ammoSkillId))
             return False
 

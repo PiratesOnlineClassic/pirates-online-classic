@@ -2,6 +2,7 @@ from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 
 from pirates.quest.QuestBase import QuestBase
+from pirates.piratesbase import FreebooterAI
 from pirates.quest.Quest import Quest
 from pirates.quest import QuestDB
 from pirates.quest.QuestTaskState import QuestTaskState
@@ -154,7 +155,7 @@ class DistributedQuestAI(DistributedObjectAI, QuestBase, Quest):
 
             taskState.resetModified()
             if questEvent.applyTo(taskState, taskDNA):
-                if holder.getAccess() != 2 and self.questDNA.getVelvetRoped():
+                if not FreebooterAI.canProgressQuest(holder, self.questDNA):
                     holder.d_popupProgressBlocker(self.getQuestId())
                 else:
                     questEvent.complete(taskState, taskDNA)

@@ -5,8 +5,6 @@ from direct.fsm.FSM import FSM
 
 from pirates.distributed.DistributedInteractiveAI import DistributedInteractiveAI
 from pirates.piratesbase import PiratesGlobals
-from pirates.quest.QuestConstants import LocationIds
-from pirates.piratesbase import Freebooter
 
 
 class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
@@ -31,10 +29,6 @@ class DistributedDoorBaseAI(DistributedInteractiveAI, FSM):
 
     def handleRequestInteraction(self, avatar, interactType, instant):
         if self.locked:
-            return self.DENY
-
-        if self.buildingUid == LocationIds.KINGSHEAD_DOOR and not Freebooter.getPaidStatusAI(avatar.doId):
-            self.notify.warning('Freebooter (%s) attempted to force open KINGSHEAD_DOOR' % avatar.doId)
             return self.DENY
 
         if not self.avatarId:

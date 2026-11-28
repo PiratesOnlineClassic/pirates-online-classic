@@ -5,6 +5,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.task import Task
 
 from pirates.ship.DistributedShipAI import DistributedShipAI
+from pirates.piratesbase import FreebooterAI
 from pirates.ship import ShipGlobals
 from pirates.ship import ShipBalance
 from pirates.ship import FlagshipGlobals
@@ -12,7 +13,6 @@ from pirates.battle import EnemyGlobals
 from pirates.battle import LootGlobals
 from pirates.pirate import AvatarTypes
 from pirates.piratesbase import PiratesGlobals
-from pirates.piratesbase import Freebooter
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 
@@ -136,8 +136,7 @@ class NPCShipAI(DistributedShipAI):
             if not inventory:
                 continue
 
-            if hasattr(avatar, 'isPaid') and not avatar.isPaid() and \
-                    avatar.getLevel() >= Freebooter.FreeOverallLevelCap:
+            if FreebooterAI.isAtOverallLevelCap(avatar):
                 continue
 
             categories = [InventoryType.SailingRep]

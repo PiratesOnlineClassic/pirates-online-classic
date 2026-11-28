@@ -6,6 +6,7 @@ from direct.task import Task
 from otp.ai.MagicWordGlobal import *
 
 from pirates.quest.QuestConstants import LocationIds
+from pirates.piratesbase import FreebooterAI
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
 from pirates.uberdog.UberDogGlobals import InventoryType
@@ -295,7 +296,7 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
                 return False
 
         # check for paid status when trying to teleport to kingshead
-        if gameArea.getUniqueId() == LocationIds.KINGSHEAD_ISLAND and not avatar.isPaid():
+        if not FreebooterAI.canEnterArea(avatar, gameArea.getUniqueId()):
             gameArea.d_deniedEntryToIsland(avatar.doId)
             return False
 

@@ -4,6 +4,7 @@ from direct.directnotify import DirectNotifyGlobal
 from otp.avatar.DistributedPlayerAI import DistributedPlayerAI
 
 from pirates.quest.QuestConstants import LocationIds
+from pirates.piratesbase import FreebooterAI
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.battle.Teamable import Teamable
 from pirates.world import WorldGlobals
@@ -180,7 +181,7 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
 
         # only paid members may sail into Kingshead, the client checks this
         # as well but we cannot trust it to do so...
-        if self.getUniqueId() == LocationIds.KINGSHEAD_ISLAND and not avatar.isPaid():
+        if not FreebooterAI.canEnterArea(avatar, self.getUniqueId()):
             self.d_deniedEntryToIsland(avatar.doId)
 
     def d_deniedEntryToIsland(self, avatarId):

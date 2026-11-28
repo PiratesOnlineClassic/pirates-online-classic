@@ -3,6 +3,7 @@ from panda3d.core import *
 from direct.directnotify import DirectNotifyGlobal
 
 from otp.ai.MagicWordGlobal import *
+from otp.otpbase import OTPGlobals
 from otp.avatar.DistributedPlayerAI import DistributedPlayerAI
 from otp.distributed.OtpDoGlobals import OTP_DO_ID_AVATAR_FRIENDS_MANAGER
 
@@ -28,6 +29,7 @@ from pirates.economy import EconomyGlobals
 from pirates.battle import WeaponGlobals
 from pirates.reputation import ReputationGlobals
 from pirates.piratesbase import Freebooter
+from pirates.piratesbase import FreebooterAI
 
 class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, HumanDNAAI, DistributedQuestAvatarAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedPlayerPirateAI')
@@ -640,7 +642,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             isWeaponDrawn = False
 
         repId = WeaponGlobals.getRepId(currentWeaponId)
-        if isWeaponDrawn and not self.isPaid() and not Freebooter.allowedFreebooterWeapon(repId):
+        if isWeaponDrawn and not FreebooterAI.canUseWeapon(self, repId):
             self.notify.warning('Freebooter %d attempted to draw paid weapon %d!' % (
                 self.doId, currentWeaponId))
 
@@ -771,27 +773,14 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
             return
 
-        if not self.isPaid():
-            # freebooters may only train the skills free to use...
-            if not WeaponGlobals.canFreeUse(skillId):
-                self.notify.debug('Cannot update stack %d, skill %d is not free to use!' % (
-                    unspentId, skillId))
+        # freebooters may only train the skills free to use, up to a
+        # certain rank and only spend so many of the weapon's skill points...
+        level, _ = ReputationGlobals.getLevelFromTotalReputation(repId, inventory.getReputation(repId))
+        if not FreebooterAI.canTrainSkill(self, skillId, skillQuantity + 1, level, unspentStackQuantity):
+            self.notify.debug('Cannot update stack %d, freebooter %d may not train skill %d; skillQuantity=%d!' % (
+                unspentId, self.doId, skillId, skillQuantity))
 
-                return
-
-            # and only up to a certain rank...
-            if skillQuantity + 1 > Freebooter.FreeSkillCap:
-                self.notify.debug('Cannot update stack %d, freebooter skill cap reached; skillQuantity=%d' % (
-                    unspentId, skillQuantity))
-
-                return
-
-            # and may only spend so many of the skill points earned
-            # leveling up the weapon...
-            level, _ = ReputationGlobals.getLevelFromTotalReputation(repId, inventory.getReputation(repId))
-            if level - 1 - unspentStackQuantity >= Freebooter.FreeMaxSkillSpend:
-                self.notify.debug('Cannot update stack %d, freebooter skill spend reached!' % unspentId)
-                return
+            return
 
         # combo skills must be learned in the order they are chained...
         if skillId in self.ComboOrderSkills and inventory.getStackQuantity(skillId - 1) <= 1:
@@ -1388,10 +1377,12 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.b_setShipBadgeIcon(titleId, rank)
 
     def isPaid(self):
-        return Freebooter.getPaidStatusAI(self.doId)
+        return FreebooterAI.isPaidAccess(self.getGameAccess())
 
     def getAccess(self):
-        return self.gameAccess
+        # with want-membership off everybody has Unlimited Access,
+        # see DistributedPlayerPirate.getAccess...
+        return FreebooterAI.getEffectiveAccess(self.getGameAccess())
 
     def setAccess(self, access):
         self.setGameAccess(access)
@@ -1407,7 +1398,7 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.gameAccess = access
 
     def getGameAccess(self):
-        return self.gameAccess
+        return getattr(self, 'gameAccess', OTPGlobals.AccessUnknown)
 
     def disable(self):
         DistributedPlayerAI.disable(self)

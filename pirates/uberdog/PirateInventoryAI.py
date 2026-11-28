@@ -8,6 +8,7 @@ from pirates.piratesbase import PiratesGlobals
 from pirates.uberdog.TreasureMapInventoryAI import TreasureMapInventoryAI
 from pirates.uberdog import InventoryInit
 from pirates.economy import EconomyGlobals
+from pirates.piratesbase import FreebooterAI
 
 class PirateInventoryAI(DistributedInventoryAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('PirateInventoryAI')
@@ -32,7 +33,12 @@ class PirateInventoryAI(DistributedInventoryAI):
         if limit:
             quantity = min(quantity, limit)
 
+        # a Freebooter stops earning reputation at the level caps...
         totalRep = self.getReputation(repType)
+        quantity = FreebooterAI.capReputation(avatar, repType, totalRep, quantity)
+        if quantity == totalRep:
+            return
+
         currentLevel, currentReputation = ReputationGlobals.getLevelFromTotalReputation(repType, totalRep)
         newLevel, newReputation = ReputationGlobals.getLevelFromTotalReputation(repType, quantity)
 

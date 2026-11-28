@@ -41,6 +41,23 @@ class TreasureMapLifecycleTests(unittest.TestCase):
         treasure_map.requestStart(5)
         self.assertEqual(treasure_map._createTreasureMapInstance.call_count, 2)
 
+    def test_freebooters_cannot_start_treasure_maps(self):
+        avatar = SimpleNamespace(doId=42, isPaid=lambda: False)
+        treasure_map = DistributedTreasureMapAI.__new__(DistributedTreasureMapAI)
+        treasure_map.ownerId = 42
+        treasure_map.air = SimpleNamespace(getAvatarIdFromSender=lambda: 42, doId2do={42: avatar})
+        treasure_map.isEnabled = 1
+        treasure_map.mapId = PiratesGlobals.GAME_STYLE_TM_BLACK_PEARL
+        treasure_map.startPending = False
+        treasure_map.activeInstance = None
+        treasure_map._createTreasureMapInstance = Mock(return_value=True)
+        treasure_map.requestStart(5)
+        treasure_map._createTreasureMapInstance.assert_not_called()
+
+        avatar.isPaid = lambda: True
+        treasure_map.requestStart(5)
+        treasure_map._createTreasureMapInstance.assert_called_once_with(avatar, 'BlackpearlWorld')
+
 
 if __name__ == '__main__':
     unittest.main()

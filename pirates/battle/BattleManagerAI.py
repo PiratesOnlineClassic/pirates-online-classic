@@ -6,6 +6,7 @@ from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import globalClockDelta
 
 from pirates.battle.BattleManagerBase import BattleManagerBase
+from pirates.piratesbase import FreebooterAI
 from pirates.piratesbase import PiratesGlobals
 from pirates.battle import WeaponGlobals
 from pirates.battle import EnemyGlobals
@@ -13,7 +14,6 @@ from pirates.battle import LootGlobals
 from pirates.uberdog import UberDogGlobals
 from pirates.uberdog.UberDogGlobals import InventoryId, InventoryType, InventoryCategory
 from pirates.battle.ComboDiaryAI import ComboDiaryAI
-from pirates.piratesbase import Freebooter
 from pirates.pirate import AvatarTypes
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
 from pirates.battle.DistributedBattleAvatarAI import DistributedBattleAvatarAI
@@ -138,7 +138,6 @@ class BattleManagerAI(BattleManagerBase):
             self.notify.debug('Avatar %d cannot use skill %d, no inventory present!' % (avatar.doId, skillId))
             return False
 
-        isPaid = avatar.isPaid()
         for usedSkillId in (skillId, ammoSkillId):
             if not self.isRankedSkill(usedSkillId):
                 continue
@@ -149,7 +148,7 @@ class BattleManagerAI(BattleManagerBase):
 
                 return False
 
-            if not isPaid and not WeaponGlobals.canFreeUse(usedSkillId):
+            if not FreebooterAI.canUseSkill(avatar, usedSkillId):
                 self.notify.debug('Freebooter %d cannot use paid skill %d!' % (avatar.doId, usedSkillId))
                 return False
 
@@ -437,10 +436,9 @@ class BattleManagerAI(BattleManagerBase):
         # ensure the user has access to the requested weapon before
         # running result calculations
         repId = WeaponGlobals.getRepId(currentWeaponId)
-        if hasattr(avatar, 'isPaid'):
-            if not avatar.isPaid() and not Freebooter.allowedFreebooterWeapon(repId):
-                self.notify.warning('Freebooter (%d) attempted to use paid weapon (%d)' % (avatar.doId, currentWeaponId))
-                return None
+        if not FreebooterAI.canUseWeapon(avatar, repId):
+            self.notify.warning('Freebooter (%d) attempted to use paid weapon (%d)' % (avatar.doId, currentWeaponId))
+            return None
 
         if target is not None and not self.canAttackTarget(avatar, target, skillId, ammoSkillId):
             return None
@@ -906,9 +904,8 @@ class BattleManagerAI(BattleManagerBase):
             return
 
         # Verify the user has not exceeded the level cap
-        if hasattr(attacker, 'isPaid'):
-            if not attacker.isPaid() and attacker.getLevel() >= Freebooter.FreeOverallLevelCap:
-                return
+        if FreebooterAI.isAtOverallLevelCap(attacker):
+            return
 
         overallReputation = 0
         reputationCategories = {}
