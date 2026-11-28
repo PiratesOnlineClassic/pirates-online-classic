@@ -144,6 +144,8 @@ class DistributedNPCTownfolkAI(DistributedBattleNPCAI, DistributedShopKeeperAI):
             self.offerQuests(avatar)
         elif option == InteractGlobals.BACK:
             pass
+        elif self.isRespecOption(option):
+            self.handleRespec(avatar, inventory, option)
 
     def offerQuests(self, avatar):
         # check to see if the avatar is in the middle of a quest choice
