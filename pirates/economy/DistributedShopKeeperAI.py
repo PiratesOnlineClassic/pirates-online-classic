@@ -1,12 +1,16 @@
-from panda3d.core import ConfigVariableBool
+import math
+
+from panda3d.core import ConfigVariableBool, Vec2
 from direct.distributed.DistributedObjectAI import DistributedObjectAI
 from direct.directnotify import DirectNotifyGlobal
 from otp.uberdog.RejectCode import RejectCode
 from pirates.distributed import InteractGlobals
 from pirates.economy import EconomyGlobals
+from pirates.economy.AvatarAccessoriesManagerAI import getClothingGender, getJewelryGender, getWornClothing
 from pirates.economy.EconomyGlobals import ItemType, ItemId
-from pirates.makeapirate import BarberGlobals
+from pirates.makeapirate import BarberGlobals, ClothingGlobals, JewelryGlobals, TattooGlobals
 from pirates.pirate import AvatarTypes
+from pirates.piratesbase import PiratesGlobals
 from pirates.ship import ShipGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType, InventoryCategory
 
@@ -340,27 +344,350 @@ class DistributedShopKeeperAI(DistributedObjectAI):
     def d_playMusic(self, songId):
         self.sendUpdate('playMusic', [songId])
 
-    # The tailor, jeweler and tattoo parlor wardrobes are persisted by the
-    # AvatarAccessoriesManager. Until it is able to store owned items the
-    # shopkeeper reports an empty wardrobe so the store GUIs can load.
+    # The tailor, jeweler and tattoo parlor. Wardrobes are stored by the
+    # AvatarAccessoriesManager, what the avatar is wearing lives in its DNA.
 
-    def requestAccessories(self, purchases, selling):
-        pass
+    def __getStoreAvatar(self, handlerName, storeType):
+        avatar, inventory = self.__getAvatarAndInventory(handlerName)
+        if not inventory:
+            return None, None
+
+        menu = None
+        if getattr(self, 'avatarType', None) is not None:
+            menu = InteractGlobals.getNPCInteractMenu(self.avatarType)
+
+        if not menu or storeType not in menu[1]:
+            self.air.logPotentialHacker(
+                message='Received %s for a shopkeeper without that store!' % handlerName,
+                avatarId=avatar.doId,
+                storeType=storeType)
+
+            self.d_makeSaleResponse(avatar.doId, RejectCode.TIMEOUT)
+            return None, None
+
+        # Freebooters can look but not touch, see the store GUIs' velvet rope...
+        if hasattr(avatar, 'isPaid') and not avatar.isPaid():
+            self.air.logPotentialHacker(
+                message='Received %s from a Freebooter!' % handlerName,
+                avatarId=avatar.doId)
+
+            self.d_makeSaleResponse(avatar.doId, RejectCode.TIMEOUT)
+            return None, None
+
+        return avatar, inventory
+
+    def __rejectAccessories(self, avatarId, message, **kwargs):
+        # This may run once the wardrobe has been loaded from the UberDOG, so
+        # the sender is not necessarily the avatar anymore...
+        self.notify.warning('%s (avatar %d)' % (message, avatarId))
+        self.air.writeServerEvent('suspicious', avId=avatarId, message=message, **kwargs)
+        self.d_makeSaleResponse(avatarId, RejectCode.TIMEOUT)
+
+    def __getCurrency(self, inventory, currency):
+        if currency == InventoryType.GoldInPocket:
+            return inventory.getGoldInPocket()
+
+        return inventory.getStackQuantity(currency) or 0
+
+    def __setCurrency(self, inventory, currency, amount):
+        amount = max(0, amount)
+        if currency == InventoryType.GoldInPocket:
+            inventory.setGoldInPocket(amount)
+        else:
+            inventory.b_setStackQuantity(currency, amount)
+
+    def __handleWardrobeChanged(self, avatarId, success, currency, refund, handlerName):
+        """
+        The UberDOG answered a wardrobe change we have already charged or paid
+        the avatar for. Should it fail the money is given or taken back.
+        """
+
+        if success:
+            return
+
+        self.notify.warning('Wardrobe change for %s failed for avatar %d, returning %d!' % (
+            handlerName, avatarId, refund))
+
+        inventory = self.air.inventoryManager.getInventory(avatarId)
+        if inventory:
+            self.__setCurrency(inventory, currency, self.__getCurrency(inventory, currency) + refund)
+
+    # Tailor:
+
+    def __getClothingPrice(self, uid, colorId):
+        # colors cost more the rarer they are, see AccessoriesStoreGUI.setPage...
+        cost = ClothingGlobals.UNIQUE_ID[uid][5]
+        scaler = ClothingGlobals.colorCostScaler.get(colorId)
+        if scaler:
+            cost = int(cost * scaler)
+
+        return cost
+
+    def __findClothing(self, clothing, uid, colorId):
+        for item in clothing:
+            if item[0] == uid and item[1] == colorId:
+                return item
+
+        return None
+
+    def __countClothing(self, clothing, clothingType):
+        count = 0
+        for item in clothing:
+            cloth = ClothingGlobals.UNIQUE_ID.get(item[0])
+            if cloth and cloth[0] == clothingType:
+                count += 1
+
+        return count
+
+    def __isWearingClothing(self, avatar, uid, colorId):
+        item = ClothingGlobals.UNIQUE_ID[uid]
+        return getWornClothing(avatar, item[0]) == (item[1], item[2], colorId)
+
+    def __canTakeOffClothing(self, avatar, clothingType):
+        # pants and a lady's shirt can never be taken off, the tailor hides
+        # their take off button...
+        if clothingType == ClothingGlobals.PANT:
+            return False
+        elif clothingType == ClothingGlobals.SHIRT and avatar.getGender() == 'f':
+            return False
+
+        return True
 
     def requestAccessoriesList(self, avId):
-        pass
+        avatarId = self.air.getAvatarIdFromSender()
+        avatar = self.air.doId2do.get(avatarId)
+        if not avatar:
+            self.notify.warning('Failed to requestAccessoriesList for non-existant avatar %d!' %
+                avatarId)
+
+            return
+
+        self.air.accessoriesManager.getClothing(avatarId,
+            lambda clothing: self.d_responseClothingList(avatarId, clothing))
 
     def d_responseClothingList(self, avatarId, accessories=[]):
+        # each entry is a [uid, colorId, original] list, see AccessoriesStoreGUI.setPage...
         self.sendUpdateToAvatarId(avatarId, 'responseClothingList', [avatarId, accessories])
 
+    def requestAccessories(self, purchases, selling):
+        avatar, inventory = self.__getStoreAvatar('requestAccessories', InteractGlobals.ACCESSORIES_STORE)
+        if not inventory:
+            return
+
+        avatarId = avatar.doId
+        self.air.accessoriesManager.getClothing(avatarId,
+            lambda clothing: self.__handleAccessories(avatarId, purchases, selling, clothing),
+            useCache=True)
+
+    def __handleAccessories(self, avatarId, purchases, selling, clothing):
+        avatar = self.air.doId2do.get(avatarId)
+        inventory = self.air.inventoryManager.getInventory(avatarId)
+        if not avatar or not inventory:
+            return
+
+        gender = avatar.getGender()
+        storeItems = ClothingGlobals.stores.get(self.getShopId(), {})
+
+        # validate the entire transaction before anything is changed, the
+        # same rules AccessoriesStoreGUI enforces...
+        sold = []
+        takeOff = []
+        totalGain = 0
+        for uid, colorId, clothingType in selling:
+            item = ClothingGlobals.UNIQUE_ID.get(uid)
+            owned = self.__findClothing(clothing, uid, colorId)
+            if not item or item[0] != clothingType or not owned or owned[2] or [uid, colorId] in sold:
+                self.__rejectAccessories(avatarId, 'Received requestAccessories sell for clothing the avatar can not sell!',
+                    uid=uid, colorId=colorId)
+
+                return
+
+            if self.__isWearingClothing(avatar, uid, colorId):
+                if not self.__canTakeOffClothing(avatar, clothingType):
+                    self.__rejectAccessories(avatarId, 'Received requestAccessories sell for clothing the avatar must wear!',
+                        uid=uid, colorId=colorId)
+
+                    return
+
+                takeOff.append(clothingType)
+
+            sold.append([uid, colorId])
+
+            # clothing is bought back at a quarter of its value...
+            totalGain += int(self.__getClothingPrice(uid, colorId) * 0.25)
+
+        bought = []
+        totalCost = 0
+        for uid, colorId, clothingType in purchases:
+            item = ClothingGlobals.UNIQUE_ID.get(uid)
+            if not item or item[0] != clothingType or colorId not in storeItems.get(uid, []) or \
+                    getClothingGender(uid) != gender or self.__findClothing(clothing, uid, colorId) or \
+                    [uid, colorId] in bought:
+                self.__rejectAccessories(avatarId, 'Received requestAccessories buy for clothing this shop does not sell!',
+                    uid=uid, colorId=colorId)
+
+                return
+
+            bought.append([uid, colorId])
+            totalCost += self.__getClothingPrice(uid, colorId)
+
+        for clothingType in set([ClothingGlobals.UNIQUE_ID[uid][0] for uid, colorId in bought]):
+            remaining = [item for item in clothing if item[:2] not in sold]
+            count = self.__countClothing(remaining, clothingType) + self.__countClothing(bought, clothingType)
+            if count > PiratesGlobals.WARDROBE_LIMIT_TAILOR:
+                self.d_makeSaleResponse(avatarId, RejectCode.OVERFLOW)
+                return
+
+        currentGold = inventory.getGoldInPocket()
+        if totalCost > currentGold + totalGain:
+            self.__rejectAccessories(avatarId, 'Received requestAccessories buy for clothing the avatar can not afford!',
+                currentGold=currentGold, totalCost=totalCost)
+
+            return
+
+        inventory.setGoldInPocket(currentGold + totalGain - totalCost)
+
+        # sold clothing is removed first so it does not count against the
+        # wardrobe limit of what was bought...
+        if sold:
+            self.air.accessoriesManager.removeClothing(avatarId, sold, refund=totalGain,
+                callback=lambda success: self.__handleWardrobeChanged(avatarId, success,
+                    InventoryType.GoldInPocket, -totalGain, 'requestAccessories'))
+
+        if bought:
+            self.air.accessoriesManager.addClothing(avatarId, bought, cost=totalCost, location=self.getShopId(),
+                callback=lambda success: self.__handleWardrobeChanged(avatarId, success,
+                    InventoryType.GoldInPocket, totalCost, 'requestAccessories'))
+
+        if takeOff:
+            for clothingType in takeOff:
+                avatar.setClothesByType(ClothingGlobals.CLOTHING_STRING[clothingType], 0, 0, 0)
+
+            avatar.d_setClothes()
+
+        # Log transaction for analytics and GM purposes
+        self.logShopkeepTransaction(
+            type='requestAccessories',
+            buying=bought,
+            selling=sold,
+            price=totalCost,
+            gain=totalGain,
+            purchaser=avatarId)
+
+        # the store GUI refreshes the avatar's gold, see DistributedShopKeeper.makeSaleResponse...
+        self.d_makeSaleResponse(avatarId, self.SALE_SUCCESS)
+
     def requestAccessoryEquip(self, accessory):
-        pass
+        avatar, inventory = self.__getStoreAvatar('requestAccessoryEquip', InteractGlobals.ACCESSORIES_STORE)
+        if not inventory:
+            return
 
-    def requestTattoo(self, purchases, selling, currencyType=0):
-        pass
+        avatarId = avatar.doId
+        self.air.accessoriesManager.getClothing(avatarId,
+            lambda clothing: self.__handleAccessoryEquip(avatarId, accessory, clothing),
+            useCache=True)
 
-    def d_makeTattooResponse(self, avatarId, tattoo, zone, success):
-        self.sendUpdateToAvatarId(avatarId, 'makeTattooResponse', [tattoo, zone, success])
+    def __handleAccessoryEquip(self, avatarId, accessory, clothing):
+        avatar = self.air.doId2do.get(avatarId)
+        if not avatar:
+            return
+
+        changes = []
+        for uid, colorId, clothingType in accessory:
+            typeString = ClothingGlobals.CLOTHING_STRING.get(clothingType)
+            if typeString is None:
+                self.__rejectAccessories(avatarId, 'Received requestAccessoryEquip for an unknown clothing type!',
+                    clothingType=clothingType)
+
+                return
+
+            # a uid of 0 takes the clothing off, see AccessoriesStoreGUI.closePanel...
+            if not uid:
+                if not self.__canTakeOffClothing(avatar, clothingType):
+                    self.__rejectAccessories(avatarId, 'Received requestAccessoryEquip to take off clothing the avatar must wear!',
+                        clothingType=clothingType)
+
+                    return
+
+                changes.append((typeString, 0, 0, 0))
+                continue
+
+            item = ClothingGlobals.UNIQUE_ID.get(uid)
+            if not item or item[0] != clothingType or not self.__findClothing(clothing, uid, colorId):
+                self.__rejectAccessories(avatarId, 'Received requestAccessoryEquip for clothing the avatar does not own!',
+                    uid=uid, colorId=colorId)
+
+                return
+
+            changes.append((typeString, item[1], item[2], colorId))
+
+        if not changes:
+            return
+
+        for typeString, modelId, texId, colorId in changes:
+            avatar.setClothesByType(typeString, modelId, texId, colorId)
+
+        avatar.d_setClothes()
+
+    # Tattoo parlor:
+
+    # tattoo zone -> the HumanDNA field the zone is stored in.
+    TattooZoneFields = {
+        TattooGlobals.ZONE1: 'TattooChest',
+        TattooGlobals.ZONE2: 'TattooZone2',
+        TattooGlobals.ZONE3: 'TattooZone3',
+        TattooGlobals.ZONE4: 'TattooZone4'}
+
+    def __getTattooDNA(self, gender, uid):
+        """
+        Returns the HumanDNA values of a tattoo, the same values
+        TattooStoreGUI.closePanel gives the avatar's DNA. An unknown uid
+        returns an empty zone.
+        """
+
+        tattoo = TattooGlobals.tattoos.get(uid)
+        if tattoo is not None:
+            if gender == 'm':
+                offsetIndex = 5
+            else:
+                offsetIndex = 6
+
+            offsetx = tattoo[offsetIndex][0]
+            offsety = tattoo[offsetIndex][1]
+            scale = tattoo[offsetIndex][2]
+            rotate = tattoo[offsetIndex][3]
+            tattooId = tattoo[1]
+        else:
+            offsetx = 0
+            offsety = 0
+            scale = 1.0
+            rotate = 0
+            tattooId = 0
+
+        S = Vec2(1 / float(scale), 1 / float(scale))
+        Iv = Vec2(offsetx, offsety)
+        Vm = Vec2(math.sin(rotate * math.pi / 180.0), math.cos(rotate * math.pi / 180.0))
+        Vms = Vec2(Vm[0] * S[0], Vm[1] * S[1])
+        Vn = Vec2(Vm[1], -Vm[0])
+        Vns = Vec2(Vn[0] * S[0], Vn[1] * S[1])
+        F = Vec2(-Vns.dot(Iv) + 0.5, -Vms.dot(Iv) + 0.5)
+        return [tattooId, F[0], F[1], S[0], rotate, 0]
+
+    def __isWearingTattoo(self, avatar, uid):
+        tattoo = TattooGlobals.tattoos[uid]
+        fieldName = self.TattooZoneFields.get(tattoo[0])
+        if not fieldName:
+            return False
+
+        return getattr(avatar, 'get' + fieldName)()[0] == tattoo[1]
+
+    def __getTattooStore(self, currencyType):
+        # the PvP rewards shopkeeper sells the privateer tattoos for infamy,
+        # see DistributedShopKeeper.startShopping and TattooStoreGUI.getMoney...
+        if currencyType:
+            return InteractGlobals.PVP_REWARDS_TATTOO, PiratesGlobals.PRIVATEER_TATTOOS, InventoryType.PVPCurrentInfamy
+
+        return InteractGlobals.TATTOO_STORE, self.getShopId(), InventoryType.GoldInPocket
 
     def requestTattooList(self, avId):
         avatarId = self.air.getAvatarIdFromSender()
@@ -371,22 +698,194 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
             return
 
-        ownedItems = []
-
-        #TODO: pull owned items from the AvatarAccessoriesManager
-
-        if not len(ownedItems):
-            ownedItems = [-1]
-        self.d_responseTattooList(avatarId, ownedItems)
+        self.air.accessoriesManager.getTattoos(avatarId,
+            lambda tattoos: self.d_responseTattooList(avatarId, tattoos or [-1]))
 
     def d_responseTattooList(self, avatarId, tattoos=[-1]):
+        # the store GUI ignores an empty wardrobe, so an avatar that owns no
+        # tattoos is sent [-1] instead...
         self.sendUpdateToAvatarId(avatarId, 'responseTattooList', [avatarId, tattoos])
 
-    def requestTattooEquip(self, tattoos):
-        pass
+    def requestTattoo(self, purchases, selling, currencyType=0):
+        if currencyType not in (0, 1):
+            avatarId = self.air.getAvatarIdFromSender()
+            self.air.logPotentialHacker(
+                message='Received requestTattoo with an unknown currency!',
+                avatarId=avatarId,
+                currencyType=currencyType)
 
-    def requestJewelry(self, purchases, selling):
-        pass
+            return
+
+        storeType, shopId, currency = self.__getTattooStore(currencyType)
+        avatar, inventory = self.__getStoreAvatar('requestTattoo', storeType)
+        if not inventory:
+            return
+
+        avatarId = avatar.doId
+        self.air.accessoriesManager.getTattoos(avatarId,
+            lambda tattoos: self.__handleTattoo(avatarId, purchases, selling, shopId, currency, tattoos),
+            useCache=True)
+
+    def __handleTattoo(self, avatarId, purchases, selling, shopId, currency, tattoos):
+        avatar = self.air.doId2do.get(avatarId)
+        inventory = self.air.inventoryManager.getInventory(avatarId)
+        if not avatar or not inventory:
+            return
+
+        storeItems = TattooGlobals.stores.get(shopId, [])
+        sold = []
+        takeOff = []
+        for uid in selling:
+            if uid not in TattooGlobals.tattoos or uid not in tattoos or uid in sold:
+                self.__rejectAccessories(avatarId, 'Received requestTattoo sell for a tattoo the avatar does not own!',
+                    uid=uid)
+
+                return
+
+            if self.__isWearingTattoo(avatar, uid):
+                takeOff.append(TattooGlobals.tattoos[uid][0])
+
+            sold.append(uid)
+
+        bought = []
+        for uid in purchases:
+            if uid not in TattooGlobals.tattoos or uid not in storeItems or uid in tattoos or uid in bought:
+                self.__rejectAccessories(avatarId, 'Received requestTattoo buy for a tattoo this shop does not sell!',
+                    uid=uid)
+
+                return
+
+            bought.append(uid)
+
+        remaining = [uid for uid in tattoos if uid not in sold] + bought
+        for zone in set([TattooGlobals.tattoos[uid][0] for uid in bought]):
+            count = len([uid for uid in remaining if uid in TattooGlobals.tattoos and TattooGlobals.tattoos[uid][0] == zone])
+            if count > PiratesGlobals.WARDROBE_LIMIT_TATTOO:
+                self.d_makeSaleResponse(avatarId, RejectCode.OVERFLOW)
+                return
+
+        # tattoos are bought back at a quarter of their value, see TattooStoreGUI.setPage...
+        prices = dict([(uid, TattooGlobals.tattoos[uid][4]) for uid in bought])
+        gains = dict([(uid, int(TattooGlobals.tattoos[uid][4] * 0.25)) for uid in sold])
+        totalCost = sum(prices.values())
+        totalGain = sum(gains.values())
+        currentMoney = self.__getCurrency(inventory, currency)
+        if totalCost > currentMoney + totalGain:
+            self.__rejectAccessories(avatarId, 'Received requestTattoo buy for tattoos the avatar can not afford!',
+                currentMoney=currentMoney, totalCost=totalCost)
+
+            return
+
+        self.__setCurrency(inventory, currency, currentMoney + totalGain - totalCost)
+
+        for uid in sold:
+            self.air.accessoriesManager.removeTattoo(avatarId, uid, refund=gains[uid],
+                callback=lambda success, uid=uid: self.__handleWardrobeChanged(avatarId, success,
+                    currency, -gains[uid], 'requestTattoo'))
+
+        for uid in bought:
+            self.air.accessoriesManager.addTattoo(avatarId, uid, cost=prices[uid], location=shopId,
+                callback=lambda success, uid=uid: self.__handleWardrobeChanged(avatarId, success,
+                    currency, prices[uid], 'requestTattoo'))
+
+        if takeOff:
+            empty = self.__getTattooDNA(avatar.getGender(), 0)
+            for zone in takeOff:
+                getattr(avatar, 'set' + self.TattooZoneFields[zone])(*empty)
+
+            avatar.d_setTattoos()
+
+        # Log transaction for analytics and GM purposes
+        self.logShopkeepTransaction(
+            type='requestTattoo',
+            buying=bought,
+            selling=sold,
+            currency=currency,
+            price=totalCost,
+            gain=totalGain,
+            purchaser=avatarId)
+
+        self.d_makeSaleResponse(avatarId, self.SALE_SUCCESS)
+
+    def d_makeTattooResponse(self, avatarId, tattoo, zone, success):
+        # TattooStoreGUI has no tattooPurchase, the store GUI refreshes
+        # itself from the tattoo list instead...
+        self.sendUpdateToAvatarId(avatarId, 'makeTattooResponse', [tattoo, zone, success])
+
+    def requestTattooEquip(self, tattoos):
+        # the privateer tattoo store is run by the PvP rewards shopkeeper...
+        storeType = InteractGlobals.TATTOO_STORE
+        menu = None
+        if getattr(self, 'avatarType', None) is not None:
+            menu = InteractGlobals.getNPCInteractMenu(self.avatarType)
+
+        if menu and InteractGlobals.PVP_REWARDS_TATTOO in menu[1]:
+            storeType = InteractGlobals.PVP_REWARDS_TATTOO
+
+        avatar, inventory = self.__getStoreAvatar('requestTattooEquip', storeType)
+        if not inventory:
+            return
+
+        avatarId = avatar.doId
+        self.air.accessoriesManager.getTattoos(avatarId,
+            lambda owned: self.__handleTattooEquip(avatarId, tattoos, owned),
+            useCache=True)
+
+    def __handleTattooEquip(self, avatarId, tattoos, owned):
+        avatar = self.air.doId2do.get(avatarId)
+        if not avatar:
+            return
+
+        gender = avatar.getGender()
+        changes = []
+        for zone, uid in tattoos:
+            fieldName = self.TattooZoneFields.get(zone)
+            if not fieldName:
+                self.__rejectAccessories(avatarId, 'Received requestTattooEquip for an unknown zone!',
+                    zone=zone)
+
+                return
+
+            # a uid of -1 removes the tattoo, see TattooStoreGUI.closePanel...
+            if uid != -1:
+                tattoo = TattooGlobals.tattoos.get(uid)
+                if not tattoo or tattoo[0] != zone or uid not in owned:
+                    self.__rejectAccessories(avatarId, 'Received requestTattooEquip for a tattoo the avatar does not own!',
+                        uid=uid, zone=zone)
+
+                    return
+
+            changes.append((fieldName, self.__getTattooDNA(gender, uid)))
+
+        if not changes:
+            return
+
+        for fieldName, dna in changes:
+            getattr(avatar, 'set' + fieldName)(*dna)
+
+        avatar.d_setTattoos()
+
+    # Jeweler:
+
+    # jewelry type -> the HumanDNA field the jewelry is stored in,
+    # see JewelryStoreGUI.closePanel.
+    JewelryZoneFields = {
+        JewelryGlobals.LEAR: 'JewelryZone1',
+        JewelryGlobals.REAR: 'JewelryZone2',
+        JewelryGlobals.LBROW: 'JewelryZone3',
+        JewelryGlobals.RBROW: 'JewelryZone4',
+        JewelryGlobals.NOSE: 'JewelryZone5',
+        JewelryGlobals.MOUTH: 'JewelryZone6',
+        JewelryGlobals.LHAND: 'JewelryZone7',
+        JewelryGlobals.RHAND: 'JewelryZone8'}
+
+    def __isWearingJewelry(self, avatar, uid):
+        item = JewelryGlobals.jewelry_id[uid]
+        fieldName = self.JewelryZoneFields.get(item[1])
+        if not fieldName:
+            return False
+
+        return list(getattr(avatar, 'get' + fieldName)()) == [item[0], item[4], item[5]]
 
     def requestJewelryList(self, avId):
         avatarId = self.air.getAvatarIdFromSender()
@@ -397,19 +896,151 @@ class DistributedShopKeeperAI(DistributedObjectAI):
 
             return
 
-        ownedItems = []
-
-        #TODO: pull owned items from the AvatarAccessoriesManager
-
-        if not len(ownedItems):
-            ownedItems = [-1]
-        self.d_responseJewelryList(avatarId, ownedItems)
+        self.air.accessoriesManager.getJewelry(avatarId,
+            lambda jewelry: self.d_responseJewelryList(avatarId, jewelry or [-1]))
 
     def d_responseJewelryList(self, avatarId, items=[-1]):
+        # the store GUI ignores an empty wardrobe, so an avatar that owns no
+        # jewelry is sent [-1] instead...
         self.sendUpdateToAvatarId(avatarId, 'responseJewelryList', [avatarId, items])
 
+    def requestJewelry(self, purchases, selling):
+        avatar, inventory = self.__getStoreAvatar('requestJewelry', InteractGlobals.JEWELRY_STORE)
+        if not inventory:
+            return
+
+        avatarId = avatar.doId
+        self.air.accessoriesManager.getJewelry(avatarId,
+            lambda jewelry: self.__handleJewelry(avatarId, purchases, selling, jewelry),
+            useCache=True)
+
+    def __handleJewelry(self, avatarId, purchases, selling, jewelry):
+        avatar = self.air.doId2do.get(avatarId)
+        inventory = self.air.inventoryManager.getInventory(avatarId)
+        if not avatar or not inventory:
+            return
+
+        gender = avatar.getGender()
+        storeItems = JewelryGlobals.stores.get(self.getShopId(), [])
+        sold = []
+        takeOff = []
+        for uid in selling:
+            if uid not in JewelryGlobals.jewelry_id or uid not in jewelry or uid in sold:
+                self.__rejectAccessories(avatarId, 'Received requestJewelry sell for jewelry the avatar does not own!',
+                    uid=uid)
+
+                return
+
+            if self.__isWearingJewelry(avatar, uid):
+                takeOff.append(JewelryGlobals.jewelry_id[uid][1])
+
+            sold.append(uid)
+
+        bought = []
+        for uid in purchases:
+            if uid not in JewelryGlobals.jewelry_id or uid not in storeItems or getJewelryGender(uid) != gender or \
+                    uid in jewelry or uid in bought:
+                self.__rejectAccessories(avatarId, 'Received requestJewelry buy for jewelry this shop does not sell!',
+                    uid=uid)
+
+                return
+
+            bought.append(uid)
+
+        remaining = [uid for uid in jewelry if uid not in sold] + bought
+        for jewelryType in set([JewelryGlobals.jewelry_id[uid][1] for uid in bought]):
+            count = len([uid for uid in remaining if uid in JewelryGlobals.jewelry_id and
+                JewelryGlobals.jewelry_id[uid][1] == jewelryType])
+            if count > PiratesGlobals.WARDROBE_LIMIT_JEWELER:
+                self.d_makeSaleResponse(avatarId, RejectCode.OVERFLOW)
+                return
+
+        # jewelry is bought back at a quarter of its value, see JewelryStoreGUI.setPage...
+        prices = dict([(uid, JewelryGlobals.jewelry_id[uid][3]) for uid in bought])
+        gains = dict([(uid, int(JewelryGlobals.jewelry_id[uid][3] * 0.25)) for uid in sold])
+        totalCost = sum(prices.values())
+        totalGain = sum(gains.values())
+        currentGold = inventory.getGoldInPocket()
+        if totalCost > currentGold + totalGain:
+            self.__rejectAccessories(avatarId, 'Received requestJewelry buy for jewelry the avatar can not afford!',
+                currentGold=currentGold, totalCost=totalCost)
+
+            return
+
+        inventory.setGoldInPocket(currentGold + totalGain - totalCost)
+
+        for uid in sold:
+            self.air.accessoriesManager.removeJewelry(avatarId, uid, refund=gains[uid],
+                callback=lambda success, uid=uid: self.__handleWardrobeChanged(avatarId, success,
+                    InventoryType.GoldInPocket, -gains[uid], 'requestJewelry'))
+
+        for uid in bought:
+            self.air.accessoriesManager.addJewelry(avatarId, uid, cost=prices[uid], location=self.getShopId(),
+                callback=lambda success, uid=uid: self.__handleWardrobeChanged(avatarId, success,
+                    InventoryType.GoldInPocket, prices[uid], 'requestJewelry'))
+
+        if takeOff:
+            for jewelryType in takeOff:
+                getattr(avatar, 'set' + self.JewelryZoneFields[jewelryType])(0, 0, 0)
+
+            avatar.d_setJewelry()
+
+        # Log transaction for analytics and GM purposes
+        self.logShopkeepTransaction(
+            type='requestJewelry',
+            buying=bought,
+            selling=sold,
+            price=totalCost,
+            gain=totalGain,
+            purchaser=avatarId)
+
+        self.d_makeSaleResponse(avatarId, self.SALE_SUCCESS)
+
     def requestJewelryEquip(self, jewelry):
-        pass
+        avatar, inventory = self.__getStoreAvatar('requestJewelryEquip', InteractGlobals.JEWELRY_STORE)
+        if not inventory:
+            return
+
+        avatarId = avatar.doId
+        self.air.accessoriesManager.getJewelry(avatarId,
+            lambda owned: self.__handleJewelryEquip(avatarId, jewelry, owned),
+            useCache=True)
+
+    def __handleJewelryEquip(self, avatarId, jewelry, owned):
+        avatar = self.air.doId2do.get(avatarId)
+        if not avatar:
+            return
+
+        changes = []
+        for jewelryType, uid in jewelry:
+            fieldName = self.JewelryZoneFields.get(jewelryType)
+            if not fieldName:
+                self.__rejectAccessories(avatarId, 'Received requestJewelryEquip for an unknown jewelry type!',
+                    jewelryType=jewelryType)
+
+                return
+
+            # a uid of -1 removes the jewelry, see JewelryStoreGUI.closePanel...
+            if uid == -1:
+                changes.append((fieldName, (0, 0, 0)))
+                continue
+
+            item = JewelryGlobals.jewelry_id.get(uid)
+            if not item or item[1] != jewelryType or uid not in owned:
+                self.__rejectAccessories(avatarId, 'Received requestJewelryEquip for jewelry the avatar does not own!',
+                    uid=uid, jewelryType=jewelryType)
+
+                return
+
+            changes.append((fieldName, (item[0], item[4], item[5])))
+
+        if not changes:
+            return
+
+        for fieldName, dna in changes:
+            getattr(avatar, 'set' + fieldName)(*dna)
+
+        avatar.d_setJewelry()
 
     def requestBarber(self, idx, color):
         avatar, inventory = self.__getAvatarAndInventory('requestBarber')
