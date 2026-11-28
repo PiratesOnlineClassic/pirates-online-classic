@@ -94,12 +94,23 @@ class Ship:
 class Inventory:
     def __init__(self):
         self.reputation = {}
+        self.overallRep = 0
+        self.gold = 0
 
     def getReputation(self, repType):
         return self.reputation.get(repType, 0)
 
     def setReputation(self, repType, quantity):
         self.reputation[repType] = quantity
+
+    def setOverallRep(self, quantity):
+        self.overallRep = quantity
+
+    def setGoldInPocket(self, gold):
+        self.gold = gold
+
+    def getGoldInPocket(self):
+        return self.gold
 
 
 class MagicWordTests(unittest.TestCase):
@@ -198,6 +209,30 @@ class MagicWordTests(unittest.TestCase):
         self.invoke(invoker, 'rep %d 250' % InventoryType.CutlassRep)
         self.assertEqual(invoker.inventory.getReputation(InventoryType.CutlassRep), 750)
         self.assertEqual(self.invoke(invoker, 'rep 1 1'), 'Invalid reputation type: 1!')
+
+    def test_max_pirate_maxes_reputation_gold_and_health(self):
+        from unittest.mock import patch
+        from pirates.uberdog.UberDogGlobals import InventoryType
+        from pirates.reputation import ReputationGlobals
+        import pirates.uberdog.DistributedInventoryManagerAI as inv_mod
+
+        invoker = self.addPlayer(1, 'Jack')
+        invoker.inventory = Inventory()
+        calls = []
+        with patch.object(inv_mod, 'maxSP', lambda: calls.append('maxSP')), \
+                patch.object(inv_mod, 'maxWeapons', lambda: calls.append('maxWeapons')):
+            result = self.invoke(invoker, 'maxPirate')
+
+        self.assertIn('Jack', result)
+        # notoriety to the global cap, every other reputation to the level cap
+        self.assertEqual(invoker.inventory.overallRep, ReputationGlobals.getTotalGlobalReputation(
+            InventoryType.OverallRep, ReputationGlobals.GlobalLevelCap))
+        self.assertEqual(invoker.inventory.getReputation(InventoryType.CutlassRep),
+            ReputationGlobals.getTotalReputation(InventoryType.CutlassRep, ReputationGlobals.LevelCap))
+        self.assertNotIn(InventoryType.OverallRep, invoker.inventory.reputation)
+        self.assertEqual(invoker.inventory.gold, 65000)
+        self.assertEqual((invoker.hp, invoker.mojo), (100, 50))
+        self.assertEqual(calls, ['maxSP', 'maxWeapons'])
 
     def test_tutorial_validates_state(self):
         invoker = self.addPlayer(1)

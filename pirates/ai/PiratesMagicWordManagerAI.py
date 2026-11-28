@@ -341,6 +341,47 @@ def rep(repType, amount):
     return 'Reputation %d set to %d.' % (repType, inventory.getReputation(repType))
 
 
+@magicWord(category=CATEGORY_SYSTEM_ADMIN)
+def maxPirate():
+    """
+    Maxes out the invoker: notoriety and every reputation to it's cap (which
+    unlocks every skill), all unspent skill points, the best weapons and ammo,
+    a full purse, and full health and voodoo.
+    """
+    from pirates.uberdog.UberDogGlobals import InventoryType
+    from pirates.uberdog.DistributedInventoryManagerAI import maxSP, maxWeapons
+    from pirates.reputation import ReputationGlobals
+
+    invoker = spellbook.getInvoker()
+    inventory = invoker.getInventory()
+    if not inventory:
+        return 'No inventory to max!'
+
+    # notoriety (OverallRep) runs to the global level cap, every other
+    # reputation to the weapon/skill level cap...
+    for repType in range(InventoryType.begin_Accumulator, InventoryType.end_Accumulator):
+        if repType == InventoryType.OverallRep:
+            inventory.setOverallRep(ReputationGlobals.getTotalGlobalReputation(
+                repType, ReputationGlobals.GlobalLevelCap))
+        else:
+            inventory.setReputation(repType, ReputationGlobals.getTotalReputation(
+                repType, ReputationGlobals.LevelCap))
+
+    # all skill points to spend, and the best weapons and ammo (these words
+    # act on the same invoker through the spellbook)...
+    maxSP()
+    maxWeapons()
+
+    # a full pocket (the pocket holds up to 65000 gold)...
+    inventory.setGoldInPocket(65000)
+
+    # top the pirate back up to it's new maximum health and voodoo...
+    invoker.b_setHp(invoker.getMaxHp())
+    invoker.b_setMojo(invoker.getMaxMojo())
+
+    return 'Maxed out %s!' % invoker.getName()
+
+
 @magicWord(category=CATEGORY_SYSTEM_ADMIN, types=[int])
 def tutorial(state=-1):
     """
