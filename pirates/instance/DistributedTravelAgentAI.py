@@ -54,6 +54,54 @@ class DistributedTravelAgentAI(DistributedObjectGlobalAI):
 
         self.sendUpdate('requestTeleportToShardAItoUD', [avatarId, shardId, instanceType, instanceName, locationUid])
 
+    def d_requestCrossShardDeployAItoUD(self, avatarId, sourceShardId, shardId, islandUid, shipId):
+        if not avatarId or not islandUid or not shipId:
+            self.notify.warning('Cannot route cross-shard deploy, '
+                'invalid avatar, island, or ship!')
+            return
+
+        self.sendUpdate('requestCrossShardDeployAItoUD', [
+            avatarId, sourceShardId, shardId, islandUid, shipId])
+
+    def requestCrossShardDeployUDtoAI(self, avatarId, shardId, islandUid, shipId):
+        if not avatarId or not islandUid or not shipId:
+            self.notify.warning('Cannot deploy cross-shard ship, '
+                'invalid avatar, island, or ship!')
+            return
+
+        if shardId != self.air.districtId:
+            self.notify.warning('Cannot deploy ship for avatar %d on shard %d, '
+                'request was received by district %d!' % (
+                    avatarId, shardId, self.air.districtId))
+            return
+
+        def avatarArrived(avatar):
+            if not avatar:
+                self.notify.warning('Cannot deploy ship for avatar %d, '
+                    'invalid generate!' % avatarId)
+                return
+
+            self.air.teleportMgr._handleLocalCrossShardDeploy(avatar, islandUid, shipId)
+
+        avatar = self.air.doId2do.get(avatarId)
+        if avatar:
+            avatarArrived(avatar)
+            return
+
+        self.__getAvatarArrival(avatarId, avatarArrived)
+
+    def crossShardDeployFailed(self, avatarId):
+        if not avatarId:
+            self.notify.warning('Cannot fail cross-shard deploy, invalid avatar!')
+            return
+
+        if avatarId not in self.air.doId2do:
+            self.notify.warning('Cannot fail cross-shard deploy for avatar %d, '
+                'avatar is not on this district!' % avatarId)
+            return
+
+        self.air.teleportMgr.d_teleportFailed(avatarId)
+
     def requestTeleportToShardUDtoAI(self, avatarId, shardId, instanceType, instanceName, locationUid):
         if not avatarId:
             return

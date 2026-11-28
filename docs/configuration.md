@@ -48,6 +48,8 @@ force-tutorial-complete #t
 
 | Setting | Default | Effect |
 |---|---|---|
+| `shard-type` | `1` | AI district type: `1` main, `2` low-latency, `3` welcome. Pass `--shard-type 3` to that AI's start script for a welcome shard. |
+| `want-welcome-worlds` | `#f` | Client: start eligible pirates in the welcome world. Enable this when a welcome shard is running. |
 | `want-townfolk` / `want-enemies` / `want-animals` | `#t` | Spawn that kind of NPC. Turn them off for a faster AI start while you work on something else. |
 | `want-random-bosses` | `#f` in `dev.prc` | Let ordinary spawns occasionally roll a boss. |
 | `want-island-barriers` | `#t` | The invisible walls around islands. |

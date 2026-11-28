@@ -3,6 +3,8 @@ import random
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
 
+from pirates.piratesbase import PiratesGlobals
+
 
 class DistributedTravelAgentUD(DistributedObjectGlobalUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedTravelAgentUD')
@@ -59,16 +61,34 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
         lowLimit, highLimit = status.get('populationLimits', (0, 0))
         return bool(highLimit) and status.get('population', 0) >= highLimit
 
-    def getRandomShard(self):
+    def getRandomShard(self, shardType=None, excludeShardId=0):
         if not self.__shards:
             return None
 
-        # Prefer the districts that still have room for another pirate:
-        shards = [shardId for channel, shardId in list(self.__shards.items()) if not self.isShardFull(channel)]
-        if not shards:
-            shards = list(self.__shards.values())
+        districtTracker = getattr(self.air, 'districtTracker', None)
+        districtStatuses = districtTracker.getShards() if districtTracker else {}
+        shards = []
+        for channel, shardId in list(self.__shards.items()):
+            if shardId == excludeShardId:
+                continue
 
-        return random.choice(shards)
+            if shardType is not None:
+                status = districtStatuses.get(channel, {})
+                if status.get('shardType') != shardType:
+                    continue
+
+            shards.append((channel, shardId))
+
+        if not shards:
+            return None
+
+        # Prefer districts that still have room, but use a full district if needed:
+        availableShards = [(channel, shardId) for channel, shardId in shards
+            if not self.isShardFull(channel)]
+        if availableShards:
+            shards = availableShards
+
+        return random.choice(shards)[1]
 
     def requestInitLocUD(self, unused, shardId):
         avatarId = self.air.getAvatarIdFromSender()
@@ -118,3 +138,34 @@ class DistributedTravelAgentUD(DistributedObjectGlobalUD):
 
         self.sendUpdateToChannel(channel, 'requestTeleportToShardUDtoAI', [avatarId, shardId,
             instanceType, instanceName, locationUid])
+
+    def requestCrossShardDeployAItoUD(self, avatarId, sourceShardId, shardId, islandUid, shipId):
+        if not avatarId or not islandUid or not shipId:
+            self.notify.warning('Cannot route cross-shard deploy, '
+                'invalid avatar, island, or ship!')
+            return
+
+        sourceChannel = self.getShard(sourceShardId)
+        if not sourceChannel:
+            self.notify.warning('Cannot route cross-shard deploy for avatar %d, '
+                'unknown source shard %d!' % (avatarId, sourceShardId))
+            return
+
+        if not shardId:
+            shardId = self.getRandomShard(
+                shardType=PiratesGlobals.SHARD_MAIN, excludeShardId=sourceShardId)
+        elif not self.getShard(shardId):
+            self.notify.warning('Cannot route cross-shard deploy for avatar %d, '
+                'unknown target shard %d!' % (avatarId, shardId))
+            self.sendUpdateToChannel(sourceChannel, 'crossShardDeployFailed', [avatarId])
+            return
+
+        channel = self.getShard(shardId) if shardId else None
+        if not channel:
+            self.notify.warning('Cannot route cross-shard deploy for avatar %d, '
+                'no eligible main-world shard is available!' % avatarId)
+            self.sendUpdateToChannel(sourceChannel, 'crossShardDeployFailed', [avatarId])
+            return
+
+        self.sendUpdateToChannel(channel, 'requestCrossShardDeployUDtoAI', [
+            avatarId, shardId, islandUid, shipId])

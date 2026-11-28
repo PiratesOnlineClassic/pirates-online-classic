@@ -301,11 +301,12 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
             return False
 
         if not spawnPt:
-            # TODO FIXME!
-            # if we have no spawn point for this world and we need to retrieve one,
-            # then let's assume the world is the game area's parent... When teleporting
-            # from an interior to an exterior, the world is not the game area's parent...?
-            world = gameArea.getParentObj()
+            world = self.getInstanceFromObject(gameArea)
+            if not world:
+                self.notify.warning('Cannot initiate teleport for avatar %d, '
+                    'gameArea %r has no parent world!' % (avatar.doId, gameArea))
+                return False
+
             spawnPt = world.getSpawnPt(gameArea.getUniqueId())
 
         if not spawnPt:
@@ -509,19 +510,30 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         if not avatar:
             return
 
-        if not islandUid or not shipId:
-            self.notify.warning('Cannot process cross shard deploy for avatar %d, '
-                'missing islandUid or shipId!' % self.air.getAvatarIdFromSender())
+        if self.air.distributedDistrict.getShardType() != PiratesGlobals.SHARD_WELCOME:
+            self.air.writeServerEvent('suspicious', avId=avatar.doId,
+                issue='Tried to cross-shard deploy from a non-welcome shard!')
+            self.d_teleportFailed(avatar.doId)
             return
 
-        # If no shard specified or the shard is our own, handle locally
-        if not shardId or shardId == self.air.districtId:
-            # Deploy the ship locally and then teleport the avatar to it
+        if not islandUid or not shipId:
+            self.notify.warning('Cannot process cross shard deploy for avatar %d, '
+                'missing islandUid or shipId!' % avatar.doId)
+            self.d_teleportFailed(avatar.doId)
+            return
+
+        inventory = avatar.getInventory()
+        if not inventory or shipId not in inventory.getShipDoIdList():
+            self.air.writeServerEvent('suspicious', avId=avatar.doId,
+                issue='Tried to cross-shard deploy ship %d not owned by avatar!' % shipId)
+            self.d_teleportFailed(avatar.doId)
+            return
+
+        if shardId == self.air.districtId:
             self._handleLocalCrossShardDeploy(avatar, islandUid, shipId)
         else:
-            # Forward to the UD for cross-shard handling
-            # TODO: Implement cross-shard deploy via UD
-            self.notify.warning('Cross-shard deploy to different shard %d not yet implemented!' % shardId)
+            self.air.travelAgent.d_requestCrossShardDeployAItoUD(
+                avatar.doId, self.air.districtId, shardId, islandUid, shipId)
 
     def _handleLocalCrossShardDeploy(self, avatar, islandUid, shipId):
         """
@@ -539,24 +551,42 @@ class DistributedTeleportMgrAI(DistributedObjectAI):
         if not gameArea:
             self.notify.warning('Cannot process cross shard deploy for avatar %d, '
                 'cannot find gameArea for islandUid %s!' % (avatar.doId, islandUid))
-            return
+            self.d_teleportFailed(avatar.doId)
+            return False
+
+        inventory = avatar.getInventory()
+        if not inventory or shipId not in inventory.getShipDoIdList():
+            self.air.writeServerEvent('suspicious', avId=avatar.doId,
+                issue='Tried to deploy ship %d not owned by avatar!' % shipId)
+            self.d_teleportFailed(avatar.doId)
+            return False
+
+        if not FreebooterAI.canEnterArea(avatar, gameArea.getUniqueId()):
+            gameArea.d_deniedEntryToIsland(avatar.doId)
+            self.d_teleportFailed(avatar.doId)
+            return False
         
         # Get the ship deployer from the island (gameArea), not the world
         if not hasattr(gameArea, 'shipDeployer') or not gameArea.shipDeployer:
             self.notify.warning('Cannot process cross shard deploy for avatar %d, '
                 'no ship deployer available on island!' % avatar.doId)
-            return
+            self.d_teleportFailed(avatar.doId)
+            return False
         
         def deployShipCallback(success):
-            if not success:
-                self.notify.warning('Cross shard deploy failed for avatar %d!' % avatar.doId)
+            ship = self.air.doId2do.get(shipId)
+            if not success or not ship:
+                self.notify.warning('Cross shard deploy failed for avatar %d, ship %d!' %
+                    (avatar.doId, shipId))
+                self.d_teleportFailed(avatar.doId)
                 return
-            
-            # After deploy, teleport to the island
-            self.d_initiateTeleport(avatar, locationUid=islandUid)
+
+            if not self.teleportToShip(avatar, ship):
+                self.d_teleportFailed(avatar.doId)
         
-        # Deploy the ship via the island's ship deployer
+        self.air.questMgr.deployedShip(avatar)
         gameArea.shipDeployer.deployShip(avatar, shipId, deployShipCallback)
+        return True
 
     def d_teleportHasBegun(self, avatarId, instanceType, fromInstanceType, instanceName, gameType):
         self.sendUpdateToAvatarId(avatarId, 'teleportHasBegun', [instanceType, fromInstanceType,

@@ -26,4 +26,4 @@ echo "==============================="
 python3 -m pirates.ai.ServiceStart --base-channel $BASE_CHANNEL \
                      --max-channels $MAX_CHANNELS --stateserver $STATESERVER \
                      --astron-ip $ASTRON_IP --eventlogger-ip $EVENTLOGGER_IP \
-                     --district-name $DISTRICT_NAME
+                     --district-name $DISTRICT_NAME "$@"

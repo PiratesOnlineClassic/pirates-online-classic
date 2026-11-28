@@ -77,6 +77,11 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.distributedDistrict = PiratesDistrictAI(self)
         self.distributedDistrict.setName(self.districtName)
         self.distributedDistrict.setMainWorld(WorldGlobals.PiratesWorldSceneFile)
+        shardType = ConfigVariableInt('shard-type', PiratesGlobals.SHARD_MAIN).value
+        if shardType not in (PiratesGlobals.SHARD_MAIN, PiratesGlobals.SHARD_LOW_LATENCY,
+                PiratesGlobals.SHARD_WELCOME):
+            raise ValueError('Invalid shard-type %d' % shardType)
+        self.distributedDistrict.setShardType(shardType)
         self.distributedDistrict.generateWithRequiredAndId(self.districtId,
             self.getGameDoId(), OTP_ZONE_ID_MANAGEMENT)
 

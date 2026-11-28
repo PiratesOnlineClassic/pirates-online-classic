@@ -22,6 +22,7 @@ class DistrictTrackerAI:
         # Send district status update containing our information
         status = {
             'shardId': self.populationTracker.getShardId(),
+            'shardType': self.district.getShardType(),
             'districtName': self.district.getName(),
             'population': self.populationTracker.getPopulation(),
             'populationLimits': self.populationTracker.getPopLimits(),

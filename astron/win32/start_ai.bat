@@ -26,5 +26,5 @@ echo ============================================
 rem Start AI server
 :main
 %PYTHON_CMD% -m pirates.ai.ServiceStart --base-channel %BASE_CHANNEL% ^
-    --district-name "%DISTRICT_NAME%"
+    --district-name "%DISTRICT_NAME%" %*
 goto main

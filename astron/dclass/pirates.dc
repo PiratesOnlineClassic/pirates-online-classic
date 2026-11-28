@@ -1206,6 +1206,9 @@ dclass DistributedTravelAgent : DistributedObjectGlobal {
   requestInitLocUDtoAI(DoId) airecv;
   requestTeleportToShardAItoUD(DoId, uint32, uint8, string, string);
   requestTeleportToShardUDtoAI(DoId, uint32, uint8, string, string) airecv;
+  requestCrossShardDeployAItoUD(DoId, uint32, uint32, string, uint32);
+  requestCrossShardDeployUDtoAI(DoId, uint32, string, uint32) airecv;
+  crossShardDeployFailed(DoId) airecv;
 };
 
 dclass DistributedMatchMaker : DistributedObject {

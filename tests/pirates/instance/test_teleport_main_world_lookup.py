@@ -12,7 +12,7 @@ from tests import REPO_ROOT
 def _load_teleport_module():
     stubs = {
         'pirates.quest.QuestConstants': {'LocationIds': SimpleNamespace(
-            KINGSHEAD_ISLAND='kingshead')},
+            KINGSHEAD_ISLAND='kingshead', KINGSHEAD_DOOR='kingshead-door')},
         'pirates.instance.DistributedInstanceBaseAI': {
             'DistributedInstanceBaseAI': type('DistributedInstanceBaseAI', (), {})},
         'pirates.instance.DistributedTeleportZoneAI': {

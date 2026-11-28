@@ -1,5 +1,6 @@
 # CSM
 accountdb-type developer
+shard-type 1
 
 # Hacking Checks
 want-treasurechest-inactive-log #f

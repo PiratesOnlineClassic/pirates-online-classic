@@ -81,7 +81,8 @@ def stubModule(name, **attributes):
 # Load the module under test without pulling in the game resource files.
 stubs = {
     'pirates.quest.QuestConstants': stubModule('pirates.quest.QuestConstants',
-        LocationIds=SimpleNamespace(KINGSHEAD_ISLAND='kingshead')),
+        LocationIds=SimpleNamespace(
+            KINGSHEAD_ISLAND='kingshead', KINGSHEAD_DOOR='kingshead-door')),
     'pirates.instance.DistributedInstanceBaseAI': stubModule('pirates.instance.DistributedInstanceBaseAI',
         DistributedInstanceBaseAI=InstanceBase),
     'pirates.instance.DistributedTeleportZoneAI': stubModule('pirates.instance.DistributedTeleportZoneAI',
@@ -111,7 +112,9 @@ class Avatar:
         self.parent = parent
         self.returnLocation = ''
         self.currentIsland = 'current'
-        self.inventory = SimpleNamespace(getStackQuantity=lambda token: 0)
+        self.inventory = SimpleNamespace(
+            getStackQuantity=lambda token: 0,
+            getShipDoIdList=lambda: [55])
 
     def getReturnLocation(self):
         return self.returnLocation
@@ -150,6 +153,8 @@ class TeleportMgrTests(unittest.TestCase):
         self.manager.avatar2fsm = {}
         self.manager.air = SimpleNamespace(
             districtId=5000,
+            distributedDistrict=SimpleNamespace(
+                getShardType=lambda: PiratesGlobals.SHARD_WELCOME),
             doId2do={10: self.world, 30: self.island, 31: self.otherIsland},
             uidMgr=SimpleNamespace(
                 getDoId=lambda uid: getattr(self.uids.get(uid), 'doId', None),
@@ -196,6 +201,63 @@ class TeleportMgrTests(unittest.TestCase):
         with patch.object(teleport, 'TeleportFSM') as fsm:
             self.manager.initiateTeleport(PiratesGlobals.INSTANCE_MAIN, 0, 0, 'island', 0, 'mainWorld', -1, 0, 0)
         fsm.assert_called_once_with(self.manager.air, self.avatar, self.world, self.island, (1, 2, 3, 4))
+
+    def test_spawn_fallback_finds_world_through_nested_interior(self):
+        interior = SimpleNamespace(doId=32, areas={}, getParentObj=lambda: self.world)
+        area = GameArea(33, 'nested-area', interior)
+        self.world.areas['nested-area'] = area
+        self.manager.air.doId2do[33] = area
+
+        with patch.object(teleport, 'TeleportFSM') as fsm:
+            self.manager.d_initiateTeleport(self.avatar, locationUid='nested-area')
+
+        fsm.assert_called_once_with(
+            self.manager.air, self.avatar, self.world, area, (1, 2, 3, 4))
+
+    def test_cross_shard_deploy_forwards_to_travel_agent(self):
+        self.manager.air.travelAgent = Mock()
+
+        self.manager.requestCrossShardDeploy(6000, 'island', 55)
+
+        self.manager.air.travelAgent.d_requestCrossShardDeployAItoUD.assert_called_once_with(
+            100, 5000, 6000, 'island', 55)
+
+    def test_automatic_cross_shard_deploy_forwards_to_travel_agent(self):
+        self.manager.air.travelAgent = Mock()
+
+        self.manager.requestCrossShardDeploy(0, 'island', 55)
+
+        self.manager.air.travelAgent.d_requestCrossShardDeployAItoUD.assert_called_once_with(
+            100, 5000, 0, 'island', 55)
+
+    def test_cross_shard_deploy_is_rejected_outside_welcome_shards(self):
+        self.manager.air.distributedDistrict.getShardType = lambda: PiratesGlobals.SHARD_MAIN
+        self.manager.air.writeServerEvent = Mock()
+        self.manager.d_teleportFailed = Mock()
+        self.manager.air.travelAgent = Mock()
+
+        self.manager.requestCrossShardDeploy(6000, 'island', 55)
+
+        self.manager.air.writeServerEvent.assert_called_once()
+        self.manager.d_teleportFailed.assert_called_once_with(100)
+        self.manager.air.travelAgent.d_requestCrossShardDeployAItoUD.assert_not_called()
+
+    def test_local_cross_shard_deploy_teleports_to_the_deployed_ship(self):
+        ship = SimpleNamespace(doId=55)
+        deployer = SimpleNamespace(deployShip=Mock())
+        self.island.shipDeployer = deployer
+        self.manager.air.doId2do[55] = ship
+        self.manager.air.questMgr = SimpleNamespace(deployedShip=Mock())
+        self.manager.teleportToShip = Mock(return_value=True)
+        deployer.deployShip.side_effect = lambda avatar, shipId, callback: callback(True)
+
+        with patch.dict(sys.modules, {
+            'pirates.world.DistributedGameAreaAI': stubModule(
+                'pirates.world.DistributedGameAreaAI', DistributedGameAreaAI=GameArea)}):
+            self.manager._handleLocalCrossShardDeploy(self.avatar, 'island', 55)
+
+        self.manager.air.questMgr.deployedShip.assert_called_once_with(self.avatar)
+        self.manager.teleportToShip.assert_called_once_with(self.avatar, ship)
 
     def test_initiate_to_friend_on_same_island_is_not_blocked(self):
         friend = Avatar(200, parent=self.island)
