@@ -5,6 +5,7 @@ from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
 from panda3d.core import *
 from direct.showbase.PythonUtil import *
+from direct.showbase import PythonUtil
 from . import FlagGlobals
 from .FlagDNA import FlagDNA
 
@@ -88,7 +89,7 @@ class Flag(NodePath):
         self.__activateEmblems()
     
     def __activateEmblems(self):
-        oldEmblemNps = self.findAllMatches('**/emblem-*').asList()
+        oldEmblemNps = list(self.findAllMatches('**/emblem-*'))
         for np in oldEmblemNps:
             np.detachNode()
             np.remove_node()
@@ -157,7 +158,7 @@ class Flag(NodePath):
         self.__setBgVFlip()
 
     def __setBgStyle(self):
-        oldBgNps = self.findAllMatches('**/bg-*').asList()
+        oldBgNps = list(self.findAllMatches('**/bg-*'))
         for np in oldBgNps:
             np.detachNode()
             np.remove_node()
@@ -207,7 +208,7 @@ class Flag(NodePath):
 
     def __setBgHFlip(self):
         val = self.getBgHFlip()
-        bgNpCol = self.findAllMatches('**/bg-*').asList()
+        bgNpCol = list(self.findAllMatches('**/bg-*'))
         scale = [
             1.0,
             1.0]
@@ -230,7 +231,7 @@ class Flag(NodePath):
 
     def __setBgVFlip(self):
         val = self.getBgVFlip()
-        bgNpCol = self.findAllMatches('**/bg-*').asList()
+        bgNpCol = list(self.findAllMatches('**/bg-*'))
         scale = [
             1.0,
             1.0]
