@@ -29,6 +29,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipAI')
 
     SinkDuration = 60.0
+    PutAwayWhenEmpty = True
     MaxRamDistance = 1000.0
 
     def __init__(self, air):
@@ -465,7 +466,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.air.worldGridManager.clearAvatarInterest(self.getParentObj(), avatar)
 
         # properly handle disabling the ship when no players remain on it:
-        if len(self.crew) == 0:
+        if len(self.crew) == 0 and self.PutAwayWhenEmpty:
             self.b_setGameState('PutAway', 0)
             self.b_setLocation(self.parentId, 0)
 
@@ -582,6 +583,21 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
     def getLevel(self):
         return self.level
+
+    def getCrewLevel(self):
+        # the same weighting the client uses, the captain counts twice:
+        captainWeight = 2
+        crewLevel = 0
+        for avatarId in self.crew:
+            avatar = self.air.doId2do.get(avatarId)
+            if avatar:
+                avatarLevel = avatar.getLevel()
+                if avatar.doId == self.captainId:
+                    avatarLevel *= captainWeight
+
+                crewLevel += avatarLevel
+
+        return int(crewLevel / (len(self.crew) + captainWeight - 1))
 
     def setShipClass(self, shipClass):
         self.shipClass = shipClass
@@ -708,8 +724,7 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         self.hp = max(min(int(hp), self.maxHp), 0)
         DidChange = oldHp != self.hp
         if self.hp == 0 and DidChange:
-            self.b_setGameState('Sinking', 0)
-            self.handleShipSinking()
+            self.handleHpDepleted()
 
     def d_setHp(self, hp):
         self.sendUpdate('setHp', [int(hp)])
@@ -1111,6 +1126,10 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             assistDamage = damage
 
         return attackerShip, assistShip
+
+    def handleHpDepleted(self):
+        self.b_setGameState('Sinking', 0)
+        self.handleShipSinking()
 
     def handleShipSinking(self):
         siegeManager = getattr(self.air, 'siegeManager', None)
