@@ -25,6 +25,11 @@ def _ensureWeaponGlobals():
         pass
 
     weaponGlobals = types.ModuleType('pirates.battle.WeaponGlobals')
+    weaponConstants = importlib.import_module('pirates.battle.WeaponConstants')
+    for name in dir(weaponConstants):
+        if not name.startswith('__'):
+            setattr(weaponGlobals, name, getattr(weaponConstants, name))
+
     weaponGlobals.getAttackHullHP = lambda *args: 0
     weaponGlobals.getAttackSailHP = lambda *args: 0
     weaponGlobals.HULL_HP_INDEX = 0
