@@ -66,9 +66,10 @@ enough glibc), each with Python 3.12 and `requirements-build.txt`.
   are attached to the run as artifacts.
 
 Archives are zips on Windows and macOS (`ditto` keeps the `.app` intact)
-and a `.tar.gz` on Linux (keeps the executable bits). Resources aren't
-bundled, and the builds aren't code signed. Nuitka's cache is kept between
-runs, so builds after the first are much faster.
+and a `.tar.gz` on Linux (keeps the executable bits). The workflow pins the
+current `master` revision of `PiratesOnlineClassic/poc-resources` for all
+three builds and bundles its phase files; the builds aren't code signed.
+Nuitka's cache is kept between runs, so builds after the first are much faster.
 
 ## Commands
 

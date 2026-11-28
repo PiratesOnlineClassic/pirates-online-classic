@@ -24,8 +24,23 @@ env:
   NUITKA_CACHE_DIR: ${{ github.workspace }}/.nuitka-cache
 
 jobs:
+  resources:
+    name: Select resources revision
+    runs-on: ubuntu-latest
+    outputs:
+      revision: ${{ steps.revision.outputs.revision }}
+    steps:
+      - name: Resolve resources revision
+        id: revision
+        shell: bash
+        run: |
+          set -o pipefail
+          revision=$(git ls-remote --exit-code https://github.com/PiratesOnlineClassic/poc-resources.git refs/heads/master | cut -f1)
+          echo "revision=$revision" >> "$GITHUB_OUTPUT"
+
   build:
     name: Build (${{ matrix.os }})
+    needs: resources
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 340
     strategy:
@@ -50,6 +65,23 @@ jobs:
         with:
           # BUILD-INFO.txt records the git revision
           fetch-depth: 0
+
+      - name: Check out game resources
+        uses: actions/checkout@v4
+        with:
+          repository: PiratesOnlineClassic/poc-resources
+          path: resources
+          ref: ${{ needs.resources.outputs.revision }}
+
+      - name: Check game resources
+        shell: bash
+        run: |
+          for phase in phase_2 phase_3 phase_4 phase_5; do
+            if [[ ! -d "resources/$phase" ]]; then
+              echo "::error::Missing game resources: $phase"
+              exit 1
+            fi
+          done
 
       - name: Work out the version
         id: version
@@ -102,13 +134,14 @@ jobs:
             nuitka-${{ matrix.os }}-${{ hashFiles('requirements-build.txt') }}-
 
       - name: Check the build
-        run: python build/nuitka_build.py --dry-run --version ${{ steps.version.outputs.version }}
+        run: python build/nuitka_build.py --dry-run --version ${{ steps.version.outputs.version }} --resources-dir resources
 
       - name: Build
         shell: bash
         run: |
           args=(--version "${{ steps.version.outputs.version }}"
                 --jobs 4
+                --resources-dir "$GITHUB_WORKSPACE/resources"
                 --nuitka-arg=--assume-yes-for-downloads)
           if [[ -n "${{ matrix.nuitka-args }}" ]]; then
             args+=(${{ matrix.nuitka-args }})
