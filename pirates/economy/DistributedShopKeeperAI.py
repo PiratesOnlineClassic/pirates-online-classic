@@ -1232,7 +1232,11 @@ class DistributedShopKeeperAI(DistributedObjectAI):
     def d_makeBarberResponse(self, avatarId, uid, color, success):
         self.sendUpdateToAvatarId(avatarId, 'makeBarberResponse', [uid, color, success])
 
-    def __getOwnedShip(self, avatarId, shipId, handlerName, states=('Off',)):
+    # a ship that isn't out at sea: never launched this session (Off), or brought back
+    # and put away once it's crew left it (PutAway)...
+    InPortShipStates = ('Off', 'PutAway')
+
+    def __getOwnedShip(self, avatarId, shipId, handlerName, states=InPortShipStates):
         inventory = self.air.inventoryManager.getInventory(avatarId)
         ship = self.air.doId2do.get(shipId)
         if (not inventory or not ship or
@@ -1254,8 +1258,10 @@ class DistributedShopKeeperAI(DistributedObjectAI):
             return
 
         # a sunk ship stays sunk until it is repaired, the client offers a
-        # repair for any damaged ship (DistributedNPCTownfolk.computeOptions)...
-        inventory, ship = self.__getOwnedShip(avatarId, shipId, 'repair', states=('Off', 'Sunk'))
+        # repair for any damaged ship (DistributedNPCTownfolk.computeOptions),
+        # so a ship waiting at the dock can be repaired too...
+        inventory, ship = self.__getOwnedShip(avatarId, shipId, 'repair',
+            states=self.InPortShipStates + ('Sunk', 'Docked'))
         if not ship:
             return
 

@@ -343,6 +343,24 @@ class ShopKeeperAITests(unittest.TestCase):
         self.assertEqual(self.lastResponse(), (1000, 'responseShipRepair', [5000]))
         self.assertLess(self.inventory.getGoldInPocket(), 1000)
 
+    def test_ship_brought_back_to_port_or_waiting_at_the_dock_can_be_repaired(self):
+        # once it's crew leave it a ship that has been sailed is put away...
+        for state in ('PutAway', 'Docked', 'Off'):
+            ship = self.makeShip(state=state)
+            self.shop.requestPurchaseRepair(5000)
+            ship.repairShip.assert_called_once_with()
+            self.assertEqual(self.lastResponse(), (1000, 'responseShipRepair', [5000]))
+
+    def test_put_away_ship_can_be_sold_but_not_one_waiting_at_the_dock(self):
+        self.inventory.setShipDoIdList = Mock()
+        ship = self.makeShip(state='Docked')
+        self.shop.requestSellShip(5000)
+        ship.requestDelete.assert_not_called()
+
+        ship = self.makeShip(state='PutAway')
+        self.shop.requestSellShip(5000)
+        ship.requestDelete.assert_called_once_with()
+
     def test_sell_ship_pays_half_and_removes_ship(self):
         self.inventory.setShipDoIdList = Mock()
         ship = self.makeShip()
