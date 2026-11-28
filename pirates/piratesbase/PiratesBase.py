@@ -457,7 +457,7 @@ class PiratesBase(OTPBase):
             try:
                 import webbrowser
                 webbrowser.open(url)
-            except WindowsError as e:
+            except OSError as e:
                 import os
                 os.system('explorer "%s"' % url)
     
@@ -864,7 +864,7 @@ class PiratesBase(OTPBase):
         index = 0
         total_resolutions = len(self.resolution_table)
         while index < total_resolutions:
-            if width == GameOptions.resolution_table[index][0]:
+            if width == self.resolution_table[index][0]:
                 id = index
                 break
             

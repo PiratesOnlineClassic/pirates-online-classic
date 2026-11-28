@@ -443,7 +443,7 @@ class HitBoxCookie:
         
         try:
             sdir = os.listdir(self.ieCookieDir)
-        except WindowsError:
+        except OSError:
             print('Dir does not exist, do nothing')
             return
 
