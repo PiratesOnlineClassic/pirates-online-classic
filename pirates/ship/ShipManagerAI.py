@@ -78,6 +78,7 @@ class ShipManagerAI:
         self.shipSpawnNodes = None
         self.spawnNodeShips = {}
         self.islandAvoidSpheres = None
+        self.krakenSummoner = None
 
     def hasPlayerShip(self, ship):
         assert(ship is not None)
@@ -548,6 +549,14 @@ class ShipManagerAI:
 
         if self.FlagshipUpkeepTask is not None:
             taskMgr.remove(self.FlagshipUpkeepTask)
+
+        # the kraken hunts player ships out in open water:
+        if config.GetBool('want-kraken-attacks', False):
+            from pirates.kraken.KrakenSummonerAI import KrakenSummonerAI
+            if self.krakenSummoner is None:
+                self.krakenSummoner = KrakenSummonerAI(self.air, self)
+
+            self.krakenSummoner.start()
 
         # Start regular NPC ship spawning
         self.NPCShipUpkeepTask = taskMgr.add(self._upkeepNPCShipPop, 'ShipManagerAI-NPCShipUpkeepPop')
