@@ -662,8 +662,8 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.sendUpdateToAvatarId(self.doId, 'spentSkillPoint', [category])
 
     def assignQuestRewardFlag(self, flag):
-        flags = self.getQuestRewardFlags() << flag
-        self.b_setQuestRewardFlags(flags)
+        flags = BitMask32(self.getQuestRewardFlags()) | flag
+        self.b_setQuestRewardFlags(flags.getWord())
 
     def checkQuestRewardFlag(self, flag):
         return not (self.questRewardFlags & flag).isZero()
