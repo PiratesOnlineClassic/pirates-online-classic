@@ -3,7 +3,7 @@ from collections import defaultdict
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
-from pirates.band.test_band_ai import FakeAvatar, FakeMember
+from tests.pirates.band.test_band_ai import FakeAvatar, FakeMember
 
 from pirates.band import BandConstance
 from pirates.band import DistributedPirateBandManagerAI as bandModule

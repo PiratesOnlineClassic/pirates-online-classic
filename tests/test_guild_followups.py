@@ -3,7 +3,7 @@ import types
 import unittest
 from unittest.mock import patch
 
-from pirates.friends.test_guild_manager_ud import FakeAir
+from tests.pirates.friends.test_guild_manager_ud import FakeAir
 
 from otp.friends.GuildManagerUD import GuildDB, GUILDRANK_GM, GUILD_NAME_REJECTED
 from otp.otpbase import OTPGlobals

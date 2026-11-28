@@ -3,7 +3,7 @@ import unittest
 from direct.distributed.PyDatagramIterator import PyDatagramIterator
 
 from otp.distributed.OtpDoGlobals import OTP_DO_ID_AVATAR_FRIENDS_MANAGER, OTP_DO_ID_PLAYER_FRIENDS_MANAGER
-from otp.friends.test_friends_managers_ud import FakeAir, FakeDBM, account, getDcFile, puppet
+from tests.otp.friends.test_friends_managers_ud import FakeAir, FakeDBM, account, getDcFile, puppet
 from pirates.friends.PCAvatarFriendsManagerUD import PCAvatarFriendsManagerUD
 from pirates.friends.PCPlayerFriendsManagerUD import PCPlayerFriendsManagerUD
 

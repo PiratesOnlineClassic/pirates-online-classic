@@ -3,10 +3,10 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 # sets up the game resource stubs the world AI modules need
-import pirates.world.test_siege_world_ai
+import tests.pirates.world.test_siege_world_ai
 
 from otp.distributed.OtpDoGlobals import OTP_DO_ID_AVATAR_FRIENDS_MANAGER
-from otp.friends.test_friends_managers_ud import getDcFile
+from tests.otp.friends.test_friends_managers_ud import getDcFile
 from pirates.world.DistributedDinghyAI import DistributedDinghyAI
 
 
