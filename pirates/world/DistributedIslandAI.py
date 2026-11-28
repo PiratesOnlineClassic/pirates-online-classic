@@ -8,7 +8,7 @@ from pirates.world import WorldGlobals
 from pirates.world.IslandAreaBuilderAI import IslandAreaBuilderAI
 from pirates.piratesbase import PiratesGlobals
 from pirates.treasuremap.DistributedTreasureMapInstanceAI import DistributedTreasureMapInstanceAI
-from pirates.world.DistributedShipDeployerAI import DistributedShipDeployerAI
+from pirates.world.DistributedShipDeployerAI import DistributedShipDeployerAI, getDeploySpacing
 from pirates.movement.DistributedMovingObjectAI import DistributedMovingObjectAI
 
 
@@ -65,11 +65,15 @@ class DistributedIslandAI(DistributedCartesianGridAI, DistributedGameAreaAI, Tea
         for holidayId in self.air.newsManager.holidayList:
             self.holidayStart(holidayId)
 
+        # the ship deployer's rings share the island's zone sphere center, ships are
+        # deployed in the band between the inner zone sphere (the reef, minRadius)
+        # and the next zone sphere (the deploy barrier, maxRadius)...
         self.shipDeployer = DistributedShipDeployerAI(self.air, self)
-        maxRadius = self.sphereRadii[1]
-        minRadius = self.sphereRadii[0]
-        spacing = self.sphereRadii[2]
+        minRadius = round(self.sphereRadii[0], 2)
+        maxRadius = round(self.sphereRadii[1], 2)
+        spacing = round(getDeploySpacing(minRadius, maxRadius), 2)
 
+        self.shipDeployer.setPos(self.sphereCenter[0], self.sphereCenter[1], 0)
         self.shipDeployer.setMaxRadius(maxRadius)
         self.shipDeployer.setMinRadius(minRadius)
         self.shipDeployer.setSpacing(spacing)

@@ -11,7 +11,35 @@ from direct.distributed.ClockDelta import *
 from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PiratesGlobals
 
-SPAWN_PROTECTION_DURATION = 8.0
+# how long a freshly deployed ship is covered by the protection dome (C_SPAWN).
+# The client's deploy fog alone takes ~11 seconds to fade the ship in
+# (see DistributedShip.startDeployEffect), the rest of the window gives the
+# captain time to get to the wheel before the ship can be attacked...
+SPAWN_PROTECTION_DURATION = ConfigVariableDouble('ship-spawn-protection-duration', 30.0).getValue()
+
+# the spacing used when an island's zone spheres leave no room
+# between the min (reef) and max (barrier) deploy radius:
+DEFAULT_DEPLOY_SPACING = 500.0
+
+# sphere ids are sent by the client as an uint8 (shipEnteredSphere/shipExitedSphere):
+MAX_DEPLOY_SPHERES = 255
+
+
+def getDeploySpacing(minRadius, maxRadius):
+    """
+    The deploy spheres fill the band between the island's min radius
+    (the tangible reef sphere) and max radius (the deploy barrier), so a
+    ship is always deployed inside the barrier and outside the reef.
+    """
+
+    spacing = maxRadius - minRadius
+    if spacing <= 0:
+        spacing = DEFAULT_DEPLOY_SPACING
+
+    # keep the number of spheres the client builds within the range of a sphere id,
+    # numSpheres = 2 * pi * (minRadius + spacing / 2) / spacing...
+    minSpacing = (2 * math.pi * minRadius) / (MAX_DEPLOY_SPHERES - math.pi)
+    return max(spacing, math.ceil(minSpacing))
 
 
 class ShipDeployerOperationFSM(FSM):
@@ -48,8 +76,9 @@ class ShipDeployerOperationFSM(FSM):
 
 class DeployShipFSM(ShipDeployerOperationFSM):
 
-    def enterStart(self, shipId):
+    def enterStart(self, shipId, preferredPos=None, allowSunk=False):
         self.shipId = shipId
+        self.allowSunk = allowSunk
         if not self.shipId:
             self.notify.warning('Cannot deploy ship for avatar %d, '
                 'invalid shipId specified!' % self.avatar.doId)
@@ -61,20 +90,38 @@ class DeployShipFSM(ShipDeployerOperationFSM):
         self.islandParentObj = self.island.getParentObj()
         self.oceanGrid = self.islandParentObj.oceanGrid
 
-        # Match the client deployer: spheres are local to the deployer node,
-        # which is parented under the island. Convert that local point into
-        # ocean-grid coordinates only when we actually place the ship.
-        deployerSphere = self.shipDeployer.getRandomSphere()
-        self.spawnPoint = self.shipDeployer.getOceanSpawnPointFromSphere(*deployerSphere)
+        ship = self.air.doId2do.get(self.shipId)
+        self.shipWasActive = ship is not None
+        if ship is not None and not self.canDeployShip(ship):
+            self.cleanup(False)
+            return
+
+        # deploy the ship into a free sphere around the island, preferring the one
+        # closest to where the avatar asked for it (the dinghy they used)...
+        self.sphereId = self.shipDeployer.chooseDeploySphere(self.oceanGrid,
+            preferredPos=preferredPos, excludeShipId=self.shipId)
+
+        self.spawnPoint = self.shipDeployer.getOceanSpawnPoint(self.sphereId)
+        self.spawnHeading = self.shipDeployer.getOceanSpawnHeading(self.sphereId)
         self.zoneId = self.oceanGrid.getZoneFromXYZ(self.spawnPoint)
 
-        ship = self.air.doId2do.get(self.shipId)
         if ship is None:
             self.acceptOnce('generate-%d' % self.shipId, self.shipArrivedCallback)
             self.air.sendSetObjectLocation(self.shipId, self.oceanGrid.doId, self.zoneId)
         else:
             ship.b_setLocation(self.oceanGrid.doId, self.zoneId)
             self.shipArrivedCallback(ship)
+
+    def canDeployShip(self, ship):
+        # a sunk ship has to be repaired by a shipwright before it can be deployed again,
+        # the client greys these ships out (see ShipFrameDeploy.enableStatsOV)...
+        if ship.getHp() <= 0 and not self.allowSunk:
+            self.notify.warning('Cannot deploy ship %d for avatar %d, '
+                'the ship is sunk!' % (ship.doId, self.avatar.doId))
+
+            return False
+
+        return True
 
     def shipArrivedCallback(self, ship):
         self.ship = ship
@@ -85,12 +132,26 @@ class DeployShipFSM(ShipDeployerOperationFSM):
             self.cleanup(False)
             return
 
+        if not self.canDeployShip(self.ship):
+            # the ship was only brought onto the AI to be deployed, put it back...
+            if not self.shipWasActive:
+                self.ship.b_setLocation(0, 0)
+
+            self.cleanup(False)
+            return
+
+        if self.ship.getHp() <= 0:
+            # siege ships are always deployed at full health:
+            self.ship.repairShip()
+
         # set the ship's captain
         self.ship.b_setCaptainId(self.avatar.doId)
 
-        # move the ship to it's appropriate locations
+        # move the ship to it's deploy sphere, facing out to sea...
         self.ship.setPos(self.oceanGrid, *self.spawnPoint)
+        self.ship.setHpr(self.oceanGrid, self.spawnHeading, 0, 0)
         self.oceanGrid.addObjectToOceanGrid(self.ship)
+        self.shipDeployer.addShipToSphere(self.sphereId, self.ship.doId)
 
         # only send our current position to initially position the ship,
         # the client will take over and control the ship beyond this point...
@@ -124,13 +185,13 @@ class DeployShipFSM(ShipDeployerOperationFSM):
 
     def _finalizeDeploy(self):
         # the ship has been successfully deployed, mark it as deployed,
-        # this will allow anyone who wants to join the ship to be able to do so...
-        self.ship.setDeploy(True)
+        # this will allow anyone who wants to join the ship to be able to do so.
+        # The client fades the ship in with the deploy fog once its parts are built...
+        self.ship.b_setDeploy(1)
 
-        # Newly deployed ships spawn around the island's deploy sphere and are
-        # invulnerable for a short window so they cannot be damaged while the
-        # deploy effect is active.
-        self.ship.addSkillEffect(WeaponGlobals.C_SPAWN, SPAWN_PROTECTION_DURATION, self.ship.doId)
+        # newly deployed ships are covered by the protection dome for a short window,
+        # so they cannot be attacked before the captain has made it to the wheel...
+        self.shipDeployer.protectShip(self.ship)
 
         # add the ship to the ship manager's list of `deployed` ships,
         # the ship will be removed by the PlayerShipAI class when delete is called.
@@ -160,6 +221,7 @@ class DistributedShipDeployerAI(DistributedNodeAI):
         self.heading = 0
 
         self.deploySpheres = []
+        self.sphere2shipIds = {}
         self.avatar2fsm = {}
 
     def setMinRadius(self, minRadius):
@@ -219,15 +281,8 @@ class DistributedShipDeployerAI(DistributedNodeAI):
         self.createDeploySpheres()
 
     def createDeploySpheres(self):
-        """
-        Mirror DistributedShipDeployer.createDeploySpheres on the client.
-
-        Sphere centers are kept in deployer-local space (island-relative),
-        matching the client collision spheres attached under ShipDeployer.
-        Ocean-space conversion is done later via islandTransform math because
-        AI islands cannot store world coords in DistributedNode setX/setY
-        (int16/10 overflows; real pose is setIslandTransform int32/10).
-        """
+        # mirrors DistributedShipDeployer.createDeploySpheres, sphere centers are
+        # local to the deployer node which sits at the island's zone sphere center...
         self.deploySpheres = []
         if self.spacing <= 0 or self.minRadius < 0:
             return
@@ -246,52 +301,196 @@ class DistributedShipDeployerAI(DistributedNodeAI):
             pos = getSpherePos(x)
             self.deploySpheres.append((pos[0], pos[1], pos[2]))
 
+    def getNumSpheres(self):
+        if not self.deploySpheres:
+            self.createDeploySpheres()
+
+        return len(self.deploySpheres)
+
     def getSphere(self, index):
         return self.deploySpheres[index]
 
+    def getSphereRadius(self):
+        return self.spacing / 2.0
+
     def getRandomSphere(self):
-        if not self.deploySpheres:
-            self.createDeploySpheres()
-        if not self.deploySpheres:
+        if not self.getNumSpheres():
             return (self.minRadius + self.spacing / 2.0, 0.0, 0.0)
+
         return random.choice(self.deploySpheres)
+
+    def getIslandSpherePos(self, sphereId):
+        # the sphere's center relative to the island:
+        sx, sy, sz = self.getSphere(sphereId)
+        return Point3(self.getX() + sx, self.getY() + sy, sz)
+
+    def getSphereHeading(self, sphereId):
+        # each sphere sits at (sphereId * stepAngle + 90 + heading) degrees around the ring,
+        # a ship with a heading 90 degrees less than that points directly out to sea...
+        return sphereId * (360.0 / self.getNumSpheres()) + self.heading
 
     def localToOceanPoint(self, localX, localY, localZ=0.0):
         """
-        Convert a client-style deployer-local point into ocean/world space
-        using the island's authored transform (pos + heading).
+        Converts an island-local point into ocean grid space using the island's
+        transform, the island's world pose is carried by setIslandTransform
+        (int32/10) rather than the DistributedNode position fields...
         """
+
         ix, iy, iz, ih = self.island.getIslandTransform()
         angle = math.radians(ih)
         cosH = math.cos(angle)
         sinH = math.sin(angle)
-        # Same basis as parenting a local point under an island NodePath
-        # with setPos(ix,iy,iz) + setH(ih).
         worldX = ix + localX * cosH - localY * sinH
         worldY = iy + localX * sinH + localY * cosH
         return Point3(worldX, worldY, iz + localZ)
 
-    def getOceanSpawnPointFromSphere(self, sx, sy, sz):
-        """
-        Convert a client-style local deploy-sphere center into an ocean-grid
-        spawn point, including a small random offset inside the sphere radius.
-        """
-        radius = self.getSpacing() / 2.0
-        localX = random.uniform(sx - radius, sx + radius)
-        localY = random.uniform(sy - radius, sy + radius)
-        return self.localToOceanPoint(localX, localY, sz)
+    def getOceanSpawnPoint(self, sphereId):
+        pos = self.getIslandSpherePos(sphereId)
+
+        # ships always float at sea level:
+        spawnPoint = self.localToOceanPoint(pos[0], pos[1])
+        spawnPoint.setZ(0)
+        return spawnPoint
+
+    def getOceanSpawnHeading(self, sphereId):
+        return (self.island.getIslandTransform()[3] + self.getSphereHeading(sphereId)) % 360.0
+
+    def addShipToSphere(self, sphereId, shipId):
+        self.removeShipFromSpheres(shipId)
+        self.sphere2shipIds.setdefault(sphereId, set()).add(shipId)
+
+    def removeShipFromSphere(self, sphereId, shipId):
+        shipIds = self.sphere2shipIds.get(sphereId)
+        if not shipIds:
+            return
+
+        shipIds.discard(shipId)
+        if not shipIds:
+            del self.sphere2shipIds[sphereId]
+
+    def removeShipFromSpheres(self, shipId):
+        for sphereId in list(self.sphere2shipIds.keys()):
+            self.removeShipFromSphere(sphereId, shipId)
+
+    def isSphereOccupied(self, sphereId, oceanGrid, excludeShipId=0):
+        # ships reported in the sphere by their captain's client:
+        for shipId in list(self.sphere2shipIds.get(sphereId, ())):
+            if shipId == excludeShipId:
+                continue
+
+            if shipId not in self.air.doId2do:
+                self.removeShipFromSphere(sphereId, shipId)
+                continue
+
+            return True
+
+        # any other ship that is sitting within the sphere right now:
+        center = self.getOceanSpawnPoint(sphereId)
+        radius = self.getSphereRadius()
+        shipManager = self.air.shipManager
+        for ship in shipManager.getPlayerShips() + shipManager.getShips():
+            if ship.doId == excludeShipId or ship.isEmpty():
+                continue
+
+            if ship.getParentObj() is not oceanGrid:
+                continue
+
+            pos = ship.getPos(oceanGrid)
+            if (Vec3(pos[0], pos[1], 0) - Vec3(center[0], center[1], 0)).length() < radius:
+                return True
+
+        return False
+
+    def chooseDeploySphere(self, oceanGrid, preferredPos=None, excludeShipId=0):
+        numSpheres = self.getNumSpheres()
+        if not numSpheres:
+            return 0
+
+        candidates = [sphereId for sphereId in range(numSpheres)
+            if not self.isSphereOccupied(sphereId, oceanGrid, excludeShipId)]
+
+        if not candidates:
+            # every sphere is taken, the deploy fog will have to sort it out...
+            candidates = list(range(numSpheres))
+
+        if preferredPos is None:
+            return random.choice(candidates)
+
+        def getDistance(sphereId):
+            pos = self.getIslandSpherePos(sphereId)
+            return (pos[0] - preferredPos[0]) ** 2 + (pos[1] - preferredPos[1]) ** 2
+
+        return min(candidates, key=getDistance)
+
+    def protectShip(self, ship):
+        ship.addSkillEffect(WeaponGlobals.C_SPAWN, int(SPAWN_PROTECTION_DURATION), ship.doId)
+
+    def unprotectShip(self, ship):
+        if not ship.hasSpawnBuff():
+            return
+
+        ship.removeSkillEffect(WeaponGlobals.C_SPAWN, ship.doId)
+
+    def _getReportedShip(self, shipId, fieldName):
+        avatarId = self.air.getAvatarIdFromSender()
+        ship = self.air.doId2do.get(shipId)
+        if ship is None or not hasattr(ship, 'getClientController'):
+            self.notify.debug('Avatar %d sent %s for unknown ship %d!' % (avatarId, fieldName, shipId))
+            return None
+
+        # the deploy spheres are only enabled for the ship the client is steering:
+        if avatarId != ship.getClientController() and avatarId not in ship.getCrew():
+            self.air.writeServerEvent('suspicious', avId=avatarId,
+                issue='Sent %s for ship %d which they are not aboard!' % (fieldName, shipId))
+
+            return None
+
+        return ship
+
+    def shipEnteredSphere(self, shipId, sphereId):
+        ship = self._getReportedShip(shipId, 'shipEnteredSphere')
+        if not ship:
+            return
+
+        if sphereId >= self.getNumSpheres():
+            self.air.writeServerEvent('suspicious', avId=self.air.getAvatarIdFromSender(),
+                issue='Sent shipEnteredSphere for invalid sphere %d!' % sphereId)
+
+            return
+
+        self.sphere2shipIds.setdefault(sphereId, set()).add(shipId)
+
+    def shipExitedSphere(self, shipId, sphereId):
+        ship = self._getReportedShip(shipId, 'shipExitedSphere')
+        if not ship:
+            return
+
+        self.removeShipFromSphere(sphereId, shipId)
+
+    def shipExitedBarrier(self, shipId):
+        ship = self._getReportedShip(shipId, 'shipExitedBarrier')
+        if not ship:
+            return
+
+        # the ship has sailed out of the island's deploy area, it is no longer
+        # occupying a deploy sphere and the deploy protection ends here...
+        self.removeShipFromSpheres(shipId)
+        self.unprotectShip(ship)
 
     def runShipDeployerFSM(self, fsmtype, avatar, *args, **kwargs):
+        callback = kwargs.pop('callback', None)
         if avatar.doId in self.avatar2fsm:
             self.notify.debug('Failed to run ship deployer FSM for avatar %d, '
                 'an inventory FSM is already running!' % avatar.doId)
 
-            return
+            if callback:
+                callback(False)
 
-        callback = kwargs.pop('callback', None)
+            return
 
         self.avatar2fsm[avatar.doId] = fsmtype(self.air, self, avatar, callback)
         self.avatar2fsm[avatar.doId].request('Start', *args, **kwargs)
 
-    def deployShip(self, avatar, shipId, callback=None):
-        self.runShipDeployerFSM(DeployShipFSM, avatar, shipId, callback=callback)
+    def deployShip(self, avatar, shipId, callback=None, preferredPos=None, allowSunk=False):
+        self.runShipDeployerFSM(DeployShipFSM, avatar, shipId, preferredPos, allowSunk,
+            callback=callback)

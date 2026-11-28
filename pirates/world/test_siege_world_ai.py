@@ -115,10 +115,10 @@ class DinghySiegeTeamTests(unittest.TestCase):
 
     def makeDinghy(self, siegeTeam, denyReason=None):
         avatar = SimpleNamespace(doId=10, getInventory=lambda: SimpleNamespace(getShipDoIdList=lambda: [30]))
-        ship = SimpleNamespace(doId=30)
+        ship = SimpleNamespace(doId=30, getHp=lambda: 100)
         parentObj = DistributedGameAreaAI.__new__(DistributedGameAreaAI)
         parentObj.shipDeployer = Mock()
-        parentObj.shipDeployer.deployShip.side_effect = lambda avatar, shipId, callback: callback(True)
+        parentObj.shipDeployer.deployShip.side_effect = lambda avatar, shipId, callback, **kwargs: callback(True)
         avatar.getParentObj = lambda: parentObj
         siegeManager = Mock()
         siegeManager.getPvpEnabled.return_value = True
@@ -126,6 +126,7 @@ class DinghySiegeTeamTests(unittest.TestCase):
 
         dinghy = DistributedDinghyAI.__new__(DistributedDinghyAI)
         dinghy.siegeTeam = siegeTeam
+        dinghy.getPos = lambda: (0, 0, 0)
         dinghy.air = SimpleNamespace(
             doId2do={10: avatar, 30: ship},
             getAvatarIdFromSender=lambda: 10,

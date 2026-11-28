@@ -172,6 +172,16 @@ class DistributedDinghyAI(DistributedInteractiveAI):
                 self.d_denyAccess(avatar.doId, denyReason)
                 return
 
+        # a sunk ship must be repaired before it can be deployed again, the client
+        # greys these out unless the ship is joining a siege (see ShipFrameDeploy)...
+        ship = self.air.doId2do.get(shipId)
+        if ship is not None and ship.getHp() <= 0 and not siegeTeam:
+            self.notify.warning('Failed to select avatar ship %d, '
+                'avatar %d tried to deploy a sunk ship!' % (shipId, avatar.doId))
+
+            self.d_sendAvatarToShip(avatar.doId, 0)
+            return
+
         def deployShipCallback(success):
             if not success:
                 self.d_sendAvatarToShip(avatar.doId, 0)
@@ -191,7 +201,9 @@ class DistributedDinghyAI(DistributedInteractiveAI):
             self.sendAvatarToShip(avatar, ship)
 
         self.air.questMgr.deployedShip(avatar)
-        parentObj.shipDeployer.deployShip(avatar, shipId, deployShipCallback)
+        # the ship is deployed into the free deploy sphere closest to this dinghy:
+        parentObj.shipDeployer.deployShip(avatar, shipId, deployShipCallback,
+            preferredPos=self.getPos(), allowSunk=bool(siegeTeam))
 
     def sendAvatarToShip(self, avatar, ship):
         assert(avatar is not None)
