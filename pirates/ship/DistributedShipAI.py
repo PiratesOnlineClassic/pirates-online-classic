@@ -467,6 +467,17 @@ class DistributedShipAI(PosHprBroadcasterAI, DistributedMovingObjectAI, Distribu
         avatar.b_setCrewShipId(self.doId)
         avatar.b_setCurrentIsland('')
 
+        # a crew member that boarded without a dinghy (put on board the Black Pearl or
+        # a tutorial ship, teleported on board or moved from another ship) has to be
+        # shown the ocean cells around the ship, or their client never gets the ship...
+        parentObj = self.getParentObj()
+        if isinstance(parentObj, DistributedOceanGridAI):
+            zoneId = parentObj.getZoneFromXYZ(self.getPos(parentObj))
+            if not parentObj.isValidZone(zoneId):
+                zoneId = self.zoneId
+
+            self.air.worldGridManager.handleLocationChanged(parentObj, avatar, zoneId)
+
     def _playerDeparted(self, avatar):
         assert(isinstance(avatar, DistributedPlayerPirateAI))
         self.ignore(avatar.getDeleteEvent())

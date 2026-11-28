@@ -1001,12 +1001,16 @@ class SteeredShipGridZoneTests(unittest.TestCase):
         # the crew's own clients look after what they can see on the ocean...
         gridManager.handleLocationChanged.assert_not_called()
 
-    def test_boarding_at_sea_leaves_the_crews_interest_alone(self):
+    def test_boarding_at_sea_opens_the_cells_around_the_ship(self):
+        # the Black Pearl and the tutorial ships put their crew on board without a
+        # dinghy, the crew's clients never get the ship without this...
         oceanGrid = self.makeOceanGrid()
         gridManager = Mock()
         ship = makeShip(air=makeAir(worldGridManager=gridManager))
         ship.reparentTo(oceanGrid)
         ship.getParentObj = lambda: oceanGrid
+        ship.zoneId = oceanGrid.getZoneFromXYZ((0, 0, 0))
+        ship.setPos(oceanGrid.cellWidth * 2, 0, 0)
         ship.addCrewMember = Mock()
         avatar = Mock(spec=['doId', 'b_setShipId', 'b_setActiveShipId',
             'b_setCrewShipId', 'b_setCurrentIsland'], doId=42)
@@ -1017,7 +1021,8 @@ class SteeredShipGridZoneTests(unittest.TestCase):
             ship._playerBoarded(avatar)
 
         ship.addCrewMember.assert_called_once_with(avatar)
-        gridManager.handleLocationChanged.assert_not_called()
+        gridManager.handleLocationChanged.assert_called_once_with(
+            oceanGrid, avatar, oceanGrid.getZoneFromXYZ((oceanGrid.cellWidth * 2, 0, 0)))
 
     def test_letting_go_of_the_wheel_stops_the_zone_checks(self):
         ship = makeShip()
