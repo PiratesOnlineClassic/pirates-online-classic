@@ -3994,6 +3994,8 @@ class DistributedShip(DistributedMovingObject, DistributedCharterableObject, Zon
             self.krakenLocators = []
             locatorInfo = ShipGlobals.KrakenLocators.get(self.shipClass)
             for x, (pos, scale, rPos, rScale) in enumerate(locatorInfo):
+                pos = Point3(pos)
+                rPos = Point3(rPos)
                 pos.setX(pos[0] + 30)
                 locator = self.attachNewNode('kraken-%s' % (x,))
                 locator.setPosHprScale(pos, VBase3(-90, 0, 0), VBase3(scale))
