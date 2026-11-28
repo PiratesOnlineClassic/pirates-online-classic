@@ -12,12 +12,24 @@ from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 class WeaponBaseAI(WeaponBaseBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('WeaponBaseAI')
 
+    # the amount of seconds a projectile may be in the air before we assume the
+    # client is never going to suggest it's result, e.g. it flew off into the sky...
+    ProjectileTimeout = 15.0
+
     def __init__(self, air):
         self.air = air
 
     def requestTargetedSkill(self, skillId, ammoSkillId, clientResult, targetId, areaIdList, timestamp, pos, charge):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
+            return
+
+        # skills used with the avatar's own weapons are validated, and their costs
+        # spent, once per request no matter how many targets the skill effects...
+        if self is avatar and not self.air.battleMgr.requestSkillUse(avatar, skillId, ammoSkillId):
+            self.notify.debug('Avatar %d cannot use targeted skill %d, ammo skill %d!' % (
+                avatar.doId, skillId, ammoSkillId))
+
             return
 
         target = self.air.doId2do.get(targetId)
@@ -50,11 +62,20 @@ class WeaponBaseAI(WeaponBaseBase):
         if not avatar:
             return
 
-        print(("requestProjectileSkill", skillId, ammoSkillId, posHpr, timestamp, power))
+        projectile = self.air.targetMgr.getProjectile(avatar.doId, skillId, ammoSkillId)
+        if projectile:
+            if globalClockDelta.localElapsedTime(projectile[2], bits=32) < self.ProjectileTimeout:
+                self.notify.debug('Avatar %d tried to request projectile skill for already used skill; '
+                    'skillId=%d ammoSkillId=%d!' % (avatar.doId, skillId, ammoSkillId))
 
-        if self.air.targetMgr.hasProjectile(avatar.doId, skillId, ammoSkillId):
-            self.notify.debug('Avatar %d tried to request projectile skill for already used skill; '
-                'skillId=%d ammoSkillId=%d!' % (avatar.doId, skillId, ammoSkillId))
+                return
+
+            # the previous projectile's result never arrived...
+            self.air.targetMgr.removeProjectile(avatar.doId, skillId, ammoSkillId)
+
+        if self is avatar and not self.air.battleMgr.requestSkillUse(avatar, skillId, ammoSkillId):
+            self.notify.debug('Avatar %d cannot use projectile skill %d, ammo skill %d!' % (
+                avatar.doId, skillId, ammoSkillId))
 
             return
 
@@ -141,7 +162,7 @@ class WeaponBaseAI(WeaponBaseBase):
         self.sendUpdate('useTargetedSkill', targetResult)
 
     def useProjectileSkill(self, avatar, target, skillId, ammoSkillId, result, targetId, areaIdList, pos, normal, codes, timestamp):
-        targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId, result, areaIdList, timestamp, pos)
+        targetResult = self.air.battleMgr.getTargetedSkillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos)
         if not targetResult:
             self.notify.debug('Cannot get projectile targeted skill, '
                 'no valid result was given; avatarId=%d, skillId=%d!' % (avatar.doId, skillId))

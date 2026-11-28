@@ -273,7 +273,7 @@ class BattleManagerRewardTests(unittest.TestCase):
         attacker = DistributedPlayerPirateAI.__new__(DistributedPlayerPirateAI)
         attacker.doId = 42
         attacker.getInventory = Mock(return_value=inventory)
-        attacker.getGameAccess = Mock(return_value=True)
+        attacker.isPaid = Mock(return_value=True)
         attacker.getLevel = Mock(return_value=5)
         attacker.d_sendReputationMessage = Mock()
         attacker.battleSkillDiary = Mock()

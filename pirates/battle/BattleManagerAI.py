@@ -38,6 +38,29 @@ class PendingSkillEffect(object):
 class BattleManagerAI(BattleManagerBase):
     notify = DirectNotifyGlobal.directNotify.newCategory('BattleManagerAI')
 
+    # an attacker is only removed from it's target once it has moved this
+    # far beyond the range of the last skill it used on the target. melee
+    # weapons have a very short range, so without this leeway an attacker
+    # stepping back from it's target would lose all it's earned reputation...
+    AttackerDisengageRange = WeaponGlobals.LONG_RANGE
+
+    # the skill ranges that are ranked through the avatar's inventory,
+    # a skill must be learned before the avatar may use it...
+    RankedSkillRanges = (
+        (InventoryType.begin_WeaponSkillMelee, InventoryType.end_WeaponSkillMelee),
+        (InventoryType.begin_WeaponSkillCutlass, InventoryType.end_WeaponSkillCutlass),
+        (InventoryType.begin_WeaponSkillPistol, InventoryType.end_WeaponSkillPistol),
+        (InventoryType.begin_WeaponSkillMusket, InventoryType.end_WeaponSkillMusket),
+        (InventoryType.begin_WeaponSkillDagger, InventoryType.end_WeaponSkillDagger),
+        (InventoryType.begin_WeaponSkillGrenade, InventoryType.end_WeaponSkillGrenade),
+        (InventoryType.begin_WeaponSkillDoll, InventoryType.end_WeaponSkillDoll),
+        (InventoryType.begin_WeaponSkillWand, InventoryType.end_WeaponSkillWand),
+        (InventoryType.begin_WeaponSkillBayonet, InventoryType.end_WeaponSkillBayonet))
+
+    # skills which are always available to the avatar's weapon,
+    # the combat tray uses these without the skill ever being learned...
+    UnrankedSkills = (InventoryType.MeleePunch,)
+
     def __init__(self, air):
         self.air = air
 
@@ -87,9 +110,160 @@ class BattleManagerAI(BattleManagerBase):
 
         return False
 
+    def isRankedSkill(self, skillId):
+        if not skillId or skillId in self.UnrankedSkills:
+            return False
+
+        for begin, end in self.RankedSkillRanges:
+            if skillId >= begin and skillId < end:
+                return True
+
+        return False
+
+    def isPlayerSkillHandledElsewhere(self, skillId):
+        # ship and cannon skills are validated by the ship and cannon objects,
+        # items are validated when the item itself is used...
+        return skillId == InventoryType.UseItem or WeaponGlobals.getIsShipSkill(skillId) or \
+            WeaponGlobals.getIsCannonSkill(skillId)
+
+    def canUseSkill(self, avatar, skillId, ammoSkillId):
+        if self.isPlayerSkillHandledElsewhere(skillId):
+            return True
+
+        if avatar.getHp()[0] <= 0:
+            self.notify.debug('Avatar %d cannot use skill %d while defeated!' % (avatar.doId, skillId))
+            return False
+
+        currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
+        if not isWeaponDrawn or not avatar.hasWeapon(currentWeaponId):
+            self.notify.debug('Avatar %d cannot use skill %d, weapon %d is not drawn!' % (
+                avatar.doId, skillId, currentWeaponId))
+
+            return False
+
+        repId = WeaponGlobals.getRepId(currentWeaponId)
+        if not WeaponGlobals.isValidSkill(skillId, currentWeaponId, repId) or \
+                not WeaponGlobals.isValidAttack(skillId, ammoSkillId, currentWeaponId, repId):
+            self.notify.debug('Avatar %d cannot use skill %d, ammo skill %d with weapon %d!' % (
+                avatar.doId, skillId, ammoSkillId, currentWeaponId))
+
+            return False
+
+        inventory = avatar.getInventory()
+        if not inventory:
+            self.notify.debug('Avatar %d cannot use skill %d, no inventory present!' % (avatar.doId, skillId))
+            return False
+
+        isPaid = avatar.isPaid()
+        for usedSkillId in (skillId, ammoSkillId):
+            if not self.isRankedSkill(usedSkillId):
+                continue
+
+            if inventory.getStackQuantity(usedSkillId) < 2:
+                self.notify.debug('Avatar %d cannot use skill %d, skill was never learned!' % (
+                    avatar.doId, usedSkillId))
+
+                return False
+
+            if not isPaid and not WeaponGlobals.canFreeUse(usedSkillId):
+                self.notify.debug('Freebooter %d cannot use paid skill %d!' % (avatar.doId, usedSkillId))
+                return False
+
+        for usedSkillId in (skillId, ammoSkillId):
+            if not usedSkillId or WeaponGlobals.isInfiniteAmmo(usedSkillId):
+                continue
+
+            ammoId = WeaponGlobals.getSkillAmmoInventoryId(usedSkillId)
+            if ammoId and inventory.getStackQuantity(ammoId) < 1:
+                self.notify.debug('Avatar %d cannot use skill %d, out of ammo %d!' % (
+                    avatar.doId, usedSkillId, ammoId))
+
+                return False
+
+        mojoCost = -1 * WeaponGlobals.getMojoCost(skillId)
+        if mojoCost > 0 and avatar.getMojo() < mojoCost:
+            self.notify.debug('Avatar %d cannot use skill %d, not enough mojo!' % (avatar.doId, skillId))
+            return False
+
+        if avatar.isSkillRecharging(skillId, ammoSkillId):
+            self.notify.debug('Avatar %d cannot use skill %d, skill is still recharging!' % (
+                avatar.doId, skillId))
+
+            return False
+
+        return True
+
+    def getSkillMojoCost(self, avatar, skillId, ammoSkillId):
+        mojo = WeaponGlobals.getAttackEffects(skillId, ammoSkillId)[0][3]
+        if mojo >= 0:
+            return 0
+
+        # voodoo users which have trained conservation spend less mojo,
+        # see BattleManagerBase.getModifiedSkillEffects...
+        inventory = avatar.getInventory()
+        if inventory and WeaponGlobals.isVoodooWeapon(avatar.currentWeaponId):
+            amt = max(0, inventory.getStackQuantity(InventoryType.StaffConservation) - 1) * \
+                WeaponGlobals.getAttackSelfMojo(InventoryType.StaffConservation)
+
+            mojo = min(mojo - mojo * amt, 0)
+
+        return int(-mojo)
+
+    def useSkillCosts(self, avatar, skillId, ammoSkillId):
+        if self.isPlayerSkillHandledElsewhere(skillId):
+            return
+
+        inventory = avatar.getInventory()
+        if inventory:
+            for usedSkillId in (skillId, ammoSkillId):
+                if not usedSkillId or WeaponGlobals.isInfiniteAmmo(usedSkillId):
+                    continue
+
+                ammoId = WeaponGlobals.getSkillAmmoInventoryId(usedSkillId)
+                if not self.getIsWeaponAmmo(ammoId):
+                    continue
+
+                ammoAmt = inventory.getStackQuantity(ammoId)
+                if ammoAmt > 0:
+                    inventory.b_setStackQuantity(ammoId, ammoAmt - 1)
+
+        mojoCost = self.getSkillMojoCost(avatar, skillId, ammoSkillId)
+        if mojoCost:
+            avatar.b_setMojo(max(0, avatar.getMojo() - mojoCost))
+
+        avatar.startSkillRecharge(skillId)
+
+    def requestSkillUse(self, avatar, skillId, ammoSkillId):
+        # only player avatars have their skill usage validated, enemies
+        # decide which skills they use themselves...
+        if not isinstance(avatar, DistributedPlayerPirateAI):
+            return True
+
+        if not self.canUseSkill(avatar, skillId, ammoSkillId):
+            return False
+
+        self.useSkillCosts(avatar, skillId, ammoSkillId)
+        return True
+
+    def isPlayerDamageAllowed(self, avatar, target):
+        # outside of pvp instances players cannot harm one another, unless
+        # one of them has been cursed undead, see TeamUtils.friendOrFoe...
+        if avatar.getZombie() or target.getZombie():
+            return True
+
+        return config.GetBool('want-friendly-fire', False)
+
     def getTargetedSkillResult(self, avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge=0):
         if not avatar:
             return None
+
+        # tonics are used on the avatar itself and may be used without
+        # any weapon drawn, they never effect the avatar's area targets...
+        if skillId == InventoryType.UseItem and ammoSkillId in InventoryType.Potions:
+            if target:
+                return None
+
+            return self._otherSkillResult(avatar, target, skillId, ammoSkillId, areaIdList, timestamp, pos, charge)
 
         currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
         if not isWeaponDrawn:
@@ -111,17 +285,8 @@ class BattleManagerAI(BattleManagerBase):
 
             return None
 
-        # Subtract ammo
-        if isinstance(avatar, DistributedPlayerPirateAI):
-            inventory = avatar.getInventory()
-            if ammoSkillId and not WeaponGlobals.isInfiniteAmmo(ammoSkillId):
-                ammoId = WeaponGlobals.getSkillAmmoInventoryId(ammoSkillId)
-                if ammoId and self.getIsWeaponAmmo(ammoId):
-                    ammoAmt = inventory.getStackQuantity(ammoId)
-
-                    # We should not attempt to remove ammo if we don't have any for that type.
-                    if not ammoAmt < 1:
-                        inventory.b_setStackQuantity(ammoId, ammoAmt - 1)
+        # the skill's ammo and mojo were spent when the skill was requested,
+        # see requestSkillUse...
 
         # this is just the client requesting an action for the skill used,
         # they are not actually attacking any kind of target...
@@ -143,8 +308,8 @@ class BattleManagerAI(BattleManagerBase):
         # ensure the user has access to the requested weapon before
         # running result calculations
         repId = WeaponGlobals.getRepId(currentWeaponId)
-        if hasattr(avatar, 'getGameAccess'):
-            if not avatar.getGameAccess() and not Freebooter.allowedFreebooterWeapon(repId):
+        if hasattr(avatar, 'isPaid'):
+            if not avatar.isPaid() and not Freebooter.allowedFreebooterWeapon(repId):
                 self.notify.warning('Freebooter (%d) attempted to use paid weapon (%d)' % (avatar.doId, currentWeaponId))
                 return None
 
@@ -166,6 +331,12 @@ class BattleManagerAI(BattleManagerBase):
                         return None
 
                     world.avatarAttacked(avatar, target)
+            elif not WeaponGlobals.isFriendlyFire(skillId, ammoSkillId):
+                if not self.isPlayerDamageAllowed(avatar, target):
+                    self.notify.debug('Cannot get skill result for avatar %d, '
+                        'cannot damage player %d outside of pvp!' % (avatar.doId, target.doId))
+
+                    return None
 
         skillResult = self.willWeaponHit(avatar, target, skillId, ammoSkillId, charge)
         distance = self.getRelativePosition(avatar, target)
@@ -232,11 +403,21 @@ class BattleManagerAI(BattleManagerBase):
             # made by avatars attacking the avatar's current target is a combo...
             for attackerDoId in self.air.targetMgr.getAttackers(target.doId):
                 attacker = self.air.doId2do.get(attackerDoId)
-                assert(attacker is not None)
+                if not attacker:
+                    continue
+
                 attacker.comboDiary.recordAttack(avatar.doId, skillId, targetEffects[0])
+
+            # players have already spent the mojo this skill costs, when the
+            # skill was requested. don't charge them for it a second time...
+            appliedAttackerEffects = attackerEffects
+            if isinstance(avatar, DistributedPlayerPirateAI) and attackerEffects[3] < 0:
+                appliedAttackerEffects = list(attackerEffects)
+                appliedAttackerEffects[3] = 0
 
             # when the skill result is parry, this means that we've reversed the
             # attack our attacker has done to us onto them
+            appliedTargetEffects = targetEffects
             if skillResult == WeaponGlobals.RESULT_PARRY:
                 prevTargetEffects = targetEffects
                 prevAttackerEffects = attackerEffects
@@ -244,9 +425,12 @@ class BattleManagerAI(BattleManagerBase):
                 targetEffects = prevAttackerEffects
                 attackerEffects = prevTargetEffects
 
+                appliedTargetEffects = appliedAttackerEffects
+                appliedAttackerEffects = prevTargetEffects
+
             # apply the target effects to both the target and attacker
-            self.applyTargetEffects(target, targetEffects)
-            self.applyTargetEffects(avatar, attackerEffects)
+            self.applyTargetEffects(target, appliedTargetEffects)
+            self.applyTargetEffects(avatar, appliedAttackerEffects)
 
             # add skill effects for both attacker and target, this will also
             # check to see if the attacker or target can be damaged...
@@ -298,7 +482,8 @@ class BattleManagerAI(BattleManagerBase):
 
         if skillId == InventoryType.UseItem:
             if ammoSkillId in UberDogGlobals.InventoryType.Potions:
-                avatar.useTonic(ammoSkillId)
+                if not avatar.useTonic(ammoSkillId):
+                    return None
         else:
             currentWeaponId, isWeaponDrawn = avatar.getCurrentWeapon()
             if not isWeaponDrawn:
@@ -445,9 +630,11 @@ class BattleManagerAI(BattleManagerBase):
         if not target:
             return
 
-        for attackerId in attackers:
+        for attackerId in list(attackers):
             attacker = self.air.doId2do.get(attackerId)
-            assert(attacker is not None)
+            if not attacker:
+                continue
+
             self.__checkAttacker(attacker, target)
 
     def __checkAttacker(self, attacker, target):
@@ -470,11 +657,21 @@ class BattleManagerAI(BattleManagerBase):
         if not skillId:
             return
 
+        skillData = attacker.battleSkillDiary.getSkill(skillId)
+        if not skillData:
+            return
+
         # now that we have the avatar's current skill, check the range of,
-        # that specific weapon...
-        ammoSkillId, timestamp, reputation = attacker.battleSkillDiary.getSkill(skillId)
-        if not self.getTargetInRange(attacker, target, skillId, ammoSkillId):
-            self.air.targetMgr.removeAttacker(target, attacker)
+        # that specific weapon. the attacker is only considered to have left
+        # the battle once it is well beyond the range of it's weapon...
+        ammoSkillId, timestamp, reputation = skillData
+        attackRange = self.getModifiedAttackRange(attacker, skillId, ammoSkillId)
+        if attackRange == WeaponGlobals.INF_RANGE:
+            return
+
+        distance = self.getRelativePosition(attacker, target)
+        if distance > attackRange + self.AttackerDisengageRange:
+            self.air.targetMgr.removeAttacker(attacker, target)
 
     def clearAttacker(self, target, attacker):
         assert(target is not None)
@@ -512,8 +709,8 @@ class BattleManagerAI(BattleManagerBase):
             return
 
         # Verify the user has not exceeded the level cap
-        if hasattr(attacker, 'getGameAccess'):
-            if not attacker.getGameAccess() and attacker.getLevel() >= Freebooter.FreeOverallLevelCap:
+        if hasattr(attacker, 'isPaid'):
+            if not attacker.isPaid() and attacker.getLevel() >= Freebooter.FreeOverallLevelCap:
                 return
 
         overallReputation = 0
