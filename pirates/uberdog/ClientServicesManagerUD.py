@@ -937,6 +937,10 @@ class LoadAvatarFSM(AvatarOperationFSM):
 
         def inventoryActivatedCallback(inventoryId):
             self.csm.air.writeServerEvent('avatarChosen', avId=self.avId, target=self.target)
+
+            # Let the friends managers know this avatar is now online:
+            self.csm.air.avatarFriendsManager.comingOnline(self.avId, self.target)
+            self.csm.air.playerFriendsManager.comingOnline(self.avId, self.target)
             self.demand('Off')
 
         # activate the avatar's inventory on the DBSS
@@ -1052,7 +1056,9 @@ class UnloadAvatarFSM(OperationFSM):
         datagram.addUint32(self.avId)
         self.csm.air.send(datagram)
 
-        # The post removes were cleared above, so tell the guild manager ourselves:
+        # Our POSTREMOVEs are gone, so tell the friends and guild managers ourselves:
+        self.csm.air.avatarFriendsManager.goingOffline(self.avId)
+        self.csm.air.playerFriendsManager.goingOffline(self.avId)
         self.csm.air.guildManager.avatarOffline(self.avId)
 
         # Done!
