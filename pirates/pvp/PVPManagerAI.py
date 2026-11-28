@@ -24,16 +24,8 @@ PVPWorldClasses = {
     'pvp_shipBattle4IslandWorld1': DistributedPVPShipBattleAI,
 }
 
-# the worlds hosted for each of the game styles the client lists in the lookout
-# (see GameTypeGlobals.GameTypes). Mayhem is the free for all battle style, which
-# is played within the mayhem island's interior, and team battle is played within
-# the jungles of the deathmatch islands; both of these maps only have spawn nodes
-# within their island game areas.
-#
-# The capture the loot and pirateer game rules (PVPGameCTLAI and PVPGamePirateerAI)
-# are not hosted, the client only lists those game styles when it's
-# pvp-testing-level config is raised (which it never is in this version) and
-# there are no instance classes or worlds for them...
+# the worlds hosted for each of the game styles the client lists in the lookout,
+# capture the loot and pirateer are only listed with pvp-testing-level raised...
 PVPGameStyleWorlds = {
     PiratesGlobals.GAME_STYLE_BATTLE: config.GetString('pvp-battle-worlds', 'pvp_mayhemWorld1').split(),
     PiratesGlobals.GAME_STYLE_TEAM_BATTLE: config.GetString('pvp-team-battle-worlds',
@@ -67,10 +59,6 @@ class PVPManagerAI(DistributedObjectAI):
 
     def getParentingRules(self):
         return ['', '']
-
-    # -------------------------------------------------------------------
-    # Challenges
-    # -------------------------------------------------------------------
 
     def isAvatarInPVP(self, avatar):
         world = avatar.getWorld()
@@ -244,10 +232,6 @@ class PVPManagerAI(DistributedObjectAI):
 
     def d_challengeAccepted(self, avatarId, otherAvatarId):
         self.sendUpdateToAvatarId(avatarId, 'challengeAccepted', [otherAvatarId])
-
-    # -------------------------------------------------------------------
-    # Instances
-    # -------------------------------------------------------------------
 
     def getWorldFile(self, gameStyle):
         worldFiles = PVPGameStyleWorlds.get(gameStyle)

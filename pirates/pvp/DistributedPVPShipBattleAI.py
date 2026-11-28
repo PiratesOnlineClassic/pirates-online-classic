@@ -6,6 +6,7 @@ from otp.ai import AIInterestHandles
 from pirates.piratesbase import PiratesGlobals
 from pirates.pvp import PVPGlobals
 from pirates.pvp.DistributedPVPInstanceAI import DistributedPVPInstanceAI, JOINED, READY
+from pirates.ship import ShipGlobals
 from pirates.uberdog.UberDogGlobals import InventoryType
 
 
@@ -19,6 +20,7 @@ class DistributedPVPShipBattleAI(DistributedPVPInstanceAI):
     ScoreLimit = config.GetInt('pvp-ship-battle-score-limit', 5)
     ShipRespawnDelay = config.GetFloat('pvp-ship-battle-respawn-delay', 20.0)
     NumTeams = 2
+    ShipClass = ShipGlobals.INTERCEPTORL1
 
     def __init__(self, air):
         DistributedPVPInstanceAI.__init__(self, air)
@@ -65,23 +67,14 @@ class DistributedPVPShipBattleAI(DistributedPVPInstanceAI):
             if team not in self.teamShips:
                 self.createTeamShip(team)
 
-    # -------------------------------------------------------------------
-    # Ships
-    # -------------------------------------------------------------------
-
-    def getShipClass(self, team):
-        from pirates.ship import ShipGlobals
-        return ShipGlobals.INTERCEPTORL1
-
     def createTeamShip(self, team):
         from pirates.ship.DistributedShipAI import DistributedShipAI
-        from pirates.ship import ShipGlobals
 
         if not self.oceanGrid:
             self.notify.warning('Cannot create ship for team %d, no ocean grid!' % team)
             return None
 
-        shipClass = self.getShipClass(team)
+        shipClass = self.ShipClass
         shipConfig = ShipGlobals.getShipConfig(shipClass)
         hullConfig = ShipGlobals.getHullConfig(shipClass)
         if shipConfig is None or hullConfig is None:
@@ -90,8 +83,7 @@ class DistributedPVPShipBattleAI(DistributedPVPInstanceAI):
 
             return None
 
-        area, spawnPt = self.getPlayerSpawnPt(team)
-        x, y, z, h = spawnPt or (0, 0, 0, 0)
+        x, y, z, h = self.getPlayerSpawnPt(team)[1] or (0, 0, 0, 0)
 
         ship = DistributedShipAI(self.air)
         ship.setBaseTeam(ShipGlobals.PLAYER_TEAM)
@@ -193,10 +185,6 @@ class DistributedPVPShipBattleAI(DistributedPVPInstanceAI):
             return
 
         self.boardedPlayers.add(avatarId)
-
-    # -------------------------------------------------------------------
-    # Teleporting
-    # -------------------------------------------------------------------
 
     def sendPlayerToInstance(self, avatarId):
         from pirates.instance.DistributedTeleportMgrAI import TeleportFSM

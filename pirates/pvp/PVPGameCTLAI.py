@@ -28,10 +28,6 @@ class PVPGameCTLAI(PVPGameBaseAI):
     def getTeamName(self, team):
         return 'Team %s' % team
 
-    # -------------------------------------------------------------------
-    # DC fields
-    # -------------------------------------------------------------------
-
     def setMaxCarry(self, maxCarry):
         self.maxCarry = maxCarry
 
@@ -67,10 +63,6 @@ class PVPGameCTLAI(PVPGameBaseAI):
 
     def d_shipDeposited(self, avatarId, shipId):
         self.sendUpdateToAvatarId(avatarId, 'shipDeposited', [shipId])
-
-    # -------------------------------------------------------------------
-    # Banks and loot
-    # -------------------------------------------------------------------
 
     def addBank(self, bank):
         self.banks[bank.doId] = bank
@@ -217,10 +209,6 @@ class PVPGameCTLAI(PVPGameBaseAI):
 
         if self.shipsNearBase.pop(shipId, None) is not None:
             self.d_setShipsNearBase()
-
-    # -------------------------------------------------------------------
-    # Scoring
-    # -------------------------------------------------------------------
 
     def getTeamScores(self):
         teamScores = {}

@@ -14,10 +14,6 @@ class ScoreboardAI(DistributedObjectAI):
         # id -> [name, score, team, type, {stat: value}]
         self.scores = {}
 
-    # -------------------------------------------------------------------
-    # DC fields
-    # -------------------------------------------------------------------
-
     def setStats(self, statTypes):
         self.statTypes = list(statTypes)
 
@@ -45,10 +41,6 @@ class ScoreboardAI(DistributedObjectAI):
 
     def d_setStat(self, id, stat, value):
         self.sendUpdate('setStat', [id, stat, value])
-
-    # -------------------------------------------------------------------
-    # Scores
-    # -------------------------------------------------------------------
 
     def hasScore(self, id):
         return id in self.scores

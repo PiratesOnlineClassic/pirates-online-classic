@@ -6,6 +6,7 @@ from direct.fsm.StatePush import FunctionCall
 from direct.task import Task
 
 from otp.chat import ChatFilter
+from pirates.battle import WeaponGlobals
 from pirates.pvp.SiegeManagerBase import SiegeManagerBase
 from pirates.pvp.SiegeAnnouncerAI import SiegeAnnouncerAI
 from pirates.pvp import PVPGlobals
@@ -111,10 +112,6 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
 
         DistributedObjectAI.delete(self)
 
-    # =========================================================================
-    # DC Fields
-    # =========================================================================
-
     def setPvpEnabled(self, pvpEnabled):
         self._pvpEnabled = pvpEnabled
 
@@ -174,10 +171,6 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
         self.setUseRepairKit(useRepairKit)
         self.d_setUseRepairKit(useRepairKit)
 
-    # =========================================================================
-    # Team Chat
-    # =========================================================================
-
     def _getChatSender(self):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
         if not avatar:
@@ -230,10 +223,6 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
     def d_recvSpeedChat(self, toAvatarId, avatarId, msgIndex, name):
         self.sendUpdateToAvatarId(toAvatarId, 'recvSpeedChat', [avatarId, msgIndex, name])
 
-    # =========================================================================
-    # Team Assignment
-    # =========================================================================
-
     def getOtherTeam(self, teamId):
         if teamId == self.TEAM_FRENCH:
             return self.TEAM_SPANISH
@@ -277,11 +266,7 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
         return self._teamsJoinable.get(teamId, True)
 
     def getJoinDenialCode(self, teamId):
-        """
-        Returns None when the team can be joined, otherwise the dinghy
-        denyAccess code the client expects (PrivateerSingleTeamFull or PrivateerBothTeamFull).
-        """
-
+        # returns the dinghy denyAccess code for a team that cannot be joined
         if teamId not in self.TeamIds:
             return PiratesGlobals.PrivateerBothTeamFull
 
@@ -407,13 +392,8 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
         return crewAvatarIds
 
     def isAvatarStillPrivateer(self, avatar):
-        """
-        Avatars remain in their privateer crew, and so keep their siege team, after going
-        ashore (privateers fight on the islands too, see TeamUtils.damageAllowed). They only
-        lose it once the privateer ship they crewed is no longer on their team, or when
-        they join the crew of another ship.
-        """
-
+        # privateers keep their siege team ashore (see TeamUtils.damageAllowed) until
+        # their ship leaves the team or they join the crew of another ship...
         teamId = self._avatar2team.get(avatar.doId)
         shipId = self._avatar2ship.get(avatar.doId)
         if not teamId or not shipId:
@@ -422,7 +402,7 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
         if self.getShipTeam(shipId) != teamId or not self.air.doId2do.get(shipId):
             return False
 
-        crewShipId = avatar.getCrewShipId() if hasattr(avatar, 'getCrewShipId') else 0
+        crewShipId = avatar.getCrewShipId()
         if crewShipId and crewShipId != shipId:
             return False
 
@@ -475,10 +455,6 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
 
         return Task.again
 
-    # =========================================================================
-    # Island Regeneration
-    # =========================================================================
-
     def getTeamIslands(self):
         if not self._teamIslands:
             from pirates.world.DistributedIslandAI import DistributedIslandAI
@@ -522,17 +498,8 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
 
                         break
 
-    # =========================================================================
-    # Repair Kits
-    # =========================================================================
-
     def useShipRepairKit(self, avatar, ship):
-        """
-        Called by the battle manager when an avatar uses a ship repair kit, the client
-        only offers the kit to privateers while repair kits are enabled (see
-        LocalPirateGameFSM._handleUseRepairKit). Returns True when the kit was used.
-        """
-
+        # the client only offers the kit to privateers (see LocalPirateGameFSM._handleUseRepairKit)
         if not self._pvpEnabled or not self._useRepairKit:
             return False
 
@@ -559,17 +526,9 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
         ship.b_setSp(min(ship.getMaxSp(), ship.getSp() + PVPGlobals.RepairKitSp.getValue()))
         return True
 
-    # =========================================================================
-    # Respawn Invulnerability
-    # =========================================================================
-
     def handleAvatarDefeated(self, avatar):
-        """
-        Privateers are not sent to jail when defeated, the client respawns them in place
-        (see DistributedMainWorld._startPvpRespawn and LocalPirateGameFSM.enterDeath),
-        once they have respawned they are temporarily invulnerable.
-        """
-
+        # privateers are respawned in place rather than sent to jail
+        # (see DistributedMainWorld._startPvpRespawn)...
         if not self.getAvatarTeam(avatar.doId):
             return False
 
@@ -590,8 +549,6 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
         return Task.done
 
     def addInvulnerability(self, avatar):
-        from pirates.battle import WeaponGlobals
-
         duration = PVPGlobals.MainWorldInvulnerabilityDuration.getValue()
         if duration <= 0:
             return
@@ -615,8 +572,6 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
                 appendTask=True)
 
     def removeInvulnerability(self, avatar):
-        from pirates.battle import WeaponGlobals
-
         self._clearInvulnerabilityTasks(avatar.doId)
         if avatar.doId not in self._invulnerableAvatars:
             return
@@ -663,10 +618,6 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
 
         return Task.again
 
-    # =========================================================================
-    # Scoring and Announcements
-    # =========================================================================
-
     def getTeamScore(self, teamId):
         return self._teamScores.get(teamId, 0)
 
@@ -674,11 +625,6 @@ class SiegeManagerAI(DistributedObjectAI, SiegeManagerBase):
         return self._sinkStreaks.get(shipId, 0)
 
     def handleShipSunk(self, sunkShip, attackerShip=None, assistShip=None):
-        """
-        Called when a privateer ship has been sunk, attackerShip is the ship which landed the
-        final blow (if any) and assistShip is another ship that helped sinking it.
-        """
-
         sunkTeam = sunkShip.getSiegeTeam()
         if not sunkTeam:
             return

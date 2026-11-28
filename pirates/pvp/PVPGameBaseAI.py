@@ -46,10 +46,6 @@ class PVPGameBaseAI(DistributedObjectAI, FSM):
     def getInstance(self):
         return self.air.doId2do.get(self.instanceId)
 
-    # -------------------------------------------------------------------
-    # Players
-    # -------------------------------------------------------------------
-
     def getInitialStats(self, avatarId):
         return {
             PVPGlobals.SCORE: 0,
@@ -124,10 +120,6 @@ class PVPGameBaseAI(DistributedObjectAI, FSM):
     def d_allPresent(self, avatarIds):
         self.sendUpdate('allPresent', [avatarIds])
 
-    # -------------------------------------------------------------------
-    # Stats
-    # -------------------------------------------------------------------
-
     def getPlayerStat(self, avatarId, stat):
         return self.stats.get(avatarId, {}).get(stat, 0)
 
@@ -174,10 +166,6 @@ class PVPGameBaseAI(DistributedObjectAI, FSM):
     def getTimeLimit(self):
         return self.TimeLimit
 
-    # -------------------------------------------------------------------
-    # Combat
-    # -------------------------------------------------------------------
-
     def avatarDefeated(self, defeaterId, defeatedId):
         if self.state != 'Game' or defeatedId not in self.players:
             return
@@ -219,10 +207,6 @@ class PVPGameBaseAI(DistributedObjectAI, FSM):
     def __gameTimeLimit(self, task):
         self.request('ScoreScreen')
         return Task.done
-
-    # -------------------------------------------------------------------
-    # States
-    # -------------------------------------------------------------------
 
     def enterOff(self):
         pass

@@ -39,10 +39,6 @@ class PVPGamePirateerAI(PVPGameBaseAI):
     def getTeamName(self, team):
         return 'Team %s' % team
 
-    # -------------------------------------------------------------------
-    # DC fields
-    # -------------------------------------------------------------------
-
     def setMaxCarry(self, maxCarry):
         self.maxCarry = maxCarry
 
@@ -87,10 +83,6 @@ class PVPGamePirateerAI(PVPGameBaseAI):
 
     def d_coinCaptured(self, shipId):
         self.sendUpdate('coinCaptured', [shipId])
-
-    # -------------------------------------------------------------------
-    # Wrecks
-    # -------------------------------------------------------------------
 
     def addWreck(self, wreck):
         self.wrecks[wreck.doId] = wreck
@@ -171,10 +163,6 @@ class PVPGamePirateerAI(PVPGameBaseAI):
         self.ignore('distObjDelete-%d' % shipId)
         self.d_unDisplayCoin(shipId)
 
-    # -------------------------------------------------------------------
-    # Ports
-    # -------------------------------------------------------------------
-
     def portEntered(self, baseTeam, shipId):
         avatarId = self.air.getAvatarIdFromSender()
         if avatarId not in self.players:
@@ -208,10 +196,6 @@ class PVPGamePirateerAI(PVPGameBaseAI):
 
         if self.shipsNearBase.pop(shipId, None) is not None:
             self.d_setShipsNearBase()
-
-    # -------------------------------------------------------------------
-    # Scoring
-    # -------------------------------------------------------------------
 
     def getTeamScores(self):
         return dict(self.teamScores)

@@ -64,10 +64,6 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
         self.gameStartTime = 0
         self.completed = False
 
-    # -------------------------------------------------------------------
-    # Generation
-    # -------------------------------------------------------------------
-
     def generateWithRequired(self, zoneId, optionalFields=[]):
         # PvP instances are only ever visible to the players taking part in
         # the match. Rather than living in the district's management zone,
@@ -116,8 +112,6 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
 
         for avatarId in list(self.instanceInterests):
             taskMgr.remove(self.uniqueName('leaveTeleport-%d' % avatarId))
-
-        for avatarId in list(self.instanceInterests):
             self.removeInstanceInterest(avatarId)
 
         self.ignoreAll()
@@ -127,10 +121,6 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
 
     def getParentingRules(self):
         return ['', '']
-
-    # -------------------------------------------------------------------
-    # Spawn points
-    # -------------------------------------------------------------------
 
     def loadSpawnPoints(self):
         # The world data player spawn nodes are tagged with the team that
@@ -221,10 +211,6 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
 
         island = islands[0]
         return (island, self.getSpawnPt(island.getUniqueId()))
-
-    # -------------------------------------------------------------------
-    # Players
-    # -------------------------------------------------------------------
 
     def setupMatch(self, teams):
         if not self.isReady:
@@ -436,10 +422,6 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
             instanceName=WorldGlobals.PiratesWorldSceneFileBase,
             locationUid=avatar.getReturnLocation())
 
-    # -------------------------------------------------------------------
-    # DC fields
-    # -------------------------------------------------------------------
-
     def getMatchPlayers(self):
         return [[avatarId, name, team] for avatarId, (name, team) in list(self.players.items())]
 
@@ -563,10 +545,6 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
         self.waitForPlayerLeave(avatarId)
         self.handlePlayerLeft(avatarId)
 
-    # -------------------------------------------------------------------
-    # Combat
-    # -------------------------------------------------------------------
-
     def isDamageAllowed(self, attacker, target):
         if self.state != 'Game':
             return False
@@ -606,10 +584,6 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
     def handleDefeat(self, defeaterId, defeatedId):
         if defeaterId != defeatedId:
             self.addPlayerStat(defeaterId, PVPGlobals.SCORE, 1)
-
-    # -------------------------------------------------------------------
-    # Scoring
-    # -------------------------------------------------------------------
 
     def getPlayerStat(self, avatarId, stat):
         return self.stats.get(avatarId, {}).get(stat, 0)
@@ -659,10 +633,6 @@ class DistributedPVPInstanceAI(DistributedInstanceWorldAI, FSM):
         self.notify.info('Pvp instance %d reached it\'s time limit' % self.doId)
         self.request('Completed')
         return Task.done
-
-    # -------------------------------------------------------------------
-    # States
-    # -------------------------------------------------------------------
 
     def enterOff(self):
         pass

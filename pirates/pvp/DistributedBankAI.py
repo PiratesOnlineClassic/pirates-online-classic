@@ -39,10 +39,6 @@ class DistributedBankAI(DistributedInteractiveAI):
     def getGameRules(self):
         return self.gameRules
 
-    # -------------------------------------------------------------------
-    # Interaction
-    # -------------------------------------------------------------------
-
     def handleRequestInteraction(self, avatar, interactType, instant):
         if not self.gameRules or avatar.doId not in self.gameRules.getPlayers():
             return self.DENY
@@ -110,10 +106,6 @@ class DistributedBankAI(DistributedInteractiveAI):
 
     def d_stopLooting(self, avatarId):
         self.sendUpdateToAvatarId(avatarId, 'stopLooting', [])
-
-    # -------------------------------------------------------------------
-    # DC fields
-    # -------------------------------------------------------------------
 
     def setModelPath(self, modelPath):
         self.modelPath = modelPath
