@@ -4,6 +4,7 @@ from direct.distributed.ClockDelta import globalClockDelta
 from otp.avatar.DistributedAvatarAI import DistributedAvatarAI
 
 from pirates.battle.WeaponBaseBase import WeaponBaseBase
+from pirates.battle import WeaponGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 
@@ -98,6 +99,15 @@ class WeaponBaseAI(WeaponBaseBase):
         else:
             # handle projectile skill results for ships and shipparts:
             cannonCode, hullCode, sailCode = codes
+            if WeaponGlobals.getIsGrappleSkill(skillId, ammoSkillId):
+                # grappling hooks don't do any damage, they land on one of the
+                # grapple targets of a crippled flagship (the sail code is the target index):
+                if hasattr(target, 'handleGrappleHit'):
+                    target.handleGrappleHit(avatar, sailCode)
+
+                self.air.targetMgr.removeProjectile(avatar.doId, skillId, ammoSkillId)
+                return
+
             skillResult = self.air.battleMgr.willWeaponHit(avatar, target, skillId, ammoSkillId, 0)
 
             attackerEffects = [0, 0, 0, 0, 0]

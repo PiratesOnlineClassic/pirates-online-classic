@@ -1262,12 +1262,14 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
 
         fromShipId = avatar.getCrewShipId()
         fromShip = self.air.doId2do.get(fromShipId)
-        if isinstance(fromShip, DistributedShipAI) and fromShip.getBoardableShipId() == self.doId:
+        if (isinstance(fromShip, DistributedShipAI) and fromShip.getBoardableShipId() == self.doId and
+                self.getCurrentGameState() == 'Boarded'):
             # the avatar is swinging over from their own ship onto the grappled ship...
             self.d_setMovie(ShipGlobals.SHIP_MOVIE_BOARD, avatar.doId, fromShipId, 0)
             return
 
-        if not self.isBoardable:
+        # NPC ships can only ever be boarded by swinging over from a grappled ship:
+        if not self.isBoardable or self.npcShip:
             self.notify.debug('Avatar %d cannot board ship %d, '
                 'ship is not boardable!' % (avatar.doId, self.doId))
 
@@ -1280,7 +1282,10 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
         if not avatar:
             return
 
-        if avatar.doId not in self.crew:
+        if avatar.doId != self.captainId:
+            self.notify.debug('Avatar %d cannot board flagship %d, '
+                'only the captain may start boarding!' % (avatar.doId, flagshipId))
+
             return
 
         if not flagshipId or flagshipId != self.boardableShipId:
@@ -1290,13 +1295,10 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             return
 
         flagship = self.air.doId2do.get(flagshipId)
-        if not isinstance(flagship, DistributedShipAI):
+        if not isinstance(flagship, DistributedShipAI) or not hasattr(flagship, 'requestBoardingStart'):
             return
 
-        if not flagship.getIsInBoardingPosition():
-            return
-
-        flagship.d_setMovie(ShipGlobals.SHIP_MOVIE_BOARD, avatar.doId, self.doId, 0)
+        flagship.requestBoardingStart(self)
 
     def requestShipRam(self, targetId, pos, timestamp):
         avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
