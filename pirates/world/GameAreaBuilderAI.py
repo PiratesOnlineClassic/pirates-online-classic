@@ -67,7 +67,9 @@ class GameAreaBuilderAI(ClientAreaBuilderAI):
         # the index value is a string by default for some reason,
         # so we'll have to change the value type...
         index = objectData.get('Index')
-        if index:
+        if index in (None, ''):
+            index = None
+        else:
             index = int(index)
 
         x, y, z = objectData.get('Pos', (0, 0, 0))

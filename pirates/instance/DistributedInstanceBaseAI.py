@@ -73,8 +73,16 @@ class DistributedInstanceBaseAI(DistributedObjectAI, WorldNodeAI):
         self.sendUpdateToAvatarId(avatarId, 'setSpawnInfo', [xPos, yPos, zPos, h, spawnZone, parents])
 
     def addSpawnPt(self, area, spawnPt, index=None):
-        self.spawnPts[area] = self.spawnPts.setdefault(area, {})
-        self.spawnPts[area][index or len(self.spawnPts[area])] = spawnPt
+        spawnPts = self.spawnPts.setdefault(area, {})
+
+        # an index of 0 is a valid index (jail cell 0 for example), only spawn
+        # points without an index are given the next free index...
+        if index is None or index < 0:
+            index = len(spawnPts)
+            while index in spawnPts:
+                index += 1
+
+        spawnPts[index] = spawnPt
 
     def removeSpawnPt(self, area, index):
         if area not in self.spawnPts:
@@ -89,13 +97,18 @@ class DistributedInstanceBaseAI(DistributedObjectAI, WorldNodeAI):
         if area not in self.spawnPts:
             return (0, 0, 0, 0)
 
-        if not index:
-            index = random.choice(list(self.spawnPts[area].keys()))
-
-        if index not in self.spawnPts[area]:
+        spawnPts = self.spawnPts[area]
+        if not spawnPts:
             return (0, 0, 0, 0)
 
-        return self.spawnPts[area][index]
+        if index is None:
+            index = random.choice(list(spawnPts.keys()))
+
+        if index not in spawnPts:
+            self.notify.debug('No spawn point %r for area %s, using a random spawn point!' % (index, area))
+            index = random.choice(list(spawnPts.keys()))
+
+        return spawnPts[index]
 
     def getAvatarArea(self, avatar):
         # returns the game area within this instance that the avatar
