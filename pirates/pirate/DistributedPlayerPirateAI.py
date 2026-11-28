@@ -310,9 +310,44 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     def d_setTutorialHandlerZone(self, handlerZoneId):
         self.sendUpdateToAvatarId(self.doId, 'setTutorialHandlerZone', [handlerZoneId])
 
+    def _isSenderSelf(self, fieldName, **kwargs):
+        """
+        Returns True if the current clsend message was sent by this avatar's own
+        client. clsend fields on an avatar can be sent by any client that can see it.
+        """
+
+        avatarId = self.air.getAvatarIdFromSender()
+        if avatarId == self.doId:
+            return True
+
+        self.air.logPotentialHacker(
+            message='Received %s for another avatar!' % fieldName,
+            targetAvId=self.doId,
+            **kwargs)
+
+        return False
+
     def giveDefaultQuest(self):
+        if not self._isSenderSelf('giveDefaultQuest'):
+            return
+
         if config.GetBool('want-alpha-blockers', False):
             # Don't give a default quest if alpha blockers are enabled
+            return
+
+        # the client only asks for the default quest when it skips the tutorial
+        # with a brand new avatar (PlayGame.enterPlay), never part way through...
+        if self.getTutorial() != PiratesGlobals.TUT_STARTED:
+            self.air.logPotentialHacker(
+                message='Received giveDefaultQuest for an avatar that can not skip the tutorial!',
+                tutorial=self.getTutorial())
+
+            return
+
+        if getattr(self, '_defaultQuestGiven', False):
+            self.notify.debug('Ignoring giveDefaultQuest for avatar %d, '
+                'the default quest was already given!' % self.doId)
+
             return
 
         inventory = self.getInventory()
@@ -329,6 +364,16 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
                 'avatar already completed quest!' % (questDNA.getQuestId(), self.doId))
 
             return
+
+        if self.air.questMgr.getQuest(self, questId=questDNA.getQuestId()):
+            self.notify.warning('Failed to give default quest %s for avatar: %d, '
+                'avatar already has the quest!' % (questDNA.getQuestId(), self.doId))
+
+            return
+
+        # the quest is created asynchronously, don't let a repeated request
+        # hand out the cutlass reward again before it exists...
+        self._defaultQuestGiven = True
 
         # skipping the tutorial also skips Will Turner's sword lesson,
         # so give the avatar the cutlass they would have received there...
@@ -509,6 +554,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             crewBonus, doubleXPBonus, holidayBonus])
 
     def spendSkillPoint(self, skillId):
+        if not self._isSenderSelf('spendSkillPoint', skillId=skillId):
+            return
+
         inventory = self.getInventory()
         if not inventory:
             self.notify.debug('Cannot spend skill point %d for avatar %d, '
@@ -582,6 +630,9 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
             return
 
     def resetSkillPoints(self, skillId):
+        if not self._isSenderSelf('resetSkillPoints', skillId=skillId):
+            return
+
         self.d_spentSkillPoint(skillId)
 
     def d_spentSkillPoint(self, category):
@@ -689,6 +740,13 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         if not inventory:
             self.notify.warning('Failed to choose best tonic for %d; Avatar does not have an inventory' % self.doId)
             return False
+
+        if tonicId not in InventoryType.Potions:
+            self.air.logPotentialHacker(
+                message='Attempted to use an item that is not a tonic',
+                tonicId=tonicId)
+
+            return
 
         amount = inventory.getStackQuantity(tonicId)
 
