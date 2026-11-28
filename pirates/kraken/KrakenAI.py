@@ -218,6 +218,10 @@ class KrakenAI(DistributedObjectAI, FSM):
             self.request('Retreat')
             return Task.done
 
+        # a freshly deployed ship is protected by its spawn dome:
+        if ship.hasSpawnBuff():
+            return Task.again
+
         numMastsHeld = 0
         for grabber in self.getLivingGrabbers():
             if grabber.getGrabbedMast():
