@@ -51,7 +51,7 @@ pip install -r requirements-build.txt
 ## GitHub Actions
 
 `.github/workflows/build-client.yml` builds all three OSes on GitHub's
-runners (Windows Server 2022 with MSVC, macOS 14, Ubuntu 22.04 for an old
+runners (Windows Server 2022 with MSVC, macOS 15 on Apple Silicon, Ubuntu 22.04 for an old
 enough glibc), each with Python 3.12 and `requirements-build.txt`.
 
 - **Pushing a tag like `v1.2.3`** builds version `1.2.3.0` and publishes a

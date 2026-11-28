@@ -35,7 +35,7 @@ jobs:
           - os: windows
             runner: windows-2022
           - os: macos
-            runner: macos-14
+            runner: macos-15
           # the binary needs a glibc at least as new as the build machine's,
           # so build on the oldest Ubuntu GitHub still offers
           - os: linux
