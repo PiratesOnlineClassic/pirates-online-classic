@@ -9,7 +9,6 @@ from pirates.world.DistributedOceanGridAI import DistributedOceanGridAI
 from pirates.movement.DistributedMovingObjectAI import DistributedMovingObjectAI
 from pirates.distributed.DistributedCharterableObjectAI import DistributedCharterableObjectAI
 from pirates.pirate.DistributedPlayerPirateAI import DistributedPlayerPirateAI
-from pirates.shipparts.DistributedShippartAI import DistributedShippartAI
 from pirates.shipparts.DistributedSteeringWheelAI import DistributedSteeringWheelAI
 from pirates.shipparts.DistributedBowSpritAI import DistributedBowSpritAI
 from pirates.shipparts.DistributedSailAI import DistributedSailAI
@@ -22,7 +21,7 @@ from pirates.battle.DistributedTutorialShipCannonAI import DistributedTutorialSh
 from pirates.world.DistributedIslandAI import DistributedIslandAI
 from pirates.uberdog.DistributedInventoryBase import DistributedInventoryBase
 from pirates.ship.GameFSMShipAI import GameFSMShipAI
-from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
+from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectAI, Teamable):
@@ -320,21 +319,6 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
             self.cabin.setMaxCargo(cabinConfig['setMaxCargo'][0])
             self.generateChildWithRequired(self.cabin, PiratesGlobals.ShipZoneSilhouette)
 
-        #self.bowSprit = DistributedBowSpritAI(self.air)
-        #self.bowSprit.setShipId(self.doId)
-        #
-        #prowConfig = ShipGlobals.getProwConfig(self.shipClass)
-        #for key, value in prowConfig.items():
-        #    if not hasattr(self.bowSprit, key):
-        #        continue
-        #
-        #    if isinstance(value, list):
-        #        value = value[0]
-        #
-        #    getattr(self.bowSprit, key)(value)
-        #
-        #self.generateChildWithRequired(self.bowSprit, PiratesGlobals.ShipZoneSilhouette)
-
         mastIndex = -1
         for configSailTypeList in [shipConfigAll.get('setSailConfig1', []),
                                    shipConfigAll.get('setSailConfig2', []),
@@ -355,10 +339,6 @@ class DistributedShipAI(DistributedMovingObjectAI, DistributedCharterableObjectA
                 sail.setOwnerId(0)
                 sail.setShipId(self.doId)
                 sail.setGeomParentId(0)
-
-                # DistributedDestructibleArray:
-                #sail.setMaxArrayHp(sailConfig['setMaxArrayHp'][0])
-                #sail.setArrayHp(sailConfig['setArrayHp'][0])
 
                 sail.setBaseTeam(shipTeam)
                 sail.setMastType(configSailType)

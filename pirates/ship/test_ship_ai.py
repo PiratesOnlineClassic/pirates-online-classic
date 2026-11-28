@@ -604,6 +604,33 @@ class GameFSMShipAITests(_TaskPatchedTestCase):
         self.ship.broadside.fireAtTarget.assert_called_once_with(self.target, ShipGlobals.BROADSIDE_RIGHT)
         self.assertFalse(fsm._attemptBroadside(self.target))
 
+    def test_broadside_lands_on_player_ship(self):
+        fsm = self.makeShips()
+        broadside = DistributedShipBroadsideAI.__new__(DistributedShipBroadsideAI)
+        NodePath.__init__(broadside, 'broadside')
+        broadside.air = self.ship.air
+        broadside.doId = 77
+        broadside.shipId = self.ship.doId
+        broadside.leftBroadside = [1, 1]
+        broadside.rightBroadside = [1, 1, 1]
+        broadside.sendUpdate = Mock()
+        grid = SimpleNamespace(getZoneFromXYZ=lambda pos: 100, getZoneCellOrigin=lambda zoneId: (0, 0, 0))
+        self.ship.getParentObj = lambda: grid
+        self.target.setPos(500, 0, 0)
+
+        self.assertTrue(broadside.fireAtTarget(self.target, ShipGlobals.BROADSIDE_RIGHT))
+        args = broadside.sendUpdate.call_args[0][1]
+        self.assertEqual(len(args[1]), 3)
+        delay, callback, name = self.taskMgr.doMethodLater.call_args[0]
+        extraArgs = self.taskMgr.doMethodLater.call_args[1]['extraArgs']
+
+        self.target.handleShipDamage = Mock()
+        with patch('random.random', return_value=0.0):
+            callback(*extraArgs)
+
+        self.target.handleShipDamage.assert_called_once()
+        self.assertLess(self.target.handleShipDamage.call_args[0][0], 0)
+
     def test_damage_engages_attacker(self):
         fsm = self.makeShips()
         fsm.onDamageReceived(self.target.doId, 50)

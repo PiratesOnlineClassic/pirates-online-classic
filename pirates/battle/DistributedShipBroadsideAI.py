@@ -1,12 +1,19 @@
+import random
+
 from direct.directnotify import DirectNotifyGlobal
 from direct.distributed.ClockDelta import *
 
 from pirates.battle.DistributedWeaponAI import DistributedWeaponAI
 from pirates.ship import ShipGlobals
+from pirates.ship import ShipBalance
 
 
 class DistributedShipBroadsideAI(DistributedWeaponAI):
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedShipBroadsideAI')
+
+    CannonballSpeed = 500.0
+    CannonballDamage = 50
+    BaseAccuracy = 0.7
 
     def __init__(self, air):
         DistributedWeaponAI.__init__(self, air)
@@ -164,153 +171,59 @@ class DistributedShipBroadsideAI(DistributedWeaponAI):
     def getAmmoType(self):
         return self.ammoType
 
-    def doBroadside(self, side, delays, hitPosList, zoneId, flightTime):
-        """
-        Fire a broadside from the AI.
-        This is used by NPC ships to attack targets.
-        """
+    def d_doBroadside(self, side, delays, hitPosList, zoneId, flightTime):
         timestamp = globalClockDelta.getRealNetworkTime(bits=16)
         self.sendUpdate('doBroadside', [side, delays, hitPosList, zoneId, flightTime, timestamp])
 
     def fireAtTarget(self, targetShip, side):
-        """
-        Fire a broadside at a target ship.
-        
-        Args:
-            targetShip: The target ship to fire at
-            side: 0 for left, 1 for right
-        """
-        import random
-        
-        if not targetShip:
-            return False
-        
+        # NPC ships fire their broadsides from the AI, the shots are shown to
+        # the clients and the damage is applied once the cannonballs land...
         ship = self.getShip()
-        if not ship:
-            return False
-        
-        try:
-            # Get target position
-            targetPos = targetShip.getPos()
-            
-            # Get zone for network transmission
-            oceanGrid = ship.getParentObj()
-            if not oceanGrid:
-                return False
-            
-            zoneId = oceanGrid.getZoneFromXYZ(targetPos)
-            zonePos = oceanGrid.getZoneCellOrigin(zoneId)
-            
-            # Calculate relative position
-            relX = targetPos.getX() - zonePos[0]
-            relY = targetPos.getY() - zonePos[1]
-            relZ = targetPos.getZ() - zonePos[2] if hasattr(targetPos, 'getZ') else 0
-            
-            # Get distance for flight time calculation
-            dist = ship.getDistance(targetShip)
-            flightTime = max(1.0, dist / 500.0)  # Approximate flight time
-            
-            # Get actual number of cannons on this side
-            if side == 0:
-                numCannons = len(self.leftBroadside) if self.leftBroadside else 0
-            else:
-                numCannons = len(self.rightBroadside) if self.rightBroadside else 0
-            
-            if numCannons == 0:
-                self.notify.warning('No broadside cannons on side %d' % side)
-                return False
-            
-            # Generate cannon delays and hit positions with spread
-            delays = []
-            hitPosList = []
-            
-            for i in range(numCannons):
-                delays.append(random.uniform(0, 0.5))
-                # Add spread for realism
-                spreadX = random.gauss(0, 25)
-                spreadY = random.gauss(0, 25)
-                spreadZ = random.gauss(0, 10)
-                hitPosList.append((relX + spreadX, relY + spreadY, relZ + spreadZ))
-            
-            # Fire the broadside (visual)
-            self.doBroadside(side, delays, hitPosList, zoneId, flightTime)
-            
-            # Apply damage directly on server
-            # AI broadsides apply damage after a delay matching flight time
-            self._applyBroadsideDamage(targetShip, numCannons, dist, flightTime)
-            
-            return True
-            
-        except Exception as e:
-            self.notify.warning('Failed to fire broadside at target: %s' % str(e))
-            import traceback
-            traceback.print_exc()
+        if not ship or not targetShip:
             return False
 
-    def _applyBroadsideDamage(self, targetShip, numCannons, distance, flightTime):
-        """
-        Apply broadside damage to target ship after a delay.
-        This handles server-side damage for AI ship attacks.
-        """
-        from pirates.ship import ShipBalance
-        
-        def _doDamage(task):
-            try:
-                # Check if target still exists and is valid
-                if not targetShip or targetShip.isEmpty():
-                    return task.done
-                
-                # Get attacker ship for damage calculation
-                ship = self.getShip()
-                if not ship:
-                    return task.done
-                
-                # Base damage per cannon (based on ship's level and broadside config)
-                baseDamagePerCannon = 50  # Base damage
-                
-                # Apply NPC damage output modifier
-                npcDamageOut = ShipBalance.NPCDamageOut.getValue()
-                
-                # Apply distance falloff (less damage at max range)
-                maxRange = 2000.0
-                distanceMod = max(0.3, 1.0 - (distance / maxRange) * 0.5)
-                
-                # Calculate hit chance per cannon (accuracy decreases with distance)
-                baseAccuracy = 0.7  # 70% base accuracy
-                accuracyFalloff = max(0.3, 1.0 - (distance / maxRange) * 0.4)
-                hitChance = baseAccuracy * accuracyFalloff
-                
-                # Calculate total damage from cannons that hit
-                import random
-                totalDamage = 0
-                hitsLanded = 0
-                for i in range(numCannons):
-                    if random.random() < hitChance:
-                        cannonDamage = baseDamagePerCannon * npcDamageOut * distanceMod
-                        totalDamage += cannonDamage
-                        hitsLanded += 1
-                
-                if hitsLanded == 0:
-                    return task.done  # All shots missed
-                
-                totalDamage = int(totalDamage)
-                
-                if getattr(targetShip, 'hasSpawnBuff', lambda: False)():
-                    return task.done
+        numCannons = len(self.leftBroadside if side == ShipGlobals.BROADSIDE_LEFT else self.rightBroadside)
+        if not numCannons:
+            return False
 
-                # Apply damage to target ship
-                # Use takeDamage if available (NPCShipAI), otherwise set HP directly
-                if hasattr(targetShip, 'takeDamage'):
-                    targetShip.takeDamage(totalDamage, ship.doId, applyModifiers=False)
-                else:
-                    # player ships handle their own damage, sinking and attack notifications:
-                    targetShip.handleShipDamage(-totalDamage, ship)
-                
-            except Exception as e:
-                self.notify.warning('Error applying broadside damage: %s' % str(e))
-            
-            return task.done
-        
-        # Schedule damage after flight time
-        taskMgr.doMethodLater(flightTime, _doDamage, 
-                              self.uniqueName('broadside-damage-%d' % targetShip.doId))
+        oceanGrid = ship.getParentObj()
+        targetPos = targetShip.getPos()
+        zoneId = oceanGrid.getZoneFromXYZ(targetPos)
+        zonePos = oceanGrid.getZoneCellOrigin(zoneId)
+
+        delays = []
+        hitPosList = []
+        for _ in range(numCannons):
+            delays.append(random.uniform(0, 0.5))
+            hitPosList.append((targetPos[0] - zonePos[0] + random.gauss(0, 25),
+                targetPos[1] - zonePos[1] + random.gauss(0, 25),
+                targetPos[2] - zonePos[2] + random.gauss(0, 10)))
+
+        distance = ship.getDistance(targetShip)
+        flightTime = max(1.0, distance / self.CannonballSpeed)
+        self.d_doBroadside(side, delays, hitPosList, zoneId, flightTime)
+
+        taskMgr.doMethodLater(flightTime, self.__broadsideLanded,
+            self.uniqueName('broadside-damage-%d' % targetShip.doId),
+            extraArgs=[targetShip, numCannons, distance])
+
+        return True
+
+    def __broadsideLanded(self, targetShip, numCannons, distance):
+        ship = self.getShip()
+        if not ship or targetShip.isEmpty() or targetShip.hasSpawnBuff():
+            return
+
+        # the further away the target is the less accurate and
+        # less damaging the broadside will be:
+        rangeRatio = distance / ShipGlobals.BROADSIDE_MAX_AUTOAIM_DIST
+        hitChance = self.BaseAccuracy * max(0.3, 1.0 - rangeRatio * 0.4)
+        damage = self.CannonballDamage * ShipBalance.NPCDamageOut.getValue() * max(0.3, 1.0 - rangeRatio * 0.5)
+        totalDamage = int(sum(damage for _ in range(numCannons) if random.random() < hitChance))
+        if not totalDamage:
+            return
+
+        if hasattr(targetShip, 'takeDamage'):
+            targetShip.takeDamage(totalDamage, ship.doId, applyModifiers=False)
+        else:
+            targetShip.handleShipDamage(-totalDamage, ship)
