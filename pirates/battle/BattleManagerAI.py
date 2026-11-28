@@ -481,14 +481,25 @@ class BattleManagerAI(BattleManagerBase):
 
     def rewardAttackers(self, target):
         attackers = self.air.targetMgr.getAttackers(target.doId)
-        for attackerId in attackers:
+        for attackerId in list(attackers):
             attacker = self.air.doId2do.get(attackerId)
-            assert(attacker is not None)
+            if not attacker:
+                # the attacker has since left the district
+                continue
+
             self.rewardAttacker(attacker, target)
 
     def rewardAttacker(self, attacker, target):
+        if not isinstance(attacker, DistributedPlayerPirateAI):
+            # only players are rewarded for defeating an enemy
+            return
+
         inventory = attacker.getInventory()
-        assert(inventory is not None)
+        if not inventory:
+            self.notify.warning('Cannot reward attacker %d for defeating %d, '
+                'no inventory present!' % (attacker.doId, target.doId))
+
+            return
 
         # Verify the user has not exceeded the level cap
         if hasattr(attacker, 'getGameAccess'):
@@ -496,6 +507,7 @@ class BattleManagerAI(BattleManagerBase):
                 return
 
         overallReputation = 0
+        reputationCategories = {}
         dropMultiplier = 1
         if hasattr(target, 'getGoldScale'):
             dropMultiplier = target.getGoldScale()
@@ -505,16 +517,25 @@ class BattleManagerAI(BattleManagerBase):
         for skillId in attacker.battleSkillDiary.getSkills():
             ammoSkillId, timestamp, reputation = attacker.battleSkillDiary.getSkill(skillId)
             reputationCategoryId = WeaponGlobals.getSkillReputationCategoryId(skillId)
+            reputation = int(reputation)
 
             # update the avatar's skill reputation for each skill it used to kill the target,
             # adding onto the overall reputation rewarded
             overallReputation += reputation
             inventory.setReputation(reputationCategoryId, inventory.getReputation(reputationCategoryId) + reputation)
+            reputationCategories[reputationCategoryId] = reputationCategories.get(reputationCategoryId, 0) + reputation
 
         # update the avatar's overall reputation based on all the skills they
         # used to kill the target
         inventory.setOverallRep(inventory.getOverallRep() + overallReputation)
         inventory.addGoldInPocket(goldReward)
+
+        # let the client know how much reputation they've earned so they can
+        # display the reputation text above the defeated enemy...
+        if overallReputation > 0:
+            categories = [categoryId for categoryId in reputationCategories if categoryId]
+            reputationList = [min(reputationCategories[categoryId], 65535) for categoryId in categories]
+            attacker.d_sendReputationMessage(target.doId, categories, reputationList, 0, 0, 0, 0)
 
         if random.random() >= 0.8:
             cardId = random.randint(InventoryType.begin_Cards, InventoryType.end_Cards - 1)

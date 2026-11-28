@@ -131,8 +131,10 @@ class PirateInventoryAI(DistributedInventoryAI):
         if not avatar:
             return
 
+        # cardId is the card's InventoryType, which is also what the
+        # client expects to receive in it's card loot message...
         avatar.giveCardMessage(cardId)
-        self.b_setStackQuantity(InventoryType.begin_Cards + cardId, amount)
+        self.b_setStackQuantity(cardId, self.getStackQuantity(cardId) + amount)
 
     def setShipDoIdList(self, shipList):
         return self.b_setDoIdListCategory(InventoryCategory.SHIPS, shipList)
