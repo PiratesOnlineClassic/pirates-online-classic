@@ -1,60 +1,206 @@
-import json
+import semidbm
+
+from panda3d.core import ConfigVariableList
 
 from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
-from pirates.uberdog.UberDogGlobals import InventoryType
+
+from pirates.economy import AwardGlobals
 
 
 class ItemTypes:
-    STACK = 1
-    CLOTHING = 2
-    HAIR_BEARD = 3
-    HAIR_HAIR = 4
-    HAIR_MUSTACHE = 5
-    JEWELRY = 6
-    GOLD = 7
+    STACK = AwardGlobals.STACK
+    CLOTHING = AwardGlobals.CLOTHING
+    HAIR_BEARD = AwardGlobals.HAIR_BEARD
+    HAIR_HAIR = AwardGlobals.HAIR_HAIR
+    HAIR_MUSTACHE = AwardGlobals.HAIR_MUSTACHE
+    JEWELRY = AwardGlobals.JEWELRY
+    GOLD = AwardGlobals.GOLD
+    TATTOO = AwardGlobals.TATTOO
+
+
+class CodeReward:
+    """
+    A redeemable code. Clothing differs between male and female pirates, so a
+    reward may carry a separate item for female avatars.
+    """
+
+    def __init__(self, code, awardType, itemId, quantity=1, femaleItemId=None):
+        self.code = code
+        self.awardType = awardType
+        self.itemId = itemId
+        self.quantity = quantity
+        self.femaleItemId = femaleItemId
+
+    def getItemId(self, gender):
+        if gender == 'f' and self.femaleItemId is not None:
+            return self.femaleItemId
+
+        return self.itemId
+
+    def needsGender(self):
+        return self.femaleItemId is not None
+
+    @staticmethod
+    def fromConfig(entry):
+        # code;awardType;itemId[;quantity[;femaleItemId]]
+        parts = entry.split(';')
+        if len(parts) < 3:
+            raise ValueError('Invalid code redemption entry: %s' % entry)
+
+        quantity = int(parts[3]) if len(parts) > 3 and parts[3] else 1
+        femaleItemId = int(parts[4]) if len(parts) > 4 and parts[4] else None
+        return CodeReward(parts[0].lower(), int(parts[1]), int(parts[2]), quantity, femaleItemId)
 
 
 class CodeRedemptionUD(DistributedObjectGlobalUD):
+    """
+    Redeems codes typed by players with the ~code chat command. Codes come
+    from the code-redemption-code PRC list or, when configured, from a remote
+    verification endpoint. Each avatar may redeem a code once; the reward is
+    given out by the AwardMaker on the avatar's district.
+    """
+
     notify = DirectNotifyGlobal.directNotify.newCategory('CodeRedemptionUD')
+
+    STATUS_FAILED = 0
+    STATUS_SUCCESS = 1
 
     def __init__(self, air):
         DistributedObjectGlobalUD.__init__(self, air)
-        self.verifyEndpoint = config.GetString('code-redeem-verify-url', 'https://api.piratesclassic.com/code/redeem')
+        self.verifyEndpoint = config.GetString('code-redeem-verify-url', '')
+        self.codes = {}
+        self.pendingAvatars = set()
+        self.redeemedDB = None
 
-    def requestCodeVerification(self, code, username, avatar):
+    def announceGenerate(self):
+        DistributedObjectGlobalUD.announceGenerate(self)
+
+        for entry in ConfigVariableList('code-redemption-code'):
+            try:
+                reward = CodeReward.fromConfig(entry)
+            except ValueError as e:
+                self.notify.warning(str(e))
+                continue
+
+            self.codes[reward.code] = reward
+
+        filename = config.GetString('code-redemption-bridge-filename', 'astron/databases/code-redemption-bridge')
+        self.redeemedDB = semidbm.open(filename, 'c')
+        self.notify.info('%s going online with %d codes' % (self.__class__.__name__, len(self.codes)))
+
+    def delete(self):
+        if self.redeemedDB:
+            self.redeemedDB.close()
+            self.redeemedDB = None
+
+        DistributedObjectGlobalUD.delete(self)
+
+    def online(self):
+        pass
+
+    # Redemption bookkeeping:
+
+    def getRedeemedKey(self, code, avatarId):
+        return '%s|%d' % (code, avatarId)
+
+    def hasRedeemed(self, code, avatarId):
+        return self.getRedeemedKey(code, avatarId) in self.redeemedDB
+
+    def setRedeemed(self, code, avatarId):
+        self.redeemedDB[self.getRedeemedKey(code, avatarId)] = '1'
+        if getattr(self.redeemedDB, 'sync', None):
+            self.redeemedDB.sync()
+
+    # Client requests:
+
+    def sendCodeForRedemption(self, code, username):
+        avatarId = self.air.getAvatarIdFromSender()
+        if not avatarId:
+            self.notify.warning('Received code redemption from a client without an avatar!')
+            return
+
+        code = code.strip().lower()
+        if not code or len(code) > 64:
+            self.d_notifyClientCodeRedeemStatus(avatarId, self.STATUS_FAILED)
+            return
+
+        if avatarId in self.pendingAvatars:
+            self.notify.debug('Avatar %d already has a code redemption pending.' % avatarId)
+            return
+
+        if self.hasRedeemed(code, avatarId):
+            self.d_notifyClientCodeRedeemStatus(avatarId, self.STATUS_FAILED)
+            return
+
+        self.pendingAvatars.add(avatarId)
+        reward = self.codes.get(code)
+        if reward:
+            self.processReward(avatarId, reward)
+        elif self.verifyEndpoint:
+            self.requestCodeVerification(avatarId, code, username)
+        else:
+            self.finishRedemption(avatarId, code, False)
+
+    def requestCodeVerification(self, avatarId, code, username):
         headers = {
-            'User-Agent':' UberDOG UserAgent',
+            'User-Agent': 'UberDOG UserAgent',
         }
 
         body = {
             'code': code,
-            'username': username
+            'username': username,
+            'avatarId': avatarId
         }
 
-        def handleVerifyCallback(self, data):
-            data = json.loads(data)
-            success = False
+        def handleVerifyCallback(data):
+            if not isinstance(data, dict) or not data.get('success'):
+                self.finishRedemption(avatarId, code, False)
+                return
 
-            #TODO: write this
+            try:
+                reward = CodeReward(code, int(data['awardType']), int(data['itemId']),
+                    int(data.get('quantity', 1)),
+                    int(data['femaleItemId']) if data.get('femaleItemId') is not None else None)
+            except (KeyError, TypeError, ValueError):
+                self.notify.warning('Invalid code verification response for %s: %s' % (code, data))
+                self.finishRedemption(avatarId, code, False)
+                return
 
-            self.d_notifyClientCodeRedeemStatus(avatar.doId, success)
+            self.processReward(avatarId, reward)
 
-        self.air.rest.performPostRequest(
+        self.air.rest.performJsonPostRequest(
             url=self.verifyEndpoint,
             headers=headers,
-            content_type='application/json',
             post_body=body,
             callback=handleVerifyCallback)
 
-    def sendCodeForRedemption(self, code, username):
-        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
-        if not avatar:
-            return
+    def processReward(self, avatarId, reward):
+        if reward.needsGender():
+            self.air.avatarManager.getAvatarGender(avatarId,
+                lambda gender: self.giveReward(avatarId, reward, gender))
+        else:
+            self.giveReward(avatarId, reward, '')
 
-        code = code.lower()
-        self.requestCodeVerification(code, username)
+    def giveReward(self, avatarId, reward, gender):
+        self.air.awardMaker.giveAward(avatarId, reward.awardType, reward.getItemId(gender),
+            reward.quantity, callback=lambda success: self.finishRedemption(avatarId, reward.code, success))
+
+    def finishRedemption(self, avatarId, code, success):
+        self.pendingAvatars.discard(avatarId)
+        if success:
+            self.setRedeemed(code, avatarId)
+
+        self.air.writeServerEvent('codeRedemption', avId=avatarId, code=code, success=success)
+        self.d_notifyClientCodeRedeemStatus(avatarId, self.STATUS_SUCCESS if success else self.STATUS_FAILED)
+
+    # Responses:
+
+    def recvAvatarGender(self, avatarId, gender, context):
+        # Remote avatar manager response; this UberDOG asks its local avatar
+        # manager directly through getAvatarGender.
+        self.notify.debug('recvAvatarGender %d: %s' % (avatarId, gender))
 
     def d_notifyClientCodeRedeemStatus(self, avatarId, status):
-        self.notify.debug('Sending redeemp notify status (%s) to avatar (%s)' % (status, avatarId))
+        self.notify.debug('Sending redeem status (%s) to avatar (%s)' % (status, avatarId))
         self.sendUpdateToAvatarId(avatarId, 'notifyClientCodeRedeemStatus', [status])
