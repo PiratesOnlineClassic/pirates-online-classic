@@ -1,8 +1,6 @@
-from direct.distributed.DistributedObjectGlobalUD import DistributedObjectGlobalUD
 from direct.directnotify import DirectNotifyGlobal
+from otp.snapshot.SnapshotRendererUD import SnapshotRendererUD
 
-class PSnapshotRendererUD(DistributedObjectGlobalUD):
+
+class PSnapshotRendererUD(SnapshotRendererUD):
     notify = DirectNotifyGlobal.directNotify.newCategory('PSnapshotRendererUD')
-
-    def __init__(self, air):
-        DistributedObjectGlobalUD.__init__(self, air)
