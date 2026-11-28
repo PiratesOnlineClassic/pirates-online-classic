@@ -362,7 +362,21 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         elif state == 'BreakCombat':
             self.request(self.avatar.getStartState())
 
+    # how much longer a slowed enemy takes to walk anywhere
+    SlowedWalkModifier = 2.0
+
+    def isMovementHeld(self):
+        # stunned and shackled enemies are rooted in place until the effect wears off...
+        skillEffectIds = self.avatar.getSkillEffectIds()
+        return WeaponGlobals.C_STUN in skillEffectIds or WeaponGlobals.C_HOLD in skillEffectIds
+
     def _walkToPoint(self, currentTarget):
+        if self.isMovementHeld():
+            self.__attackChaseTask = taskMgr.doMethodLater(self.StunnedAttackDelay, self._walkToPoint,
+                self.getWalkToPointChaseName(), extraArgs=[currentTarget], appendTask=False)
+
+            return
+
         self.walkToPoint(currentTarget.getPos(), currentTarget.getParent())
 
     def walkToPoint(self, walkPoint, parent=None, walkSpeed=None):
@@ -384,6 +398,9 @@ class BattleNPCGameFSMAI(BattleAvatarGameFSMAI):
         walkDuration = MotionFSM.WALK_CUTOFF * 2
         if walkSpeed:
             walkDuration = max(self.avatar.getDistance(walkPointNode) / walkSpeed, walkDuration)
+
+        if WeaponGlobals.C_SLOW in self.avatar.getSkillEffectIds():
+            walkDuration *= self.SlowedWalkModifier
 
         self.__movementInterval = self.avatar.posInterval(walkDuration, walkPoint, other=parent)
         self.__movementInterval.setDoneEvent(self.getWalkToPointDoneName())

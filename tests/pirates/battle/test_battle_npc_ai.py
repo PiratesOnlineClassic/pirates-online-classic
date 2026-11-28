@@ -375,3 +375,32 @@ class EnemySkillSelectionTests(unittest.TestCase):
         fsm.avatar.b_setCurrentTarget = Mock()
         fsm._chooseNextAttack(SimpleNamespace(done='done'))
         fsm.demand.assert_called_once_with('BreakCombat')
+
+
+class HeldEnemyMovementTests(unittest.TestCase):
+    def makeFSM(self, effects):
+        from pirates.battle import WeaponGlobals
+
+        fsm = BattleNPCGameFSMAI.__new__(BattleNPCGameFSMAI)
+        fsm.avatar = SimpleNamespace(doId=1000, getSkillEffectIds=lambda: list(effects),
+            uniqueName=lambda name: '%s-1000' % name)
+        fsm.walkToPoint = Mock()
+        return fsm, WeaponGlobals
+
+    def test_held_enemies_do_not_chase(self):
+        from pirates.battle import WeaponGlobals
+
+        for effectId in (WeaponGlobals.C_STUN, WeaponGlobals.C_HOLD):
+            fsm, _ = self.makeFSM([effectId])
+            target = Mock()
+            with patch.object(builtins, 'taskMgr', Mock()) as fakeTaskMgr:
+                fsm._walkToPoint(target)
+
+            fsm.walkToPoint.assert_not_called()
+            self.assertEqual(fakeTaskMgr.doMethodLater.call_args[0][0], fsm.StunnedAttackDelay)
+
+    def test_free_enemies_chase(self):
+        fsm, _ = self.makeFSM([])
+        target = Mock()
+        fsm._walkToPoint(target)
+        fsm.walkToPoint.assert_called_once_with(target.getPos(), target.getParent())
