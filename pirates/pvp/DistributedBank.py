@@ -27,7 +27,7 @@ class DistributedBank(DistributedInteractive.DistributedInteractive):
         self.model.reparentTo(self)
         self.model.setColorScale(1, 1, 1, 1, 1)
         self.goldPileCollection = self.findAllMatches('**/pile*')
-        self.goldPileList = self.goldPileCollection.asList()
+        self.goldPileList = list(self.goldPileCollection)
         self.goldPileList.reverse()
         self.goldPileCollection.stash()
         self.initInteractOpts()

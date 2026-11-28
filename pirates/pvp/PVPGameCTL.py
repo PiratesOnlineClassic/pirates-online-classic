@@ -1,3 +1,4 @@
+from functools import cmp_to_key
 from pirates.pvp.PVPGameBase import PVPGameBase
 from pirates.piratesbase import PiratesGlobals
 from pirates.piratesbase import PLocalizer
@@ -174,7 +175,7 @@ class PVPGameCTL(PVPGameBase):
                 'Team': teams[currIdx],
                 'Score': scores[currIdx]})
         
-        self.scoreList.sort(self.sortScores)
+        self.scoreList.sort(key = cmp_to_key(self.sortScores))
         print('got new score list %s' % self.scoreList)
         messenger.send(self.getItemChangeMsg())
 

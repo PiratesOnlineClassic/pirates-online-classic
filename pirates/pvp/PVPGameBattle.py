@@ -1,3 +1,4 @@
+from functools import cmp_to_key
 from pirates.pvp.PVPGameBase import PVPGameBase
 from pirates.piratesbase import PiratesGlobals
 from pirates.pvp import PVPGlobals
@@ -62,7 +63,7 @@ class PVPGameBattle(PVPGameBase):
                 'Player': playerId,
                 'Score': stats[PVPGlobals.SCORE]})
         
-        scoreList.sort(self.sortScores)
+        scoreList.sort(key = cmp_to_key(self.sortScores))
         return scoreList
 
     def createScoreboardItem(self, item, parent, itemType = None, columnWidths = [], color = None):

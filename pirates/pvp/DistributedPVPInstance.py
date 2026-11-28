@@ -3,6 +3,7 @@ from direct.fsm.FSM import FSM
 from panda3d.core import *
 from direct.interval.IntervalGlobal import *
 from direct.distributed.ClockDelta import *
+from libotp import NametagGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.pvp import PVPGlobals
 from pirates.piratesbase import PLocalizer

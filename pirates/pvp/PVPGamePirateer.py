@@ -1,3 +1,4 @@
+from functools import cmp_to_key
 from direct.gui.DirectGui import *
 from panda3d.core import *
 from direct.interval.IntervalGlobal import *
@@ -152,7 +153,7 @@ class PVPGamePirateer(PVPGameBase):
                 'Team': teams[currIdx],
                 'Score': scores[currIdx]})
         
-        self.scoreList.sort(self.sortScores)
+        self.scoreList.sort(key = cmp_to_key(self.sortScores))
         print('got new score list %s' % self.scoreList)
         messenger.send(self.getItemChangeMsg())
 

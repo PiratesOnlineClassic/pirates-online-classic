@@ -1,3 +1,4 @@
+from functools import cmp_to_key
 from direct.distributed.DistributedObject import DistributedObject
 from pirates.piratesgui.StatRowHeadingGui import StatRowHeadingGui
 from pirates.piratesgui.StatRowGui import StatRowGui
@@ -90,7 +91,7 @@ class Scoreboard(DistributedObject):
                     'ID': id,
                     'Score': score})
         
-        scores.sort(self.sortTeamScores)
+        scores.sort(key = cmp_to_key(self.sortTeamScores))
         return scores
 
     def getTeamName(self, team):
