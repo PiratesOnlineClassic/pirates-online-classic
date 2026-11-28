@@ -17,6 +17,9 @@ class DistributedCellDoorAI(DistributedInteractiveAI):
         self.avatarId = 0
 
     def handleRequestInteraction(self, avatar, interactType, instant):
+        if avatar.getJailCellIndex() != self.cellIndex or self.health <= 0:
+            return self.DENY
+
         return self.ACCEPT
 
     def handleRequestExit(self, avatar):
@@ -66,6 +69,12 @@ class DistributedCellDoorAI(DistributedInteractiveAI):
             return
 
         if self.avatarId:
+            return
+
+        if avatar.getJailCellIndex() != self.cellIndex or avatar.parentId != self.parentId:
+            self.notify.warning('Avatar %d tried to kick cell door %d, '
+                'but is not locked in that cell!' % (avatar.doId, self.doId))
+
             return
 
         health = max(0, min(self.getHealth() - random.random() *

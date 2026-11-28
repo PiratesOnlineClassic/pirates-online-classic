@@ -19,12 +19,12 @@ class DistributedJailInteriorAI(DistributedGAInteriorAI):
         if isinstance(childObj, DistributedPlayerPirateAI) and not childObj.isNpc:
             if childObj.getJailCellIndex() < 100:
                 cellDoor = self.getCellDoor(avatarId=childObj.doId)
-                if not cellDoor:
-                    self.notify.warning('Cannot reset cell door for avatar %d, no cell door found!' % avatar.doId)
-                    return
-
                 childObj.b_setJailCellIndex(100)
-                cellDoor.b_setHealth(cellDoor.getMaxHealth())
+                if cellDoor is None:
+                    self.notify.warning('Cannot reset cell door for avatar %d, no cell door found!' % childObj.doId)
+                else:
+                    cellDoor.setAvatarId(0)
+                    cellDoor.b_setHealth(cellDoor.getMaxHealth())
 
         DistributedGAInteriorAI.handleChildLeave(self, childObj, zoneId)
 
@@ -44,10 +44,21 @@ class DistributedJailInteriorAI(DistributedGAInteriorAI):
         del self.cellDoors[cellDoor.doId]
 
     def getCellDoor(self, cellDoorId=None, avatarId=None):
+        if cellDoorId is not None:
+            return self.cellDoors.get(cellDoorId)
+
         if avatarId is not None:
             for cellDoor in list(self.cellDoors.values()):
                 if cellDoor.getAvatarId() == avatarId:
                     return cellDoor
+
+            avatar = self.air.doId2do.get(avatarId)
+            if avatar:
+                for cellDoor in list(self.cellDoors.values()):
+                    if cellDoor.getCellIndex() == avatar.getJailCellIndex():
+                        return cellDoor
+
+            return None
 
         if len(self.cellDoors) == 0:
             return None
@@ -55,4 +66,19 @@ class DistributedJailInteriorAI(DistributedGAInteriorAI):
         return random.choice(list(self.cellDoors.values()))
 
     def avatarAlreadyInJail(self):
-        pass
+        avatar = self.air.doId2do.get(self.air.getAvatarIdFromSender())
+        if not avatar:
+            return
+
+        if avatar.getParentObj() is not self:
+            self.notify.warning('Avatar %d claims to already be in jail %d, '
+                'but is not in this interior!' % (avatar.doId, self.doId))
+
+            return
+
+        if avatar.getJailCellIndex() >= 100:
+            return
+
+        # the avatar died inside of this jail so the client never sees itself
+        # arrive here, finish throwing the avatar into it's cell instead...
+        avatar.b_setGameState('ThrownInJail')
