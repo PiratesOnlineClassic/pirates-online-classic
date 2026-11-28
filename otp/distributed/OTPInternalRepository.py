@@ -95,7 +95,7 @@ class OTPInternalRepository(AstronInternalRepository):
     def _isValidPlayerLocation(self, parentId, zoneId):
         return True
 
-    def systemMessage(self, message, channel=10):
+    def systemMessage(self, message, channel=OTP_CHANNEL_ALL_CLIENTS):
         msgDg = PyDatagram()
         msgDg.addUint16(10)
         msgDg.addString(message)

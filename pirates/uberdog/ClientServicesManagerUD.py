@@ -457,6 +457,16 @@ class LoginAccountFSM(OperationFSM):
         datagram.addChannel(self.csm.GetAccountConnectionChannel(self.accountId))
         self.csm.air.send(datagram)
 
+        # Subscribe the connection to the channel system messages
+        # and maintenance ejects are broadcast to:
+        datagram = PyDatagram()
+        datagram.addServerHeader(
+            self.target,
+            self.csm.air.ourChannel,
+            CLIENTAGENT_OPEN_CHANNEL)
+        datagram.addChannel(OtpDoGlobals.OTP_CHANNEL_ALL_CLIENTS)
+        self.csm.air.send(datagram)
+
         # Now set their sender channel to represent their account affiliation:
         datagram = PyDatagram()
         datagram.addServerHeader(

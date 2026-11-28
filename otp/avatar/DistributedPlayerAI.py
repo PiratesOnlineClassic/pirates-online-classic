@@ -304,7 +304,7 @@ def update(minutes):
 
     def disconnect(task):
         dg = PyDatagram()
-        dg.addServerHeader(10, base.air.ourChannel, CLIENTAGENT_EJECT)
+        dg.addServerHeader(OtpDoGlobals.OTP_CHANNEL_ALL_CLIENTS, base.air.ourChannel, CLIENTAGENT_EJECT)
         dg.addUint16(154)
         dg.addString('Pirates Online Classic is now closed for maintenance.')
         base.air.send(dg)
