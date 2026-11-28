@@ -516,7 +516,10 @@ class SinkRewardTests(_ClockTestCase):
 
         reputation = ShipGlobals.getShipExp(5)
         npcShip.plunderShip.assert_called_once_with(playerShip)
-        air.questMgr.shipSunk.assert_called_once_with(npcShip, [2000])
+        # quest credit is given to every crew that damaged the ship once it begins
+        # sinking (DistributedShipAI.handleShipSinking), not again by the npc ship...
+        air.questMgr.shipSinking.assert_called_once_with(npcShip)
+        air.questMgr.shipSunk.assert_not_called()
         self.assertEqual(playerShip.shipKills, 1)
         self.assertEqual(gunner.inventory.getReputation(InventoryType.CannonRep), reputation)
         self.assertEqual(gunner.inventory.getReputation(InventoryType.SailingRep), reputation)
