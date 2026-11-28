@@ -57,6 +57,7 @@ class CreateShipFSM(ShipLoaderOperationFSM):
         self.hullConfig = ShipGlobals.getHullConfig(self.modelClass)
 
         fields = {
+            'setOwnerId': (self.avatarId,),
             'setBaseTeam': (ShipGlobals.PLAYER_TEAM,),
             'setShipClass': (self.shipConfig['setShipClass'][0],),
             'setName': (shipName or 'Unnamed Ship',),
@@ -304,10 +305,13 @@ class ActivateShipFSM(ShipLoaderOperationFSM):
 
     def _shipInventoryActivatedCallback(self, inventoryId):
         # the ship's crew permissions are not stored in the database, the client
-        # expects crew and friends to be allowed aboard by default...
+        # expects crew and friends to be allowed aboard by default. Ships created
+        # before the owner was stored have no owner, the ship is always activated
+        # for it's owner so set it here (the client checks ship.ownerId)...
         self.air.sendActivate(self.shipId, 0, 0,
             self.air.dclassesByName['PlayerShipUD'],
             {'setInventoryId': (inventoryId,),
+             'setOwnerId': (self.avatarId,),
              'setAllowCrewState': (1,),
              'setAllowFriendState': (1,)})
 
