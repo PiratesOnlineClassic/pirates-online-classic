@@ -9,30 +9,50 @@ from pirates.uberdog.UberDogGlobals import InventoryType
 
 
 class DistributedBlackjackTableAI(DistributedGameTableAI):
+    """
+    Blackjack against the house dealer.  Every round runs through:
+    bidding, dealing, each seat playing it's hand(s), the dealer playing
+    and finally the payout.  Players bet with the gold in their pocket.
+    """
+
     notify = DirectNotifyGlobal.directNotify.newCategory('DistributedBlackjackTableAI')
 
-    DealerSeat = 7  # Dealer is at the last index (one past the player seats)
     CheatingFine = PlayingCardGlobals.CheatingFine
     # Starting stack for AI seats so they can bid against the dealer.
     AIStartingChips = 200
+    # The client bid slider tops out at 50 times the bet multiplier.
+    MaxBidMultiplier = 50
+    DealerStandValue = 17
+    # Seconds the server waits past the client timers before acting for it.
+    TimeoutPadding = 3.0
+    NextRoundDelay = 4.0
+    AIThinkTime = (1.0, 2.0)
+
+    AIBustSpeech = ['Blast, too many!', 'Busted again...', 'Arr, the cards hate me.']
+    AIWinSpeech = ['Ha! Pay up, dealer!', 'That\'s more like it!', 'Gold for me!']
 
     def __init__(self, air):
         # Original tables seat one AI pirate plus a separate dealer NPC.
         DistributedGameTableAI.__init__(self, air, numberAI=1)
         self.betMultiplier = 1
+        self.DealerSeat = self._availableSeats
 
-        # Per-seat state: each seat has a list of hands (for splits)
+        # Per-seat state: each seat has a list of hands (for splits), the
+        # last entry is the dealer's hand.
         self._allHands = [[[]] for _ in range(self._availableSeats + 1)]
-        self._bids = {}       # seatIndex -> bid amount
-        # Client updateStacks always indexes 0..NumSeats-1 (and pot may use +1),
-        # so keep a full-length chips vector from generation onward.
+        self._bids = {}             # seatIndex -> [bid per hand]
         self._chipsCount = [0] * (self._availableSeats + 1)
         self._waitingBids = set()
-        self._actionQueue = []
+        self._actionQueue = []      # seats still to play this round
+        self._currentHand = {}      # seatIndex -> index of the hand being played
+        self._finishedHands = {}    # seatIndex -> set of hand indexes that are done
         self._deck = []
-        self._deck2 = []      # second deck for reshuffle
-        self._numSeats = self._availableSeats  # seats in use (dealer slot added)
+        self._dealerHoleCard = None
         self._roundActive = False
+        self._bidding = False
+        self._cheaters = {}         # seatIndex -> swapped in card
+        self._caughtCheating = set()
+        self._missedBids = {}       # seatIndex -> consecutive rounds without bidding
 
     def delete(self):
         taskMgr.remove(self.uniqueName('bj-bid'))
@@ -46,7 +66,7 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
     # ------------------------------------------------------------------
 
     def setBetMultiplier(self, multiplier):
-        self.betMultiplier = multiplier
+        self.betMultiplier = max(1, multiplier)
 
     def d_setBetMultiplier(self, multiplier):
         self.sendUpdate('setBetMultiplier', [multiplier])
@@ -63,15 +83,26 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         self._chipsCount = self._normalizeChipsCount(chipsCount)
 
     def d_setTableState(self):
-        self._chipsCount = self._normalizeChipsCount(self._chipsCount)
-        self.sendUpdate('setTableState', [self._allHands, self._chipsCount])
-
-    def b_setTableState(self, allHands, chipsCount):
-        self.setTableState(allHands, chipsCount)
-        self.d_setTableState()
+        self.sendUpdate('setTableState', self.getTableState())
 
     def getTableState(self):
-        return [self._allHands, self._normalizeChipsCount(self._chipsCount)]
+        self._updateChipsCount()
+        hands = [[list(hand) for hand in seatHands] for seatHands in self._allHands]
+        return [hands, list(self._chipsCount)]
+
+    def _broadcastTableState(self):
+        self.d_setTableState()
+
+    def d_setEvent(self, seatIndex, action, amount=0):
+        self.sendUpdate('setEvent', [seatIndex, [action, amount]])
+
+    def d_setHandResults(self, results):
+        self.sendUpdate('setHandResults', [results])
+
+    def d_cheatResponse(self, seatIndex, cheatType, cheatTarget, success, hand):
+        if self.isPlayerSeat(seatIndex):
+            self.sendUpdateToAvatarId(self.seats[seatIndex].doId, 'cheatResponse',
+                [cheatType, cheatTarget, success, hand])
 
     def _normalizeChipsCount(self, chipsCount=None):
         """Ensure chipsCount covers every player seat plus the dealer/pot slot."""
@@ -83,90 +114,149 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
             normalized = normalized[:needed]
         return normalized
 
+    def _updateChipsCount(self):
+        self._chipsCount = self._normalizeChipsCount(self._chipsCount)
+        for seatIndex in range(self._availableSeats):
+            if self.isPlayerSeat(seatIndex):
+                self._chipsCount[seatIndex] = self.getSeatGold(seatIndex)
+            elif not self.isAISeat(seatIndex):
+                self._chipsCount[seatIndex] = 0
+
     # ------------------------------------------------------------------
     # Seat lifecycle
     # ------------------------------------------------------------------
 
     def avatarSit(self, avatar, seatIndex):
         DistributedGameTableAI.avatarSit(self, avatar, seatIndex)
-        inv = self.air.inventoryManager.getInventory(avatar.doId) if avatar not in (0, 1) else None
-        self._chipsCount = self._normalizeChipsCount(self._chipsCount)
-        if inv:
-            self._chipsCount[seatIndex] = inv.getGoldInPocket()
-        elif avatar == 1:
-            self._chipsCount[seatIndex] = max(self._chipsCount[seatIndex], self.AIStartingChips)
-        else:
-            self._chipsCount[seatIndex] = 0
+        self._missedBids[seatIndex] = 0
         self.d_setTableState()
         self._scheduleRoundStart()
 
     def avatarStand(self, avatar, seatIndex):
         DistributedGameTableAI.avatarStand(self, avatar, seatIndex)
+
+        # anything bid on the hand in play is forfeit to the house
         self._bids.pop(seatIndex, None)
         self._waitingBids.discard(seatIndex)
-        if seatIndex < len(self._chipsCount):
-            self._chipsCount[seatIndex] = 0
+        self._missedBids.pop(seatIndex, None)
+        self._cheaters.pop(seatIndex, None)
+        self._allHands[seatIndex] = [[]]
+        self._chipsCount[seatIndex] = 0
+
+        wasActing = self._actionQueue and self._actionQueue[0] == seatIndex
+        while seatIndex in self._actionQueue:
+            self._actionQueue.remove(seatIndex)
+
         self.d_setTableState()
+        if not self._roundActive:
+            return
+
+        if not self.getPlayerSeats():
+            self._abortRound()
+        elif self._bidding:
+            self._checkAllBidsIn()
+        elif wasActing:
+            self._nextPlayerAction()
 
     # ------------------------------------------------------------------
-    # Game lifecycle
+    # Deck
     # ------------------------------------------------------------------
 
     def _buildDeck(self):
-        self._deck = list(range(52)) * 2  # double deck
+        self._deck = list(range(52))
         random.shuffle(self._deck)
 
     def _dealCard(self):
         if not self._deck:
-            self._buildDeck()
+            # reshuffle everything that isn't on the table
+            inPlay = set()
+            for seatHands in self._allHands:
+                for hand in seatHands:
+                    inPlay.update(hand)
+            inPlay.add(self._dealerHoleCard)
+            self._deck = [card for card in range(52) if card not in inPlay]
+            random.shuffle(self._deck)
+
         return self._deck.pop()
 
     def _getTableBidAmount(self):
         return PlayingCardGlobals.BlackjackBidAmount * self.betMultiplier
 
+    def _getMaxBidAmount(self):
+        return self.MaxBidMultiplier * self.betMultiplier
+
     def _getOccupiedPlayerSeats(self):
-        seats = []
-        for i in range(self._availableSeats):
-            if self.seats[i] is not None:
-                seats.append(i)
-        return seats
+        return self.getOccupiedSeats()
+
+    def getSeatChips(self, seatIndex):
+        if self.isPlayerSeat(seatIndex):
+            return self.getSeatGold(seatIndex)
+        elif self.isAISeat(seatIndex):
+            return self._chipsCount[seatIndex]
+
+        return 0
+
+    def _takeChips(self, seatIndex, amount):
+        if self.isPlayerSeat(seatIndex):
+            return self.takeSeatGold(seatIndex, amount)
+        elif self.isAISeat(seatIndex):
+            amount = min(amount, self._chipsCount[seatIndex])
+            self._chipsCount[seatIndex] -= amount
+            return amount
+
+        return 0
+
+    def _payChips(self, seatIndex, amount):
+        if amount <= 0:
+            return
+
+        if self.isPlayerSeat(seatIndex):
+            self.giveSeatGold(seatIndex, amount)
+        elif self.isAISeat(seatIndex):
+            self._chipsCount[seatIndex] += amount
 
     def _seedAIChips(self):
         """Give AI seats a playable stack if they are empty or broke."""
         self._chipsCount = self._normalizeChipsCount(self._chipsCount)
         for seatIndex in self.getAIPlayers():
             if self._chipsCount[seatIndex] < self._getTableBidAmount():
-                self._chipsCount[seatIndex] = self.AIStartingChips
+                self._chipsCount[seatIndex] = self.AIStartingChips * self.betMultiplier
+
+    # ------------------------------------------------------------------
+    # Game lifecycle
+    # ------------------------------------------------------------------
 
     def _scheduleRoundStart(self, delay=1.0):
-        """Start a round once seats are occupied and no hand is running."""
+        """Start a round once a pirate is seated and no hand is running."""
         if self._roundActive:
             return
-        if not self._getOccupiedPlayerSeats():
+
+        if not self.getPlayerSeats():
             return
+
         taskMgr.remove(self.uniqueName('bj-start'))
         taskMgr.doMethodLater(delay, self._startRoundTask,
             self.uniqueName('bj-start'), appendTask=True)
 
     def _startRoundTask(self, task=None):
-        if not self._roundActive and self._getOccupiedPlayerSeats():
+        if not self._roundActive and self.getPlayerSeats():
             self._startRound()
+
         return Task.done
 
     def _startRound(self):
-        occupied = self._getOccupiedPlayerSeats()
-        if not occupied:
-            self._roundActive = False
-            return
-
         self._roundActive = True
         self._buildDeck()
         self._bids = {}
         self._actionQueue = []
-        self._allHands = [[[]] for _ in range(self._availableSeats + 1)]  # +1 for dealer
+        self._currentHand = {}
+        self._finishedHands = {}
+        self._cheaters = {}
+        self._caughtCheating = set()
+        self._dealerHoleCard = None
+        self._allHands = [[[]] for _ in range(self._availableSeats + 1)]
         self._seedAIChips()
-        self._chipsCount = self._normalizeChipsCount(self._chipsCount)
-
+        self.d_setTableState()
         self._collectBids()
 
     def _collectBids(self):
@@ -175,57 +265,79 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
             self._roundActive = False
             return
 
-        self._waitingBids = set(occupied)
-        self._bids = {}
+        self._waitingBids = set()
+        self._bidding = True
         bidAmount = self._getTableBidAmount()
 
         for seatIndex in occupied:
-            if self.seats[seatIndex] == 1:
-                # AI bids the default amount when it can afford it.
-                if self._chipsCount[seatIndex] < bidAmount:
-                    self._chipsCount[seatIndex] = self.AIStartingChips
-                self._bids[seatIndex] = bidAmount
-                self._waitingBids.discard(seatIndex)
-                self.sendUpdate('setEvent', [seatIndex, [PlayingCardGlobals.Bid, bidAmount]])
+            if self.isAISeat(seatIndex):
+                # AI bids the default amount, a little more when it's flush.
+                bid = bidAmount
+                if self._chipsCount[seatIndex] > bidAmount * 20 and random.random() < 0.3:
+                    bid = bidAmount * random.randint(2, 5)
+                self._placeBid(seatIndex, bid)
             else:
-                self.sendUpdate('setEvent', [seatIndex, [PlayingCardGlobals.AskForBid, 0]])
+                self._waitingBids.add(seatIndex)
+                self.d_setEvent(seatIndex, PlayingCardGlobals.AskForBid, 0)
 
         # Start bid timeout
-        taskMgr.doMethodLater(PlayingCardGlobals.BidTimeout + 1.0,
+        taskMgr.doMethodLater(PlayingCardGlobals.BidTimeout + self.TimeoutPadding,
             self._bidTimeoutTask, self.uniqueName('bj-bid'), appendTask=True)
 
         self._checkAllBidsIn()
 
     def _bidTimeoutTask(self, task=None):
-        # Auto-bid the minimum for anyone who hasn't bid
+        # anyone who hasn't bid sits this round out
         for seatIndex in list(self._waitingBids):
-            self._receiveBid(seatIndex, self._getTableBidAmount())
+            self._sitOutRound(seatIndex)
+
+        self._waitingBids = set()
+        self._checkAllBidsIn()
         return Task.done
 
-    def _receiveBid(self, seatIndex, amount):
-        bid = max(self._getTableBidAmount(), amount)
-        inv = None
-        seat = self.seats[seatIndex]
-        if seat and seat not in (0, 1):
-            inv = self.air.inventoryManager.getInventory(seat.doId)
+    def _sitOutRound(self, seatIndex):
+        self._waitingBids.discard(seatIndex)
+        self.d_setEvent(seatIndex, PlayingCardGlobals.Bid, 0)
+        self._missedBids[seatIndex] = self._missedBids.get(seatIndex, 0) + 1
+        if self._missedBids[seatIndex] > PlayingCardGlobals.MaximumTimeouts:
+            # the pirate has walked away from the table
+            self.standPlayer(seatIndex)
 
-        if inv and inv.getGoldInPocket() < bid:
-            # Can't afford - stand them up
-            self.avatarStand(seat, seatIndex)
-            self._waitingBids.discard(seatIndex)
-            self._checkAllBidsIn()
+    def _receiveBid(self, seatIndex, amount):
+        if seatIndex not in self._waitingBids:
             return
 
-        self._bids[seatIndex] = bid
         self._waitingBids.discard(seatIndex)
-        self.sendUpdate('setEvent', [seatIndex, [PlayingCardGlobals.Bid, bid]])
+        self._missedBids[seatIndex] = 0
+        bid = min(max(self._getTableBidAmount(), amount), self._getMaxBidAmount())
+        if self.getSeatChips(seatIndex) < self._getTableBidAmount():
+            self.d_setEvent(seatIndex, PlayingCardGlobals.Bid, 0)
+        else:
+            self._placeBid(seatIndex, min(bid, self.getSeatChips(seatIndex)))
+
         self._checkAllBidsIn()
+
+    def _placeBid(self, seatIndex, bid):
+        bid = self._takeChips(seatIndex, bid)
+        if bid <= 0:
+            self.d_setEvent(seatIndex, PlayingCardGlobals.Bid, 0)
+            return
+
+        self._bids[seatIndex] = [bid]
+        self.d_setEvent(seatIndex, PlayingCardGlobals.Bid, bid)
 
     def _checkAllBidsIn(self):
         if self._waitingBids:
             return
 
         taskMgr.remove(self.uniqueName('bj-bid'))
+        self._bidding = False
+        if not [seatIndex for seatIndex in self._bids if self.isPlayerSeat(seatIndex)]:
+            # no pirate bid on this round; refund the AI and try again later.
+            self._abortRound()
+            self._scheduleRoundStart(self.NextRoundDelay)
+            return
+
         taskMgr.doMethodLater(PlayingCardGlobals.DealDelay,
             self._dealTask, self.uniqueName('bj-deal'), appendTask=True)
 
@@ -233,59 +345,108 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         self._dealCards()
         return Task.done
 
+    def _getBiddingSeats(self):
+        return sorted(self._bids.keys())
+
     def _dealCards(self):
-        occupied = list(self._bids.keys())
-        dealerSeat = self._availableSeats
+        bidders = self._getBiddingSeats()
 
-        # Deal two cards to each player and dealer
-        for _ in range(2):
-            for seatIndex in occupied:
-                card = self._dealCard()
-                self._allHands[seatIndex][0].append(card)
-            self._allHands[dealerSeat][0].append(self._dealCard())
+        # Deal two cards to each player and dealer, the dealer's second
+        # card is dealt face down.
+        for i in range(2):
+            for seatIndex in bidders:
+                self._allHands[seatIndex][0].append(self._dealCard())
 
-        # Second dealer card is face-down (Unknown)
-        dealerVisible = [self._allHands[dealerSeat][0][0], PlayingCardGlobals.Unknown]
-        self._allHands[dealerSeat][0] = dealerVisible
+            if i == 0:
+                self._allHands[self.DealerSeat][0].append(self._dealCard())
+            else:
+                self._dealerHoleCard = self._dealCard()
+                self._allHands[self.DealerSeat][0].append(PlayingCardGlobals.Unknown)
 
-        self._broadcastTableState()
-        taskMgr.doMethodLater(PlayingCardGlobals.DealCompleteDelay,
-            self._startPlayerActionsTask, self.uniqueName('bj-action'), appendTask=True)
+        for seatIndex in bidders:
+            self._currentHand[seatIndex] = 0
+            self._finishedHands[seatIndex] = set()
+
+        self.d_setTableState()
+
+        if self._isBlackjack(self._getDealerHand()):
+            # the dealer peeks at a blackjack, nobody gets to play
+            delay = PlayingCardGlobals.DealCompleteDelay * len(bidders)
+            taskMgr.doMethodLater(delay, self._dealerPlayTask,
+                self.uniqueName('bj-action'), appendTask=True)
+            return
+
+        delay = PlayingCardGlobals.DealCompleteDelay * (len(bidders) + 1)
+        taskMgr.doMethodLater(delay, self._startPlayerActionsTask,
+            self.uniqueName('bj-action'), appendTask=True)
+
+    def _getDealerHand(self):
+        hand = list(self._allHands[self.DealerSeat][0])
+        if self._dealerHoleCard is not None and PlayingCardGlobals.Unknown in hand:
+            hand[hand.index(PlayingCardGlobals.Unknown)] = self._dealerHoleCard
+
+        return hand
 
     def _startPlayerActionsTask(self, task=None):
-        occupied = list(self._bids.keys())
-        self._actionQueue = list(occupied)  # queue of seats still to act
-        self._currentSplitIndex = {s: 0 for s in occupied}
+        self._actionQueue = self._getBiddingSeats()
         self._nextPlayerAction()
         return Task.done
 
     def _nextPlayerAction(self, task=None):
         taskMgr.remove(self.uniqueName('bj-action'))
 
+        while self._actionQueue:
+            seatIndex = self._actionQueue[0]
+            if seatIndex not in self._bids:
+                self._actionQueue.pop(0)
+                continue
+
+            hand = self._getCurrentHand(seatIndex)
+            if len(hand) < 2:
+                # second hand of a split, it gets it's next card now
+                hand.append(self._dealCard())
+                self.d_setTableState()
+
+            if self._handValue(hand) >= 21:
+                if not self._advanceHand(seatIndex):
+                    self._actionQueue.pop(0)
+                continue
+
+            break
+
         if not self._actionQueue:
             self._dealerPlay()
             return
 
         seatIndex = self._actionQueue[0]
-        hand = self._getCurrentHand(seatIndex)
-        handValue = self._handValue(hand)
-
-        if handValue >= 21:
-            # Auto-stay
-            self.sendUpdate('setEvent', [seatIndex, [PlayingCardGlobals.AutoStay, handValue]])
-            self._actionQueue.pop(0)
-            self._nextPlayerAction()
-            return
-
-        if self.seats[seatIndex] == 1:
-            # AI decision
-            taskMgr.doMethodLater(1.0, self._aiBlackjackDecisionTask,
+        if self.isAISeat(seatIndex):
+            self.d_setEvent(seatIndex, PlayingCardGlobals.AskCard, 0)
+            taskMgr.doMethodLater(random.uniform(*self.AIThinkTime), self._aiBlackjackDecisionTask,
                 self.uniqueName('bj-action'), extraArgs=[seatIndex], appendTask=True)
         else:
-            self.sendUpdate('setEvent', [seatIndex, [PlayingCardGlobals.AskCard, 0]])
-            taskMgr.doMethodLater(PlayingCardGlobals.AskCardTimeout + 1.0,
+            self.d_setEvent(seatIndex, PlayingCardGlobals.AskCard, 0)
+            taskMgr.doMethodLater(PlayingCardGlobals.AskCardTimeout + self.TimeoutPadding,
                 self._playerActionTimeoutTask, self.uniqueName('bj-action'),
                 extraArgs=[seatIndex], appendTask=True)
+
+    def _nextPlayerActionTask(self, task=None):
+        self._nextPlayerAction()
+        return Task.done
+
+    def _advanceHand(self, seatIndex):
+        """
+        Marks the seat's current hand as finished, returns True if the seat
+        still has a split hand left to play.
+        """
+
+        self._finishedHands.setdefault(seatIndex, set()).add(self._currentHand.get(seatIndex, 0))
+        hands = self._allHands[seatIndex]
+        for handIndex in range(len(hands)):
+            if handIndex not in self._finishedHands[seatIndex]:
+                self._currentHand[seatIndex] = handIndex
+                return True
+
+        return False
 
     def _playerActionTimeoutTask(self, seatIndex, task=None):
         # Auto-stay on timeout
@@ -295,11 +456,18 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
     def _aiBlackjackDecisionTask(self, seatIndex, task=None):
         hand = self._getCurrentHand(seatIndex)
         value = self._handValue(hand)
-        # Simple AI: hit under 17, stay at 17+
-        if value < 17:
+        dealerUp = self._handValue(self._allHands[self.DealerSeat][0][:1])
+        bid = self._bids[seatIndex][self._currentHand[seatIndex]]
+
+        # Simple basic strategy
+        if len(hand) == 2 and value in (10, 11) and dealerUp < value and \
+                self.getSeatChips(seatIndex) >= bid:
+            self._applyBlackjackAction(seatIndex, PlayingCardGlobals.DoubleDown, bid)
+        elif value < 12 or (value < 17 and dealerUp >= 7):
             self._applyBlackjackAction(seatIndex, PlayingCardGlobals.Hit, 0)
         else:
             self._applyBlackjackAction(seatIndex, PlayingCardGlobals.Stay, 0)
+
         return Task.done
 
     def clientAction(self, action):
@@ -310,8 +478,6 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         seatIndex = self.getAvatarSeatIndex(avatar)
         if seatIndex is None:
             return
-
-        taskMgr.remove(self.uniqueName('bj-action'))
 
         actionCode = action[0] if action else PlayingCardGlobals.Stay
         amount = action[1] if len(action) > 1 else 0
@@ -325,76 +491,105 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
         if not self._actionQueue or self._actionQueue[0] != seatIndex:
             return
 
+        taskMgr.remove(self.uniqueName('bj-action'))
         hand = self._getCurrentHand(seatIndex)
-        self.sendUpdate('setEvent', [seatIndex, [actionCode, amount]])
+        handIndex = self._currentHand.get(seatIndex, 0)
+        bid = self._bids[seatIndex][handIndex]
+
+        if actionCode == PlayingCardGlobals.DoubleDown and \
+                (len(hand) != 2 or self.getSeatChips(seatIndex) < bid):
+            actionCode = PlayingCardGlobals.Hit
+
+        if actionCode == PlayingCardGlobals.Split and \
+                (len(hand) != 2 or not self._isSplittable(hand) or self.getSeatChips(seatIndex) < bid):
+            actionCode = PlayingCardGlobals.Hit
 
         if actionCode == PlayingCardGlobals.Hit:
+            self.d_setEvent(seatIndex, PlayingCardGlobals.Hit, 0)
             hand.append(self._dealCard())
-            value = self._handValue(hand)
-            self._broadcastTableState()
-            if value >= 21:
-                self._actionQueue.pop(0)
-                self._nextPlayerAction()
+            self.d_setTableState()
+            if self._handValue(hand) > 21:
+                self.aiSpeak(seatIndex, self.AIBustSpeech, 0.4)
+
+            if self._handValue(hand) >= 21:
+                self._finishHand(seatIndex)
             else:
                 # Ask again
-                taskMgr.doMethodLater(0.5, self._nextPlayerAction, self.uniqueName('bj-action'))
-
-        elif actionCode == PlayingCardGlobals.Stay:
-            self._actionQueue.pop(0)
-            self._nextPlayerAction()
+                self._askAgain(seatIndex)
 
         elif actionCode == PlayingCardGlobals.DoubleDown:
-            bid = self._bids.get(seatIndex, 0)
-            self._bids[seatIndex] = bid * 2
+            self.d_setEvent(seatIndex, PlayingCardGlobals.DoubleDown, bid)
+            self._bids[seatIndex][handIndex] += self._takeChips(seatIndex, bid)
             hand.append(self._dealCard())
-            self._broadcastTableState()
-            self._actionQueue.pop(0)
-            self._nextPlayerAction()
+            self.d_setTableState()
+            self._finishHand(seatIndex)
 
         elif actionCode == PlayingCardGlobals.Split:
-            if len(hand) == 2:
-                # Split into two hands
-                card2 = hand.pop()
-                newHand = [card2, self._dealCard()]
-                hand.append(self._dealCard())
-                self._allHands[seatIndex].append(newHand)
-                self._broadcastTableState()
-                # Put seat back in queue for second hand
-                self._actionQueue.insert(1, seatIndex)
-            self._actionQueue.pop(0)
-            self._nextPlayerAction()
+            self.d_setEvent(seatIndex, PlayingCardGlobals.Split, bid)
+            self._bids[seatIndex].append(self._takeChips(seatIndex, bid))
+            card = hand.pop()
+            self._allHands[seatIndex].append([card])
+            hand.append(self._dealCard())
+            self.d_setTableState()
+            if self._handValue(hand) >= 21:
+                self._finishHand(seatIndex)
+            else:
+                self._askAgain(seatIndex)
 
         else:
-            # Default: stay
+            # Stay, AutoStay and anything we don't understand
+            self.d_setEvent(seatIndex, PlayingCardGlobals.Stay, 0)
+            self._finishHand(seatIndex)
+
+    def _askAgain(self, seatIndex):
+        taskMgr.doMethodLater(0.5, self._nextPlayerActionTask,
+            self.uniqueName('bj-action'), appendTask=True)
+
+    def _finishHand(self, seatIndex):
+        if not self._advanceHand(seatIndex):
             self._actionQueue.pop(0)
-            self._nextPlayerAction()
+
+        taskMgr.doMethodLater(PlayingCardGlobals.DealDelay, self._nextPlayerActionTask,
+            self.uniqueName('bj-action'), appendTask=True)
 
     def _getCurrentHand(self, seatIndex):
         hands = self._allHands[seatIndex]
-        # Current hand: last hand with fewer than 2 final cards, or first hand
-        for hand in reversed(hands):
-            if len(hand) < 2:
-                return hand
-        return hands[-1] if hands else []
+        handIndex = self._currentHand.get(seatIndex, 0)
+        if handIndex >= len(hands):
+            handIndex = len(hands) - 1
+
+        return hands[handIndex]
 
     # ------------------------------------------------------------------
     # Dealer plays
     # ------------------------------------------------------------------
 
+    def _dealerPlayTask(self, task=None):
+        self._dealerPlay()
+        return Task.done
+
     def _dealerPlay(self):
-        dealerSeat = self._availableSeats
-        dealerHand = self._allHands[dealerSeat][0]
+        taskMgr.remove(self.uniqueName('bj-action'))
 
         # Reveal dealer hole card
-        if len(dealerHand) >= 2 and dealerHand[1] == PlayingCardGlobals.Unknown:
-            dealerHand[1] = self._dealCard()
+        dealerHand = self._getDealerHand()
+        self._allHands[self.DealerSeat][0] = dealerHand
+        self._dealerHoleCard = None
 
-        # Dealer hits until 17
-        while self._handValue(dealerHand) < 17:
-            dealerHand.append(self._dealCard())
+        # The dealer only draws when somebody is still standing
+        live = False
+        for seatIndex in self._bids:
+            for hand in self._allHands[seatIndex]:
+                if self._handValue(hand) <= 21:
+                    live = True
 
-        self._broadcastTableState()
-        taskMgr.doMethodLater(PlayingCardGlobals.PayOutDelay,
+        if live and not self._isBlackjack(dealerHand):
+            while self._handValue(dealerHand) < self.DealerStandValue:
+                dealerHand.append(self._dealCard())
+
+        self.d_setEvent(self.DealerSeat, PlayingCardGlobals.Stay, 0)
+        self.d_setTableState()
+        taskMgr.doMethodLater(PlayingCardGlobals.PayOutDelay * len(dealerHand),
             self._payoutTask, self.uniqueName('bj-deal'), appendTask=True)
 
     def _payoutTask(self, task=None):
@@ -405,82 +600,101 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
     # Payout
     # ------------------------------------------------------------------
 
+    def _getHandPayout(self, hand, bid, split, dealerHand):
+        """Returns the total gold returned to the player for the hand."""
+        playerValue = self._handValue(hand)
+        dealerValue = self._handValue(dealerHand)
+        playerBJ = self._isBlackjack(hand) and not split
+        dealerBJ = self._isBlackjack(dealerHand)
+
+        if playerValue > 21:
+            return 0
+        elif playerBJ and dealerBJ:
+            return bid
+        elif dealerBJ:
+            return 0
+        elif playerBJ:
+            # Blackjack pays 3:2
+            return bid + (bid * 3) // 2
+        elif dealerValue > 21 or playerValue > dealerValue:
+            return bid * 2
+        elif playerValue == dealerValue:
+            return bid
+
+        return 0
+
     def _payout(self):
-        dealerSeat = self._availableSeats
-        dealerValue = self._handValue(self._allHands[dealerSeat][0])
-        dealerBlackjack = self._isBlackjack(self._allHands[dealerSeat][0])
+        dealerHand = self._allHands[self.DealerSeat][0]
+        self._checkForCheaters()
         results = [0] * self._availableSeats
 
-        for seatIndex, bid in self._bids.items():
-            seat = self.seats[seatIndex]
-            totalWin = 0
+        for seatIndex in self._getBiddingSeats():
+            bids = self._bids[seatIndex]
+            hands = self._allHands[seatIndex]
+            split = len(hands) > 1
+            totalBid = sum(bids)
 
-            for hand in self._allHands[seatIndex]:
-                playerValue = self._handValue(hand)
-                playerBJ = self._isBlackjack(hand) and len(self._allHands[seatIndex]) == 1
+            if seatIndex in self._caughtCheating:
+                # the bid is forfeit, the fine was taken when they were caught
+                results[seatIndex] = PlayingCardGlobals.PlayerCaughtCheating
+                continue
 
-                if playerValue > 21:
-                    # Bust
-                    win = -bid
-                elif dealerBlackjack and not playerBJ:
-                    win = -bid
-                elif playerBJ and not dealerBlackjack:
-                    win = int(bid * 1.5)  # Blackjack pays 3:2
-                elif playerValue > dealerValue or dealerValue > 21:
-                    win = bid
-                elif playerValue == dealerValue:
-                    win = 0  # Push
-                else:
-                    win = -bid
+            totalPayout = 0
+            for handIndex in range(len(hands)):
+                totalPayout += self._getHandPayout(hands[handIndex], bids[handIndex], split, dealerHand)
 
-                totalWin += win
+            self._payChips(seatIndex, totalPayout)
+            profit = totalPayout - totalBid
+            results[seatIndex] = profit
 
-            results[seatIndex] = totalWin
+            if profit > 0:
+                self.aiSpeak(seatIndex, self.AIWinSpeech, 0.4)
 
-            if seat and seat not in (0, 1):
-                inv = self.air.inventoryManager.getInventory(seat.doId)
-                if inv:
-                    # Deduct bid then apply result
-                    inv.setGoldInPocket(inv.getGoldInPocket() - bid)
-                    if totalWin > 0:
-                        inv.addGoldInPocket(bid + totalWin)
+            if profit > 0 and self.isPlayerSeat(seatIndex):
+                avatar = self.seats[seatIndex]
+                self.air.questMgr.blackjackHandWon(avatar, profit)
 
-                    if totalWin > 0:
-                        # Quest hook
-                        if hasattr(self.air, 'questMgr'):
-                            self.air.questMgr.blackjackHandWon(seat, totalWin)
-                        # Reputation
-                        current = 0
-                        accumulators = inv.getAccumulators()
-                        for accType, qty in accumulators:
-                            if accType == InventoryType.BlackjackGame:
-                                current = qty
-                                break
-                        inv.b_setAccumulator(InventoryType.BlackjackGame,
-                            min(current + totalWin, 9999))
+                # Track the pirate's blackjack winnings for the rankings
+                inventory = self.getSeatInventory(seatIndex)
+                if inventory:
+                    current = inventory.getStackQuantity(InventoryType.BlackjackGame)
+                    inventory.b_setStackQuantity(InventoryType.BlackjackGame, min(current + profit, 9999))
 
-                    self._chipsCount[seatIndex] = inv.getGoldInPocket()
-            elif seat == 1:
-                # AI stack is table-local; apply net result and top up if broke.
-                self._chipsCount[seatIndex] = max(0, self._chipsCount[seatIndex] + totalWin)
-                if self._chipsCount[seatIndex] < self._getTableBidAmount():
-                    self._chipsCount[seatIndex] = self.AIStartingChips
-
-        self._chipsCount = self._normalizeChipsCount(self._chipsCount)
-        self.sendUpdate('setHandResults', [results])
-        self._broadcastTableState()
+        self._seedAIChips()
+        self.d_setHandResults(results)
+        self.d_setTableState()
         self._roundActive = False
+        self._bids = {}
 
-        taskMgr.doMethodLater(3.0, self._nextRoundTask,
-            self.uniqueName('bj-deal'), appendTask=True)
+        taskMgr.doMethodLater(self.NextRoundDelay, self._nextRoundTask,
+            self.uniqueName('bj-start'), appendTask=True)
 
     def _nextRoundTask(self, task=None):
-        occupied = self._getOccupiedPlayerSeats()
-        if occupied:
+        if self.getPlayerSeats():
             self._startRound()
         else:
             self._roundActive = False
+
         return Task.done
+
+    def _abortRound(self):
+        taskMgr.remove(self.uniqueName('bj-bid'))
+        taskMgr.remove(self.uniqueName('bj-deal'))
+        taskMgr.remove(self.uniqueName('bj-action'))
+
+        # the AI gets it's bids back; pirates that left forfeit theirs
+        for seatIndex, bids in list(self._bids.items()):
+            if self.isAISeat(seatIndex) or self.isPlayerSeat(seatIndex):
+                self._payChips(seatIndex, sum(bids))
+
+        self._bids = {}
+        self._waitingBids = set()
+        self._bidding = False
+        self._actionQueue = []
+        self._dealerHoleCard = None
+        self._allHands = [[[]] for _ in range(self._availableSeats + 1)]
+        self._roundActive = False
+        self.d_setTableState()
 
     # ------------------------------------------------------------------
     # Cheat handling
@@ -496,76 +710,96 @@ class DistributedBlackjackTableAI(DistributedGameTableAI):
             return
 
         hand = self._getCurrentHand(seatIndex)
-        if not hand:
-            self.sendUpdateToAvatarId(avatar.doId, 'cheatResponse',
-                [cheatType, cheatTarget, 0, []])
+        cardIndex = {PlayingCardGlobals.ReplaceHoleCardOneCheat: 0,
+                     PlayingCardGlobals.ReplaceHoleCardTwoCheat: 1}.get(cheatType, -1)
+
+        # card swaps are only allowed while it's the pirate's turn
+        if (not self._actionQueue or self._actionQueue[0] != seatIndex or seatIndex in self._cheaters or
+                cardIndex < 0 or cardIndex >= len(hand) or not 0 <= cheatTarget < 52):
+            self.d_cheatResponse(seatIndex, cheatType, cheatTarget, 0, list(hand))
             return
 
         inv = self.air.inventoryManager.getInventory(avatar.doId)
-        if not inv:
-            self.sendUpdateToAvatarId(avatar.doId, 'cheatResponse',
-                [cheatType, cheatTarget, 0, hand])
+        cardType = InventoryType.begin_Cards + cheatTarget
+        quantity = inv.getStackQuantity(cardType) if inv else 0
+        if quantity <= 0:
+            self.air.logPotentialHacker(
+                message='Requested blackjack card swap with card not in inventory',
+                targetAvId=avatar.doId,
+                cardId=cheatTarget)
+
+            self.d_cheatResponse(seatIndex, cheatType, cheatTarget, 0, list(hand))
             return
 
-        # Find a usable card from inventory
-        newCard = -1
-        for cardId in range(52):
-            qty = inv.getStackQuantity(InventoryType.begin_Cards + cardId)
-            if qty > 0:
-                newCard = cardId
-                inv.b_setStackQuantity(InventoryType.begin_Cards + cardId, qty - 1)
-                break
+        inv.b_setStackQuantity(cardType, quantity - 1)
+        hand[cardIndex] = cheatTarget
+        self._cheaters[seatIndex] = cheatTarget
 
-        if newCard < 0:
-            self.sendUpdateToAvatarId(avatar.doId, 'cheatResponse',
-                [cheatType, cheatTarget, 0, hand])
+        if self._isCardDuplicated(cheatTarget):
+            # the swapped card is already showing on the table, the
+            # dealer spots it straight away.
+            self._caughtCheating.add(seatIndex)
+            self._takeChips(seatIndex, self.CheatingFine)
+            self.d_cheatResponse(seatIndex, PlayingCardGlobals.CaughtCheating, cheatTarget, 0, list(hand))
             return
 
-        if len(hand) >= 1:
-            hand[0] = newCard
-        self._broadcastTableState()
-        self.sendUpdateToAvatarId(avatar.doId, 'cheatResponse',
-            [cheatType, cheatTarget, 1, hand])
+        self.d_cheatResponse(seatIndex, cheatType, cheatTarget, 1, list(hand))
+        self.d_setTableState()
+
+        # the player's turn timer restarts with the swapped hand
+        taskMgr.remove(self.uniqueName('bj-action'))
+        taskMgr.doMethodLater(PlayingCardGlobals.AskCardTimeout + self.TimeoutPadding,
+            self._playerActionTimeoutTask, self.uniqueName('bj-action'),
+            extraArgs=[seatIndex], appendTask=True)
+
+    def _isCardDuplicated(self, card):
+        count = 0
+        for seatHands in self._allHands:
+            for hand in seatHands:
+                count += hand.count(card)
+
+        if self._dealerHoleCard == card:
+            count += 1
+
+        return count > 1
+
+    def _checkForCheaters(self):
+        """The dealer inspects the cards on the table before paying out."""
+        for seatIndex, card in list(self._cheaters.items()):
+            if seatIndex in self._caughtCheating:
+                continue
+
+            if self._isCardDuplicated(card):
+                self._caughtCheating.add(seatIndex)
+                self._takeChips(seatIndex, self.CheatingFine)
+                if self.isPlayerSeat(seatIndex):
+                    hand = self._getCurrentHand(seatIndex)
+                    self.d_cheatResponse(seatIndex, PlayingCardGlobals.CaughtCheating, card, 0, list(hand))
 
     # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
 
     def _handValue(self, hand):
-        # rank = card % 13: 0=2, 1=3, ..., 7=9, 8=10, 9=J, 10=Q, 11=K, 12=Ace
-        value = 0
-        aces = 0
-        for card in hand:
-            if card == PlayingCardGlobals.Unknown:
-                continue
-            rank = card % 13
-            if rank == 12:   # Ace
-                value += 11
-                aces += 1
-            elif rank >= 8:  # 10, J, Q, K
-                value += 10
-            else:
-                value += rank + 2  # 0=2, 1=3, ..., 7=9
-
-        while value > 21 and aces > 0:
-            value -= 10
-            aces -= 1
-
-        return value
+        return PlayingCardGlobals.getBlackjackHandValue(
+            [card for card in hand if card != PlayingCardGlobals.Unknown])
 
     def _isBlackjack(self, hand):
         if len(hand) != 2:
             return False
+
         return self._handValue(hand) == 21
 
-    def _broadcastTableState(self):
-        self.d_setTableState()
+    def _isSplittable(self, hand):
+        # mirrors BlackjackTableGUI.splitableHand on the client
+        rank1 = hand[0] % 13
+        rank2 = hand[1] % 13
+        if rank1 == rank2:
+            return True
+
+        return 8 <= rank1 <= 11 and 8 <= rank2 <= 11
 
     def announceGenerate(self):
         DistributedGameTableAI.announceGenerate(self)
         self._seedAIChips()
-        self._allHands = [[[]] for _ in range(self._availableSeats + 1)]
-        self.sendUpdate('setBetMultiplier', [self.betMultiplier])
-        self.d_setTableState()
-        # Original tables deal once AI/players are seated.
         self._scheduleRoundStart(delay=2.0)
