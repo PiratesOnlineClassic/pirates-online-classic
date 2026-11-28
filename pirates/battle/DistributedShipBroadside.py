@@ -620,7 +620,7 @@ class DistributedShipBroadside(DistributedWeapon, DistributedShippart):
 
     def completeCannonCheck(self):
         for colList in list(self.collisionLists.values()):
-            colList.sort()
+            colList.sort(key = lambda x: x[0])
             ammo = colList[0][1].getFromNodePath().getPythonTag('ammo')
             if not ammo or ammo.destroyed:
                 continue
