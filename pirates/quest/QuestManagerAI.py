@@ -1008,7 +1008,7 @@ class QuestManagerAI(DirectObject):
         return madeProgress
 
     def getShipFaction(self, ship):
-        team = ship.getBaseTeam() if hasattr(ship, 'getBaseTeam') else PiratesGlobals.INVALID_TEAM
+        team = ship.getBaseTeam()
         if team in (PiratesGlobals.INVALID_TEAM, PiratesGlobals.PLAYER_TEAM):
             team = ShipGlobals.getShipTeam(ship.getShipClass())
 
