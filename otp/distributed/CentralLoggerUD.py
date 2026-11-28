@@ -15,11 +15,12 @@ class CentralLoggerUD(DistributedObjectGlobalUD):
         parts = message.split('|')
         msgType = parts[0]
         fields = {
+            'avId': self.air.getAvatarIdFromSender(),
             'targetDISLid': targetDISLid,
             'targetAvId': targetAvId
         }
 
-        if msgType == 'GUEST_FEEDBACK':
+        if msgType == 'GUEST_FEEDBACK' and len(parts) >= 3:
             fields['feedbackCategory'] = parts[1]
             fields['feedbackMessage'] = parts[2]
 
@@ -53,7 +54,7 @@ class CentralLoggerUD(DistributedObjectGlobalUD):
 
         if self.notify.getDebug():
             # Print to console
-            print((json.dumps(event)))
+            print(json.dumps(messageBody))
 
         if exceptionLogger == 'splunk':
             pass #TODO
