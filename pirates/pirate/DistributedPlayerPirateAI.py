@@ -243,6 +243,18 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         """
         self.sendUpdateToAvatarId(self.doId, 'beginningTeleport', [instanceType, fromInstanceType, instanceName, gameType])
 
+    def requestActivity(self, gameType, gameCategory, options, shipIds):
+        self.air.matchMaker.requestActivity(self, gameType, gameCategory, options, shipIds)
+
+    def requestInvites(self, inviteModes, gameCategory, gameType, options, additionalAvs):
+        self.air.matchMaker.requestInvites(self, inviteModes, gameCategory, gameType, options, additionalAvs)
+
+    def d_requestInvitesResp(self, invitees, numFailed):
+        self.sendUpdateToAvatarId(self.doId, 'requestInvitesResp', [invitees, numFailed])
+
+    def d_lookoutMatchFailed(self, restartRequest):
+        self.sendUpdateToAvatarId(self.doId, 'lookoutMatchFailed', [restartRequest])
+
     def d_setTutorialHandlerZone(self, handlerZoneId):
         self.sendUpdateToAvatarId(self.doId, 'setTutorialHandlerZone', [handlerZoneId])
 

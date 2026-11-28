@@ -180,6 +180,8 @@ class PiratesAIRepository(PiratesInternalRepository):
         self.pvpManager = PVPManagerAI(self)
         self.pvpManager.generateWithRequired(OTP_ZONE_ID_MANAGEMENT)
 
+        self.matchMaker = self.generateGlobalObject(OTP_DO_ID_PIRATES_MATCH_MAKER, 'DistributedMatchMaker')
+
     def createWorlds(self):
         """
         Create "world" objects, e.g. DistributedInstanceBase, DistributedOceanGrid et al.
