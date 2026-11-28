@@ -1,3 +1,4 @@
+from functools import cmp_to_key
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
 from panda3d.core import *
@@ -1091,7 +1092,7 @@ class TattooStoreGUI(DirectFrame):
             else:
                 return
 
-        tattoos.sort(self.sortItems)
+        tattoos.sort(key=cmp_to_key(self.sortItems))
         for item in self.buttons:
             item.destroy()
 

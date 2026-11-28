@@ -1,3 +1,4 @@
+from functools import cmp_to_key
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
 from panda3d.core import *
@@ -1425,7 +1426,7 @@ class AccessoriesStoreGUI(DirectFrame):
                 return
 
         if not config.GetBool('tailor-debug', 0):
-            clothes.sort(self.sortItems)
+            clothes.sort(key=cmp_to_key(self.sortItems))
 
         clothingAmount = 0
         startPos = Vec3(0.35, 0.0, 1.05)

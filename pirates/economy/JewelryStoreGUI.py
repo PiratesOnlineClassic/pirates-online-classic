@@ -1,3 +1,4 @@
+from functools import cmp_to_key
 from direct.directnotify.DirectNotifyGlobal import directNotify
 from direct.gui.DirectGui import *
 from panda3d.core import *
@@ -1198,7 +1199,7 @@ class JewelryStoreGUI(DirectFrame):
             else:
                 return
 
-        jewelry.sort(self.sortItems)
+        jewelry.sort(key=cmp_to_key(self.sortItems))
         jewelryAmount = 0
         startPos = Vec3(0.35, 0.0, 1.05)
         buttonScale = Vec3(0.6, 0.6, 0.6)
