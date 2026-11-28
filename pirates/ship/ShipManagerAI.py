@@ -7,10 +7,12 @@ from pirates.ship.DistributedShipAI import DistributedShipAI
 from pirates.ship.PlayerShipAI import PlayerShipAI
 from pirates.ship.NPCShipAI import NPCShipAI
 from pirates.ship.TutorialShipAI import TutorialShipAI
+from pirates.ship.GameFSMShipAI import getIslandAvoidSpheres
 from pirates.ship import ShipGlobals
 from pirates.ship import FlagshipGlobals
 from pirates.world import OceanZone
 from pirates.world import WorldGlobals
+from pirates.leveleditor import WorldDataGlobals
 from pirates.piratesbase.PLocalizerEnglish import *
 
 
@@ -71,6 +73,11 @@ class ShipManagerAI:
 
         self.NPCShipUpkeepTask = None
         self.FlagshipUpkeepTask = None
+
+        # the world's ship spawn nodes, and the ship each one has out at sea:
+        self.shipSpawnNodes = None
+        self.spawnNodeShips = {}
+        self.islandAvoidSpheres = None
 
     def hasPlayerShip(self, ship):
         assert(ship is not None)
@@ -163,10 +170,23 @@ class ShipManagerAI:
     def _isValidSpawnPosition(self, x, y):
         """
         Check if a position is valid for spawning a ship.
-        Must be within the Cartesian grid bounds.
+        Must be within the Cartesian grid bounds and clear of the islands.
         """
         minX, maxX, minY, maxY = self._getGridBounds()
-        return minX <= x <= maxX and minY <= y <= maxY
+        return minX <= x <= maxX and minY <= y <= maxY and self._isClearOfIslands(x, y)
+
+    def _isClearOfIslands(self, x, y):
+        if self.islandAvoidSpheres is None:
+            if not self.world or not hasattr(self.world, 'builder'):
+                return True
+
+            self.islandAvoidSpheres = getIslandAvoidSpheres(self.world)
+
+        for centerX, centerY, radius in self.islandAvoidSpheres:
+            if (x - centerX) ** 2 + (y - centerY) ** 2 < radius * radius:
+                return False
+
+        return True
 
     def _clampToGridBounds(self, x, y):
         """Clamp coordinates to be within valid grid bounds."""
@@ -202,10 +222,14 @@ class ShipManagerAI:
             except Exception as e:
                 pass
         
-        # Fallback: generate random position within grid bounds
+        # Fallback: generate random position within grid bounds, out in open water
         minX, maxX, minY, maxY = self._getGridBounds()
-        sx = random.uniform(minX, maxX)
-        sy = random.uniform(minY, maxY)
+        for _ in range(maxAttempts * 10):
+            sx = random.uniform(minX, maxX)
+            sy = random.uniform(minY, maxY)
+            if self._isClearOfIslands(sx, sy):
+                break
+
         return sx, sy
 
     def _getIslandPatrolPosition(self, island):
@@ -258,7 +282,7 @@ class ShipManagerAI:
     # Ship Spawning
     # =========================================================================
 
-    def _spawnEnemyShip(self, shipClass, isFlagship=False, spawnNearIsland=None):
+    def _spawnEnemyShip(self, shipClass, isFlagship=False, spawnNearIsland=None, pos=None, patrolRoute=None):
         """
         Spawn an NPC enemy ship.
         
@@ -298,7 +322,9 @@ class ShipManagerAI:
         world = oceanGrid.getParentObj()
         
         # Get valid spawn position
-        if spawnNearIsland:
+        if pos is not None:
+            sx, sy = pos[0], pos[1]
+        elif spawnNearIsland:
             pos = self._getIslandPatrolPosition(spawnNearIsland)
             if pos:
                 sx, sy = pos
@@ -323,6 +349,9 @@ class ShipManagerAI:
 
         ship.sendCurrentPosition()
         ship.startPosHprBroadcast()
+        if patrolRoute:
+            ship.gameFSM.setPatrolRoute(patrolRoute)
+
         ship.b_setGameState('Patrol', 0)
         
         # Track flagships separately
@@ -410,12 +439,95 @@ class ShipManagerAI:
 
         return task.again
 
+    def getShipSpawnNodes(self):
+        """
+        The world's ship spawn nodes. Each one names the ship it spawns, and the world's node
+        links join it to the ship movement nodes that make up the route the ship patrols,
+        the routes are laid out through open water, clear of the islands.
+        """
+        if self.shipSpawnNodes is not None:
+            return self.shipSpawnNodes
+
+        self.shipSpawnNodes = []
+        fileName = self.world.getFileName() if self.world else ''
+        fileData = self.air.worldCreator.openFile(fileName + '.py') if fileName else None
+        if not fileData:
+            return self.shipSpawnNodes
+
+        nodes = {}
+
+        def collectNodes(objects):
+            for objKey, objData in list(objects.items()):
+                if objData.get('Type') in ('Ship Spawn Node', 'Ship Movement Node'):
+                    nodes[objKey] = objData
+
+                collectNodes(objData.get('Objects', {}))
+
+        collectNodes(fileData.get('Objects', {}))
+
+        links = {}
+        for link in fileData.get(WorldDataGlobals.LINK_TYPE_AI_NODE, []):
+            if link[0] in nodes and link[1] in nodes:
+                links.setdefault(link[0], []).append(link[1])
+                links.setdefault(link[1], []).append(link[0])
+
+        for objKey, objData in list(nodes.items()):
+            if objData['Type'] != 'Ship Spawn Node':
+                continue
+
+            shipClass = getattr(ShipGlobals, objData.get('Spawnables', ''), None)
+            if shipClass is None:
+                self.notify.warning('Ship spawn node %s spawns unknown ship %s!' % (
+                    objKey, objData.get('Spawnables')))
+
+                continue
+
+            # follow the movement nodes linked on from the spawn node:
+            route = [objData['Pos']]
+            visited = {objKey}
+            nodeKey = objKey
+            while True:
+                nextKeys = [key for key in links.get(nodeKey, []) if key not in visited and
+                    nodes[key]['Type'] == 'Ship Movement Node']
+                if not nextKeys:
+                    break
+
+                nodeKey = nextKeys[0]
+                visited.add(nodeKey)
+                route.append(nodes[nodeKey]['Pos'])
+
+            self.shipSpawnNodes.append({
+                'uid': objKey,
+                'shipClass': shipClass,
+                'flagship': objData.get('Flagship', False),
+                'route': [(pos[0], pos[1]) for pos in route]})
+
+        return self.shipSpawnNodes
+
+    def _spawnNodeShip(self, spawnNode):
+        ship = self._spawnEnemyShip(spawnNode['shipClass'], isFlagship=spawnNode['flagship'],
+            pos=spawnNode['route'][0], patrolRoute=spawnNode['route'])
+        if ship:
+            self.spawnNodeShips[spawnNode['uid']] = ship
+
+        return ship
+
     def _upkeepFlagshipPop(self, task):
         """Maintain flagship population."""
         task.delayTime = random.random() * 30.0 + FLAGSHIP_SPAWN_DELAY
 
         # Clean up deleted flagships
         self.flagships = {s for s in self.flagships if not s.isEmpty()}
+
+        # a world with ship spawn nodes keeps a ship out on each node's route:
+        spawnNodes = self.getShipSpawnNodes()
+        if spawnNodes:
+            for spawnNode in spawnNodes:
+                ship = self.spawnNodeShips.get(spawnNode['uid'])
+                if ship is None or ship.isEmpty() or ship.isDeleted():
+                    self._spawnNodeShip(spawnNode)
+
+            return task.again
 
         # Spawn new flagships if below max
         for _ in range(FLAGSHIP_POP_MAX - len(self.flagships)):
@@ -426,6 +538,10 @@ class ShipManagerAI:
     def startSpawnEnemyShips(self, world):
         self.world = world
         assert(world is not None)
+
+        self.shipSpawnNodes = None
+        self.spawnNodeShips = {}
+        self.islandAvoidSpheres = None
 
         if self.NPCShipUpkeepTask is not None:
             taskMgr.remove(self.NPCShipUpkeepTask)

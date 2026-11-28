@@ -883,6 +883,77 @@ class ShipManagerTutorialShipTests(unittest.TestCase):
         self.assertEqual(ship.values['b_setGameState'], ('Idle', 0))
 
 
+class ShipSpawnNodeTests(unittest.TestCase):
+
+    def makeShipManager(self):
+        import importlib
+        from pirates.ship import ShipManagerAI as shipManagerModule
+        openFile = lambda name: importlib.import_module(
+            'pirates.leveleditor.worldData.' + name[:-3]).objectStruct
+        shipManager = shipManagerModule.ShipManagerAI(
+            SimpleNamespace(worldCreator=SimpleNamespace(openFile=openFile)))
+        shipManager.world = SimpleNamespace(getFileName=lambda: 'piratesWorld')
+        return shipManager
+
+    def test_spawn_nodes_and_their_routes_come_from_the_world_data(self):
+        spawnNodes = self.makeShipManager().getShipSpawnNodes()
+        self.assertEqual(len(spawnNodes), 12)
+
+        kingfisher = [node for node in spawnNodes if node['uid'] == '1185235968.0dxschafe0'][0]
+        self.assertEqual(kingfisher['shipClass'], ShipGlobals.NAVY_KINGFISHER)
+        self.assertTrue(kingfisher['flagship'])
+        self.assertEqual([tuple(round(c) for c in point) for point in kingfisher['route']],
+            [(7537, 20772), (-20006, 15829)])
+
+        # every node has a route to patrol, starting at the node itself...
+        for spawnNode in spawnNodes:
+            self.assertGreaterEqual(len(spawnNode['route']), 2)
+
+    def test_each_spawn_node_keeps_one_ship_on_its_route(self):
+        shipManager = self.makeShipManager()
+        ships = []
+
+        def spawnEnemyShip(shipClass, isFlagship=False, pos=None, patrolRoute=None):
+            ship = SimpleNamespace(shipClass=shipClass, route=patrolRoute, pos=pos,
+                isEmpty=lambda: False, isDeleted=lambda: False)
+            ships.append(ship)
+            return ship
+
+        shipManager._spawnEnemyShip = spawnEnemyShip
+        task = SimpleNamespace(again='again')
+        shipManager._upkeepFlagshipPop(task)
+        self.assertEqual(len(ships), 12)
+        for ship in ships:
+            self.assertEqual(ship.pos, ship.route[0])
+
+        # nothing more while they're all out at sea, a sunk one is replaced...
+        shipManager._upkeepFlagshipPop(task)
+        self.assertEqual(len(ships), 12)
+        ships[0].isDeleted = lambda: True
+        shipManager._upkeepFlagshipPop(task)
+        self.assertEqual(len(ships), 13)
+        self.assertEqual(ships[-1].shipClass, ships[0].shipClass)
+
+
+class PatrolRouteTests(_TaskPatchedTestCase):
+
+    def test_ship_patrols_back_and_forth_along_its_route(self):
+        ship = makeShip(cls=NPCShipAI, npcShip=1, shipClass=ShipGlobals.NAVY_FERRET)
+        ship.getParentObj = lambda: None
+        fsm = makeFSM(ship)
+        fsm.setPatrolRoute([(0, 0), (0, 5000), (5000, 5000)])
+        ship.setPos(0, 4900, 0)
+
+        points = [tuple(fsm._getRandomPatrolPos())[:2] for _ in range(6)]
+        self.assertEqual(points, [(0, 5000), (5000, 5000), (0, 5000), (0, 0), (0, 5000), (5000, 5000)])
+
+        # after a chase the ship rejoins it's route wherever is nearest...
+        fsm.targetShip = None
+        fsm._routeIndex = None
+        ship.setPos(100, 100, 0)
+        self.assertEqual(tuple(fsm._getRandomPatrolPos())[:2], (0, 0))
+
+
 class SteeredShipGridZoneTests(unittest.TestCase):
 
     def makeOceanGrid(self):

@@ -13,6 +13,37 @@ from pirates.battle import EnemyGlobals
 from pirates.piratesbase import PiratesGlobals
 from pirates.world import WorldGlobals
 
+def _localIslandPointToOcean(island, localX, localY):
+    islandTransform = island.getIslandTransform()
+    angle = math.radians(islandTransform[3] if len(islandTransform) > 3 else 0.0)
+    return (islandTransform[0] + localX * math.cos(angle) - localY * math.sin(angle),
+        islandTransform[1] + localX * math.sin(angle) + localY * math.cos(angle))
+
+
+def getIslandAvoidSpheres(world):
+    """
+    The (x, y, radius) spheres NPC ships keep out of, in ocean grid space: each island's
+    inner LOD sphere, which covers the whole island, and the island's port collision spheres.
+    """
+
+    spheres = []
+    for island in world.builder.getIslands():
+        for sphere in island.getPortCollisionSpheres() or []:
+            pos, radius = sphere.get('pos', (0, 0, 0)), sphere.get('radius', 0)
+            if radius:
+                x, y = _localIslandPointToOcean(island, pos[0], pos[1])
+                spheres.append((x, y, float(radius)))
+
+        # the island's inner sphere covers the island itself, the same
+        # radius the ship deployer uses for it's minimum radius:
+        sphereRadii = getattr(island, 'sphereRadii', None)
+        if sphereRadii and sphereRadii[0] > 0:
+            sphereCenter = getattr(island, 'sphereCenter', None) or [0, 0]
+            x, y = _localIslandPointToOcean(island, sphereCenter[0], sphereCenter[1])
+            spheres.append((x, y, float(sphereRadii[0])))
+
+    return spheres
+
 
 class GameFSMShipAI(FSM.FSM):
     """
@@ -86,6 +117,12 @@ class GameFSMShipAI(FSM.FSM):
 
         # a ship that is hunting a target never gives up on it:
         self.huntTarget = None
+
+        # ships spawned at a ship spawn node patrol back and forth along the route
+        # the world data links the node to (see ShipManagerAI.getShipSpawnNodes):
+        self.patrolRoute = None
+        self._routeIndex = None
+        self._routeStep = 1
 
     def _initWorldRefs(self):
         if self.oceanGrid is None:
@@ -229,6 +266,27 @@ class GameFSMShipAI(FSM.FSM):
 
         return True
 
+    def setPatrolRoute(self, patrolRoute):
+        self.patrolRoute = [Point3(point[0], point[1], 0) for point in patrolRoute] if patrolRoute else None
+        self._routeIndex = None
+        self._routeStep = 1
+
+    def _getNextRoutePoint(self):
+        route = self.patrolRoute
+        if self._routeIndex is None:
+            # start (or after a chase, carry on) from whichever point is nearest:
+            pos = self._getGridPos(self.ship)
+            self._routeIndex = min(range(len(route)), key=lambda index: (route[index] - pos).length())
+            return route[self._routeIndex]
+
+        if len(route) > 1:
+            if not 0 <= self._routeIndex + self._routeStep < len(route):
+                self._routeStep = -self._routeStep
+
+            self._routeIndex += self._routeStep
+
+        return route[self._routeIndex]
+
     def setSeaLane(self, seaLane):
         self.seaLane = list(seaLane) if seaLane else None
 
@@ -356,12 +414,6 @@ class GameFSMShipAI(FSM.FSM):
         minX, maxX, minY, maxY = self._getGridBounds()
         return max(minX, min(maxX, x)), max(minY, min(maxY, y))
 
-    def _localIslandPointToOcean(self, island, localX, localY):
-        islandTransform = island.getIslandTransform()
-        angle = math.radians(islandTransform[3] if len(islandTransform) > 3 else 0.0)
-        return (islandTransform[0] + localX * math.cos(angle) - localY * math.sin(angle),
-            islandTransform[1] + localX * math.sin(angle) + localY * math.cos(angle))
-
     def _getIslandCollisionSpheres(self):
         # islands don't move, so we only need to work these out once:
         if self._islandSpheres is not None:
@@ -371,22 +423,7 @@ class GameFSMShipAI(FSM.FSM):
         if not self.world or not hasattr(self.world, 'builder'):
             return []
 
-        self._islandSpheres = []
-        for island in self.world.builder.getIslands():
-            for sphere in island.getPortCollisionSpheres() or []:
-                pos, radius = sphere.get('pos', (0, 0, 0)), sphere.get('radius', 0)
-                if radius:
-                    x, y = self._localIslandPointToOcean(island, pos[0], pos[1])
-                    self._islandSpheres.append((x, y, float(radius)))
-
-            # the island's inner sphere covers the island itself, the same
-            # radius the ship deployer uses for it's minimum radius:
-            sphereRadii = getattr(island, 'sphereRadii', None)
-            if sphereRadii and sphereRadii[0] > 0:
-                sphereCenter = getattr(island, 'sphereCenter', None) or [0, 0]
-                x, y = self._localIslandPointToOcean(island, sphereCenter[0], sphereCenter[1])
-                self._islandSpheres.append((x, y, float(sphereRadii[0])))
-
+        self._islandSpheres = getIslandAvoidSpheres(self.world)
         return self._islandSpheres
 
     def _getBlockingIsland(self, x, y):
@@ -488,6 +525,9 @@ class GameFSMShipAI(FSM.FSM):
         return self._isWithinGridBounds(pos[0], pos[1]) and not self._getBlockingIsland(pos[0], pos[1])
 
     def _getRandomPatrolPos(self):
+        if self.patrolRoute:
+            return self._getNextRoutePoint()
+
         homeX, homeY = self.homePos[0], self.homePos[1]
         if self.seaLane:
             homeAlong = self._getLanePosition(homeX, homeY)[0]
@@ -685,6 +725,7 @@ class GameFSMShipAI(FSM.FSM):
 
     def enterAttackChase(self):
         self._initWorldRefs()
+        self._routeIndex = None
         self.ship.setSailAnimState('Idle')
         if not self._isValidTarget(self.targetShip):
             self.targetShip = self._getHuntTarget() or self._selectBestTarget()
