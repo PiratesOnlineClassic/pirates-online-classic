@@ -32,23 +32,23 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
     ATTACK_SHIP_HUNT_DELAY = 6.0
     SEA_CHECK_PERIOD = 1.0
 
-    # Navy guard positions on the Black Pearl deck (relative to ship)
-    # These are positioned around the main deck for combat encounters
+    # Navy guard positions on the Black Pearl deck (relative to ship), the heights are
+    # the Pearl's main deck under each guard, it rises toward the bow and stern...
     NAVY_GUARD_POSITIONS = [
         # Main deck - front
-        ((-15, 30, 8), (180, 0, 0)),
-        ((15, 30, 8), (180, 0, 0)),
+        ((-15, 30, 42.3), (180, 0, 0)),
+        ((15, 30, 42.3), (180, 0, 0)),
         # Main deck - middle
-        ((-20, 0, 8), (90, 0, 0)),
-        ((20, 0, 8), (270, 0, 0)),
-        ((0, 5, 8), (0, 0, 0)),
+        ((-20, 0, 42.1), (90, 0, 0)),
+        ((20, 0, 42.1), (270, 0, 0)),
+        ((0, 5, 43.1), (0, 0, 0)),
         # Main deck - rear
-        ((-15, -25, 8), (0, 0, 0)),
-        ((15, -25, 8), (0, 0, 0)),
-        # Near steering wheel
-        ((0, -40, 12), (180, 0, 0)),
-        ((-8, -35, 12), (135, 0, 0)),
-        ((8, -35, 12), (225, 0, 0)),
+        ((-15, -25, 43.0), (0, 0, 0)),
+        ((15, -25, 43.0), (0, 0, 0)),
+        # Near the main mast
+        ((0, -40, 44.6), (180, 0, 0)),
+        ((-8, -35, 44.3), (135, 0, 0)),
+        ((8, -35, 44.3), (225, 0, 0)),
     ]
 
     # Number of guards to spawn
@@ -552,13 +552,19 @@ class TreasureMapBlackPearlAI(DistributedTreasureMapInstanceAI):
             zoneId = PiratesGlobals.ShipZoneOnDeck
             self.blackPearl.generateChildWithRequired(guard, zoneId)
 
-            # Position relative to the ship
-            guard.setPos(self.blackPearl, sx, sy, sz)
+            # the guard stands on the ship's deck, it's position is relative to the ship
+            # just as the client places it under the ship's root (and as the crew's
+            # positions on deck are), not a position out on the ocean grid...
+            guard.setPos(sx, sy, sz)
             h, p, r = hpr
-            guard.setHpr(self.blackPearl, h, p, r)
+            guard.setHpr(h, p, r)
 
             # Initialize guard state
             guard.d_setInitZ(sz)
+
+            # the guard only broadcasts it's position while it moves, the state
+            # server holds it's spawn position for the crew boarding the Pearl...
+            guard.sendCurrentPosition()
             guard.d_setSpawnIn()
             guard.b_setGameState('Idle')
 
