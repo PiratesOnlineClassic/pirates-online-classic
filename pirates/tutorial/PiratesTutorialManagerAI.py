@@ -139,6 +139,28 @@ class TutorialFSM(FSM):
         if doorDoId:
             self.exteriorDoor = self.air.doId2do.get(doorDoId)
 
+        # The client sends it's login teleport as soon as the teleport manager arrives
+        # in the uber zone, long before PlayGame has finished it's teleportToShard. That
+        # teleport ends by placing the avatar in the district itself, which would clobber
+        # the jail location (and the jail's instance interest) if we teleported first...
+        if not self._avatarInDistrict():
+            self.accept(DistributedObjectAI.staticGetZoneChangeEvent(self.avatar.doId),
+                self._runCallback, [self.__avatarLocationChanged])
+            return
+
+        self.__startJailTeleport()
+
+    def _avatarInDistrict(self):
+        return getattr(self.avatar, 'parentId', self.air.districtId) == self.air.districtId
+
+    def __avatarLocationChanged(self, newZoneId, oldZoneId):
+        if not self._avatarInDistrict():
+            return
+
+        self.ignore(DistributedObjectAI.staticGetZoneChangeEvent(self.avatar.doId))
+        self.__startJailTeleport()
+
+    def __startJailTeleport(self):
         teleportMgr = self.air.teleportMgr
         if self.avatar.doId in teleportMgr.avatar2fsm:
             self.notify.warning('Avatar %d is already teleporting' % self.avatar.doId)
