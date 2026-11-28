@@ -220,7 +220,7 @@ class HighSeasScoreboard(GuiPanel.GuiPanel):
             self.results.append({
                 'Type': 'Entry',
                 'Text': PLocalizer.DoubleGoldBonus,
-                'Value1': str(totalGold / 2) + ' ' + PLocalizer.MoneyName,
+                'Value1': str(int(totalGold / 2)) + ' ' + PLocalizer.MoneyName,
                 'UnwrapMode': 1})
         
         self.results.append({

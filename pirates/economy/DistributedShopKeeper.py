@@ -451,7 +451,7 @@ class DistributedShopKeeper:
             return
         
         modelType = ShipGlobals.getModelClass(shipOV.shipClass)
-        cost = EconomyGlobals.getItemCost(modelType) / 2
+        cost = int(EconomyGlobals.getItemCost(modelType) / 2)
         r = Functor(self.doubleConfirmSellShip, shipId)
         if self.confirmDialog:
             self.confirmDialog.destroy()
@@ -478,7 +478,7 @@ class DistributedShopKeeper:
             return
         
         modelType = ShipGlobals.getModelClass(shipOV.shipClass)
-        cost = EconomyGlobals.getItemCost(modelType) / 2
+        cost = int(EconomyGlobals.getItemCost(modelType) / 2)
         if choice == 1:
             inventory = base.localAvatar.getInventory()
             if inventory:
@@ -525,7 +525,7 @@ class DistributedShopKeeper:
             return
         
         shipClass = shipOV.getShipClass()
-        cost = EconomyGlobals.getItemCost(shipClass) * EconomyGlobals.OVERHAUL_COST_PERCENTAGE
+        cost = int(EconomyGlobals.getItemCost(shipClass) * EconomyGlobals.OVERHAUL_COST_PERCENTAGE)
         if self.confirmDialog:
             self.confirmDialog.destroy()
             self.confirmDialog = None
@@ -543,7 +543,7 @@ class DistributedShopKeeper:
             return
         
         shipClass = shipOV.getShipClass()
-        cost = EconomyGlobals.getItemCost(shipClass) * EconomyGlobals.OVERHAUL_COST_PERCENTAGE
+        cost = int(EconomyGlobals.getItemCost(shipClass) * EconomyGlobals.OVERHAUL_COST_PERCENTAGE)
         if choice == 1:
             inventory = base.localAvatar.getInventory()
             if inventory:
