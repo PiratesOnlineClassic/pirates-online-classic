@@ -22,7 +22,8 @@ from pirates.quest import QuestDB
 from pirates.quest.QuestReward import CutlassReward
 from pirates.world.DistributedGameAreaAI import DistributedGameAreaAI
 from pirates.world.DistributedGAInteriorAI import DistributedGAInteriorAI
-from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType
+from pirates.uberdog.UberDogGlobals import InventoryCategory, InventoryType, getNumRespecType
+from pirates.economy import EconomyGlobals
 from pirates.battle import WeaponGlobals
 from pirates.reputation import ReputationGlobals
 from pirates.piratesbase import Freebooter
@@ -48,6 +49,30 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
     # avatar's inventory; the combat tray falls back to the avatar's fists
     # when the avatar has not been given any weapons yet...
     DefaultWeapons = (0, InventoryType.MeleeWeaponL1)
+
+    # the skills of each weapon and the skill points spent on them,
+    # see SkillPage.respec...
+    SkillTracks = {
+        InventoryType.MeleeRep: (InventoryType.begin_WeaponSkillMelee,
+            InventoryType.end_WeaponSkillMelee, InventoryType.UnspentMelee),
+        InventoryType.CutlassRep: (InventoryType.begin_WeaponSkillCutlass,
+            InventoryType.end_WeaponSkillCutlass, InventoryType.UnspentCutlass),
+        InventoryType.PistolRep: (InventoryType.begin_WeaponSkillPistol,
+            InventoryType.end_WeaponSkillPistol, InventoryType.UnspentPistol),
+        InventoryType.MusketRep: (InventoryType.begin_WeaponSkillMusket,
+            InventoryType.end_WeaponSkillMusket, InventoryType.UnspentMusket),
+        InventoryType.DaggerRep: (InventoryType.begin_WeaponSkillDagger,
+            InventoryType.end_WeaponSkillDagger, InventoryType.UnspentDagger),
+        InventoryType.GrenadeRep: (InventoryType.begin_WeaponSkillGrenade,
+            InventoryType.end_WeaponSkillGrenade, InventoryType.UnspentGrenade),
+        InventoryType.DollRep: (InventoryType.begin_WeaponSkillDoll,
+            InventoryType.end_WeaponSkillDoll, InventoryType.UnspentDoll),
+        InventoryType.SailingRep: (InventoryType.begin_SkillSailing,
+            InventoryType.end_SkillSailing, InventoryType.UnspentSailing),
+        InventoryType.WandRep: (InventoryType.begin_WeaponSkillWand,
+            InventoryType.end_WeaponSkillWand, InventoryType.UnspentWand),
+        InventoryType.CannonRep: (InventoryType.begin_WeaponSkillCannon,
+            InventoryType.end_WeaponSkillCannon, InventoryType.UnspentCannon)}
 
     # combo skills which require the previous skill in the combo
     # chain to be learned first, see the client's SkillPage.addPoint...
@@ -595,6 +620,13 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
         self.sendUpdate('sendReputationMessage', [targetId, categories, reputationList, basicPenalty,
             crewBonus, doubleXPBonus, holidayBonus])
 
+    def getSkillTrack(self, skillId):
+        for repId, (begin, end, unspentId) in list(self.SkillTracks.items()):
+            if begin <= skillId < end:
+                return repId, unspentId
+
+        return None, None
+
     def spendSkillPoint(self, skillId):
         if not self._isSenderSelf('spendSkillPoint', skillId=skillId):
             return
@@ -606,76 +638,135 @@ class DistributedPlayerPirateAI(DistributedPlayerAI, DistributedBattleAvatarAI, 
 
             return
 
-        def updateStack(stackType):
-            unspentStackQuantity = inventory.getStackQuantity(stackType)
-            skillQuantity = inventory.getStackQuantity(skillId)
-
-            # check to see if the player has any skill points...
-            if not unspentStackQuantity:
-                self.notify.debug('Cannot update stack %d, player has no skill points; unspentStackQuantity=%d!' % (
-                    stackType, unspentStackQuantity))
-
-                return
-
-            # check to see if the player can purchase anymore stacks
-            # for this type...
-            if skillQuantity >= 6:
-                self.notify.debug('Cannot update stack %d, stack limit reached; skillQuantity=%d, skillLimit=5' % (
-                    stackType, skillQuantity))
-
-                return
-
-            # freebooters may only train their skills up to a certain rank...
-            if not self.isPaid() and skillQuantity + 1 > Freebooter.FreeSkillCap:
-                self.notify.debug('Cannot update stack %d, freebooter skill cap reached; skillQuantity=%d' % (
-                    stackType, skillQuantity))
-
-                return
-
-            # combo skills must be learned in the order they are chained...
-            if skillId in self.ComboOrderSkills and inventory.getStackQuantity(skillId - 1) <= 1:
-                self.notify.debug('Cannot update stack %d, previous combo skill %d was never learned!' % (
-                    stackType, skillId - 1))
-
-                return
-
-            # update the player's skill quantity and their skill
-            # points quantity stack...
-            inventory.b_setStackQuantity(skillId, skillQuantity + 1)
-            inventory.b_setStackQuantity(stackType, unspentStackQuantity - 1)
-            self.d_spentSkillPoint(skillId)
-
-        if skillId >= InventoryType.begin_WeaponSkillMelee and skillId < InventoryType.end_WeaponSkillMelee:
-            updateStack(InventoryType.UnspentMelee)
-        elif skillId >= InventoryType.begin_WeaponSkillCutlass and skillId < InventoryType.end_WeaponSkillCutlass:
-            updateStack(InventoryType.UnspentCutlass)
-        elif skillId >= InventoryType.begin_WeaponSkillPistol and skillId < InventoryType.end_WeaponSkillPistol:
-            updateStack(InventoryType.UnspentPistol)
-        elif skillId >= InventoryType.begin_WeaponSkillMusket and skillId < InventoryType.end_WeaponSkillMusket:
-            updateStack(InventoryType.UnspentMusket)
-        elif skillId >= InventoryType.begin_WeaponSkillDagger and skillId < InventoryType.end_WeaponSkillDagger:
-            updateStack(InventoryType.UnspentDagger)
-        elif skillId >= InventoryType.begin_WeaponSkillGrenade and skillId < InventoryType.end_WeaponSkillGrenade:
-            updateStack(InventoryType.UnspentGrenade)
-        elif skillId >= InventoryType.begin_SkillSailing and skillId < InventoryType.end_SkillSailing:
-            updateStack(InventoryType.UnspentSailing)
-        elif skillId >= InventoryType.begin_WeaponSkillCannon and skillId < InventoryType.end_WeaponSkillCannon:
-            updateStack(InventoryType.UnspentCannon)
-        elif skillId >= InventoryType.begin_WeaponSkillDoll and skillId < InventoryType.end_WeaponSkillDoll:
-            updateStack(InventoryType.UnspentDoll)
-        elif skillId >= InventoryType.begin_WeaponSkillWand and skillId < InventoryType.end_WeaponSkillWand:
-            updateStack(InventoryType.UnspentWand)
-        else:
+        repId, unspentId = self.getSkillTrack(skillId)
+        if not unspentId:
             self.notify.debug('Cannot spend skill point for skill %d,'
                 'has no unspent category!' % skillId)
 
             return
 
-    def resetSkillPoints(self, skillId):
-        if not self._isSenderSelf('resetSkillPoints', skillId=skillId):
+        unspentStackQuantity = inventory.getStackQuantity(unspentId)
+        skillQuantity = inventory.getStackQuantity(skillId)
+
+        # check to see if the player has any skill points...
+        if not unspentStackQuantity:
+            self.notify.debug('Cannot update stack %d, player has no skill points; unspentStackQuantity=%d!' % (
+                unspentId, unspentStackQuantity))
+
             return
 
+        # skills are unlocked by leveling up the weapon, a skill that has
+        # not been unlocked yet cannot be trained, see SkillPage.addPoint...
+        if not skillQuantity or not inventory.getStackLimit(skillId):
+            self.notify.debug('Cannot update stack %d, skill %d is not unlocked!' % (
+                unspentId, skillId))
+
+            return
+
+        # check to see if the player can purchase anymore stacks
+        # for this type...
+        if skillQuantity >= 6:
+            self.notify.debug('Cannot update stack %d, stack limit reached; skillQuantity=%d, skillLimit=5' % (
+                unspentId, skillQuantity))
+
+            return
+
+        if not self.isPaid():
+            # freebooters may only train the skills free to use...
+            if not WeaponGlobals.canFreeUse(skillId):
+                self.notify.debug('Cannot update stack %d, skill %d is not free to use!' % (
+                    unspentId, skillId))
+
+                return
+
+            # and only up to a certain rank...
+            if skillQuantity + 1 > Freebooter.FreeSkillCap:
+                self.notify.debug('Cannot update stack %d, freebooter skill cap reached; skillQuantity=%d' % (
+                    unspentId, skillQuantity))
+
+                return
+
+            # and may only spend so many of the skill points earned
+            # leveling up the weapon...
+            level, _ = ReputationGlobals.getLevelFromTotalReputation(repId, inventory.getReputation(repId))
+            if level - 1 - unspentStackQuantity >= Freebooter.FreeMaxSkillSpend:
+                self.notify.debug('Cannot update stack %d, freebooter skill spend reached!' % unspentId)
+                return
+
+        # combo skills must be learned in the order they are chained...
+        if skillId in self.ComboOrderSkills and inventory.getStackQuantity(skillId - 1) <= 1:
+            self.notify.debug('Cannot update stack %d, previous combo skill %d was never learned!' % (
+                unspentId, skillId - 1))
+
+            return
+
+        # update the player's skill quantity and their skill
+        # points quantity stack...
+        inventory.b_setStackQuantity(skillId, skillQuantity + 1)
+        inventory.b_setStackQuantity(unspentId, unspentStackQuantity - 1)
         self.d_spentSkillPoint(skillId)
+
+    def resetSkillPoints(self, repId):
+        # the client asks to reset the skills of a weapon when the avatar
+        # buys a respec from a trainer, see DistributedNPCTownfolk.respecTransaction...
+        if not self._isSenderSelf('resetSkillPoints', skillId=repId):
+            return
+
+        inventory = self.getInventory()
+        if not inventory:
+            self.notify.debug('Cannot reset skill points of %d for avatar %d, '
+                'no inventory present' % (repId, self.doId))
+
+            return
+
+        numRespecId = getNumRespecType(repId)
+        if repId not in self.SkillTracks or numRespecId is None:
+            self.air.logPotentialHacker(
+                message='Attempted to reset the skill points of an invalid weapon',
+                targetAvId=self.doId,
+                repId=repId)
+
+            return
+
+        numRespecs = inventory.getStackQuantity(numRespecId)
+        goldCost = EconomyGlobals.getRespecCost(numRespecs)
+        if inventory.getGoldInPocket() < goldCost:
+            self.notify.debug('Avatar %d cannot afford to reset the skill points of %d!' % (
+                self.doId, repId))
+
+            return
+
+        # every skill trained is reset to it's unlocked rank, the starting
+        # skills keep their first rank, see SkillPage.respec...
+        begin, end, unspentId = self.SkillTracks[repId]
+        refundedPoints = 0
+        resetSkills = []
+        for skillId in range(begin, end):
+            if skillId in InventoryType.DontResetSkills:
+                continue
+
+            resetQuantity = 1
+            if skillId in InventoryType.StartingSkills:
+                resetQuantity = 2
+
+            skillQuantity = inventory.getStackQuantity(skillId)
+            if skillQuantity > resetQuantity:
+                refundedPoints += skillQuantity - resetQuantity
+                resetSkills.append((skillId, resetQuantity))
+
+        if not refundedPoints:
+            self.notify.debug('Avatar %d has no skill points of %d to reset!' % (
+                self.doId, repId))
+
+            return
+
+        inventory.setGoldInPocket(inventory.getGoldInPocket() - goldCost)
+        for skillId, resetQuantity in resetSkills:
+            inventory.b_setStackQuantity(skillId, resetQuantity)
+
+        inventory.b_setStackQuantity(unspentId, inventory.getStackQuantity(unspentId) + refundedPoints)
+        inventory.b_setStackQuantity(numRespecId, numRespecs + 1)
+        self.d_spentSkillPoint(repId)
 
     def d_spentSkillPoint(self, category):
         self.sendUpdateToAvatarId(self.doId, 'spentSkillPoint', [category])

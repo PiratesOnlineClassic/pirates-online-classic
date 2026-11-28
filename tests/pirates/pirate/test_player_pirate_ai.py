@@ -55,6 +55,9 @@ from pirates.pirate.PlayerPirateGameFSMAI import PlayerPirateGameFSMAI
 from pirates.uberdog.UberDogGlobals import InventoryType
 from otp.chat import ChatFilter
 
+from pirates.uberdog import InventoryInit
+from pirates.reputation import ReputationGlobals
+
 # patch the WeaponGlobals module the code under test actually uses...
 WeaponGlobals = player_pirate_module.WeaponGlobals
 
@@ -63,9 +66,22 @@ class FakeInventory:
 
     def __init__(self, stacks=None):
         self.stacks = dict(stacks or {})
+        self.accumulators = {}
 
     def getStackQuantity(self, stackType):
         return self.stacks.get(stackType, 0)
+
+    def getStackLimit(self, stackType):
+        return InventoryInit.StackLimits.get(stackType, 0)
+
+    def getReputation(self, repType):
+        return self.accumulators.get(repType, 0)
+
+    def getGoldInPocket(self):
+        return self.getStackQuantity(InventoryType.GoldInPocket)
+
+    def setGoldInPocket(self, quantity):
+        self.b_setStackQuantity(InventoryType.GoldInPocket, quantity)
 
     def b_setStackQuantity(self, stackType, quantity):
         self.stacks[stackType] = quantity
@@ -255,14 +271,101 @@ class RegenerationTests(unittest.TestCase):
 class SkillPointTests(unittest.TestCase):
 
     def test_combo_skills_are_learned_in_order(self):
-        player = makePlayer(stacks={InventoryType.UnspentCutlass: 2, InventoryType.CutlassSlash: 1})
+        player = makePlayer(stacks={InventoryType.UnspentCutlass: 2, InventoryType.CutlassSlash: 1,
+            InventoryType.CutlassCleave: 1})
         player.spendSkillPoint(InventoryType.CutlassCleave)
-        self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassCleave), 0)
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassCleave), 1)
 
         player.inventory.stacks[InventoryType.CutlassSlash] = 2
         player.spendSkillPoint(InventoryType.CutlassCleave)
-        self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassCleave), 1)
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassCleave), 2)
         self.assertEqual(player.inventory.getStackQuantity(InventoryType.UnspentCutlass), 1)
+        player.sendUpdateToAvatarId.assert_called_with(player.doId, 'spentSkillPoint', [InventoryType.CutlassCleave])
+
+    def test_locked_skills_cannot_be_trained(self):
+        player = makePlayer(stacks={InventoryType.UnspentCutlass: 2})
+        player.spendSkillPoint(InventoryType.CutlassBladestorm)
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassBladestorm), 0)
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.UnspentCutlass), 2)
+
+    def test_skill_rank_is_capped(self):
+        player = makePlayer(stacks={InventoryType.UnspentCutlass: 2, InventoryType.CutlassSweep: 6})
+        player.spendSkillPoint(InventoryType.CutlassSweep)
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassSweep), 6)
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.UnspentCutlass), 2)
+
+    def test_freebooter_skill_spend_limit(self):
+        # a level 10 freebooter has earned 9 skill points, having spent
+        # six of them it may not spend any more, see SkillPage.addPoint...
+        player = makePlayer(stacks={InventoryType.UnspentCutlass: 3, InventoryType.CutlassSweep: 1})
+        player.isPaid.return_value = False
+        player.inventory.accumulators[InventoryType.CutlassRep] = ReputationGlobals.TotalReputationAtLevel[10]
+        with patch.object(WeaponGlobals, 'canFreeUse', return_value=True):
+            player.spendSkillPoint(InventoryType.CutlassSweep)
+            self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassSweep), 1)
+
+            player.inventory.stacks[InventoryType.UnspentCutlass] = 4
+            player.spendSkillPoint(InventoryType.CutlassSweep)
+            self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassSweep), 2)
+
+    def test_freebooter_cannot_train_paid_skills(self):
+        player = makePlayer(stacks={InventoryType.UnspentCutlass: 2, InventoryType.CutlassSweep: 1})
+        player.isPaid.return_value = False
+        with patch.object(WeaponGlobals, 'canFreeUse', return_value=False):
+            player.spendSkillPoint(InventoryType.CutlassSweep)
+
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassSweep), 1)
+
+
+class RespecTests(unittest.TestCase):
+
+    def makeTrainedPlayer(self, gold=1000):
+        return makePlayer(stacks={
+            InventoryType.GoldInPocket: gold,
+            InventoryType.UnspentCutlass: 1,
+            InventoryType.CutlassHack: 4,
+            InventoryType.CutlassSlash: 2,
+            InventoryType.CutlassSweep: 3,
+            InventoryType.CutlassCleave: 1})
+
+    def test_respec_refunds_skill_points(self):
+        player = self.makeTrainedPlayer()
+        player.resetSkillPoints(InventoryType.CutlassRep)
+
+        inventory = player.inventory
+        self.assertEqual(inventory.getStackQuantity(InventoryType.CutlassHack), 2)
+        self.assertEqual(inventory.getStackQuantity(InventoryType.CutlassSlash), 2)
+        self.assertEqual(inventory.getStackQuantity(InventoryType.CutlassSweep), 1)
+        self.assertEqual(inventory.getStackQuantity(InventoryType.CutlassCleave), 1)
+        self.assertEqual(inventory.getStackQuantity(InventoryType.UnspentCutlass), 5)
+        self.assertEqual(inventory.getStackQuantity(InventoryType.NumRespecCutlass), 1)
+        self.assertEqual(inventory.getGoldInPocket(), 750)
+        player.sendUpdateToAvatarId.assert_called_with(player.doId, 'spentSkillPoint', [InventoryType.CutlassRep])
+
+    def test_respec_cost_increases(self):
+        player = self.makeTrainedPlayer(gold=3000)
+        player.inventory.stacks[InventoryType.NumRespecCutlass] = 1
+        player.resetSkillPoints(InventoryType.CutlassRep)
+        self.assertEqual(player.inventory.getGoldInPocket(), 500)
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.NumRespecCutlass), 2)
+
+    def test_respec_requires_gold(self):
+        player = self.makeTrainedPlayer(gold=100)
+        player.resetSkillPoints(InventoryType.CutlassRep)
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.CutlassHack), 4)
+        self.assertEqual(player.inventory.getGoldInPocket(), 100)
+
+    def test_respec_without_trained_skills_is_free(self):
+        player = makePlayer(stacks={InventoryType.GoldInPocket: 1000, InventoryType.CutlassHack: 2})
+        player.resetSkillPoints(InventoryType.CutlassRep)
+        self.assertEqual(player.inventory.getGoldInPocket(), 1000)
+        self.assertEqual(player.inventory.getStackQuantity(InventoryType.NumRespecCutlass), 0)
+
+    def test_respec_of_invalid_weapon_is_rejected(self):
+        player = self.makeTrainedPlayer()
+        player.resetSkillPoints(InventoryType.MeleeRep)
+        self.assertEqual(player.inventory.getGoldInPocket(), 1000)
+        player.air.logPotentialHacker.assert_called_once()
 
     def test_freebooter_skill_cap(self):
         player = makePlayer(stacks={InventoryType.UnspentCutlass: 2, InventoryType.CutlassSweep: 3})
